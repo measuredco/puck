@@ -9,10 +9,14 @@
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
     "eslint": "^7.32.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint-config-custom": "*",
     "prettier": "^2.5.1",
     "turbo": "^1.9.7"
   },
-  "packageManager": "pnpm@7.15.0",
-  "name": "puck"
+  "name": "puck",
+  "packageManager": "yarn@1.22.19",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
