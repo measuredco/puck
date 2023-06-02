@@ -2,11 +2,12 @@
 "use client";
 
 import ReactFromJSON from "react-from-json";
-import { ReactNode, useState } from "react";
-import { DragDropContext, Draggable } from "react-beautiful-dnd";
+import { Fragment, useState } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
 import DroppableStrictMode from "../lib/droppable-strict-mode";
-import { mapping, initialData } from "../lib/config";
+import config from "../lib/config";
 import { DraggableComponent } from "./DraggableComponent";
+import type { Field } from "../types/Config";
 
 const reorder = (list: any[], startIndex, endIndex) => {
   const result = Array.from(list);
@@ -16,11 +17,53 @@ const reorder = (list: any[], startIndex, endIndex) => {
   return result;
 };
 
+const replace = (list: any[], index, newItem) => {
+  const result = Array.from(list);
+  result.splice(index, 1);
+  result.splice(index, 0, newItem);
+
+  return result;
+};
+
+const InputOrGroup = ({
+  name,
+  field,
+  value,
+  onChange,
+}: {
+  name: string;
+  field: Field<any>;
+  value: any;
+  onChange: (e: React.FormEvent<HTMLInputElement>) => void;
+}) => {
+  if (field.type === "group") {
+    if (!field.items) {
+      return null;
+    }
+
+    // Can't support groups until we have proper form system
+    return <div>Groups not supported yet</div>;
+  }
+
+  return (
+    <label>
+      <div>{name}</div>
+      {/* TODO use proper form lib */}
+      <input type={field.type} name={name} value={value} onChange={onChange} />
+    </label>
+  );
+};
+
 export default function Page() {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState(config.initialData);
   const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
 
-  const Base = mapping.Base || "div";
+  const Base = config.mapping.Base || Fragment;
+
+  const fields =
+    selectedIndex !== null
+      ? (config.fields[data[selectedIndex].type] as Record<string, Field<any>>)
+      : {};
 
   return (
     <>
@@ -45,7 +88,7 @@ export default function Page() {
                 mapping={{
                   default: (item) => (
                     <li>
-                      {item._type} {console.log(item)}
+                      {item._type}
                       {typeof item.children === "object" && item.children && (
                         <ul>{item.children}</ul>
                       )}
@@ -87,11 +130,7 @@ export default function Page() {
               >
                 <DroppableStrictMode droppableId="droppable">
                   {(provided, snapshot) => (
-                    <div
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      // style={getListStyle(snapshot.isDraggingOver)}
-                    >
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
                       {/* Using ReactFromJSON here instead of mapping over should allow us to do nestable draging */}
                       <ReactFromJSON
                         entry={data}
@@ -106,7 +145,7 @@ export default function Page() {
                                 e.stopPropagation();
                               }}
                             >
-                              {mapping[item._type](item)}
+                              {config.mapping[item._type](item)}
                             </DraggableComponent>
                           ),
                         }}
@@ -124,6 +163,32 @@ export default function Page() {
           {selectedIndex !== null ? (
             <>
               <h2>{data[selectedIndex].type}</h2>
+
+              {Object.keys(fields).map((fieldName) => {
+                const field = fields[fieldName];
+
+                return (
+                  <InputOrGroup
+                    key={`${data[selectedIndex].props.id}_${fieldName}`}
+                    field={field}
+                    name={fieldName}
+                    value={data[selectedIndex].props[fieldName]}
+                    onChange={(e) => {
+                      const value = e.currentTarget.value;
+
+                      const updatedData = replace(data, selectedIndex, {
+                        ...data[selectedIndex],
+                        props: {
+                          ...data[selectedIndex].props,
+                          [fieldName]: value,
+                        },
+                      });
+
+                      setData([...updatedData]);
+                    }}
+                  />
+                );
+              })}
             </>
           ) : null}
         </div>
