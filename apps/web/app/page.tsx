@@ -18,6 +18,8 @@ const reorder = (list: any[], startIndex, endIndex) => {
 export default function Page() {
   const [data, setData] = useState(initialData);
 
+  const Base = mapping.Base || "div";
+
   return (
     <>
       <div
@@ -55,65 +57,66 @@ export default function Page() {
             <h2>Components</h2>
           </div>
         </div>
-        <div style={{ background: "#dedede", padding: 32 }}>
+        <div style={{ background: "#dedede", padding: 32, overflowY: "auto" }}>
           <div
             style={{
               background: "#eee",
               border: "1px solid #dedede",
-              borderTopLeftRadius: 32,
-              borderTopRightRadius: 32,
+              borderRadius: 32,
               minHeight: "calc(100vh - 32px)",
               paddingBottom: 64,
               overflow: "hidden",
             }}
           >
-            <DragDropContext
-              onDragEnd={(droppedItem) => {
-                setData(
-                  reorder(
-                    data,
-                    droppedItem.source.index,
-                    droppedItem.destination.index
-                  )
-                );
-              }}
-            >
-              <DroppableStrictMode droppableId="droppable">
-                {(provided, snapshot) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    // style={getListStyle(snapshot.isDraggingOver)}
-                  >
-                    {/* Using ReactFromJSON here instead of mapping over should allow us to do nestable draging */}
-                    <ReactFromJSON
-                      entry={data}
-                      mapping={{
-                        default: (item, i) => (
-                          <Draggable
-                            key={`drag_${i}`}
-                            draggableId={`draggable-${item.id}`}
-                            index={item.propIndex}
-                          >
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                {mapping[item._type](item)}
-                              </div>
-                            )}
-                          </Draggable>
-                        ),
-                      }}
-                    />
+            <Base>
+              <DragDropContext
+                onDragEnd={(droppedItem) => {
+                  setData(
+                    reorder(
+                      data,
+                      droppedItem.source.index,
+                      droppedItem.destination.index
+                    )
+                  );
+                }}
+              >
+                <DroppableStrictMode droppableId="droppable">
+                  {(provided, snapshot) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      // style={getListStyle(snapshot.isDraggingOver)}
+                    >
+                      {/* Using ReactFromJSON here instead of mapping over should allow us to do nestable draging */}
+                      <ReactFromJSON
+                        entry={data}
+                        mapping={{
+                          default: (item, i) => (
+                            <Draggable
+                              key={`drag_${i}`}
+                              draggableId={`draggable-${item.id}`}
+                              index={item.propIndex}
+                            >
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                >
+                                  {mapping[item._type](item)}
+                                </div>
+                              )}
+                            </Draggable>
+                          ),
+                        }}
+                      />
 
-                    {provided.placeholder}
-                  </div>
-                )}
-              </DroppableStrictMode>
-            </DragDropContext>
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </DroppableStrictMode>
+              </DragDropContext>
+            </Base>
           </div>
         </div>
         <div style={{ padding: 16 }}>
