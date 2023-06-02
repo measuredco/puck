@@ -5,6 +5,7 @@ import ReactFromJSON from "react-from-json";
 import { useState } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import DroppableStrictMode from "../lib/droppable-strict-mode";
+import { mapping, initialData } from "../lib/config";
 
 const reorder = (list: any[], startIndex, endIndex) => {
   const result = Array.from(list);
@@ -14,52 +15,8 @@ const reorder = (list: any[], startIndex, endIndex) => {
   return result;
 };
 
-const mapping = {
-  Hero: ({ children }) => (
-    <div style={{ background: "black", color: "white", padding: 128 }}>
-      <h1>{children}</h1>
-    </div>
-  ),
-  FeatureList: ({ children, items }) => (
-    <div style={{ background: "white", color: "black", padding: 128 }}>
-      <h2>{children}</h2>
-      <ul>
-        {items.map((item, id) => (
-          <li key={id}>{item.text}</li>
-        ))}
-      </ul>
-    </div>
-  ),
-};
-
 export default function Page() {
-  const [data, setData] = useState([
-    {
-      type: "Hero",
-      props: {
-        id: "hero1",
-        children: "Hero Content",
-      },
-    },
-    {
-      type: "FeatureList",
-      props: {
-        id: "featureList",
-        children: "Great features",
-        items: [
-          {
-            text: "Feature 1",
-          },
-          {
-            text: "Feature 2",
-          },
-          {
-            text: "Feature 3",
-          },
-        ],
-      },
-    },
-  ]);
+  const [data, setData] = useState(initialData);
 
   return (
     <>
