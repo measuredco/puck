@@ -14,7 +14,7 @@ type Props = {
 
 export const config: Config<Props> = {
   Hero: {
-    render: ({ heading }) => (
+    render: ({ heading = "Heading" }) => (
       <div style={{ background: "black", color: "white", padding: 128 }}>
         <h1>{heading}</h1>
       </div>
@@ -24,7 +24,7 @@ export const config: Config<Props> = {
     },
   },
   FeatureList: {
-    render: ({ title, description }) => (
+    render: ({ title = "Title", description = "Description" }) => (
       <div style={{ background: "white", color: "black", padding: 128 }}>
         <h2>{title}</h2>
         <p>{description}</p>
@@ -53,7 +53,6 @@ export const initialData: InitialData<Props> = [
     type: "Hero",
     props: {
       id: "hero",
-      heading: "Heading",
     },
   },
   {
