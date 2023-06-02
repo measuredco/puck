@@ -1,0 +1,32 @@
+.DraggableComponent {
+  position: relative;
+}
+
+.DraggableComponent-overlay {
+  display: none;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  position: absolute;
+  z-index: 1;
+}
+
+.DraggableComponent:hover .DraggableComponent-overlay {
+  display: block;
+  background-color: #cdcdcd50;
+}
+
+.DraggableComponent .DraggableComponent-overlay:hover {
+  z-index: 1;
+}
+
+.DraggableComponent--isSelected .DraggableComponent-overlay {
+  box-shadow: inset 0 0 0 4px lightblue;
+  display: block;
+  z-index: 1;
+}
+
+.DraggableComponent:first-of-type .DraggableComponent-overlay {
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+}

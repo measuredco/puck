@@ -2,10 +2,11 @@
 "use client";
 
 import ReactFromJSON from "react-from-json";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import DroppableStrictMode from "../lib/droppable-strict-mode";
 import { mapping, initialData } from "../lib/config";
+import { DraggableComponent } from "./DraggableComponent";
 
 const reorder = (list: any[], startIndex, endIndex) => {
   const result = Array.from(list);
@@ -17,6 +18,7 @@ const reorder = (list: any[], startIndex, endIndex) => {
 
 export default function Page() {
   const [data, setData] = useState(initialData);
+  const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
 
   const Base = mapping.Base || "div";
 
@@ -57,7 +59,10 @@ export default function Page() {
             <h2>Components</h2>
           </div>
         </div>
-        <div style={{ background: "#dedede", padding: 32, overflowY: "auto" }}>
+        <div
+          style={{ background: "#dedede", padding: 32, overflowY: "auto" }}
+          onClick={() => setSelectedIndex(null)}
+        >
           <div
             style={{
               background: "#eee",
@@ -92,21 +97,17 @@ export default function Page() {
                         entry={data}
                         mapping={{
                           default: (item, i) => (
-                            <Draggable
-                              key={`drag_${i}`}
-                              draggableId={`draggable-${item.id}`}
+                            <DraggableComponent
+                              id={`draggable-${item.id}`}
                               index={item.propIndex}
+                              isSelected={selectedIndex === item.propIndex}
+                              onClick={(e) => {
+                                setSelectedIndex(item.propIndex);
+                                e.stopPropagation();
+                              }}
                             >
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                >
-                                  {mapping[item._type](item)}
-                                </div>
-                              )}
-                            </Draggable>
+                              {mapping[item._type](item)}
+                            </DraggableComponent>
                           ),
                         }}
                       />
@@ -120,7 +121,11 @@ export default function Page() {
           </div>
         </div>
         <div style={{ padding: 16 }}>
-          <h2>Content</h2>
+          {selectedIndex !== null ? (
+            <>
+              <h2>{data[selectedIndex].type}</h2>
+            </>
+          ) : null}
         </div>
       </div>
     </>
