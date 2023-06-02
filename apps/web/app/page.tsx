@@ -5,7 +5,7 @@ import ReactFromJSON from "react-from-json";
 import { Fragment, useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import DroppableStrictMode from "../lib/droppable-strict-mode";
-import config from "../lib/config";
+import config, { initialData } from "../lib/config";
 import { DraggableComponent } from "./DraggableComponent";
 import type { Field } from "../types/Config";
 
@@ -191,15 +191,15 @@ const InputOrGroup = ({
 };
 
 export default function Page() {
-  const [data, setData] = useState(config.initialData);
+  const [data, setData] = useState(initialData);
   const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
   const [lockedFields, setLockedFields] = useState<string[]>([]);
 
-  const Base = config.mapping.Base || Fragment;
+  const Base = config.Base?.render || Fragment;
 
   const fields =
     selectedIndex !== null
-      ? (config.fields[data[selectedIndex].type] as Record<string, Field<any>>)
+      ? (config[data[selectedIndex].type].fields as Record<string, Field<any>>)
       : {};
 
   return (
@@ -282,7 +282,7 @@ export default function Page() {
                                 e.stopPropagation();
                               }}
                             >
-                              {config.mapping[item._type](item)}
+                              {config[item._type].render(item)}
                             </DraggableComponent>
                           ),
                         }}

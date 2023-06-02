@@ -1,4 +1,4 @@
-import { Config } from "../types/Config";
+import { Config, InitialData } from "../types/Config";
 import strapiAdaptor from "./adaptors/strapi";
 
 type Props = {
@@ -13,27 +13,24 @@ type Props = {
 };
 
 export const config: Config<Props> = {
-  initialData: [
-    {
-      type: "Hero",
-      props: {
-        id: "hero",
-        heading: "Heading",
-      },
-    },
-    {
-      type: "FeatureList",
-      props: {
-        id: "fl1",
-      },
-    },
-  ],
-
-  fields: {
-    Hero: {
+  Hero: {
+    render: ({ heading }) => (
+      <div style={{ background: "black", color: "white", padding: 128 }}>
+        <h1>{heading}</h1>
+      </div>
+    ),
+    fields: {
       heading: { type: "text" },
     },
-    FeatureList: {
+  },
+  FeatureList: {
+    render: ({ title, description }) => (
+      <div style={{ background: "white", color: "black", padding: 128 }}>
+        <h2>{title}</h2>
+        <p>{description}</p>
+      </div>
+    ),
+    fields: {
       _data: {
         type: "external",
         adaptor: strapiAdaptor,
@@ -49,20 +46,22 @@ export const config: Config<Props> = {
       },
     },
   },
-
-  mapping: {
-    Hero: ({ heading }) => (
-      <div style={{ background: "black", color: "white", padding: 128 }}>
-        <h1>{heading}</h1>
-      </div>
-    ),
-    FeatureList: ({ title, description, ..._data }) => (
-      <div style={{ background: "white", color: "black", padding: 128 }}>
-        <h2>{title}</h2>
-        <p>{description}</p>
-      </div>
-    ),
-  },
 };
+
+export const initialData: InitialData<Props> = [
+  {
+    type: "Hero",
+    props: {
+      id: "hero",
+      heading: "Heading",
+    },
+  },
+  {
+    type: "FeatureList",
+    props: {
+      id: "fl1",
+    },
+  },
+];
 
 export default config;
