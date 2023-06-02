@@ -1,8 +1,15 @@
 import { ReactElement } from "react";
 import { ReactNode } from "react";
 
+export type Adaptor = {
+  name: string;
+  fetchList: (adaptorParams: object) => Promise<object[] | null>;
+};
+
 export type Field<Props extends { [key: string]: any }> = {
-  type: "text" | "number" | "group";
+  type: "text" | "number" | "group" | "external";
+  adaptor?: Adaptor;
+  adaptorParams?: object;
   items?: {
     [SubPropName in keyof Props]: Field<Props[SubPropName]>;
   }[];
