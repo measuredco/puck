@@ -180,6 +180,7 @@ const InputOrGroup = ({
       <div>{name}</div>
       {/* TODO use proper form lib */}
       <input
+        autoComplete="off"
         type={field.type}
         name={name}
         value={value}
