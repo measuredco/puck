@@ -2,12 +2,13 @@
 "use client";
 
 import ReactFromJSON from "react-from-json";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import DroppableStrictMode from "../lib/droppable-strict-mode";
-import config, { initialData } from "../lib/config";
+import config, { initialData } from "../lib/config.bt";
 import { DraggableComponent } from "./DraggableComponent";
 import type { ComponentConfig, Field } from "../types/Config";
+import { InputOrGroup } from "./InputOrGroup";
 
 const reorder = (list: any[], startIndex, endIndex) => {
   const result = Array.from(list);
@@ -33,166 +34,6 @@ const filter = (obj: object, validKeys: string[]) => {
 
     return acc;
   }, {});
-};
-
-const ExternalInput = ({ field, onChange }: { field: any; onChange: any }) => {
-  const [data, setData] = useState([]);
-  const [isOpen, setOpen] = useState(false);
-  const [selectedData, setSelectedData] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      setData(await field.adaptor.fetchList(field.adaptorParams));
-    })();
-  }, [field.adaptor, field.adaptorParams]);
-
-  return (
-    <div>
-      <div style={{ display: "flex" }}>
-        <button onClick={() => setOpen(true)}>
-          {selectedData
-            ? `${field.adaptor.name}: ${selectedData.attributes.title}`
-            : `Select from ${field.adaptor.name}`}
-        </button>
-        {selectedData && (
-          <button
-            onClick={() => {
-              setSelectedData(null);
-              onChange({ currentTarget: { value: null } });
-            }}
-          >
-            Detach
-          </button>
-        )}
-      </div>
-      <div
-        style={{
-          background: "#00000080",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          display: isOpen ? "flex" : "none",
-          zIndex: 1,
-        }}
-        onClick={() => setOpen(false)}
-      >
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 1024,
-            padding: 32,
-            borderRadius: 32,
-            overflow: "hidden",
-            background: "white",
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <h2>Select content</h2>
-
-          {data.length ? (
-            <div style={{ overflowX: "scroll" }}>
-              <table cellPadding="8" cellSpacing="8">
-                <tr>
-                  {Object.keys(data[0].attributes).map((key) => (
-                    <th key={key} style={{ textAlign: "left" }}>
-                      {key}
-                    </th>
-                  ))}
-                </tr>
-                {data.map((item) => {
-                  return (
-                    <tr
-                      key={item.id}
-                      style={{ whiteSpace: "nowrap" }}
-                      onClick={(e) => {
-                        onChange({
-                          ...e,
-                          // This is a dirty hack until we have a proper form lib
-                          currentTarget: {
-                            ...e.currentTarget,
-                            value: item,
-                          },
-                        });
-
-                        setOpen(false);
-
-                        setSelectedData(item);
-                      }}
-                    >
-                      {Object.keys(item.attributes).map((key) => (
-                        <td key={key}>{item.attributes[key]}</td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </table>
-            </div>
-          ) : (
-            <div>No content</div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const InputOrGroup = ({
-  name,
-  field,
-  value,
-  onChange,
-  readOnly,
-}: {
-  name: string;
-  field: Field<any>;
-  value: any;
-  onChange: (e: React.FormEvent<HTMLInputElement>) => void;
-  readOnly: boolean;
-}) => {
-  if (field.type === "group") {
-    if (!field.items) {
-      return null;
-    }
-
-    // Can't support groups until we have proper form system
-    return <div>Groups not supported yet</div>;
-  }
-
-  if (field.type === "external") {
-    if (!field.adaptor) {
-      return null;
-    }
-
-    return (
-      <>
-        <div>{name}</div>
-        <ExternalInput field={field} onChange={onChange} />
-      </>
-    );
-  }
-
-  return (
-    <label>
-      <div>{name}</div>
-      {/* TODO use proper form lib */}
-      <input
-        autoComplete="off"
-        type={field.type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        readOnly={readOnly}
-        style={{
-          background: readOnly ? "#ddd" : "white",
-          border: "1px solid grey",
-        }}
-      />
-    </label>
-  );
 };
 
 export default function Page() {
