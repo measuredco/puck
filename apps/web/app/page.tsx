@@ -239,7 +239,7 @@ export default function Page() {
                               const newItem = {
                                 ...newData[i],
                                 props: {
-                                  ...newData[i],
+                                  ...newData[i].props,
                                   id: `${
                                     newData[i].type
                                   }-${new Date().getTime()}`,
