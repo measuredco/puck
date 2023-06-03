@@ -33,11 +33,6 @@
   border-top-right-radius: 32px;
 }
 
-.DraggableComponent:last-of-type .DraggableComponent-overlay {
-  border-bottom-left-radius: 32px;
-  border-bottom-right-radius: 32px;
-}
-
 .DraggableComponent-actions {
   display: none;
 }
