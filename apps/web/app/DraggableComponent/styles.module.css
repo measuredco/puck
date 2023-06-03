@@ -9,6 +9,7 @@
   top: 0;
   position: absolute;
   z-index: 1;
+  zoom: 1.33;
 }
 
 .DraggableComponent:hover .DraggableComponent-overlay {
@@ -43,13 +44,10 @@
 
 .DraggableComponent:hover .DraggableComponent-actions {
   position: absolute;
-
   right: 0;
   padding: 16px;
   border-bottom-left-radius: 8px;
   background: white;
-
   display: flex;
   gap: 8px;
-  z-index: -1;
 }

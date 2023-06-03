@@ -212,6 +212,7 @@ export default function Page() {
                         background: snapshot.isDraggingOver
                           ? "lightblue"
                           : "white",
+                        zoom: 0.75,
                       }}
                     >
                       {data.map((item, i) => {
