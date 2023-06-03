@@ -47,7 +47,10 @@ export default function Page() {
 
   const fields =
     selectedIndex !== null
-      ? (config[data[selectedIndex].type].fields as Record<string, Field<any>>)
+      ? (config[data[selectedIndex].type].fields as Record<
+          string,
+          Field<any>
+        >) || {}
       : {};
 
   return (
