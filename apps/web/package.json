@@ -14,7 +14,6 @@
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
-    "react-from-json": "^0.7.2",
     "ui": "*"
   },
   "devDependencies": {

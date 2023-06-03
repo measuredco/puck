@@ -1,7 +1,5 @@
-// react-from-json does not work with server components due to use of class components. This should still support SSR.
 "use client";
 
-import ReactFromJSON from "react-from-json";
 import { Fragment, useState } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import DroppableStrictMode from "../lib/droppable-strict-mode";
@@ -104,19 +102,15 @@ export default function Page() {
             <div style={{ borderBottom: "1px solid #dedede", padding: 16 }}>
               <h2>Outline</h2>
               <ul>
-                <ReactFromJSON
-                  entry={data}
-                  mapping={{
-                    default: (item) => (
-                      <li>
-                        {item._type}
-                        {typeof item.children === "object" && item.children && (
-                          <ul>{item.children}</ul>
-                        )}
-                      </li>
-                    ),
-                  }}
-                />
+                {data.map((item, i) => {
+                  return (
+                    <li key={i}>
+                      {item.type}
+                      {typeof item.props.children === "object" &&
+                        item.props.children && <ul>{item.props.children}</ul>}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
             <div style={{ padding: 16 }}>
