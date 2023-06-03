@@ -233,7 +233,17 @@ export default function Page() {
                             }}
                             onDuplicate={(e) => {
                               const newData = [...data];
-                              newData.splice(i, 0, newData[i]);
+                              const newItem = {
+                                ...newData[i],
+                                props: {
+                                  ...newData[i],
+                                  id: `${
+                                    newData[i].type
+                                  }-${new Date().getTime()}`,
+                                },
+                              };
+
+                              newData.splice(i + 1, 0, newItem);
 
                               setData(newData);
 
