@@ -7,11 +7,15 @@ export type Adaptor = {
 };
 
 export type Field<Props extends { [key: string]: any }> = {
-  type: "text" | "number" | "group" | "external";
+  type: "text" | "number" | "select" | "group" | "external";
   adaptor?: Adaptor;
   adaptorParams?: object;
   items?: {
     [SubPropName in keyof Props]: Field<Props[SubPropName]>;
+  }[];
+  options?: {
+    label: string;
+    value: string | number;
   }[];
 };
 

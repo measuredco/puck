@@ -11,7 +11,7 @@ export const InputOrGroup = ({
   name: string;
   field: Field<any>;
   value: any;
-  onChange: (e: React.FormEvent<HTMLInputElement>) => void;
+  onChange: (e: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => void;
   readOnly: boolean;
 }) => {
   if (field.type === "group") {
@@ -33,6 +33,27 @@ export const InputOrGroup = ({
         <div>{name}</div>
         <ExternalInput field={field} onChange={onChange} />
       </>
+    );
+  }
+
+  if (field.type === "select") {
+    if (!field.options) {
+      return null;
+    }
+
+    return (
+      <label>
+        <div>{name}</div>
+        <select onChange={onChange} value={value}>
+          {field.options.map((option) => (
+            <option
+              key={option.label + option.value}
+              label={option.label}
+              value={option.value}
+            />
+          ))}
+        </select>
+      </label>
     );
   }
 
