@@ -193,7 +193,7 @@ const InputOrGroup = ({
 
 export default function Page() {
   const [data, setData] = useState(initialData);
-  const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lockedFields, setLockedFields] = useState<string[]>([]);
 
   const { Base: BaseConfig, ...configWithoutBase } = config;
@@ -364,25 +364,22 @@ export default function Page() {
                         paddingBottom: 64,
                       }}
                     >
-                      {/* Using ReactFromJSON here instead of mapping over should allow us to do nestable draging */}
-                      <ReactFromJSON
-                        entry={data}
-                        mapping={{
-                          default: (item, i) => (
-                            <DraggableComponent
-                              id={`draggable-${item.id}`}
-                              index={item.propIndex}
-                              isSelected={selectedIndex === item.propIndex}
-                              onClick={(e) => {
-                                setSelectedIndex(item.propIndex);
-                                e.stopPropagation();
-                              }}
-                            >
-                              {config[item._type].render(item)}
-                            </DraggableComponent>
-                          ),
-                        }}
-                      />
+                      {data.map((item, i) => {
+                        return (
+                          <DraggableComponent
+                            key={item.props.id}
+                            id={`draggable-${item.props.id}`}
+                            index={i}
+                            isSelected={selectedIndex === i}
+                            onClick={(e) => {
+                              setSelectedIndex(i);
+                              e.stopPropagation();
+                            }}
+                          >
+                            {config[item.type].render(item.props)}
+                          </DraggableComponent>
+                        );
+                      })}
 
                       {provided.placeholder}
                     </div>
