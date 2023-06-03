@@ -186,6 +186,10 @@ const InputOrGroup = ({
         value={value}
         onChange={onChange}
         readOnly={readOnly}
+        style={{
+          background: readOnly ? "#ddd" : "white",
+          border: "1px solid grey",
+        }}
       />
     </label>
   );
