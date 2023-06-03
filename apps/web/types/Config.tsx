@@ -15,15 +15,19 @@ export type Field<Props extends { [key: string]: any }> = {
   }[];
 };
 
-export type Config<Props extends { [key: string]: any }> = {
-  [ComponentName in keyof Props]: {
-    render: (props: Props[ComponentName]) => ReactNode;
-    fields?: {
-      [PropName in keyof Required<Props[ComponentName]>]: Field<
-        Props[ComponentName][PropName][0]
-      >;
-    };
+export type ComponentConfig<
+  ComponentProps extends { [key: string]: any[] } = { [key: string]: any[] }
+> = {
+  render: (props: ComponentProps) => ReactNode;
+  fields?: {
+    [PropName in keyof Required<ComponentProps>]: Field<
+      ComponentProps[PropName][0]
+    >;
   };
+};
+
+export type Config<Props extends { [key: string]: any }> = {
+  [ComponentName in keyof Props]: ComponentConfig<Props[ComponentName]>;
 } & { Base?: { render: (props: any) => ReactElement } };
 
 export type InitialData<Props extends { [key: string]: any }> = {
