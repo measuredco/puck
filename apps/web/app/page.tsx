@@ -366,6 +366,9 @@ export default function Page() {
                       style={{
                         minHeight: "calc(100vh - 32px)",
                         paddingBottom: 64,
+                        background: snapshot.isDraggingOver
+                          ? "lightblue"
+                          : "white",
                       }}
                     >
                       {data.map((item, i) => {
