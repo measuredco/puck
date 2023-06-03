@@ -247,7 +247,7 @@ export default function Page() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "312px auto 312px",
+            gridTemplateColumns: "256px auto 256px",
             height: "100vh",
             position: "fixed",
             top: 0,
@@ -365,7 +365,6 @@ export default function Page() {
                       ref={provided.innerRef}
                       style={{
                         minHeight: "calc(100vh - 32px)",
-                        paddingBottom: 64,
                         background: snapshot.isDraggingOver
                           ? "lightblue"
                           : "white",
@@ -380,6 +379,23 @@ export default function Page() {
                             isSelected={selectedIndex === i}
                             onClick={(e) => {
                               setSelectedIndex(i);
+                              e.stopPropagation();
+                            }}
+                            onDelete={(e) => {
+                              const newData = [...data];
+                              newData.splice(i, 1);
+
+                              setSelectedIndex(null);
+                              setData(newData);
+
+                              e.stopPropagation();
+                            }}
+                            onDuplicate={(e) => {
+                              const newData = [...data];
+                              newData.splice(i, 0, newData[i]);
+
+                              setData(newData);
+
                               e.stopPropagation();
                             }}
                           >

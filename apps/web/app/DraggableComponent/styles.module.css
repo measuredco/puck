@@ -14,6 +14,7 @@
 .DraggableComponent:hover .DraggableComponent-overlay {
   display: block;
   background-color: #cdcdcd50;
+  box-shadow: inset 0 0 0 4px lightblue;
 }
 
 .DraggableComponent .DraggableComponent-overlay:hover {
@@ -29,4 +30,21 @@
 .DraggableComponent:first-of-type .DraggableComponent-overlay {
   border-top-left-radius: 32px;
   border-top-right-radius: 32px;
+}
+
+.DraggableComponent-actions {
+  display: none;
+}
+
+.DraggableComponent:hover .DraggableComponent-actions {
+  position: absolute;
+
+  right: 0;
+  padding: 16px;
+  border-bottom-left-radius: 8px;
+  background: white;
+
+  display: flex;
+  gap: 8px;
+  z-index: -1;
 }

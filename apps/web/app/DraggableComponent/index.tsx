@@ -11,12 +11,16 @@ export const DraggableComponent = ({
   index,
   isSelected = false,
   onClick = () => null,
+  onDelete = () => null,
+  onDuplicate = () => null,
 }: {
   children: ReactNode;
   id: string;
   index: number;
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
+  onDelete?: (e: SyntheticEvent) => void;
+  onDuplicate?: (e: SyntheticEvent) => void;
 }) => {
   return (
     <Draggable key={id} draggableId={id} index={index}>
@@ -29,7 +33,16 @@ export const DraggableComponent = ({
           onClick={onClick}
         >
           {children}
-          <div className={getClassName("overlay")} />
+          <div className={getClassName("overlay")}>
+            <div className={getClassName("actions")}>
+              <button className={getClassName("action")} onClick={onDuplicate}>
+                Duplicate
+              </button>
+              <button className={getClassName("action")} onClick={onDelete}>
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </Draggable>
