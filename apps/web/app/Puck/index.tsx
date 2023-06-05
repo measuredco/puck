@@ -105,7 +105,7 @@ export default function Puck({
         >
           <div>
             <div style={{ borderBottom: "1px solid #dedede", padding: 16 }}>
-              <h2>Outline</h2>
+              <h4>Outline</h4>
               <Space />
               <OutlineList>
                 {data.map((item, i) => {
@@ -123,7 +123,7 @@ export default function Puck({
               </OutlineList>
             </div>
             <div style={{ padding: 16 }}>
-              <h2>Components</h2>
+              <h4>Components</h4>
               <Space />
               <ComponentList config={configWithoutBase} />
             </div>
