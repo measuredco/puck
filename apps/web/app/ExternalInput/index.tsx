@@ -11,7 +11,7 @@ export const ExternalInput = ({
   value = null,
 }: {
   field: Field;
-  onChange: any;
+  onChange: (value: any) => void;
   value: any;
 }) => {
   const [data, setData] = useState([]);
@@ -45,7 +45,7 @@ export const ExternalInput = ({
             className={getClassName("detachButton")}
             onClick={() => {
               setSelectedData(null);
-              onChange({ currentTarget: { value: null } });
+              onChange(null);
             }}
           >
             Detach
@@ -76,14 +76,7 @@ export const ExternalInput = ({
                         key={item.id}
                         style={{ whiteSpace: "nowrap" }}
                         onClick={(e) => {
-                          onChange({
-                            ...e,
-                            // This is a dirty hack until we have a proper form lib
-                            currentTarget: {
-                              ...e.currentTarget,
-                              value: item,
-                            },
-                          });
+                          onChange(item);
 
                           setOpen(false);
 

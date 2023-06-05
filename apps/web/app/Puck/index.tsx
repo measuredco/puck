@@ -223,9 +223,7 @@ export default function Puck({
                       name={fieldName}
                       readOnly={lockedFields.indexOf(fieldName) > -1}
                       value={data[selectedIndex].props[fieldName]}
-                      onChange={(e) => {
-                        const value = e.currentTarget.value;
-
+                      onChange={(value) => {
                         // In case of _data, we replace everything
                         if (fieldName === "_data") {
                           // Reset the link if value is falsey

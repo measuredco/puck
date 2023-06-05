@@ -16,7 +16,7 @@ export const InputOrGroup = ({
   name: string;
   field: Field<any>;
   value: any;
-  onChange: (e: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onChange: (value: any) => void;
   readOnly: boolean;
 }) => {
   if (field.type === "group") {
@@ -51,7 +51,7 @@ export const InputOrGroup = ({
     return (
       <label className={getClassName()}>
         <div className={getClassName("label")}>{name}</div>
-        <select onChange={onChange} value={value}>
+        <select onChange={(e) => onChange(e.currentTarget.value)} value={value}>
           {field.options.map((option) => (
             <option
               key={option.label + option.value}
@@ -67,13 +67,12 @@ export const InputOrGroup = ({
   return (
     <label className={getClassName({ readOnly })}>
       <div className={getClassName("label")}>{name}</div>
-      {/* TODO use proper form lib */}
       <input
         autoComplete="off"
         type={field.type}
         name={name}
         value={value}
-        onChange={onChange}
+        onChange={(e) => onChange(e.currentTarget.value)}
         readOnly={readOnly}
       />
     </label>
