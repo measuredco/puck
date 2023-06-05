@@ -1,5 +1,10 @@
+import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Field } from "../../types/Config";
 import { ExternalInput } from "../ExternalInput";
+
+import styles from "./styles.module.css";
+
+const getClassName = getClassNameFactory("Input", styles);
 
 export const InputOrGroup = ({
   name,
@@ -29,10 +34,12 @@ export const InputOrGroup = ({
     }
 
     return (
-      <>
-        <div>{name}</div>
+      <div className={getClassName("")}>
+        <div className={getClassName("label")}>
+          {name === "_data" ? "External content" : name}
+        </div>
         <ExternalInput field={field} onChange={onChange} />
-      </>
+      </div>
     );
   }
 
@@ -42,8 +49,8 @@ export const InputOrGroup = ({
     }
 
     return (
-      <label>
-        <div>{name}</div>
+      <label className={getClassName()}>
+        <div className={getClassName("label")}>{name}</div>
         <select onChange={onChange} value={value}>
           {field.options.map((option) => (
             <option
@@ -58,8 +65,8 @@ export const InputOrGroup = ({
   }
 
   return (
-    <label>
-      <div>{name}</div>
+    <label className={getClassName({ readOnly })}>
+      <div className={getClassName("label")}>{name}</div>
       {/* TODO use proper form lib */}
       <input
         autoComplete="off"
@@ -68,10 +75,6 @@ export const InputOrGroup = ({
         value={value}
         onChange={onChange}
         readOnly={readOnly}
-        style={{
-          background: readOnly ? "#ddd" : "white",
-          border: "1px solid grey",
-        }}
       />
     </label>
   );

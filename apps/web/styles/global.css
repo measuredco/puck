@@ -1,0 +1,78 @@
+@import "./color.css";
+@import "./typography.css";
+
+html {
+  background-color: var(--color-neutral-0);
+}
+
+html,
+body {
+  padding: 0;
+  letter-spacing: 0.02ch;
+  margin: 0;
+  font-family: var(--font-stack);
+}
+
+body {
+  background-color: white;
+}
+
+@supports (font-variation-settings: normal) {
+  html,
+  body {
+    font-family: var(--font-stack-variable);
+  }
+}
+
+a {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+b {
+  font-weight: 600;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/**
+ * Removes the default spacing and border for appropriate elements.
+ */
+
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+figure,
+p,
+pre {
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+}
+
+ol,
+ul {
+  list-style: none;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+}

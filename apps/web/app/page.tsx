@@ -1,12 +1,14 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { DragDropContext, Draggable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 import DroppableStrictMode from "../lib/droppable-strict-mode";
 import config, { initialData } from "../lib/config.bt";
 import { DraggableComponent } from "./DraggableComponent";
-import type { ComponentConfig, Field } from "../types/Config";
+import type { Field } from "../types/Config";
 import { InputOrGroup } from "./InputOrGroup";
+import { ComponentList } from "./ComponentList";
+import { OutlineList } from "./OutlineList";
 
 const reorder = (list: any[], startIndex, endIndex) => {
   const result = Array.from(list);
@@ -33,6 +35,8 @@ const filter = (obj: object, validKeys: string[]) => {
     return acc;
   }, {});
 };
+
+const Space = () => <div style={{ marginBottom: 16 }} />;
 
 export default function Page() {
   const [data, setData] = useState(initialData);
@@ -101,85 +105,26 @@ export default function Page() {
           <div>
             <div style={{ borderBottom: "1px solid #dedede", padding: 16 }}>
               <h2>Outline</h2>
-              <ul>
+              <Space />
+              <OutlineList>
                 {data.map((item, i) => {
                   return (
-                    <li key={i}>
+                    <OutlineList.Item
+                      key={i}
+                      onClick={() => {
+                        setSelectedIndex(i);
+                      }}
+                    >
                       {item.type}
-                      {typeof item.props.children === "object" &&
-                        item.props.children && <ul>{item.props.children}</ul>}
-                    </li>
+                    </OutlineList.Item>
                   );
                 })}
-              </ul>
+              </OutlineList>
             </div>
             <div style={{ padding: 16 }}>
               <h2>Components</h2>
-              <div
-                style={{
-                  display: "grid",
-                  gridGap: 16,
-                }}
-              >
-                <DroppableStrictMode
-                  droppableId="component-list"
-                  isDropDisabled
-                >
-                  {(provided, snapshot) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
-                      {Object.keys(configWithoutBase).map((componentKey, i) => {
-                        const componentConfig: ComponentConfig =
-                          config[componentKey];
-
-                        return (
-                          <Draggable
-                            key={componentKey}
-                            draggableId={componentKey}
-                            index={i}
-                          >
-                            {(provided, snapshot) => (
-                              <>
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                >
-                                  <div
-                                    style={{
-                                      background: "white",
-                                      padding: 8,
-                                      display: "flex",
-                                      border: "1px #ccc solid",
-                                      borderRadius: 8,
-                                      marginBottom: 16,
-                                    }}
-                                  >
-                                    {componentKey}
-                                  </div>
-                                </div>
-                                {/* Needs CSS adding, per https://github.com/atlassian/react-beautiful-dnd/issues/216#issuecomment-423708497 */}
-                                {snapshot.isDragging && (
-                                  <div
-                                    style={{
-                                      padding: 8,
-                                      display: "flex",
-                                      border: "1px #ccc solid",
-                                      borderRadius: 8,
-                                      marginBottom: 16,
-                                    }}
-                                  >
-                                    {componentKey}
-                                  </div>
-                                )}
-                              </>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                    </div>
-                  )}
-                </DroppableStrictMode>
-              </div>
+              <Space />
+              <ComponentList config={configWithoutBase} />
             </div>
           </div>
           <div
@@ -260,10 +205,12 @@ export default function Page() {
               </Base>
             </div>
           </div>
-          <div style={{ padding: 16 }}>
+          <div style={{ padding: 16, overflowY: "scroll" }}>
             {selectedIndex !== null ? (
               <>
                 <h2>{data[selectedIndex].type}</h2>
+
+                <Space />
 
                 {Object.keys(fields).map((fieldName) => {
                   const field = fields[fieldName];

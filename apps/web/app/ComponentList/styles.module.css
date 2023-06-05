@@ -1,0 +1,24 @@
+.ComponentList {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 100%;
+  gap: 16px;
+}
+
+.ComponentList-item,
+.ComponentList-itemShadow {
+  background: white;
+  color: var(--color-neutral-4);
+  padding: 16px;
+  display: flex;
+  border: 1px #ccc solid;
+  border-radius: 8px;
+  font-size: var(--font-size-xxs);
+  font-weight: 600;
+  justify-content: center;
+  cursor: grab;
+}
+
+.ComponentList-item:hover {
+  background-color: var(--color-neutral-1);
+}

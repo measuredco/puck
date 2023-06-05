@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import styles from "./styles.module.css";
+import getClassNameFactory from "../../lib/get-class-name-factory";
+
+const getClassName = getClassNameFactory("ExternalInput", styles);
 
 export const ExternalInput = ({
   field,
@@ -18,15 +22,24 @@ export const ExternalInput = ({
   }, [field.adaptor, field.adaptorParams]);
 
   return (
-    <div>
-      <div style={{ display: "flex" }}>
-        <button onClick={() => setOpen(true)}>
+    <div
+      className={getClassName({
+        hasData: !!selectedData,
+        modalVisible: isOpen,
+      })}
+    >
+      <div className={getClassName("actions")}>
+        <button
+          onClick={() => setOpen(true)}
+          className={getClassName("button")}
+        >
           {selectedData
-            ? `${field.adaptor.name}: ${selectedData.attributes.title}`
+            ? selectedData.attributes.title
             : `Select from ${field.adaptor.name}`}
         </button>
         {selectedData && (
           <button
+            className={getClassName("detachButton")}
             onClick={() => {
               setSelectedData(null);
               onChange({ currentTarget: { value: null } });
@@ -36,70 +49,51 @@ export const ExternalInput = ({
           </button>
         )}
       </div>
-      <div
-        style={{
-          background: "#00000080",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          display: isOpen ? "flex" : "none",
-          zIndex: 1,
-        }}
-        onClick={() => setOpen(false)}
-      >
+      <div className={getClassName("modal")} onClick={() => setOpen(false)}>
         <div
-          style={{
-            width: "100%",
-            maxWidth: 1024,
-            padding: 32,
-            borderRadius: 32,
-            overflow: "hidden",
-            background: "white",
-          }}
+          className={getClassName("modalInner")}
           onClick={(e) => e.stopPropagation()}
         >
-          <h2>Select content</h2>
+          <h2 className={getClassName("modalHeading")}>Select content</h2>
 
           {data.length ? (
-            <div style={{ overflowX: "scroll" }}>
-              <table cellPadding="8" cellSpacing="8">
-                <tr>
+            <div className={getClassName("modalTableWrapper")}>
+              <table>
+                <thead>
                   {Object.keys(data[0].attributes).map((key) => (
                     <th key={key} style={{ textAlign: "left" }}>
                       {key}
                     </th>
                   ))}
-                </tr>
-                {data.map((item) => {
-                  return (
-                    <tr
-                      key={item.id}
-                      style={{ whiteSpace: "nowrap" }}
-                      onClick={(e) => {
-                        onChange({
-                          ...e,
-                          // This is a dirty hack until we have a proper form lib
-                          currentTarget: {
-                            ...e.currentTarget,
-                            value: item,
-                          },
-                        });
+                </thead>
+                <tbody>
+                  {data.map((item) => {
+                    return (
+                      <tr
+                        key={item.id}
+                        style={{ whiteSpace: "nowrap" }}
+                        onClick={(e) => {
+                          onChange({
+                            ...e,
+                            // This is a dirty hack until we have a proper form lib
+                            currentTarget: {
+                              ...e.currentTarget,
+                              value: item,
+                            },
+                          });
 
-                        setOpen(false);
+                          setOpen(false);
 
-                        setSelectedData(item);
-                      }}
-                    >
-                      {Object.keys(item.attributes).map((key) => (
-                        <td key={key}>{item.attributes[key]}</td>
-                      ))}
-                    </tr>
-                  );
-                })}
+                          setSelectedData(item);
+                        }}
+                      >
+                        {Object.keys(item.attributes).map((key) => (
+                          <td key={key}>{item.attributes[key]}</td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
               </table>
             </div>
           ) : (

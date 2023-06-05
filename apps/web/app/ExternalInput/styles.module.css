@@ -1,0 +1,127 @@
+.ExternalInput-actions {
+  display: flex;
+}
+
+.ExternalInput-button {
+  background-color: white;
+  border: 1px solid var(--color-neutral-2);
+  border-radius: 4px;
+  color: var(--color-blue);
+  padding: 12px 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: relative;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.ExternalInput-button:hover,
+.ExternalInput-detachButton:hover {
+  cursor: pointer;
+  background: var(--color-neutral-0);
+  border-color: var(--color-neutral-3);
+  z-index: 1;
+}
+
+.ExternalInput--hasData .ExternalInput-button {
+  color: var(--color-neutral-4);
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.ExternalInput-detachButton {
+  border: 1px solid var(--color-neutral-2);
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  background-color: var(--color-neutral-1);
+  padding: 8px 12px;
+  margin-left: -1px;
+}
+
+.ExternalInput-modal {
+  background: #00000099;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  padding: 64px;
+}
+
+.ExternalInput--modalVisible .ExternalInput-modal {
+  display: flex;
+}
+
+.ExternalInput-modalInner {
+  width: 100%;
+  max-width: 1024px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.ExternalInput-modalHeading {
+  background-color: var(--color-neutral-blue);
+  color: white;
+  padding: 32px 24px;
+  border-bottom: 1px solid var(--color-neutral-4);
+}
+
+.ExternalInput-modalTableWrapper {
+  overflow-x: scroll;
+  overflow-y: scroll;
+  flex-grow: 1;
+}
+
+.ExternalInput table {
+  border-spacing: 0px;
+  color: var(--color-neutral-4);
+  position: relative;
+}
+
+.ExternalInput thead {
+  position: sticky;
+  top: 0;
+}
+
+.ExternalInput th {
+  background-color: var(--color-neutral-blue);
+  color: white;
+  border-bottom: 1px solid var(--color-neutral-3);
+  font-weight: 700;
+  padding: 16px 24px;
+  opacity: 0.9;
+}
+
+.ExternalInput td {
+  padding: 16px 24px;
+}
+
+.ExternalInput tr:nth-of-type(2n) {
+  background-color: var(--color-neutral-1);
+}
+
+.ExternalInput tr td:first-of-type {
+  font-weight: 500;
+}
+
+.ExternalInput tr:hover {
+  background: var(--color-neutral-0);
+  color: var(--color-blue);
+  cursor: pointer;
+  position: relative;
+  margin-left: -5px;
+}
+
+.ExternalInput tr:hover td:first-of-type {
+  border-left: 4px solid var(--color-blue);
+  padding-left: 20px;
+}

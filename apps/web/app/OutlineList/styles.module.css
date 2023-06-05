@@ -1,0 +1,34 @@
+.OutlineList {
+  padding-left: 16px;
+  position: relative;
+}
+
+.OutlineList::before {
+  background: var(--color-neutral-3);
+  position: absolute;
+  left: -1px;
+  top: 0px;
+  width: 1px;
+  height: calc(100% - 9px);
+  content: "";
+}
+
+.OutlineList li {
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.OutlineList li::before {
+  background: var(--color-neutral-3);
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  width: 12px;
+  height: 1px;
+  content: "";
+}
+
+.OutlineList li:hover {
+  color: var(--color-blue);
+  cursor: pointer;
+}

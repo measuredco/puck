@@ -1,0 +1,114 @@
+@import url("https://rsms.me/inter/inter.css");
+
+:root {
+  /**
+     * Modular Scale
+     *
+     * 2:1 - octave - 2.0
+     *
+     * Base: 12px
+     *
+     * Interval: 5
+     *
+     * http://spencermortensen.com/articles/typographic-scale/
+     *
+     * Spacing unit: 16px * 1.5 = 24px
+     *
+     * Root/html font-size is undefined (browser default)
+     *
+     * 1rem = 16px
+     */
+
+  /* Unitless font sizes
+       ======================================================================== */
+
+  --font-size-scale-base-unitless: 12;
+  --font-size-xxxs-unitless: 12;
+  --font-size-xxs-unitless: 14;
+  --font-size-xs-unitless: 16;
+  --font-size-s-unitless: 18;
+  --font-size-m-unitless: 21;
+  --font-size-l-unitless: 24;
+  --font-size-xl-unitless: 28;
+  --font-size-xxl-unitless: 36;
+  --font-size-xxxl-unitless: 48;
+  --font-size-xxxxl-unitless: 56;
+
+  /* Descriptive font sizes
+       ======================================================================== */
+
+  --font-size-xxxs: calc(1rem * var(--font-size-xxxs-unitless) / 16);
+  --font-size-xxs: calc(1rem * var(--font-size-xxs-unitless) / 16);
+  --font-size-xs: calc(1rem * var(--font-size-xs-unitless) / 16);
+  --font-size-s: calc(1rem * var(--font-size-s-unitless) / 16);
+  --font-size-m: calc(1rem * var(--font-size-m-unitless) / 16);
+  --font-size-l: calc(1rem * var(--font-size-l-unitless) / 16);
+  --font-size-xl: calc(1rem * var(--font-size-xl-unitless) / 16);
+  --font-size-xxl: calc(1rem * var(--font-size-xxl-unitless) / 16);
+  --font-size-xxxl: calc(1rem * var(--font-size-xxxl-unitless) / 16);
+  --font-size-xxxxl: calc(1rem * var(--font-size-xxxxl-unitless) / 16);
+
+  /* Functional font sizes
+      ========================================================================= */
+
+  --font-size-base: var(--font-size-xs);
+
+  /* Descriptive line heights
+      ========================================================================= */
+
+  --line-height-reset: 1;
+  --line-height-xs: calc(var(--space-m-unitless) / var(--font-size-m-unitless));
+  --line-height-s: calc(var(--space-m-unitless) / var(--font-size-s-unitless));
+  --line-height-m: calc(var(--space-m-unitless) / var(--font-size-xs-unitless));
+  --line-height-l: calc(
+    var(--space-m-unitless) / var(--font-size-xxs-unitless)
+  );
+  --line-height-xl: calc(
+    var(--space-m-unitless) / var(--font-size-scale-base-unitless)
+  );
+
+  /* Functional line heights
+      ========================================================================= */
+
+  --line-height-base: var(--line-height-m);
+
+  /* Font families
+       ======================================================================== */
+
+  /* Stacks */
+  --font-stack: Inter, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Helvetica Neue, sans-serif, Apple Color Emoji, Segoe UI Emoji,
+    Segoe UI Symbol;
+  --font-stack-variable: "Inter var", -apple-system, BlinkMacSystemFont,
+    Segoe UI, Helvetica Neue, sans-serif, Apple Color Emoji, Segoe UI Emoji,
+    Segoe UI Symbol;
+
+  /* Values */
+  --font-family-monospaced: "Menlo", "Monaco", "Liberation Mono", "Consolas",
+    "Courier New", monospace;
+  --font-family-proportional: var(--font-stack), sans-serif;
+}
+
+h1 {
+  font-size: var(--font-size-xxl);
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+}
+
+h3 {
+  font-size: var(--font-size-l);
+}
+
+h4 {
+  font-size: var(--font-size-m);
+}
+
+h5 {
+  font-size: var(--font-size-s);
+}
+
+h6 {
+  font-size: var(--font-size-xs);
+}

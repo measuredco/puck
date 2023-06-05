@@ -30,7 +30,9 @@ export type ComponentConfig<
   };
 };
 
-export type Config<Props extends { [key: string]: any }> = {
+export type Config<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = {
   [ComponentName in keyof Props]: ComponentConfig<Props[ComponentName]>;
 } & { Base?: { render: (props: any) => ReactElement } };
 
