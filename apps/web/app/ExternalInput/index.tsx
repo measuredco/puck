@@ -36,6 +36,7 @@ export const ExternalInput = ({
           onClick={() => setOpen(true)}
           className={getClassName("button")}
         >
+          {/* NB this is hardcoded to strapi for now */}
           {selectedData
             ? selectedData.attributes.title
             : `Select from ${field.adaptor.name}`}

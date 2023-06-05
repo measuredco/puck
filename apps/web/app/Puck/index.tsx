@@ -233,7 +233,7 @@ export default function Puck({
                                 ...data[selectedIndex],
                                 props: {
                                   ...data[selectedIndex].props,
-                                  _data: {},
+                                  _data: undefined,
                                 },
                               })
                             );
