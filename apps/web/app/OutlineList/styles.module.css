@@ -22,9 +22,9 @@
 .OutlineList li::before {
   background: var(--color-neutral-3);
   position: absolute;
-  left: -16px;
+  left: -17px;
   top: 50%;
-  width: 12px;
+  width: 13px;
   height: 1px;
   content: "";
 }
