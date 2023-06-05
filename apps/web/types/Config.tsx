@@ -36,7 +36,9 @@ export type Config<
   [ComponentName in keyof Props]: ComponentConfig<Props[ComponentName]>;
 } & { Base?: { render: (props: any) => ReactElement } };
 
-export type InitialData<Props extends { [key: string]: any }> = {
+export type InitialData<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = {
   type: keyof Props;
   props: {
     [key: string]: any;
