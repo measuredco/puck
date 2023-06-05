@@ -63,11 +63,13 @@ export const ExternalInput = ({
             <div className={getClassName("modalTableWrapper")}>
               <table>
                 <thead>
-                  {Object.keys(data[0].attributes).map((key) => (
-                    <th key={key} style={{ textAlign: "left" }}>
-                      {key}
-                    </th>
-                  ))}
+                  <tr>
+                    {Object.keys(data[0].attributes).map((key) => (
+                      <th key={key} style={{ textAlign: "left" }}>
+                        {key}
+                      </th>
+                    ))}
+                  </tr>
                 </thead>
                 <tbody>
                   {data.map((item) => {
