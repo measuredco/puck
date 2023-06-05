@@ -1,8 +1,8 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import DroppableStrictMode from "../../lib/droppable-strict-mode";
 import { DraggableComponent } from "../DraggableComponent";
-import type { Config, Field, InitialData } from "../../types/Config";
+import type { Config, Data, Field } from "../../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
 import { OutlineList } from "../OutlineList";
@@ -38,9 +38,13 @@ const Space = () => <div style={{ marginBottom: 16 }} />;
 export default function Puck({
   config,
   initialData,
+  onChange,
+  onPublish,
 }: {
   config: Config;
-  initialData: InitialData;
+  initialData: Data;
+  onChange?: (data: Data) => void;
+  onPublish: (data: Data) => void;
 }) {
   const [data, setData] = useState(initialData);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -57,6 +61,10 @@ export default function Puck({
           Field<any>
         >) || {}
       : {};
+
+  useEffect(() => {
+    if (onChange) onChange(data);
+  }, [data, onChange]);
 
   return (
     <>
@@ -94,7 +102,9 @@ export default function Puck({
         <div
           style={{
             display: "grid",
+            gridTemplateAreas: '"header header header" "left editor right"',
             gridTemplateColumns: "256px auto 256px",
+            gridTemplateRows: "min-content auto",
             height: "100vh",
             position: "fixed",
             top: 0,
@@ -103,8 +113,37 @@ export default function Puck({
             right: 0,
           }}
         >
-          <div>
-            <div style={{ borderBottom: "1px solid #dedede", padding: 16 }}>
+          <header
+            style={{
+              display: "flex",
+
+              gridArea: "header",
+              borderBottom: "1px solid #cccccc",
+              padding: 16,
+            }}
+          >
+            <button
+              onClick={() => onPublish(data)}
+              style={{
+                marginLeft: "auto",
+                background: "var(--color-blue)",
+                border: "none",
+                borderRadius: 4,
+                padding: "12px 16px",
+                color: "white",
+                fontWeight: 600,
+              }}
+            >
+              Publish
+            </button>
+          </header>
+          <div style={{ gridArea: "left" }}>
+            <div
+              style={{
+                borderBottom: "1px solid #dedede",
+                padding: 16,
+              }}
+            >
               <h4>Outline</h4>
               <Space />
               <OutlineList>
@@ -129,7 +168,12 @@ export default function Puck({
             </div>
           </div>
           <div
-            style={{ background: "#dedede", padding: 32, overflowY: "auto" }}
+            style={{
+              background: "#dedede",
+              padding: 32,
+              overflowY: "auto",
+              gridArea: "editor",
+            }}
             onClick={() => setSelectedIndex(null)}
           >
             <div
@@ -137,7 +181,6 @@ export default function Puck({
                 background: "#eee",
                 border: "1px solid #dedede",
                 borderRadius: 32,
-
                 overflow: "hidden",
               }}
             >
@@ -206,7 +249,7 @@ export default function Puck({
               </Base>
             </div>
           </div>
-          <div style={{ padding: 16, overflowY: "scroll" }}>
+          <div style={{ padding: 16, overflowY: "scroll", gridArea: "right" }}>
             {selectedIndex !== null ? (
               <>
                 <h2>{data[selectedIndex].type}</h2>
