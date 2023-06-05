@@ -38,7 +38,7 @@ export const InputOrGroup = ({
         <div className={getClassName("label")}>
           {name === "_data" ? "External content" : name}
         </div>
-        <ExternalInput field={field} onChange={onChange} />
+        <ExternalInput field={field} onChange={onChange} value={value} />
       </div>
     );
   }

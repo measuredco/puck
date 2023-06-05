@@ -6,7 +6,9 @@ export type Adaptor = {
   fetchList: (adaptorParams: object) => Promise<object[] | null>;
 };
 
-export type Field<Props extends { [key: string]: any }> = {
+export type Field<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = {
   type: "text" | "number" | "select" | "group" | "external";
   adaptor?: Adaptor;
   adaptorParams?: object;

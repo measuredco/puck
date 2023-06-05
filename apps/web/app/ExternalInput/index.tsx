@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
+import { Field } from "../../types/Config";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
 
 export const ExternalInput = ({
   field,
   onChange,
+  value = null,
 }: {
-  field: any;
+  field: Field;
   onChange: any;
+  value: any;
 }) => {
   const [data, setData] = useState([]);
   const [isOpen, setOpen] = useState(false);
-  const [selectedData, setSelectedData] = useState(null);
+  const [selectedData, setSelectedData] = useState(value);
 
   useEffect(() => {
     (async () => {

@@ -233,7 +233,10 @@ export default function Puck({
                             setData(
                               replace(data, selectedIndex, {
                                 ...data[selectedIndex],
-                                _meta: {},
+                                props: {
+                                  ...data[selectedIndex].props,
+                                  _data: {},
+                                },
                               })
                             );
 
@@ -251,12 +254,10 @@ export default function Puck({
                           setData(
                             replace(data, selectedIndex, {
                               ...data[selectedIndex],
-                              _meta: {
-                                adaptorId: (value as any).id,
-                              },
                               props: {
                                 ...data[selectedIndex].props,
                                 ...changedFields,
+                                _data: value, // TODO perf - this is duplicative and will make payload larger
                               },
                             })
                           );
