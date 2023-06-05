@@ -64,7 +64,8 @@ export default function Puck({
 
   useEffect(() => {
     if (onChange) onChange(data);
-  }, [data, onChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   return (
     <>

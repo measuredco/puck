@@ -1,16 +1,19 @@
 "use client";
 
-import Puck from "./Puck";
-import config, { initialData } from "../lib/config";
+import config from "../lib/config.bt";
+import { Data } from "../types/Config";
 
-export default function Page() {
-  return (
-    <Puck
-      config={config}
-      initialData={initialData}
-      onPublish={(data) => {
-        console.log(data);
-      }}
-    />
-  );
+export default async function Page() {
+  const data: Data = await fetch("http://localhost:3000/api/puck", {
+    next: { revalidate: 0 },
+  }).then((res) => res.json());
+
+  // TODO add key
+  const children = data.map((item) => config[item.type].render(item.props));
+
+  if (config.Base) {
+    return <config.Base.render>{children}</config.Base.render>;
+  }
+
+  return <div>{children}</div>;
 }
