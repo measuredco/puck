@@ -1,7 +1,7 @@
 "use client";
 
 import Puck from "core/Puck";
-import config, { initialData } from "../config";
+import config, { initialData } from "../../puck.config";
 import { Data } from "core/types/Config";
 
 export default async function Page() {
