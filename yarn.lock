@@ -7,20 +7,20 @@
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.2.0.tgz#e1a84fca468f4b337816fcb7f0964beb620ba855"
   integrity sha512-E09FiIft46CmH5Qnjb0wsW54/YQd69LsxeKUOWawmws1XWvyFGURnAChH0mlr7YPFR1ofwvUQfcL0J3lMxXqPA==
 
-"@arc-ui/components@^11.4.2":
-  version "11.4.2"
-  resolved "https://registry.yarnpkg.com/@arc-ui/components/-/components-11.4.2.tgz#91debc201a8fdb4422394e411771f4f31b41b013"
-  integrity sha512-FiRY9E1QARpMo9HQDJuxdmpmzLc9u0DYQ75HHdZvId+5WUd6biIP3c0COGnSuU3dh3sLUy1OgnH1wlkXzi4+gA==
+"@arc-ui/components@^10.0.1":
+  version "10.8.1"
+  resolved "https://registry.yarnpkg.com/@arc-ui/components/-/components-10.8.1.tgz#13bbfbd462bd461eaf38e46be5ca04f253661eb9"
+  integrity sha512-3QyuqWx8pocFhMrsUp4HKycsn22RPn759wxnOb34Bqy2SJInfea0exyugKQWzYTLFg2YsLye7gCc06sDcY2RZQ==
   dependencies:
     "@radix-ui/react-dialog" "1.0.2"
     "@radix-ui/react-label" "2.0.0"
     "@radix-ui/react-select" "1.1.2"
     "@radix-ui/react-switch" "^1.0.1"
 
-"@arc-ui/fonts@^11.4.2":
-  version "11.4.2"
-  resolved "https://registry.yarnpkg.com/@arc-ui/fonts/-/fonts-11.4.2.tgz#cecf1a03e968559b4b94f85d38aa6cb2530d4c30"
-  integrity sha512-y1ebWccitm9ihsTnw7NgztRrp8irBLnz2YV37g2AMm0f+Vzf+sTfiGxSx4gGXXjic0baOTnSLbOkqwRwZ5ZR4g==
+"@arc-ui/fonts@^10.0.1":
+  version "10.8.1"
+  resolved "https://registry.yarnpkg.com/@arc-ui/fonts/-/fonts-10.8.1.tgz#0a38f6bcdd596c4ede6036ddbbcea0114cfe81eb"
+  integrity sha512-ROiuFKRabYgc0UOSekDvdZ42cH2BdjqvfEUjY16HJBkitEAV8uZlslBvhj4QovXeuFzQrmapB7EcKuxQ2FzxZw==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
