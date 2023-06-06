@@ -1,8 +1,8 @@
-.DraggableComponent {
+:global(.puck) .DraggableComponent {
   position: relative;
 }
 
-.DraggableComponent-overlay {
+:global(.puck) .DraggableComponent-overlay {
   display: none;
   height: 100%;
   width: 100%;
@@ -12,32 +12,32 @@
   zoom: 1.33;
 }
 
-.DraggableComponent:hover .DraggableComponent-overlay {
+:global(.puck) .DraggableComponent:hover .DraggableComponent-overlay {
   display: block;
   background-color: #cdcdcd50;
   box-shadow: inset 0 0 0 4px lightblue;
 }
 
-.DraggableComponent .DraggableComponent-overlay:hover {
+:global(.puck) .DraggableComponent .DraggableComponent-overlay:hover {
   z-index: 1;
 }
 
-.DraggableComponent--isSelected .DraggableComponent-overlay {
+:global(.puck) .DraggableComponent--isSelected .DraggableComponent-overlay {
   box-shadow: inset 0 0 0 4px lightblue;
   display: block;
   z-index: 1;
 }
 
-.DraggableComponent:first-of-type .DraggableComponent-overlay {
+:global(.puck) .DraggableComponent:first-of-type .DraggableComponent-overlay {
   border-top-left-radius: 32px;
   border-top-right-radius: 32px;
 }
 
-.DraggableComponent-actions {
+:global(.puck) .DraggableComponent-actions {
   display: none;
 }
 
-.DraggableComponent:hover .DraggableComponent-actions {
+:global(.puck) .DraggableComponent:hover .DraggableComponent-actions {
   position: absolute;
   right: 0;
   padding: 8px;
@@ -45,20 +45,20 @@
   background: white;
   display: flex;
   gap: 8px;
-  border: 1px solid var(--color-neutral-3);
+  border: 1px solid var(--puck-color-neutral-3);
 }
 
-.DraggableComponent-action {
-  background: var(--color-neutral-0);
-  border: 1px solid var(--color-neutral-3);
-  color: var(--color-neutral-4);
+:global(.puck) .DraggableComponent-action {
+  background: var(--puck-color-neutral-0);
+  border: 1px solid var(--puck-color-neutral-3);
+  color: var(--puck-color-neutral-4);
   padding: 12px 16px;
   border-radius: 4px;
   font-weight: 600;
-  font-size: var(--font-size-xxxs);
+  font-size: var(--puck-font-size-xxxs);
 }
 
-.DraggableComponent-action:hover {
-  background: var(--color-neutral-1);
+:global(.puck) .DraggableComponent-action:hover {
+  background: var(--puck-color-neutral-1);
   cursor: pointer;
 }

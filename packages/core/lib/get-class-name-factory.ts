@@ -17,7 +17,7 @@ export const getGlobalClassName = (rootClass, options) => {
 };
 
 const getClassNameFactory =
-  (rootClass, styles) =>
+  (rootClass, styles, { baseClass = "puck " } = {}) =>
   (options = {}) => {
     let descendant: any = false;
     let modifiers: any = false;
@@ -29,7 +29,7 @@ const getClassNameFactory =
     }
 
     if (descendant) {
-      return styles[`${rootClass}-${descendant}`] || "";
+      return baseClass + styles[`${rootClass}-${descendant}`] || "";
     } else if (modifiers) {
       const prefixedModifiers = {};
 
@@ -40,12 +40,15 @@ const getClassNameFactory =
 
       const c = styles[rootClass];
 
-      return classnames({
-        [c]: !!c, // only apply the class if it exists
-        ...prefixedModifiers,
-      });
+      return (
+        baseClass +
+        classnames({
+          [c]: !!c, // only apply the class if it exists
+          ...prefixedModifiers,
+        })
+      );
     } else {
-      return styles[rootClass] || "";
+      return baseClass + styles[rootClass] || "";
     }
   };
 

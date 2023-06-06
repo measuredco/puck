@@ -58,7 +58,7 @@ export function Puck({
 
   const fields =
     selectedIndex !== null
-      ? (config[data[selectedIndex].type].fields as Record<
+      ? (config[data[selectedIndex].type]?.fields as Record<
           string,
           Field<any>
         >) || {}
@@ -70,7 +70,7 @@ export function Puck({
   }, [data]);
 
   return (
-    <>
+    <div className="puck">
       <DragDropContext
         onDragEnd={(droppedItem) => {
           if (!droppedItem.destination) {
@@ -134,7 +134,7 @@ export function Puck({
               onClick={() => onPublish(data)}
               style={{
                 marginLeft: "auto",
-                background: "var(--color-blue)",
+                background: "var(--puck-color-blue)",
                 border: "none",
                 borderRadius: 4,
                 padding: "12px 16px",
@@ -245,7 +245,11 @@ export function Puck({
                               e.stopPropagation();
                             }}
                           >
-                            {config[item.type].render(item.props)}
+                            {config[item.type] ? (
+                              config[item.type].render(item.props)
+                            ) : (
+                              <div>No configuration for {item.type}</div>
+                            )}
                           </DraggableComponent>
                         );
                       })}
@@ -332,6 +336,6 @@ export function Puck({
           </div>
         </div>
       </DragDropContext>
-    </>
+    </div>
   );
 }

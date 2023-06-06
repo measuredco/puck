@@ -1,11 +1,11 @@
-.OutlineList {
+:global(.puck) .OutlineList {
   margin: 16px;
   padding-left: 16px;
   position: relative;
 }
 
-.OutlineList::before {
-  background: var(--color-neutral-3);
+:global(.puck) .OutlineList::before {
+  background: var(--puck-color-neutral-3);
   position: absolute;
   left: -1px;
   top: 0px;
@@ -14,13 +14,13 @@
   content: "";
 }
 
-.OutlineList li {
+:global(.puck) .OutlineList li {
   position: relative;
   margin-bottom: 4px;
 }
 
-.OutlineList li::before {
-  background: var(--color-neutral-3);
+:global(.puck) .OutlineList li::before {
+  background: var(--puck-color-neutral-3);
   position: absolute;
   left: -17px;
   top: 50%;
@@ -29,7 +29,7 @@
   content: "";
 }
 
-.OutlineList li:hover {
-  color: var(--color-blue);
+:global(.puck) .OutlineList li:hover {
+  color: var(--puck-color-blue);
   cursor: pointer;
 }

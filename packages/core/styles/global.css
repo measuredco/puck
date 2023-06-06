@@ -1,44 +1,34 @@
 @import "./color.css";
 @import "./typography.css";
 
-html {
-  background-color: var(--color-neutral-0);
-}
-
-html,
-body {
+.puck {
   padding: 0;
   letter-spacing: 0.02ch;
   margin: 0;
-  font-family: var(--font-stack);
-}
-
-body {
-  background-color: white;
+  font-family: var(--puck-font-stack);
 }
 
 @supports (font-variation-settings: normal) {
-  html,
-  body {
-    font-family: var(--font-stack-variable);
+  .puck {
+    font-family: var(--puck-font-stack-variable);
   }
 }
 
-a {
-  color: var(--color-primary);
+.puck a {
+  color: var(--puck-color-primary);
   font-weight: 500;
   text-decoration: none;
 }
 
-a:hover {
+.puck a:hover {
   text-decoration: underline;
 }
 
-b {
+.puck b {
   font-weight: 600;
 }
 
-* {
+.puck * {
   box-sizing: border-box;
 }
 
@@ -46,26 +36,26 @@ b {
  * Removes the default spacing and border for appropriate elements.
  */
 
-blockquote,
-dl,
-dd,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-figure,
-p,
-pre {
+.puck blockquote,
+.puck dl,
+.puck dd,
+.puck h1,
+.puck h2,
+.puck h3,
+.puck h4,
+.puck h5,
+.puck h6,
+.puck figure,
+.puck p,
+.puck pre {
   margin-bottom: 0;
   margin-left: 0;
   margin-right: 0;
   margin-top: 0;
 }
 
-ol,
-ul {
+.puck ol,
+.puck ul {
   list-style: none;
   margin-bottom: 0;
   margin-left: 0;

@@ -2,6 +2,7 @@ import "@arc-ui/components/dist/styles.css";
 import "@arc-ui/fonts";
 
 import "core/styles.css";
+import "./styles.css";
 
 export default function RootLayout({
   children,

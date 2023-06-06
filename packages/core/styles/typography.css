@@ -22,49 +22,57 @@
   /* Unitless font sizes
        ======================================================================== */
 
-  --font-size-scale-base-unitless: 12;
-  --font-size-xxxs-unitless: 12;
-  --font-size-xxs-unitless: 14;
-  --font-size-xs-unitless: 16;
-  --font-size-s-unitless: 18;
-  --font-size-m-unitless: 21;
-  --font-size-l-unitless: 24;
-  --font-size-xl-unitless: 28;
-  --font-size-xxl-unitless: 36;
-  --font-size-xxxl-unitless: 48;
-  --font-size-xxxxl-unitless: 56;
+  --puck-font-size-scale-base-unitless: 12;
+  --puck-font-size-xxxs-unitless: 12;
+  --puck-font-size-xxs-unitless: 14;
+  --puck-font-size-xs-unitless: 16;
+  --puck-font-size-s-unitless: 18;
+  --puck-font-size-m-unitless: 21;
+  --puck-font-size-l-unitless: 24;
+  --puck-font-size-xl-unitless: 28;
+  --puck-font-size-xxl-unitless: 36;
+  --puck-font-size-xxxl-unitless: 48;
+  --puck-font-size-xxxxl-unitless: 56;
 
   /* Descriptive font sizes
        ======================================================================== */
 
-  --font-size-xxxs: calc(1rem * var(--font-size-xxxs-unitless) / 16);
-  --font-size-xxs: calc(1rem * var(--font-size-xxs-unitless) / 16);
-  --font-size-xs: calc(1rem * var(--font-size-xs-unitless) / 16);
-  --font-size-s: calc(1rem * var(--font-size-s-unitless) / 16);
-  --font-size-m: calc(1rem * var(--font-size-m-unitless) / 16);
-  --font-size-l: calc(1rem * var(--font-size-l-unitless) / 16);
-  --font-size-xl: calc(1rem * var(--font-size-xl-unitless) / 16);
-  --font-size-xxl: calc(1rem * var(--font-size-xxl-unitless) / 16);
-  --font-size-xxxl: calc(1rem * var(--font-size-xxxl-unitless) / 16);
-  --font-size-xxxxl: calc(1rem * var(--font-size-xxxxl-unitless) / 16);
+  --puck-font-size-xxxs: calc(1rem * var(--puck-font-size-xxxs-unitless) / 16);
+  --puck-font-size-xxs: calc(1rem * var(--puck-font-size-xxs-unitless) / 16);
+  --puck-font-size-xs: calc(1rem * var(--puck-font-size-xs-unitless) / 16);
+  --puck-font-size-s: calc(1rem * var(--puck-font-size-s-unitless) / 16);
+  --puck-font-size-m: calc(1rem * var(--puck-font-size-m-unitless) / 16);
+  --puck-font-size-l: calc(1rem * var(--puck-font-size-l-unitless) / 16);
+  --puck-font-size-xl: calc(1rem * var(--puck-font-size-xl-unitless) / 16);
+  --puck-font-size-xxl: calc(1rem * var(--puck-font-size-xxl-unitless) / 16);
+  --puck-font-size-xxxl: calc(1rem * var(--puck-font-size-xxxl-unitless) / 16);
+  --puck-font-size-xxxxl: calc(
+    1rem * var(--puck-font-size-xxxxl-unitless) / 16
+  );
 
   /* Functional font sizes
       ========================================================================= */
 
-  --font-size-base: var(--font-size-xs);
+  --puck-font-size-base: var(--puck-font-size-xs);
 
   /* Descriptive line heights
       ========================================================================= */
 
   --line-height-reset: 1;
-  --line-height-xs: calc(var(--space-m-unitless) / var(--font-size-m-unitless));
-  --line-height-s: calc(var(--space-m-unitless) / var(--font-size-s-unitless));
-  --line-height-m: calc(var(--space-m-unitless) / var(--font-size-xs-unitless));
+  --line-height-xs: calc(
+    var(--space-m-unitless) / var(--puck-font-size-m-unitless)
+  );
+  --line-height-s: calc(
+    var(--space-m-unitless) / var(--puck-font-size-s-unitless)
+  );
+  --line-height-m: calc(
+    var(--space-m-unitless) / var(--puck-font-size-xs-unitless)
+  );
   --line-height-l: calc(
-    var(--space-m-unitless) / var(--font-size-xxs-unitless)
+    var(--space-m-unitless) / var(--puck-font-size-xxs-unitless)
   );
   --line-height-xl: calc(
-    var(--space-m-unitless) / var(--font-size-scale-base-unitless)
+    var(--space-m-unitless) / var(--puck-font-size-scale-base-unitless)
   );
 
   /* Functional line heights
@@ -76,39 +84,39 @@
        ======================================================================== */
 
   /* Stacks */
-  --font-stack: Inter, -apple-system, BlinkMacSystemFont, Segoe UI,
+  --puck-font-stack: Inter, -apple-system, BlinkMacSystemFont, Segoe UI,
     Helvetica Neue, sans-serif, Apple Color Emoji, Segoe UI Emoji,
     Segoe UI Symbol;
-  --font-stack-variable: "Inter var", -apple-system, BlinkMacSystemFont,
+  --puck-font-stack-variable: "Inter var", -apple-system, BlinkMacSystemFont,
     Segoe UI, Helvetica Neue, sans-serif, Apple Color Emoji, Segoe UI Emoji,
     Segoe UI Symbol;
 
   /* Values */
-  --font-family-monospaced: "Menlo", "Monaco", "Liberation Mono", "Consolas",
-    "Courier New", monospace;
-  --font-family-proportional: var(--font-stack), sans-serif;
+  --puck-font-family-monospaced: "Menlo", "Monaco", "Liberation Mono",
+    "Consolas", "Courier New", monospace;
+  --puck-font-family-proportional: var(--puck-font-stack), sans-serif;
 }
 
 h1 {
-  font-size: var(--font-size-xxl);
+  font-size: var(--puck-font-size-xxl);
 }
 
 h2 {
-  font-size: var(--font-size-xl);
+  font-size: var(--puck-font-size-xl);
 }
 
 h3 {
-  font-size: var(--font-size-l);
+  font-size: var(--puck-font-size-l);
 }
 
 h4 {
-  font-size: var(--font-size-m);
+  font-size: var(--puck-font-size-m);
 }
 
 h5 {
-  font-size: var(--font-size-s);
+  font-size: var(--puck-font-size-s);
 }
 
 h6 {
-  font-size: var(--font-size-xs);
+  font-size: var(--puck-font-size-xs);
 }

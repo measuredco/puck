@@ -1,6 +1,6 @@
 "use client";
 
-import { Config, Data } from "core/types/Config";
+import { Config, Data } from "../types/Config";
 
 export function Render({ config, data }: { config: Config; data: Data }) {
   const children = data.map((item) => {
