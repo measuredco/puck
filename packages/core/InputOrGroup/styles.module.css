@@ -1,19 +1,24 @@
-:global(.puck) .Input {
+.Input {
   display: block;
+  font-family: var(--puck-font-stack);
 }
 
-:global(.puck) .Input + .Input {
+.Input * {
+  box-sizing: border-box;
+}
+
+.Input + .Input {
   margin-top: 8px;
 }
 
-:global(.puck) .Input-label {
+.Input-label {
   margin-bottom: 4px;
   font-size: var(--puck-font-size-xxs);
   font-weight: 500;
 }
 
-:global(.puck) .Input input,
-:global(.puck) .Input select {
+.Input input,
+.Input select {
   border-width: 1px;
   border-style: solid;
   border-color: var(--puck-color-neutral-2);
@@ -22,13 +27,13 @@
   width: 100%;
 }
 
-:global(.puck) .Input--readOnly input,
-:global(.puck) .Input--readOnly select {
+.Input--readOnly input,
+.Input--readOnly select {
   background-color: var(--puck-color-neutral-1);
   border-color: var(--puck-color-neutral-2);
 }
 
-:global(.puck) .Input input:hover,
-:global(.puck) .Input select:hover {
+.Input input:hover,
+.Input select:hover {
   border-color: var(--puck-color-neutral-3);
 }

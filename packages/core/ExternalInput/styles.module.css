@@ -1,3 +1,7 @@
+.ExternalInput {
+  font-family: var(--puck-font-stack);
+}
+
 .ExternalInput-actions {
   display: flex;
 }

@@ -1,8 +1,8 @@
-:global(.puck) .DraggableComponent {
+.DraggableComponent {
   position: relative;
 }
 
-:global(.puck) .DraggableComponent-overlay {
+.DraggableComponent-overlay {
   display: none;
   height: 100%;
   width: 100%;
@@ -10,34 +10,35 @@
   position: absolute;
   z-index: 1;
   zoom: 1.33;
+  font-family: var(--puck-font-stack);
 }
 
-:global(.puck) .DraggableComponent:hover .DraggableComponent-overlay {
+.DraggableComponent:hover .DraggableComponent-overlay {
   display: block;
   background-color: #cdcdcd50;
   box-shadow: inset 0 0 0 4px lightblue;
 }
 
-:global(.puck) .DraggableComponent .DraggableComponent-overlay:hover {
+.DraggableComponent .DraggableComponent-overlay:hover {
   z-index: 1;
 }
 
-:global(.puck) .DraggableComponent--isSelected .DraggableComponent-overlay {
+.DraggableComponent--isSelected .DraggableComponent-overlay {
   box-shadow: inset 0 0 0 4px lightblue;
   display: block;
   z-index: 1;
 }
 
-:global(.puck) .DraggableComponent:first-of-type .DraggableComponent-overlay {
+.DraggableComponent:first-of-type .DraggableComponent-overlay {
   border-top-left-radius: 32px;
   border-top-right-radius: 32px;
 }
 
-:global(.puck) .DraggableComponent-actions {
+.DraggableComponent-actions {
   display: none;
 }
 
-:global(.puck) .DraggableComponent:hover .DraggableComponent-actions {
+.DraggableComponent:hover .DraggableComponent-actions {
   position: absolute;
   right: 0;
   padding: 8px;
@@ -48,7 +49,7 @@
   border: 1px solid var(--puck-color-neutral-3);
 }
 
-:global(.puck) .DraggableComponent-action {
+.DraggableComponent-action {
   background: var(--puck-color-neutral-0);
   border: 1px solid var(--puck-color-neutral-3);
   color: var(--puck-color-neutral-4);
@@ -58,7 +59,7 @@
   font-size: var(--puck-font-size-xxxs);
 }
 
-:global(.puck) .DraggableComponent-action:hover {
+.DraggableComponent-action:hover {
   background: var(--puck-color-neutral-1);
   cursor: pointer;
 }

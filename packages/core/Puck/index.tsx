@@ -8,6 +8,7 @@ import type { Config, Data, Field } from "../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
 import { OutlineList } from "../OutlineList";
+import { Heading } from "../Heading";
 
 const reorder = (list: any[], startIndex: number, endIndex: number) => {
   const result = Array.from(list);
@@ -152,7 +153,7 @@ export function Puck({
                 padding: 16,
               }}
             >
-              <h4>Outline</h4>
+              <Heading size="m">Outline</Heading>
               <Space />
               <OutlineList>
                 {data.map((item, i) => {
@@ -170,7 +171,7 @@ export function Puck({
               </OutlineList>
             </div>
             <div style={{ padding: 16 }}>
-              <h4>Components</h4>
+              <Heading size="m">Components</Heading>
               <Space />
               <ComponentList config={configWithoutBase} />
             </div>
@@ -264,7 +265,7 @@ export function Puck({
           <div style={{ padding: 16, overflowY: "scroll", gridArea: "right" }}>
             {selectedIndex !== null ? (
               <>
-                <h2>{data[selectedIndex].type}</h2>
+                <Heading size="l">{data[selectedIndex].type}</Heading>
 
                 <Space />
 

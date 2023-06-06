@@ -96,27 +96,3 @@
     "Consolas", "Courier New", monospace;
   --puck-font-family-proportional: var(--puck-font-stack), sans-serif;
 }
-
-h1 {
-  font-size: var(--puck-font-size-xxl);
-}
-
-h2 {
-  font-size: var(--puck-font-size-xl);
-}
-
-h3 {
-  font-size: var(--puck-font-size-l);
-}
-
-h4 {
-  font-size: var(--puck-font-size-m);
-}
-
-h5 {
-  font-size: var(--puck-font-size-s);
-}
-
-h6 {
-  font-size: var(--puck-font-size-xs);
-}

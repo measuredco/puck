@@ -1,12 +1,13 @@
-:global(.puck) .ComponentList {
+.ComponentList {
   display: grid;
+  font-family: var(--puck-font-stack);
   grid-template-columns: 1fr;
   max-width: 100%;
   gap: 16px;
 }
 
-:global(.puck) .ComponentList-item,
-:global(.puck) .ComponentList-itemShadow {
+.ComponentList-item,
+.ComponentList-itemShadow {
   background: white;
   color: var(--puck-color-neutral-4);
   padding: 16px;
@@ -19,6 +20,6 @@
   cursor: grab;
 }
 
-:global(.puck) .ComponentList-item:hover {
+.ComponentList-item:hover {
   background-color: var(--puck-color-neutral-1);
 }

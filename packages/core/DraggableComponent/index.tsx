@@ -2,6 +2,7 @@ import { ReactNode, SyntheticEvent } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../lib/get-class-name-factory";
+import Frame from "react-frame-component";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -36,6 +37,17 @@ export const DraggableComponent = ({
         >
           {debug}
           {children}
+          {/* <Frame
+            head={
+              <style
+                dangerouslySetInnerHTML={{
+                  __html: "body { background: blue; }",
+                }}
+              />
+            }
+          >
+            {children}
+          </Frame> */}
           <div className={getClassName("overlay")}>
             <div className={getClassName("actions")}>
               <button className={getClassName("action")} onClick={onDuplicate}>

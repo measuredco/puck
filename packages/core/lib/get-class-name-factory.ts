@@ -17,7 +17,7 @@ export const getGlobalClassName = (rootClass, options) => {
 };
 
 const getClassNameFactory =
-  (rootClass, styles, { baseClass = "puck " } = {}) =>
+  (rootClass, styles, { baseClass = "" } = {}) =>
   (options = {}) => {
     let descendant: any = false;
     let modifiers: any = false;
