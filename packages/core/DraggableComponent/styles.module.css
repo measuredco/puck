@@ -9,7 +9,6 @@
   top: 0;
   position: absolute;
   z-index: 1;
-  zoom: 1.33;
   font-family: var(--puck-font-stack);
 }
 

@@ -246,11 +246,13 @@ export function Puck({
                               e.stopPropagation();
                             }}
                           >
-                            {config[item.type] ? (
-                              config[item.type].render(item.props)
-                            ) : (
-                              <div>No configuration for {item.type}</div>
-                            )}
+                            <div style={{ zoom: 0.75 }}>
+                              {config[item.type] ? (
+                                config[item.type].render(item.props)
+                              ) : (
+                                <div>No configuration for {item.type}</div>
+                              )}
+                            </div>
                           </DraggableComponent>
                         );
                       })}
