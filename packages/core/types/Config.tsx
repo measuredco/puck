@@ -26,7 +26,7 @@ export type Field<
 export type ComponentConfig<
   ComponentProps extends { [key: string]: any[] } = { [key: string]: any[] }
 > = {
-  render: (props: ComponentProps) => ReactNode;
+  render: (props: ComponentProps) => ReactElement;
   fields?: {
     [PropName in keyof Required<ComponentProps>]: Field<
       ComponentProps[PropName][0]

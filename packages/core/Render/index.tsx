@@ -3,8 +3,11 @@
 import { Config, Data } from "core/types/Config";
 
 export function Render({ config, data }: { config: Config; data: Data }) {
-  // TODO add key
-  const children = data.map((item) => config[item.type].render(item.props));
+  const children = data.map((item) => {
+    const Component = config[item.type].render;
+
+    return <Component key={item.props.id} {...item.props} />;
+  });
 
   if (config.Base) {
     return <config.Base.render>{children}</config.Base.render>;
