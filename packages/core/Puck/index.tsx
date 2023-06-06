@@ -1,3 +1,5 @@
+"use client";
+
 import { Fragment, useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import DroppableStrictMode from "../DroppableStrictMode";
@@ -35,7 +37,7 @@ const filter = (obj: object, validKeys: string[]) => {
 
 const Space = () => <div style={{ marginBottom: 16 }} />;
 
-export default function Puck({
+export function Puck({
   config,
   initialData,
   onChange,
