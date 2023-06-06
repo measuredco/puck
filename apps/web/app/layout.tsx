@@ -1,3 +1,6 @@
+import "@arc-ui/components/dist/styles.css";
+import "@arc-ui/fonts";
+
 import "../styles/global.css";
 
 export default function RootLayout({

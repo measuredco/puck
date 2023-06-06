@@ -1,8 +1,13 @@
-import { Adaptor } from "../../types/Config";
+import { Adaptor } from "core/types/Config";
 
-const strapiAdaptor: Adaptor = {
+type AdaptorParams = { resource: string };
+export const strapiAdaptor: Adaptor<AdaptorParams> = {
   name: "Strapi.js",
-  fetchList: async (adaptorParams: { resource: string }) => {
+  fetchList: async (adaptorParams) => {
+    if (!adaptorParams) {
+      return null;
+    }
+
     const res = await fetch(
       `http://localhost:1337/api/${adaptorParams.resource}`,
       {
@@ -13,10 +18,8 @@ const strapiAdaptor: Adaptor = {
       }
     );
 
-    const body: { data: any[] } = await res.json();
+    const body: { data: Record<string, any>[] } = await res.json();
 
     return body.data;
   },
 };
-
-export default strapiAdaptor;

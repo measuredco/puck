@@ -1,5 +1,5 @@
-import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Field } from "../../types/Config";
+import getClassNameFactory from "../lib/get-class-name-factory";
+import { Field } from "../types/Config";
 import { ExternalInput } from "../ExternalInput";
 
 import styles from "./styles.module.css";

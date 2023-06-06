@@ -1,13 +1,13 @@
 import { Fragment, useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import DroppableStrictMode from "../../lib/droppable-strict-mode";
+import DroppableStrictMode from "../DroppableStrictMode";
 import { DraggableComponent } from "../DraggableComponent";
-import type { Config, Data, Field } from "../../types/Config";
+import type { Config, Data, Field } from "../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
 import { OutlineList } from "../OutlineList";
 
-const reorder = (list: any[], startIndex, endIndex) => {
+const reorder = (list: any[], startIndex: number, endIndex: number) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -15,7 +15,7 @@ const reorder = (list: any[], startIndex, endIndex) => {
   return result;
 };
 
-const replace = (list: any[], index, newItem) => {
+const replace = (list: any[], index: number, newItem: any) => {
   const result = Array.from(list);
   result.splice(index, 1);
   result.splice(index, 0, newItem);
@@ -71,6 +71,11 @@ export default function Puck({
     <>
       <DragDropContext
         onDragEnd={(droppedItem) => {
+          if (!droppedItem.destination) {
+            console.warn("No destination specified");
+            return;
+          }
+
           // New component
           if (droppedItem.source.droppableId === "component-list") {
             const emptyComponentData = {

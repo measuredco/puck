@@ -1,7 +1,7 @@
 import { ReactNode, SyntheticEvent } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styles from "./styles.module.css";
-import getClassNameFactory from "../../lib/get-class-name-factory";
+import getClassNameFactory from "../lib/get-class-name-factory";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
-import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Field } from "../../types/Config";
+import getClassNameFactory from "../lib/get-class-name-factory";
+import { Field } from "../types/Config";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
 
@@ -14,15 +14,25 @@ export const ExternalInput = ({
   onChange: (value: any) => void;
   value: any;
 }) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Record<string, any>[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(value);
 
   useEffect(() => {
     (async () => {
-      setData(await field.adaptor.fetchList(field.adaptorParams));
+      if (field.adaptor) {
+        const listData = await field.adaptor.fetchList(field.adaptorParams);
+
+        if (listData) {
+          setData(listData);
+        }
+      }
     })();
   }, [field.adaptor, field.adaptorParams]);
+
+  if (!field.adaptor) {
+    return <div>Incorrectly configured</div>;
+  }
 
   return (
     <div

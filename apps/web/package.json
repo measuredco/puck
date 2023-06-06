@@ -9,10 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@arc-ui/components": "^11.4.2",
+    "@arc-ui/fonts": "^11.4.2",
     "classnames": "^2.3.2",
     "next": "^13.4.1",
     "react": "^18.2.0",
-    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "ui": "*"
   },

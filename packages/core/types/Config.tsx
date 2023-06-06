@@ -1,9 +1,11 @@
 import { ReactElement } from "react";
 import { ReactNode } from "react";
 
-export type Adaptor = {
+export type Adaptor<AdaptorParams = {}> = {
   name: string;
-  fetchList: (adaptorParams: object) => Promise<object[] | null>;
+  fetchList: (
+    adaptorParams?: AdaptorParams
+  ) => Promise<Record<string, any>[] | null>;
 };
 
 export type Field<

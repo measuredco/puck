@@ -1,5 +1,5 @@
-import { Config, InitialData } from "../types/Config";
-import strapiAdaptor from "./adaptors/strapi";
+import { Config, Data } from "core/types/Config";
+import { strapiAdaptor } from "adaptors";
 
 type Props = {
   Hero: {
@@ -48,7 +48,7 @@ export const config: Config<Props> = {
   },
 };
 
-export const initialData: InitialData<Props> = [
+export const initialData: Data<Props> = [
   {
     type: "Hero",
     props: {

@@ -1,7 +1,7 @@
 "use client";
 
-import config from "../lib/config.bt";
-import { Data } from "../types/Config";
+import config from "./config";
+import { Data } from "core/types/Config";
 
 export default async function Page() {
   const data: Data = await fetch("http://localhost:3000/api/puck", {

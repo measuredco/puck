@@ -1,5 +1,5 @@
 {
-  "name": "ui",
+  "name": "core",
   "version": "0.0.0",
   "main": "./index.tsx",
   "types": "./index.tsx",
@@ -16,5 +16,9 @@
     "react": "^17.0.2",
     "tsconfig": "*",
     "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@types/react-beautiful-dnd": "^13.1.4",
+    "react-beautiful-dnd": "^13.1.1"
   }
 }
