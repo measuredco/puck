@@ -1,0 +1,83 @@
+.msrd .msrd-Contact {
+  border: solid 0.0625rem var(--color-grey-8);
+  border-radius: 1rem;
+  box-shadow: 0 0 64px rgba(0, 23, 93, 0.08);
+  color: var(--color-grey-3);
+  padding: var(--space-vertical) var(--space-horizontal-06);
+}
+
+@media (min-width: 48em) {
+  .msrd .msrd-Contact {
+    padding: var(--space-vertical-06) var(--space-horizontal-09);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .msrd .msrd-Contact {
+    border-color: var(--color-grey-2);
+    color: var(--color-text-inverted-muted);
+  }
+}
+
+.msrd .msrd-Contact-heading {
+  color: var(--color-brand);
+  font: var(--font-07);
+  font-weight: 700;
+  letter-spacing: var(--font-07-letter-spacing);
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+@media (min-width: 48em) {
+  .msrd .msrd-Contact-heading {
+    font: var(--font-09);
+    font-weight: 700;
+    letter-spacing: var(--font-09-letter-spacing);
+    margin-bottom: var(--space-vertical-01);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .msrd .msrd-Contact-heading {
+    color: var(--color-brand-inverted);
+  }
+}
+
+.msrd .msrd-Contact-strapline {
+  margin-bottom: var(--space-vertical-03);
+  margin-top: 0;
+}
+
+@media (min-width: 48em) {
+  .msrd .msrd-Contact-strapline {
+    font: var(--font-05);
+    letter-spacing: var(--font-05-letter-spacing);
+  }
+}
+
+.msrd .msrd-Contact-methods {
+  font: var(--font-04);
+  letter-spacing: var(--font-04-letter-spacing);
+  list-style: none;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-left: 0;
+}
+
+@media (min-width: 23em) {
+  .msrd .msrd-Contact-methods {
+    font: var(--font-05);
+    letter-spacing: var(--font-05-letter-spacing);
+  }
+}
+
+@media (min-width: 48em) {
+  .msrd .msrd-Contact-methods {
+    font: var(--font-07);
+    letter-spacing: var(--font-07-letter-spacing);
+  }
+}
+
+.msrd .msrd-Contact-methods li {
+  margin-bottom: var(--space-vertical-02);
+}

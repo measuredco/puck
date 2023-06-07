@@ -1,0 +1,95 @@
+.msrd .msrd-Heading {
+  font-size: 1rem;
+  font-weight: normal;
+  margin: 0;
+}
+
+.msrd .msrd-Heading--01 {
+  font: var(--font-01);
+  font-weight: 700;
+  letter-spacing: var(--font-01-letter-spacing);
+}
+
+.msrd .msrd-Heading--02 {
+  font: var(--font-02);
+  font-weight: 700;
+  letter-spacing: var(--font-02-letter-spacing);
+}
+
+.msrd .msrd-Heading--03 {
+  font: var(--font-03);
+  font-weight: 700;
+  letter-spacing: var(--font-03-letter-spacing);
+}
+
+.msrd .msrd-Heading--04 {
+  font: var(--font-04);
+  font-weight: 700;
+  letter-spacing: var(--font-04-letter-spacing);
+}
+
+.msrd .msrd-Heading--05 {
+  font: var(--font-05);
+  font-weight: 700;
+  letter-spacing: var(--font-05-letter-spacing);
+}
+
+.msrd .msrd-Heading--06 {
+  font: var(--font-06);
+  font-weight: 700;
+  letter-spacing: var(--font-06-letter-spacing);
+}
+
+.msrd .msrd-Heading--07 {
+  font: var(--font-07);
+  font-weight: 700;
+  letter-spacing: var(--font-07-letter-spacing);
+}
+
+.msrd .msrd-Heading--08 {
+  font: var(--font-08);
+  font-weight: 700;
+  letter-spacing: var(--font-08-letter-spacing);
+}
+
+.msrd .msrd-Heading--09 {
+  font: var(--font-09);
+  font-weight: 800;
+  letter-spacing: var(--font-09-letter-spacing);
+}
+
+.msrd .msrd-Heading--10 {
+  font: var(--font-10);
+  font-weight: 800;
+  letter-spacing: var(--font-10-letter-spacing);
+}
+
+.msrd .msrd-Heading--11 {
+  font: var(--font-11);
+  font-weight: 800;
+  letter-spacing: var(--font-11-letter-spacing);
+}
+
+.msrd .msrd-Heading--12 {
+  font: var(--font-12);
+  font-weight: 800;
+  letter-spacing: var(--font-12-letter-spacing);
+}
+
+.msrd .msrd-Heading--13 {
+  font: var(--font-13);
+  font-weight: 800;
+  letter-spacing: var(--font-13-letter-spacing);
+}
+
+.msrd .msrd-Heading--14 {
+  font: var(--font-14);
+  font-weight: 800;
+  letter-spacing: var(--font-14-letter-spacing);
+}
+
+.msrd .msrd-Heading--15 {
+  font: var(--font-15);
+  font-weight: 800;
+  letter-spacing: var(--font-15-letter-spacing);
+}

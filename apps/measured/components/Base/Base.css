@@ -1,0 +1,117 @@
+@import "../system.css";
+
+@font-face {
+  font-display: fallback;
+  font-family: "Inter";
+  font-style: oblique 0deg 10deg;
+  font-weight: 100 900;
+  src: url("../Inter.var.woff2?v=3.19") format("woff2");
+}
+
+ html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+}
+
+
+.msrd {
+  background-color: var(--color-background);
+  box-sizing: border-box;
+  color: var(--color-text);
+  font-family: var(--font-family);
+  letter-spacing: var(--letter-spacing);
+  line-height: var(--line-height);
+}
+
+.msrd *,
+.msrd *::after,
+.msrd *::before {
+  box-sizing: border-box;
+}
+
+.msrd a {
+  text-decoration: none;
+}
+
+.msrd a:not([class]) {
+  color: var(--color-interactive);
+}
+
+/* .msrd a:not([class]):visited {
+  color: var(--color-brand);
+} */
+
+.msrd a:not([class]):hover,
+.msrd a:not([class]):focus {
+  color: var(--color-interactive-focus);
+}
+
+.msrd a:not([class]):active {
+  color: var(--color-interactive-active);
+}
+
+@media (prefers-color-scheme: dark) {
+  .msrd {
+    background-color: var(--color-background-inverted);
+    color: var(--color-text-inverted);
+  }
+
+  .msrd a:not([class]) {
+    color: var(--color-interactive-inverted);
+  }
+
+  /* .msrd a:not([class]):visited {
+    color: var(--color-brand-inverted);
+  } */
+
+  .msrd a:not([class]):hover,
+  .msrd a:not([class]):focus {
+    color: var(--color-interactive-inverted-focus);
+  }
+
+  .msrd a:not([class]):active {
+    color: var(--color-interactive-inverted-active);
+  }
+}
+
+.msrd img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.msrd svg {
+  display: block;
+  max-width: 100%;
+}
+
+/*
+ * Utilities
+ */
+
+.msrd-u-colorTextMuted {
+  color: var(--color-text-muted);
+}
+
+@media (prefers-color-scheme: dark) {
+  .msrd-u-colorTextMuted {
+    color: var(--color-text-inverted-muted);
+  }
+}
+
+.msrd-u-overflowHidden {
+  overflow: hidden;
+}
+
+.msrd-u-visuallyHidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}

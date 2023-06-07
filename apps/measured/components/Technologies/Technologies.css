@@ -1,0 +1,27 @@
+.msrd .msrd-Technologies ul {
+  color: var(--color-text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font: var(--font-01);
+  gap: var(--space-vertical) var(--space-horizontal-01);
+  justify-content: space-around;
+  list-style: none;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-left: 0;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .msrd .msrd-Technologies ul {
+    color: var(--color-text-inverted-muted);
+  }
+}
+
+.msrd .msrd-Technologies li {
+  min-width: 80px;
+}
+
+.msrd .msrd-Technologies svg {
+  margin: 0 auto;
+}

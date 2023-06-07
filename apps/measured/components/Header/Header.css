@@ -1,0 +1,190 @@
+@import "./components/Menu/Menu.css";
+@import "./components/MenuButton/MenuButton.css";
+
+html {
+  scroll-padding-top: var(--space-vertical-12);
+}
+
+@media (min-width: 48em) {
+  html {
+    scroll-padding-top: var(--space-vertical-14);
+  }
+}
+
+.msrd .msrd-Header {
+  background-color: var(--color-background);
+  padding: var(--space-vertical-03) var(--space-horizontal);
+  position: sticky;
+  top: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .msrd .msrd-Header {
+    background-color: var(--color-background-inverted);
+  }
+}
+
+@media (min-width: 48em) {
+  .msrd .msrd-Header {
+    padding: var(--space-vertical-04) var(--space-horizontal);
+  }
+}
+
+.msrd .msrd-Header:after {
+  border-bottom: 0.0625rem solid transparent;
+  bottom: 0;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.msrd .msrd-Header--windowScrolled:after {
+  border-bottom-color: var(--color-grey-8);
+  transition: border-bottom-color 0.25s var(--easing-cubic-bezier-easy-ease);
+}
+
+@media (prefers-color-scheme: dark) {
+  .msrd .msrd-Header--windowScrolled:after {
+    border-bottom-color: var(--color-grey-2);
+  }
+}
+
+.msrd .msrd-Header-inner {
+  align-items: center;
+  border-bottom: 0.125rem solid transparent;
+  border-top: 0.125rem solid transparent;
+  display: flex;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--section-max-width);
+  width: 100%;
+}
+
+.msrd .msrd-Header-logo {
+  margin: 0;
+}
+.msrd .msrd-Header-navItems {
+  font-size: var(--font-05-size);
+  letter-spacing: var(--font-05-letter-spacing);
+  line-height: var(--font-05-line-height);
+  list-style: none;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-left: 0;
+}
+
+@media (min-width: 48em) {
+  .msrd .msrd-Header-navItems {
+    align-items: center;
+    display: flex;
+    font-size: var(--font-size);
+    gap: var(--space-horizontal-07);
+    letter-spacing: var(--letter-spacing);
+    line-height: var(--line-height);
+  }
+}
+
+.msrd .msrd-Header-link {
+  color: inherit;
+  display: table;
+  padding-bottom: var(--space-vertical-01);
+  padding-top: var(--space-vertical-01);
+}
+
+@media (hover: hover) {
+  .msrd .msrd-Header-link:hover {
+    color: var(--color-grey-1);
+  }
+}
+
+.msrd .msrd-Header-link:active {
+  color: var(--color-grey-2);
+}
+
+@media (prefers-color-scheme: dark) {
+  @media (hover: hover) {
+    .msrd .msrd-Header-link:hover {
+      color: var(--color-grey-9);
+    }
+  }
+
+  .msrd .msrd-Header-link:active {
+    color: var(--color-grey-8);
+  }
+}
+
+.msrd .msrd-Header-callToAction {
+  color: var(--color-brand);
+  font-weight: 600;
+}
+
+@media (hover: hover) {
+  .msrd .msrd-Header-callToAction:hover {
+    color: var(--color-rose-2);
+  }
+}
+
+.msrd .msrd-Header-callToAction:active {
+  color: var(--color-rose-1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .msrd .msrd-Header-callToAction {
+    color: var(--color-brand-inverted);
+  }
+
+  @media (hover: hover) {
+    .msrd .msrd-Header-callToAction:hover {
+      color: var(--color-rose-6);
+    }
+  }
+
+  .msrd .msrd-Header-callToAction:active {
+    color: var(--color-rose-7);
+  }
+}
+
+@media (min-width: 48em) {
+  .msrd .msrd-Header-callToAction {
+    align-items: center;
+    background-color: var(--color-brand);
+    border-radius: 1.3125rem;
+    color: var(--color-text-inverted);
+    display: flex;
+    height: 2.75rem;
+    padding: 0 var(--space-horizontal-07);
+  }
+
+  @media (hover: hover) {
+    .msrd .msrd-Header-callToAction:hover {
+      background-color: var(--color-rose-2);
+      color: var(--color-text-inverted);
+    }
+  }
+
+  .msrd .msrd-Header-callToAction:active {
+    background-color: var(--color-rose-1);
+    color: var(--color-text-inverted);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .msrd .msrd-Header-callToAction {
+      background-color: var(--color-brand-inverted);
+      color: var(--color-text);
+    }
+
+    @media (hover: hover) {
+      .msrd .msrd-Header-callToAction:hover {
+        background-color: var(--color-rose-6);
+        color: var(--color-text);
+      }
+    }
+
+    .msrd .msrd-Header-callToAction:active {
+      background-color: var(--color-rose-7);
+      color: var(--color-text);
+    }
+  }
+}

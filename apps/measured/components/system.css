@@ -1,0 +1,327 @@
+/*
+ * Measured design tokens
+ */
+
+ :root {
+  /*
+   * Color palette
+   */
+
+  --color-rose-0: #4a001c;
+  --color-rose-1: #670833;
+  --color-rose-2: #87114c;
+  --color-rose-3: #a81a66;
+  --color-rose-4: #bc5089;
+  --color-rose-5: #cc7ca5;
+  --color-rose-6: #d89aba;
+  --color-rose-7: #e3b8cf;
+  --color-rose-8: #efd6e3;
+  --color-rose-9: #faf4f8;
+
+  --color-azure-0: #00175d;
+  --color-azure-1: #002c77;
+  --color-azure-2: #014292;
+  --color-azure-3: #0158ad;
+  --color-azure-4: #3479be;
+  --color-azure-5: #6499cf;
+  --color-azure-6: #88b0da;
+  --color-azure-7: #abc7e5;
+  --color-azure-8: #cfdff0;
+  --color-azure-9: #f3f6fb;
+
+  --color-green-0: #002000;
+  --color-green-1: #043604;
+  --color-green-2: #084e08;
+  --color-green-3: #0c680c;
+  --color-green-4: #1d882f;
+  --color-green-5: #2faa53;
+  --color-green-6: #56c16f;
+  --color-green-7: #7dd78b;
+  --color-green-8: #b8e8bf;
+  --color-green-9: #eff8f0;
+
+  --color-yellow-0: #211000;
+  --color-yellow-1: #362700;
+  --color-yellow-2: #4c4000;
+  --color-yellow-3: #645a00;
+  --color-yellow-4: #877614;
+  --color-yellow-5: #ab9429;
+  --color-yellow-6: #bfac4e;
+  --color-yellow-7: #d4c474;
+  --color-yellow-8: #e6deb1;
+  --color-yellow-9: #f9f7ed;
+
+  --color-red-0: #4c0000;
+  --color-red-1: #6a0a10;
+  --color-red-2: #8a1422;
+  --color-red-3: #ac1f35;
+  --color-red-4: #bf5366;
+  --color-red-5: #ce7e8e;
+  --color-red-6: #d99ca8;
+  --color-red-7: #e4b9c2;
+  --color-red-8: #efd7db;
+  --color-red-9: #faf4f5;
+
+  --color-grey-0: #111111;
+  --color-grey-1: #282828;
+  --color-grey-2: #404040;
+  --color-grey-3: #5a5a5a;
+  --color-grey-4: #767676;
+  --color-grey-5: #949494;
+  --color-grey-6: #ababab;
+  --color-grey-7: #c3c3c3;
+  --color-grey-8: #dcdcdc;
+  --color-grey-9: #f5f5f5;
+
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  /*
+   * Space scales
+   */
+
+  /* Vertical space derived from base font-size of 16 & base leading of 1.5. */
+  --space-scale-vertical: 24;
+
+  --space-scale-vertical-01: calc(var(--space-scale-vertical) * 0.125); /* 3 */
+  --space-scale-vertical-02: calc(var(--space-scale-vertical) * 0.25); /* 6 */
+  --space-scale-vertical-03: calc(var(--space-scale-vertical) * 0.5); /* 12 */
+  --space-scale-vertical-04: calc(var(--space-scale-vertical) * 0.75); /* 18 */
+  --space-scale-vertical-05: calc(var(--space-scale-vertical) * 1); /* 24 */
+  --space-scale-vertical-06: calc(var(--space-scale-vertical) * 1.5); /* 36 */
+  --space-scale-vertical-07: calc(var(--space-scale-vertical) * 2); /* 48 */
+  --space-scale-vertical-08: calc(var(--space-scale-vertical) * 2.5); /* 60 */
+  --space-scale-vertical-09: calc(var(--space-scale-vertical) * 3); /* 72 */
+  --space-scale-vertical-10: calc(var(--space-scale-vertical) * 3.5); /* 84 */
+  --space-scale-vertical-11: calc(var(--space-scale-vertical) * 4); /* 96 */
+  --space-scale-vertical-12: calc(var(--space-scale-vertical) * 4.5); /* 108 */
+  --space-scale-vertical-13: calc(var(--space-scale-vertical) * 5); /* 120 */
+  --space-scale-vertical-14: calc(var(--space-scale-vertical) * 6); /* 144 */
+
+  /* Horizontal space derived from base font-size of 16. */
+  --space-scale-horizontal: 16;
+
+  --space-scale-horizontal-01: calc(var(--space-scale-horizontal) * 0.125);
+  --space-scale-horizontal-02: calc(var(--space-scale-horizontal) * 0.25);
+  --space-scale-horizontal-03: calc(var(--space-scale-horizontal) * 0.5);
+  --space-scale-horizontal-04: calc(var(--space-scale-horizontal) * 0.75);
+  --space-scale-horizontal-05: calc(var(--space-scale-horizontal) * 1);
+  --space-scale-horizontal-06: calc(var(--space-scale-horizontal) * 1.5);
+  --space-scale-horizontal-07: calc(var(--space-scale-horizontal) * 2);
+  --space-scale-horizontal-08: calc(var(--space-scale-horizontal) * 2.5);
+  --space-scale-horizontal-09: calc(var(--space-scale-horizontal) * 3);
+  --space-scale-horizontal-10: calc(var(--space-scale-horizontal) * 3.5);
+  --space-scale-horizontal-11: calc(var(--space-scale-horizontal) * 4);
+  --space-scale-horizontal-12: calc(var(--space-scale-horizontal) * 4.5);
+
+  /*
+   * Typography scales
+   */
+
+  --leading-scale: var(--space-scale-vertical);
+
+  --leading-scale-01: var(--space-scale-vertical-05);
+  --leading-scale-02: var(--space-scale-vertical-06);
+  --leading-scale-03: var(--space-scale-vertical-07);
+  --leading-scale-04: var(--space-scale-vertical-08);
+  --leading-scale-05: var(--space-scale-vertical-09);
+  --leading-scale-06: var(--space-scale-vertical-10);
+  --leading-scale-07: var(--space-scale-vertical-11);
+  --leading-scale-08: var(--space-scale-vertical-12);
+
+  /*
+   * Classic typographic scale, mathematically corrected.
+   *
+   * https://spencermortensen.com/articles/typographic-scale/
+   */
+
+  --type-scale: 16;
+
+  --type-scale-01: 12;
+  --type-scale-02: 16;
+  --type-scale-03: 18;
+  --type-scale-04: 21;
+  --type-scale-05: 24;
+  --type-scale-06: 28;
+  --type-scale-07: 32;
+  --type-scale-08: 36;
+  --type-scale-09: 42;
+  --type-scale-10: 48;
+  --type-scale-11: 55;
+  --type-scale-12: 63;
+  --type-scale-13: 73;
+  --type-scale-14: 84;
+  --type-scale-15: 96;
+
+  /*
+   * Tracking calculated with Inter Dynamic Metrics.
+   *
+   * https://rsms.me/inter/dynmetrics/
+   *
+   * -0.0223 + 0.185 * Math.pow(Math.e, -0.1745 * --type-scale-xx)
+   *
+   */
+
+  --tracking-scale: -0.01095977856; /* --type-scale-02 */
+
+  --tracking-scale-01: -0.006223544263;
+  --tracking-scale-02: -0.01095977856;
+  --tracking-scale-03: -0.0143006857;
+  --tracking-scale-04: -0.01756085933;
+  --tracking-scale-05: -0.01949232757;
+  --tracking-scale-06: -0.02090295984;
+  --tracking-scale-07: -0.0216048615;
+  --tracking-scale-08: -0.02195411336;
+  --tracking-scale-09: -0.02217859754;
+  --tracking-scale-10: -0.02225738906;
+  --tracking-scale-11: -0.02228743882;
+  --tracking-scale-12: -0.02229689004;
+  --tracking-scale-13: -0.02229945686;
+  --tracking-scale-14: -0.02229992033;
+  --tracking-scale-15: -0.02229999019;
+
+  /*
+   * Color tokens
+   */
+
+  --color-background: var(--color-white);
+  --color-background-inverted: var(--color-grey-0);
+
+  --color-brand: var(--color-rose-3);
+  --color-brand-inverted: var(--color-rose-5);
+
+  --color-interactive: var(--color-azure-3);
+  --color-interactive-focus: var(--color-azure-2);
+  --color-interactive-active: var(--color-azure-1);
+  --color-interactive-inverted: var(--color-azure-5);
+  --color-interactive-inverted-focus: var(--color-azure-6);
+  --color-interactive-inverted-active: var(--color-azure-7);
+
+  --color-text: var(--color-black);
+  --color-text-muted: var(--color-grey-4);
+  --color-text-inverted: var(--color-white);
+  --color-text-inverted-muted: var(--color-grey-5);
+
+  /*
+   * Font tokens
+   */
+
+  --font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Helvetica Neue, sans-serif, Apple Color Emoji, Segoe UI Emoji,
+    Segoe UI Symbol;
+
+  --font-size: calc((var(--type-scale) / 16) * 1rem);
+
+  --font-01-size: calc((var(--type-scale-01) / 16) * 1rem);
+  --font-02-size: calc((var(--type-scale-02) / 16) * 1rem);
+  --font-03-size: calc((var(--type-scale-03) / 16) * 1rem);
+  --font-04-size: calc((var(--type-scale-04) / 16) * 1rem);
+  --font-05-size: calc((var(--type-scale-05) / 16) * 1rem);
+  --font-06-size: calc((var(--type-scale-06) / 16) * 1rem);
+  --font-07-size: calc((var(--type-scale-07) / 16) * 1rem);
+  --font-08-size: calc((var(--type-scale-08) / 16) * 1rem);
+  --font-09-size: calc((var(--type-scale-09) / 16) * 1rem);
+  --font-10-size: calc((var(--type-scale-10) / 16) * 1rem);
+  --font-11-size: calc((var(--type-scale-11) / 16) * 1rem);
+  --font-12-size: calc((var(--type-scale-12) / 16) * 1rem);
+  --font-13-size: calc((var(--type-scale-13) / 16) * 1rem);
+  --font-14-size: calc((var(--type-scale-14) / 16) * 1rem);
+  --font-15-size: calc((var(--type-scale-15) / 16) * 1rem);
+
+  --line-height: calc(var(--leading-scale) / var(--type-scale));
+
+  --font-01-line-height: calc(var(--leading-scale-01) / var(--type-scale-01));
+  --font-02-line-height: calc(var(--leading-scale-01) / var(--type-scale-02));
+  --font-03-line-height: calc(var(--leading-scale-01) / var(--type-scale-03));
+  --font-04-line-height: calc(var(--leading-scale-01) / var(--type-scale-04));
+  --font-05-line-height: calc(var(--leading-scale-02) / var(--type-scale-05));
+  --font-06-line-height: calc(var(--leading-scale-02) / var(--type-scale-06));
+  --font-07-line-height: calc(var(--leading-scale-03) / var(--type-scale-07));
+  --font-08-line-height: calc(var(--leading-scale-03) / var(--type-scale-08));
+  --font-09-line-height: calc(var(--leading-scale-03) / var(--type-scale-09));
+  --font-10-line-height: calc(var(--leading-scale-04) / var(--type-scale-10));
+  --font-11-line-height: calc(var(--leading-scale-04) / var(--type-scale-11));
+  --font-12-line-height: calc(var(--leading-scale-05) / var(--type-scale-12));
+  --font-13-line-height: calc(var(--leading-scale-06) / var(--type-scale-13));
+  --font-14-line-height: calc(var(--leading-scale-07) / var(--type-scale-14));
+  --font-15-line-height: calc(var(--leading-scale-08) / var(--type-scale-15));
+
+  --font: var(--font-size) / var(--line-height) var(--font-family);
+
+  --font-01: var(--font-01-size) / var(--font-01-line-height) var(--font-family);
+  --font-02: var(--font-02-size) / var(--font-02-line-height) var(--font-family);
+  --font-03: var(--font-03-size) / var(--font-03-line-height) var(--font-family);
+  --font-04: var(--font-04-size) / var(--font-04-line-height) var(--font-family);
+  --font-05: var(--font-05-size) / var(--font-05-line-height) var(--font-family);
+  --font-06: var(--font-06-size) / var(--font-06-line-height) var(--font-family);
+  --font-07: var(--font-07-size) / var(--font-07-line-height) var(--font-family);
+  --font-08: var(--font-08-size) / var(--font-08-line-height) var(--font-family);
+  --font-09: var(--font-09-size) / var(--font-09-line-height) var(--font-family);
+  --font-10: var(--font-10-size) / var(--font-10-line-height) var(--font-family);
+  --font-11: var(--font-11-size) / var(--font-11-line-height) var(--font-family);
+  --font-12: var(--font-12-size) / var(--font-12-line-height) var(--font-family);
+  --font-13: var(--font-13-size) / var(--font-13-line-height) var(--font-family);
+  --font-14: var(--font-14-size) / var(--font-14-line-height) var(--font-family);
+  --font-15: var(--font-15-size) / var(--font-15-line-height) var(--font-family);
+
+  --letter-spacing: calc(var(--tracking-scale) * 1em);
+
+  --font-01-letter-spacing: calc(var(--tracking-scale-01) * 1em);
+  --font-02-letter-spacing: calc(var(--tracking-scale-02) * 1em);
+  --font-03-letter-spacing: calc(var(--tracking-scale-03) * 1em);
+  --font-04-letter-spacing: calc(var(--tracking-scale-04) * 1em);
+  --font-05-letter-spacing: calc(var(--tracking-scale-05) * 1em);
+  --font-06-letter-spacing: calc(var(--tracking-scale-06) * 1em);
+  --font-07-letter-spacing: calc(var(--tracking-scale-07) * 1em);
+  --font-08-letter-spacing: calc(var(--tracking-scale-08) * 1em);
+  --font-09-letter-spacing: calc(var(--tracking-scale-09) * 1em);
+  --font-10-letter-spacing: calc(var(--tracking-scale-10) * 1em);
+  --font-11-letter-spacing: calc(var(--tracking-scale-11) * 1em);
+  --font-12-letter-spacing: calc(var(--tracking-scale-12) * 1em);
+  --font-13-letter-spacing: calc(var(--tracking-scale-13) * 1em);
+  --font-14-letter-spacing: calc(var(--tracking-scale-14) * 1em);
+  --font-15-letter-spacing: calc(var(--tracking-scale-15) * 1em);
+
+  /*
+   * Space tokens
+   */
+
+  --space-vertical: calc((var(--space-scale-vertical) / 16) * 1rem);
+
+  --space-vertical-01: calc((var(--space-scale-vertical-01) / 16) * 1rem);
+  --space-vertical-02: calc((var(--space-scale-vertical-02) / 16) * 1rem);
+  --space-vertical-03: calc((var(--space-scale-vertical-03) / 16) * 1rem);
+  --space-vertical-04: calc((var(--space-scale-vertical-04) / 16) * 1rem);
+  --space-vertical-05: calc((var(--space-scale-vertical-05) / 16) * 1rem);
+  --space-vertical-06: calc((var(--space-scale-vertical-06) / 16) * 1rem);
+  --space-vertical-07: calc((var(--space-scale-vertical-07) / 16) * 1rem);
+  --space-vertical-08: calc((var(--space-scale-vertical-08) / 16) * 1rem);
+  --space-vertical-09: calc((var(--space-scale-vertical-09) / 16) * 1rem);
+  --space-vertical-10: calc((var(--space-scale-vertical-10) / 16) * 1rem);
+  --space-vertical-11: calc((var(--space-scale-vertical-11) / 16) * 1rem);
+  --space-vertical-12: calc((var(--space-scale-vertical-12) / 16) * 1rem);
+  --space-vertical-13: calc((var(--space-scale-vertical-13) / 16) * 1rem);
+  --space-vertical-14: calc((var(--space-scale-vertical-14) / 16) * 1rem);
+
+  --space-horizontal: calc((var(--space-scale-horizontal) / 16) * 1rem);
+
+  --space-horizontal-01: calc((var(--space-scale-horizontal-01) / 16) * 1rem);
+  --space-horizontal-02: calc((var(--space-scale-horizontal-02) / 16) * 1rem);
+  --space-horizontal-03: calc((var(--space-scale-horizontal-03) / 16) * 1rem);
+  --space-horizontal-04: calc((var(--space-scale-horizontal-04) / 16) * 1rem);
+  --space-horizontal-05: calc((var(--space-scale-horizontal-05) / 16) * 1rem);
+  --space-horizontal-06: calc((var(--space-scale-horizontal-06) / 16) * 1rem);
+  --space-horizontal-07: calc((var(--space-scale-horizontal-07) / 16) * 1rem);
+  --space-horizontal-08: calc((var(--space-scale-horizontal-08) / 16) * 1rem);
+  --space-horizontal-09: calc((var(--space-scale-horizontal-09) / 16) * 1rem);
+  --space-horizontal-10: calc((var(--space-scale-horizontal-10) / 16) * 1rem);
+  --space-horizontal-11: calc((var(--space-scale-horizontal-11) / 16) * 1rem);
+  --space-horizontal-12: calc((var(--space-scale-horizontal-12) / 16) * 1rem);
+
+  --section-max-width: calc((1024 / 16) * 1rem);
+
+  --easing-cubic-bezier-easy-ease: cubic-bezier(0.44, 0, 0.55, 0.94);
+  --easing-cubic-bezier-ease-in: cubic-bezier(0.44, 0, 1, 1);
+  --easing-cubic-bezier-ease-out: cubic-bezier(0, 0, 0.55, 0.94);
+  --easing-cubic-bezier-reverse-easy-ease: cubic-bezier(0.96, 0.03, 0.53, 0.96);
+}

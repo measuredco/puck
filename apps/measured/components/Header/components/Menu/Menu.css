@@ -1,0 +1,31 @@
+.msrd .msrd-HeaderMenu {
+  background-color: var(--color-background);
+  bottom: 0;
+  display: none;
+  left: 0;
+  overflow-y: auto;
+  padding: var(--space-vertical-03) var(--space-horizontal)
+    var(--space-vertical);
+  position: fixed;
+  right: 0;
+  top: var(--space-vertical-09);
+}
+
+@media (prefers-color-scheme: dark) {
+  .msrd .msrd-HeaderMenu {
+    background-color: var(--color-background-inverted);
+  }
+}
+
+.msrd .msrd-HeaderMenu--open {
+  display: block;
+}
+
+@media (min-width: 48em) {
+  .msrd .msrd-HeaderMenu {
+    display: block;
+    overflow-y: visible;
+    padding: 0;
+    position: static;
+  }
+}

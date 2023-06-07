@@ -1,0 +1,110 @@
+.msrd .msrd-HeaderMenuButton {
+  background-color: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  overflow: visible;
+  padding: 10px;
+  position: relative;
+  right: -10px;
+}
+
+@media (hover: hover) {
+  .msrd .msrd-HeaderMenuButton:hover {
+    color: var(--color-grey-1);
+  }
+}
+
+.msrd .msrd-HeaderMenuButton:active {
+  color: var(--color-grey-2);
+}
+
+@media (prefers-color-scheme: dark) {
+  @media (hover: hover) {
+    .msrd .msrd-HeaderMenuButton:hover {
+      color: var(--color-grey-9);
+    }
+  }
+
+  .msrd .msrd-HeaderMenuButton:active {
+    color: var(--color-grey-8);
+  }
+}
+
+@media (min-width: 48em) {
+  .msrd .msrd-HeaderMenuButton {
+    display: none;
+  }
+}
+
+.msrd .msrd-HeaderMenuButton-box {
+  display: block;
+  height: 24px;
+  position: relative;
+  width: 24px;
+}
+
+.msrd .msrd-HeaderMenuButton-inner,
+.msrd .msrd-HeaderMenuButton-inner::before,
+.msrd .msrd-HeaderMenuButton-inner::after {
+  background-color: currentColor;
+  border-radius: 1px;
+  height: 2px;
+  position: absolute;
+  width: 24px;
+}
+
+.msrd .msrd-HeaderMenuButton-inner {
+  display: block;
+  top: 50%;
+  transition: transform 0.22s var(--easing-cubic-bezier-reverse-easy-ease);
+}
+
+.msrd .msrd-HeaderMenuButton-inner::before,
+.msrd .msrd-HeaderMenuButton-inner::after {
+  content: "";
+  display: block;
+}
+
+.msrd .msrd-HeaderMenuButton-inner::before {
+  top: -8px;
+  transition: top 0.1s 0.25s var(--easing-cubic-bezier-ease-in),
+    opacity 0.1s var(--easing-cubic-bezier-ease-in);
+}
+
+.msrd .msrd-HeaderMenuButton-inner::after {
+  bottom: -8px;
+  transition: bottom 0.1s 0.25s var(--easing-cubic-bezier-ease-in),
+    transform 0.22s var(--easing-cubic-bezier-reverse-easy-ease);
+}
+
+.msrd .msrd-HeaderMenuButton--menuOpen .msrd-HeaderMenuButton-inner {
+  transform: rotate(225deg);
+  transition-delay: 0.12s;
+  transition-timing-function: var(--easing-cubic-bezier-easy-ease);
+}
+
+.msrd .msrd-HeaderMenuButton--menuOpen .msrd-HeaderMenuButton-inner::before {
+  opacity: 0;
+  top: 0;
+  transition: top 0.1s var(--easing-cubic-bezier-ease-out),
+    opacity 0.1s 0.12s var(--easing-cubic-bezier-ease-out);
+}
+
+.msrd .msrd-HeaderMenuButton--menuOpen .msrd-HeaderMenuButton-inner::after {
+  bottom: 0;
+  transform: rotate(-90deg);
+  transition: bottom 0.1s var(--easing-cubic-bezier-ease-out),
+    transform 0.22s 0.12s var(--easing-cubic-bezier-easy-ease);
+}
+
+.msrd .msrd-HeaderMenuButton-text {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}

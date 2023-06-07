@@ -1,0 +1,40 @@
+.msrd .msrd-Cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-vertical) var(--space-horizontal);
+  list-style: none;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-left: 0;
+}
+
+.msrd .msrd-Cards li {
+  border: solid 0.0625rem var(--color-grey-8);
+  border-radius: 1rem;
+  padding: var(--space-vertical-03) var(--space-horizontal)
+    var(--space-vertical-05);
+  width: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  .msrd .msrd-Cards li {
+    border-color: var(--color-grey-2);
+  }
+}
+
+@media (min-width: 40em) {
+  .msrd .msrd-Cards li {
+    width: calc((100% / 2) - (((2 - 1) / 2) * var(--space-horizontal)));
+  }
+}
+
+@media (min-width: 64em) {
+  .msrd .msrd-Cards li {
+    width: calc((100% / 4) - (((4 - 1) / 4) * var(--space-horizontal)));
+  }
+}
+
+.msrd .msrd-Cards p {
+  margin-bottom: 0;
+  margin-top: 0;
+}
