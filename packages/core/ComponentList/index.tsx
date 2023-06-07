@@ -16,7 +16,7 @@ export const ComponentList = ({ config }: { config: Config }) => {
           ref={provided.innerRef}
           className={getClassName()}
         >
-          {Object.keys(config).map((componentKey, i) => {
+          {Object.keys(config.components).map((componentKey, i) => {
             const componentConfig: ComponentConfig = config[componentKey];
 
             return (

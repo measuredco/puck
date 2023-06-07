@@ -3,14 +3,14 @@
 import { Config, Data } from "../types/Config";
 
 export function Render({ config, data }: { config: Config; data: Data }) {
-  const children = data.map((item) => {
-    const Component = config[item.type].render;
+  const children = data.content.map((item) => {
+    const Component = config.components[item.type].render;
 
     return <Component key={item.props.id} {...item.props} />;
   });
 
-  if (config.Base) {
-    return <config.Base.render>{children}</config.Base.render>;
+  if (config.page) {
+    return <config.page.render {...data.page}>{children}</config.page.render>;
   }
 
   return <div>{children}</div>;

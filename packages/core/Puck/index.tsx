@@ -36,16 +36,22 @@ const filter = (obj: object, validKeys: string[]) => {
   }, {});
 };
 
+const Field = () => {};
+
 const Space = () => <div style={{ marginBottom: 16 }} />;
+
+const defaultPageFields: Record<string, Field> = {
+  title: { type: "text" },
+};
 
 export function Puck({
   config,
-  initialData,
+  data: initialData = { content: [], page: { title: "" } },
   onChange,
   onPublish,
 }: {
   config: Config;
-  initialData: Data;
+  data: Data;
   onChange?: (data: Data) => void;
   onPublish: (data: Data) => void;
 }) {
@@ -53,17 +59,17 @@ export function Puck({
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lockedFields, setLockedFields] = useState<string[]>([]);
 
-  const { Base: BaseConfig, ...configWithoutBase } = config;
+  const Page = config.page?.render || Fragment;
 
-  const Base = BaseConfig?.render || Fragment;
+  const pageFields = config.page?.fields || defaultPageFields;
 
-  const fields =
+  let fields =
     selectedIndex !== null
-      ? (config[data[selectedIndex].type]?.fields as Record<
+      ? (config.components[data.content[selectedIndex].type]?.fields as Record<
           string,
           Field<any>
         >) || {}
-      : {};
+      : pageFields;
 
   useEffect(() => {
     if (onChange) onChange(data);
@@ -88,9 +94,9 @@ export function Puck({
               },
             };
 
-            const newData = [...data];
+            const newData = { ...data };
 
-            newData.splice(
+            newData.content.splice(
               droppedItem.destination.index,
               0,
               emptyComponentData
@@ -98,13 +104,14 @@ export function Puck({
 
             setData(newData);
           } else {
-            setData(
-              reorder(
-                data,
+            setData({
+              ...data,
+              content: reorder(
+                data.content,
                 droppedItem.source.index,
                 droppedItem.destination.index
-              )
-            );
+              ),
+            });
           }
         }}
       >
@@ -132,7 +139,9 @@ export function Puck({
             }}
           >
             <button
-              onClick={() => onPublish(data)}
+              onClick={() => {
+                onPublish(data);
+              }}
               style={{
                 marginLeft: "auto",
                 background: "var(--puck-color-blue)",
@@ -156,7 +165,7 @@ export function Puck({
               <Heading size="m">Outline</Heading>
               <Space />
               <OutlineList>
-                {data.map((item, i) => {
+                {data.content.map((item, i) => {
                   return (
                     <OutlineList.Item
                       key={i}
@@ -173,7 +182,7 @@ export function Puck({
             <div style={{ padding: 16 }}>
               <Heading size="m">Components</Heading>
               <Space />
-              <ComponentList config={configWithoutBase} />
+              <ComponentList config={config} />
             </div>
           </div>
           <div
@@ -193,7 +202,7 @@ export function Puck({
                 overflow: "hidden",
               }}
             >
-              <Base>
+              <Page {...data.page}>
                 <DroppableStrictMode droppableId="droppable">
                   {(provided, snapshot) => (
                     <div
@@ -206,7 +215,7 @@ export function Puck({
                           : "white",
                       }}
                     >
-                      {data.map((item, i) => {
+                      {data.content.map((item, i) => {
                         return (
                           <DraggableComponent
                             key={item.props.id}
@@ -218,8 +227,8 @@ export function Puck({
                               e.stopPropagation();
                             }}
                             onDelete={(e) => {
-                              const newData = [...data];
-                              newData.splice(i, 1);
+                              const newData = { ...data };
+                              newData.content.splice(i, 1);
 
                               setSelectedIndex(null);
                               setData(newData);
@@ -227,18 +236,18 @@ export function Puck({
                               e.stopPropagation();
                             }}
                             onDuplicate={(e) => {
-                              const newData = [...data];
+                              const newData = { ...data };
                               const newItem = {
-                                ...newData[i],
+                                ...newData.content[i],
                                 props: {
-                                  ...newData[i].props,
+                                  ...newData.content[i].props,
                                   id: `${
-                                    newData[i].type
+                                    newData.content[i].type
                                   }-${new Date().getTime()}`,
                                 },
                               };
 
-                              newData.splice(i + 1, 0, newItem);
+                              newData.content.splice(i + 1, 0, newItem);
 
                               setData(newData);
 
@@ -246,8 +255,8 @@ export function Puck({
                             }}
                           >
                             <div style={{ zoom: 0.75 }}>
-                              {config[item.type] ? (
-                                config[item.type].render(item.props)
+                              {config.components[item.type] ? (
+                                config.components[item.type].render(item.props)
                               ) : (
                                 <div>No configuration for {item.type}</div>
                               )}
@@ -260,81 +269,99 @@ export function Puck({
                     </div>
                   )}
                 </DroppableStrictMode>
-              </Base>
+              </Page>
             </div>
           </div>
           <div style={{ padding: 16, overflowY: "scroll", gridArea: "right" }}>
             {selectedIndex !== null ? (
-              <>
-                <Heading size="l">{data[selectedIndex].type}</Heading>
+              <Heading size="l">{data.content[selectedIndex].type}</Heading>
+            ) : (
+              <Heading size="l">Page</Heading>
+            )}
 
-                <Space />
+            <Space />
 
-                {Object.keys(fields).map((fieldName) => {
-                  const field = fields[fieldName];
+            {Object.keys(fields).map((fieldName) => {
+              const field = fields[fieldName];
 
-                  return (
-                    <InputOrGroup
-                      key={`${data[selectedIndex].props.id}_${fieldName}`}
-                      field={field}
-                      name={fieldName}
-                      readOnly={lockedFields.indexOf(fieldName) > -1}
-                      value={data[selectedIndex].props[fieldName]}
-                      onChange={(value) => {
-                        // In case of _data, we replace everything
-                        if (fieldName === "_data") {
-                          // Reset the link if value is falsey
-                          if (!value) {
-                            setData(
-                              replace(data, selectedIndex, {
-                                ...data[selectedIndex],
-                                props: {
-                                  ...data[selectedIndex].props,
-                                  _data: undefined,
-                                },
-                              })
-                            );
+              const onChange = (value: any) => {
+                let currentProps;
+                let newProps;
 
-                            setLockedFields([]);
+                if (selectedIndex !== null) {
+                  currentProps = data.content[selectedIndex].props;
+                } else {
+                  currentProps = data.page;
+                }
 
-                            return;
-                          }
+                if (fieldName === "_data") {
+                  // Reset the link if value is falsey
+                  if (!value) {
+                    newProps = {
+                      ...currentProps,
+                      _data: undefined,
+                    };
 
-                          const changedFields = filter(
-                            // filter out anything not supported by this component
-                            (value as any).attributes, // TODO type properly after getting proper state library
-                            Object.keys(fields)
-                          );
+                    setLockedFields([]);
+                  } else {
+                    const changedFields = filter(
+                      // filter out anything not supported by this component
+                      (value as any).attributes, // TODO type properly after getting proper state library
+                      Object.keys(fields)
+                    );
 
-                          setData(
-                            replace(data, selectedIndex, {
-                              ...data[selectedIndex],
-                              props: {
-                                ...data[selectedIndex].props,
-                                ...changedFields,
-                                _data: value, // TODO perf - this is duplicative and will make payload larger
-                              },
-                            })
-                          );
+                    newProps = {
+                      ...currentProps,
+                      ...changedFields,
+                      _data: value, // TODO perf - this is duplicative and will make payload larger
+                    };
 
-                          setLockedFields(Object.keys(changedFields));
-                        } else {
-                          setData(
-                            replace(data, selectedIndex, {
-                              ...data[selectedIndex],
-                              props: {
-                                ...data[selectedIndex].props,
-                                [fieldName]: value,
-                              },
-                            })
-                          );
-                        }
-                      }}
-                    />
-                  );
-                })}
-              </>
-            ) : null}
+                    setLockedFields(Object.keys(changedFields));
+                  }
+                } else {
+                  newProps = {
+                    ...currentProps,
+                    [fieldName]: value,
+                  };
+                }
+
+                if (selectedIndex !== null) {
+                  setData({
+                    ...data,
+                    content: replace(data.content, selectedIndex, {
+                      ...data.content[selectedIndex],
+                      props: newProps,
+                    }),
+                  });
+                } else {
+                  setData({ ...data, page: newProps });
+                }
+              };
+
+              if (selectedIndex !== null) {
+                return (
+                  <InputOrGroup
+                    key={`${data.content[selectedIndex].props.id}_${fieldName}`}
+                    field={field}
+                    name={fieldName}
+                    readOnly={lockedFields.indexOf(fieldName) > -1}
+                    value={data.content[selectedIndex].props[fieldName]}
+                    onChange={onChange}
+                  />
+                );
+              } else {
+                return (
+                  <InputOrGroup
+                    key={`page_${fieldName}`}
+                    field={field}
+                    name={fieldName}
+                    readOnly={lockedFields.indexOf(fieldName) > -1}
+                    value={data.page[fieldName]}
+                    onChange={onChange}
+                  />
+                );
+              }
+            })}
           </div>
         </div>
       </DragDropContext>

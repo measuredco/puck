@@ -28,23 +28,40 @@ export type ComponentConfig<
 > = {
   render: (props: ComponentProps) => ReactElement;
   fields?: {
-    [PropName in keyof Required<ComponentProps>]: Field<
+    [PropName in keyof Omit<Required<ComponentProps>, "children">]: Field<
       ComponentProps[PropName][0]
     >;
   };
 };
 
 export type Config<
-  Props extends { [key: string]: any } = { [key: string]: any }
+  Props extends { [key: string]: any } = { [key: string]: any },
+  PageProps extends { title: string; [key: string]: any } = {
+    title: string;
+    [key: string]: any;
+  }
 > = {
-  [ComponentName in keyof Props]: ComponentConfig<Props[ComponentName]>;
-} & { Base?: { render: (props: any) => ReactElement } };
+  components: {
+    [ComponentName in keyof Props]: ComponentConfig<Props[ComponentName]>;
+  };
+  page?: ComponentConfig<PageProps & { children: ReactNode }>;
+};
+
+type MappedItem<Props extends { [key: string]: any } = { [key: string]: any }> =
+  {
+    type: keyof Props;
+    props: {
+      [key: string]: any;
+    } & { id: string };
+  };
 
 export type Data<
-  Props extends { [key: string]: any } = { [key: string]: any }
-> = {
-  type: keyof Props;
-  props: {
+  Props extends { [key: string]: any } = { [key: string]: any },
+  PageProps extends { title: string; [key: string]: any } = {
+    title: string;
     [key: string]: any;
-  } & { id: string };
-}[];
+  }
+> = {
+  page: PageProps;
+  content: MappedItem<Props>[];
+};
