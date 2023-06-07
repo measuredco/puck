@@ -2,9 +2,11 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 
 export async function GET() {
-  const data = fs.readFileSync("database.json", "utf-8");
+  const data = fs.existsSync("database.json")
+    ? fs.readFileSync("database.json", "utf-8")
+    : null;
 
-  return NextResponse.json(JSON.parse(data));
+  return NextResponse.json(JSON.parse(data || "[]"));
 }
 
 export async function POST(request: Request) {
