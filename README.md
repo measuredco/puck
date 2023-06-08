@@ -59,23 +59,37 @@ Instead, we provide recipes for how you might integrate Puck into your stack of 
 
 ### `Config`
 
+The `Config` object describes which components Puck should render, how they should render and which inputs are available to them.
+
 - **page** (`object`)
-  - **fields** (`Field`): The Field objects describing the input data stored in the `page` key. Used for page-level data, like title.
+  - **fields** (`object`):
+    - **title** (`Field`): A mandatory field for the page title.
+    - **[fieldName]** (`Field`): User defined fields, used to describe the input data stored in the `page` key.
   - **render** (`Component`): Render a React component at the root of your component tree. Useful for defining context providers.
 - **components** (`object`): Definitions for each of the components you want to show in the visual editor
-  - **[Component Name]** (`object`)
+  - **[componentName]** (`object`)
     - **fields** (`Field`): The Field objects describing the input data stored against this component.
     - **render** (`Component`): Render function for your React component. Receives props as defined in fields.
 
 ### `Field`
 
-- **type** (`text` | `number` | `select` | `external`): The input type to render
+A `Field` represents a user input field shown in the Puck interface.
+
+- **type** (`text` | `number` | `select` | `external` | `group`): The input type to render
 - **options** (`object[]`): array of items to render for select-type inputs
   - **label** (`string`)
   - **value** (`string`)
 
 ### `Data`
 
+The `Data` object stores the state of a page.
+
 - **page** (`object`):
+  - **title** (string): Page title
+  - **[prop]** (string): User defined data from page fields
+- **content** (`object[]`):
+  - **type** (string): Component name
+  - **props** (object):
+    - **[prop]** (string): User defined data from component fields
 
 ## License
