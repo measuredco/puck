@@ -1,5 +1,7 @@
-const resolvePuckPath = (puckPath: string[]) => {
-  const isEdit = puckPath[puckPath.length - 1] === "edit";
+const resolvePuckPath = (puckPath: string[] = []) => {
+  const hasPath = puckPath.length > 0;
+
+  const isEdit = hasPath ? puckPath[puckPath.length - 1] === "edit" : false;
 
   return {
     isEdit,
