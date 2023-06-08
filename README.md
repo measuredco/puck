@@ -46,14 +46,14 @@ export function Page() {
 
 ## Recipes
 
-> Building a new application? We recommend following using our `next-multi` recipe.
+> Building a new application? We recommend following using our [`next-multi`](https://github.com/measuredco/puck/tree/main/recipes/next-multi) recipe.
 
 Puck is a powerful visual editor that's the perfect companion for your existing application. Because everyone's stack is different, Puck can't handle authentication or provide a database.
 
 Instead, we provide recipes for how you might integrate Puck into your stack of choice:
 
 - [**next**](#): a single page Next.js example
-- [**next-multi**](#): a multi-page Next.js example
+- [**next-multi**](https://github.com/measuredco/puck/tree/main/recipes/next-multi): a multi-page Next.js example
 
 ## Reference
 
