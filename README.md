@@ -93,3 +93,5 @@ The `Data` object stores the state of a page.
     - **[prop]** (string): User defined data from component fields
 
 ## License
+
+MIT © [Measured Co.](https://github.com/measuredco)
