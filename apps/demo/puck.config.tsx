@@ -65,6 +65,7 @@ type Props = {
     size: (typeof curveSizes)[number]; // TODO this isn't working for some reason
     from: (typeof curvePositions)[number];
     bottomColor: (typeof surfaceBackgrounds)[number];
+    topColor: (typeof surfaceBackgrounds)[number];
   };
 };
 
@@ -478,10 +479,18 @@ export const config: Config<Props> = {
             ...surfaceBackgrounds.map((bg) => ({ label: bg, value: bg })),
           ],
         },
+        topColor: {
+          type: "select",
+          options: [
+            { label: "", value: "" },
+            ...surfaceBackgrounds.map((bg) => ({ label: bg, value: bg })),
+          ],
+        },
       },
-      render: ({ bottomColor = "black", from, size }) => (
+      render: ({ bottomColor = "black", topColor = "black", from, size }) => (
         <Curve
           bottomColor={bottomColor}
+          topColor={topColor}
           from={from as any}
           size={size as any}
         />
