@@ -24,7 +24,7 @@ export async function generateMetadata({
   )[path];
 
   return {
-    title: data.page.title,
+    title: data?.page?.title,
   };
 }
 
