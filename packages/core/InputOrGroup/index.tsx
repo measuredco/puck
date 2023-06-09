@@ -24,7 +24,7 @@ export const InputOrGroup = ({
   readOnly?: boolean;
 }) => {
   if (field.type === "group") {
-    if (!field.itemFields) {
+    if (!field.groupFields) {
       return null;
     }
 
@@ -34,8 +34,8 @@ export const InputOrGroup = ({
         {Array.isArray(value) ? (
           value.map((item, i) => (
             <fieldset className={getClassName("group")} key={`${name}_${i}`}>
-              {Object.keys(field.itemFields!).map((fieldName) => {
-                const subField = field.itemFields![fieldName];
+              {Object.keys(field.groupFields!).map((fieldName) => {
+                const subField = field.groupFields![fieldName];
 
                 return (
                   <InputOrGroup

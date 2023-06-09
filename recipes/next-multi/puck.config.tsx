@@ -295,7 +295,7 @@ export const config: Config<Props> = {
       fields: {
         links: {
           type: "group",
-          itemFields: {
+          groupFields: {
             href: { type: "text" },
             label: { type: "text" },
           },

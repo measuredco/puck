@@ -15,7 +15,7 @@ export type Field<
   label?: string;
   adaptor?: Adaptor;
   adaptorParams?: object;
-  itemFields?: {
+  groupFields?: {
     [SubPropName in keyof Props]: Field<Props[SubPropName]>;
   };
   options?: {

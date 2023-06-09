@@ -77,7 +77,7 @@ A `Field` represents a user input field shown in the Puck interface.
 
 - **type** (`text` | `number` | `select` | `external` | `group`): The input type to render
 - **label** (`text` [optional]): A label for the input. Will use the key if not provided.
-- **itemFields** (`object`): Object describing sub-fields for items in a group input
+- **groupFields** (`object`): Object describing sub-fields for items in a group input
   - **[fieldName]** (`Field`): The Field objects describing the input data for each item
 - **options** (`object[]`): array of items to render for select-type inputs
   - **label** (`string`)
