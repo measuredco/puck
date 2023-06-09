@@ -313,6 +313,7 @@ export function Puck({
                     key={`${data.content[selectedIndex].props.id}_${fieldName}`}
                     field={field}
                     name={fieldName}
+                    label={field.label}
                     readOnly={lockedFields.indexOf(fieldName) > -1}
                     value={data.content[selectedIndex].props[fieldName]}
                     onChange={onChange}
@@ -324,6 +325,7 @@ export function Puck({
                     key={`page_${fieldName}`}
                     field={field}
                     name={fieldName}
+                    label={field.label}
                     readOnly={lockedFields.indexOf(fieldName) > -1}
                     value={data.page[fieldName]}
                     onChange={onChange}
