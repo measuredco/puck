@@ -37,3 +37,14 @@
 .Input select:hover {
   border-color: var(--puck-color-neutral-3);
 }
+
+.Input-group {
+  border-color: var(--puck-color-neutral-2);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+
+  padding: 16px;
+}

@@ -295,12 +295,10 @@ export const config: Config<Props> = {
       fields: {
         links: {
           type: "group",
-          items: [
-            {
-              href: { type: "text" },
-              label: { type: "text" },
-            },
-          ],
+          itemFields: {
+            href: { type: "text" },
+            label: { type: "text" },
+          },
         },
       },
       render: ({ links = [] }) => (

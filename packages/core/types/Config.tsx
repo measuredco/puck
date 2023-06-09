@@ -14,9 +14,9 @@ export type Field<
   type: "text" | "number" | "select" | "group" | "external";
   adaptor?: Adaptor;
   adaptorParams?: object;
-  items?: {
+  itemFields?: {
     [SubPropName in keyof Props]: Field<Props[SubPropName]>;
-  }[];
+  };
   options?: {
     label: string;
     value: string | number;
