@@ -19,7 +19,7 @@ export const Button = ({
 }: {
   children: ReactNode;
   href?: string;
-  onClick?: () => void | Promise<void>;
+  onClick?: (e: any) => void | Promise<void>;
   variant?: "primary" | "secondary";
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
