@@ -9,32 +9,8 @@ import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
 import { OutlineList } from "../OutlineList";
 import { Heading } from "../Heading";
-
-const reorder = (list: any[], startIndex: number, endIndex: number) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
-
-const replace = (list: any[], index: number, newItem: any) => {
-  const result = Array.from(list);
-  result.splice(index, 1);
-  result.splice(index, 0, newItem);
-
-  return result;
-};
-
-const filter = (obj: object, validKeys: string[]) => {
-  return validKeys.reduce((acc, item) => {
-    if (typeof obj[item] !== "undefined") {
-      return { ...acc, [item]: obj[item] };
-    }
-
-    return acc;
-  }, {});
-};
+import { filter, reorder, replace } from "../lib";
+import { Button } from "../Button";
 
 const Field = () => {};
 
@@ -138,22 +114,15 @@ export function Puck({
               padding: 16,
             }}
           >
-            <button
-              onClick={() => {
-                onPublish(data);
-              }}
-              style={{
-                marginLeft: "auto",
-                background: "var(--puck-color-blue)",
-                border: "none",
-                borderRadius: 4,
-                padding: "12px 16px",
-                color: "white",
-                fontWeight: 600,
-              }}
-            >
-              Publish
-            </button>
+            <div style={{ marginLeft: "auto" }}>
+              <Button
+                onClick={() => {
+                  onPublish(data);
+                }}
+              >
+                Publish
+              </Button>
+            </div>
           </header>
           <div style={{ gridArea: "left" }}>
             <div

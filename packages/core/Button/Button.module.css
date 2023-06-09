@@ -1,0 +1,58 @@
+.Button {
+  appearance: none;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  letter-spacing: 0.05ch;
+  font-size: 14px;
+  font-weight: 600;
+  padding-bottom: 12px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 12px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.Button:hover {
+  text-decoration: none;
+}
+
+.Button--primary {
+  background: var(--puck-color-blue);
+}
+
+.Button--primary:hover {
+  opacity: 0.7;
+  transition: opacity 50ms ease-in;
+}
+
+.Button--secondary {
+  color: currentColor;
+  border: 1px solid currentColor;
+}
+
+.Button--secondary:hover {
+  background-color: var(--puck-color-neutral-0);
+}
+
+.Button--flush {
+  border-radius: 0;
+}
+
+.Button--disabled {
+  background: var(--color-neutral-2);
+  color: black;
+  cursor: not-allowed;
+}
+
+.Button--disabled:hover {
+  opacity: 1;
+}
+
+.Button--fullWidth {
+  width: 100%;
+}

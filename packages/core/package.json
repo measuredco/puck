@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "@types/react-beautiful-dnd": "^13.1.4",
-    "react-beautiful-dnd": "^13.1.1"
+    "react-beautiful-dnd": "^13.1.1",
+    "react-spinners": "^0.13.8"
   },
   "peerDependencies": {
     "react": "^17.0.2"
