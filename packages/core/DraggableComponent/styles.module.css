@@ -44,21 +44,30 @@
   border-bottom-left-radius: 8px;
   background: white;
   display: flex;
-  gap: 8px;
+  gap: 4px;
   border: 1px solid var(--puck-color-neutral-3);
 }
 
+.DraggableComponent-actionsLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 12px;
+  padding-right: 16px;
+  margin-right: 8px;
+  border-right: 1px solid var(--puck-color-neutral-2);
+}
+
 .DraggableComponent-action {
-  background: var(--puck-color-neutral-0);
-  border: 1px solid var(--puck-color-neutral-3);
+  background: transparent;
+  border: none;
   color: var(--puck-color-neutral-4);
-  padding: 12px 16px;
+  padding: 8px;
   border-radius: 4px;
-  font-weight: 600;
-  font-size: var(--puck-font-size-xxxs);
 }
 
 .DraggableComponent-action:hover {
   background: var(--puck-color-neutral-1);
+  color: var(--puck-color-blue);
   cursor: pointer;
 }

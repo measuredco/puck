@@ -188,6 +188,7 @@ export function Puck({
                         return (
                           <DraggableComponent
                             key={item.props.id}
+                            label={item.type.toString()}
                             id={`draggable-${item.props.id}`}
                             index={i}
                             isSelected={selectedIndex === i}
