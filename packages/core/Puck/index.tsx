@@ -33,7 +33,6 @@ export function Puck({
 }) {
   const [data, setData] = useState(initialData);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [lockedFields, setLockedFields] = useState<string[]>([]);
 
   const Page = config.page?.render || Fragment;
 
@@ -267,12 +266,13 @@ export function Puck({
                 if (fieldName === "_data") {
                   // Reset the link if value is falsey
                   if (!value) {
+                    const { locked, ..._meta } = currentProps._meta || {};
+
                     newProps = {
                       ...currentProps,
                       _data: undefined,
+                      _meta: _meta,
                     };
-
-                    setLockedFields([]);
                   } else {
                     const changedFields = filter(
                       // filter out anything not supported by this component
@@ -284,9 +284,10 @@ export function Puck({
                       ...currentProps,
                       ...changedFields,
                       _data: value, // TODO perf - this is duplicative and will make payload larger
+                      _meta: {
+                        locked: Object.keys(changedFields),
+                      },
                     };
-
-                    setLockedFields(Object.keys(changedFields));
                   }
                 } else {
                   newProps = {
@@ -315,7 +316,11 @@ export function Puck({
                     field={field}
                     name={fieldName}
                     label={field.label}
-                    readOnly={lockedFields.indexOf(fieldName) > -1}
+                    readOnly={
+                      data.content[selectedIndex].props._meta?.locked?.indexOf(
+                        fieldName
+                      ) > -1
+                    }
                     value={data.content[selectedIndex].props[fieldName]}
                     onChange={onChange}
                   />
@@ -327,7 +332,7 @@ export function Puck({
                     field={field}
                     name={fieldName}
                     label={field.label}
-                    readOnly={lockedFields.indexOf(fieldName) > -1}
+                    readOnly={data.page._meta?.locked?.indexOf(fieldName) > -1}
                     value={data.page[fieldName]}
                     onChange={onChange}
                   />
