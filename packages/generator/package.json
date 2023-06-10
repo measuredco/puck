@@ -1,0 +1,17 @@
+{
+  "name": "puck-generator",
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "generate": "bin/generate.js"
+  },
+  "files": [
+    "templates"
+  ],
+  "dependencies": {
+    "commander": "^10.0.1",
+    "handlebars": "^4.7.7",
+    "inquirer": "^9.2.7"
+  }
+}
