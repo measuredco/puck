@@ -22,7 +22,7 @@ program
         name: "recipe",
         message: "Which recipe would you like to use?",
         required: true,
-        default: "next-multi",
+        default: "next",
       },
     ];
     const answers = await inquirer.prompt(questions);

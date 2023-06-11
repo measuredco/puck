@@ -1,6 +1,6 @@
-# `next-multi` recipe
+# `next` recipe
 
-The `next-multi` recipe showcases one of the most powerful ways to implement Puck using to provide an authoring tool for any route in your Next app.
+The `next` recipe showcases one of the most powerful ways to implement Puck using to provide an authoring tool for any route in your Next app.
 
 ## Demonstrates
 
@@ -10,7 +10,7 @@ The `next-multi` recipe showcases one of the most powerful ways to implement Puc
 
 ## Usage
 
-Run the generator and enter `next-multi` when prompted
+Run the generator and enter `next` when prompted
 
 ```
 npx create-puck-app my-app
