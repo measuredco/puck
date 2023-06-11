@@ -13,7 +13,7 @@ The `next-multi` recipe showcases one of the most powerful ways to implement Puc
 Run the generator and enter `next-multi` when prompted
 
 ```
-npx create-puck-app
+npx create-puck-app my-app
 ```
 
 Start the server
