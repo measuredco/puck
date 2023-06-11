@@ -1,6 +1,12 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import {
+  ReactElement,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import DroppableStrictMode from "../DroppableStrictMode";
 import { DraggableComponent } from "../DraggableComponent";
@@ -20,21 +26,72 @@ const defaultPageFields: Record<string, Field> = {
   title: { type: "text" },
 };
 
+const PluginRenderer = ({
+  children,
+  plugins,
+  renderMethod,
+}: {
+  children: ReactNode;
+  plugins;
+  renderMethod: "renderPage" | "renderPageFields" | "renderFields";
+}) => {
+  return plugins
+    .filter((item) => item[renderMethod])
+    .map((item) => item[renderMethod])
+    .reduce((accChildren, Item) => <Item>{accChildren}</Item>, children);
+};
+
 export function Puck({
   config,
   data: initialData = { content: [], page: { title: "" } },
   onChange,
   onPublish,
+  plugins = [],
 }: {
   config: Config;
   data: Data;
   onChange?: (data: Data) => void;
   onPublish: (data: Data) => void;
+  plugins: {
+    renderPageFields?: (props: { children: ReactNode }) => ReactElement<any>;
+    renderPage?: (props: { children: ReactNode }) => ReactElement<any>;
+    renderFields?: (props: { children: ReactNode }) => ReactElement<any>;
+  }[];
 }) {
   const [data, setData] = useState(initialData);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const Page = config.page?.render || Fragment;
+  const Page = useCallback(
+    (pageProps) => (
+      <PluginRenderer plugins={plugins} renderMethod="renderPage">
+        {config.page?.render
+          ? config.page?.render(pageProps)
+          : pageProps.children}
+      </PluginRenderer>
+    ),
+    [config.page, plugins]
+  );
+
+  const PageFieldWrapper = useCallback(
+    (props) => (
+      <PluginRenderer plugins={plugins} renderMethod="renderPageFields">
+        {props.children}
+      </PluginRenderer>
+    ),
+    [plugins]
+  );
+
+  const ComponentFieldWrapper = useCallback(
+    (props) => (
+      <PluginRenderer plugins={plugins} renderMethod="renderFields">
+        {props.children}
+      </PluginRenderer>
+    ),
+    [plugins]
+  );
+
+  const FieldWrapper =
+    selectedIndex !== null ? ComponentFieldWrapper : PageFieldWrapper;
 
   const pageFields = config.page?.fields || defaultPageFields;
 
@@ -250,95 +307,99 @@ export function Puck({
 
             <Space />
 
-            {Object.keys(fields).map((fieldName) => {
-              const field = fields[fieldName];
+            <FieldWrapper>
+              {Object.keys(fields).map((fieldName) => {
+                const field = fields[fieldName];
 
-              const onChange = (value: any) => {
-                let currentProps;
-                let newProps;
+                const onChange = (value: any) => {
+                  let currentProps;
+                  let newProps;
 
-                if (selectedIndex !== null) {
-                  currentProps = data.content[selectedIndex].props;
-                } else {
-                  currentProps = data.page;
-                }
-
-                if (fieldName === "_data") {
-                  // Reset the link if value is falsey
-                  if (!value) {
-                    const { locked, ..._meta } = currentProps._meta || {};
-
-                    newProps = {
-                      ...currentProps,
-                      _data: undefined,
-                      _meta: _meta,
-                    };
+                  if (selectedIndex !== null) {
+                    currentProps = data.content[selectedIndex].props;
                   } else {
-                    const changedFields = filter(
-                      // filter out anything not supported by this component
-                      (value as any).attributes, // TODO type properly after getting proper state library
-                      Object.keys(fields)
-                    );
+                    currentProps = data.page;
+                  }
 
+                  if (fieldName === "_data") {
+                    // Reset the link if value is falsey
+                    if (!value) {
+                      const { locked, ..._meta } = currentProps._meta || {};
+
+                      newProps = {
+                        ...currentProps,
+                        _data: undefined,
+                        _meta: _meta,
+                      };
+                    } else {
+                      const changedFields = filter(
+                        // filter out anything not supported by this component
+                        (value as any).attributes, // TODO type properly after getting proper state library
+                        Object.keys(fields)
+                      );
+
+                      newProps = {
+                        ...currentProps,
+                        ...changedFields,
+                        _data: value, // TODO perf - this is duplicative and will make payload larger
+                        _meta: {
+                          locked: Object.keys(changedFields),
+                        },
+                      };
+                    }
+                  } else {
                     newProps = {
                       ...currentProps,
-                      ...changedFields,
-                      _data: value, // TODO perf - this is duplicative and will make payload larger
-                      _meta: {
-                        locked: Object.keys(changedFields),
-                      },
+                      [fieldName]: value,
                     };
                   }
-                } else {
-                  newProps = {
-                    ...currentProps,
-                    [fieldName]: value,
-                  };
-                }
+
+                  if (selectedIndex !== null) {
+                    setData({
+                      ...data,
+                      content: replace(data.content, selectedIndex, {
+                        ...data.content[selectedIndex],
+                        props: newProps,
+                      }),
+                    });
+                  } else {
+                    setData({ ...data, page: newProps });
+                  }
+                };
 
                 if (selectedIndex !== null) {
-                  setData({
-                    ...data,
-                    content: replace(data.content, selectedIndex, {
-                      ...data.content[selectedIndex],
-                      props: newProps,
-                    }),
-                  });
+                  return (
+                    <InputOrGroup
+                      key={`${data.content[selectedIndex].props.id}_${fieldName}`}
+                      field={field}
+                      name={fieldName}
+                      label={field.label}
+                      readOnly={
+                        data.content[
+                          selectedIndex
+                        ].props._meta?.locked?.indexOf(fieldName) > -1
+                      }
+                      value={data.content[selectedIndex].props[fieldName]}
+                      onChange={onChange}
+                    />
+                  );
                 } else {
-                  setData({ ...data, page: newProps });
+                  return (
+                    <InputOrGroup
+                      key={`page_${fieldName}`}
+                      field={field}
+                      name={fieldName}
+                      label={field.label}
+                      readOnly={
+                        data.page._meta?.locked?.indexOf(fieldName) > -1
+                      }
+                      value={data.page[fieldName]}
+                      onChange={onChange}
+                    />
+                  );
                 }
-              };
-
-              if (selectedIndex !== null) {
-                return (
-                  <InputOrGroup
-                    key={`${data.content[selectedIndex].props.id}_${fieldName}`}
-                    field={field}
-                    name={fieldName}
-                    label={field.label}
-                    readOnly={
-                      data.content[selectedIndex].props._meta?.locked?.indexOf(
-                        fieldName
-                      ) > -1
-                    }
-                    value={data.content[selectedIndex].props[fieldName]}
-                    onChange={onChange}
-                  />
-                );
-              } else {
-                return (
-                  <InputOrGroup
-                    key={`page_${fieldName}`}
-                    field={field}
-                    name={fieldName}
-                    label={field.label}
-                    readOnly={data.page._meta?.locked?.indexOf(fieldName) > -1}
-                    value={data.page[fieldName]}
-                    onChange={onChange}
-                  />
-                );
-              }
-            })}
+              })}
+            </FieldWrapper>
           </div>
         </div>
       </DragDropContext>
