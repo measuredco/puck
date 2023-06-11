@@ -10,10 +10,10 @@ The `next-multi` recipe showcases one of the most powerful ways to implement Puc
 
 ## Usage
 
-Install deps
+Run the generator and enter `next-multi` when prompted
 
 ```
-yarn
+npx create-puck-app
 ```
 
 Start the server
