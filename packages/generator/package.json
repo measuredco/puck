@@ -12,6 +12,7 @@
   "dependencies": {
     "commander": "^10.0.1",
     "handlebars": "^4.7.7",
-    "inquirer": "^9.2.7"
+    "inquirer": "^9.2.7",
+    "prettier": "^2.8.8"
   }
 }

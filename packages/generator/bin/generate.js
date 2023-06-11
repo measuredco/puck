@@ -19,32 +19,44 @@ program
     const questions = [
       {
         type: "input",
-        name: "author",
-        message: "What is your name?",
+        name: "recipe",
+        message: "Which recipe would you like to use?",
+        required: true,
+        default: "next-multi",
       },
     ];
     const answers = await inquirer.prompt(questions);
+    const recipe = answers.recipe;
 
     // Copy template files to the new directory
-    const templatePath = path.join(__dirname, "../templates");
+    const templatePath = path.join(__dirname, "../templates", recipe);
     const appPath = path.join(process.cwd(), appName);
+
+    if (!recipe) {
+      console.error(`Please specify a recipe.`);
+      return;
+    }
+
+    if (!fs.existsSync(templatePath)) {
+      console.error(`No recipe named ${recipe} exists.`);
+      return;
+    }
 
     if (fs.existsSync(appPath)) {
       console.error(
         `A directory called ${appName} already exists. Please use a different name or delete this directory.`
       );
-
       return;
     }
 
     await fs.mkdirSync(appName);
 
     // Compile handlebars templates
-    const templateFiles = glob.sync(`**/*.hbs`, {
+    const templateFiles = glob.sync(`**/*`, {
       cwd: templatePath,
+      nodir: true,
+      dot: true,
     });
-
-    console.log(templatePath, appPath);
 
     for (const templateFile of templateFiles) {
       const filePath = path.join(templatePath, templateFile);
@@ -52,27 +64,40 @@ program
         .replace(templatePath, appPath)
         .replace(".hbs", "");
 
-      console.log(templateFile, filePath, targetPath);
+      let data;
 
-      const templateString = await fs.readFileSync(filePath, "utf-8");
-      const template = Handlebars.compile(templateString);
-      const result = template(answers);
+      if (path.extname(filePath) === ".hbs") {
+        const templateString = await fs.readFileSync(filePath, "utf-8");
+
+        const template = Handlebars.compile(templateString);
+        data = template({ ...answers, appName });
+      } else {
+        data = await fs.readFileSync(filePath, "utf-8");
+      }
 
       const dir = path.dirname(targetPath);
 
       await fs.mkdirSync(dir, { recursive: true });
 
-      await fs.writeFileSync(targetPath, result);
+      await fs.writeFileSync(targetPath, data);
     }
 
-    // Install dependencies and format code
-    // execSync("yarn install", { cwd: appPath, stdio: "inherit" });
-    // execSync("yarn prettier --write .", { cwd: appPath, stdio: "inherit" });
-    // execSync("git init", { cwd: appPath, stdio: "inherit" });
-    // execSync("git add -a", { cwd: appPath, stdio: "inherit" });
-    // execSync("git commit -m 'build(puck): generate app'", {
-    //   cwd: appPath,
-    //   stdio: "inherit",
-    // });
+    execSync("yarn install", { cwd: appPath, stdio: "inherit" });
+
+    const inGitRepo =
+      execSync("git rev-parse --is-inside-work-tree", {
+        cwd: appPath,
+      }).toString() === "true";
+
+    // Only commit if this is a new repo
+    if (!inGitRepo) {
+      execSync("git init", { cwd: appPath, stdio: "inherit" });
+
+      execSync("git add .", { cwd: appPath, stdio: "inherit" });
+      execSync("git commit -m 'build(puck): generate app'", {
+        cwd: appPath,
+        stdio: "inherit",
+      });
+    }
   })
   .parse(process.argv);
