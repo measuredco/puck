@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  ReactElement,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import DroppableStrictMode from "../DroppableStrictMode";
 import { DraggableComponent } from "../DraggableComponent";
@@ -18,6 +12,8 @@ import { Heading } from "../Heading";
 import { filter, reorder, replace } from "../lib";
 import { Button } from "../Button";
 
+import { Plugin } from "../types/Plugin";
+
 const Field = () => {};
 
 const Space = () => <div style={{ marginBottom: 16 }} />;
@@ -28,17 +24,22 @@ const defaultPageFields: Record<string, Field> = {
 
 const PluginRenderer = ({
   children,
+  data,
   plugins,
   renderMethod,
 }: {
   children: ReactNode;
+  data: Data;
   plugins;
   renderMethod: "renderPage" | "renderPageFields" | "renderFields";
 }) => {
   return plugins
     .filter((item) => item[renderMethod])
     .map((item) => item[renderMethod])
-    .reduce((accChildren, Item) => <Item>{accChildren}</Item>, children);
+    .reduce(
+      (accChildren, Item) => <Item data={data}>{accChildren}</Item>,
+      children
+    );
 };
 
 export function Puck({
@@ -52,42 +53,50 @@ export function Puck({
   data: Data;
   onChange?: (data: Data) => void;
   onPublish: (data: Data) => void;
-  plugins: {
-    renderPageFields?: (props: { children: ReactNode }) => ReactElement<any>;
-    renderPage?: (props: { children: ReactNode }) => ReactElement<any>;
-    renderFields?: (props: { children: ReactNode }) => ReactElement<any>;
-  }[];
+  plugins?: Plugin[];
 }) {
   const [data, setData] = useState(initialData);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const Page = useCallback(
     (pageProps) => (
-      <PluginRenderer plugins={plugins} renderMethod="renderPage">
+      <PluginRenderer
+        plugins={plugins}
+        renderMethod="renderPage"
+        data={pageProps.data}
+      >
         {config.page?.render
           ? config.page?.render(pageProps)
           : pageProps.children}
       </PluginRenderer>
     ),
-    [config.page, plugins]
+    [config.page]
   );
 
   const PageFieldWrapper = useCallback(
     (props) => (
-      <PluginRenderer plugins={plugins} renderMethod="renderPageFields">
+      <PluginRenderer
+        plugins={plugins}
+        renderMethod="renderPageFields"
+        data={props.data}
+      >
         {props.children}
       </PluginRenderer>
     ),
-    [plugins]
+    []
   );
 
   const ComponentFieldWrapper = useCallback(
     (props) => (
-      <PluginRenderer plugins={plugins} renderMethod="renderFields">
+      <PluginRenderer
+        plugins={plugins}
+        renderMethod="renderFields"
+        data={props.data}
+      >
         {props.children}
       </PluginRenderer>
     ),
-    [plugins]
+    []
   );
 
   const FieldWrapper =
@@ -145,6 +154,8 @@ export function Puck({
               ),
             });
           }
+
+          setSelectedIndex(null);
         }}
       >
         <div
@@ -227,7 +238,7 @@ export function Puck({
                 overflow: "hidden",
               }}
             >
-              <Page {...data.page}>
+              <Page data={data} {...data.page}>
                 <DroppableStrictMode droppableId="droppable">
                   {(provided, snapshot) => (
                     <div
@@ -298,7 +309,14 @@ export function Puck({
               </Page>
             </div>
           </div>
-          <div style={{ padding: 16, overflowY: "scroll", gridArea: "right" }}>
+          <div
+            style={{
+              padding: 16,
+              overflowY: "scroll",
+              gridArea: "right",
+              fontFamily: "var(--puck-font-stack)",
+            }}
+          >
             {selectedIndex !== null ? (
               <Heading size="l">{data.content[selectedIndex].type}</Heading>
             ) : (
@@ -307,7 +325,7 @@ export function Puck({
 
             <Space />
 
-            <FieldWrapper>
+            <FieldWrapper data={data}>
               {Object.keys(fields).map((fieldName) => {
                 const field = fields[fieldName];
 

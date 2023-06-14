@@ -1,0 +1,25 @@
+{
+  "name": "@puck/plugin-heading-analyzer",
+  "version": "0.0.0",
+  "main": "./index.tsx",
+  "types": "./index.tsx",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"**/*.ts*\""
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "tsup": "^6.7.0",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "react-from-json": "^0.7.2"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2"
+  }
+}
