@@ -25,13 +25,17 @@
   background: var(--puck-color-neutral-3);
   position: absolute;
   left: -17px;
-  top: 50%;
+  top: 9px;
   width: 13px;
   height: 1px;
   content: "";
 }
 
-.OutlineList li:hover {
+.OutlineList .OutlineList-clickableItem:hover {
   color: var(--puck-color-blue);
   cursor: pointer;
+}
+
+.OutlineList li > .OutlineList {
+  margin: 8px;
 }

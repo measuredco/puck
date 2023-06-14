@@ -408,7 +408,7 @@ export const config: Config<Props> = {
         <Surface background={surface}>
           <Section>
             <VerticalSpace size="96" />
-            <Heading align="center" color="brand" size="xl">
+            <Heading align="center" color="brand" size="xl" level="2">
               Who we work with
             </Heading>
             <VerticalSpace size="96" />

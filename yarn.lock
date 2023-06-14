@@ -3570,6 +3570,11 @@ react-feather@^2.0.10:
   dependencies:
     prop-types "^15.7.2"
 
+react-from-json@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/react-from-json/-/react-from-json-0.7.2.tgz#7f4b354f6f1d7c78f408e25d0c1ed115359d85f0"
+  integrity sha512-of/jhr45fs4S+GefkRsj4T5wGp+T9o8ddaxni6nAUyel/VrLFS6ogDbnzaSX/UFfBT5Xah59OVKtQtdrYsBWPw==
+
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"

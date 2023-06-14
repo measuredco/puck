@@ -14,10 +14,13 @@ OutlineList.Item = ({
   onClick,
 }: {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
 }) => {
   return (
-    <li className={getClassName("item")} onClick={onClick}>
+    <li
+      className={onClick ? getClassName("clickableItem") : ""}
+      onClick={onClick}
+    >
       {children}
     </li>
   );

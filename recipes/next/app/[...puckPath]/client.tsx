@@ -3,6 +3,7 @@
 import { Data } from "core/types/Config";
 import { Puck, Render } from "core";
 import config from "../../puck.config";
+import headingAnalyzer from "../../../../packages/plugin-heading-analyzer";
 
 export function Client({
   path,
@@ -24,6 +25,7 @@ export function Client({
             body: JSON.stringify({ [path]: data }),
           });
         }}
+        plugins={[headingAnalyzer]}
       />
     );
   }
