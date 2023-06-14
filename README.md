@@ -64,6 +64,26 @@ Puck is a React component that can be easily integrated into your existing appli
 
 - [**next**](https://github.com/measuredco/puck/tree/main/recipes/next): Next.js app example
 
+## Plugins
+
+Puck can be configured to work with plugins. Plugins can extend the functionality to support novel functionality.
+
+### Official plugins
+
+- [`heading-analyzer`](https://github.com/measuredco/puck/tree/main/plugins/heading-analyzer): Analyze the heading outline of your page and be warned when you're not respecting WCAG 2 accessiblity standards.
+
+### Developing a plugin
+
+The plugin API follows a React paradigm. Each plugin passed to the Puck editor can provide three functions:
+
+#### `Plugin`
+
+- `renderPage` (`Component`): Render the root node of the preview content
+- `renderPageFields` (`Component`): Render the page fields
+- `renderFields` (`Component`): Render the fields for the currently selected component
+
+Each render function receives the `children` prop, which you should render to show the page or fields, and the `data` prop, which can be used to read the data model for the page.
+
 ## Reference
 
 ### `Config`
