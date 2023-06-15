@@ -1,6 +1,12 @@
 "use client";
 
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import {
+  ReactElement,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import DroppableStrictMode from "../DroppableStrictMode";
 import { DraggableComponent } from "../DraggableComponent";
@@ -48,12 +54,18 @@ export function Puck({
   onChange,
   onPublish,
   plugins = [],
+  renderHeader,
 }: {
   config: Config;
   data: Data;
   onChange?: (data: Data) => void;
   onPublish: (data: Data) => void;
   plugins?: Plugin[];
+  renderHeader?: (props: {
+    children: ReactNode;
+    data: Data;
+    setData: (data: Data) => void;
+  }) => ReactElement;
 }) {
   const [data, setData] = useState(initialData);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -174,22 +186,35 @@ export function Puck({
         >
           <header
             style={{
-              display: "flex",
-
               gridArea: "header",
               borderBottom: "1px solid #cccccc",
-              padding: 16,
             }}
           >
-            <div style={{ marginLeft: "auto" }}>
-              <Button
-                onClick={() => {
-                  onPublish(data);
-                }}
-              >
-                Publish
-              </Button>
-            </div>
+            {renderHeader ? (
+              renderHeader({
+                children: (
+                  <Button
+                    onClick={() => {
+                      onPublish(data);
+                    }}
+                  >
+                    Publish
+                  </Button>
+                ),
+                data,
+                setData,
+              })
+            ) : (
+              <div style={{ marginLeft: "auto", padding: 16 }}>
+                <Button
+                  onClick={() => {
+                    onPublish(data);
+                  }}
+                >
+                  Publish
+                </Button>
+              </div>
+            )}
           </header>
           <div style={{ gridArea: "left" }}>
             <div
