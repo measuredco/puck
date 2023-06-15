@@ -51,6 +51,7 @@ export const Button = ({
       tabIndex={tabIndex}
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noreferrer" : undefined}
+      href={href}
     >
       {children}
       {loading && (
@@ -61,10 +62,6 @@ export const Button = ({
       )}
     </ElementType>
   );
-
-  if (ElementType === "a") {
-    return <a href={href!}>{el}</a>;
-  }
 
   return el;
 };
