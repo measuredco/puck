@@ -84,6 +84,20 @@ The plugin API follows a React paradigm. Each plugin passed to the Puck editor c
 
 Each render function receives the `children` prop, which you should render to show the page or fields, and the `data` prop, which can be used to read the data model for the page.
 
+#### Example
+
+Here's a basic plugin that renders a "My plugin" heading in the page field area:
+
+```jsx
+const myPlugin = {
+  renderPageFields: (props) => <div>
+    {props.children}
+
+    <h2>My plugin</h2>
+  </div>
+};
+```
+
 ## Reference
 
 ### `Config`
