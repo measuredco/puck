@@ -1,7 +1,6 @@
 import { ReactNode, useState } from "react";
 import styles from "./Button.module.css";
 import getClassNameFactory from "../lib/get-class-name-factory";
-import Link from "next/link";
 import { ClipLoader } from "react-spinners";
 
 const getClassName = getClassNameFactory("Button", styles);
@@ -39,11 +38,11 @@ export const Button = ({
         disabled,
         fullWidth,
       })}
-      onClick={() => {
+      onClick={(e) => {
         if (!onClick) return;
 
         setLoading(true);
-        Promise.resolve(onClick()).then(() => {
+        Promise.resolve(onClick(e)).then(() => {
           setLoading(false);
         });
       }}
@@ -64,7 +63,7 @@ export const Button = ({
   );
 
   if (ElementType === "a") {
-    return <Link href={href!}>{el}</Link>;
+    return <a href={href!}>{el}</a>;
   }
 
   return el;
