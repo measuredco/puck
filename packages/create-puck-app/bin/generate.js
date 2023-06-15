@@ -149,11 +149,12 @@ program
     let inGitRepo = false;
 
     try {
-      execSync("git status", {
-        cwd: appPath,
-      })
-        .toString()
-        .indexOf("fatal:") !== 0;
+      inGitRepo =
+        execSync("git status", {
+          cwd: appPath,
+        })
+          .toString()
+          .indexOf("fatal:") !== 0;
     } catch {}
 
     // Only commit if this is a new repo
