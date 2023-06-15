@@ -14,9 +14,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 program
-  .command("create <app-name>")
-  .action(async (appName) => {
+  .command("create [app-name]")
+  .action(async (_appName) => {
+    const beforeQuestions = [];
+
+    if (!_appName) {
+      beforeQuestions.push({
+        type: "input",
+        name: "appName",
+        message: "What is the name of your app?",
+        required: true,
+      });
+    }
+
     const questions = [
+      ...beforeQuestions,
       {
         type: "input",
         name: "recipe",
@@ -26,6 +38,7 @@ program
       },
     ];
     const answers = await inquirer.prompt(questions);
+    const appName = answers.appName || _appName;
     const recipe = answers.recipe;
 
     // Copy template files to the new directory
