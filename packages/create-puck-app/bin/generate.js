@@ -13,9 +13,46 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Lifted from https://github.com/vercel/next.js/blob/c2d7bbd1b82c71808b99e9a7944fb16717a581db/packages/create-next-app/helpers/get-pkg-manager.ts
+function getPkgManager() {
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  const userAgent = process.env.npm_config_user_agent || "";
+
+  if (userAgent.startsWith("yarn")) {
+    return "yarn";
+  }
+
+  if (userAgent.startsWith("pnpm")) {
+    return "pnpm";
+  }
+
+  return "npm";
+}
+
 program
   .command("create [app-name]")
-  .action(async (_appName) => {
+  .option(
+    "--use-npm",
+    `
+
+    Explicitly tell the CLI to bootstrap the application using npm
+  `
+  )
+  .option(
+    "--use-pnpm",
+    `
+
+    Explicitly tell the CLI to bootstrap the application using pnpm
+  `
+  )
+  .option(
+    "--use-yarn",
+    `
+
+    Explicitly tell the CLI to bootstrap the application using Yarn
+  `
+  )
+  .action(async (_appName, options) => {
     const beforeQuestions = [];
 
     if (!_appName) {
@@ -64,6 +101,14 @@ program
 
     await fs.mkdirSync(appName);
 
+    const packageManager = !!options.useNpm
+      ? "npm"
+      : !!options.usePnpm
+      ? "pnpm"
+      : !!options.useYarn
+      ? "yarn"
+      : getPkgManager();
+
     // Compile handlebars templates
     const templateFiles = glob.sync(`**/*`, {
       cwd: templatePath,
@@ -95,7 +140,11 @@ program
       await fs.writeFileSync(targetPath, data);
     }
 
-    execSync("yarn install", { cwd: appPath, stdio: "inherit" });
+    if (packageManager === "yarn") {
+      execSync("yarn install", { cwd: appPath, stdio: "inherit" });
+    } else {
+      execSync(`${packageManager} i`, { cwd: appPath, stdio: "inherit" });
+    }
 
     let inGitRepo = false;
 
