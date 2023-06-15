@@ -19,6 +19,7 @@ import { filter, reorder, replace } from "../lib";
 import { Button } from "../Button";
 
 import { Plugin } from "../types/Plugin";
+import { usePlaceholderStyle } from "../lib/use-placeholder-style";
 
 const Field = () => {};
 
@@ -129,9 +130,12 @@ export function Puck({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
+  const { onDragUpdate, placeholderStyle } = usePlaceholderStyle();
+
   return (
     <div className="puck">
       <DragDropContext
+        onDragUpdate={onDragUpdate}
         onDragEnd={(droppedItem) => {
           if (!droppedItem.destination) {
             console.warn("No destination specified");
@@ -257,7 +261,7 @@ export function Puck({
           >
             <div
               style={{
-                background: "#eee",
+                background: "white",
                 border: "1px solid #dedede",
                 borderRadius: 32,
                 overflow: "hidden",
@@ -271,10 +275,9 @@ export function Puck({
                       ref={provided.innerRef}
                       style={{
                         minHeight: "calc(100vh - 32px)",
-                        background: snapshot.isDraggingOver
-                          ? "lightblue"
-                          : "white",
+                        position: "relative",
                       }}
+                      id="puck-drop-zone"
                     >
                       {data.content.map((item, i) => {
                         return (
@@ -328,6 +331,16 @@ export function Puck({
                       })}
 
                       {provided.placeholder}
+
+                      {snapshot.isDraggingOver && (
+                        <div
+                          style={{
+                            ...placeholderStyle,
+                            background: "#DFEEF3",
+                            zIndex: 0,
+                          }}
+                        />
+                      )}
                     </div>
                   )}
                 </DroppableStrictMode>

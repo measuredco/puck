@@ -1,5 +1,6 @@
 .DraggableComponent {
   position: relative;
+  z-index: 1;
 }
 
 .DraggableComponent-overlay {
