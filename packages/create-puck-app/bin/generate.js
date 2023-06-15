@@ -97,10 +97,15 @@ program
 
     execSync("yarn install", { cwd: appPath, stdio: "inherit" });
 
-    const inGitRepo =
-      execSync("git rev-parse --is-inside-work-tree", {
+    let inGitRepo = false;
+
+    try {
+      execSync("git status", {
         cwd: appPath,
-      }).toString() === "true";
+      })
+        .toString()
+        .indexOf("fatal:") !== 0;
+    } catch {}
 
     // Only commit if this is a new repo
     if (!inGitRepo) {
