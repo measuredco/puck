@@ -106,7 +106,9 @@ const HeadingOutlineAnalyser = ({
       {children}
       <br />
       <Heading>Heading Outline</Heading>
-      <div style={{ marginBottom: 8 }} />
+      <div style={{ marginBottom: 16 }} />
+
+      {hierarchy.length === 0 && <div>No headings.</div>}
 
       <OutlineList>
         <ReactFromJSON<{
