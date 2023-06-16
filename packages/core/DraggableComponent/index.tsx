@@ -3,7 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../lib/get-class-name-factory";
 import { Copy, Trash } from "react-feather";
-import { useShiftHeld } from "../lib/use-shift-held";
+import { useModifierHeld } from "../lib/use-modifier-held";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -28,7 +28,7 @@ export const DraggableComponent = ({
   debug?: string;
   label?: string;
 }) => {
-  const isShiftHeld = useShiftHeld();
+  const isModifierHeld = useModifierHeld("Alt");
 
   return (
     <Draggable key={id} draggableId={id} index={index}>
@@ -37,10 +37,10 @@ export const DraggableComponent = ({
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={getClassName({ isSelected, isShiftHeld })}
+          className={getClassName({ isSelected, isModifierHeld })}
           style={{
             ...provided.draggableProps.style,
-            cursor: isShiftHeld ? "initial" : "grab",
+            cursor: isModifierHeld ? "initial" : "grab",
           }}
         >
           {debug}

@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 
-export const useShiftHeld = () => {
-  const [shiftHeld, setShiftHeld] = useState(false);
+export const useModifierHeld = (modifier: "Shift" | "Alt" | "Control") => {
+  const [modifierHeld, setModifierHeld] = useState(false);
 
   function downHandler({ key }) {
-    if (key === "Shift") {
-      setShiftHeld(true);
+    if (key === modifier) {
+      setModifierHeld(true);
     }
   }
 
   function upHandler({ key }) {
-    if (key === "Shift") {
-      setShiftHeld(false);
+    if (key === modifier) {
+      setModifierHeld(false);
     }
   }
 
@@ -24,5 +24,5 @@ export const useShiftHeld = () => {
     };
   }, []);
 
-  return shiftHeld;
+  return modifierHeld;
 };
