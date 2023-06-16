@@ -81,7 +81,7 @@ export function Puck({
         data={pageProps.data}
       >
         {config.page?.render
-          ? config.page?.render(pageProps)
+          ? config.page?.render({ ...pageProps, editMode: true })
           : pageProps.children}
       </PluginRenderer>
     ),
@@ -320,7 +320,10 @@ export function Puck({
                           >
                             <div style={{ zoom: 0.75 }}>
                               {config.components[item.type] ? (
-                                config.components[item.type].render(item.props)
+                                config.components[item.type].render({
+                                  ...item.props,
+                                  editMode: true,
+                                })
                               ) : (
                                 <div>No configuration for {item.type}</div>
                               )}
