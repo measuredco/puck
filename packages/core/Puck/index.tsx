@@ -274,7 +274,7 @@ export function Puck({
                       {...provided.droppableProps}
                       ref={provided.innerRef}
                       style={{
-                        minHeight: "calc(100vh - 32px)",
+                        minHeight: 128,
                         position: "relative",
                       }}
                       id="puck-drop-zone"
