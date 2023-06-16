@@ -3,6 +3,11 @@
   z-index: 1;
 }
 
+.DraggableComponent-contents {
+  position: relative; /* Reset stacking context */
+  z-index: 0;
+}
+
 .DraggableComponent-overlay {
   display: none;
   height: 100%;
@@ -17,6 +22,10 @@
   display: block;
   background-color: #cdcdcd50;
   box-shadow: inset 0 0 0 4px lightblue;
+}
+
+.DraggableComponent--isShiftHeld:hover .DraggableComponent-overlay {
+  display: none;
 }
 
 .DraggableComponent .DraggableComponent-overlay:hover {

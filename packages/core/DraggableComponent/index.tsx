@@ -3,6 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../lib/get-class-name-factory";
 import { Copy, Trash } from "react-feather";
+import { useShiftHeld } from "../lib/use-shift-held";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -27,19 +28,24 @@ export const DraggableComponent = ({
   debug?: string;
   label?: string;
 }) => {
+  const isShiftHeld = useShiftHeld();
+
   return (
     <Draggable key={id} draggableId={id} index={index}>
-      {(provided, snapshot) => (
+      {(provided) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={getClassName({ isSelected })}
-          onClick={onClick}
+          className={getClassName({ isSelected, isShiftHeld })}
+          style={{
+            ...provided.draggableProps.style,
+            cursor: isShiftHeld ? "initial" : "grab",
+          }}
         >
           {debug}
-          {children}
-          <div className={getClassName("overlay")}>
+          <div className={getClassName("contents")}>{children}</div>
+          <div className={getClassName("overlay")} onClick={onClick}>
             <div className={getClassName("actions")}>
               {label && (
                 <div className={getClassName("actionsLabel")}>{label}</div>
