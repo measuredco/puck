@@ -27,6 +27,17 @@
   width: 100%;
 }
 
+.Input select {
+  /* Safari */
+  appearance: none;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23c3c3c3'><polygon points='0,0 100,0 50,50'/></svg>")
+    no-repeat;
+  background-size: 12px;
+  background-position: calc(100% - 12px) calc(50% + 3px);
+  background-repeat: no-repeat;
+  background-color: white;
+}
+
 .Input--readOnly input,
 .Input--readOnly select {
   background-color: var(--puck-color-grey-9);
