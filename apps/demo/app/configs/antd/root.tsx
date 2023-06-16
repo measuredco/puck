@@ -39,14 +39,14 @@ const items2: MenuProps["items"] = [
   };
 });
 
-export type PageProps = {
+export type RootProps = {
   children: ReactNode;
   layout: string;
   title: string;
   editMode: boolean;
 };
 
-export const Page = ({ children, layout, editMode }: PageProps) => {
+export const Root = ({ children, layout, editMode }: RootProps) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();

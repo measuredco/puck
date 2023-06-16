@@ -3,7 +3,7 @@ import { CardDeck, CardDeckProps } from "./blocks/CardDeck";
 import { Carousel, CarouselProps } from "./blocks/Carousel";
 import { Hero, HeroProps } from "./blocks/Hero";
 import { Video, VideoProps } from "./blocks/Video";
-import { Page, PageProps } from "./page";
+import { Root, RootProps } from "./root";
 
 type Props = {
   CardDeck: CardDeckProps;
@@ -13,7 +13,7 @@ type Props = {
 };
 
 // We avoid the name config as next gets confused
-export const conf: Config<Props, PageProps> = {
+export const conf: Config<Props, RootProps> = {
   page: {
     fields: {
       title: {
@@ -33,7 +33,7 @@ export const conf: Config<Props, PageProps> = {
         ],
       },
     },
-    render: Page,
+    render: Root,
   },
   components: {
     CardDeck,
