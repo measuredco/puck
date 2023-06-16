@@ -19,7 +19,7 @@ export function Client({
   framework: Framework;
 }) {
   const config = require(`../../configs/${framework}/`).default;
-  const initialData = require(`../../configs/${framework}/`).initialData;
+  const initialData = require(`../../configs/${framework}/`).initialData || {};
 
   const key = `puck-demo:${framework}:${path}`;
 

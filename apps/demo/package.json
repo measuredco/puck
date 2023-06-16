@@ -9,8 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.13.5",
+    "antd": "^5.6.1",
     "classnames": "^2.3.2",
     "next": "^13.4.6",
+    "rc-footer": "^0.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
