@@ -5,6 +5,7 @@ import { Puck, Render } from "core";
 import { Framework } from "../../Framework";
 import { useEffect, useState } from "react";
 import { Button } from "core/Button";
+import headingAnalyzer from "../../../../../packages/plugin-heading-analyzer";
 
 const isBrowser = typeof window !== "undefined";
 
@@ -46,6 +47,7 @@ export function Client({
           onPublish={async (data: Data) => {
             localStorage.setItem(key, JSON.stringify(data));
           }}
+          plugins={[headingAnalyzer]}
           renderHeader={({ children }) => (
             <>
               <div
