@@ -260,6 +260,7 @@ export function Puck({
             onClick={() => setSelectedIndex(null)}
           >
             <div
+              className="puck-root"
               style={{
                 background: "white",
                 borderRadius: 16,

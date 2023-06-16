@@ -9,7 +9,7 @@ import ReactFromJSON from "react-from-json";
 
 const getOutline = () => {
   const headings = window.document
-    .querySelector(".puck")!
+    .querySelector(".puck-root")!
     .querySelectorAll("h1,h2,h3,h4,h5,h6");
 
   const _outline: { rank: number; text: string }[] = [];
