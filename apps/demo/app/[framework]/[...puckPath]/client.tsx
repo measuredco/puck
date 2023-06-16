@@ -18,7 +18,8 @@ export function Client({
   isEdit: boolean;
   framework: Framework;
 }) {
-  const config = require(`../../configs/${framework}.config`).default;
+  const config = require(`../../configs/${framework}/`).default;
+  const initialData = require(`../../configs/${framework}/`).initialData;
 
   const key = `puck-demo:${framework}:${path}`;
 
@@ -29,6 +30,8 @@ export function Client({
       if (dataStr) {
         return JSON.parse(dataStr);
       }
+
+      return initialData[path] || undefined;
     }
   });
 
