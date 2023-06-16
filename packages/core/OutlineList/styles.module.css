@@ -8,7 +8,7 @@
 }
 
 .OutlineList::before {
-  background: var(--puck-color-neutral-3);
+  background: var(--puck-color-grey-7);
   position: absolute;
   left: -1px;
   top: 0px;
@@ -23,7 +23,7 @@
 }
 
 .OutlineList li::before {
-  background: var(--puck-color-neutral-3);
+  background: var(--puck-color-grey-7);
   position: absolute;
   left: -17px;
   top: 9px;

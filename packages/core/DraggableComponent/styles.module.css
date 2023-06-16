@@ -21,7 +21,7 @@
 .DraggableComponent:hover .DraggableComponent-overlay {
   display: block;
   background-color: #cdcdcd50;
-  box-shadow: inset 0 0 0 4px lightblue;
+  box-shadow: inset 0 0 0 4px var(--puck-color-azure-6);
 }
 
 .DraggableComponent--isModifierHeld:hover .DraggableComponent-overlay {
@@ -33,7 +33,7 @@
 }
 
 .DraggableComponent--isSelected .DraggableComponent-overlay {
-  box-shadow: inset 0 0 0 4px lightblue;
+  box-shadow: inset 0 0 0 4px var(--puck-color-azure-6);
   display: block;
   z-index: 1;
 }
@@ -50,7 +50,7 @@
   background: white;
   display: flex;
   gap: 4px;
-  border: 1px solid var(--puck-color-neutral-3);
+  border: 1px solid var(--puck-color-grey-8);
 }
 
 .DraggableComponent-actionsLabel {
@@ -60,19 +60,19 @@
   padding-left: 12px;
   padding-right: 16px;
   margin-right: 8px;
-  border-right: 1px solid var(--puck-color-neutral-2);
+  border-right: 1px solid var(--puck-color-grey-8);
 }
 
 .DraggableComponent-action {
   background: transparent;
   border: none;
-  color: var(--puck-color-neutral-4);
+  color: var(--puck-color-grey-2);
   padding: 8px;
   border-radius: 4px;
 }
 
 .DraggableComponent-action:hover {
-  background: var(--puck-color-neutral-1);
+  background: var(--puck-color-grey-9);
   color: var(--puck-color-blue);
   cursor: pointer;
 }

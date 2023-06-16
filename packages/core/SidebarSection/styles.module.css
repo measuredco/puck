@@ -1,5 +1,5 @@
 .SidebarSection {
-  border-bottom: 1px solid var(--puck-color-neutral-2);
+  border-bottom: 1px solid var(--puck-color-grey-8);
 }
 
 .SidebarSection:last-of-type {
@@ -10,7 +10,7 @@
 .SidebarSection-title {
   background: white;
   padding: 16px;
-  border-bottom: 1px solid var(--puck-color-neutral-2);
+  border-bottom: 1px solid var(--puck-color-grey-8);
 }
 
 .SidebarSection-content {

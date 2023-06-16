@@ -9,7 +9,7 @@
 .ComponentList-item,
 .ComponentList-itemShadow {
   background: white;
-  color: var(--puck-color-neutral-4);
+  color: black;
   padding: 16px;
   display: flex;
   border: 1px #ccc solid;
@@ -21,5 +21,5 @@
 }
 
 .ComponentList-item:hover {
-  background-color: var(--puck-color-neutral-1);
+  background-color: var(--puck-color-grey-9);
 }

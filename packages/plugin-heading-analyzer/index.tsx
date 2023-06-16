@@ -118,7 +118,7 @@ const HeadingOutlineAnalyser = ({
                 <OutlineList.Item>
                   <small>
                     {props.missing ? (
-                      <span style={{ color: "red" }}>
+                      <span style={{ color: "var(--puck-color-red)" }}>
                         <b>H{props.rank}</b>: Missing
                       </span>
                     ) : (

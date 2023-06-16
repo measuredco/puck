@@ -21,7 +21,7 @@
 .Input select {
   border-width: 1px;
   border-style: solid;
-  border-color: var(--puck-color-neutral-2);
+  border-color: var(--puck-color-grey-8);
   border-radius: 4px;
   padding: 12px 16px;
   width: 100%;
@@ -29,8 +29,8 @@
 
 .Input--readOnly input,
 .Input--readOnly select {
-  background-color: var(--puck-color-neutral-1);
-  border-color: var(--puck-color-neutral-2);
+  background-color: var(--puck-color-grey-9);
+  border-color: var(--puck-color-grey-8);
 }
 
 .Input input:hover,
@@ -40,12 +40,11 @@
 
 .Input-group {
   background: white;
-  border-color: var(--puck-color-neutral-2);
+  border-color: var(--puck-color-grey-8);
   border-style: solid;
   border-width: 1px;
   border-radius: 4px;
   margin-top: 4px;
   margin-bottom: 16px;
-
   padding: 16px;
 }

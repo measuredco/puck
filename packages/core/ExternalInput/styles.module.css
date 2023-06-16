@@ -8,7 +8,7 @@
 
 .ExternalInput-button {
   background-color: white;
-  border: 1px solid var(--puck-color-neutral-2);
+  border: 1px solid var(--puck-color-grey-8);
   border-radius: 4px;
   color: var(--puck-color-blue);
   padding: 12px 16px;
@@ -17,13 +17,12 @@
   text-overflow: ellipsis;
   position: relative;
   overflow: hidden;
-  flex-grow: 1;
 }
 
 .ExternalInput-button:hover,
 .ExternalInput-detachButton:hover {
   cursor: pointer;
-  background: var(--puck-color-neutral-0);
+  background: var(--puck-color-grey-10);
   border-color: var(--puck-color-neutral-3);
   z-index: 1;
 }
@@ -35,7 +34,7 @@
 }
 
 .ExternalInput-detachButton {
-  border: 1px solid var(--puck-color-neutral-2);
+  border: 1px solid var(--puck-color-grey-8);
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   background-color: var(--puck-color-neutral-1);
@@ -64,7 +63,7 @@
 .ExternalInput-modalInner {
   width: 100%;
   max-width: 1024px;
-  border-radius: 32px;
+  border-radius: 16px;
   overflow: hidden;
   background: white;
   display: flex;
@@ -95,10 +94,8 @@
 }
 
 .ExternalInput th {
-  background-color: var(--puck-color-neutral-blue);
+  background-color: var(--puck-color-grey-1);
   color: white;
-  border-bottom: 1px solid var(--puck-color-neutral-2);
-  border-top: 1px solid var(--puck-color-neutral-2);
   font-weight: 700;
   padding: 16px 24px;
   opacity: 0.9;
@@ -113,7 +110,7 @@
 }
 
 .ExternalInput tr:nth-of-type(2n) {
-  background-color: var(--puck-color-neutral-1);
+  background-color: var(--puck-color-grey-9);
 }
 
 .ExternalInput tr td:first-of-type {
@@ -121,14 +118,14 @@
 }
 
 .ExternalInput tr:hover {
-  background: var(--puck-color-neutral-0);
-  color: var(--puck-color-blue);
+  background: var(--puck-color-grey-10);
+  color: var(--puck-color-azure-4);
   cursor: pointer;
   position: relative;
   margin-left: -5px;
 }
 
 .ExternalInput tr:hover td:first-of-type {
-  border-left: 4px solid var(--puck-color-blue);
+  border-left: 4px solid var(--puck-color-azure-4);
   padding-left: 20px;
 }

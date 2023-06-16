@@ -192,7 +192,7 @@ export function Puck({
         >
           <header
             style={{
-              background: "var(--puck-color-neutral-blue)",
+              background: "var(--puck-color-grey-0)",
               color: "white",
               gridArea: "header",
               borderBottom: "1px solid #cccccc",
@@ -227,7 +227,7 @@ export function Puck({
           <div
             style={{
               gridArea: "left",
-              background: "var(--puck-color-neutral-0)",
+              background: "var(--puck-color-grey-10)",
             }}
           >
             <SidebarSection title="Outline">
@@ -252,7 +252,7 @@ export function Puck({
           </div>
           <div
             style={{
-              background: "#dedede",
+              background: "var(--puck-color-grey-8)",
               padding: 32,
               overflowY: "auto",
               gridArea: "editor",
@@ -262,7 +262,6 @@ export function Puck({
             <div
               style={{
                 background: "white",
-                border: "1px solid #dedede",
                 borderRadius: 16,
                 overflow: "hidden",
               }}
@@ -336,7 +335,7 @@ export function Puck({
                         <div
                           style={{
                             ...placeholderStyle,
-                            background: "#DFEEF3",
+                            background: "var(--puck-color-azure-8)",
                             zIndex: 0,
                           }}
                         />
@@ -349,7 +348,7 @@ export function Puck({
           </div>
           <div
             style={{
-              background: "var(--puck-color-neutral-0)",
+              background: "var(--puck-color-grey-10)",
               overflowY: "scroll",
               gridArea: "right",
               fontFamily: "var(--puck-font-stack)",

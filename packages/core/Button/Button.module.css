@@ -37,8 +37,8 @@
 }
 
 .Button--secondary:hover {
-  background-color: var(--puck-color-neutral-0);
-  color: var(--puck-color-neutral-4);
+  background-color: var(--puck-color-grey-10);
+  color: black;
   opacity: 0.7;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .Button--disabled {
-  background: var(--color-neutral-2);
+  background: var(--puck-color-grey-10);
   color: black;
   cursor: not-allowed;
 }
