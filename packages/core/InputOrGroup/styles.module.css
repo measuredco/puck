@@ -39,6 +39,7 @@
 }
 
 .Input-group {
+  background: white;
   border-color: var(--puck-color-neutral-2);
   border-style: solid;
   border-width: 1px;

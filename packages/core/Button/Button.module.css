@@ -38,6 +38,8 @@
 
 .Button--secondary:hover {
   background-color: var(--puck-color-neutral-0);
+  color: var(--puck-color-neutral-4);
+  opacity: 0.7;
 }
 
 .Button--flush {

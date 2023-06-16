@@ -1,0 +1,18 @@
+.SidebarSection {
+  border-bottom: 1px solid var(--puck-color-neutral-2);
+}
+
+.SidebarSection:last-of-type {
+  border-bottom: none;
+  height: 100%;
+}
+
+.SidebarSection-title {
+  background: white;
+  padding: 16px;
+  border-bottom: 1px solid var(--puck-color-neutral-2);
+}
+
+.SidebarSection-content {
+  padding: 16px;
+}

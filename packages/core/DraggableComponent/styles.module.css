@@ -38,11 +38,6 @@
   z-index: 1;
 }
 
-.DraggableComponent:first-of-type .DraggableComponent-overlay {
-  border-top-left-radius: 32px;
-  border-top-right-radius: 32px;
-}
-
 .DraggableComponent-actions {
   display: none;
 }

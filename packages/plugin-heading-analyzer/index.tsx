@@ -2,7 +2,7 @@ import { ReactElement, ReactNode, useEffect, useState } from "react";
 
 import { Data } from "core/types/Config";
 import { Plugin } from "core/types/Plugin";
-import { Heading } from "core/Heading";
+import { SidebarSection } from "core/SidebarSection";
 import { OutlineList } from "core/OutlineList";
 
 import ReactFromJSON from "react-from-json";
@@ -104,52 +104,50 @@ const HeadingOutlineAnalyser = ({
   return (
     <div>
       {children}
-      <br />
-      <Heading>Heading Outline</Heading>
-      <div style={{ marginBottom: 16 }} />
+      <SidebarSection title="Heading Outline">
+        {hierarchy.length === 0 && <div>No headings.</div>}
 
-      {hierarchy.length === 0 && <div>No headings.</div>}
+        <OutlineList>
+          <ReactFromJSON<{
+            Root: (any) => ReactElement;
+            OutlineListItem: (any) => ReactElement;
+          }>
+            mapping={{
+              Root: (props) => <>{props.children}</>,
+              OutlineListItem: (props) => (
+                <OutlineList.Item>
+                  <small>
+                    {props.missing ? (
+                      <span style={{ color: "red" }}>
+                        <b>H{props.rank}</b>: Missing
+                      </span>
+                    ) : (
+                      <span>
+                        <b>H{props.rank}</b>: {props.text}
+                      </span>
+                    )}
+                  </small>
+                  <OutlineList>{props.children}</OutlineList>
+                </OutlineList.Item>
+              ),
+            }}
+            entry={{
+              props: { children: hierarchy },
+              type: "Root",
+            }}
+            mapProp={(prop) => {
+              if (prop && prop.rank) {
+                return {
+                  type: "OutlineListItem",
+                  props: prop,
+                };
+              }
 
-      <OutlineList>
-        <ReactFromJSON<{
-          Root: (any) => ReactElement;
-          OutlineListItem: (any) => ReactElement;
-        }>
-          mapping={{
-            Root: (props) => <>{props.children}</>,
-            OutlineListItem: (props) => (
-              <OutlineList.Item>
-                <small>
-                  {props.missing ? (
-                    <span style={{ color: "red" }}>
-                      <b>H{props.rank}</b>: Missing
-                    </span>
-                  ) : (
-                    <span>
-                      <b>H{props.rank}</b>: {props.text}
-                    </span>
-                  )}
-                </small>
-                <OutlineList>{props.children}</OutlineList>
-              </OutlineList.Item>
-            ),
-          }}
-          entry={{
-            props: { children: hierarchy },
-            type: "Root",
-          }}
-          mapProp={(prop) => {
-            if (prop && prop.rank) {
-              return {
-                type: "OutlineListItem",
-                props: prop,
-              };
-            }
-
-            return prop;
-          }}
-        />
-      </OutlineList>
+              return prop;
+            }}
+          />
+        </OutlineList>
+      </SidebarSection>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 .OutlineList {
   font-family: var(--puck-font-stack);
-  margin: 16px;
+  margin: 0;
+  margin-left: 16px;
   padding-left: 16px;
   position: relative;
   list-style: none;

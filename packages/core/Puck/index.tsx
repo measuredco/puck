@@ -21,6 +21,8 @@ import { Button } from "../Button";
 import { Plugin } from "../types/Plugin";
 import { usePlaceholderStyle } from "../lib/use-placeholder-style";
 
+import { SidebarSection } from "../SidebarSection";
+
 const Field = () => {};
 
 const Space = () => <div style={{ marginBottom: 16 }} />;
@@ -190,6 +192,8 @@ export function Puck({
         >
           <header
             style={{
+              background: "var(--puck-color-neutral-blue)",
+              color: "white",
               gridArea: "header",
               borderBottom: "1px solid #cccccc",
             }}
@@ -220,15 +224,13 @@ export function Puck({
               </div>
             )}
           </header>
-          <div style={{ gridArea: "left" }}>
-            <div
-              style={{
-                borderBottom: "1px solid #dedede",
-                padding: 16,
-              }}
-            >
-              <Heading size="m">Outline</Heading>
-              <Space />
+          <div
+            style={{
+              gridArea: "left",
+              background: "var(--puck-color-neutral-0)",
+            }}
+          >
+            <SidebarSection title="Outline">
               <OutlineList>
                 {data.content.map((item, i) => {
                   return (
@@ -243,12 +245,10 @@ export function Puck({
                   );
                 })}
               </OutlineList>
-            </div>
-            <div style={{ padding: 16 }}>
-              <Heading size="m">Components</Heading>
-              <Space />
+            </SidebarSection>
+            <SidebarSection title="Components">
               <ComponentList config={config} />
-            </div>
+            </SidebarSection>
           </div>
           <div
             style={{
@@ -263,7 +263,7 @@ export function Puck({
               style={{
                 background: "white",
                 border: "1px solid #dedede",
-                borderRadius: 32,
+                borderRadius: 16,
                 overflow: "hidden",
               }}
             >
@@ -349,112 +349,112 @@ export function Puck({
           </div>
           <div
             style={{
-              padding: 16,
+              background: "var(--puck-color-neutral-0)",
               overflowY: "scroll",
               gridArea: "right",
               fontFamily: "var(--puck-font-stack)",
             }}
           >
-            {selectedIndex !== null ? (
-              <Heading size="l">{data.content[selectedIndex].type}</Heading>
-            ) : (
-              <Heading size="l">Page</Heading>
-            )}
-
-            <Space />
-
             <FieldWrapper data={data}>
-              {Object.keys(fields).map((fieldName) => {
-                const field = fields[fieldName];
+              <SidebarSection
+                title={
+                  selectedIndex !== null
+                    ? (data.content[selectedIndex].type as string)
+                    : "Page"
+                }
+              >
+                {Object.keys(fields).map((fieldName) => {
+                  const field = fields[fieldName];
 
-                const onChange = (value: any) => {
-                  let currentProps;
-                  let newProps;
+                  const onChange = (value: any) => {
+                    let currentProps;
+                    let newProps;
 
-                  if (selectedIndex !== null) {
-                    currentProps = data.content[selectedIndex].props;
-                  } else {
-                    currentProps = data.page;
-                  }
-
-                  if (fieldName === "_data") {
-                    // Reset the link if value is falsey
-                    if (!value) {
-                      const { locked, ..._meta } = currentProps._meta || {};
-
-                      newProps = {
-                        ...currentProps,
-                        _data: undefined,
-                        _meta: _meta,
-                      };
+                    if (selectedIndex !== null) {
+                      currentProps = data.content[selectedIndex].props;
                     } else {
-                      const changedFields = filter(
-                        // filter out anything not supported by this component
-                        (value as any).attributes, // TODO type properly after getting proper state library
-                        Object.keys(fields)
-                      );
+                      currentProps = data.page;
+                    }
 
+                    if (fieldName === "_data") {
+                      // Reset the link if value is falsey
+                      if (!value) {
+                        const { locked, ..._meta } = currentProps._meta || {};
+
+                        newProps = {
+                          ...currentProps,
+                          _data: undefined,
+                          _meta: _meta,
+                        };
+                      } else {
+                        const changedFields = filter(
+                          // filter out anything not supported by this component
+                          (value as any).attributes, // TODO type properly after getting proper state library
+                          Object.keys(fields)
+                        );
+
+                        newProps = {
+                          ...currentProps,
+                          ...changedFields,
+                          _data: value, // TODO perf - this is duplicative and will make payload larger
+                          _meta: {
+                            locked: Object.keys(changedFields),
+                          },
+                        };
+                      }
+                    } else {
                       newProps = {
                         ...currentProps,
-                        ...changedFields,
-                        _data: value, // TODO perf - this is duplicative and will make payload larger
-                        _meta: {
-                          locked: Object.keys(changedFields),
-                        },
+                        [fieldName]: value,
                       };
                     }
-                  } else {
-                    newProps = {
-                      ...currentProps,
-                      [fieldName]: value,
-                    };
-                  }
+
+                    if (selectedIndex !== null) {
+                      setData({
+                        ...data,
+                        content: replace(data.content, selectedIndex, {
+                          ...data.content[selectedIndex],
+                          props: newProps,
+                        }),
+                      });
+                    } else {
+                      setData({ ...data, page: newProps });
+                    }
+                  };
 
                   if (selectedIndex !== null) {
-                    setData({
-                      ...data,
-                      content: replace(data.content, selectedIndex, {
-                        ...data.content[selectedIndex],
-                        props: newProps,
-                      }),
-                    });
+                    return (
+                      <InputOrGroup
+                        key={`${data.content[selectedIndex].props.id}_${fieldName}`}
+                        field={field}
+                        name={fieldName}
+                        label={field.label}
+                        readOnly={
+                          data.content[
+                            selectedIndex
+                          ].props._meta?.locked?.indexOf(fieldName) > -1
+                        }
+                        value={data.content[selectedIndex].props[fieldName]}
+                        onChange={onChange}
+                      />
+                    );
                   } else {
-                    setData({ ...data, page: newProps });
+                    return (
+                      <InputOrGroup
+                        key={`page_${fieldName}`}
+                        field={field}
+                        name={fieldName}
+                        label={field.label}
+                        readOnly={
+                          data.page._meta?.locked?.indexOf(fieldName) > -1
+                        }
+                        value={data.page[fieldName]}
+                        onChange={onChange}
+                      />
+                    );
                   }
-                };
-
-                if (selectedIndex !== null) {
-                  return (
-                    <InputOrGroup
-                      key={`${data.content[selectedIndex].props.id}_${fieldName}`}
-                      field={field}
-                      name={fieldName}
-                      label={field.label}
-                      readOnly={
-                        data.content[
-                          selectedIndex
-                        ].props._meta?.locked?.indexOf(fieldName) > -1
-                      }
-                      value={data.content[selectedIndex].props[fieldName]}
-                      onChange={onChange}
-                    />
-                  );
-                } else {
-                  return (
-                    <InputOrGroup
-                      key={`page_${fieldName}`}
-                      field={field}
-                      name={fieldName}
-                      label={field.label}
-                      readOnly={
-                        data.page._meta?.locked?.indexOf(fieldName) > -1
-                      }
-                      value={data.page[fieldName]}
-                      onChange={onChange}
-                    />
-                  );
-                }
-              })}
+                })}
+              </SidebarSection>
             </FieldWrapper>
           </div>
         </div>
