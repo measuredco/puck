@@ -72,16 +72,26 @@ export function Client({
                         document.location = `/${e.currentTarget.value}/${path}/edit`;
                       }}
                       style={{
+                        // background:
+                        //   "url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0Ljk1IDEwIj48ZGVmcz48c3R5bGU+LmNscy0ye2ZpbGw6IzQ0NDt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPmFycm93czwvdGl0bGU+PHBvbHlnb24gY2xhc3M9ImNscy0yIiBwb2ludHM9IjEuNDEgNC42NyAyLjQ4IDMuMTggMy41NCA0LjY3IDEuNDEgNC42NyIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMiIgcG9pbnRzPSIzLjU0IDUuMzMgMi40OCA2LjgyIDEuNDEgNS4zMyAzLjU0IDUuMzMiLz48L3N2Zz4=) no-repeat 95% 50%",
+                        background:
+                          "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='white'><polygon points='0,0 100,0 50,50'/></svg>\") no-repeat",
+                        backgroundSize: "12px",
+                        backgroundPosition: "calc(100% - 8px) calc(50% + 4px)",
+                        backgroundRepeat: "no-repeat",
+                        backgroundColor: "transparent",
+                        appearance: "none",
                         padding: 0,
+                        paddingRight: 32,
                         fontSize: 24,
                         fontWeight: 600,
                         border: "none",
-                        background: "transparent",
                         color: "white",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         height: "100%",
+                        fontFamily: "Inter",
                       }}
                       defaultValue={framework}
                     >
