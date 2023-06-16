@@ -27,7 +27,7 @@ export const Video: ComponentConfig<VideoProps> = {
       ],
     },
   },
-  render: ({ autoplay, loop, src }) => {
+  render: ({ autoplay = "on", loop = "on", src }) => {
     return (
       <div style={{ background: "white" }}>
         <div
@@ -40,11 +40,12 @@ export const Video: ComponentConfig<VideoProps> = {
         >
           <video
             src={src}
-            loop={loop === "on"}
+            loop={loop !== "off"}
             style={{
               height: "100%",
             }}
-            autoPlay={autoplay === "on"}
+            autoPlay={autoplay !== "off"}
+            muted
           />
         </div>
       </div>
