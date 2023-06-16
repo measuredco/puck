@@ -55,8 +55,9 @@ export function Client({
             <>
               <div
                 style={{
+                  color: "var(--puck-color-yellow-3)",
                   padding: "8px 12px",
-                  background: "lightyellow",
+                  background: "var(--puck-color-yellow-8)",
                   textAlign: "center",
                 }}
               >
@@ -72,14 +73,20 @@ export function Client({
                       }}
                       style={{
                         padding: 0,
-                        fontSize: 32,
+                        fontSize: 24,
                         fontWeight: 600,
                         border: "none",
+                        background: "transparent",
+                        color: "white",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100%",
                       }}
                       defaultValue={framework}
                     >
-                      <option value="antd">ant.design Demo</option>
-                      <option value="material-ui">Material UI Demo</option>
+                      <option value="antd">Ant Design</option>
+                      <option value="material-ui">Material UI</option>
                     </select>
                   </label>
                 </div>
