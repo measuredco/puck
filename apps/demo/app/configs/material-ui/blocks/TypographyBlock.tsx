@@ -6,9 +6,9 @@ import { ContainerProps, Container, containerFields } from "../Container";
 
 export type TypographyBlockProps = {
   align: "left" | "center" | "right";
-  text: string;
+  text?: string;
   variant: TypographyVariant;
-  component: any;
+  component?: any;
 } & ContainerProps;
 
 const variantOptions = [
@@ -62,13 +62,8 @@ export const TypographyBlock: ComponentConfig<TypographyBlockProps> = {
     },
     ...containerFields,
   },
-  render: ({
-    align = "left",
-    text = "Text",
-    variant = "body1",
-    component,
-    ...props
-  }) => {
+  defaultProps: { align: "left", variant: "h2", text: "Text" },
+  render: ({ align, text, variant, component, ...props }) => {
     return (
       <Container {...props}>
         <Typography align={align} variant={variant} component={component}>
