@@ -13,13 +13,14 @@ export const CardDeck: ComponentConfig<CardDeckProps> = {
       groupFields: { title: { type: "text" }, content: { type: "text" } },
     },
   },
-  render: ({
-    cards = [
+  defaultProps: {
+    cards: [
       { title: "Title", content: "Content" },
       { title: "Title", content: "Content" },
       { title: "Title", content: "Content" },
     ],
-  }) => {
+  },
+  render: ({ cards }) => {
     return (
       <div
         style={{

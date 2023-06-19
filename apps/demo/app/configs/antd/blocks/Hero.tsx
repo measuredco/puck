@@ -8,7 +8,7 @@ export type HeroProps = {
   ctas: {
     label: string;
     href: string;
-    type: "primary" | "secondary";
+    type?: "primary" | "text";
   }[];
 };
 
@@ -44,23 +44,24 @@ export const Hero: ComponentConfig<HeroProps> = {
           type: "select",
           options: [
             {
-              value: "secondary",
-              label: "Secondary",
-            },
-            {
               value: "primary",
               label: "Primary",
+            },
+            {
+              value: "text",
+              label: "Text",
             },
           ],
         },
       },
     },
   },
-  render: ({
-    title = "Title",
-    description = "Description",
-    ctas = [{ label: "Click me", href: "#" }],
-  }) => {
+  defaultProps: {
+    title: "Title",
+    description: "Description",
+    ctas: [{ label: "Click me", href: "#", type: "primary" }],
+  },
+  render: ({ title, description, ctas }) => {
     return (
       <div style={{ background: "white" }}>
         <div
