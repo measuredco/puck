@@ -5,6 +5,7 @@ import { ExternalInput } from "../ExternalInput";
 import styles from "./styles.module.css";
 import { replace } from "../lib";
 import { Button } from "../Button";
+import { Copy, Trash } from "react-feather";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -31,56 +32,69 @@ export const InputOrGroup = ({
     return (
       <div className={getClassName()}>
         <b className={getClassName("label")}>{label || name}</b>
-        {Array.isArray(value) ? (
-          value.map((item, i) => (
-            <fieldset className={getClassName("group")} key={`${name}_${i}`}>
-              {Object.keys(field.groupFields!).map((fieldName) => {
-                const subField = field.groupFields![fieldName];
+        <div className={getClassName("item")}>
+          {Array.isArray(value) ? (
+            value.map((item, i) => (
+              <details key={`${name}_${i}`} className={getClassName("group")}>
+                <summary>
+                  {field.getItemSummary
+                    ? field.getItemSummary(item, i)
+                    : `Item #${i}`}
 
-                return (
-                  <InputOrGroup
-                    key={`${name}_${i}_${fieldName}`}
-                    name={`${name}_${i}_${fieldName}`}
-                    label={fieldName}
-                    field={subField}
-                    value={item[fieldName]}
-                    onChange={(val) =>
-                      onChange(replace(value, i, { ...item, [fieldName]: val }))
-                    }
-                  />
-                );
-              })}
-              <div style={{ marginBottom: 16 }} />
-              <Button
-                onClick={() => {
-                  const existingValue = value || [];
+                  {/* <button
+                  className={getClassName("action")}
+                  onClick={onDuplicate}
+                >
+                  <Copy />
+                </button> */}
+                  <button
+                    className={getClassName("action")}
+                    onClick={() => {
+                      const existingValue = value || [];
 
-                  existingValue.splice(i, 1);
-                  onChange(existingValue);
-                }}
-                fullWidth
-                variant="secondary"
-              >
-                Remove item
-              </Button>
-            </fieldset>
-          ))
-        ) : (
-          <div />
-        )}
+                      existingValue.splice(i, 1);
+                      onChange(existingValue);
+                    }}
+                  >
+                    <Trash />
+                  </button>
+                </summary>
+                <fieldset>
+                  {Object.keys(field.groupFields!).map((fieldName) => {
+                    const subField = field.groupFields![fieldName];
 
-        <div style={{ marginBottom: 8 }} />
+                    return (
+                      <InputOrGroup
+                        key={`${name}_${i}_${fieldName}`}
+                        name={`${name}_${i}_${fieldName}`}
+                        label={fieldName}
+                        field={subField}
+                        value={item[fieldName]}
+                        onChange={(val) =>
+                          onChange(
+                            replace(value, i, { ...item, [fieldName]: val })
+                          )
+                        }
+                      />
+                    );
+                  })}
+                </fieldset>
+              </details>
+            ))
+          ) : (
+            <div />
+          )}
 
-        <Button
-          onClick={() => {
-            const existingValue = value || [];
-            onChange([...existingValue, {}]);
-          }}
-          fullWidth
-          variant="secondary"
-        >
-          Add item
-        </Button>
+          <button
+            className={getClassName("addButton")}
+            onClick={() => {
+              const existingValue = value || [];
+              onChange([...existingValue, {}]);
+            }}
+          >
+            Add item
+          </button>
+        </div>
       </div>
     );
   }

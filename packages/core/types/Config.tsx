@@ -18,6 +18,7 @@ export type Field<
   groupFields?: {
     [SubPropName in keyof Props]: Field<Props[SubPropName]>;
   };
+  getItemSummary?: (item: Props, index: number) => string;
   options?: {
     label: string;
     value: string | number;

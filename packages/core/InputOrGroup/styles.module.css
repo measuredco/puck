@@ -51,11 +51,64 @@
 
 .Input-group {
   background: white;
-  border-color: var(--puck-color-grey-8);
-  border-style: solid;
-  border-width: 1px;
+  border-bottom: var(--puck-color-grey-8) solid 1px;
+}
+
+.Input-group > summary {
+  padding: 16px;
+  position: relative;
+}
+
+.Input-group > summary:hover {
+  cursor: pointer;
+  color: var(--puck-color-blue);
+}
+
+.Input-group > fieldset {
+  border: none;
+  border-top: var(--puck-color-grey-8) solid 1px;
+  margin: 0;
+  padding: 16px;
+}
+
+.Input-group .Input-action {
+  background: transparent;
+  border: none;
+  color: var(--puck-color-grey-2);
+  display: none;
+  padding: 8px;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+}
+
+.Input-group summary:hover .Input-action {
+  display: block;
+}
+
+.Input-group .Input-action:hover {
+  background: var(--puck-color-grey-9);
+  color: var(--puck-color-blue);
+  cursor: pointer;
+}
+
+.Input-addButton {
+  background-color: white;
+  border: none;
+  color: var(--puck-color-blue);
+  cursor: pointer;
+  width: 100%;
+  margin: 0;
+  padding: 12px 16px;
+}
+
+.Input-addButton:hover {
+  background: var(--puck-color-grey-9);
+}
+
+.Input-item {
+  border: 1px solid var(--puck-color-grey-8);
   border-radius: 4px;
   margin-top: 4px;
-  margin-bottom: 16px;
-  padding: 16px;
+  overflow: hidden;
 }

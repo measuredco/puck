@@ -90,11 +90,13 @@ Here's a basic plugin that renders a "My plugin" heading in the page field area:
 
 ```jsx
 const myPlugin = {
-  renderPageFields: (props) => <div>
-    {props.children}
+  renderPageFields: (props) => (
+    <div>
+      {props.children}
 
-    <h2>My plugin</h2>
-  </div>
+      <h2>My plugin</h2>
+    </div>
+  ),
 };
 ```
 
@@ -122,6 +124,7 @@ A `Field` represents a user input field shown in the Puck interface.
 - **label** (`text` [optional]): A label for the input. Will use the key if not provided.
 - **groupFields** (`object`): Object describing sub-fields for items in a group input
   - **[fieldName]** (`Field`): The Field objects describing the input data for each item
+- **getItemSummary** (`(object, number) => string` [optional]): Function to get the name of each item when using a group input
 - **options** (`object[]`): array of items to render for select-type inputs
   - **label** (`string`)
   - **value** (`string`)
