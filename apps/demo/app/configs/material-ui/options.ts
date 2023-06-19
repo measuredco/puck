@@ -1,0 +1,32 @@
+export const spacingOptions = [
+  { label: "0px", value: 0 },
+  { label: "8px", value: 1 },
+  { label: "16px", value: 2 },
+  { label: "24px", value: 3 },
+  { label: "32px", value: 4 },
+  { label: "40px", value: 5 },
+  { label: "48px", value: 6 },
+  { label: "56px", value: 7 },
+  { label: "64px", value: 8 },
+  { label: "72px", value: 9 },
+  { label: "80px", value: 10 },
+  { label: "88px", value: 11 },
+  { label: "96px", value: 12 },
+  { label: "104px", value: 13 },
+  { label: "112px", value: 14 },
+  { label: "120px", value: 15 },
+  { label: "128px", value: 16 },
+  { label: "136px", value: 17 },
+  { label: "144px", value: 18 },
+  { label: "152px", value: 19 },
+  { label: "160px", value: 20 },
+];
+
+export const breakpointOptions = [
+  { label: "", value: "" },
+  { label: "xs", value: "xs" },
+  { label: "sm", value: "sm" },
+  { label: "md", value: "md" },
+  { label: "lg", value: "lg" },
+  { label: "xl", value: "xl" },
+];
