@@ -115,6 +115,7 @@ The `Config` object describes which components Puck should render, how they shou
   - **[componentName]** (`object`)
     - **fields** (`Field`): The Field objects describing the input data stored against this component.
     - **render** (`Component`): Render function for your React component. Receives props as defined in fields.
+    - **defaultProps** (`object`): Default props to pass to your component. Will show in fields.
 
 ### `Field`
 

@@ -25,19 +25,23 @@ export type Field<
   }[];
 };
 
+type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
+
+export type Fields<
+  ComponentProps extends DefaultComponentProps = DefaultComponentProps
+> = {
+  [PropName in keyof Omit<
+    Required<ComponentProps>,
+    "children" | "editMode"
+  >]: Field<ComponentProps[PropName][0]>;
+};
+
 export type ComponentConfig<
-  ComponentProps extends { [key: string]: any; editMode?: boolean } = {
-    [key: string]: any;
-    editMode?: boolean;
-  }
+  ComponentProps extends DefaultComponentProps = DefaultComponentProps
 > = {
   render: (props: ComponentProps) => ReactElement;
-  fields?: {
-    [PropName in keyof Omit<
-      Required<ComponentProps>,
-      "children" | "editMode"
-    >]: Field<ComponentProps[PropName][0]>;
-  };
+  defaultProps?: ComponentProps;
+  fields?: Fields<ComponentProps>;
 };
 
 export type Config<

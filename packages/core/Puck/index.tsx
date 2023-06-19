@@ -149,6 +149,8 @@ export function Puck({
             const emptyComponentData = {
               type: droppedItem.draggableId,
               props: {
+                ...(config.components[droppedItem.draggableId].defaultProps ||
+                  {}),
                 id: `${droppedItem.draggableId}-${new Date().getTime()}`, // TODO make random string
               },
             };
@@ -322,6 +324,7 @@ export function Puck({
                             <div style={{ zoom: 0.75 }}>
                               {config.components[item.type] ? (
                                 config.components[item.type].render({
+                                  ...config.components[item.type].defaultProps,
                                   ...item.props,
                                   editMode: true,
                                 })
