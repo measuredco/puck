@@ -1,11 +1,9 @@
 .DraggableComponent {
   position: relative;
-  z-index: 0;
 }
 
 .DraggableComponent-contents {
   position: relative; /* Reset stacking context */
-  z-index: -1;
 }
 
 .DraggableComponent-overlay {
