@@ -83,7 +83,7 @@ export const InputOrGroup = ({
             className={getClassName("addButton")}
             onClick={() => {
               const existingValue = value || [];
-              onChange([...existingValue, {}]);
+              onChange([...existingValue, field.defaultItemProps || {}]);
             }}
           >
             Add item

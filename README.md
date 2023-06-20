@@ -115,7 +115,7 @@ The `Config` object describes which components Puck should render, how they shou
   - **[componentName]** (`object`)
     - **fields** (`Field`): The Field objects describing the input data stored against this component.
     - **render** (`Component`): Render function for your React component. Receives props as defined in fields.
-    - **defaultProps** (`object`): Default props to pass to your component. Will show in fields.
+    - **defaultProps** (`object` [optional]): Default props to pass to your component. Will show in fields.
 
 ### `Field`
 
@@ -126,6 +126,7 @@ A `Field` represents a user input field shown in the Puck interface.
 - **groupFields** (`object`): Object describing sub-fields for items in a group input
   - **[fieldName]** (`Field`): The Field objects describing the input data for each item
 - **getItemSummary** (`(object, number) => string` [optional]): Function to get the name of each item when using a group input
+- **defaultItemProps** (`object` [optional]): Default props to pass to each new item added, when using a `group` field type
 - **options** (`object[]`): array of items to render for select-type inputs
   - **label** (`string`)
   - **value** (`string`)

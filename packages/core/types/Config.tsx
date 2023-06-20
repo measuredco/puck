@@ -19,13 +19,21 @@ export type Field<
     [SubPropName in keyof Props]: Field<Props[SubPropName]>;
   };
   getItemSummary?: (item: Props, index: number) => string;
+  defaultItemProps?: Props;
   options?: {
     label: string;
     value: string | number;
   }[];
 };
 
-type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
+export type DefaultPageProps = {
+  children: ReactNode;
+  title: string;
+  editMode: boolean;
+  [key: string]: any;
+};
+
+export type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
 
 export type Fields<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps
@@ -46,10 +54,7 @@ export type ComponentConfig<
 
 export type Config<
   Props extends { [key: string]: any } = { [key: string]: any },
-  PageProps extends { title: string; [key: string]: any } = {
-    title: string;
-    [key: string]: any;
-  }
+  PageProps extends DefaultPageProps = DefaultPageProps
 > = {
   components: {
     [ComponentName in keyof Props]: ComponentConfig<Props[ComponentName]>;
