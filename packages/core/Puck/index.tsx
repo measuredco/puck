@@ -230,6 +230,7 @@ export function Puck({
             style={{
               gridArea: "left",
               background: "var(--puck-color-grey-10)",
+              overflowY: "auto",
             }}
           >
             <SidebarSection title="Outline">
@@ -356,7 +357,7 @@ export function Puck({
           <div
             style={{
               background: "var(--puck-color-grey-10)",
-              overflowY: "scroll",
+              overflowY: "auto",
               gridArea: "right",
               fontFamily: "var(--puck-font-stack)",
             }}
