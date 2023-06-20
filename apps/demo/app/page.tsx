@@ -10,6 +10,9 @@ export default async function Page() {
         <a className="Framework" href="/material-ui/edit">
           Material UI
         </a>
+        <a className="Framework" href="/custom/edit">
+          Custom example
+        </a>
       </div>
     </div>
   );

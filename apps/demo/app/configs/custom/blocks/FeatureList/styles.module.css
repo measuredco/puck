@@ -1,0 +1,60 @@
+.FeatureList-items {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.FeatureList--cardMode .FeatureList-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.FeatureList-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.FeatureList--cardMode .FeatureList-item {
+  background: white;
+  box-shadow: rgba(140, 152, 164, 0.25) 0px 3px 6px 0px;
+  border-radius: 8px;
+  padding: 24px;
+  align-items: flex-start;
+  width: auto;
+}
+
+.FeatureList-icon {
+  border-radius: 256px;
+  background: var(--puck-color-azure-8);
+  color: var(--puck-color-azure-5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 64px;
+}
+
+.FeatureList-title {
+  font-size: 22px;
+  text-align: center;
+}
+
+.FeatureList--cardMode .FeatureList-title {
+  text-align: left;
+}
+
+.FeatureList-description {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--puck-color-grey-4);
+  text-align: center;
+  font-weight: 300;
+}
+
+.FeatureList--cardMode .FeatureList-description {
+  text-align: left;
+}

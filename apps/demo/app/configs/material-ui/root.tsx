@@ -19,7 +19,7 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 export type RootProps = {
   children: React.ReactNode;
-  editMode: Boolean;
+  editMode: boolean;
   title: string;
   primaryColor: string;
   primaryContrastTextColor: string;

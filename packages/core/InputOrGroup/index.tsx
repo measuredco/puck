@@ -41,12 +41,6 @@ export const InputOrGroup = ({
                     ? field.getItemSummary(item, i)
                     : `Item #${i}`}
 
-                  {/* <button
-                  className={getClassName("action")}
-                  onClick={onDuplicate}
-                >
-                  <Copy />
-                </button> */}
                   <button
                     className={getClassName("action")}
                     onClick={() => {

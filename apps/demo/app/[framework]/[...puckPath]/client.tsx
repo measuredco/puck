@@ -95,6 +95,7 @@ export function Client({
                     >
                       <option value="antd">Ant Design</option>
                       <option value="material-ui">Material UI</option>
+                      <option value="custom">Custom Example</option>
                     </select>
                   </label>
                 </div>

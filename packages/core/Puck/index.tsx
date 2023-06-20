@@ -161,6 +161,8 @@ export function Puck({
             );
 
             setData(newData);
+
+            setSelectedIndex(droppedItem.destination.index);
           } else {
             setData({
               ...data,
@@ -170,9 +172,9 @@ export function Puck({
                 droppedItem.destination.index
               ),
             });
-          }
 
-          setSelectedIndex(null);
+            setSelectedIndex(null);
+          }
         }}
       >
         <div

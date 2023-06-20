@@ -1,2 +1,2 @@
-export const validFrameworks = ["antd", "material-ui"];
-export type Framework = "antd" | "material-ui";
+export const validFrameworks = ["antd", "material-ui", "custom"];
+export type Framework = "antd" | "material-ui" | "custom";

@@ -1,0 +1,8 @@
+.ButtonGroup-actions {
+  display: flex;
+  gap: 24px;
+}
+
+.ButtonGroup--center .ButtonGroup-actions {
+  justify-content: center;
+}

@@ -1,0 +1,13 @@
+.Logos {
+  background-color: var(--puck-color-grey-1);
+}
+
+.Logos-items {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 64px;
+  padding-top: 64px;
+  gap: 24px;
+  filter: grayscale(1) brightness(100);
+  opacity: 0.8;
+}
