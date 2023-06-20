@@ -14,7 +14,6 @@ import type { Config, Data, Field } from "../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
 import { OutlineList } from "../OutlineList";
-import { Heading } from "../Heading";
 import { filter, reorder, replace } from "../lib";
 import { Button } from "../Button";
 
@@ -24,8 +23,6 @@ import { usePlaceholderStyle } from "../lib/use-placeholder-style";
 import { SidebarSection } from "../SidebarSection";
 
 const Field = () => {};
-
-const Space = () => <div style={{ marginBottom: 16 }} />;
 
 const defaultPageFields: Record<string, Field> = {
   title: { type: "text" },
