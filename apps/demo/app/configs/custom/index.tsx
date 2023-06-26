@@ -44,7 +44,7 @@ export const initialData: Record<string, Data> = {
       {
         type: "Hero",
         props: {
-          title: "This page was built by Puck",
+          title: "This page was built with Puck",
           description:
             "Puck is the self-hosted visual editor for React. Bring your own components and make site changes instantly, without a deploy.",
           buttons: [
