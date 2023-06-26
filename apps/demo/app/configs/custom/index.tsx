@@ -48,7 +48,10 @@ export const initialData: Record<string, Data> = {
           description:
             "Puck is the self-hosted visual editor for React. Bring your own components and make site changes instantly, without a deploy.",
           buttons: [
-            { label: "See GitHub", href: "https://github.com/measuredco/puck" },
+            {
+              label: "Visit GitHub",
+              href: "https://github.com/measuredco/puck",
+            },
             {
               label: "Edit this page",
               href: "/custom/edit",
