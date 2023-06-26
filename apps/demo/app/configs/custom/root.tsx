@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 import { DefaultPageProps } from "core/types/Config";
+import { Footer } from "./components/Footer";
 
 export type RootProps = {
   children: ReactNode;
@@ -66,6 +67,32 @@ function Root({ children, editMode }: RootProps) {
         </div>
       </header>
       {children}
+      <Footer>
+        <Footer.List title="Section">
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+        </Footer.List>
+        <Footer.List title="Section">
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+        </Footer.List>
+        <Footer.List title="Section">
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+        </Footer.List>
+        <Footer.List title="Section">
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+        </Footer.List>
+      </Footer>
     </>
   );
 }
