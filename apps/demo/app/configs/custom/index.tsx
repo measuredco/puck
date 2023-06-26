@@ -105,13 +105,13 @@ export const initialData: Record<string, Data> = {
             {
               title: "Built for content teams",
               description:
-                "Puck is built for non-technical users to manage the content on their web page.",
+                "Puck enables content teams to make changes to their content without a developer or breaking the UI.",
               icon: "PenTool",
             },
             {
               title: "Easy to integrate",
               description:
-                "React developers can easily integrate their own components using a familiar React API.",
+                "Front-end developers can easily integrate their own components using a familiar React API.",
               icon: "GitMerge",
             },
             {
