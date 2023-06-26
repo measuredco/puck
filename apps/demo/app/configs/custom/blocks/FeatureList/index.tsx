@@ -48,7 +48,7 @@ export const FeatureList: ComponentConfig<FeatureListProps> = {
       },
       groupFields: {
         title: { type: "text" },
-        description: { type: "text" },
+        description: { type: "textarea" },
         icon: {
           type: "select",
           options: iconOptions,

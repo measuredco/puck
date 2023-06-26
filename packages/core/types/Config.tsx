@@ -11,7 +11,7 @@ export type Adaptor<AdaptorParams = {}> = {
 export type Field<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = {
-  type: "text" | "number" | "select" | "group" | "external";
+  type: "text" | "textarea" | "number" | "select" | "group" | "external";
   label?: string;
   adaptor?: Adaptor;
   adaptorParams?: object;

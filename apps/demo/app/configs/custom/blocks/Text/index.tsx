@@ -14,7 +14,7 @@ export type TextProps = {
 
 export const Text: ComponentConfig<TextProps> = {
   fields: {
-    text: { type: "text" },
+    text: { type: "textarea" },
     size: {
       type: "select",
       options: [

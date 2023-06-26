@@ -59,7 +59,7 @@ export const CardDeck: ComponentConfig<CardDeckProps> = {
       groupFields: {
         title: { type: "text" },
         subtitle: { type: "text" },
-        content: { type: "text" },
+        content: { type: "textarea" },
         eyebrow: { type: "text" },
         cta: { type: "text" },
       },

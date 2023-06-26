@@ -21,7 +21,7 @@ export type HeroProps = {
 export const Hero: ComponentConfig<HeroProps> = {
   fields: {
     title: { type: "text" },
-    description: { type: "text" },
+    description: { type: "textarea" },
     buttons: {
       type: "group",
       getItemSummary: (item) => item.label || "Button",

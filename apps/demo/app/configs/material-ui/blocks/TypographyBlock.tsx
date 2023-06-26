@@ -43,7 +43,7 @@ const componentOptions = [
 
 export const TypographyBlock: ComponentConfig<TypographyBlockProps> = {
   fields: {
-    text: { type: "text" },
+    text: { type: "textarea" },
     variant: {
       type: "select",
       options: variantOptions,

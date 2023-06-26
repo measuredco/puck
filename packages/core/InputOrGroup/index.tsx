@@ -116,7 +116,11 @@ export const InputOrGroup = ({
     return (
       <label className={getClassName()}>
         <div className={getClassName("label")}>{label || name}</div>
-        <select onChange={(e) => onChange(e.currentTarget.value)} value={value}>
+        <select
+          className={getClassName("input")}
+          onChange={(e) => onChange(e.currentTarget.value)}
+          value={value}
+        >
           {field.options.map((option) => (
             <option
               key={option.label + option.value}
@@ -129,10 +133,28 @@ export const InputOrGroup = ({
     );
   }
 
+  if (field.type === "textarea") {
+    return (
+      <label className={getClassName({ readOnly })}>
+        <div className={getClassName("label")}>{label || name}</div>
+        <textarea
+          className={getClassName("input")}
+          autoComplete="off"
+          name={name}
+          value={value}
+          onChange={(e) => onChange(e.currentTarget.value)}
+          readOnly={readOnly}
+          rows={5}
+        />
+      </label>
+    );
+  }
+
   return (
     <label className={getClassName({ readOnly })}>
       <div className={getClassName("label")}>{label || name}</div>
       <input
+        className={getClassName("input")}
         autoComplete="off"
         type={field.type}
         name={name}

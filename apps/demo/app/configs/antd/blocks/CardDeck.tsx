@@ -10,7 +10,7 @@ export const CardDeck: ComponentConfig<CardDeckProps> = {
   fields: {
     cards: {
       type: "group",
-      groupFields: { title: { type: "text" }, content: { type: "text" } },
+      groupFields: { title: { type: "text" }, content: { type: "textarea" } },
     },
   },
   defaultProps: {

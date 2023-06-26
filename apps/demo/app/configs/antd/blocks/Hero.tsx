@@ -29,7 +29,7 @@ export const Hero: ComponentConfig<HeroProps> = {
       type: "text",
     },
     description: {
-      type: "text",
+      type: "textarea",
     },
     ctas: {
       type: "group",

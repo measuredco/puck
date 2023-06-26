@@ -17,12 +17,12 @@
   font-weight: 500;
 }
 
-.Input input,
-.Input select {
+.Input-input {
   border-width: 1px;
   border-style: solid;
   border-color: var(--puck-color-grey-8);
   border-radius: 4px;
+  font-family: inherit;
   padding: 12px 16px;
   width: 100%;
 }
@@ -38,14 +38,12 @@
   background-color: white;
 }
 
-.Input--readOnly input,
-.Input--readOnly select {
+.Input--readOnly .Input-input {
   background-color: var(--puck-color-grey-9);
   border-color: var(--puck-color-grey-8);
 }
 
-.Input input:hover,
-.Input select:hover {
+.Input-input:hover {
   border-color: var(--puck-color-neutral-3);
 }
 
