@@ -13,13 +13,13 @@ export const SidebarSection = ({
   title: string;
 }) => {
   return (
-    <div className={getClassName({})}>
-      <div className={getClassName("title")}>
-        <Heading rank={2} size="s">
+    <details className={getClassName({})} open>
+      <summary className={getClassName("title")}>
+        <Heading rank={2} size="xs">
           {title}
         </Heading>
-      </div>
+      </summary>
       <div className={getClassName("content")}>{children}</div>
-    </div>
+    </details>
   );
 };

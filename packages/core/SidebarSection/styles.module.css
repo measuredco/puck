@@ -1,8 +1,4 @@
-.SidebarSection {
-  border-bottom: 1px solid var(--puck-color-grey-8);
-}
-
-.SidebarSection:last-of-type {
+.SidebarSection:last-of-type .SidebarSection-content {
   border-bottom: none;
   height: 100%;
 }
@@ -10,9 +6,24 @@
 .SidebarSection-title {
   background: white;
   padding: 16px;
+
   border-bottom: 1px solid var(--puck-color-grey-8);
 }
 
+.SidebarSection-title:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}
+
 .SidebarSection-content {
+  border-bottom: 1px solid var(--puck-color-grey-8);
   padding: 16px;
+}
+
+.SidebarSection > summary {
+  list-style: none;
+}
+
+.SidebarSection > summary::-webkit-details-marker {
+  display: none;
 }

@@ -232,6 +232,9 @@ export function Puck({
               overflowY: "auto",
             }}
           >
+            <SidebarSection title="Components">
+              <ComponentList config={config} />
+            </SidebarSection>
             <SidebarSection title="Outline">
               <OutlineList>
                 {data.content.map((item, i) => {
@@ -247,9 +250,6 @@ export function Puck({
                   );
                 })}
               </OutlineList>
-            </SidebarSection>
-            <SidebarSection title="Components">
-              <ComponentList config={config} />
             </SidebarSection>
           </div>
           <div

@@ -4,6 +4,7 @@ import { Draggable } from "react-beautiful-dnd";
 
 import styles from "./styles.module.css";
 import getClassNameFactory from "../lib/get-class-name-factory";
+import { Grid } from "react-feather";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 
@@ -39,7 +40,10 @@ export const ComponentList = ({ config }: { config: Config }) => {
                           : "translate(0px, 0px)",
                       }}
                     >
-                      {componentKey}{" "}
+                      {componentKey}
+                      <div className={getClassName("itemIcon")}>
+                        <Grid size={18} />
+                      </div>
                     </div>
                     {/* See https://github.com/atlassian/react-beautiful-dnd/issues/216#issuecomment-906890987 */}
                     {snapshot.isDragging && (
@@ -48,6 +52,9 @@ export const ComponentList = ({ config }: { config: Config }) => {
                         style={{ transform: "none !important" }}
                       >
                         {componentKey}
+                        <div className={getClassName("itemIcon")}>
+                          <Grid size={18} />
+                        </div>
                       </div>
                     )}
                   </>

@@ -1,4 +1,5 @@
 .OutlineList {
+  color: var(--puck-color-grey-2);
   font-family: var(--puck-font-stack);
   margin: 0;
   margin-left: 16px;

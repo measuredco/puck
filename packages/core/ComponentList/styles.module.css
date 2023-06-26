@@ -3,23 +3,28 @@
   font-family: var(--puck-font-stack);
   grid-template-columns: 1fr;
   max-width: 100%;
-  gap: 16px;
+  grid-gap: 12px;
 }
 
 .ComponentList-item,
 .ComponentList-itemShadow {
   background: white;
-  color: black;
-  padding: 16px;
+  padding: 12px;
+  padding-top: 12px;
   display: flex;
-  border: 1px #ccc solid;
+  border: 1px var(--puck-color-grey-8) solid;
   border-radius: 8px;
   font-size: var(--puck-font-size-xxs);
-  font-weight: 600;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   cursor: grab;
 }
 
+.ComponentList-itemIcon {
+  color: var(--puck-color-grey-4);
+}
+
 .ComponentList-item:hover {
-  background-color: var(--puck-color-grey-9);
+  background-color: var(--puck-color-azure-9);
 }
