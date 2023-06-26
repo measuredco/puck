@@ -33,7 +33,6 @@ export type StatsProps = {
     description: string;
     icon?: "Feather";
   }[];
-  mode: "flat" | "card";
 };
 
 export const Stats: ComponentConfig<StatsProps> = {
@@ -55,13 +54,6 @@ export const Stats: ComponentConfig<StatsProps> = {
         },
       },
     },
-    mode: {
-      type: "select",
-      options: [
-        { label: "flat", value: "flat" },
-        { label: "card", value: "card" },
-      ],
-    },
   },
   defaultProps: {
     items: [
@@ -71,18 +63,13 @@ export const Stats: ComponentConfig<StatsProps> = {
         icon: "Feather",
       },
     ],
-    mode: "flat",
   },
-  render: ({ items, mode }) => {
+  render: ({ items }) => {
     return (
-      <Section
-        className={getClassName({ cardMode: mode === "card" })}
-        maxWidth={"916px"}
-      >
+      <Section className={getClassName()} maxWidth={"916px"}>
         <div className={getClassName("items")}>
           {items.map((item, i) => (
             <div key={i} className={getClassName("item")}>
-              {/* <div className={getClassName("icon")}>{icons[item.icon]}</div> */}
               <div className={getClassName("label")}>{item.title}</div>
               <div className={getClassName("value")}>{item.description}</div>
             </div>
