@@ -10,7 +10,11 @@ export function Render({ config, data }: { config: Config; data: Data }) {
   });
 
   if (config.page) {
-    return <config.page.render {...data.page}>{children}</config.page.render>;
+    return (
+      <config.page.render {...data.page} editMode={false}>
+        {children}
+      </config.page.render>
+    );
   }
 
   return <div>{children}</div>;
