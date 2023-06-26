@@ -267,6 +267,7 @@ export function Puck({
                 background: "white",
                 borderRadius: 16,
                 overflow: "hidden",
+                zoom: 0.75,
               }}
             >
               <Page data={data} {...data.page}>
@@ -278,6 +279,7 @@ export function Puck({
                       style={{
                         minHeight: 128,
                         position: "relative",
+                        zoom: 1.33,
                       }}
                       id="puck-drop-zone"
                     >
