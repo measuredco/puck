@@ -31,7 +31,6 @@ export type StatsProps = {
   items: {
     title: string;
     description: string;
-    icon?: "Feather";
   }[];
 };
 
@@ -43,15 +42,10 @@ export const Stats: ComponentConfig<StatsProps> = {
       defaultItemProps: {
         title: "Title",
         description: "Description",
-        icon: "Feather",
       },
       groupFields: {
         title: { type: "text" },
         description: { type: "text" },
-        icon: {
-          type: "select",
-          options: iconOptions,
-        },
       },
     },
   },
@@ -60,7 +54,6 @@ export const Stats: ComponentConfig<StatsProps> = {
       {
         title: "Feature",
         description: "Description",
-        icon: "Feather",
       },
     ],
   },
