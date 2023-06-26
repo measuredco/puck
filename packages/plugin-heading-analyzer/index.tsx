@@ -7,17 +7,26 @@ import { OutlineList } from "core/OutlineList";
 
 import ReactFromJSON from "react-from-json";
 
-const getOutline = () => {
+const dataAttr = "data-puck-heading-analyzer-id";
+
+const getOutline = ({
+  addDataAttr = false,
+}: { addDataAttr?: boolean } = {}) => {
   const headings = window.document
     .querySelector(".puck-root")!
     .querySelectorAll("h1,h2,h3,h4,h5,h6");
 
-  const _outline: { rank: number; text: string }[] = [];
+  const _outline: { rank: number; text: string; analyzeId: string }[] = [];
 
-  headings.forEach((item) => {
+  headings.forEach((item, i) => {
+    if (addDataAttr) {
+      item.setAttribute(dataAttr, i.toString());
+    }
+
     _outline.push({
       rank: parseInt(item.tagName.split("H")[1]),
       text: item.textContent!,
+      analyzeId: i.toString(),
     });
   });
 
@@ -29,11 +38,12 @@ type Block = {
   text: string;
   children?: Block[];
   missing?: boolean;
+  analyzeId?: string;
 };
 type Heading<T> = { text: string; children: T[]; valid: boolean };
 
 function buildHierarchy(): Block[] {
-  const headings = getOutline();
+  const headings = getOutline({ addDataAttr: true });
 
   const root = { rank: 0, children: [], text: "" }; // Placeholder root node
   let path: Block[] = [root];
@@ -42,6 +52,7 @@ function buildHierarchy(): Block[] {
     const node: Block = {
       rank: heading.rank,
       text: heading.text,
+      analyzeId: heading.analyzeId,
       children: [],
     };
 
@@ -116,17 +127,50 @@ const HeadingOutlineAnalyser = ({
               Root: (props) => <>{props.children}</>,
               OutlineListItem: (props) => (
                 <OutlineList.Item>
-                  <small>
-                    {props.missing ? (
-                      <span style={{ color: "var(--puck-color-red)" }}>
-                        <b>H{props.rank}</b>: Missing
-                      </span>
-                    ) : (
-                      <span>
-                        <b>H{props.rank}</b>: {props.text}
-                      </span>
-                    )}
-                  </small>
+                  <OutlineList.Clickable>
+                    <small
+                      onClick={
+                        typeof props.analyzeId == "undefined"
+                          ? undefined
+                          : (e) => {
+                              e.stopPropagation();
+
+                              const el = document.querySelector(
+                                `[${dataAttr}="${props.analyzeId}"]`
+                              ) as HTMLElement;
+
+                              const oldStyle = { ...el.style };
+
+                              el.style.scrollMargin = "256px";
+
+                              if (el) {
+                                el?.scrollIntoView({ behavior: "smooth" });
+
+                                el.style.scrollMargin = oldStyle.scrollMargin;
+                                el.style.outline =
+                                  "4px solid var(--puck-color-rose-5)";
+                                el.style.outlineOffset = "4px";
+
+                                setTimeout(() => {
+                                  el.style.outline = oldStyle.outline;
+                                  el.style.outlineOffset =
+                                    oldStyle.outlineOffset;
+                                }, 2000);
+                              }
+                            }
+                      }
+                    >
+                      {props.missing ? (
+                        <span style={{ color: "var(--puck-color-red)" }}>
+                          <b>H{props.rank}</b>: Missing
+                        </span>
+                      ) : (
+                        <span>
+                          <b>H{props.rank}</b>: {props.text}
+                        </span>
+                      )}
+                    </small>
+                  </OutlineList.Clickable>
                   <OutlineList>{props.children}</OutlineList>
                 </OutlineList.Item>
               ),
