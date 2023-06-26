@@ -152,7 +152,7 @@ export const initialData: Record<string, Data> = {
         type: "Text",
         props: {
           align: "center",
-          text: 'This page demonstrates Puck configured with a custom component library. This component is called "Stats", and contains some made-up numbers. You can configure any URL  by adding "/edit" onto it.',
+          text: 'This page demonstrates Puck configured with a custom component library. This component is called "Stats", and contains some made-up numbers. You can configure any page by adding "/edit" onto the URL.',
           padding: "0px",
           size: "m",
           id: "Text-1687284565722",
