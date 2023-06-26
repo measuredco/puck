@@ -21,6 +21,7 @@ import { Plugin } from "../types/Plugin";
 import { usePlaceholderStyle } from "../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
+import { scrollIntoView } from "../lib/scroll-into-view";
 
 const Field = () => {};
 
@@ -243,6 +244,14 @@ export function Puck({
                       key={i}
                       onClick={() => {
                         setSelectedIndex(i);
+
+                        const id = data.content[i].props.id;
+
+                        scrollIntoView(
+                          document.querySelector(
+                            `[data-rbd-drag-handle-draggable-id="draggable-${id}"]`
+                          ) as HTMLElement
+                        );
                       }}
                     >
                       {item.type}

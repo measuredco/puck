@@ -5,6 +5,8 @@ import { Plugin } from "core/types/Plugin";
 import { SidebarSection } from "core/SidebarSection";
 import { OutlineList } from "core/OutlineList";
 
+import { scrollIntoView } from "core/lib/scroll-into-view";
+
 import ReactFromJSON from "react-from-json";
 
 const dataAttr = "data-puck-heading-analyzer-id";
@@ -141,12 +143,9 @@ const HeadingOutlineAnalyser = ({
 
                               const oldStyle = { ...el.style };
 
-                              el.style.scrollMargin = "256px";
-
                               if (el) {
-                                el?.scrollIntoView({ behavior: "smooth" });
+                                scrollIntoView(el);
 
-                                el.style.scrollMargin = oldStyle.scrollMargin;
                                 el.style.outline =
                                   "4px solid var(--puck-color-rose-5)";
                                 el.style.outlineOffset = "4px";
