@@ -112,13 +112,13 @@ export const initialData: Record<string, Data> = {
               title: "Easy to integrate",
               description:
                 "React developers can easily integrate their own components using a familiar React API.",
-              icon: "GitHub",
+              icon: "GitMerge",
             },
             {
               title: "No vendor lock-in",
               description:
                 "Completely open-source, Puck is designed to be integrated into your existing React application.",
-              icon: "Feather",
+              icon: "GitHub",
             },
           ],
           id: "FeatureList-1687287577500",
