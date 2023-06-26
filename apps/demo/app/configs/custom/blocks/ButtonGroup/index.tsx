@@ -22,7 +22,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
         label: { type: "text" },
         href: { type: "text" },
         variant: {
-          type: "select",
+          type: "radio",
           options: [
             { label: "primary", value: "primary" },
             { label: "secondary", value: "secondary" },
@@ -31,7 +31,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
       },
     },
     align: {
-      type: "select",
+      type: "radio",
       options: [
         { label: "left", value: "left" },
         { label: "center", value: "center" },

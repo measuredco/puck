@@ -45,7 +45,7 @@ export const Heading: ComponentConfig<HeadingProps> = {
       options: levelOptions,
     },
     align: {
-      type: "select",
+      type: "radio",
       options: [
         { label: "Left", value: "left" },
         { label: "Center", value: "center" },

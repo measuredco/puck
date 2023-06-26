@@ -49,7 +49,7 @@ export const TypographyBlock: ComponentConfig<TypographyBlockProps> = {
       options: variantOptions,
     },
     align: {
-      type: "select",
+      type: "radio",
       options: [
         { label: "Left", value: "left" },
         { label: "Center", value: "center" },

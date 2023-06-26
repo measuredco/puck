@@ -13,14 +13,14 @@ export const Video: ComponentConfig<VideoProps> = {
       type: "text",
     },
     autoplay: {
-      type: "select",
+      type: "radio",
       options: [
         { label: "On", value: "on" },
         { label: "Off", value: "off" },
       ],
     },
     loop: {
-      type: "select",
+      type: "radio",
       options: [
         { label: "On", value: "on" },
         { label: "Off", value: "off" },

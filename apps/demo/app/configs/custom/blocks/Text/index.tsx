@@ -23,7 +23,7 @@ export const Text: ComponentConfig<TextProps> = {
       ],
     },
     align: {
-      type: "select",
+      type: "radio",
       options: [
         { label: "Left", value: "left" },
         { label: "Center", value: "center" },
@@ -31,7 +31,7 @@ export const Text: ComponentConfig<TextProps> = {
       ],
     },
     color: {
-      type: "select",
+      type: "radio",
       options: [
         { label: "Default", value: "default" },
         { label: "Muted", value: "muted" },

@@ -41,7 +41,7 @@ export const Hero: ComponentConfig<HeroProps> = {
           type: "text",
         },
         type: {
-          type: "select",
+          type: "radio",
           options: [
             {
               value: "primary",

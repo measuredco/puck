@@ -38,7 +38,7 @@ export const Hero: ComponentConfig<HeroProps> = {
       },
     },
     align: {
-      type: "select",
+      type: "radio",
       options: [
         { label: "left", value: "left" },
         { label: "center", value: "center" },
@@ -46,7 +46,7 @@ export const Hero: ComponentConfig<HeroProps> = {
     },
     imageUrl: { type: "text" },
     imageMode: {
-      type: "select",
+      type: "radio",
       options: [
         { label: "inline", value: "inline" },
         { label: "background", value: "background" },

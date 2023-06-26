@@ -110,3 +110,20 @@
   margin-top: 4px;
   overflow: hidden;
 }
+
+.Input-radioGroup {
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+
+.Input-radioGroupItems {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.Input-radio {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

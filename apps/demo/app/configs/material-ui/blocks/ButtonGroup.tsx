@@ -20,7 +20,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
       getItemSummary: (item) => item.label || "Button",
       groupFields: {
         variant: {
-          type: "select",
+          type: "radio",
           options: [
             { value: "text", label: "text" },
             { value: "outlined", label: "outlined" },
@@ -36,7 +36,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
       },
     },
     align: {
-      type: "select",
+      type: "radio",
       options: [
         { value: "flex-start", label: "left" },
         { value: "center", label: "center" },

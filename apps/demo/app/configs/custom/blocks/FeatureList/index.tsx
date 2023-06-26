@@ -56,7 +56,7 @@ export const FeatureList: ComponentConfig<FeatureListProps> = {
       },
     },
     mode: {
-      type: "select",
+      type: "radio",
       options: [
         { label: "flat", value: "flat" },
         { label: "card", value: "card" },

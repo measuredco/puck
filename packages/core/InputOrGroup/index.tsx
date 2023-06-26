@@ -150,6 +150,37 @@ export const InputOrGroup = ({
     );
   }
 
+  if (field.type === "radio") {
+    if (!field.options) {
+      return null;
+    }
+
+    return (
+      <div className={getClassName("radioGroup")}>
+        <div className={getClassName("label")}>{field.label || name}</div>
+
+        <div className={getClassName("radioGroupItems")}>
+          {field.options.map((option) => (
+            <label
+              key={option.label + option.value}
+              className={getClassName("radio")}
+            >
+              <input
+                type="radio"
+                value={option.value}
+                name={name}
+                onChange={(e) => onChange(e.currentTarget.value)}
+                readOnly={readOnly}
+                defaultChecked={value === option.value}
+              />
+              <div>{option.value}</div>
+            </label>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <label className={getClassName({ readOnly })}>
       <div className={getClassName("label")}>{label || name}</div>
