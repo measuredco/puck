@@ -9,7 +9,6 @@ import * as reactFeather from "react-feather";
 const getClassName = getClassNameFactory("Stats", styles);
 
 const icons = Object.keys(reactFeather).reduce((acc, iconName) => {
-  console.log(reactFeather[iconName]);
   if (typeof reactFeather[iconName] === "object") {
     const El = reactFeather[iconName];
 
