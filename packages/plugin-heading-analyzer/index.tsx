@@ -151,9 +151,9 @@ const HeadingOutlineAnalyser = ({
                                 el.style.outlineOffset = "4px";
 
                                 setTimeout(() => {
-                                  el.style.outline = oldStyle.outline;
+                                  el.style.outline = oldStyle.outline || "";
                                   el.style.outlineOffset =
-                                    oldStyle.outlineOffset;
+                                    oldStyle.outlineOffset || "";
                                 }, 2000);
                               }
                             }

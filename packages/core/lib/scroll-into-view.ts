@@ -6,6 +6,6 @@ export const scrollIntoView = (el: HTMLElement) => {
   if (el) {
     el?.scrollIntoView({ behavior: "smooth" });
 
-    el.style.scrollMargin = oldStyle.scrollMargin;
+    el.style.scrollMargin = oldStyle.scrollMargin || "";
   }
 };
