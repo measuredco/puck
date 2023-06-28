@@ -10,7 +10,6 @@ export const usePlaceholderStyle = () => {
       return;
     }
     const draggableId = update.draggableId;
-    const sourceIndex = update.source.index;
     const destinationIndex = update.destination.index;
 
     const domQuery = `[${queryAttr}='${draggableId}']`;
@@ -28,22 +27,20 @@ export const usePlaceholderStyle = () => {
       return;
     }
 
-    const up = destinationIndex > sourceIndex;
-    const sameList =
-      update.source.droppableId === update.destination.droppableId;
-
     let clientY = 0;
 
     if (destinationIndex > 0) {
-      const itemAtIndex =
-        targetListElement.children[
-          up && sameList ? destinationIndex : destinationIndex - 1
-        ];
+      const children = Array.from(targetListElement.children)
+        .filter((item) => item !== draggedDOM)
+        .slice(0, destinationIndex);
 
-      const el = itemAtIndex as HTMLElement;
-      const style = window.getComputedStyle(itemAtIndex);
-      const marginBottom = parseFloat(style.marginBottom);
-      clientY = el.offsetTop + itemAtIndex.clientHeight + marginBottom;
+      clientY = children.reduce(
+        (total, item) =>
+          total +
+          item.clientHeight +
+          parseInt(window.getComputedStyle(item).marginTop.replace("px", "")),
+        0
+      );
     }
 
     setPlaceholderStyle({
