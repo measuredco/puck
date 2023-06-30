@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ComponentConfig } from "core/types/Config";
+import { ComponentConfig } from "@puck/core/types/Config";
 import { Typography, TypographyVariant } from "@mui/material";
 import { ContainerProps, Container, containerFields } from "../Container";
 

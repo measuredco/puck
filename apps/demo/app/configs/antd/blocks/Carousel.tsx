@@ -1,7 +1,7 @@
 import React from "react";
 import { Carousel as AntdCarousel } from "antd/dist/antd";
 import { Image } from "antd";
-import { ComponentConfig } from "core/types/Config";
+import { ComponentConfig } from "@puck/core/types/Config";
 
 export type CarouselProps = {
   slides: { imageUrl: string; alt: string }[];

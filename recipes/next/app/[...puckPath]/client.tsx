@@ -1,7 +1,7 @@
 "use client";
 
-import { Data } from "core/types/Config";
-import { Puck, Render } from "core";
+import { Data } from "@puck/core/types/Config";
+import { Puck, Render } from "@puck/core";
 import config from "../../puck.config";
 import headingAnalyzer from "../../../../packages/plugin-heading-analyzer";
 

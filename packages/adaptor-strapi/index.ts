@@ -1,8 +1,8 @@
-import { Adaptor } from "core/types/Config";
+import { Adaptor } from "@puck/core/types/Config";
 
 type AdaptorParams = { apiToken: string; resource: string };
 
-export const strapiAdaptor: Adaptor<AdaptorParams> = {
+const strapiAdaptor: Adaptor<AdaptorParams> = {
   name: "Strapi.js",
   fetchList: async (adaptorParams) => {
     if (!adaptorParams) {
@@ -23,3 +23,5 @@ export const strapiAdaptor: Adaptor<AdaptorParams> = {
     return body.data;
   },
 };
+
+export default strapiAdaptor;

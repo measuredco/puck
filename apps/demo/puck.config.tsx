@@ -1,4 +1,4 @@
-import { Config } from "core/types/Config";
+import { Config } from "@puck/core/types/Config";
 
 type Props = {
   HeadingBlock: { title: string };

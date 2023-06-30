@@ -1,11 +1,11 @@
 import { ReactElement, ReactNode, useEffect, useState } from "react";
 
-import { Data } from "core/types/Config";
-import { Plugin } from "core/types/Plugin";
-import { SidebarSection } from "core/SidebarSection";
-import { OutlineList } from "core/OutlineList";
+import { Data } from "@puck/core/types/Config";
+import { Plugin } from "@puck/core/types/Plugin";
+import { SidebarSection } from "@puck/core/SidebarSection";
+import { OutlineList } from "@puck/core/OutlineList";
 
-import { scrollIntoView } from "core/lib/scroll-into-view";
+import { scrollIntoView } from "@puck/core/lib/scroll-into-view";
 
 import ReactFromJSON from "react-from-json";
 
@@ -42,7 +42,6 @@ type Block = {
   missing?: boolean;
   analyzeId?: string;
 };
-type Heading<T> = { text: string; children: T[]; valid: boolean };
 
 function buildHierarchy(): Block[] {
   const headings = getOutline({ addDataAttr: true });

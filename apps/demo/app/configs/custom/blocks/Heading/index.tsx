@@ -1,8 +1,8 @@
 import React from "react";
 
-import { ComponentConfig } from "core/types/Config";
-import { Heading as _Heading } from "core/Heading";
-import type { HeadingProps as _HeadingProps } from "core/Heading";
+import { ComponentConfig } from "@puck/core/types/Config";
+import { Heading as _Heading } from "@puck/core/Heading";
+import type { HeadingProps as _HeadingProps } from "@puck/core/Heading";
 import { Section } from "../../components/Section";
 
 export type HeadingProps = {

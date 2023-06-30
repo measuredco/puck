@@ -1,16 +1,18 @@
 {
-  "name": "adaptors",
+  "name": "@puck/adaptor-strapi",
   "version": "0.0.0",
   "main": "./index.ts",
   "types": "./index.ts",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint \"**/*.ts*\""
+    "lint": "eslint \"**/*.ts*\"",
+    "build": "rm -rf dist && tsup index.ts"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",
+    "tsup-config": "*",
     "typescript": "^4.5.2"
   }
 }

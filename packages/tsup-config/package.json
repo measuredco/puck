@@ -1,0 +1,16 @@
+{
+  "name": "tsup-config",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "tsconfig": "*",
+    "tsup": "^6.7.0",
+    "typescript": "^4.5.2",
+    "postcss": "^8.4.24",
+    "postcss-modules": "^6.0.0"
+  }
+}

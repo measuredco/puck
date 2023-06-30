@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { DefaultPageProps } from "core/types/Config";
+import { DefaultPageProps } from "@puck/core/types/Config";
 import { Footer } from "./components/Footer";
 
 export type RootProps = {

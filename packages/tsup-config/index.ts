@@ -1,13 +1,10 @@
-import { defineConfig } from "tsup";
 import fs from "fs";
 import path from "path";
 import postcss from "postcss";
 import postcssModules from "postcss-modules";
 
-export default defineConfig({
-  entry: ["index.tsx"],
+const config = {
   dts: true,
-  inject: ["./react-import.js"],
   format: "cjs",
   esbuildPlugins: [
     {
@@ -68,4 +65,6 @@ export default defineConfig({
       },
     },
   ],
-});
+};
+
+export default config;

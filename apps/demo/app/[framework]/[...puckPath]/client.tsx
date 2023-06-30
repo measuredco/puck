@@ -1,10 +1,10 @@
 "use client";
 
-import { Data } from "core/types/Config";
-import { Puck, Render } from "core";
+import { Data } from "@puck/core/types/Config";
+import { Puck, Render } from "@puck/core";
 import { Framework } from "../../Framework";
 import { useEffect, useState } from "react";
-import { Button } from "core/Button";
+import { Button } from "@puck/core/Button";
 import headingAnalyzer from "../../../../../packages/plugin-heading-analyzer";
 
 const isBrowser = typeof window !== "undefined";

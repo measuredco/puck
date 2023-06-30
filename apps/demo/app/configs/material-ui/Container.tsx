@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import { Breakpoint, Container as _Container } from "@mui/material";
 import { breakpointOptions, spacingOptions } from "./options";
 
-import { Fields } from "core/types/Config";
+import { Fields } from "@puck/core/types/Config";
 
 export type ContainerProps = {
   paddingBottom?: string;

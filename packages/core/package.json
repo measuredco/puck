@@ -1,12 +1,16 @@
 {
-  "name": "core",
+  "name": "@puck/core",
   "version": "0.0.0",
-  "main": "./index.tsx",
-  "types": "./index.tsx",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint \"**/*.ts*\""
+    "lint": "eslint \"**/*.ts*\"",
+    "build": "rm -rf dist && tsup index.tsx"
   },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
@@ -14,6 +18,7 @@
     "eslint-config-custom": "*",
     "tsconfig": "*",
     "tsup": "^6.7.0",
+    "tsup-config": "*",
     "typescript": "^4.5.2"
   },
   "dependencies": {

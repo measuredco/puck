@@ -1,4 +1,4 @@
-import { Config, Data } from "core/types/Config";
+import { Config, Data } from "@puck/core/types/Config";
 import { ButtonGroup, ButtonGroupProps } from "./blocks/ButtonGroup";
 import { Hero, HeroProps } from "./blocks/Hero";
 import { Heading, HeadingProps } from "./blocks/Heading";
