@@ -173,7 +173,7 @@ export const InputOrGroup = ({
                 readOnly={readOnly}
                 defaultChecked={value === option.value}
               />
-              <div>{option.value}</div>
+              <div>{option.label || option.value}</div>
             </label>
           ))}
         </div>
