@@ -1,5 +1,5 @@
 {
-  "name": "@puck/adaptor-strapi",
+  "name": "@measured/puck-adaptor-strapi",
   "version": "0.0.0",
   "main": "./index.ts",
   "types": "./index.ts",
