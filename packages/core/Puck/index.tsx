@@ -215,7 +215,13 @@ export function Puck({
                 setData,
               })
             ) : (
-              <div style={{ marginLeft: "auto", padding: 16 }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: 16,
+                }}
+              >
                 <Button
                   onClick={() => {
                     onPublish(data);
