@@ -6,7 +6,7 @@ import { Render } from "@measured/puck/components/Render";
 import { Framework } from "../../Framework";
 import { useEffect, useState } from "react";
 import { Button } from "@measured/puck/components/Button";
-import headingAnalyzer from "@measured/puck-plugin-heading-analyzer";
+import headingAnalyzer from "@measured/puck-plugin-heading-analyzer/src/HeadingAnalyzer";
 
 const isBrowser = typeof window !== "undefined";
 
