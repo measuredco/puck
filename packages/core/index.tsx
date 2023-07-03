@@ -1,5 +1,5 @@
-import "@puck/core/styles/global.css";
-import "@puck/core/types/Config";
+import "./styles/global.css";
 
+export * from "./types/Config";
 export * from "./Puck";
 export * from "./Render";
