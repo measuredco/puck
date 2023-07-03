@@ -25,8 +25,8 @@ jobs:
           node-version: "18.16.1"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Build everything
-        run: yarn && yarn build
+      - name: Install dependencies
+        run: yarn
 
       - name: Publish core
         run: cd packages/core && npm publish
