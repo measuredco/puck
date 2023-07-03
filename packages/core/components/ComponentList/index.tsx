@@ -1,5 +1,5 @@
 import DroppableStrictMode from "../DroppableStrictMode";
-import { ComponentConfig, Config } from "../types/Config";
+import { ComponentConfig, Config } from "../../types/Config";
 import { Draggable } from "react-beautiful-dnd";
 
 import styles from "./styles.module.css";
