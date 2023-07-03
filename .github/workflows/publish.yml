@@ -1,0 +1,46 @@
+name: Publish release
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  tag-and-publish-to-npm:
+    runs-on: ubuntu-latest
+    if: "startsWith(github.event.head_commit.message, 'release: ')"
+    steps:
+      - uses: actions/checkout@v2.0.0
+      - name: Extract version
+        shell: bash
+        run: echo "TAG_NAME=$(git log -1 --oneline --pretty=%B | sed 's/release:\ //g')" >> $GITHUB_ENV
+      - name: Tag commit
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: "${{ secrets.GH_TOKEN }}"
+          tag: ${{ env.TAG_NAME }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.13.0"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Build everything
+        run: yarn && yarn build
+
+      - name: Publish core
+        run: cd packages/core && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish adaptor-strapi
+        run: cd packages/adaptor-strapi && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish plugin-heading-analyzer
+        run: cd packages/plugin-heading-analyzer && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    timeout-minutes: 10

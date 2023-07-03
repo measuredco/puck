@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts*\"",
-    "build": "rm -rf dist && tsup index.ts"
+    "build": "rm -rf dist && tsup index.ts",
+    "prepublish": "yarn build"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
