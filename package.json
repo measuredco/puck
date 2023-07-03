@@ -24,7 +24,8 @@
   "packageManager": "yarn@1.22.19",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "recipes/*"
   ],
   "version": "0.1.3"
 }
