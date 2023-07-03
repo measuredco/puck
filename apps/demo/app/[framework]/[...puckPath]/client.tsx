@@ -1,7 +1,8 @@
 "use client";
 
 import { Data } from "@measured/puck/types/Config";
-import { Puck, Render } from "@measured/puck";
+import { Puck } from "@measured/puck/components/Puck";
+import { Render } from "@measured/puck/components/Render";
 import { Framework } from "../../Framework";
 import { useEffect, useState } from "react";
 import { Button } from "@measured/puck/components/Button";
