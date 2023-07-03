@@ -8,7 +8,7 @@
   "scripts": {
     "lint": "eslint \"**/*.ts*\"",
     "build": "rm -rf dist && tsup index.ts",
-    "prepublish": "yarn build"
+    "prepare": "yarn build"
   },
   "files": [
     "dist"
