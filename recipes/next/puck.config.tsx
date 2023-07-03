@@ -20,8 +20,8 @@ import {
   VerticalSpace,
 } from "@arc-ui/components";
 import { backgrounds as surfaceBackgrounds } from "@arc-ui/components/dist/Surface";
-import { Config, Data } from "@puck/core/types/Config";
-import strapiAdaptor from "@puck/adaptor-strapi";
+import { Config, Data } from "@measured/puck";
+import strapiAdaptor from "@measured/puck-adaptor-strapi";
 
 const curveSizes = ["s", "m", "l"];
 const curvePositions = [

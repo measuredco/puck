@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { Container, ContainerProps, containerFields } from "../Container";
 
-import { ComponentConfig } from "@puck/core/types/Config";
+import { ComponentConfig } from "@measured/puck/types/Config";
 
 export type ImageListProps = {
   variant: "masonry" | "quilted" | "standard" | "woven";

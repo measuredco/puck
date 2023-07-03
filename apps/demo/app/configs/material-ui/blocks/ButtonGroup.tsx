@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ComponentConfig } from "@puck/core/types/Config";
+import { ComponentConfig } from "@measured/puck/types/Config";
 import { Button, Stack } from "@mui/material";
 import { Container, ContainerProps, containerFields } from "../Container";
 

@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { ComponentConfig } from "@puck/core/types/Config";
+import { ComponentConfig } from "@measured/puck/types/Config";
 import styles from "./styles.module.css";
-import { getClassNameFactory } from "@puck/core/lib";
-import { Button } from "@puck/core/Button";
+import { getClassNameFactory } from "@measured/puck/lib";
+import { Button } from "@measured/puck/Button";
 import { Section } from "../../components/Section";
 
 const getClassName = getClassNameFactory("Hero", styles);

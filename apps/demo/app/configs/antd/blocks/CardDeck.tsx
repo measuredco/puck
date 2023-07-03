@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Col, Row } from "antd";
-import { ComponentConfig } from "@puck/core/types/Config";
+import { ComponentConfig } from "@measured/puck/types/Config";
 
 export type CardDeckProps = {
   cards: { title: string; content: string }[];

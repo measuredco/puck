@@ -1,4 +1,4 @@
-import { Adaptor } from "@puck/core/types/Config";
+import { Adaptor } from "@measured/puck/types/Config";
 
 type AdaptorParams = { apiToken: string; resource: string };
 

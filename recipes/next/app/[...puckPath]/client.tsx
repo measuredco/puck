@@ -1,7 +1,7 @@
 "use client";
 
-import { Data } from "@puck/core/types/Config";
-import { Puck, Render } from "@puck/core";
+import { Data } from "@measured/puck/types/Config";
+import { Puck, Render } from "@measured/puck";
 import config from "../../puck.config";
 import headingAnalyzer from "../../../../packages/plugin-heading-analyzer";
 

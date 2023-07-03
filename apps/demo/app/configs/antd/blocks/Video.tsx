@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentConfig } from "@puck/core/types/Config";
+import { ComponentConfig } from "@measured/puck/types/Config";
 
 export type VideoProps = {
   autoplay: "on" | "off";

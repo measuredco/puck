@@ -1,11 +1,11 @@
 import { ReactElement, ReactNode, useEffect, useState } from "react";
 
-import { Data } from "@puck/core/types/Config";
-import { Plugin } from "@puck/core/types/Plugin";
-import { SidebarSection } from "@puck/core/SidebarSection";
-import { OutlineList } from "@puck/core/OutlineList";
+import { Data } from "@measured/puck/types/Config";
+import { Plugin } from "@measured/puck/types/Plugin";
+import { SidebarSection } from "@measured/puck/SidebarSection";
+import { OutlineList } from "@measured/puck/OutlineList";
 
-import { scrollIntoView } from "@puck/core/lib/scroll-into-view";
+import { scrollIntoView } from "@measured/puck/lib/scroll-into-view";
 
 import ReactFromJSON from "react-from-json";
 

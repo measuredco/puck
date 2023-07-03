@@ -1,6 +1,6 @@
 import { CSSProperties, ReactNode } from "react";
 import styles from "./styles.module.css";
-import { getClassNameFactory } from "@puck/core/lib";
+import { getClassNameFactory } from "@measured/puck/lib";
 
 const getClassName = getClassNameFactory("Section", styles);
 
