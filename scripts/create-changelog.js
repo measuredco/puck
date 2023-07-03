@@ -25,8 +25,6 @@ standardStream.on("end", () => {
   // Indent headers and add download section
   const transformed = transform(changes);
 
-  console.log("changes", changelog, changes);
-
   // Inject into changelog
   const updatedChangelog = changelog.replace(
     "<!--__CHANGELOG_ENTRY__-->\n",
