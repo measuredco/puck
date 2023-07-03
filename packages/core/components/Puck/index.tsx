@@ -10,18 +10,18 @@ import {
 import { DragDropContext } from "react-beautiful-dnd";
 import DroppableStrictMode from "../DroppableStrictMode";
 import { DraggableComponent } from "../DraggableComponent";
-import type { Config, Data, Field } from "../types/Config";
+import type { Config, Data, Field } from "../../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
 import { OutlineList } from "../OutlineList";
-import { filter, reorder, replace } from "../lib";
+import { filter, reorder, replace } from "../../lib";
 import { Button } from "../Button";
 
-import { Plugin } from "../types/Plugin";
-import { usePlaceholderStyle } from "../lib/use-placeholder-style";
+import { Plugin } from "../../types/Plugin";
+import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
-import { scrollIntoView } from "../lib/scroll-into-view";
+import { scrollIntoView } from "../../lib/scroll-into-view";
 
 const Field = () => {};
 

@@ -3,7 +3,7 @@ import { ComponentConfig, Config } from "../types/Config";
 import { Draggable } from "react-beautiful-dnd";
 
 import styles from "./styles.module.css";
-import getClassNameFactory from "../lib/get-class-name-factory";
+import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Grid } from "react-feather";
 
 const getClassName = getClassNameFactory("ComponentList", styles);

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import styles from "./styles.module.css";
-import getClassNameFactory from "../lib/get-class-name-factory";
+import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Heading } from "../Heading";
 
 const getClassName = getClassNameFactory("SidebarSection", styles);

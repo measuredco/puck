@@ -4,7 +4,6 @@ import { ComponentConfig } from "@measured/puck/types/Config";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@measured/puck/lib";
 import { Section } from "../../components/Section";
-import * as reactFeather from "react-feather";
 
 const getClassName = getClassNameFactory("Logos", styles);
 

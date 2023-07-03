@@ -1,11 +1,10 @@
-import getClassNameFactory from "../lib/get-class-name-factory";
-import { Field } from "../types/Config";
+import getClassNameFactory from "../../lib/get-class-name-factory";
+import { Field } from "../../types/Config";
 import { ExternalInput } from "../ExternalInput";
 
 import styles from "./styles.module.css";
-import { replace } from "../lib";
-import { Button } from "../Button";
-import { Copy, Trash } from "react-feather";
+import { replace } from "../../lib";
+import { Trash } from "react-feather";
 
 const getClassName = getClassNameFactory("Input", styles);
 

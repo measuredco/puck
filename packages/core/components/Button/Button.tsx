@@ -1,6 +1,6 @@
 import { ReactNode, useState } from "react";
 import styles from "./Button.module.css";
-import getClassNameFactory from "../lib/get-class-name-factory";
+import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ClipLoader } from "react-spinners";
 
 const getClassName = getClassNameFactory("Button", styles);

@@ -1,8 +1,8 @@
 import React from "react";
 
 import { ComponentConfig } from "@measured/puck/types/Config";
-import { Heading as _Heading } from "@measured/puck/Heading";
-import type { HeadingProps as _HeadingProps } from "@measured/puck/Heading";
+import { Heading as _Heading } from "@measured/puck/components/Heading";
+import type { HeadingProps as _HeadingProps } from "@measured/puck/components/Heading";
 import { Section } from "../../components/Section";
 
 export type HeadingProps = {

@@ -1,5 +1,5 @@
 import styles from "./styles.module.css";
-import getClassNameFactory from "../lib/get-class-name-factory";
+import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ReactNode, SyntheticEvent } from "react";
 
 const getClassName = getClassNameFactory("OutlineList", styles);

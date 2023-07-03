@@ -2,8 +2,8 @@ import { ReactElement, ReactNode, useEffect, useState } from "react";
 
 import { Data } from "@measured/puck/types/Config";
 import { Plugin } from "@measured/puck/types/Plugin";
-import { SidebarSection } from "@measured/puck/SidebarSection";
-import { OutlineList } from "@measured/puck/OutlineList";
+import { SidebarSection } from "@measured/puck/components/SidebarSection";
+import { OutlineList } from "@measured/puck/components/OutlineList";
 
 import { scrollIntoView } from "@measured/puck/lib/scroll-into-view";
 

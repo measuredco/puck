@@ -3,7 +3,7 @@ import React from "react";
 import { ComponentConfig } from "@measured/puck/types/Config";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@measured/puck/lib";
-import { Button } from "@measured/puck/Button";
+import { Button } from "@measured/puck/components/Button";
 import { Section } from "../../components/Section";
 
 const getClassName = getClassNameFactory("ButtonGroup", styles);
