@@ -87,7 +87,7 @@ function buildHierarchy(): Block[] {
   return root.children;
 }
 
-const HeadingOutlineAnalyser = ({
+const HeadingOutlineAnalyzer = ({
   children,
   data,
 }: {
@@ -195,7 +195,7 @@ const HeadingOutlineAnalyser = ({
 };
 
 const HeadingAnalyzer: Plugin = {
-  renderPageFields: HeadingOutlineAnalyser,
+  renderPageFields: HeadingOutlineAnalyzer,
 };
 
 export default HeadingAnalyzer;
