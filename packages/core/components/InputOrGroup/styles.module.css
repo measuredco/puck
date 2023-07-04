@@ -47,29 +47,29 @@
   border-color: var(--puck-color-neutral-3);
 }
 
-.Input-group {
+.Input-array {
   background: white;
   border-bottom: var(--puck-color-grey-8) solid 1px;
 }
 
-.Input-group > summary {
+.Input-array > summary {
   padding: 16px;
   position: relative;
 }
 
-.Input-group > summary:hover {
+.Input-array > summary:hover {
   cursor: pointer;
   color: var(--puck-color-blue);
 }
 
-.Input-group > fieldset {
+.Input-array > fieldset {
   border: none;
   border-top: var(--puck-color-grey-8) solid 1px;
   margin: 0;
   padding: 16px;
 }
 
-.Input-group .Input-action {
+.Input-array .Input-action {
   background: transparent;
   border: none;
   color: var(--puck-color-grey-2);
@@ -80,11 +80,11 @@
   top: 4px;
 }
 
-.Input-group summary:hover .Input-action {
+.Input-array summary:hover .Input-action {
   display: block;
 }
 
-.Input-group .Input-action:hover {
+.Input-array .Input-action:hover {
   background: var(--puck-color-grey-9);
   color: var(--puck-color-blue);
   cursor: pointer;

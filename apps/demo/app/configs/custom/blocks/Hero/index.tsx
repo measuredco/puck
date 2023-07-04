@@ -23,9 +23,9 @@ export const Hero: ComponentConfig<HeroProps> = {
     title: { type: "text" },
     description: { type: "textarea" },
     buttons: {
-      type: "group",
+      type: "array",
       getItemSummary: (item) => item.label || "Button",
-      groupFields: {
+      arrayFields: {
         label: { type: "text" },
         href: { type: "text" },
         variant: {

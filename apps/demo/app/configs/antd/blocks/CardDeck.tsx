@@ -9,8 +9,8 @@ export type CardDeckProps = {
 export const CardDeck: ComponentConfig<CardDeckProps> = {
   fields: {
     cards: {
-      type: "group",
-      groupFields: { title: { type: "text" }, content: { type: "textarea" } },
+      type: "array",
+      arrayFields: { title: { type: "text" }, content: { type: "textarea" } },
     },
   },
   defaultProps: {

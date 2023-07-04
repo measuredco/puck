@@ -32,8 +32,8 @@ export const Hero: ComponentConfig<HeroProps> = {
       type: "textarea",
     },
     ctas: {
-      type: "group",
-      groupFields: {
+      type: "array",
+      arrayFields: {
         label: {
           type: "text",
         },

@@ -36,13 +36,13 @@ export type StatsProps = {
 export const Stats: ComponentConfig<StatsProps> = {
   fields: {
     items: {
-      type: "group",
+      type: "array",
       getItemSummary: (item, i) => item.title || `Feature #${i}`,
       defaultItemProps: {
         title: "Title",
         description: "Description",
       },
-      groupFields: {
+      arrayFields: {
         title: { type: "text" },
         description: { type: "text" },
       },

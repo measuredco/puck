@@ -299,8 +299,8 @@ export const config: Config<Props> = {
     UniversalHeader: {
       fields: {
         links: {
-          type: "group",
-          groupFields: {
+          type: "array",
+          arrayFields: {
             href: { type: "text" },
             label: { type: "text" },
           },

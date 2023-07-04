@@ -55,8 +55,8 @@ const definedElse = (str: string, fallback: string) =>
 export const CardDeck: ComponentConfig<CardDeckProps> = {
   fields: {
     cards: {
-      type: "group",
-      groupFields: {
+      type: "array",
+      arrayFields: {
         title: { type: "text" },
         subtitle: { type: "text" },
         content: { type: "textarea" },

@@ -21,8 +21,8 @@ const contentStyle: React.CSSProperties = {
 export const Carousel: ComponentConfig<CarouselProps> = {
   fields: {
     slides: {
-      type: "group",
-      groupFields: { imageUrl: { type: "text" }, alt: { type: "text" } },
+      type: "array",
+      arrayFields: { imageUrl: { type: "text" }, alt: { type: "text" } },
     },
   },
   render: ({ slides = [] }) => {

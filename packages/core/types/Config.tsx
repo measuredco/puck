@@ -16,13 +16,13 @@ export type Field<
     | "textarea"
     | "number"
     | "select"
-    | "group"
+    | "array"
     | "external"
     | "radio";
   label?: string;
   adaptor?: Adaptor;
   adaptorParams?: object;
-  groupFields?: {
+  arrayFields?: {
     [SubPropName in keyof Props]: Field<Props[SubPropName]>;
   };
   getItemSummary?: (item: Props, index: number) => string;

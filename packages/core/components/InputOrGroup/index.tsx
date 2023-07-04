@@ -23,8 +23,8 @@ export const InputOrGroup = ({
   onChange: (value: any) => void;
   readOnly?: boolean;
 }) => {
-  if (field.type === "group") {
-    if (!field.groupFields) {
+  if (field.type === "array") {
+    if (!field.arrayFields) {
       return null;
     }
 
@@ -34,7 +34,7 @@ export const InputOrGroup = ({
         <div className={getClassName("item")}>
           {Array.isArray(value) ? (
             value.map((item, i) => (
-              <details key={`${name}_${i}`} className={getClassName("group")}>
+              <details key={`${name}_${i}`} className={getClassName("array")}>
                 <summary>
                   {field.getItemSummary
                     ? field.getItemSummary(item, i)
@@ -53,8 +53,8 @@ export const InputOrGroup = ({
                   </button>
                 </summary>
                 <fieldset>
-                  {Object.keys(field.groupFields!).map((fieldName) => {
-                    const subField = field.groupFields![fieldName];
+                  {Object.keys(field.arrayFields!).map((fieldName) => {
+                    const subField = field.arrayFields![fieldName];
 
                     return (
                       <InputOrGroup

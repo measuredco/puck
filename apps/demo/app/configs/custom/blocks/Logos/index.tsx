@@ -17,13 +17,13 @@ export type LogosProps = {
 export const Logos: ComponentConfig<LogosProps> = {
   fields: {
     logos: {
-      type: "group",
+      type: "array",
       getItemSummary: (item, i) => item.alt || `Feature #${i}`,
       defaultItemProps: {
         alt: "",
         imageUrl: "",
       },
-      groupFields: {
+      arrayFields: {
         alt: { type: "text" },
         imageUrl: { type: "text" },
       },

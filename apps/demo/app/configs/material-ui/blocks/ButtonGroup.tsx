@@ -16,9 +16,9 @@ export type ButtonGroupProps = {
 export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
   fields: {
     buttons: {
-      type: "group",
+      type: "array",
       getItemSummary: (item) => item.label || "Button",
-      groupFields: {
+      arrayFields: {
         variant: {
           type: "radio",
           options: [

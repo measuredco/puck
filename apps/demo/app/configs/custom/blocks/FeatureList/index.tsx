@@ -38,14 +38,14 @@ export type FeatureListProps = {
 export const FeatureList: ComponentConfig<FeatureListProps> = {
   fields: {
     items: {
-      type: "group",
+      type: "array",
       getItemSummary: (item, i) => item.title || `Feature #${i}`,
       defaultItemProps: {
         title: "Title",
         description: "Description",
         icon: "Feather",
       },
-      groupFields: {
+      arrayFields: {
         title: { type: "text" },
         description: { type: "textarea" },
         icon: {

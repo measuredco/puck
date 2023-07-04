@@ -125,12 +125,12 @@ The `Config` object describes which components Puck should render, how they shou
 
 A `Field` represents a user input field shown in the Puck interface.
 
-- **type** (`text` | `textarea` | `number` | `select` | `radio` | `external` | `group`): The input type to render
+- **type** (`text` | `textarea` | `number` | `select` | `radio` | `external` | `array`): The input type to render
 - **label** (`text` [optional]): A label for the input. Will use the key if not provided.
-- **groupFields** (`object`): Object describing sub-fields for items in a group input
+- **arrayFields** (`object`): Object describing sub-fields for items in an `array` input
   - **[fieldName]** (`Field`): The Field objects describing the input data for each item
-- **getItemSummary** (`(object, number) => string` [optional]): Function to get the name of each item when using a group input
-- **defaultItemProps** (`object` [optional]): Default props to pass to each new item added, when using a `group` field type
+- **getItemSummary** (`(object, number) => string` [optional]): Function to get the name of each item when using an `array` field type
+- **defaultItemProps** (`object` [optional]): Default props to pass to each new item added, when using a `array` field type
 - **options** (`object[]`): array of items to render for select-type inputs
   - **label** (`string`)
   - **value** (`string`)
