@@ -6,6 +6,7 @@ import postcssModules from "postcss-modules";
 const config = {
   dts: true,
   format: "cjs",
+  inject: ["../tsup-config/react-import.js"],
   esbuildPlugins: [
     {
       name: "css-module",
