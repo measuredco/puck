@@ -1,6 +1,14 @@
 .Input {
+  background: white;
+  color: var(--puck-color-grey-3);
+  padding: 16px;
+  border-radius: 4px;
   display: block;
   font-family: var(--puck-font-stack);
+}
+
+.Input .Input {
+  padding: 0px;
 }
 
 .Input * {
@@ -12,7 +20,8 @@
 }
 
 .Input-label {
-  margin-bottom: 4px;
+  display: block;
+  padding-bottom: 12px;
   font-size: var(--puck-font-size-xxs);
   font-weight: 500;
 }
@@ -49,11 +58,11 @@
 
 .Input-array {
   background: white;
-  border-bottom: var(--puck-color-grey-8) solid 1px;
 }
 
 .Input-array > summary {
-  padding: 16px;
+  color: var(--puck-color-grey-3);
+  padding: 12px 16px;
   position: relative;
 }
 
@@ -64,14 +73,13 @@
 
 .Input-array > fieldset {
   border: none;
-  border-top: var(--puck-color-grey-8) solid 1px;
   margin: 0;
-  padding: 16px;
 }
 
 .Input-array .Input-action {
   background: transparent;
   border: none;
+  border-radius: 4px;
   color: var(--puck-color-grey-2);
   display: none;
   padding: 8px;
@@ -98,6 +106,7 @@
   width: 100%;
   margin: 0;
   padding: 12px 16px;
+  text-align: left;
 }
 
 .Input-addButton:hover {
@@ -105,25 +114,43 @@
 }
 
 .Input-item {
-  border: 1px solid var(--puck-color-grey-8);
-  border-radius: 4px;
-  margin-top: 4px;
   overflow: hidden;
-}
-
-.Input-radioGroup {
-  margin-bottom: 8px;
-  margin-top: 8px;
 }
 
 .Input-radioGroupItems {
   display: flex;
-  gap: 8px;
+  border: 1px solid var(--puck-color-grey-7);
+  border-radius: 4px;
   flex-wrap: wrap;
+  overflow: hidden;
 }
 
 .Input-radio {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  border-right: 1px solid var(--puck-color-grey-7);
+  flex-grow: 1;
+}
+
+.Input-radio:last-of-type {
+  border-right: none;
+}
+
+.Input-radioInner {
+  font-size: var(--puck-font-size-xxxs);
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.Input-radioInner:hover {
+  background-color: var(--puck-color-azure-8);
+  cursor: pointer;
+}
+
+.Input-radio input:checked ~ .Input-radioInner {
+  background-color: var(--puck-color-azure-4);
+  color: white;
+  font-weight: 500;
+}
+
+.Input-radio input {
+  display: none;
 }

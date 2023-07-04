@@ -114,7 +114,7 @@ const HeadingOutlineAnalyzer = ({
   }, [data.content]);
 
   return (
-    <div>
+    <>
       {children}
       <SidebarSection title="Heading Outline">
         {hierarchy.length === 0 && <div>No headings.</div>}
@@ -190,7 +190,7 @@ const HeadingOutlineAnalyzer = ({
           />
         </OutlineList>
       </SidebarSection>
-    </div>
+    </>
   );
 };
 

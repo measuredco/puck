@@ -8,12 +8,14 @@ const getClassName = getClassNameFactory("SidebarSection", styles);
 export const SidebarSection = ({
   children,
   title,
+  background,
 }: {
   children: ReactNode;
   title: string;
+  background?: string;
 }) => {
   return (
-    <details className={getClassName({})} open>
+    <details className={getClassName()} open style={{ background }}>
       <summary className={getClassName("title")}>
         <Heading rank={2} size="xs">
           {title}

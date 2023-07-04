@@ -182,7 +182,7 @@ export function Puck({
           style={{
             display: "grid",
             gridTemplateAreas: '"header header header" "left editor right"',
-            gridTemplateColumns: "256px auto 256px",
+            gridTemplateColumns: "288px auto 288px",
             gridTemplateRows: "min-content auto",
             height: "100vh",
             position: "fixed",
@@ -237,12 +237,24 @@ export function Puck({
               gridArea: "left",
               background: "var(--puck-color-grey-10)",
               overflowY: "auto",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <SidebarSection title="Components">
               <ComponentList config={config} />
             </SidebarSection>
             <SidebarSection title="Outline">
+              {data.content.length === 0 && (
+                <div
+                  style={{
+                    textAlign: "center",
+                    color: "var(--puck-color-grey-6)",
+                  }}
+                >
+                  Add items to your page
+                </div>
+              )}
               <OutlineList>
                 {data.content.map((item, i) => {
                   return (
@@ -376,10 +388,13 @@ export function Puck({
               overflowY: "auto",
               gridArea: "right",
               fontFamily: "var(--puck-font-stack)",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <FieldWrapper data={data}>
               <SidebarSection
+                background="var(--puck-color-grey-9)"
                 title={
                   selectedIndex !== null
                     ? (data.content[selectedIndex].type as string)

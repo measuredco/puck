@@ -1,12 +1,15 @@
-.SidebarSection:last-of-type .SidebarSection-content {
-  border-bottom: none;
-  height: 100%;
+.SidebarSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.SidebarSection:last-of-type {
+  flex-grow: 1;
 }
 
 .SidebarSection-title {
   background: white;
   padding: 16px;
-
   border-bottom: 1px solid var(--puck-color-grey-8);
 }
 
@@ -18,6 +21,11 @@
 .SidebarSection-content {
   border-bottom: 1px solid var(--puck-color-grey-8);
   padding: 16px;
+}
+
+.SidebarSection:last-of-type .SidebarSection-content {
+  border-bottom: none;
+  flex-grow: 1;
 }
 
 .SidebarSection > summary {

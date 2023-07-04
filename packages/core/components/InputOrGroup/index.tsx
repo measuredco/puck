@@ -49,7 +49,7 @@ export const InputOrGroup = ({
                       onChange(existingValue);
                     }}
                   >
-                    <Trash />
+                    <Trash size={21} />
                   </button>
                 </summary>
                 <fieldset>
@@ -85,7 +85,7 @@ export const InputOrGroup = ({
               onChange([...existingValue, field.defaultItemProps || {}]);
             }}
           >
-            Add item
+            + Add item
           </button>
         </div>
       </div>
@@ -155,26 +155,30 @@ export const InputOrGroup = ({
     }
 
     return (
-      <div className={getClassName("radioGroup")}>
-        <div className={getClassName("label")}>{field.label || name}</div>
+      <div className={getClassName()}>
+        <div className={getClassName("radioGroup")}>
+          <div className={getClassName("label")}>{field.label || name}</div>
 
-        <div className={getClassName("radioGroupItems")}>
-          {field.options.map((option) => (
-            <label
-              key={option.label + option.value}
-              className={getClassName("radio")}
-            >
-              <input
-                type="radio"
-                value={option.value}
-                name={name}
-                onChange={(e) => onChange(e.currentTarget.value)}
-                readOnly={readOnly}
-                defaultChecked={value === option.value}
-              />
-              <div>{option.label || option.value}</div>
-            </label>
-          ))}
+          <div className={getClassName("radioGroupItems")}>
+            {field.options.map((option) => (
+              <label
+                key={option.label + option.value}
+                className={getClassName("radio")}
+              >
+                <input
+                  type="radio"
+                  value={option.value}
+                  name={name}
+                  onChange={(e) => onChange(e.currentTarget.value)}
+                  readOnly={readOnly}
+                  defaultChecked={value === option.value}
+                />
+                <div className={getClassName("radioInner")}>
+                  {option.label || option.value}
+                </div>
+              </label>
+            ))}
+          </div>
         </div>
       </div>
     );
