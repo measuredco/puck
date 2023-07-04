@@ -8,7 +8,8 @@
   "scripts": {
     "lint": "eslint \"**/*.ts*\"",
     "build": "rm -rf dist && tsup index.ts",
-    "prepare": "yarn build"
+    "prepare": "cp ../../README.md . && yarn build",
+    "postpublish": "rm README.md"
   },
   "files": [
     "dist"
