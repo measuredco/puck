@@ -38,7 +38,11 @@ export const usePlaceholderStyle = () => {
         (total, item) =>
           total +
           item.clientHeight +
-          parseInt(window.getComputedStyle(item).marginTop.replace("px", "")),
+          parseInt(window.getComputedStyle(item).marginTop.replace("px", "")) +
+          parseInt(
+            window.getComputedStyle(item).marginBottom.replace("px", "")
+          ),
+
         0
       );
     }

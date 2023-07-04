@@ -15,7 +15,6 @@ const config = {
           { filter: /\.module\.css$/, namespace: "file" },
           (args) => ({
             path: `${path.join(args.resolveDir, args.path)}#css-module`,
-            // path: args.path,
             namespace: "css-module",
             pluginData: {
               pathDir: path.join(args.resolveDir, args.path),
