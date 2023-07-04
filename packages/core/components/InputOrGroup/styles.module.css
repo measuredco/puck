@@ -20,10 +20,15 @@
 }
 
 .Input-label {
-  display: block;
+  display: flex;
   padding-bottom: 12px;
   font-size: var(--puck-font-size-xxs);
   font-weight: 500;
+}
+
+.Input-labelIcon {
+  color: var(--puck-color-grey-6);
+  margin-right: 4px;
 }
 
 .Input-input {
@@ -62,6 +67,7 @@
 
 .Input-array > summary {
   color: var(--puck-color-grey-3);
+  font-size: var(--puck-font-size-xxs);
   padding: 12px 16px;
   position: relative;
 }
@@ -74,6 +80,13 @@
 .Input-array > fieldset {
   border: none;
   margin: 0;
+}
+.Input-array > fieldset .Input + .Input-array > fieldset .Input {
+  margin-top: 16px;
+}
+
+.Input-array > fieldset .Input-label {
+  padding-bottom: 4px;
 }
 
 .Input-array .Input-action {

@@ -4,7 +4,14 @@ import { ExternalInput } from "../ExternalInput";
 
 import styles from "./styles.module.css";
 import { replace } from "../../lib";
-import { Trash } from "react-feather";
+import {
+  Trash,
+  Type,
+  List,
+  ChevronDown,
+  CheckCircle,
+  Hash,
+} from "react-feather";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -30,7 +37,12 @@ export const InputOrGroup = ({
 
     return (
       <div className={getClassName()}>
-        <b className={getClassName("label")}>{label || name}</b>
+        <b className={getClassName("label")}>
+          <div className={getClassName("labelIcon")}>
+            <List size={16} />
+          </div>
+          {label || name}
+        </b>
         <div className={getClassName("item")}>
           {Array.isArray(value) ? (
             value.map((item, i) => (
@@ -114,7 +126,12 @@ export const InputOrGroup = ({
 
     return (
       <label className={getClassName()}>
-        <div className={getClassName("label")}>{label || name}</div>
+        <div className={getClassName("label")}>
+          <div className={getClassName("labelIcon")}>
+            <ChevronDown size={16} />
+          </div>
+          {label || name}
+        </div>
         <select
           className={getClassName("input")}
           onChange={(e) => onChange(e.currentTarget.value)}
@@ -135,7 +152,12 @@ export const InputOrGroup = ({
   if (field.type === "textarea") {
     return (
       <label className={getClassName({ readOnly })}>
-        <div className={getClassName("label")}>{label || name}</div>
+        <div className={getClassName("label")}>
+          <div className={getClassName("labelIcon")}>
+            <Type size={16} />
+          </div>
+          {label || name}
+        </div>
         <textarea
           className={getClassName("input")}
           autoComplete="off"
@@ -157,7 +179,12 @@ export const InputOrGroup = ({
     return (
       <div className={getClassName()}>
         <div className={getClassName("radioGroup")}>
-          <div className={getClassName("label")}>{field.label || name}</div>
+          <div className={getClassName("label")}>
+            <div className={getClassName("labelIcon")}>
+              <CheckCircle size={16} />
+            </div>
+            {field.label || name}
+          </div>
 
           <div className={getClassName("radioGroupItems")}>
             {field.options.map((option) => (
@@ -186,7 +213,13 @@ export const InputOrGroup = ({
 
   return (
     <label className={getClassName({ readOnly })}>
-      <div className={getClassName("label")}>{label || name}</div>
+      <div className={getClassName("label")}>
+        <div className={getClassName("labelIcon")}>
+          {field.type === "text" && <Type size={16} />}
+          {field.type === "number" && <Hash size={16} />}
+        </div>
+        {label || name}
+      </div>
       <input
         className={getClassName("input")}
         autoComplete="off"
