@@ -13,7 +13,10 @@ The self-hosted, drag and drop editor for React.
 
 ## Example
 
+Render an editor:
+
 ```jsx
+// Editor.jsx
 import { Puck } from "puck";
 
 // Create puck component config
@@ -42,9 +45,20 @@ const data = {
   ],
 };
 
-// Render Puck
+// Render Puck editor
 export function Page() {
-  return <Puck config={config} data={data} />;
+  return <Puck config={config} data={data} onPublish={userSaveMethod} />;
+}
+```
+
+Render the page:
+
+```jsx
+// Page.jsx
+import { Puck } from "puck";
+
+export function Page() {
+  return <Render config={config} data={data} />;
 }
 ```
 
@@ -80,8 +94,6 @@ Puck can be configured to work with plugins. Plugins can extend the functionalit
 
 The plugin API follows a React paradigm. Each plugin passed to the Puck editor can provide three functions:
 
-#### `Plugin`
-
 - `renderPage` (`Component`): Render the root node of the preview content
 - `renderPageFields` (`Component`): Render the page fields
 - `renderFields` (`Component`): Render the fields for the currently selected component
@@ -105,6 +117,24 @@ const myPlugin = {
 ```
 
 ## Reference
+
+### `<Puck>`
+
+The `<Puck>` component renders the Puck editor.
+
+- **config** (`Config`): Puck component configuration
+- **data** (`Data`): Initial data to render
+- **onChange** (`(Data) => void` [optional]): Callback that triggers when the user makes a change
+- **onPublish** (`(Data) => void` [optional]): Callback that triggers when the user hits the "Publish" button
+- **renderHeader** (`Component` [optional]): Render function for overriding the Puck header component
+- **plugins** (`Plugin[]` [optional]): Array of plugins that can be used to enhance Puck
+
+### `<Render>`
+
+The `<Render>` component renders a user-facing page using Puck data.
+
+- **config** (`Config`): Puck component configuration
+- **data** (`Data`): Data to render
 
 ### `Config`
 
@@ -146,6 +176,14 @@ The `Data` object stores the state of a page.
   - **type** (string): Component name
   - **props** (object):
     - **[prop]** (string): User defined data from component fields
+
+### `Plugin`
+
+Plugins that can be used to enhance Puck.
+
+- `renderPage` (`Component`): Render the root node of the preview content
+- `renderPageFields` (`Component`): Render the page fields
+- `renderFields` (`Component`): Render the fields for the currently selected component
 
 ## License
 
