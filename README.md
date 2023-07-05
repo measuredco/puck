@@ -11,7 +11,7 @@ The self-hosted, drag and drop editor for React.
 
 ## Example
 
-Render an editor:
+Render the editor:
 
 ```jsx
 // Editor.jsx
