@@ -32,20 +32,14 @@ const config = {
 };
 
 // Describe the initial data
-const data = {
-  content: [
-    {
-      type: "HeadingBlock",
-      props: {
-        title: "Home Page",
-      },
-    },
-  ],
-};
+const initialData = {};
+
+// Save the data to your database
+const save = (data) => {};
 
 // Render Puck editor
 export function Page() {
-  return <Puck config={config} data={data} onPublish={userSaveMethod} />;
+  return <Puck config={config} data={data} onPublish={save} />;
 }
 ```
 
