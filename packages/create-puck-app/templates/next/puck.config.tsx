@@ -10,7 +10,10 @@ export const config: Config<Props> = {
       fields: {
         title: { type: "text" },
       },
-      render: ({ title = "Heading" }) => (
+      defaultProps: {
+        title: "Heading",
+      },
+      render: ({ title }) => (
         <div style={{ padding: 64 }}>
           <h1>{title}</h1>
         </div>
