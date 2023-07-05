@@ -7,8 +7,6 @@ The self-hosted, drag and drop editor for React.
 - ✍️ **Inline editing**: Author content directly via puck for convenience
 - ⭐️ **No vendor lock-in**: Self-host or integrate with your existing application
 
-![puck](https://github.com/measuredco/puck/assets/985961/10257000-ece7-4728-9e71-6204d2f1540e)
-
 [See demo](https://puck-demo-six.vercel.app/custom/edit)
 
 ## Example
