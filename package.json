@@ -5,7 +5,7 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "release": "conventional-recommended-bump -p angular | xargs yarn version --no-git-tag-version --new-version$1 && yarn release-commit",
+    "release": "git fetch --tags && conventional-recommended-bump -p angular | xargs yarn version --no-git-tag-version --new-version$1 && yarn release-commit",
     "release-commit": "git add -u && git commit -m \"release: v${npm_package_version}\"",
     "version": "yarn changelog && lerna version --force-publish -y --no-push --no-changelog --no-git-tag-version $npm_package_version",
     "changelog": "node scripts/create-changelog"
