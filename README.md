@@ -156,6 +156,8 @@ A `Field` represents a user input field shown in the Puck interface.
 - **options** (`object[]`): array of items to render for select-type inputs
   - **label** (`string`)
   - **value** (`string`)
+- **adaptor** (`Adaptor`): Content adaptor if using the `external` input type
+- **adaptorParams** (`object`): Paramaters passed to the adaptor
 
 ### `Data`
 
@@ -168,6 +170,15 @@ The `Data` object stores the state of a page.
   - **type** (string): Component name
   - **props** (object):
     - **[prop]** (string): User defined data from component fields
+
+### `Adaptor`
+
+An `Adaptor` can be used to load content from an external content repository, like Strapi.js.
+
+- **name** (`string`): The human-readable name of the adaptor
+- **fetchList** (`(adaptorParams: object) => object`): Fetch a list of content and return an array
+
+> NB Using an adaptor on the reserved field name `_data` will spread the resulting data over your object, and lock the overridden fields.
 
 ### `Plugin`
 
