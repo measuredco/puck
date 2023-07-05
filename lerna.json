@@ -2,6 +2,7 @@
   "packages": [
     "packages/adaptor-strapi",
     "packages/core",
+    "packages/create-puck-app",
     "packages/plugin-heading-analyzer"
   ],
   "version": "0.2.2",

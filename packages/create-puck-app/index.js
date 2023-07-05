@@ -14,7 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const packageJson = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "../package.json"))
+  fs.readFileSync(path.join(__dirname, "./package.json"))
 );
 
 // Lifted from https://github.com/vercel/next.js/blob/c2d7bbd1b82c71808b99e9a7944fb16717a581db/packages/create-next-app/helpers/get-pkg-manager.ts
@@ -83,7 +83,7 @@ program
     const recipe = answers.recipe;
 
     // Copy template files to the new directory
-    const templatePath = path.join(__dirname, "../templates", recipe);
+    const templatePath = path.join(__dirname, "./templates", recipe);
     const appPath = path.join(process.cwd(), appName);
 
     if (!recipe) {

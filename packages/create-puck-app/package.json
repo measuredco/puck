@@ -1,10 +1,11 @@
 {
   "name": "create-puck-app",
   "version": "0.2.2",
+  "private": false,
   "license": "MIT",
   "type": "module",
   "bin": {
-    "generate": "bin/generate.js"
+    "create-puck-app": "./index.js"
   },
   "files": [
     "templates"
