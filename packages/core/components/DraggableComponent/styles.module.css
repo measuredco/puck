@@ -3,9 +3,14 @@
 }
 
 .DraggableComponent-contents {
-  margin-top: -1px; /* Prevent margin collapsing  */
-  padding-top: 1px; /* Prevent margin collapsing  */
   position: relative; /* Reset stacking context */
+}
+
+/* Prevent margin collapsing  */
+.DraggableComponent-contents::before,
+.DraggableComponent-contents::after {
+  content: " ";
+  display: table;
 }
 
 .DraggableComponent-overlay {
