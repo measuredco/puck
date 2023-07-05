@@ -7,9 +7,6 @@
   "bin": {
     "create-puck-app": "./index.js"
   },
-  "files": [
-    "templates"
-  ],
   "dependencies": {
     "commander": "^10.0.1",
     "handlebars": "^4.7.7",

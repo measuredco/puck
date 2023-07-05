@@ -124,7 +124,8 @@ program
       const filePath = path.join(templatePath, templateFile);
       const targetPath = filePath
         .replace(templatePath, appPath)
-        .replace(".hbs", "");
+        .replace(".hbs", "")
+        .replace("gitignore", ".gitignore"); // .gitignore gets ignored by npm during publish, so we have to rename it
 
       let data;
 
