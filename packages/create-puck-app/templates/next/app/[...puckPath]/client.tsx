@@ -1,6 +1,6 @@
 "use client";
 
-import { Data } from "@measured/puck/types/Config";
+import type { Data } from "@measured/puck";
 import { Puck, Render } from "@measured/puck";
 import config from "../../puck.config";
 

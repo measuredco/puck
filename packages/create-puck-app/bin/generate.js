@@ -13,6 +13,10 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const packageJson = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "../package.json"))
+);
+
 // Lifted from https://github.com/vercel/next.js/blob/c2d7bbd1b82c71808b99e9a7944fb16717a581db/packages/create-next-app/helpers/get-pkg-manager.ts
 function getPkgManager() {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -128,7 +132,11 @@ program
         const templateString = await fs.readFileSync(filePath, "utf-8");
 
         const template = Handlebars.compile(templateString);
-        data = template({ ...answers, appName });
+        data = template({
+          ...answers,
+          appName,
+          puckVersion: `^${packageJson.version}`,
+        });
       } else {
         data = await fs.readFileSync(filePath, "utf-8");
       }
