@@ -3,7 +3,8 @@
 }
 
 .DraggableComponent-contents {
-  border: 1px inset transparent; /* Prevent margin collapsing  */
+  margin-top: -1px; /* Prevent margin collapsing  */
+  padding-top: 1px; /* Prevent margin collapsing  */
   position: relative; /* Reset stacking context */
 }
 
