@@ -38,7 +38,7 @@ const initialData = {};
 const save = (data) => {};
 
 // Render Puck editor
-export function Page() {
+export function Editor() {
   return <Puck config={config} data={data} onPublish={save} />;
 }
 ```
@@ -47,7 +47,7 @@ Render the page:
 
 ```jsx
 // Page.jsx
-import { Puck } from "puck";
+import { Render } from "puck";
 
 export function Page() {
   return <Render config={config} data={data} />;
