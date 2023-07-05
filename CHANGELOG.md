@@ -2,6 +2,16 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.2.1](https://github.com/measuredco/puck/compare/v0.2.0...v0.2.1) (2023-07-05)
+
+
+### Bug Fixes
+
+* remove border on draggable components ([726a27c](https://github.com/measuredco/puck/commit/726a27cc0df6b8c439d0aa8e0dd05cac32774b3e))
+
+
+
+
 ## [0.2.0](https://github.com/measuredco/puck/compare/v0.1.3...v0.2.0) (2023-07-04)
 
 
