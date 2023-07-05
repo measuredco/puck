@@ -9,10 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@arc-ui/components": "^10.0.1",
-    "@arc-ui/fonts": "^10.0.1",
-    "@measured/puck-adaptor-strapi": "*",
-    "@measured/puck": "*",
+    "@measured/puck": "^0.2.2",
     "classnames": "^2.3.2",
     "next": "^13.4.6",
     "react": "^18.2.0",
@@ -23,7 +20,6 @@
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "eslint-config-custom": "*",
-    "tsconfig": "*",
     "typescript": "^4.5.3"
   }
 }

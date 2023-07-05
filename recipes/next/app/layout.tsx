@@ -1,7 +1,4 @@
-import "@arc-ui/components/dist/styles.css";
-import "@arc-ui/fonts";
-
-import "@measured/puck/styles.css";
+import "@measured/puck/dist/index.css";
 import "./styles.css";
 
 export default function RootLayout({

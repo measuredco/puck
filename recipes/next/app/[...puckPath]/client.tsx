@@ -1,9 +1,8 @@
 "use client";
 
-import { Data } from "@measured/puck/types/Config";
+import type { Data } from "@measured/puck";
 import { Puck, Render } from "@measured/puck";
 import config from "../../puck.config";
-import headingAnalyzer from "../../../../packages/plugin-heading-analyzer";
 
 export function Client({
   path,
@@ -25,7 +24,6 @@ export function Client({
             body: JSON.stringify({ [path]: data }),
           });
         }}
-        plugins={[headingAnalyzer]}
       />
     );
   }
