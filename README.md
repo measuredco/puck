@@ -173,9 +173,9 @@ The `Data` object stores the state of a page.
 
 Plugins that can be used to enhance Puck.
 
-- `renderPage` (`Component`): Render the root node of the preview content
-- `renderPageFields` (`Component`): Render the page fields
-- `renderFields` (`Component`): Render the fields for the currently selected component
+- **renderPage** (`Component`): Render the root node of the preview content
+- **renderPageFields** (`Component`): Render the page fields
+- **renderFields** (`Component`): Render the fields for the currently selected component
 
 ## License
 
