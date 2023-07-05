@@ -2,6 +2,16 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.3.1](https://github.com/measuredco/puck/compare/v0.3.0...v0.3.1) (2023-07-05)
+
+
+### Bug Fixes
+
+* include .gitignore in recipes ([e18bf67](https://github.com/measuredco/puck/commit/e18bf67e366c431a6bea08a9965b7d40866119e2))
+
+
+
+
 ## [0.3.0](https://github.com/measuredco/puck/compare/v0.2.2...v0.3.0) (2023-07-05)
 
 
