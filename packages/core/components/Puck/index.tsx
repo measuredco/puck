@@ -250,6 +250,7 @@ export function Puck({
                   style={{
                     textAlign: "center",
                     color: "var(--puck-color-grey-6)",
+                    fontFamily: "var(--puck-font-stack)",
                   }}
                 >
                   Add items to your page

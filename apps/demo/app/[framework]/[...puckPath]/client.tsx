@@ -90,7 +90,7 @@ export function Client({
                         justifyContent: "center",
                         alignItems: "center",
                         height: "100%",
-                        fontFamily: "var(--puck-font-family)",
+                        fontFamily: "var(--puck-font-stack)",
                       }}
                       defaultValue={framework}
                     >
