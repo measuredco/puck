@@ -1,6 +1,6 @@
 import { Adaptor } from "@measured/puck/types/Config";
 
-type AdaptorParams = { apiToken: string; resource: string };
+type AdaptorParams = { apiToken: string; url: string; resource: string };
 
 const strapiAdaptor: Adaptor<AdaptorParams> = {
   name: "Strapi.js",
@@ -10,7 +10,7 @@ const strapiAdaptor: Adaptor<AdaptorParams> = {
     }
 
     const res = await fetch(
-      `http://localhost:1337/api/${adaptorParams.resource}`,
+      `${adaptorParams.url}/api/${adaptorParams.resource}`,
       {
         headers: {
           Authorization: `bearer ${adaptorParams.apiToken}`,
