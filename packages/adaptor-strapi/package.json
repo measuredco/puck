@@ -1,6 +1,6 @@
 {
   "name": "@measured/puck-adaptor-strapi",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
