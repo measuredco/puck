@@ -31,6 +31,8 @@
 
 .Hero-image {
   background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   position: absolute;
   right: 0;
   top: 0;
