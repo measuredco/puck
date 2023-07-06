@@ -33,7 +33,7 @@ const config = {
       fields: {
         movie: {
           type: "external",
-          adaptor: moviesAdaptor,
+          adaptor: movieAdaptor,
         },
       },
       render: ({ movie }) => <h1>{movie.title}</h1>,
