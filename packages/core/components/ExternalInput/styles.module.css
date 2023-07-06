@@ -17,6 +17,7 @@
   text-overflow: ellipsis;
   position: relative;
   overflow: hidden;
+  flex-grow: 1;
 }
 
 .ExternalInput-button:hover,
