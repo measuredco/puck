@@ -1,27 +1,19 @@
-import { Adaptor } from "@measured/puck/types/Config";
+import createAdaptor from "@measured/puck-adaptor-fetch/index";
 
-type AdaptorParams = { apiToken: string; url: string; resource: string };
+const createStrapiAdaptor = (url: string, apiToken: string) =>
+  createAdaptor(
+    "Strapi.js",
+    url,
+    {
+      headers: {
+        Authorization: `bearer ${apiToken}`,
+      },
+    },
+    (body) =>
+      body.data.map(({ attributes, ...item }) => ({
+        ...item,
+        ...attributes,
+      }))
+  );
 
-const strapiAdaptor: Adaptor<AdaptorParams> = {
-  name: "Strapi.js",
-  fetchList: async (adaptorParams) => {
-    if (!adaptorParams) {
-      return null;
-    }
-
-    const res = await fetch(
-      `${adaptorParams.url}/api/${adaptorParams.resource}`,
-      {
-        headers: {
-          Authorization: `bearer ${adaptorParams.apiToken}`,
-        },
-      }
-    );
-
-    const body: { data: Record<string, any>[] } = await res.json();
-
-    return body.data;
-  },
-};
-
-export default strapiAdaptor;
+export default createStrapiAdaptor;

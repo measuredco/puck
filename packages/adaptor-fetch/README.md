@@ -15,11 +15,18 @@ Create an adaptor using the [fetch() API](https://developer.mozilla.org/en-US/do
 ```jsx
 import createAdaptor from "@measured/puck-adaptor-fetch";
 
-const movieAdaptor = createAdaptor("http://localhost:1337/api/movies", {
-  headers: {
-    Authorization: "Bearer abc123",
+const movieAdaptor = createAdaptor(
+  "Movies API",
+  "http://localhost:1337/api/movies",
+  // Optional request data
+  {
+    headers: {
+      Authorization: "Bearer abc123",
+    },
   },
-});
+  // Optional mapping function
+  (body) => body.data
+);
 ```
 
 Configure your Puck instance. In this case, we add our `movieAdaptor` to the `movie` field on our "MovieBlock" component:

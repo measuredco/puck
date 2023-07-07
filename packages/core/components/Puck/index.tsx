@@ -428,7 +428,7 @@ export function Puck({
                       } else {
                         const changedFields = filter(
                           // filter out anything not supported by this component
-                          (value as any).attributes, // TODO type properly after getting proper state library
+                          value,
                           Object.keys(fields)
                         );
 

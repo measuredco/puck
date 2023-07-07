@@ -48,7 +48,9 @@ export const ExternalInput = ({
         >
           {/* NB this is hardcoded to strapi for now */}
           {selectedData
-            ? selectedData.attributes.title
+            ? field.getItemSummary
+              ? field.getItemSummary(selectedData)
+              : `${field.adaptor.name} item`
             : `Select from ${field.adaptor.name}`}
         </button>
         {selectedData && (
@@ -75,7 +77,7 @@ export const ExternalInput = ({
               <table>
                 <thead>
                   <tr>
-                    {Object.keys(data[0].attributes).map((key) => (
+                    {Object.keys(data[0]).map((key) => (
                       <th key={key} style={{ textAlign: "left" }}>
                         {key}
                       </th>
@@ -83,10 +85,10 @@ export const ExternalInput = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item) => {
+                  {data.map((item, i) => {
                     return (
                       <tr
-                        key={item.id}
+                        key={i}
                         style={{ whiteSpace: "nowrap" }}
                         onClick={(e) => {
                           onChange(item);
@@ -96,8 +98,8 @@ export const ExternalInput = ({
                           setSelectedData(item);
                         }}
                       >
-                        {Object.keys(item.attributes).map((key) => (
-                          <td key={key}>{item.attributes[key]}</td>
+                        {Object.keys(item).map((key) => (
+                          <td key={key}>{item[key]}</td>
                         ))}
                       </tr>
                     );
@@ -106,7 +108,7 @@ export const ExternalInput = ({
               </table>
             </div>
           ) : (
-            <div>No content</div>
+            <div style={{ padding: 24 }}>No content</div>
           )}
         </div>
       </div>

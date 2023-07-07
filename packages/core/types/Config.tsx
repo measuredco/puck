@@ -25,7 +25,7 @@ export type Field<
   arrayFields?: {
     [SubPropName in keyof Props]: Field<Props[SubPropName]>;
   };
-  getItemSummary?: (item: Props, index: number) => string;
+  getItemSummary?: (item: Props, index?: number) => string;
   defaultItemProps?: Props;
   options?: {
     label: string;
