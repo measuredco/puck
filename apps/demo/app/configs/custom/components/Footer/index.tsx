@@ -61,7 +61,7 @@ const Footer = ({ children }: { children: ReactNode }) => {
           style={{
             display: "grid",
             gridGap: 24,
-            gridTemplateColumns: "1fr 1fr 1fr 1fr",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
             paddingTop: 24,
             paddingBottom: 24,
           }}

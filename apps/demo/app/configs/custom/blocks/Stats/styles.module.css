@@ -1,6 +1,3 @@
-.Stats {
-}
-
 .Stats-items {
   background-image: linear-gradient(
     120deg,
@@ -9,11 +6,18 @@
   );
   border-radius: 24px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-gap: 72px;
   align-items: center;
   justify-content: space-between;
-  padding: 128px;
+  padding: 64px;
+}
+
+@media (min-width: 768px) {
+  .Stats-items {
+    grid-template-columns: 1fr 1fr;
+    padding: 128px;
+  }
 }
 
 .Stats-item {

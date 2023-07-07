@@ -3,17 +3,27 @@
   gap: 24px;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .FeatureList--cardMode .FeatureList-items {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .FeatureList--cardMode .FeatureList-items {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 
 .FeatureList-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 312px;
+  margin-left: auto;
+  margin-right: auto;
   gap: 16px;
   width: 100%;
 }
@@ -22,6 +32,9 @@
   background: white;
   box-shadow: rgba(140, 152, 164, 0.25) 0px 3px 6px 0px;
   border-radius: 8px;
+  max-width: 100%;
+  margin-left: unset;
+  margin-right: unset;
   padding: 24px;
   align-items: flex-start;
   width: auto;

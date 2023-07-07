@@ -56,6 +56,7 @@ export const Hero: ComponentConfig<HeroProps> = {
   },
   defaultProps: {
     title: "Hero",
+    align: "left",
     description: "Description",
     buttons: [{ label: "Learn more", href: "#" }],
     padding: "64px",
@@ -72,7 +73,11 @@ export const Hero: ComponentConfig<HeroProps> = {
     return (
       <Section
         padding={padding}
-        className={getClassName({ center: align === "center" })}
+        className={getClassName({
+          left: align === "left",
+          center: align === "center",
+          hasImageBackground: imageMode === "background",
+        })}
       >
         {imageMode === "background" && (
           <>
@@ -106,10 +111,11 @@ export const Hero: ComponentConfig<HeroProps> = {
                 backgroundImage: `url('${imageUrl}')`,
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
                 borderRadius: 24,
                 height: 356,
-                width: 512,
                 marginLeft: "auto",
+                width: "100%",
               }}
             />
           )}

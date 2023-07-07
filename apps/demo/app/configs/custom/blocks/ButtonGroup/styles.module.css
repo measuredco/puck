@@ -1,6 +1,7 @@
 .ButtonGroup-actions {
   display: flex;
   gap: 24px;
+  flex-wrap: wrap;
 }
 
 .ButtonGroup--center .ButtonGroup-actions {

@@ -12,13 +12,26 @@
   display: flex;
   align-items: center;
   position: relative;
-  gap: 24px;
+  gap: 48px;
+  flex-wrap: wrap;
   z-index: 1;
+}
+
+@media (min-width: 1024px) {
+  .Hero-inner {
+    flex-wrap: nowrap;
+  }
 }
 
 .Hero h1 {
   line-height: 1.1;
-  font-size: 64px;
+  font-size: 48px;
+}
+
+@media (min-width: 768px) {
+  .Hero h1 {
+    font-size: 64px;
+  }
 }
 
 .Hero-subtitle {
@@ -26,7 +39,12 @@
   font-size: var(--puck-font-size-m);
   line-height: 1.5;
   margin: 0;
+  margin-bottom: 8px;
   font-weight: 300;
+}
+
+.Hero--hasImageBackground .Hero-subtitle {
+  color: var(--puck-color-grey-2);
 }
 
 .Hero-image {
@@ -43,14 +61,24 @@
 .Hero-imageOverlay {
   background-image: linear-gradient(
     -90deg,
-    rgba(255, 255, 255, 0),
-    rgb(247, 250, 255) 80%
+    rgb(247, 250, 255, 0.7) 0%,
+    rgb(247, 250, 255, 0.7) 80%
   );
   position: absolute;
   right: 0;
   top: 0;
   bottom: 0;
   left: 0;
+}
+
+@media (min-width: 768px) {
+  .Hero--left .Hero-imageOverlay {
+    background-image: linear-gradient(
+      -90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgb(247, 250, 255) 70%
+    );
+  }
 }
 
 .Hero-bg img {
@@ -61,11 +89,18 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 50%;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .Hero--hasImageBackground .Hero-content {
+    max-width: 50%;
+  }
 }
 
 .Hero--center .Hero-inner {
   justify-content: center;
+  text-align: center;
 }
 
 .Hero--center .Hero-content {
