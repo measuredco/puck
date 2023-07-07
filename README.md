@@ -86,19 +86,19 @@ Puck can be configured to work with plugins. Plugins can extend the functionalit
 
 The plugin API follows a React paradigm. Each plugin passed to the Puck editor can provide three functions:
 
-- `renderPage` (`Component`): Render the root node of the preview content
-- `renderPageFields` (`Component`): Render the page fields
+- `renderRoot` (`Component`): Render the root node of the preview content
+- `renderRootFields` (`Component`): Render the root fields
 - `renderFields` (`Component`): Render the fields for the currently selected component
 
-Each render function receives the `children` prop, which you should render to show the page or fields, and the `data` prop, which can be used to read the data model for the page.
+Each render function receives the `children` prop, which you must render, and the `data` prop, which can be used to read the data model.
 
 #### Example
 
-Here's a basic plugin that renders a "My plugin" heading in the page field area:
+Here's a basic plugin that renders a "My plugin" heading in the root field area:
 
 ```jsx
 const myPlugin = {
-  renderPageFields: (props) => (
+  renderRootFields: (props) => (
     <div>
       {props.children}
 
@@ -123,7 +123,7 @@ The `<Puck>` component renders the Puck editor.
 
 ### `<Render>`
 
-The `<Render>` component renders a user-facing page using Puck data.
+The `<Render>` component renders user-facing UI using Puck data.
 
 - **config** (`Config`): Puck component configuration
 - **data** (`Data`): Data to render
@@ -132,10 +132,10 @@ The `<Render>` component renders a user-facing page using Puck data.
 
 The `Config` object describes which components Puck should render, how they should render and which inputs are available to them.
 
-- **page** (`object`)
+- **root** (`object`)
   - **fields** (`object`):
-    - **title** (`Field`): A mandatory field for the page title.
-    - **[fieldName]** (`Field`): User defined fields, used to describe the input data stored in the `page` key.
+    - **title** (`Field`): Title of the content, typically used for the page title.
+    - **[fieldName]** (`Field`): User defined fields, used to describe the input data stored in the `root` key.
   - **render** (`Component`): Render a React component at the root of your component tree. Useful for defining context providers.
 - **components** (`object`): Definitions for each of the components you want to show in the visual editor
   - **[componentName]** (`object`)
@@ -161,11 +161,11 @@ A `Field` represents a user input field shown in the Puck interface.
 
 ### `Data`
 
-The `Data` object stores the state of a page.
+The `Data` object stores the puck state.
 
-- **page** (`object`):
-  - **title** (string): Page title
-  - **[prop]** (string): User defined data from page fields
+- **root** (`object`):
+  - **title** (string): Title of the content, typically used for the page title
+  - **[prop]** (string): User defined data from `root` fields
 - **content** (`object[]`):
   - **type** (string): Component name
   - **props** (object):
@@ -184,8 +184,8 @@ An `Adaptor` can be used to load content from an external content repository, li
 
 Plugins that can be used to enhance Puck.
 
-- **renderPage** (`Component`): Render the root node of the preview content
-- **renderPageFields** (`Component`): Render the page fields
+- **renderRoot** (`Component`): Render the root node of the preview content
+- **renderRootFields** (`Component`): Render the root fields
 - **renderFields** (`Component`): Render the fields for the currently selected component
 
 ## License

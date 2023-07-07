@@ -2,11 +2,11 @@ import { ReactElement, ReactNode } from "react";
 import { Data } from "./Config";
 
 export type Plugin = {
-  renderPageFields?: (props: {
+  renderRootFields?: (props: {
     children: ReactNode;
     data: Data;
   }) => ReactElement<any>;
-  renderPage?: (props: {
+  renderRoot?: (props: {
     children: ReactNode;
     data: Data;
   }) => ReactElement<any>;

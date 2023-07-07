@@ -195,7 +195,7 @@ const HeadingOutlineAnalyer = ({
 };
 
 const HeadingAnalyzer: Plugin = {
-  renderPageFields: HeadingOutlineAnalyer,
+  renderRootFields: HeadingOutlineAnalyer,
 };
 
 export default HeadingAnalyzer;

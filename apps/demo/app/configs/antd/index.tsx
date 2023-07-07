@@ -14,7 +14,7 @@ type Props = {
 
 // We avoid the name config as next gets confused
 export const conf: Config<Props, RootProps> = {
-  page: {
+  root: {
     fields: {
       title: {
         type: "text",
@@ -59,7 +59,7 @@ export const initialData: Record<string, Data> = {
         },
       },
     ],
-    page: { title: "Home", layout: "" },
+    root: { title: "Home", layout: "" },
   },
   "/about": {
     content: [
@@ -72,7 +72,7 @@ export const initialData: Record<string, Data> = {
         },
       },
     ],
-    page: { title: "About us", layout: "" },
+    root: { title: "About us", layout: "" },
   },
 };
 

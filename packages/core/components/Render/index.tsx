@@ -9,11 +9,11 @@ export function Render({ config, data }: { config: Config; data: Data }) {
     return <Component key={item.props.id} {...item.props} />;
   });
 
-  if (config.page) {
+  if (config.root) {
     return (
-      <config.page.render {...data.page} editMode={false}>
+      <config.root.render {...data.root} editMode={false}>
         {children}
-      </config.page.render>
+      </config.root.render>
     );
   }
 

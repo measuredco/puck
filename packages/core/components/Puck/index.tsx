@@ -38,7 +38,7 @@ const PluginRenderer = ({
   children: ReactNode;
   data: Data;
   plugins;
-  renderMethod: "renderPage" | "renderPageFields" | "renderFields";
+  renderMethod: "renderRoot" | "renderRootFields" | "renderFields";
 }) => {
   return plugins
     .filter((item) => item[renderMethod])
@@ -51,7 +51,7 @@ const PluginRenderer = ({
 
 export function Puck({
   config,
-  data: initialData = { content: [], page: { title: "" } },
+  data: initialData = { content: [], root: { title: "" } },
   onChange,
   onPublish,
   plugins = [],
@@ -75,22 +75,22 @@ export function Puck({
     (pageProps) => (
       <PluginRenderer
         plugins={plugins}
-        renderMethod="renderPage"
+        renderMethod="renderRoot"
         data={pageProps.data}
       >
-        {config.page?.render
-          ? config.page?.render({ ...pageProps, editMode: true })
+        {config.root?.render
+          ? config.root?.render({ ...pageProps, editMode: true })
           : pageProps.children}
       </PluginRenderer>
     ),
-    [config.page]
+    [config.root]
   );
 
   const PageFieldWrapper = useCallback(
     (props) => (
       <PluginRenderer
         plugins={plugins}
-        renderMethod="renderPageFields"
+        renderMethod="renderRootFields"
         data={props.data}
       >
         {props.children}
@@ -115,7 +115,7 @@ export function Puck({
   const FieldWrapper =
     selectedIndex !== null ? ComponentFieldWrapper : PageFieldWrapper;
 
-  const pageFields = config.page?.fields || defaultPageFields;
+  const rootFields = config.root?.fields || defaultPageFields;
 
   let fields =
     selectedIndex !== null
@@ -123,7 +123,7 @@ export function Puck({
           string,
           Field<any>
         >) || {}
-      : pageFields;
+      : rootFields;
 
   useEffect(() => {
     if (onChange) onChange(data);
@@ -298,7 +298,7 @@ export function Puck({
                 zoom: 0.75,
               }}
             >
-              <Page data={data} {...data.page}>
+              <Page data={data} {...data.root}>
                 <DroppableStrictMode droppableId="droppable">
                   {(provided, snapshot) => (
                     <div
@@ -412,7 +412,7 @@ export function Puck({
                     if (selectedIndex !== null) {
                       currentProps = data.content[selectedIndex].props;
                     } else {
-                      currentProps = data.page;
+                      currentProps = data.root;
                     }
 
                     if (fieldName === "_data") {
@@ -457,7 +457,7 @@ export function Puck({
                         }),
                       });
                     } else {
-                      setData({ ...data, page: newProps });
+                      setData({ ...data, root: newProps });
                     }
                   };
 
@@ -485,9 +485,9 @@ export function Puck({
                         name={fieldName}
                         label={field.label}
                         readOnly={
-                          data.page._meta?.locked?.indexOf(fieldName) > -1
+                          data.root._meta?.locked?.indexOf(fieldName) > -1
                         }
-                        value={data.page[fieldName]}
+                        value={data.root[fieldName]}
                         onChange={onChange}
                       />
                     );
