@@ -38,9 +38,9 @@ export function Client({
 
   useEffect(() => {
     if (!isEdit) {
-      document.title = data?.page?.title || "";
+      document.title = data?.root?.title || "";
     }
-  }, [data]);
+  }, [data, isEdit]);
 
   if (isEdit) {
     return (

@@ -23,7 +23,7 @@ type Props = {
 
 // We avoid the name config as next gets confused
 export const conf: Config<Props, RootProps> = {
-  page: {
+  root: {
     render: Root,
   },
   components: {
@@ -302,15 +302,15 @@ export const initialData: Record<string, Data> = {
         props: { size: "96px", id: "VerticalSpace-1687284290127" },
       },
     ],
-    page: { title: "Custom Example" },
+    root: { title: "Custom Example" },
   },
   "/pricing": {
     content: [],
-    page: { title: "Pricing" },
+    root: { title: "Pricing" },
   },
   "/about": {
     content: [],
-    page: { title: "About Us" },
+    root: { title: "About Us" },
   },
 };
 

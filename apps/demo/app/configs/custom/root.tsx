@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
 
-import { DefaultPageProps } from "@measured/puck/types/Config";
+import { DefaultRootProps } from "@measured/puck/types/Config";
 import { Footer } from "./components/Footer";
 
 export type RootProps = {
   children: ReactNode;
   title: string;
-} & DefaultPageProps;
+} & DefaultRootProps;
 
 const NavItem = ({ label, href }: { label: string; href: string }) => {
   const navPath = window.location.pathname.replace("/edit", "") || "/";

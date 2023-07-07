@@ -33,7 +33,7 @@ export type Field<
   }[];
 };
 
-export type DefaultPageProps = {
+export type DefaultRootProps = {
   children: ReactNode;
   title: string;
   editMode: boolean;
@@ -61,12 +61,12 @@ export type ComponentConfig<
 
 export type Config<
   Props extends { [key: string]: any } = { [key: string]: any },
-  PageProps extends DefaultPageProps = DefaultPageProps
+  RootProps extends DefaultRootProps = DefaultRootProps
 > = {
   components: {
     [ComponentName in keyof Props]: ComponentConfig<Props[ComponentName]>;
   };
-  page?: ComponentConfig<PageProps & { children: ReactNode }>;
+  root?: ComponentConfig<RootProps & { children: ReactNode }>;
 };
 
 type MappedItem<Props extends { [key: string]: any } = { [key: string]: any }> =
@@ -79,11 +79,11 @@ type MappedItem<Props extends { [key: string]: any } = { [key: string]: any }> =
 
 export type Data<
   Props extends { [key: string]: any } = { [key: string]: any },
-  PageProps extends { title: string; [key: string]: any } = {
+  RootProps extends { title: string; [key: string]: any } = {
     title: string;
     [key: string]: any;
   }
 > = {
-  page: PageProps;
+  root: RootProps;
   content: MappedItem<Props>[];
 };
