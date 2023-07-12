@@ -188,6 +188,12 @@ Plugins that can be used to enhance Puck.
 - **renderRootFields** (`Component`): Render the root fields
 - **renderFields** (`Component`): Render the fields for the currently selected component
 
+## Hire the Puck team
+
+Puck is developed and maintained by **Measured**, a small group of industry veterans with decades of experience helping companies solve hard UI problems. We offer consultancy and development services for scale-ups, SMEs and enterprises.
+
+If you need support integrating Puck or creating a beautiful component library, please reach out via [our website](https://measured.co).
+
 ## License
 
 MIT © [Measured Co.](https://github.com/measuredco)
