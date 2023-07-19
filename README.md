@@ -15,7 +15,7 @@ Render the editor:
 
 ```jsx
 // Editor.jsx
-import { Puck } from "puck";
+import { Puck } from "@measured/puck";
 
 // Create puck component config
 const config = {
@@ -47,7 +47,7 @@ Render the page:
 
 ```jsx
 // Page.jsx
-import { Render } from "puck";
+import { Render } from "@measured/puck";
 
 export function Page() {
   return <Render config={config} data={data} />;
