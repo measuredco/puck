@@ -59,7 +59,7 @@ export function Page() {
 Install the package
 
 ```
-npm i puck --save
+npm i @measured/puck --save
 ```
 
 Or generate a puck application using a recipe
