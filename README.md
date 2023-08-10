@@ -19,14 +19,16 @@ import { Puck } from "@measured/puck";
 
 // Create puck component config
 const config = {
-  HeadingBlock: {
-    fields: {
-      children: {
-        type: "text",
+  components: {
+    HeadingBlock: {
+      fields: {
+        children: {
+          type: "text",
+        },
       },
-    },
-    render: ({ children }) => {
-      return <h1>{children}</h1>;
+      render: ({ children }) => {
+        return <h1>{children}</h1>;
+      },
     },
   },
 };
@@ -39,7 +41,7 @@ const save = (data) => {};
 
 // Render Puck editor
 export function Editor() {
-  return <Puck config={config} data={data} onPublish={save} />;
+  return <Puck config={config} data={initialData} onPublish={save} />;
 }
 ```
 
