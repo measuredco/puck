@@ -1,8 +1,7 @@
 .Input {
-  background: white;
   color: var(--puck-color-grey-3);
   padding: 16px;
-  border-radius: 4px;
+  padding-bottom: 12px;
   display: block;
   font-family: var(--puck-font-stack);
 }
@@ -16,14 +15,20 @@
 }
 
 .Input + .Input {
+  border-top: 1px solid var(--puck-color-grey-8);
   margin-top: 8px;
+}
+
+.Input .Input + .Input {
+  border-top: 0px;
+  margin-top: 12px;
 }
 
 .Input-label {
   display: flex;
   padding-bottom: 12px;
   font-size: var(--puck-font-size-xxs);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .Input-labelIcon {
@@ -53,7 +58,7 @@
 }
 
 .Input--readOnly .Input-input {
-  background-color: var(--puck-color-grey-9);
+  background-color: var(--puck-color-grey-10);
   border-color: var(--puck-color-grey-8);
 }
 
@@ -61,72 +66,86 @@
   border-color: var(--puck-color-neutral-3);
 }
 
-.Input-array {
+.Input-arrayItem {
   background: white;
+  border: 1px solid var(--puck-color-grey-8);
+  border-radius: 4px;
 }
 
-.Input-array > summary {
+.Input-arrayItem > summary {
   color: var(--puck-color-grey-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: var(--puck-font-size-xxs);
+  list-style: none;
   padding: 12px 16px;
   position: relative;
 }
 
-.Input-array > summary:hover {
+.Input-arrayItem > summary:hover {
   cursor: pointer;
   color: var(--puck-color-blue);
 }
 
-.Input-array > fieldset {
-  border: none;
-  margin: 0;
+.Input-arrayItem > summary::-webkit-details-marker {
+  display: none;
 }
-.Input-array > fieldset .Input + .Input-array > fieldset .Input {
+
+.Input-arrayItem > fieldset {
+  background-color: var(--puck-color-grey-11);
+  border: none;
+  border-top: 1px solid var(--puck-color-grey-8);
+  margin: 0;
+  padding-bottom: 16px;
+  padding-top: 16px;
+}
+
+.Input-arrayItem > fieldset .Input + .Input-arrayItem > fieldset .Input {
   margin-top: 16px;
 }
 
-.Input-array > fieldset .Input-label {
+.Input-arrayItem > fieldset .Input-label {
   padding-bottom: 4px;
 }
 
-.Input-array .Input-action {
-  background: transparent;
-  border: none;
+.Input-arrayItem .Input-arrayItemAction {
   border-radius: 4px;
-  color: var(--puck-color-grey-2);
-  display: none;
-  padding: 8px;
-  position: absolute;
-  right: 4px;
-  top: 4px;
+  opacity: 0;
 }
 
-.Input-array summary:hover .Input-action {
-  display: block;
+.Input-arrayItem summary:hover .Input-arrayItemAction {
+  opacity: 1;
 }
 
-.Input-array .Input-action:hover {
+.Input-arrayItem .Input-arrayItemAction:hover {
   background: var(--puck-color-grey-9);
   color: var(--puck-color-blue);
   cursor: pointer;
+}
+
+.Input-arrayItem + .Input-arrayItem {
+  margin-top: 12px;
 }
 
 .Input-addButton {
   background-color: white;
   border: none;
+  border-radius: 4px;
   color: var(--puck-color-blue);
   cursor: pointer;
   width: 100%;
   margin: 0;
+  margin-top: 12px;
   padding: 12px 16px;
   text-align: left;
 }
 
 .Input-addButton:hover {
-  background: var(--puck-color-grey-9);
+  background: var(--puck-color-grey-10);
 }
 
-.Input-item {
+.Input-array {
   overflow: hidden;
 }
 
@@ -148,22 +167,27 @@
 }
 
 .Input-radioInner {
+  color: var(--puck-color-grey-4);
   font-size: var(--puck-font-size-xxxs);
   padding: 8px 12px;
   text-align: center;
 }
 
 .Input-radioInner:hover {
-  background-color: var(--puck-color-azure-8);
+  background-color: var(--puck-color-azure-9);
   cursor: pointer;
 }
 
 .Input-radio input:checked ~ .Input-radioInner {
-  background-color: var(--puck-color-azure-4);
-  color: white;
+  background-color: var(--puck-color-azure-9);
+  color: var(--puck-color-grey-2);
   font-weight: 500;
 }
 
 .Input-radio input {
   display: none;
+}
+
+.Input textarea {
+  margin-bottom: -4px; /* Remove strange bottom border */
 }

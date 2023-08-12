@@ -7,6 +7,10 @@
 }
 
 .ExternalInput-button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
   background-color: white;
   border: 1px solid var(--puck-color-grey-8);
   border-radius: 4px;
@@ -29,6 +33,7 @@
 }
 
 .ExternalInput--hasData .ExternalInput-button {
+  display: block;
   color: var(--puck-color-neutral-4);
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
@@ -39,6 +44,10 @@
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   background-color: var(--puck-color-neutral-1);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
   padding: 8px 12px;
   margin-left: -1px;
 }
@@ -95,8 +104,8 @@
 }
 
 .ExternalInput th {
-  background-color: var(--puck-color-grey-1);
-  color: white;
+  border-bottom: 1px solid var(--puck-color-grey-8);
+  border-top: 1px solid var(--puck-color-grey-8);
   font-weight: 700;
   padding: 16px 24px;
   opacity: 0.9;
@@ -111,22 +120,22 @@
 }
 
 .ExternalInput tr:nth-of-type(2n) {
-  background-color: var(--puck-color-grey-9);
+  background-color: var(--puck-color-grey-10);
 }
 
 .ExternalInput tr td:first-of-type {
   font-weight: 500;
 }
 
-.ExternalInput tr:hover {
-  background: var(--puck-color-grey-10);
+.ExternalInput tbody tr:hover {
+  background: var(--puck-color-grey-11);
   color: var(--puck-color-azure-4);
   cursor: pointer;
   position: relative;
   margin-left: -5px;
 }
 
-.ExternalInput tr:hover td:first-of-type {
+.ExternalInput tbody tr:hover td:first-of-type {
   border-left: 4px solid var(--puck-color-azure-4);
   padding-left: 20px;
 }

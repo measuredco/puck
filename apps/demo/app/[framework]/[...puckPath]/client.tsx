@@ -52,72 +52,11 @@ export function Client({
             localStorage.setItem(key, JSON.stringify(data));
           }}
           plugins={[headingAnalyzer]}
-          renderHeader={({ children }) => (
+          renderHeaderActions={() => (
             <>
-              <div
-                style={{
-                  color: "var(--puck-color-yellow-3)",
-                  padding: "8px 12px",
-                  background: "var(--puck-color-yellow-8)",
-                  textAlign: "center",
-                }}
-              >
-                <b>Demo</b>: Using local storage.
-              </div>
-
-              <div style={{ display: "flex", padding: 16 }}>
-                <div>
-                  <label>
-                    <select
-                      onChange={(e) => {
-                        document.location = `/${e.currentTarget.value}/${path}/edit`;
-                      }}
-                      style={{
-                        background:
-                          "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='white'><polygon points='0,0 100,0 50,50'/></svg>\") no-repeat",
-                        backgroundSize: "12px",
-                        backgroundPosition: "calc(100% - 8px) calc(50% + 4px)",
-                        backgroundRepeat: "no-repeat",
-                        backgroundColor: "transparent",
-                        appearance: "none",
-                        padding: 0,
-                        paddingRight: 32,
-                        fontSize: 24,
-                        fontWeight: 600,
-                        border: "none",
-                        color: "white",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: "100%",
-                        fontFamily: "var(--puck-font-stack)",
-                      }}
-                      defaultValue={framework}
-                    >
-                      <option value="antd">Ant Design</option>
-                      <option value="material-ui">Material UI</option>
-                      <option value="custom">Custom Example</option>
-                    </select>
-                  </label>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 16,
-                    flexGrow: 1,
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Button
-                    href={`/${framework}/${path}`}
-                    newTab
-                    variant="secondary"
-                  >
-                    View page
-                  </Button>
-                  {children}
-                </div>
-              </div>
+              <Button href={`/${framework}/${path}`} newTab variant="secondary">
+                View page
+              </Button>
             </>
           )}
         />

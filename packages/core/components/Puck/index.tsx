@@ -22,6 +22,9 @@ import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
 import { scrollIntoView } from "../../lib/scroll-into-view";
+import { Globe, Sidebar } from "react-feather";
+import { Heading } from "../Heading";
+import { IconButton } from "../IconButton/IconButton";
 
 const Field = () => {};
 
@@ -56,6 +59,7 @@ export function Puck({
   onPublish,
   plugins = [],
   renderHeader,
+  renderHeaderActions,
 }: {
   config: Config;
   data: Data;
@@ -64,6 +68,10 @@ export function Puck({
   plugins?: Plugin[];
   renderHeader?: (props: {
     children: ReactNode;
+    data: Data;
+    setData: (data: Data) => void;
+  }) => ReactElement;
+  renderHeaderActions?: (props: {
     data: Data;
     setData: (data: Data) => void;
   }) => ReactElement;
@@ -132,6 +140,8 @@ export function Puck({
 
   const { onDragUpdate, placeholderStyle } = usePlaceholderStyle();
 
+  const [leftSidebarVisible, setLeftSidebarVisible] = useState(true);
+
   return (
     <div className="puck">
       <DragDropContext
@@ -182,7 +192,9 @@ export function Puck({
           style={{
             display: "grid",
             gridTemplateAreas: '"header header header" "left editor right"',
-            gridTemplateColumns: "288px auto 288px",
+            gridTemplateColumns: `${
+              leftSidebarVisible ? "288px" : "0px"
+            } auto 288px`,
             gridTemplateRows: "min-content auto",
             height: "100vh",
             position: "fixed",
@@ -194,10 +206,8 @@ export function Puck({
         >
           <header
             style={{
-              background: "var(--puck-color-grey-0)",
-              color: "white",
               gridArea: "header",
-              borderBottom: "1px solid #cccccc",
+              borderBottom: "1px solid var(--puck-color-grey-8)",
             }}
           >
             {renderHeader ? (
@@ -207,6 +217,7 @@ export function Puck({
                     onClick={() => {
                       onPublish(data);
                     }}
+                    icon={<Globe size="14px" />}
                   >
                     Publish
                   </Button>
@@ -217,25 +228,63 @@ export function Puck({
             ) : (
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
+                  display: "grid",
                   padding: 16,
+                  gridTemplateAreas: '"left middle right"',
+                  gridTemplateColumns: "288px auto 288px",
+                  gridTemplateRows: "auto",
                 }}
               >
-                <Button
-                  onClick={() => {
-                    onPublish(data);
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 16,
                   }}
                 >
-                  Publish
-                </Button>
+                  <IconButton
+                    onClick={() => setLeftSidebarVisible(!leftSidebarVisible)}
+                    title="Toggle left sidebar"
+                  >
+                    <Sidebar />
+                  </IconButton>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Heading rank={2} size="xs">
+                    {data.root.title || "Page"}
+                  </Heading>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 16,
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  {renderHeaderActions &&
+                    renderHeaderActions({ data, setData })}
+                  <Button
+                    onClick={() => {
+                      onPublish(data);
+                    }}
+                    icon={<Globe size="14px" />}
+                  >
+                    Publish
+                  </Button>
+                </div>
               </div>
             )}
           </header>
           <div
             style={{
               gridArea: "left",
-              background: "var(--puck-color-grey-10)",
+              background: "var(--puck-color-grey-11)",
+              borderRight: "1px solid var(--puck-color-grey-8)",
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
@@ -282,7 +331,7 @@ export function Puck({
           </div>
           <div
             style={{
-              background: "var(--puck-color-grey-8)",
+              background: "var(--puck-color-grey-9)",
               padding: 32,
               overflowY: "auto",
               gridArea: "editor",
@@ -294,6 +343,7 @@ export function Puck({
               style={{
                 background: "white",
                 borderRadius: 16,
+                border: "1px solid var(--puck-color-grey-8)",
                 overflow: "hidden",
                 zoom: 0.75,
               }}
@@ -385,7 +435,7 @@ export function Puck({
           </div>
           <div
             style={{
-              background: "var(--puck-color-grey-10)",
+              borderLeft: "1px solid var(--puck-color-grey-8)",
               overflowY: "auto",
               gridArea: "right",
               fontFamily: "var(--puck-font-stack)",
@@ -395,7 +445,9 @@ export function Puck({
           >
             <FieldWrapper data={data}>
               <SidebarSection
-                background="var(--puck-color-grey-9)"
+                noPadding
+                breadcrumb={selectedIndex !== null ? "Page" : ""}
+                breadcrumbClick={() => setSelectedIndex(null)}
                 title={
                   selectedIndex !== null
                     ? (data.content[selectedIndex].type as string)

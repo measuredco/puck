@@ -4,18 +4,35 @@
   border: none;
   border-radius: 4px;
   color: white;
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   letter-spacing: 0.05ch;
   font-size: 14px;
-  font-weight: 600;
-  padding-bottom: 12px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 12px;
+  font-weight: 500;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
+  margin: 0;
+}
+
+.Button--medium {
+  padding-bottom: 8px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 8px;
+}
+
+.Button--large {
+  padding-bottom: 12px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 12px;
+}
+
+.Button-icon {
+  margin-top: 2px;
 }
 
 .Button:hover {

@@ -1,11 +1,11 @@
 import { ReactNode, useState } from "react";
-import styles from "./Button.module.css";
+import styles from "./IconButton.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ClipLoader } from "react-spinners";
 
-const getClassName = getClassNameFactory("Button", styles);
+const getClassName = getClassNameFactory("IconButton", styles);
 
-export const Button = ({
+export const IconButton = ({
   children,
   href,
   onClick,
@@ -15,8 +15,7 @@ export const Button = ({
   tabIndex,
   newTab,
   fullWidth,
-  icon,
-  size = "medium",
+  title,
 }: {
   children: ReactNode;
   href?: string;
@@ -27,8 +26,7 @@ export const Button = ({
   tabIndex?: number;
   newTab?: boolean;
   fullWidth?: boolean;
-  icon?: ReactNode;
-  size?: "medium" | "large";
+  title: string;
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -41,7 +39,6 @@ export const Button = ({
         secondary: variant === "secondary",
         disabled,
         fullWidth,
-        [size]: true,
       })}
       onClick={(e) => {
         if (!onClick) return;
@@ -57,8 +54,8 @@ export const Button = ({
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noreferrer" : undefined}
       href={href}
+      title={title}
     >
-      {icon && <div className={getClassName("icon")}>{icon}</div>}
       {children}
       {loading && (
         <>

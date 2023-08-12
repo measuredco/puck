@@ -1,5 +1,6 @@
 .SidebarSection {
   display: flex;
+  position: relative;
   flex-direction: column;
 }
 
@@ -13,14 +14,13 @@
   border-bottom: 1px solid var(--puck-color-grey-8);
 }
 
-.SidebarSection-title:hover {
-  opacity: 0.6;
-  cursor: pointer;
-}
-
 .SidebarSection-content {
   border-bottom: 1px solid var(--puck-color-grey-8);
   padding: 16px;
+}
+
+.SidebarSection--noPadding .SidebarSection-content {
+  padding: 0px;
 }
 
 .SidebarSection:last-of-type .SidebarSection-content {
@@ -28,10 +28,12 @@
   flex-grow: 1;
 }
 
-.SidebarSection > summary {
-  list-style: none;
+.SidebarSection-breadcrumb {
+  color: var(--puck-color-azure-3);
 }
 
-.SidebarSection > summary::-webkit-details-marker {
-  display: none;
+.SidebarSection-breadcrumb:hover {
+  color: var(--puck-color-azure-4);
+  cursor: pointer;
+  text-decoration: underline;
 }

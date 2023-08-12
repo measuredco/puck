@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Field } from "../../types/Config";
+import { Link } from "react-feather";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
 
@@ -47,11 +48,18 @@ export const ExternalInput = ({
           className={getClassName("button")}
         >
           {/* NB this is hardcoded to strapi for now */}
-          {selectedData
-            ? field.getItemSummary
-              ? field.getItemSummary(selectedData)
-              : `${field.adaptor.name} item`
-            : `Select from ${field.adaptor.name}`}
+          {selectedData ? (
+            field.getItemSummary ? (
+              field.getItemSummary(selectedData)
+            ) : (
+              `${field.adaptor.name} item`
+            )
+          ) : (
+            <>
+              <Link size="16" />
+              <span>Select from {field.adaptor.name}</span>
+            </>
+          )}
         </button>
         {selectedData && (
           <button
