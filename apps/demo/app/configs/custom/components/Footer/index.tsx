@@ -54,7 +54,7 @@ const FooterList = ({
 
 const Footer = ({ children }: { children: ReactNode }) => {
   return (
-    <footer style={{ background: "var(--puck-color-grey-10)" }}>
+    <footer style={{ background: "var(--puck-color-grey-11)" }}>
       <h2 style={{ visibility: "hidden", height: 0 }}>Footer</h2>
       <Section padding="32px">
         <div
@@ -74,7 +74,7 @@ const Footer = ({ children }: { children: ReactNode }) => {
           padding: 64,
           textAlign: "center",
           color: "var(--puck-color-grey-2)",
-          background: "var(--puck-color-grey-9)",
+          background: "var(--puck-color-grey-10)",
         }}
       >
         Made by{" "}

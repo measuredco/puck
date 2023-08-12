@@ -77,8 +77,9 @@
   --puck-color-grey-6: #ababab;
   --puck-color-grey-7: #c3c3c3;
   --puck-color-grey-8: #dcdcdc;
-  --puck-color-grey-9: #f5f5f5;
-  --puck-color-grey-10: #fafafa;
+  --puck-color-grey-9: #efefef; /* Drifted from Measured value */
+  --puck-color-grey-10: #f5f5f5;
+  --puck-color-grey-11: #fafafa;
 
   --puck-color-black: #000000;
   --puck-color-white: #ffffff;

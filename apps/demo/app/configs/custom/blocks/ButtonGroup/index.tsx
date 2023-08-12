@@ -46,7 +46,12 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
       <Section className={getClassName({ center: align === "center" })}>
         <div className={getClassName("actions")}>
           {buttons.map((button, i) => (
-            <Button key={i} href={button.href} variant={button.variant}>
+            <Button
+              key={i}
+              href={button.href}
+              variant={button.variant}
+              size="large"
+            >
               {button.label}
             </Button>
           ))}

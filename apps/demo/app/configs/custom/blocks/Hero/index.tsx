@@ -122,7 +122,12 @@ export const Hero: ComponentConfig<HeroProps> = {
             <p className={getClassName("subtitle")}>{description}</p>
             <div className={getClassName("actions")}>
               {buttons.map((button, i) => (
-                <Button key={i} href={button.href} variant={button.variant}>
+                <Button
+                  key={i}
+                  href={button.href}
+                  variant={button.variant}
+                  size="large"
+                >
                   {button.label}
                 </Button>
               ))}

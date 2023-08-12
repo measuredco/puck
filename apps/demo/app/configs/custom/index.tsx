@@ -302,7 +302,7 @@ export const initialData: Record<string, Data> = {
         props: { size: "96px", id: "VerticalSpace-1687284290127" },
       },
     ],
-    root: { title: "Custom Example" },
+    root: { title: "Puck Example" },
   },
   "/pricing": {
     content: [],

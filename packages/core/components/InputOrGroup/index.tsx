@@ -12,6 +12,7 @@ import {
   CheckCircle,
   Hash,
 } from "react-feather";
+import { IconButton } from "../IconButton";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -43,26 +44,31 @@ export const InputOrGroup = ({
           </div>
           {label || name}
         </b>
-        <div className={getClassName("item")}>
+        <div className={getClassName("array")}>
           {Array.isArray(value) ? (
             value.map((item, i) => (
-              <details key={`${name}_${i}`} className={getClassName("array")}>
+              <details
+                key={`${name}_${i}`}
+                className={getClassName("arrayItem")}
+              >
                 <summary>
                   {field.getItemSummary
                     ? field.getItemSummary(item, i)
                     : `Item #${i}`}
 
-                  <button
-                    className={getClassName("action")}
-                    onClick={() => {
-                      const existingValue = value || [];
+                  <div className={getClassName("arrayItemAction")}>
+                    <IconButton
+                      onClick={() => {
+                        const existingValue = value || [];
 
-                      existingValue.splice(i, 1);
-                      onChange(existingValue);
-                    }}
-                  >
-                    <Trash size={21} />
-                  </button>
+                        existingValue.splice(i, 1);
+                        onChange(existingValue);
+                      }}
+                      title="Delete"
+                    >
+                      <Trash size={21} />
+                    </IconButton>
+                  </div>
                 </summary>
                 <fieldset>
                   {Object.keys(field.arrayFields!).map((fieldName) => {
