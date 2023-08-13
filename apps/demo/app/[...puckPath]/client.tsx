@@ -52,6 +52,7 @@ export function Client({
             localStorage.setItem(key, JSON.stringify(data));
           }}
           plugins={[headingAnalyzer]}
+          headerPath={path}
           renderHeaderActions={() => (
             <>
               <Button href={path} newTab variant="secondary">
