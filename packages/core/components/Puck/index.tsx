@@ -409,7 +409,11 @@ export function Puck({
                                   editMode: true,
                                 })
                               ) : (
-                                <div>No configuration for {item.type}</div>
+                                <div
+                                  style={{ padding: 48, textAlign: "center" }}
+                                >
+                                  No configuration for {item.type}
+                                </div>
                               )}
                             </div>
                           </DraggableComponent>
