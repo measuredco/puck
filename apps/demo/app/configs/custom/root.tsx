@@ -11,11 +11,11 @@ export type RootProps = {
 const NavItem = ({ label, href }: { label: string; href: string }) => {
   const navPath = window.location.pathname.replace("/edit", "") || "/";
 
-  const isActive = navPath === href.replace("/edit", "");
+  const isActive = navPath === (href.replace("/edit", "") || "/");
 
   return (
     <a
-      href={href}
+      href={href || "/"}
       style={{
         textDecoration: "none",
         color: isActive
@@ -54,15 +54,12 @@ function Root({ children, editMode }: RootProps) {
             LOGO
           </div>
           <nav style={{ display: "flex", marginLeft: "auto", gap: 32 }}>
-            <NavItem label="Home" href={`/custom${editMode ? "/edit" : ""}`} />
+            <NavItem label="Home" href={`${editMode ? "/edit" : ""}`} />
             <NavItem
               label="Pricing"
-              href={`/custom/pricing${editMode ? "/edit" : ""}`}
+              href={`/pricing${editMode ? "/edit" : ""}`}
             />
-            <NavItem
-              label="About"
-              href={`/custom/about${editMode ? "/edit" : ""}`}
-            />
+            <NavItem label="About" href={`/about${editMode ? "/edit" : ""}`} />
           </nav>
         </div>
       </header>

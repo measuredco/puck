@@ -1,8 +1,6 @@
 import dynamic from "next/dynamic";
-import { notFound } from "next/navigation";
 import resolvePuckPath from "./resolve-puck-path";
 import { Metadata } from "next";
-import { Framework, validFrameworks } from "../../Framework";
 
 const Client = dynamic(() => import("./client"), {
   ssr: false,
@@ -33,15 +31,5 @@ export default async function Page({
 }) {
   const { isEdit, path } = resolvePuckPath(params.puckPath);
 
-  if (validFrameworks.indexOf(params.framework) === -1) {
-    return notFound();
-  }
-
-  return (
-    <Client
-      isEdit={isEdit}
-      path={path}
-      framework={params.framework as Framework}
-    />
-  );
+  return <Client isEdit={isEdit} path={path} framework={"custom"} />;
 }
