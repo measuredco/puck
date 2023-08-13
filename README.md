@@ -155,9 +155,9 @@ A `Field` represents a user input field shown in the Puck interface.
   - **[fieldName]** (`Field`): The Field objects describing the input data for each item
 - **getItemSummary** (`(object, number) => string` [optional]): Function to get the name of each item when using the `array` or `external` field types
 - **defaultItemProps** (`object` [optional]): Default props to pass to each new item added, when using a `array` field type
-- **options** (`object[]`): array of items to render for select-type inputs
+- **options** (`object[]`): array of items to render for select or radio inputs
   - **label** (`string`)
-  - **value** (`string`)
+  - **value** (`string` | `number` | `boolean`)
 - **adaptor** (`Adaptor`): Content adaptor if using the `external` input type
 - **adaptorParams** (`object`): Paramaters passed to the adaptor
 

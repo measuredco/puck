@@ -140,14 +140,24 @@ export const InputOrGroup = ({
         </div>
         <select
           className={getClassName("input")}
-          onChange={(e) => onChange(e.currentTarget.value)}
+          onChange={(e) => {
+            if (
+              e.currentTarget.value === "true" ||
+              e.currentTarget.value === "false"
+            ) {
+              onChange(Boolean(e.currentTarget.value));
+              return;
+            }
+
+            onChange(e.currentTarget.value);
+          }}
           value={value}
         >
           {field.options.map((option) => (
             <option
               key={option.label + option.value}
               label={option.label}
-              value={option.value}
+              value={option.value as string | number}
             />
           ))}
         </select>
@@ -200,9 +210,19 @@ export const InputOrGroup = ({
               >
                 <input
                   type="radio"
-                  value={option.value}
+                  value={option.value as string | number}
                   name={name}
-                  onChange={(e) => onChange(e.currentTarget.value)}
+                  onChange={(e) => {
+                    if (
+                      e.currentTarget.value === "true" ||
+                      e.currentTarget.value === "false"
+                    ) {
+                      onChange(JSON.parse(e.currentTarget.value));
+                      return;
+                    }
+
+                    onChange(e.currentTarget.value);
+                  }}
                   readOnly={readOnly}
                   defaultChecked={value === option.value}
                 />
