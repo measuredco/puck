@@ -60,6 +60,8 @@ export function Puck({
   plugins = [],
   renderHeader,
   renderHeaderActions,
+  headerTitle,
+  headerPath,
 }: {
   config: Config;
   data: Data;
@@ -75,6 +77,8 @@ export function Puck({
     data: Data;
     setData: (data: Data) => void;
   }) => ReactElement;
+  headerTitle?: string;
+  headerPath?: string;
 }) {
   const [data, setData] = useState(initialData);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -256,7 +260,12 @@ export function Puck({
                   }}
                 >
                   <Heading rank={2} size="xs">
-                    {data.root.title || "Page"}
+                    {headerTitle || data.root.title || "Page"}
+                    {headerPath && (
+                      <small style={{ fontWeight: 400, marginLeft: 4 }}>
+                        <code>{headerPath}</code>
+                      </small>
+                    )}
                   </Heading>
                 </div>
                 <div
