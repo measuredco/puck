@@ -29,7 +29,7 @@ export type Field<
   defaultItemProps?: Props;
   options?: {
     label: string;
-    value: string | number;
+    value: string | number | boolean;
   }[];
 };
 
