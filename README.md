@@ -121,6 +121,9 @@ The `<Puck>` component renders the Puck editor.
 - **onChange** (`(Data) => void` [optional]): Callback that triggers when the user makes a change
 - **onPublish** (`(Data) => void` [optional]): Callback that triggers when the user hits the "Publish" button
 - **renderHeader** (`Component` [optional]): Render function for overriding the Puck header component
+- **renderHeaderActions** (`Component` [optional]): Render function for overriding the Puck header actions. Use a fragment.
+- **headerTitle** (`string` [optional]): Set the title shown in the header title
+- **headerPath** (`string` [optional]): Set a path to show after the header title
 - **plugins** (`Plugin[]` [optional]): Array of plugins that can be used to enhance Puck
 
 ### `<Render>`
