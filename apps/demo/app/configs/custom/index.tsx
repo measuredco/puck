@@ -54,7 +54,7 @@ export const initialData: Record<string, Data> = {
             },
             {
               label: "Edit this page",
-              href: "/custom/edit",
+              href: "/edit",
               variant: "secondary",
             },
           ],
@@ -289,7 +289,7 @@ export const initialData: Record<string, Data> = {
             },
             {
               label: "Edit this page",
-              href: "/custom/edit",
+              href: "/edit",
               variant: "secondary",
             },
           ],

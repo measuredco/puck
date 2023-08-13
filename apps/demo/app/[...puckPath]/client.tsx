@@ -3,7 +3,7 @@
 import { Data } from "@measured/puck/types/Config";
 import { Puck } from "@measured/puck/components/Puck";
 import { Render } from "@measured/puck/components/Render";
-import { Framework } from "../../Framework";
+import { Framework } from "../Framework";
 import { useEffect, useState } from "react";
 import { Button } from "@measured/puck/components/Button";
 import headingAnalyzer from "@measured/puck-plugin-heading-analyzer/src/HeadingAnalyzer";
@@ -19,8 +19,8 @@ export function Client({
   isEdit: boolean;
   framework: Framework;
 }) {
-  const config = require(`../../configs/${framework}/`).default;
-  const initialData = require(`../../configs/${framework}/`).initialData || {};
+  const config = require(`../configs/${framework}/`).default;
+  const initialData = require(`../configs/${framework}/`).initialData || {};
 
   const key = `puck-demo:${framework}:${path}`;
 
@@ -54,7 +54,7 @@ export function Client({
           plugins={[headingAnalyzer]}
           renderHeaderActions={() => (
             <>
-              <Button href={`/${framework}/${path}`} newTab variant="secondary">
+              <Button href={path} newTab variant="secondary">
                 View page
               </Button>
             </>
