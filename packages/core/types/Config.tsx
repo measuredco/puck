@@ -52,10 +52,11 @@ export type Fields<
 };
 
 export type ComponentConfig<
-  ComponentProps extends DefaultComponentProps = DefaultComponentProps
+  ComponentProps extends DefaultComponentProps = DefaultComponentProps,
+  DefaultProps = ComponentProps
 > = {
   render: (props: ComponentProps) => ReactElement;
-  defaultProps?: ComponentProps;
+  defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
 };
 
@@ -66,7 +67,10 @@ export type Config<
   components: {
     [ComponentName in keyof Props]: ComponentConfig<Props[ComponentName]>;
   };
-  root?: ComponentConfig<RootProps & { children: ReactNode }>;
+  root?: ComponentConfig<
+    RootProps & { children: ReactNode },
+    Partial<RootProps & { children: ReactNode }>
+  >;
 };
 
 type MappedItem<Props extends { [key: string]: any } = { [key: string]: any }> =
