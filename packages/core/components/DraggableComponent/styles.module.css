@@ -54,6 +54,7 @@
 }
 
 .DraggableComponent-actionsLabel {
+  color: var(--puck-color-grey-0);
   display: flex;
   justify-content: center;
   align-items: center;
