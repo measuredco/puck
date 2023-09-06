@@ -5,7 +5,7 @@ import path from "path";
 import { program } from "commander";
 import inquirer from "inquirer";
 import Handlebars from "handlebars";
-import glob from "glob";
+import { glob } from "glob";
 import { execSync } from "child_process";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
