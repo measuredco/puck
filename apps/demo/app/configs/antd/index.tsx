@@ -1,4 +1,4 @@
-import { Config, Data } from "@measured/puck/types/Config";
+import { Config, Data } from "@measured/puck";
 import { CardDeck, CardDeckProps } from "./blocks/CardDeck";
 import { Carousel, CarouselProps } from "./blocks/Carousel";
 import { Hero, HeroProps } from "./blocks/Hero";

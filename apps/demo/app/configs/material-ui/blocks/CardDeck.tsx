@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 
-import { ComponentConfig } from "@measured/puck/types/Config";
+import { ComponentConfig } from "@measured/puck";
 import { Container, ContainerProps, containerFields } from "../Container";
 
 export type CardDeckProps = {

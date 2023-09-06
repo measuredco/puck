@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Image, Space, Typography } from "antd";
-import { ComponentConfig } from "@measured/puck/types/Config";
+import { ComponentConfig } from "@measured/puck";
 
 export type HeroProps = {
   title: string;
