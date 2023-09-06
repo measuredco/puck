@@ -7,7 +7,7 @@ import fs from "fs";
 
 // Replace with call to your database
 const getPage = (path: string) => {
-  const allData: Data | null = fs.existsSync("database.json")
+  const allData: Record<string, Data> | null = fs.existsSync("database.json")
     ? JSON.parse(fs.readFileSync("database.json", "utf-8"))
     : null;
 
@@ -28,7 +28,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: getPage(path),
+    title: getPage(path).root.title,
   };
 }
 
