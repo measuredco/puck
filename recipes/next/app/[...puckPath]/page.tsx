@@ -2,7 +2,7 @@ import { Client } from "./client";
 import { notFound } from "next/navigation";
 import resolvePuckPath from "./resolve-puck-path";
 import { Metadata } from "next";
-import { Data } from "@measured/puck/types/Config";
+import { Data } from "@measured/puck";
 
 export async function generateMetadata({
   params,

@@ -1,6 +1,6 @@
 import { ReactElement, ReactNode, useEffect, useState } from "react";
 
-import { Data } from "@measured/puck/types/Config";
+import { Data } from "@measured/puck";
 import { Plugin } from "@measured/puck/types/Plugin";
 import { SidebarSection } from "@measured/puck/components/SidebarSection";
 import { OutlineList } from "@measured/puck/components/OutlineList";

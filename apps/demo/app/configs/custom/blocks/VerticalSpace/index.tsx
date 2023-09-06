@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ComponentConfig } from "@measured/puck/types/Config";
+import { ComponentConfig } from "@measured/puck";
 import { spacingOptions } from "../../options";
 
 export type VerticalSpaceProps = {
