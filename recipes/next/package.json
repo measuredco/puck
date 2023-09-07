@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@measured/puck": "^0.2.2",
+    "@measured/puck": "^0.6.1",
     "classnames": "^2.3.2",
     "next": "^13.4.6",
     "react": "^18.2.0",
