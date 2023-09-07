@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
+import useUndo from "use-undo";
 import DroppableStrictMode from "../DroppableStrictMode";
 import { DraggableComponent } from "../DraggableComponent";
 import type { Config, Data, Field } from "../../types/Config";
@@ -22,7 +23,7 @@ import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
 import { scrollIntoView } from "../../lib/scroll-into-view";
-import { Globe, Sidebar } from "react-feather";
+import { Globe, Sidebar, ChevronLeft, ChevronRight } from "react-feather";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
 
@@ -80,7 +81,11 @@ export function Puck({
   headerTitle?: string;
   headerPath?: string;
 }) {
-  const [data, setData] = useState(initialData);
+  const [
+    { present: data },
+    { set: setData, undo: undoData, redo: redoData, canUndo, canRedo },
+  ] = useUndo(initialData);
+
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const Page = useCallback(
@@ -275,6 +280,28 @@ export function Puck({
                     justifyContent: "flex-end",
                   }}
                 >
+                  <div style={{ display: "flex" }}>
+                    <IconButton
+                      title="undo"
+                      disabled={!canUndo}
+                      onClick={undoData}
+                    >
+                      <ChevronLeft
+                        size={21}
+                        stroke={canUndo ? "black" : "#ddd"}
+                      />
+                    </IconButton>
+                    <IconButton
+                      title="redo"
+                      disabled={!canRedo}
+                      onClick={redoData}
+                    >
+                      <ChevronRight
+                        size={21}
+                        stroke={canRedo ? "black" : "#ddd"}
+                      />
+                    </IconButton>
+                  </div>
                   {renderHeaderActions &&
                     renderHeaderActions({ data, setData })}
                   <Button

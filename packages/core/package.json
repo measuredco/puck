@@ -28,7 +28,8 @@
   "dependencies": {
     "react-beautiful-dnd": "^13.1.1",
     "react-feather": "^2.0.10",
-    "react-spinners": "^0.13.8"
+    "react-spinners": "^0.13.8",
+    "use-undo": "^1.1.1"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0"
