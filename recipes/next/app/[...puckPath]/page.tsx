@@ -3,6 +3,16 @@ import { notFound } from "next/navigation";
 import resolvePuckPath from "./resolve-puck-path";
 import { Metadata } from "next";
 import { Data } from "@measured/puck";
+import fs from "fs";
+
+// Replace with call to your database
+const getPage = (path: string) => {
+  const allData: Record<string, Data> | null = fs.existsSync("database.json")
+    ? JSON.parse(fs.readFileSync("database.json", "utf-8"))
+    : null;
+
+  return allData ? allData[path] : null;
+};
 
 export async function generateMetadata({
   params,
@@ -17,14 +27,8 @@ export async function generateMetadata({
     };
   }
 
-  const data: Data = (
-    await fetch("http://localhost:3000/api/puck", {
-      next: { revalidate: 0 },
-    }).then((d) => d.json())
-  )[path];
-
   return {
-    title: data?.root?.title,
+    title: getPage(path).root.title,
   };
 }
 
@@ -35,11 +39,7 @@ export default async function Page({
 }) {
   const { isEdit, path } = resolvePuckPath(params.puckPath);
 
-  const data = (
-    await fetch("http://localhost:3000/api/puck", {
-      next: { revalidate: 0 },
-    }).then((d) => d.json())
-  )[path];
+  const data = getPage(path);
 
   if (!data && !isEdit) {
     return notFound();

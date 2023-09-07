@@ -21,7 +21,7 @@ export function Client({
         onPublish={async (data: Data) => {
           await fetch("/api/puck", {
             method: "post",
-            body: JSON.stringify({ [path]: data }),
+            body: JSON.stringify({ data, path }),
           });
         }}
       />
