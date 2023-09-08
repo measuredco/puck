@@ -82,7 +82,7 @@ Puck can be configured to work with plugins. Plugins can extend the functionalit
 
 ### Official plugins
 
-- [`heading-analyzer`](https://github.com/measuredco/puck/tree/main/packages/plugin-heading-analyzer): Analyze the heading outline of your page and be warned when you're not respecting WCAG 2 accessiblity standards.
+- [`heading-analyzer`](https://github.com/measuredco/puck/tree/main/packages/plugin-heading-analyzer): Analyze the heading outline of your page and be warned when you're not respecting WCAG 2 accessibility standards.
 
 ### Developing a plugin
 
