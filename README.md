@@ -110,6 +110,37 @@ const myPlugin = {
 };
 ```
 
+## Custom fields
+
+Puck supports custom fields using the `custom` field type and `render` method.
+
+In this example, we optionally add the `<FieldLabel>` component to add a label:
+
+```tsx
+import { FieldLabel } from "@measured/puck";
+
+export const MyComponent: ComponentConfig = {
+  fields: {
+    myField: {
+      type: "custom",
+      render: ({ field, name, onChange, value }) => {
+        return (
+          <FieldLabel label={field.label || name}>
+            <input
+              placeholder="Enter text..."
+              type="text"
+              name={name}
+              defaultValue={value}
+              onChange={(e) => onChange(e.currentTarget.value)}
+            ></input>
+          </FieldLabel>
+        );
+      },
+    },
+  },
+};
+```
+
 ## Reference
 
 ### `<Puck>`
@@ -152,7 +183,7 @@ The `Config` object describes which components Puck should render, how they shou
 
 A `Field` represents a user input field shown in the Puck interface.
 
-- **type** (`text` | `textarea` | `number` | `select` | `radio` | `external` | `array`): The input type to render
+- **type** (`text` | `textarea` | `number` | `select` | `radio` | `external` | `array` | `custom`): The input type to render
 - **label** (`text` [optional]): A label for the input. Will use the key if not provided.
 - **arrayFields** (`object`): Object describing sub-fields for items in an `array` input
   - **[fieldName]** (`Field`): The Field objects describing the input data for each item
@@ -163,6 +194,12 @@ A `Field` represents a user input field shown in the Puck interface.
   - **value** (`string` | `number` | `boolean`)
 - **adaptor** (`Adaptor`): Content adaptor if using the `external` input type
 - **adaptorParams** (`object`): Paramaters passed to the adaptor
+- **render** (`Component`): Render a custom field. Receives the props:
+  - **field** (`Field`): Field configuration
+  - **name** (`string`): Name of the field
+  - **value** (`any`): Value for the field
+  - **onChange** (`(value: any) => void`): Callback to change the value
+  - **readOnly** (`boolean` | `undefined`): Whether or not the field should be in readOnly mode
 
 ### `Data`
 

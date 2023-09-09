@@ -13,8 +13,29 @@ import {
   Hash,
 } from "react-feather";
 import { IconButton } from "../IconButton";
+import { ReactNode } from "react";
 
 const getClassName = getClassNameFactory("Input", styles);
+
+export const FieldLabel = ({
+  children,
+  icon,
+  label,
+}: {
+  children?: ReactNode;
+  icon?: ReactNode;
+  label: string;
+}) => {
+  return (
+    <label>
+      <div className={getClassName("label")}>
+        {icon && <div className={getClassName("labelIcon")}></div>}
+        {label}
+      </div>
+      {children}
+    </label>
+  );
+};
 
 export const InputOrGroup = ({
   name,
@@ -233,6 +254,24 @@ export const InputOrGroup = ({
             ))}
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (field.type === "custom") {
+    if (!field.render) {
+      return null;
+    }
+
+    return (
+      <div className={getClassName()}>
+        {field.render({
+          field,
+          name,
+          value,
+          onChange,
+          readOnly,
+        })}
       </div>
     );
   }
