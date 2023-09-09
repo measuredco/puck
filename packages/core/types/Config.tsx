@@ -18,7 +18,8 @@ export type Field<
     | "select"
     | "array"
     | "external"
-    | "radio";
+    | "radio"
+    | "custom";
   label?: string;
   adaptor?: Adaptor;
   adaptorParams?: object;
@@ -27,6 +28,13 @@ export type Field<
   };
   getItemSummary?: (item: Props, index?: number) => string;
   defaultItemProps?: Props;
+  render?: (props: {
+    field: Field;
+    name: string;
+    value: any;
+    onChange: (value: any) => void;
+    readOnly?: boolean;
+  }) => ReactElement;
   options?: {
     label: string;
     value: string | number | boolean;

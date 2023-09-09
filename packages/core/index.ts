@@ -5,3 +5,5 @@ export * from "./components/Button";
 export * from "./components/IconButton";
 export * from "./components/Puck";
 export * from "./components/Render";
+
+export { FieldLabel } from "./components/InputOrGroup";
