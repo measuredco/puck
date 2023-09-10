@@ -31,6 +31,59 @@ export const InputOrGroup = ({
   onChange: (value: any) => void;
   readOnly?: boolean;
 }) => {
+  if (field.type === "object") {
+    if (!field.objectFields) {
+      return null;
+    }
+    let existingValue = value || {};
+
+    return (
+      <div className={getClassName()}>
+
+        <b className={getClassName("label")}>
+          <div className={getClassName("labelIcon")}>
+            <List size={16} />
+          </div>
+          {label || name}
+        </b>
+        <div className={getClassName("array")}>
+              <details
+                className={getClassName("arrayItem")}
+              >
+                <summary>
+                     {label || name}
+                </summary>
+                <fieldset>
+                  {Object.keys(field.objectFields!).map((fieldName, i) => {
+                    const subField = field.objectFields![fieldName];
+
+                    return (
+                      <InputOrGroup
+                        key={`${name}_${i}_${fieldName}`}
+                        name={`${name}_${i}_${fieldName}`}
+                        label={fieldName}
+                        field={subField}
+                        value={existingValue[fieldName] ?? ""}
+                        onChange={(val) =>
+                          onChange(
+                            // replace(existingValue, 0, { ...existingValue, [fieldName]: val })
+                              existingValue = {
+                                ...existingValue,
+                                  [fieldName]: val
+                              }
+                          )
+                        }
+                      />
+                    );
+                  })}
+                </fieldset>
+              </details>
+            
+        </div>
+      </div>
+    );
+  }
+
   if (field.type === "array") {
     if (!field.arrayFields) {
       return null;
