@@ -6,8 +6,6 @@ import { getClassNameFactory } from "@measured/puck/lib";
 import { Button } from "@measured/puck/components/Button";
 import { Section } from "../../components/Section";
 import { quotes } from "./quotes";
-import { Heading as HeadingEditor } from "../Heading";
-import { Heading } from "@measured/puck/components/Heading";
 
 const getClassName = getClassNameFactory("Hero", styles);
 
@@ -19,13 +17,7 @@ export type HeroProps = {
   padding: string;
   imageMode?: "inline" | "background";
   imageUrl?: string;
-  buttons: {
-    label: string;
-    href: string;
-    variant?: "primary" | "secondary"
-  }[];
-  headingTheme: object[];
-  blockTheme: object[];
+  buttons: { label: string; href: string; variant?: "primary" | "secondary" }[];
 };
 
 const quotesAdaptor = {
@@ -44,70 +36,45 @@ export const Hero: ComponentConfig<HeroProps> = {
       adaptor: quotesAdaptor,
       getItemSummary: (item: Partial<HeroProps>) => item.description,
     },
-    title: {type: "text"},
-    description: {type: "textarea"},
+    title: { type: "text" },
+    description: { type: "textarea" },
     buttons: {
       type: "array",
       getItemSummary: (item) => item.label || "Button",
       arrayFields: {
-        label: {type: "text"},
-        href: {type: "text"},
+        label: { type: "text" },
+        href: { type: "text" },
         variant: {
           type: "select",
           options: [
-            {label: "primary", value: "primary"},
-            {label: "secondary", value: "secondary"},
+            { label: "primary", value: "primary" },
+            { label: "secondary", value: "secondary" },
           ],
         },
       },
     },
-    headingTheme: {
-      type: "object",
-      objectFields: {
-        ...HeadingEditor.fields,
-      }
-    },
-    blockTheme: {
-      type: "object",
-      objectFields: {
-        color: "fafafa"
-      }
-    },
     align: {
       type: "radio",
       options: [
-        {label: "left", value: "left"},
-        {label: "center", value: "center"},
+        { label: "left", value: "left" },
+        { label: "center", value: "center" },
       ],
     },
-    imageUrl: {type: "text"},
+    imageUrl: { type: "text" },
     imageMode: {
       type: "radio",
       options: [
-        {label: "inline", value: "inline"},
-        {label: "background", value: "background"},
+        { label: "inline", value: "inline" },
+        { label: "background", value: "background" },
       ],
     },
-    padding: {type: "text"},
+    padding: { type: "text" },
   },
   defaultProps: {
-    title: "Title1",
+    title: "Hero",
     align: "left",
     description: "Description",
-    buttons: [
-      {
-        label: "Learn more",
-        href: "#"
-      }
-    ],
-    // @ts-ignore
-    headingTheme: {
-      ...HeadingEditor.defaultProps
-    },
-    blockTheme: [ {
-      color: "#fafafa",
-      size: "H1"
-    } ],
+    buttons: [{ label: "Learn more", href: "#" }],
     padding: "64px",
   },
   render: ({
@@ -118,58 +85,51 @@ export const Hero: ComponentConfig<HeroProps> = {
              padding,
              imageUrl,
              imageMode,
-             headingTheme,
-             blockTheme
            }) => {
-
     return (
       <Section
-        padding={ padding }
-        className={ getClassName({
+        padding={padding}
+        className={getClassName({
           left: align === "left",
           center: align === "center",
           hasImageBackground: imageMode === "background",
-        }) }
+        })}
       >
-        { imageMode === "background" && (
+        {imageMode === "background" && (
           <>
             <div
-              className={ getClassName("image") }
-              style={ {
-                backgroundImage: `url("${ imageUrl }")`,
-              } }
+              className={getClassName("image")}
+              style={{
+                backgroundImage: `url("${imageUrl}")`,
+              }}
             ></div>
 
-            <div className={ getClassName("imageOverlay") }></div>
+            <div className={getClassName("imageOverlay")}></div>
           </>
-        ) }
+        )}
 
-        <div className={ getClassName("inner") }>
-          <div className={ getClassName("content") }>
-            {/*@ts-ignore*/ }
-            <Heading size={ headingTheme['size'] } rank={ headingTheme['level'] }>
-              { title }
-            </Heading>
-
-            <p className={ getClassName("subtitle") }>{ description }</p>
-            <div className={ getClassName("actions") }>
-              { buttons.map((button, i) => (
+        <div className={getClassName("inner")}>
+          <div className={getClassName("content")}>
+            <h1>{title}</h1>
+            <p className={getClassName("subtitle")}>{description}</p>
+            <div className={getClassName("actions")}>
+              {buttons.map((button, i) => (
                 <Button
-                  key={ i }
-                  href={ button.href }
-                  variant={ button.variant }
+                  key={i}
+                  href={button.href}
+                  variant={button.variant}
                   size="large"
                 >
-                  { button.label }
+                  {button.label}
                 </Button>
-              )) }
+              ))}
             </div>
           </div>
 
-          { align !== "center" && imageMode !== "background" && imageUrl && (
+          {align !== "center" && imageMode !== "background" && imageUrl && (
             <div
-              style={ {
-                backgroundImage: `url('${ imageUrl }')`,
+              style={{
+                backgroundImage: `url('${imageUrl}')`,
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
@@ -177,9 +137,9 @@ export const Hero: ComponentConfig<HeroProps> = {
                 height: 356,
                 marginLeft: "auto",
                 width: "100%",
-              } }
+              }}
             />
-          ) }
+          )}
         </div>
       </Section>
     );
