@@ -63,7 +63,6 @@ export const InputOrGroup = ({
                         value={existingValue[fieldName] ?? ""}
                         onChange={(val) =>
                           onChange(
-                            // replace(existingValue, 0, { ...existingValue, [fieldName]: val })
                               existingValue = {
                                 ...existingValue,
                                   [fieldName]: val
@@ -75,7 +74,6 @@ export const InputOrGroup = ({
                   })}
                 </fieldset>
               </details>
-            
         </div>
       </div>
     );
