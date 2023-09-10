@@ -34,12 +34,15 @@ jobs:
             exit 1
           fi
 
-      - name: Build generated code
-        run: yarn build
+      - name: Create and build generated code
+        run: |
+          npx create-puck-app test-ci-app
+          cd test-ci-app
+          yarn build
 
       - name: Check for build failures
         run: |
-          if ! ${{ success() }}; then
+          if [ $? -ne 0 ]; then
             echo "Build failed. Please fix the issues."
             exit 1
           fi
