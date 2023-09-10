@@ -34,10 +34,9 @@ jobs:
             exit 1
           fi
 
-      - name: Create and build generated code
+      - name: Build generated code
         run: |
-          npx create-puck-app test-ci-app
-          cd test-ci-app
+          cd recipes/next
           yarn build
 
       - name: Check for build failures
