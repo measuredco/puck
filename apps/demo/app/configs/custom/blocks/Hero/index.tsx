@@ -1,13 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import {ComponentConfig} from "@measured/puck";
+import { ComponentConfig } from "@measured/puck";
 import styles from "./styles.module.css";
-import {getClassNameFactory} from "@measured/puck/lib";
-import {Button} from "@measured/puck/components/Button";
-import {Section} from "../../components/Section";
-import {quotes} from "./quotes";
-import {Heading as HeadingEditor} from "../Heading";
-import {Heading} from "@measured/puck/components/Heading";
+import { getClassNameFactory } from "@measured/puck/lib";
+import { Button } from "@measured/puck/components/Button";
+import { Section } from "../../components/Section";
+import { quotes } from "./quotes";
+import { Heading as HeadingEditor } from "../Heading";
+import { Heading } from "@measured/puck/components/Heading";
 
 const getClassName = getClassNameFactory("Hero", styles);
 
@@ -104,10 +104,10 @@ export const Hero: ComponentConfig<HeroProps> = {
     headingTheme: {
       ...HeadingEditor.defaultProps
     },
-    blockTheme: [{
+    blockTheme: [ {
       color: "#fafafa",
       size: "H1"
-    }],
+    } ],
     padding: "64px",
   },
   render: ({
@@ -124,52 +124,52 @@ export const Hero: ComponentConfig<HeroProps> = {
 
     return (
       <Section
-        padding={padding}
-        className={getClassName({
+        padding={ padding }
+        className={ getClassName({
           left: align === "left",
           center: align === "center",
           hasImageBackground: imageMode === "background",
-        })}
+        }) }
       >
-        {imageMode === "background" && (
+        { imageMode === "background" && (
           <>
             <div
-              className={getClassName("image")}
-              style={{
-                backgroundImage: `url("${imageUrl}")`,
-              }}
+              className={ getClassName("image") }
+              style={ {
+                backgroundImage: `url("${ imageUrl }")`,
+              } }
             ></div>
 
-            <div className={getClassName("imageOverlay")}></div>
+            <div className={ getClassName("imageOverlay") }></div>
           </>
-        )}
+        ) }
 
-        <div className={getClassName("inner")}>
-          <div className={getClassName("content")}>
-            {/*@ts-ignore*/}
-            <Heading size={headingTheme['size']} rank={headingTheme['level']}>
-              {title}
+        <div className={ getClassName("inner") }>
+          <div className={ getClassName("content") }>
+            {/*@ts-ignore*/ }
+            <Heading size={ headingTheme['size'] } rank={ headingTheme['level'] }>
+              { title }
             </Heading>
 
-            <p className={getClassName("subtitle")}>{description}</p>
-            <div className={getClassName("actions")}>
-              {buttons.map((button, i) => (
+            <p className={ getClassName("subtitle") }>{ description }</p>
+            <div className={ getClassName("actions") }>
+              { buttons.map((button, i) => (
                 <Button
-                  key={i}
-                  href={button.href}
-                  variant={button.variant}
+                  key={ i }
+                  href={ button.href }
+                  variant={ button.variant }
                   size="large"
                 >
-                  {button.label}
+                  { button.label }
                 </Button>
-              ))}
+              )) }
             </div>
           </div>
 
-          {align !== "center" && imageMode !== "background" && imageUrl && (
+          { align !== "center" && imageMode !== "background" && imageUrl && (
             <div
-              style={{
-                backgroundImage: `url('${imageUrl}')`,
+              style={ {
+                backgroundImage: `url('${ imageUrl }')`,
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
@@ -177,9 +177,9 @@ export const Hero: ComponentConfig<HeroProps> = {
                 height: 356,
                 marginLeft: "auto",
                 width: "100%",
-              }}
+              } }
             />
-          )}
+          ) }
         </div>
       </Section>
     );
