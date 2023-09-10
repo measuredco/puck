@@ -78,14 +78,14 @@ export const Hero: ComponentConfig<HeroProps> = {
     padding: "64px",
   },
   render: ({
-             align,
-             title,
-             description,
-             buttons,
-             padding,
-             imageUrl,
-             imageMode,
-           }) => {
+    align,
+    title,
+    description,
+    buttons,
+    padding,
+    imageUrl,
+    imageMode,
+  }) => {
     return (
       <Section
         padding={padding}
