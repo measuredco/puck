@@ -83,6 +83,10 @@
   position: relative;
 }
 
+.Input-objectItem {
+  justify-content: start !important;
+}
+
 .Input-arrayItem > summary:hover {
   cursor: pointer;
   color: var(--puck-color-blue);

@@ -10,7 +10,7 @@ import {
   List,
   ChevronDown,
   CheckCircle,
-  Hash,
+  Hash, MoreVertical,
 } from "react-feather";
 import { IconButton } from "../IconButton";
 
@@ -39,20 +39,17 @@ export const InputOrGroup = ({
 
     return (
       <div className={getClassName()}>
-
-        <b className={getClassName("label")}>
-          <div className={getClassName("labelIcon")}>
-            <List size={16} />
-          </div>
-          {label || name}
-        </b>
         <div className={getClassName("array")}>
               <details
                 className={getClassName("arrayItem")}
               >
-                <summary>
-                     {label || name}
+                <summary className={getClassName("objectItem") }>
+                  <div className={getClassName("labelIcon")}>
+                    <MoreVertical size={16} />
+                  </div>
+                  {label || name}
                 </summary>
+
                 <fieldset>
                   {Object.keys(field.objectFields!).map((fieldName, i) => {
                     const subField = field.objectFields![fieldName];
