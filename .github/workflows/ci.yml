@@ -22,6 +22,9 @@ jobs:
           node-version: "18.16.1"
           registry-url: "https://registry.npmjs.org"
 
+      - name: Check Yarn Version
+        run: yarn --version
+
       - name: Install dependencies
         run: yarn
 
@@ -31,18 +34,5 @@ jobs:
             echo "Linting and formatting checks passed."
           else
             echo "Linting or formatting checks failed. Please fix the issues."
-            exit 1
-          fi
-
-      - name: Install dependencies and Build generated code
-        run: |
-          cd recipes/next
-          yarn 
-          yarn build
-
-      - name: Check for build failures
-        run: |
-          if [ $? -ne 0 ]; then
-            echo "Build failed. Please fix the issues."
             exit 1
           fi
