@@ -34,9 +34,10 @@ jobs:
             exit 1
           fi
 
-      - name: Build generated code
+      - name: Install dependencies and Build generated code
         run: |
           cd recipes/next
+          yarn 
           yarn build
 
       - name: Check for build failures
