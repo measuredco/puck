@@ -1,0 +1,38 @@
+# This workflow will run all checks required for a PR to be merged.
+
+name: Build and Test ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.0.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18.16.1"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Check Yarn Version
+        run: yarn --version
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Check linting and formatting
+        run: |
+          if yarn lint && yarn format --check; then
+            echo "Linting and formatting checks passed."
+          else
+            echo "Linting or formatting checks failed. Please fix the issues."
+            exit 1
+          fi
