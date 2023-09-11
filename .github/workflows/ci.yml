@@ -36,3 +36,18 @@ jobs:
             echo "Linting or formatting checks failed. Please fix the issues."
             exit 1
           fi
+
+      - name: Build Puck
+        run: |
+          yarn build --scope @measured/puck --no-deps
+
+      - name: Build recipe/next
+        run: |
+          yarn build --scope next-recipe --no-deps
+
+      - name: Check for build failures
+        run: |
+          if [ $? -ne 0 ]; then
+            echo "Build failed. Please fix the issues."
+            exit 1
+          fi
