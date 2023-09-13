@@ -162,4 +162,31 @@ describe("use-action-history", () => {
       });
     });
   });
+
+  describe("in the middle of history", () => {
+    const actions = [
+      { rewind: jest.fn(), forward: jest.fn() },
+      { rewind: jest.fn(), forward: jest.fn() },
+      { rewind: jest.fn(), forward: jest.fn() },
+    ];
+
+    beforeEach(() => {
+      actions.forEach(({ rewind, forward }) => {
+        act(() =>
+          renderedHook.result.current.record({
+            rewind,
+            forward,
+          })
+        );
+      });
+      act(() => renderedHook.result.current.rewind());
+    });
+
+    test("recent histories are rewritten when recording a new action ", () => {
+      const newAction = { rewind: jest.fn(), forward: jest.fn() };
+      act(() => renderedHook.result.current.record(newAction));
+
+      expect(renderedHook.result.current.canForward).toBe(false);
+    });
+  });
 });

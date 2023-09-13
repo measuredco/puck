@@ -23,7 +23,10 @@ export function useActionHistory() {
       ...params,
     };
 
-    setHistories((prev) => [...prev, history]);
+    setHistories((prev) => [
+      ...prev.slice(0, currentHistoryIndex + 1),
+      history,
+    ]);
     setCurrentHistoryIndex((prev) => prev + 1);
   };
 
