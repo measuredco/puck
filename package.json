@@ -4,6 +4,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md}\"",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "release": "git fetch --tags && conventional-recommended-bump -p angular | xargs yarn version --no-git-tag-version --new-version$1 && yarn release-commit",
     "release-commit": "git add -u && git commit -m \"release: v${npm_package_version}\"",
