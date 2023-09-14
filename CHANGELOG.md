@@ -2,6 +2,16 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.7.0](https://github.com/measuredco/puck/compare/v0.6.2...v0.7.0) (2023-09-14)
+
+
+### Features
+
+* add support for custom fields ([b46b721](https://github.com/measuredco/puck/commit/b46b721aea70698e249cd3dfff34f88717952da7))
+
+
+
+
 ## [0.6.2](https://github.com/measuredco/puck/compare/v0.6.1...v0.6.2) (2023-09-07)
 
 
