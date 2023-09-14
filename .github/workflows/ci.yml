@@ -30,7 +30,7 @@ jobs:
 
       - name: Check linting and formatting
         run: |
-          if yarn lint && yarn format --check; then
+          if yarn lint && yarn format:check; then
             echo "Linting and formatting checks passed."
           else
             echo "Linting or formatting checks failed. Please fix the issues."
