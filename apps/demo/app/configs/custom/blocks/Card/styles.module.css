@@ -1,0 +1,53 @@
+.Card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 16px;
+  width: 100%;
+}
+
+.Card--card {
+  background: white;
+  box-shadow: rgba(140, 152, 164, 0.25) 0px 3px 6px 0px;
+  border-radius: 8px;
+  max-width: 100%;
+  margin-left: unset;
+  margin-right: unset;
+  padding: 24px;
+  align-items: flex-start;
+  width: auto;
+}
+
+.Card-icon {
+  border-radius: 256px;
+  background: var(--puck-color-azure-8);
+  color: var(--puck-color-azure-5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 64px;
+}
+
+.Card-title {
+  font-size: 22px;
+  text-align: center;
+}
+
+.Card--card .Card-title {
+  text-align: left;
+}
+
+.Card-description {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--puck-color-grey-4);
+  text-align: center;
+  font-weight: 300;
+}
+
+.Card--card .Card-description {
+  text-align: left;
+}
