@@ -1,25 +1,23 @@
 "use client";
 
+import { rootDroppableId } from "../../lib/root-droppable-id";
 import { Config, Data } from "../../types/Config";
+import { DropZone, DropZoneProvider } from "../DropZone";
 
 export function Render({ config, data }: { config: Config; data: Data }) {
-  const children = data.content.map((item) => {
-    const Component = config.components[item.type]?.render;
-
-    if (Component) {
-      return <Component key={item.props.id} {...item.props} />;
-    }
-
-    return null;
-  });
-
   if (config.root) {
     return (
-      <config.root.render {...data.root} editMode={false}>
-        {children}
-      </config.root.render>
+      <DropZoneProvider value={{ data, config, mode: "render" }}>
+        <config.root.render {...data.root} editMode={false}>
+          <DropZone dropzone={rootDroppableId} />
+        </config.root.render>
+      </DropZoneProvider>
     );
   }
 
-  return <div>{children}</div>;
+  return (
+    <DropZoneProvider value={{ data, config, mode: "render" }}>
+      <DropZone dropzone={rootDroppableId} />
+    </DropZoneProvider>
+  );
 }

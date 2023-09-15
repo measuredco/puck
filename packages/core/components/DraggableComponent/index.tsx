@@ -1,4 +1,4 @@
-import { ReactNode, SyntheticEvent } from "react";
+import { CSSProperties, ReactNode, SyntheticEvent, useEffect } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
@@ -13,40 +13,75 @@ export const DraggableComponent = ({
   index,
   isSelected = false,
   onClick = () => null,
+  onMount = () => null,
+  onMouseOver = () => null,
+  onMouseOut = () => null,
   onDelete = () => null,
   onDuplicate = () => null,
   debug,
   label,
+  isLocked = false,
+  isDragDisabled,
+  forceHover = false,
+  indicativeHover = false,
+  style,
 }: {
   children: ReactNode;
   id: string;
   index: number;
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
+  onMount?: () => void;
+  onMouseOver?: (e: SyntheticEvent) => void;
+  onMouseOut?: (e: SyntheticEvent) => void;
   onDelete?: (e: SyntheticEvent) => void;
   onDuplicate?: (e: SyntheticEvent) => void;
   debug?: string;
   label?: string;
+  isLocked: boolean;
+  isDragDisabled?: boolean;
+  forceHover?: boolean;
+  indicativeHover?: boolean;
+  style?: CSSProperties;
 }) => {
   const isModifierHeld = useModifierHeld("Alt");
 
+  useEffect(onMount, []);
+
   return (
-    <Draggable key={id} draggableId={id} index={index}>
-      {(provided) => (
+    <Draggable
+      key={id}
+      draggableId={id}
+      index={index}
+      isDragDisabled={isDragDisabled}
+    >
+      {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={getClassName({ isSelected, isModifierHeld })}
+          className={getClassName({
+            isSelected,
+            isModifierHeld,
+            isDragging: snapshot.isDragging,
+            isLocked,
+            forceHover,
+            indicativeHover,
+          })}
           style={{
+            ...style,
             ...provided.draggableProps.style,
             cursor: isModifierHeld ? "initial" : "grab",
             zIndex: snapshot.isDragging ? 10 : 0,
           }}
+          onMouseOver={onMouseOver}
+          onMouseOut={onMouseOut}
+          onClick={onClick}
         >
           {debug}
           <div className={getClassName("contents")}>{children}</div>
-          <div className={getClassName("overlay")} onClick={onClick}>
+
+          <div className={getClassName("overlay")}>
             <div className={getClassName("actions")}>
               {label && (
                 <div className={getClassName("actionsLabel")}>{label}</div>

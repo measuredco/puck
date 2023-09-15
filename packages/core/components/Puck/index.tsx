@@ -5,26 +5,31 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useReducer,
   useState,
 } from "react";
-import { DragDropContext } from "react-beautiful-dnd";
-import DroppableStrictMode from "../DroppableStrictMode";
-import { DraggableComponent } from "../DraggableComponent";
+import { DragDropContext, DragStart, DragUpdate } from "react-beautiful-dnd";
 import type { Config, Data, Field } from "../../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
-import { OutlineList } from "../OutlineList";
-import { filter, reorder, replace } from "../../lib";
+import { filter } from "../../lib";
 import { Button } from "../Button";
 
 import { Plugin } from "../../types/Plugin";
 import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
-import { scrollIntoView } from "../../lib/scroll-into-view";
 import { Globe, Sidebar } from "react-feather";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
+import { DropZone, DropZoneProvider, dropZoneContext } from "../DropZone";
+import { rootDroppableId } from "../../lib/root-droppable-id";
+import { ItemSelector, getItem } from "../../lib/get-item";
+import { PuckAction, StateReducer, createReducer } from "../../lib/reducer";
+import { LayerTree } from "../LayerTree";
+import { findDropzonesForArea } from "../../lib/find-dropzones-for-area";
+import { areaContainsDropzones } from "../../lib/area-contains-dropzones";
+import { flushDropzones } from "../../lib/flush-dropzones";
 
 const Field = () => {};
 
@@ -71,17 +76,24 @@ export function Puck({
   renderHeader?: (props: {
     children: ReactNode;
     data: Data;
-    setData: (data: Data) => void;
+    dispatch: (action: PuckAction) => void;
   }) => ReactElement;
   renderHeaderActions?: (props: {
     data: Data;
-    setData: (data: Data) => void;
+    dispatch: (action: PuckAction) => void;
   }) => ReactElement;
   headerTitle?: string;
   headerPath?: string;
 }) {
-  const [data, setData] = useState(initialData);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [reducer] = useState(() => createReducer({ config }));
+  const [data, dispatch] = useReducer<StateReducer>(
+    reducer,
+    flushDropzones(initialData)
+  );
+
+  const [itemSelector, setItemSelector] = useState<ItemSelector | null>(null);
+
+  const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
   const Page = useCallback(
     (pageProps) => (
@@ -124,444 +136,414 @@ export function Puck({
     []
   );
 
-  const FieldWrapper =
-    selectedIndex !== null ? ComponentFieldWrapper : PageFieldWrapper;
+  const FieldWrapper = itemSelector ? ComponentFieldWrapper : PageFieldWrapper;
 
   const rootFields = config.root?.fields || defaultPageFields;
 
-  let fields =
-    selectedIndex !== null
-      ? (config.components[data.content[selectedIndex].type]?.fields as Record<
-          string,
-          Field<any>
-        >) || {}
-      : rootFields;
+  let fields = selectedItem
+    ? (config.components[selectedItem.type]?.fields as Record<
+        string,
+        Field<any>
+      >) || {}
+    : rootFields;
 
   useEffect(() => {
     if (onChange) onChange(data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  const { onDragUpdate, placeholderStyle } = usePlaceholderStyle();
+  const { onDragStartOrUpdate, placeholderStyle } = usePlaceholderStyle();
 
   const [leftSidebarVisible, setLeftSidebarVisible] = useState(true);
+
+  const [draggedItem, setDraggedItem] = useState<
+    DragStart & Partial<DragUpdate>
+  >();
 
   return (
     <div className="puck">
       <DragDropContext
-        onDragUpdate={onDragUpdate}
+        onDragUpdate={(update) => {
+          setDraggedItem({ ...draggedItem, ...update });
+          onDragStartOrUpdate(update);
+        }}
+        onBeforeDragStart={(start) => {
+          onDragStartOrUpdate(start);
+          setItemSelector(null);
+        }}
         onDragEnd={(droppedItem) => {
+          setDraggedItem(undefined);
+
+          // User cancel drag
           if (!droppedItem.destination) {
-            console.warn("No destination specified");
             return;
           }
 
           // New component
-          if (droppedItem.source.droppableId === "component-list") {
-            const emptyComponentData = {
-              type: droppedItem.draggableId,
-              props: {
-                ...(config.components[droppedItem.draggableId].defaultProps ||
-                  {}),
-                id: `${droppedItem.draggableId}-${new Date().getTime()}`, // TODO make random string
-              },
-            };
-
-            const newData = { ...data };
-
-            newData.content.splice(
-              droppedItem.destination.index,
-              0,
-              emptyComponentData
-            );
-
-            setData(newData);
-
-            setSelectedIndex(droppedItem.destination.index);
-          } else {
-            setData({
-              ...data,
-              content: reorder(
-                data.content,
-                droppedItem.source.index,
-                droppedItem.destination.index
-              ),
+          if (
+            droppedItem.source.droppableId === "component-list" &&
+            droppedItem.destination
+          ) {
+            dispatch({
+              type: "insert",
+              componentType: droppedItem.draggableId,
+              destinationIndex: droppedItem.destination!.index,
+              destinationDropzone: droppedItem.destination.droppableId,
             });
 
-            setSelectedIndex(null);
+            setItemSelector({
+              index: droppedItem.destination!.index,
+              dropzone: droppedItem.destination.droppableId,
+            });
+
+            return;
+          } else {
+            const { source, destination } = droppedItem;
+
+            if (source.droppableId === destination.droppableId) {
+              dispatch({
+                type: "reorder",
+                sourceIndex: source.index,
+                destinationIndex: destination.index,
+                destinationDropzone: destination.droppableId,
+              });
+            } else {
+              dispatch({
+                type: "move",
+                sourceDropzone: source.droppableId,
+                sourceIndex: source.index,
+                destinationIndex: destination.index,
+                destinationDropzone: destination.droppableId,
+              });
+            }
+
+            setItemSelector({
+              index: destination.index,
+              dropzone: destination.droppableId,
+            });
           }
         }}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateAreas: '"header header header" "left editor right"',
-            gridTemplateColumns: `${
-              leftSidebarVisible ? "288px" : "0px"
-            } auto 288px`,
-            gridTemplateRows: "min-content auto",
-            height: "100vh",
-            position: "fixed",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
+        <DropZoneProvider
+          value={{
+            data,
+            itemSelector,
+            setItemSelector,
+            config,
+            dispatch,
+            draggedItem,
+            placeholderStyle,
+            mode: "edit",
+            areaId: "root",
           }}
         >
-          <header
-            style={{
-              gridArea: "header",
-              borderBottom: "1px solid var(--puck-color-grey-8)",
-            }}
-          >
-            {renderHeader ? (
-              renderHeader({
-                children: (
-                  <Button
-                    onClick={() => {
-                      onPublish(data);
+          <dropZoneContext.Consumer>
+            {(ctx) => {
+              let path =
+                ctx?.pathData && selectedItem
+                  ? ctx?.pathData[selectedItem?.props.id]
+                  : undefined;
+
+              if (path) {
+                path = [{ label: "Page", selector: null }, ...path];
+                path = path.slice(path.length - 2, path.length - 1);
+              }
+
+              return (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateAreas:
+                      '"header header header" "left editor right"',
+                    gridTemplateColumns: `${
+                      leftSidebarVisible ? "288px" : "0px"
+                    } auto 288px`,
+                    gridTemplateRows: "min-content auto",
+                    height: "100vh",
+                    position: "fixed",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                  }}
+                >
+                  <header
+                    style={{
+                      gridArea: "header",
+                      borderBottom: "1px solid var(--puck-color-grey-8)",
                     }}
-                    icon={<Globe size="14px" />}
                   >
-                    Publish
-                  </Button>
-                ),
-                data,
-                setData,
-              })
-            ) : (
-              <div
-                style={{
-                  display: "grid",
-                  padding: 16,
-                  gridTemplateAreas: '"left middle right"',
-                  gridTemplateColumns: "288px auto 288px",
-                  gridTemplateRows: "auto",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 16,
-                  }}
-                >
-                  <IconButton
-                    onClick={() => setLeftSidebarVisible(!leftSidebarVisible)}
-                    title="Toggle left sidebar"
-                  >
-                    <Sidebar />
-                  </IconButton>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Heading rank={2} size="xs">
-                    {headerTitle || data.root.title || "Page"}
-                    {headerPath && (
-                      <small style={{ fontWeight: 400, marginLeft: 4 }}>
-                        <code>{headerPath}</code>
-                      </small>
-                    )}
-                  </Heading>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 16,
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  {renderHeaderActions &&
-                    renderHeaderActions({ data, setData })}
-                  <Button
-                    onClick={() => {
-                      onPublish(data);
-                    }}
-                    icon={<Globe size="14px" />}
-                  >
-                    Publish
-                  </Button>
-                </div>
-              </div>
-            )}
-          </header>
-          <div
-            style={{
-              gridArea: "left",
-              background: "var(--puck-color-grey-11)",
-              borderRight: "1px solid var(--puck-color-grey-8)",
-              overflowY: "auto",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <SidebarSection title="Components">
-              <ComponentList config={config} />
-            </SidebarSection>
-            <SidebarSection title="Outline">
-              {data.content.length === 0 && (
-                <div
-                  style={{
-                    textAlign: "center",
-                    color: "var(--puck-color-grey-6)",
-                    fontFamily: "var(--puck-font-stack)",
-                  }}
-                >
-                  Add items to your page
-                </div>
-              )}
-              <OutlineList>
-                {data.content.map((item, i) => {
-                  return (
-                    <OutlineList.Item
-                      key={i}
-                      onClick={() => {
-                        setSelectedIndex(i);
-
-                        const id = data.content[i].props.id;
-
-                        scrollIntoView(
-                          document.querySelector(
-                            `[data-rbd-drag-handle-draggable-id="draggable-${id}"]`
-                          ) as HTMLElement
-                        );
-                      }}
-                    >
-                      {item.type}
-                    </OutlineList.Item>
-                  );
-                })}
-              </OutlineList>
-            </SidebarSection>
-          </div>
-          <div
-            style={{
-              background: "var(--puck-color-grey-9)",
-              padding: 32,
-              overflowY: "auto",
-              gridArea: "editor",
-            }}
-            onClick={() => setSelectedIndex(null)}
-          >
-            <div
-              className="puck-root"
-              style={{
-                background: "white",
-                borderRadius: 16,
-                border: "1px solid var(--puck-color-grey-8)",
-                overflow: "hidden",
-                zoom: 0.75,
-              }}
-            >
-              <Page data={data} {...data.root}>
-                <DroppableStrictMode droppableId="droppable">
-                  {(provided, snapshot) => (
-                    <div
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      style={{
-                        minHeight: 128,
-                        position: "relative",
-                        zoom: 1.33,
-                      }}
-                      id="puck-drop-zone"
-                    >
-                      {data.content.map((item, i) => {
-                        const Render = config.components[item.type]
-                          ? config.components[item.type].render
-                          : () => (
-                              <div style={{ padding: 48, textAlign: "center" }}>
-                                No configuration for {item.type}
-                              </div>
-                            );
-
-                        return (
-                          <DraggableComponent
-                            key={item.props.id}
-                            label={item.type.toString()}
-                            id={`draggable-${item.props.id}`}
-                            index={i}
-                            isSelected={selectedIndex === i}
-                            onClick={(e) => {
-                              setSelectedIndex(i);
-                              e.stopPropagation();
+                    {renderHeader ? (
+                      renderHeader({
+                        children: (
+                          <Button
+                            onClick={() => {
+                              onPublish(data);
                             }}
-                            onDelete={(e) => {
-                              const newData = { ...data };
-                              newData.content.splice(i, 1);
-
-                              setSelectedIndex(null);
-                              setData(newData);
-
-                              e.stopPropagation();
-                            }}
-                            onDuplicate={(e) => {
-                              const newData = { ...data };
-                              const newItem = {
-                                ...newData.content[i],
-                                props: {
-                                  ...newData.content[i].props,
-                                  id: `${
-                                    newData.content[i].type
-                                  }-${new Date().getTime()}`,
-                                },
-                              };
-
-                              newData.content.splice(i + 1, 0, newItem);
-
-                              setData(newData);
-
-                              e.stopPropagation();
-                            }}
+                            icon={<Globe size="14px" />}
                           >
-                            <div style={{ zoom: 0.75 }}>
-                              <Render
-                                {...config.components[item.type]?.defaultProps}
-                                {...item.props}
-                                editMode={true}
-                              />
-                            </div>
-                          </DraggableComponent>
-                        );
-                      })}
-
-                      {provided.placeholder}
-
-                      {snapshot.isDraggingOver && (
+                            Publish
+                          </Button>
+                        ),
+                        data,
+                        dispatch,
+                      })
+                    ) : (
+                      <div
+                        style={{
+                          display: "grid",
+                          padding: 16,
+                          gridTemplateAreas: '"left middle right"',
+                          gridTemplateColumns: "288px auto 288px",
+                          gridTemplateRows: "auto",
+                        }}
+                      >
                         <div
                           style={{
-                            ...placeholderStyle,
-                            background: "var(--puck-color-azure-8)",
-                            zIndex: 0,
+                            display: "flex",
+                            gap: 16,
                           }}
-                        />
+                        >
+                          <IconButton
+                            onClick={() =>
+                              setLeftSidebarVisible(!leftSidebarVisible)
+                            }
+                            title="Toggle left sidebar"
+                          >
+                            <Sidebar />
+                          </IconButton>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Heading rank={2} size="xs">
+                            {headerTitle || data.root.title || "Page"}
+                            {headerPath && (
+                              <small style={{ fontWeight: 400, marginLeft: 4 }}>
+                                <code>{headerPath}</code>
+                              </small>
+                            )}
+                          </Heading>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: 16,
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          {renderHeaderActions &&
+                            renderHeaderActions({ data, dispatch })}
+                          <Button
+                            onClick={() => {
+                              onPublish(data);
+                            }}
+                            icon={<Globe size="14px" />}
+                          >
+                            Publish
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </header>
+                  <div
+                    style={{
+                      gridArea: "left",
+                      background: "var(--puck-color-grey-11)",
+                      borderRight: "1px solid var(--puck-color-grey-8)",
+                      overflowY: "auto",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <SidebarSection title="Components">
+                      <ComponentList config={config} />
+                    </SidebarSection>
+                    <SidebarSection title="Outline">
+                      {ctx?.activeDropzones &&
+                        ctx?.activeDropzones[rootDroppableId] && (
+                          <LayerTree
+                            data={data}
+                            label={
+                              areaContainsDropzones(data, "root")
+                                ? "puck-drop-zone"
+                                : ""
+                            }
+                            dropzoneContent={data.content}
+                            setItemSelector={setItemSelector}
+                            itemSelector={itemSelector}
+                          />
+                        )}
+
+                      {Object.entries(findDropzonesForArea(data, "root")).map(
+                        ([dropzoneKey, dropzone]) => {
+                          return (
+                            <LayerTree
+                              key={dropzoneKey}
+                              data={data}
+                              label={dropzoneKey}
+                              dropzoneContent={dropzone}
+                              setItemSelector={setItemSelector}
+                              itemSelector={itemSelector}
+                            />
+                          );
+                        }
                       )}
+                    </SidebarSection>
+                  </div>
+
+                  <div
+                    style={{
+                      background: "var(--puck-color-grey-10)",
+                      padding: 32,
+                      overflowY: "auto",
+                      gridArea: "editor",
+                      position: "relative",
+                    }}
+                    onClick={() => setItemSelector(null)}
+                    id="puck-frame"
+                  >
+                    <div
+                      className="puck-root"
+                      style={{
+                        background: "white",
+                        border: "1px solid var(--puck-color-grey-8)",
+                        zoom: 0.75,
+                      }}
+                    >
+                      <Page data={data} {...data.root}>
+                        <DropZone dropzone={rootDroppableId} />
+                      </Page>
                     </div>
-                  )}
-                </DroppableStrictMode>
-              </Page>
-            </div>
-          </div>
-          <div
-            style={{
-              borderLeft: "1px solid var(--puck-color-grey-8)",
-              overflowY: "auto",
-              gridArea: "right",
-              fontFamily: "var(--puck-font-stack)",
-              display: "flex",
-              flexDirection: "column",
+                  </div>
+                  <div
+                    style={{
+                      borderLeft: "1px solid var(--puck-color-grey-8)",
+                      overflowY: "auto",
+                      gridArea: "right",
+                      fontFamily: "var(--puck-font-stack)",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <FieldWrapper data={data}>
+                      <SidebarSection
+                        noPadding
+                        breadcrumbs={path}
+                        breadcrumbClick={(breadcrumb) =>
+                          setItemSelector(breadcrumb.selector)
+                        }
+                        title={selectedItem ? selectedItem.type : "Page"}
+                      >
+                        {Object.keys(fields).map((fieldName) => {
+                          const field = fields[fieldName];
+
+                          const onChange = (value: any) => {
+                            let currentProps;
+                            let newProps;
+
+                            if (selectedItem) {
+                              currentProps = selectedItem.props;
+                            } else {
+                              currentProps = data.root;
+                            }
+
+                            if (fieldName === "_data") {
+                              // Reset the link if value is falsey
+                              if (!value) {
+                                const { locked, ..._meta } =
+                                  currentProps._meta || {};
+
+                                newProps = {
+                                  ...currentProps,
+                                  _data: undefined,
+                                  _meta: _meta,
+                                };
+                              } else {
+                                const changedFields = filter(
+                                  // filter out anything not supported by this component
+                                  value,
+                                  Object.keys(fields)
+                                );
+
+                                newProps = {
+                                  ...currentProps,
+                                  ...changedFields,
+                                  _data: value, // TODO perf - this is duplicative and will make payload larger
+                                  _meta: {
+                                    locked: Object.keys(changedFields),
+                                  },
+                                };
+                              }
+                            } else {
+                              newProps = {
+                                ...currentProps,
+                                [fieldName]: value,
+                              };
+                            }
+
+                            if (itemSelector) {
+                              dispatch({
+                                type: "replace",
+                                destinationIndex: itemSelector.index,
+                                destinationDropzone:
+                                  itemSelector.dropzone || rootDroppableId,
+                                data: { ...selectedItem, props: newProps },
+                              });
+                            } else {
+                              dispatch({
+                                type: "set",
+                                data: { root: newProps },
+                              });
+                            }
+                          };
+
+                          if (selectedItem && itemSelector) {
+                            return (
+                              <InputOrGroup
+                                key={`${selectedItem.props.id}_${fieldName}`}
+                                field={field}
+                                name={fieldName}
+                                label={field.label}
+                                readOnly={
+                                  getItem(
+                                    itemSelector,
+                                    data
+                                  )!.props._meta?.locked?.indexOf(fieldName) >
+                                  -1
+                                }
+                                value={selectedItem.props[fieldName]}
+                                onChange={onChange}
+                              />
+                            );
+                          } else {
+                            return (
+                              <InputOrGroup
+                                key={`page_${fieldName}`}
+                                field={field}
+                                name={fieldName}
+                                label={field.label}
+                                readOnly={
+                                  data.root._meta?.locked?.indexOf(fieldName) >
+                                  -1
+                                }
+                                value={data.root[fieldName]}
+                                onChange={onChange}
+                              />
+                            );
+                          }
+                        })}
+                      </SidebarSection>
+                    </FieldWrapper>
+                  </div>
+                </div>
+              );
             }}
-          >
-            <FieldWrapper data={data}>
-              <SidebarSection
-                noPadding
-                breadcrumb={selectedIndex !== null ? "Page" : ""}
-                breadcrumbClick={() => setSelectedIndex(null)}
-                title={
-                  selectedIndex !== null
-                    ? (data.content[selectedIndex].type as string)
-                    : "Page"
-                }
-              >
-                {Object.keys(fields).map((fieldName) => {
-                  const field = fields[fieldName];
-
-                  const onChange = (value: any) => {
-                    let currentProps;
-                    let newProps;
-
-                    if (selectedIndex !== null) {
-                      currentProps = data.content[selectedIndex].props;
-                    } else {
-                      currentProps = data.root;
-                    }
-
-                    if (fieldName === "_data") {
-                      // Reset the link if value is falsey
-                      if (!value) {
-                        const { locked, ..._meta } = currentProps._meta || {};
-
-                        newProps = {
-                          ...currentProps,
-                          _data: undefined,
-                          _meta: _meta,
-                        };
-                      } else {
-                        const changedFields = filter(
-                          // filter out anything not supported by this component
-                          value,
-                          Object.keys(fields)
-                        );
-
-                        newProps = {
-                          ...currentProps,
-                          ...changedFields,
-                          _data: value, // TODO perf - this is duplicative and will make payload larger
-                          _meta: {
-                            locked: Object.keys(changedFields),
-                          },
-                        };
-                      }
-                    } else {
-                      newProps = {
-                        ...currentProps,
-                        [fieldName]: value,
-                      };
-                    }
-
-                    if (selectedIndex !== null) {
-                      setData({
-                        ...data,
-                        content: replace(data.content, selectedIndex, {
-                          ...data.content[selectedIndex],
-                          props: newProps,
-                        }),
-                      });
-                    } else {
-                      setData({ ...data, root: newProps });
-                    }
-                  };
-
-                  if (selectedIndex !== null) {
-                    return (
-                      <InputOrGroup
-                        key={`${data.content[selectedIndex].props.id}_${fieldName}`}
-                        field={field}
-                        name={fieldName}
-                        label={field.label}
-                        readOnly={
-                          data.content[
-                            selectedIndex
-                          ].props._meta?.locked?.indexOf(fieldName) > -1
-                        }
-                        value={data.content[selectedIndex].props[fieldName]}
-                        onChange={onChange}
-                      />
-                    );
-                  } else {
-                    return (
-                      <InputOrGroup
-                        key={`page_${fieldName}`}
-                        field={field}
-                        name={fieldName}
-                        label={field.label}
-                        readOnly={
-                          data.root._meta?.locked?.indexOf(fieldName) > -1
-                        }
-                        value={data.root[fieldName]}
-                        onChange={onChange}
-                      />
-                    );
-                  }
-                })}
-              </SidebarSection>
-            </FieldWrapper>
-          </div>
-        </div>
+          </dropZoneContext.Consumer>
+        </DropZoneProvider>
       </DragDropContext>
     </div>
   );

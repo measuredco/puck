@@ -12,6 +12,7 @@
   background: white;
   padding: 16px;
   border-bottom: 1px solid var(--puck-color-grey-8);
+  overflow-x: scroll;
 }
 
 .SidebarSection-content {
@@ -28,12 +29,29 @@
   flex-grow: 1;
 }
 
-.SidebarSection-breadcrumb {
+.SidebarSection-breadcrumbLabel {
   color: var(--puck-color-azure-3);
+  flex-shrink: 0;
 }
 
-.SidebarSection-breadcrumb:hover {
+.SidebarSection-breadcrumbLabel:hover {
   color: var(--puck-color-azure-4);
   cursor: pointer;
   text-decoration: underline;
+}
+
+.SidebarSection-breadcrumbs {
+  align-items: center;
+  display: flex;
+  gap: 4px;
+}
+
+.SidebarSection-breadcrumb {
+  align-items: center;
+  display: flex;
+  gap: 4px;
+}
+
+.SidebarSection-heading {
+  padding-right: 16px;
 }
