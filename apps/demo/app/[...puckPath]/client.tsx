@@ -1,6 +1,6 @@
 "use client";
 
-import { Data } from "@measured/puck";
+import { Config, Data } from "@measured/puck";
 import { Puck } from "@measured/puck/components/Puck";
 import { Render } from "@measured/puck/components/Render";
 import { Framework } from "../Framework";
@@ -19,10 +19,16 @@ export function Client({
   isEdit: boolean;
   framework: Framework;
 }) {
-  const config = require(`../configs/${framework}/`).default;
-  const initialData = require(`../configs/${framework}/`).initialData || {};
+  const config: Config = require(`../configs/${framework}/`).default;
+  const initialData: Data =
+    require(`../configs/${framework}/`).initialData || {};
 
-  const key = `puck-demo:${framework}:${path}`;
+  // unique b64 key that updates each time we add / remove components
+  const componentKey = Buffer.from(
+    Object.keys(config.components).join("-")
+  ).toString("base64");
+
+  const key = `puck-demo:${framework}:${componentKey}:${path}`;
 
   const [data] = useState<Data>(() => {
     if (isBrowser) {
