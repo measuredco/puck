@@ -109,8 +109,6 @@ const HeadingOutlineAnalyer = ({
     } else {
       setHierarchy(buildHierarchy());
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.content]);
 
   return (
