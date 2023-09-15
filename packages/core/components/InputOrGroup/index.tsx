@@ -292,7 +292,13 @@ export const InputOrGroup = ({
         type={field.type}
         name={name}
         value={value}
-        onChange={(e) => onChange(e.currentTarget.value)}
+        onChange={(e) => {
+          if (field.type === "number") {
+            onChange(Number(e.currentTarget.value));
+          } else {
+            onChange(e.currentTarget.value);
+          }
+        }}
         readOnly={readOnly}
       />
     </label>
