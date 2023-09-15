@@ -3,49 +3,48 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Heading } from "../Heading";
 import { ChevronRight } from "react-feather";
+import { ItemSelector } from "../../lib/get-item";
 
 const getClassName = getClassNameFactory("SidebarSection", styles);
+
+type Breadcrumb = { label: string; selector: ItemSelector | null };
 
 export const SidebarSection = ({
   children,
   title,
   background,
-  breadcrumb,
+  breadcrumbs = [],
   breadcrumbClick,
   noPadding,
 }: {
   children: ReactNode;
   title: ReactNode;
   background?: string;
-  breadcrumb?: string;
-  breadcrumbClick?: () => void;
+  breadcrumbs?: Breadcrumb[];
+  breadcrumbClick?: (breadcrumb: Breadcrumb) => void;
   noPadding?: boolean;
 }) => {
   return (
     <div className={getClassName({ noPadding })} style={{ background }}>
       <div className={getClassName("title")}>
-        <span
-          style={{
-            display: "flex",
-            gap: 4,
-            alignItems: "center",
-          }}
-        >
-          {breadcrumb && (
-            <>
+        <div className={getClassName("breadcrumbs")}>
+          {breadcrumbs.map((breadcrumb, i) => (
+            <div key={i} className={getClassName("breadcrumb")}>
               <div
-                className={getClassName("breadcrumb")}
-                onClick={breadcrumbClick}
+                className={getClassName("breadcrumbLabel")}
+                onClick={() => breadcrumbClick && breadcrumbClick(breadcrumb)}
               >
-                {breadcrumb}
+                {breadcrumb.label}
               </div>
               <ChevronRight size={16} />
-            </>
-          )}
-          <Heading rank={2} size="xs">
-            {title}
-          </Heading>
-        </span>
+            </div>
+          ))}
+          <div className={getClassName("heading")}>
+            <Heading rank={2} size="xs">
+              {title}
+            </Heading>
+          </div>
+        </div>
       </div>
       <div className={getClassName("content")}>{children}</div>
     </div>

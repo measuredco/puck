@@ -5,7 +5,7 @@ export const usePlaceholderStyle = () => {
 
   const [placeholderStyle, setPlaceholderStyle] = useState<CSSProperties>();
 
-  const onDragUpdate = (update) => {
+  const onDragStartOrUpdate = (update) => {
     if (!update.destination) {
       return;
     }
@@ -56,5 +56,5 @@ export const usePlaceholderStyle = () => {
     });
   };
 
-  return { onDragUpdate, placeholderStyle };
+  return { onDragStartOrUpdate, placeholderStyle };
 };

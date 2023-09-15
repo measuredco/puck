@@ -3,6 +3,12 @@
   pointer-events: auto;
 }
 
+.DraggableComponent--isDragging {
+  background: #abc7e510;
+  outline: 2px var(--puck-color-azure-8) solid;
+  overflow: hidden;
+}
+
 .DraggableComponent-contents {
   position: relative; /* Reset stacking context */
   pointer-events: none;
@@ -30,12 +36,28 @@
   box-sizing: border-box;
 }
 
-.DraggableComponent:hover .DraggableComponent-overlay {
+.DraggableComponent:hover:not(.DraggableComponent--isLocked)
+  > .DraggableComponent-overlay {
   display: block;
   pointer-events: none;
 }
 
-.DraggableComponent--isModifierHeld:hover .DraggableComponent-overlay {
+.DraggableComponent--forceHover > .DraggableComponent-overlay {
+  display: block;
+  pointer-events: none;
+}
+
+.DraggableComponent--indicativeHover > .DraggableComponent-overlay {
+  display: block;
+  background: transparent; /* We only use backgrounds on natural hovers */
+  pointer-events: none;
+}
+
+/* Won't work in FF */
+.DraggableComponent:not(.DraggableComponent--isSelected):has(
+    .DraggableComponent:hover > .DraggableComponent-overlay
+  )
+  > .DraggableComponent-overlay {
   display: none;
 }
 

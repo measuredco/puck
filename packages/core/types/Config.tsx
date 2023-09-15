@@ -59,6 +59,10 @@ export type Fields<
   >]: Field<ComponentProps[PropName][0]>;
 };
 
+export type Content<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = MappedItem<Props>[];
+
 export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
   DefaultProps = ComponentProps
@@ -73,7 +77,10 @@ export type Config<
   RootProps extends DefaultRootProps = DefaultRootProps
 > = {
   components: {
-    [ComponentName in keyof Props]: ComponentConfig<Props[ComponentName]>;
+    [ComponentName in keyof Props]: ComponentConfig<
+      Props[ComponentName],
+      Props[ComponentName]
+    >;
   };
   root?: ComponentConfig<
     RootProps & { children: ReactNode },
@@ -97,5 +104,6 @@ export type Data<
   }
 > = {
   root: RootProps;
-  content: MappedItem<Props>[];
+  content: Content<Props>;
+  dropzones?: Record<string, Content<Props>>;
 };
