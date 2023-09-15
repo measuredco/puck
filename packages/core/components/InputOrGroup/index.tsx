@@ -99,7 +99,7 @@ export const InputOrGroup = ({
                       <InputOrGroup
                         key={`${name}_${i}_${fieldName}`}
                         name={`${name}_${i}_${fieldName}`}
-                        label={fieldName}
+                        label={subField.label || fieldName}
                         field={subField}
                         value={item[fieldName]}
                         onChange={(val) =>
