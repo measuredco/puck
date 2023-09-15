@@ -62,6 +62,7 @@ export const ComponentList = ({ config }: { config: Config }) => {
               </Draggable>
             );
           })}
+          <div style={{ display: "none" }}>{provided.placeholder}</div>
         </div>
       )}
     </DroppableStrictMode>
