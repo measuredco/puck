@@ -41,6 +41,7 @@ export const DraggableComponent = ({
           style={{
             ...provided.draggableProps.style,
             cursor: isModifierHeld ? "initial" : "grab",
+            zIndex: snapshot.isDragging ? 10 : 0,
           }}
         >
           {debug}
@@ -51,10 +52,10 @@ export const DraggableComponent = ({
                 <div className={getClassName("actionsLabel")}>{label}</div>
               )}
               <button className={getClassName("action")} onClick={onDuplicate}>
-                <Copy />
+                <Copy size={16} />
               </button>
               <button className={getClassName("action")} onClick={onDelete}>
-                <Trash />
+                <Trash size={16} />
               </button>
             </div>
           </div>
