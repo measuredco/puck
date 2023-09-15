@@ -385,6 +385,7 @@ export function Puck({
                               key={dropzoneKey}
                               data={data}
                               label={dropzoneKey}
+                              dropzone={dropzoneKey}
                               dropzoneContent={dropzone}
                               setItemSelector={setItemSelector}
                               itemSelector={itemSelector}
