@@ -1,16 +1,19 @@
 import { CSSProperties, useState } from "react";
+import { DragStart, DragUpdate } from "react-beautiful-dnd";
 
 export const usePlaceholderStyle = () => {
   const queryAttr = "data-rbd-drag-handle-draggable-id";
 
   const [placeholderStyle, setPlaceholderStyle] = useState<CSSProperties>();
 
-  const onDragStartOrUpdate = (update) => {
-    if (!update.destination) {
-      return;
-    }
-    const draggableId = update.draggableId;
-    const destinationIndex = update.destination.index;
+  const onDragStartOrUpdate = (
+    draggedItem: DragStart & Partial<DragUpdate>
+  ) => {
+    const draggableId = draggedItem.draggableId;
+    const destinationIndex = (draggedItem.destination || draggedItem.source)
+      .index;
+    const droppableId = (draggedItem.destination || draggedItem.source)
+      .droppableId;
 
     const domQuery = `[${queryAttr}='${draggableId}']`;
     const draggedDOM = document.querySelector(domQuery);
@@ -19,7 +22,9 @@ export const usePlaceholderStyle = () => {
       return;
     }
 
-    const targetListElement = document.querySelector("#puck-drop-zone");
+    const targetListElement = document.querySelector(
+      `[data-rbd-droppable-id='${droppableId}']`
+    );
 
     const { clientHeight } = draggedDOM;
 
@@ -29,10 +34,25 @@ export const usePlaceholderStyle = () => {
 
     let clientY = 0;
 
+    const isSameDroppable =
+      draggedItem.source.droppableId === draggedItem.destination?.droppableId;
+
     if (destinationIndex > 0) {
+      const end =
+        destinationIndex > draggedItem.source.index && isSameDroppable
+          ? destinationIndex + 1
+          : destinationIndex;
+
       const children = Array.from(targetListElement.children)
-        .filter((item) => item !== draggedDOM)
-        .slice(0, destinationIndex);
+        .filter(
+          (item) =>
+            item !== draggedDOM &&
+            item.getAttributeNames().indexOf("data-puck-placeholder") === -1 &&
+            item
+              .getAttributeNames()
+              .indexOf("data-rbd-placeholder-context-id") === -1
+        )
+        .slice(0, end);
 
       clientY = children.reduce(
         (total, item) =>
