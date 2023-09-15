@@ -56,7 +56,7 @@ export const Heading: ComponentConfig<HeadingProps> = {
   },
   defaultProps: {
     align: "left",
-    text: "Text",
+    text: "Heading",
     padding: "24px",
     size: "m",
   },

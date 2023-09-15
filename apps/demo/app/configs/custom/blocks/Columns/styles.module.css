@@ -1,0 +1,14 @@
+.Columns {
+  display: flex;
+  gap: 24px;
+  grid-template-columns: repeat(12, 1fr);
+  flex-direction: column;
+  min-height: 0; /* NEW */
+  min-width: 0; /* NEW; needed for Firefox */
+}
+
+@media (min-width: 768px) {
+  .Columns {
+    display: grid;
+  }
+}
