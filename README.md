@@ -16,6 +16,7 @@ Render the editor:
 ```jsx
 // Editor.jsx
 import { Puck } from "@measured/puck";
+import "@measured/puck/dist/index.css";
 
 // Create puck component config
 const config = {
@@ -34,7 +35,10 @@ const config = {
 };
 
 // Describe the initial data
-const initialData = {};
+const initialData = {
+  content: [],
+  root: {},
+};
 
 // Save the data to your database
 const save = (data) => {};
