@@ -199,7 +199,7 @@ export const InputOrGroup = ({
           className={getClassName("input")}
           autoComplete="off"
           name={name}
-          value={value}
+          value={typeof value === "undefined" ? "" : value}
           onChange={(e) => onChange(e.currentTarget.value)}
           readOnly={readOnly}
           rows={5}
@@ -290,7 +290,7 @@ export const InputOrGroup = ({
         autoComplete="off"
         type={field.type}
         name={name}
-        value={value}
+        value={typeof value === "undefined" ? "" : value}
         onChange={(e) => {
           if (field.type === "number") {
             onChange(Number(e.currentTarget.value));
