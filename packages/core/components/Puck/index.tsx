@@ -371,6 +371,14 @@ export function Puck({
                       id="puck-drop-zone"
                     >
                       {data.content.map((item, i) => {
+                        const Render = config.components[item.type]
+                          ? config.components[item.type].render
+                          : () => (
+                              <div style={{ padding: 48, textAlign: "center" }}>
+                                No configuration for {item.type}
+                              </div>
+                            );
+
                         return (
                           <DraggableComponent
                             key={item.props.id}
@@ -411,19 +419,11 @@ export function Puck({
                             }}
                           >
                             <div style={{ zoom: 0.75 }}>
-                              {config.components[item.type] ? (
-                                config.components[item.type].render({
-                                  ...config.components[item.type].defaultProps,
-                                  ...item.props,
-                                  editMode: true,
-                                })
-                              ) : (
-                                <div
-                                  style={{ padding: 48, textAlign: "center" }}
-                                >
-                                  No configuration for {item.type}
-                                </div>
-                              )}
+                              <Render
+                                {...config.components[item.type]?.defaultProps}
+                                {...item.props}
+                                editMode={true}
+                              />
                             </div>
                           </DraggableComponent>
                         );
