@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useState } from "react";
 import { ComponentConfig } from "@measured/puck";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@measured/puck/lib";
@@ -86,6 +86,10 @@ export const Hero: ComponentConfig<HeroProps> = {
     imageUrl,
     imageMode,
   }) => {
+    // Empty state allows us to test that components support hooks
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [_] = useState(0);
+
     return (
       <Section
         padding={padding}
