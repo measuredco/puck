@@ -3,6 +3,7 @@
   font-family: var(--puck-font-stack);
   grid-template-columns: 1fr;
   max-width: 100%;
+  grid-gap: 12px;
 }
 
 .ComponentList-item,
@@ -17,7 +18,6 @@
   align-items: center;
   gap: 12px;
   cursor: grab;
-  margin-bottom: 12px;
 }
 
 .ComponentList-item:last-of-type,
