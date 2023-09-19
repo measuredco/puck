@@ -25,19 +25,12 @@
 }
 
 .DropZone--isAreaSelected,
-.DropZone--draggingOverArea,
-.DropZone--hoveringOverArea:not(.DropZone--isDisabled):not(
-    .DropZone--isRootDropzone
-  ) {
-  outline: 2px dashed var(--puck-color-azure-7);
-}
-
-.DropZone--isAreaSelected,
-.DropZone--draggingOverArea,
+.DropZone--draggingOverArea:not(:has(.DropZone--hoveringOverArea)),
 .DropZone--hoveringOverArea:not(.DropZone--isDisabled):not(
     .DropZone--isRootDropzone
   ) {
   background: var(--puck-color-azure-9);
+  outline: 2px dashed var(--puck-color-azure-7);
 }
 
 .DropZone--isDestination {
