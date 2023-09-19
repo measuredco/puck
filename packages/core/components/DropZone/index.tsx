@@ -114,7 +114,7 @@ function DropZoneEdit({
     : isRootDropzone;
   const hoveringOverDropzone = hoveringDropzone === dropzoneCompound;
 
-  let isEnabled = true;
+  let isEnabled = false;
 
   /**
    * We enable dropzones when:
