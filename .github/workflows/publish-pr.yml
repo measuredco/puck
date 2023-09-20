@@ -25,7 +25,7 @@ jobs:
         run: yarn release:pr
 
       - name: Publish all packages
-        run: ./scripts/publish.sh canary
+        run: ./scripts/publish.sh pr
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
