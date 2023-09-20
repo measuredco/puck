@@ -4,41 +4,41 @@ import { reorder } from "./reorder";
 import { rootDroppableId } from "./root-droppable-id";
 import { insert } from "./insert";
 import { remove } from "./remove";
-import { setupDropzone } from "./setup-dropzone";
+import { setupZone } from "./setup-zone";
 import { replace } from "./replace";
 import { getItem } from "./get-item";
 import {
-  duplicateRelatedDropzones,
-  removeRelatedDropzones,
-} from "./reduce-related-dropzones";
+  duplicateRelatedZones,
+  removeRelatedZones,
+} from "./reduce-related-zones";
 import { generateId } from "./generate-id";
 
 export type ActionType = "insert" | "reorder";
 
-// Restore unregistered dropzones when re-registering in same session
-export const dropzoneCache = {};
+// Restore unregistered zones when re-registering in same session
+export const zoneCache = {};
 
-export const addToDropzoneCache = (key: string, data: Content) => {
-  dropzoneCache[key] = data;
+export const addToZoneCache = (key: string, data: Content) => {
+  zoneCache[key] = data;
 };
 
 type InsertAction = {
   type: "insert";
   componentType: string;
   destinationIndex: number;
-  destinationDropzone: string;
+  destinationZone: string;
 };
 
 type DuplicateAction = {
   type: "duplicate";
   sourceIndex: number;
-  sourceDropzone: string;
+  sourceZone: string;
 };
 
 type ReplaceAction = {
   type: "replace";
   destinationIndex: number;
-  destinationDropzone: string;
+  destinationZone: string;
   data: any;
 };
 
@@ -46,21 +46,21 @@ type ReorderAction = {
   type: "reorder";
   sourceIndex: number;
   destinationIndex: number;
-  destinationDropzone: string;
+  destinationZone: string;
 };
 
 type MoveAction = {
   type: "move";
   sourceIndex: number;
-  sourceDropzone: string;
+  sourceZone: string;
   destinationIndex: number;
-  destinationDropzone: string;
+  destinationZone: string;
 };
 
 type RemoveAction = {
   type: "remove";
   index: number;
-  dropzone: string;
+  zone: string;
 };
 
 type SetDataAction = {
@@ -68,14 +68,14 @@ type SetDataAction = {
   data: Partial<Data>;
 };
 
-type RegisterDropZoneAction = {
-  type: "registerDropZone";
-  dropzone: string;
+type RegisterZoneAction = {
+  type: "registerZone";
+  zone: string;
 };
 
-type UnregisterDropZoneAction = {
-  type: "unregisterDropZone";
-  dropzone: string;
+type UnregisterZoneAction = {
+  type: "unregisterZone";
+  zone: string;
 };
 
 export type PuckAction =
@@ -86,8 +86,8 @@ export type PuckAction =
   | RemoveAction
   | DuplicateAction
   | SetDataAction
-  | RegisterDropZoneAction
-  | UnregisterDropZoneAction;
+  | RegisterZoneAction
+  | UnregisterZoneAction;
 
 export type StateReducer = Reducer<Data, PuckAction>;
 
@@ -103,7 +103,7 @@ export const createReducer =
         },
       };
 
-      if (action.destinationDropzone === rootDroppableId) {
+      if (action.destinationZone === rootDroppableId) {
         return {
           ...data,
           content: insert(
@@ -114,14 +114,14 @@ export const createReducer =
         };
       }
 
-      const newData = setupDropzone(data, action.destinationDropzone);
+      const newData = setupZone(data, action.destinationZone);
 
       return {
         ...data,
-        dropzones: {
-          ...newData.dropzones,
-          [action.destinationDropzone]: insert(
-            newData.dropzones[action.destinationDropzone],
+        zones: {
+          ...newData.zones,
+          [action.destinationZone]: insert(
+            newData.zones[action.destinationZone],
             action.destinationIndex,
             emptyComponentData
           ),
@@ -131,7 +131,7 @@ export const createReducer =
 
     if (action.type === "duplicate") {
       const item = getItem(
-        { index: action.sourceIndex, dropzone: action.sourceDropzone },
+        { index: action.sourceIndex, zone: action.sourceZone },
         data
       )!;
 
@@ -143,13 +143,13 @@ export const createReducer =
         },
       };
 
-      const dataWithRelatedDuplicated = duplicateRelatedDropzones(
+      const dataWithRelatedDuplicated = duplicateRelatedZones(
         item,
         data,
         newItem.props.id
       );
 
-      if (action.sourceDropzone === rootDroppableId) {
+      if (action.sourceZone === rootDroppableId) {
         return {
           ...dataWithRelatedDuplicated,
           content: insert(data.content, action.sourceIndex + 1, newItem),
@@ -158,10 +158,10 @@ export const createReducer =
 
       return {
         ...dataWithRelatedDuplicated,
-        dropzones: {
-          ...dataWithRelatedDuplicated.dropzones,
-          [action.sourceDropzone]: insert(
-            dataWithRelatedDuplicated.dropzones[action.sourceDropzone],
+        zones: {
+          ...dataWithRelatedDuplicated.zones,
+          [action.sourceZone]: insert(
+            dataWithRelatedDuplicated.zones[action.sourceZone],
             action.sourceIndex + 1,
             newItem
           ),
@@ -170,7 +170,7 @@ export const createReducer =
     }
 
     if (action.type === "reorder") {
-      if (action.destinationDropzone === rootDroppableId) {
+      if (action.destinationZone === rootDroppableId) {
         return {
           ...data,
           content: reorder(
@@ -181,14 +181,14 @@ export const createReducer =
         };
       }
 
-      const newData = setupDropzone(data, action.destinationDropzone);
+      const newData = setupZone(data, action.destinationZone);
 
       return {
         ...data,
-        dropzones: {
-          ...newData.dropzones,
-          [action.destinationDropzone]: reorder(
-            newData.dropzones[action.destinationDropzone],
+        zones: {
+          ...newData.zones,
+          [action.destinationZone]: reorder(
+            newData.zones[action.destinationZone],
             action.sourceIndex,
             action.destinationIndex
           ),
@@ -197,25 +197,25 @@ export const createReducer =
     }
 
     if (action.type === "move") {
-      const newData = setupDropzone(
-        setupDropzone(data, action.sourceDropzone),
-        action.destinationDropzone
+      const newData = setupZone(
+        setupZone(data, action.sourceZone),
+        action.destinationZone
       );
 
       const item = getItem(
-        { dropzone: action.sourceDropzone, index: action.sourceIndex },
+        { zone: action.sourceZone, index: action.sourceIndex },
         newData
       );
 
-      if (action.sourceDropzone === rootDroppableId) {
+      if (action.sourceZone === rootDroppableId) {
         return {
           ...newData,
           content: remove(newData.content, action.sourceIndex),
-          dropzones: {
-            ...newData.dropzones,
+          zones: {
+            ...newData.zones,
 
-            [action.destinationDropzone]: insert(
-              newData.dropzones[action.destinationDropzone],
+            [action.destinationZone]: insert(
+              newData.zones[action.destinationZone],
               action.destinationIndex,
               item
             ),
@@ -223,14 +223,14 @@ export const createReducer =
         };
       }
 
-      if (action.destinationDropzone === rootDroppableId) {
+      if (action.destinationZone === rootDroppableId) {
         return {
           ...newData,
           content: insert(newData.content, action.destinationIndex, item),
-          dropzones: {
-            ...newData.dropzones,
-            [action.sourceDropzone]: remove(
-              newData.dropzones[action.sourceDropzone],
+          zones: {
+            ...newData.zones,
+            [action.sourceZone]: remove(
+              newData.zones[action.sourceZone],
               action.sourceIndex
             ),
           },
@@ -239,14 +239,14 @@ export const createReducer =
 
       return {
         ...newData,
-        dropzones: {
-          ...newData.dropzones,
-          [action.sourceDropzone]: remove(
-            newData.dropzones[action.sourceDropzone],
+        zones: {
+          ...newData.zones,
+          [action.sourceZone]: remove(
+            newData.zones[action.sourceZone],
             action.sourceIndex
           ),
-          [action.destinationDropzone]: insert(
-            newData.dropzones[action.destinationDropzone],
+          [action.destinationZone]: insert(
+            newData.zones[action.destinationZone],
             action.destinationIndex,
             item
           ),
@@ -255,21 +255,21 @@ export const createReducer =
     }
 
     if (action.type === "replace") {
-      if (action.destinationDropzone === rootDroppableId) {
+      if (action.destinationZone === rootDroppableId) {
         return {
           ...data,
           content: replace(data.content, action.destinationIndex, action.data),
         };
       }
 
-      const newData = setupDropzone(data, action.destinationDropzone);
+      const newData = setupZone(data, action.destinationZone);
 
       return {
         ...newData,
-        dropzones: {
-          ...newData.dropzones,
-          [action.destinationDropzone]: replace(
-            newData.dropzones[action.destinationDropzone],
+        zones: {
+          ...newData.zones,
+          [action.destinationZone]: replace(
+            newData.zones[action.destinationZone],
             action.destinationIndex,
             action.data
           ),
@@ -278,18 +278,15 @@ export const createReducer =
     }
 
     if (action.type === "remove") {
-      const item = getItem(
-        { index: action.index, dropzone: action.dropzone },
-        data
-      )!;
+      const item = getItem({ index: action.index, zone: action.zone }, data)!;
 
-      // Remove any related dropzones
-      const dataWithRelatedRemoved = setupDropzone(
-        removeRelatedDropzones(item, data),
-        action.dropzone
+      // Remove any related zones
+      const dataWithRelatedRemoved = setupZone(
+        removeRelatedZones(item, data),
+        action.zone
       );
 
-      if (action.dropzone === rootDroppableId) {
+      if (action.zone === rootDroppableId) {
         return {
           ...dataWithRelatedRemoved,
           content: remove(data.content, action.index),
@@ -298,40 +295,41 @@ export const createReducer =
 
       return {
         ...dataWithRelatedRemoved,
-        dropzones: {
-          ...dataWithRelatedRemoved.dropzones,
-          [action.dropzone]: remove(
-            dataWithRelatedRemoved.dropzones[action.dropzone],
+        zones: {
+          ...dataWithRelatedRemoved.zones,
+          [action.zone]: remove(
+            dataWithRelatedRemoved.zones[action.zone],
             action.index
           ),
         },
       };
     }
 
-    if (action.type === "registerDropZone") {
-      if (dropzoneCache[action.dropzone]) {
+    if (action.type === "registerZone") {
+      console.log("register zone", action);
+      if (zoneCache[action.zone]) {
         return {
           ...data,
-          dropzones: {
-            ...data.dropzones,
-            [action.dropzone]: dropzoneCache[action.dropzone],
+          zones: {
+            ...data.zones,
+            [action.zone]: zoneCache[action.zone],
           },
         };
       }
 
-      return setupDropzone(data, action.dropzone);
+      return setupZone(data, action.zone);
     }
 
-    if (action.type === "unregisterDropZone") {
-      const _dropzones = { ...(data.dropzones || {}) };
+    if (action.type === "unregisterZone") {
+      const _zones = { ...(data.zones || {}) };
 
-      if (_dropzones[action.dropzone]) {
-        dropzoneCache[action.dropzone] = _dropzones[action.dropzone];
+      if (_zones[action.zone]) {
+        zoneCache[action.zone] = _zones[action.zone];
 
-        delete _dropzones[action.dropzone];
+        delete _zones[action.zone];
       }
 
-      return { ...data, dropzones: _dropzones };
+      return { ...data, zones: _zones };
     }
 
     if (action.type === "set") {

@@ -7,53 +7,53 @@ import { ChevronDown, Grid, Layers, Type } from "react-feather";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { useContext } from "react";
 import { dropZoneContext } from "../DropZone/context";
-import { findDropzonesForArea } from "../../lib/find-dropzones-for-area";
-import { getDropzoneId } from "../../lib/get-dropzone-id";
+import { findZonesForArea } from "../../lib/find-zones-for-area";
+import { getZoneId } from "../../lib/get-zone-id";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
 
 export const LayerTree = ({
   data,
-  dropzoneContent,
+  zoneContent,
   itemSelector,
   setItemSelector,
-  dropzone,
+  zone,
   label,
 }: {
   data: Data;
-  dropzoneContent: Data["content"];
+  zoneContent: Data["content"];
   itemSelector: ItemSelector | null;
   setItemSelector: (item: ItemSelector | null) => void;
-  dropzone?: string;
+  zone?: string;
   label?: string;
 }) => {
-  const dropzones = data.dropzones || {};
+  const zones = data.zones || {};
 
   const ctx = useContext(dropZoneContext);
 
   return (
     <>
       {label && (
-        <div className={getClassName("dropzoneTitle")}>
-          <div className={getClassName("dropzoneIcon")}>
+        <div className={getClassName("zoneTitle")}>
+          <div className={getClassName("zoneIcon")}>
             <Layers size="16" />
           </div>{" "}
           {label}
         </div>
       )}
       <ul className={getClassName()}>
-        {dropzoneContent.length === 0 && (
+        {zoneContent.length === 0 && (
           <div className={getClassName("helper")}>No items</div>
         )}
-        {dropzoneContent.map((item, i) => {
+        {zoneContent.map((item, i) => {
           const isSelected =
             itemSelector?.index === i &&
-            (itemSelector.dropzone === dropzone ||
-              (itemSelector.dropzone === rootDroppableId && !dropzone));
+            (itemSelector.zone === zone ||
+              (itemSelector.zone === rootDroppableId && !zone));
 
-          const dropzonesForItem = findDropzonesForArea(data, item.props.id);
-          const containsDropzone = Object.keys(dropzonesForItem).length > 0;
+          const zonesForItem = findZonesForArea(data, item.props.id);
+          const containsZone = Object.keys(zonesForItem).length > 0;
 
           const {
             setHoveringArea = () => {},
@@ -68,7 +68,7 @@ export const LayerTree = ({
               className={getClassNameLayer({
                 isSelected,
                 isHovering,
-                containsDropzone,
+                containsZone,
               })}
               key={`${item.props.id}_${i}`}
             >
@@ -83,10 +83,10 @@ export const LayerTree = ({
 
                     setItemSelector({
                       index: i,
-                      dropzone,
+                      zone,
                     });
 
-                    const id = dropzoneContent[i].props.id;
+                    const id = zoneContent[i].props.id;
 
                     scrollIntoView(
                       document.querySelector(
@@ -105,7 +105,7 @@ export const LayerTree = ({
                     setHoveringComponent(null);
                   }}
                 >
-                  {containsDropzone && (
+                  {containsZone && (
                     <div
                       className={getClassNameLayer("chevron")}
                       title={isSelected ? "Collapse" : "Expand"}
@@ -125,16 +125,16 @@ export const LayerTree = ({
                   </div>
                 </div>
               </div>
-              {containsDropzone &&
-                Object.keys(dropzonesForItem).map((dropzoneKey, idx) => (
-                  <div key={idx} className={getClassNameLayer("dropzones")}>
+              {containsZone &&
+                Object.keys(zonesForItem).map((zoneKey, idx) => (
+                  <div key={idx} className={getClassNameLayer("zones")}>
                     <LayerTree
                       data={data}
-                      dropzoneContent={dropzones[dropzoneKey]}
+                      zoneContent={zones[zoneKey]}
                       setItemSelector={setItemSelector}
                       itemSelector={itemSelector}
-                      dropzone={dropzoneKey}
-                      label={getDropzoneId(dropzoneKey)[1]}
+                      zone={zoneKey}
+                      label={getZoneId(zoneKey)[1]}
                     />
                   </div>
                 ))}

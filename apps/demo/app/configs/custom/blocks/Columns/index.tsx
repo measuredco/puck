@@ -69,7 +69,7 @@ export const Columns: ComponentConfig<ColumnsProps> = {
                     : "",
               }}
             >
-              <DropZone dropzone={`column-${idx}`} />
+              <DropZone zone={`column-${idx}`} />
             </div>
           ))}
         </div>

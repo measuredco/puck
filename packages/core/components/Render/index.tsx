@@ -9,7 +9,7 @@ export function Render({ config, data }: { config: Config; data: Data }) {
     return (
       <DropZoneProvider value={{ data, config, mode: "render" }}>
         <config.root.render {...data.root} editMode={false}>
-          <DropZone dropzone={rootDroppableId} />
+          <DropZone zone={rootDroppableId} />
         </config.root.render>
       </DropZoneProvider>
     );
@@ -17,7 +17,7 @@ export function Render({ config, data }: { config: Config; data: Data }) {
 
   return (
     <DropZoneProvider value={{ data, config, mode: "render" }}>
-      <DropZone dropzone={rootDroppableId} />
+      <DropZone zone={rootDroppableId} />
     </DropZoneProvider>
   );
 }

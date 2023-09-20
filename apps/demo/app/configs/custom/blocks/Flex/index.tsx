@@ -43,7 +43,7 @@ export const Flex: ComponentConfig<FlexProps> = {
               className={getClassName("item")}
               style={{ minWidth: item.minItemWidth || minItemWidth }}
             >
-              <DropZone dropzone={`item-${idx}`} />
+              <DropZone zone={`item-${idx}`} />
             </div>
           ))}
         </div>
