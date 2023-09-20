@@ -6,9 +6,11 @@
     "lint": "turbo run lint",
     "format:check": "prettier --check \"**/*.{ts,tsx,md}\"",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "release": "git fetch --tags && conventional-recommended-bump -p angular | xargs yarn version --no-git-tag-version --new-version$1 && yarn release-commit",
+    "release": "yarn release:prepare && yarn changelog && yarn release-commit",
+    "release:prepare": "git fetch --tags && conventional-recommended-bump -p angular  | xargs yarn version --no-git-tag-version --new-version $1",
+    "release:canary": "yarn release:prepare && node scripts/get-canary-version | xargs yarn version --no-git-tag-version --new-version $1",
     "release-commit": "git add -u && git commit -m \"release: v${npm_package_version}\"",
-    "version": "yarn changelog && lerna version --force-publish -y --no-push --no-changelog --no-git-tag-version $npm_package_version",
+    "version": "lerna version --force-publish -y --no-push --no-changelog --no-git-tag-version $npm_package_version",
     "changelog": "node scripts/create-changelog"
   },
   "devDependencies": {
