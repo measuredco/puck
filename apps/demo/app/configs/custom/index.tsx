@@ -272,7 +272,7 @@ export const initialData: Record<string, Data> = {
       },
     ],
     root: { title: "Puck Example" },
-    dropzones: {
+    zones: {
       "Columns-2d650a8ceb081a2c04f3a2d17a7703ca6efb0d06:column-0": [
         {
           type: "Card",

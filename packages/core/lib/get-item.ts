@@ -1,21 +1,19 @@
 import { Data } from "../types/Config";
 import { rootDroppableId } from "./root-droppable-id";
-import { setupDropzone } from "./setup-dropzone";
+import { setupZone } from "./setup-zone";
 
 export type ItemSelector = {
   index: number;
-  dropzone?: string;
+  zone?: string;
 };
 
 export const getItem = (
   selector: ItemSelector,
   data: Data
 ): Data["content"][0] | undefined => {
-  if (!selector.dropzone || selector.dropzone === rootDroppableId) {
+  if (!selector.zone || selector.zone === rootDroppableId) {
     return data.content[selector.index];
   }
 
-  return setupDropzone(data, selector.dropzone).dropzones[selector.dropzone][
-    selector.index
-  ];
+  return setupZone(data, selector.zone).zones[selector.zone][selector.index];
 };

@@ -11,7 +11,7 @@ import { ItemSelector, getItem } from "../../lib/get-item";
 import { PuckAction } from "../../lib/reducer";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { useDebounce } from "use-debounce";
-import { getDropzoneId } from "../../lib/get-dropzone-id";
+import { getZoneId } from "../../lib/get-zone-id";
 
 type PathData = Record<
   string,
@@ -29,15 +29,15 @@ type ContextProps = {
   placeholderStyle?: CSSProperties;
   hoveringArea?: string | null;
   setHoveringArea?: (area: string | null) => void;
-  hoveringDropzone?: string | null;
-  setHoveringDropzone?: (dropzone: string | null) => void;
+  hoveringZone?: string | null;
+  setHoveringZone?: (zone: string | null) => void;
   hoveringComponent?: string | null;
   setHoveringComponent?: (id: string | null) => void;
-  registerDropzoneArea?: (areaId: string) => void;
-  areasWithDropzones?: Record<string, boolean>;
-  registerDropzone?: (dropzoneCompound: string) => void;
-  unregisterDropzone?: (dropzoneCompound: string) => void;
-  activeDropzones?: Record<string, boolean>;
+  registerZoneArea?: (areaId: string) => void;
+  areasWithZones?: Record<string, boolean>;
+  registerZone?: (zoneCompound: string) => void;
+  unregisterZone?: (zoneCompound: string) => void;
+  activeZones?: Record<string, boolean>;
   pathData?: PathData;
   registerPath?: (selector: ItemSelector) => void;
   mode?: "edit" | "render";
@@ -53,65 +53,63 @@ export const DropZoneProvider = ({
   value: ContextProps;
 }) => {
   const [hoveringArea, setHoveringArea] = useState<string | null>(null);
-  const [hoveringDropzone, setHoveringDropzone] = useState<string | null>(
+  const [hoveringZone, setHoveringZone] = useState<string | null>(
     rootDroppableId
   );
 
-  // Hovering component may match area, but areas must always contain dropzones
+  // Hovering component may match area, but areas must always contain zones
   const [hoveringComponent, setHoveringComponent] = useState<string | null>();
 
   const [hoveringAreaDb] = useDebounce(hoveringArea, 75, { leading: false });
 
-  const [areasWithDropzones, setAreasWithDropzones] = useState<
-    Record<string, boolean>
-  >({});
+  const [areasWithZones, setAreasWithZones] = useState<Record<string, boolean>>(
+    {}
+  );
 
-  const [activeDropzones, setActiveDropzones] = useState<
-    Record<string, boolean>
-  >({});
+  const [activeZones, setActiveZones] = useState<Record<string, boolean>>({});
 
   const { dispatch = null } = value ? value : {};
 
-  const registerDropzoneArea = useCallback(
+  const registerZoneArea = useCallback(
     (area: string) => {
-      setAreasWithDropzones((latest) => ({ ...latest, [area]: true }));
+      setAreasWithZones((latest) => ({ ...latest, [area]: true }));
     },
-    [setAreasWithDropzones]
+    [setAreasWithZones]
   );
 
-  const registerDropzone = useCallback(
-    (dropzoneCompound: string) => {
+  const registerZone = useCallback(
+    (zoneCompound: string) => {
       if (!dispatch) {
         return;
       }
 
       dispatch({
-        type: "registerDropZone",
-        dropzone: dropzoneCompound,
+        type: "registerZone",
+        zone: zoneCompound,
       });
 
-      setActiveDropzones((latest) => ({ ...latest, [dropzoneCompound]: true }));
+      setActiveZones((latest) => ({ ...latest, [zoneCompound]: true }));
     },
-    [setActiveDropzones, dispatch]
+    [setActiveZones, dispatch]
   );
 
-  const unregisterDropzone = useCallback(
-    (dropzoneCompound: string) => {
+  const unregisterZone = useCallback(
+    (zoneCompound: string) => {
       if (!dispatch) {
         return;
       }
 
       dispatch({
-        type: "unregisterDropZone",
-        dropzone: dropzoneCompound,
+        type: "unregisterZone",
+        zone: zoneCompound,
       });
 
-      setActiveDropzones((latest) => ({
+      setActiveZones((latest) => ({
         ...latest,
-        [dropzoneCompound]: false,
+        [zoneCompound]: false,
       }));
     },
-    [setActiveDropzones, dispatch]
+    [setActiveZones, dispatch]
   );
 
   const [pathData, setPathData] = useState<PathData>();
@@ -128,7 +126,7 @@ export const DropZoneProvider = ({
         return;
       }
 
-      const [area] = getDropzoneId(selector.dropzone);
+      const [area] = getZoneId(selector.zone);
 
       setPathData((latestPathData = {}) => {
         const pathData = latestPathData[area] || [];
@@ -155,15 +153,15 @@ export const DropZoneProvider = ({
           value={{
             hoveringArea: value.draggedItem ? hoveringAreaDb : hoveringArea,
             setHoveringArea,
-            hoveringDropzone,
-            setHoveringDropzone,
+            hoveringZone,
+            setHoveringZone,
             hoveringComponent,
             setHoveringComponent,
-            registerDropzoneArea,
-            areasWithDropzones,
-            registerDropzone,
-            unregisterDropzone,
-            activeDropzones,
+            registerZoneArea,
+            areasWithZones,
+            registerZone,
+            unregisterZone,
+            activeZones,
             registerPath,
             pathData,
 

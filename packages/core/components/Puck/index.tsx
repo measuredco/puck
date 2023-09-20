@@ -27,9 +27,9 @@ import { rootDroppableId } from "../../lib/root-droppable-id";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { PuckAction, StateReducer, createReducer } from "../../lib/reducer";
 import { LayerTree } from "../LayerTree";
-import { findDropzonesForArea } from "../../lib/find-dropzones-for-area";
-import { areaContainsDropzones } from "../../lib/area-contains-dropzones";
-import { flushDropzones } from "../../lib/flush-dropzones";
+import { findZonesForArea } from "../../lib/find-zones-for-area";
+import { areaContainsZones } from "../../lib/area-contains-zones";
+import { flushZones } from "../../lib/flush-zones";
 
 const Field = () => {};
 
@@ -88,7 +88,7 @@ export function Puck({
   const [reducer] = useState(() => createReducer({ config }));
   const [data, dispatch] = useReducer<StateReducer>(
     reducer,
-    flushDropzones(initialData)
+    flushZones(initialData)
   );
 
   const [itemSelector, setItemSelector] = useState<ItemSelector | null>(null);
@@ -187,12 +187,12 @@ export function Puck({
               type: "insert",
               componentType: droppedItem.draggableId,
               destinationIndex: droppedItem.destination!.index,
-              destinationDropzone: droppedItem.destination.droppableId,
+              destinationZone: droppedItem.destination.droppableId,
             });
 
             setItemSelector({
               index: droppedItem.destination!.index,
-              dropzone: droppedItem.destination.droppableId,
+              zone: droppedItem.destination.droppableId,
             });
 
             return;
@@ -204,21 +204,21 @@ export function Puck({
                 type: "reorder",
                 sourceIndex: source.index,
                 destinationIndex: destination.index,
-                destinationDropzone: destination.droppableId,
+                destinationZone: destination.droppableId,
               });
             } else {
               dispatch({
                 type: "move",
-                sourceDropzone: source.droppableId,
+                sourceZone: source.droppableId,
                 sourceIndex: source.index,
                 destinationIndex: destination.index,
-                destinationDropzone: destination.droppableId,
+                destinationZone: destination.droppableId,
               });
             }
 
             setItemSelector({
               index: destination.index,
-              dropzone: destination.droppableId,
+              zone: destination.droppableId,
             });
           }
         }}
@@ -363,30 +363,30 @@ export function Puck({
                       <ComponentList config={config} />
                     </SidebarSection>
                     <SidebarSection title="Outline">
-                      {ctx?.activeDropzones &&
-                        ctx?.activeDropzones[rootDroppableId] && (
+                      {ctx?.activeZones &&
+                        ctx?.activeZones[rootDroppableId] && (
                           <LayerTree
                             data={data}
                             label={
-                              areaContainsDropzones(data, "root")
+                              areaContainsZones(data, "root")
                                 ? "puck-drop-zone"
                                 : ""
                             }
-                            dropzoneContent={data.content}
+                            zoneContent={data.content}
                             setItemSelector={setItemSelector}
                             itemSelector={itemSelector}
                           />
                         )}
 
-                      {Object.entries(findDropzonesForArea(data, "root")).map(
-                        ([dropzoneKey, dropzone]) => {
+                      {Object.entries(findZonesForArea(data, "root")).map(
+                        ([zoneKey, zone]) => {
                           return (
                             <LayerTree
-                              key={dropzoneKey}
+                              key={zoneKey}
                               data={data}
-                              label={dropzoneKey}
-                              dropzone={dropzoneKey}
-                              dropzoneContent={dropzone}
+                              label={zoneKey}
+                              zone={zoneKey}
+                              zoneContent={zone}
                               setItemSelector={setItemSelector}
                               itemSelector={itemSelector}
                             />
@@ -416,7 +416,7 @@ export function Puck({
                       }}
                     >
                       <Page data={data} {...data.root}>
-                        <DropZone dropzone={rootDroppableId} />
+                        <DropZone zone={rootDroppableId} />
                       </Page>
                     </div>
                   </div>
@@ -490,8 +490,8 @@ export function Puck({
                               dispatch({
                                 type: "replace",
                                 destinationIndex: itemSelector.index,
-                                destinationDropzone:
-                                  itemSelector.dropzone || rootDroppableId,
+                                destinationZone:
+                                  itemSelector.zone || rootDroppableId,
                                 data: { ...selectedItem, props: newProps },
                               });
                             } else {

@@ -8,7 +8,7 @@
   padding: 0;
 }
 
-.LayerTree-dropzoneTitle {
+.LayerTree-zoneTitle {
   color: var(--puck-color-grey-4);
   font-size: var(--puck-font-size-xxxs);
   text-transform: uppercase;
@@ -32,7 +32,7 @@
   border-radius: 3px;
 }
 
-.Layer--containsDropzone > .Layer-inner {
+.Layer--containsZone > .Layer-inner {
   padding-left: 8px;
 }
 
@@ -70,22 +70,22 @@
   transform: scaleY(-1);
 }
 
-.Layer-dropzones {
+.Layer-zones {
   display: none;
   margin-left: 20px;
 }
 
-.Layer--isSelected > .Layer-dropzones,
-.Layer:has(.Layer--isSelected) > .Layer-dropzones {
+.Layer--isSelected > .Layer-zones,
+.Layer:has(.Layer--isSelected) > .Layer-zones {
   display: block;
 }
 
-.Layer-dropzones > .LayerTree {
+.Layer-zones > .LayerTree {
   margin-left: 16px;
 }
 
 .Layer-title,
-.LayerTree-dropzoneTitle {
+.LayerTree-zoneTitle {
   display: flex;
   gap: 8px;
   align-items: center;
@@ -97,7 +97,7 @@
   margin-top: 4px;
 }
 
-.Layer-dropzoneIcon {
+.Layer-zoneIcon {
   color: var(--puck-color-grey-7);
   margin-top: 4px;
 }

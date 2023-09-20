@@ -105,5 +105,5 @@ export type Data<
 > = {
   root: RootProps;
   content: Content<Props>;
-  dropzones?: Record<string, Content<Props>>;
+  zones?: Record<string, Content<Props>>;
 };
