@@ -28,23 +28,8 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Publish core
-        run: cd packages/core && npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish adaptor-strapi
-        run: cd packages/adaptor-strapi && npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish plugin-heading-analyzer
-        run: cd packages/plugin-heading-analyzer && npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish create-puck-app
-        run: cd packages/create-puck-app && npm publish --access public
+      - name: Publish all packages
+        run: ./scripts/publish.sh pr
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
