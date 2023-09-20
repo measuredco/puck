@@ -369,7 +369,7 @@ export function Puck({
                             data={data}
                             label={
                               areaContainsZones(data, "root")
-                                ? "puck-drop-zone"
+                                ? rootDroppableId
                                 : ""
                             }
                             zoneContent={data.content}

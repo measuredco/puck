@@ -1,1 +1,1 @@
-export const rootDroppableId = "puck-drop-zone";
+export const rootDroppableId = "default-zone";
