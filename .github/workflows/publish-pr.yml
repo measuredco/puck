@@ -1,0 +1,32 @@
+name: Publish PR release
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  publish-to-npm:
+    runs-on: ubuntu-latest
+
+    # Don't run on regular releases
+    if: "!startsWith(github.event.head_commit.message, 'release: ')"
+    steps:
+      - uses: actions/checkout@v2.0.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18.16.1"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Run release script
+        run: yarn release:pr
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Publish all packages
+        run: ./scripts/publish.sh canary
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    timeout-minutes: 10
