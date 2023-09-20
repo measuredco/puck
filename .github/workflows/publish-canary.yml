@@ -19,11 +19,11 @@ jobs:
           node-version: "18.16.1"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Run release script
-        run: yarn release:canary
-
       - name: Install dependencies
         run: yarn
+
+      - name: Run release script
+        run: yarn release:canary
 
       - name: Publish all packages
         run: ./scripts/publish.sh canary
