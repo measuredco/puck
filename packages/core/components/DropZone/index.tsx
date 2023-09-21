@@ -15,11 +15,10 @@ export { DropZoneProvider, dropZoneContext } from "./context";
 
 type DropZoneProps = {
   zone: string;
-  direction?: "vertical" | "horizontal";
   style?: CSSProperties;
 };
 
-function DropZoneEdit({ zone, direction = "vertical", style }: DropZoneProps) {
+function DropZoneEdit({ zone, style }: DropZoneProps) {
   const ctx = useContext(dropZoneContext);
 
   const {
@@ -148,7 +147,7 @@ function DropZoneEdit({ zone, direction = "vertical", style }: DropZoneProps) {
     >
       <DroppableStrictMode
         droppableId={zoneCompound}
-        direction={direction}
+        direction={"vertical"}
         isDropDisabled={!isEnabled}
       >
         {(provided, snapshot) => {
