@@ -28,7 +28,7 @@ export type Field<
   adaptor?: Adaptor;
   adaptorParams?: object;
   arrayFields?: {
-    [SubPropName in keyof Props]: Field<Props[SubPropName]>;
+    [SubPropName in keyof Props]: Field<Props[SubPropName][0]>;
   };
   getItemSummary?: (item: Props, index?: number) => string;
   defaultItemProps?: Props;
