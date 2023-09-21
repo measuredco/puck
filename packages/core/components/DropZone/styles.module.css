@@ -4,7 +4,7 @@
   zoom: 1.33;
   position: relative;
   height: 100%;
-  outline-offset: -1;
+  outline-offset: -1px;
   width: 100%;
 }
 

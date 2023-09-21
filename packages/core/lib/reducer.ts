@@ -306,7 +306,6 @@ export const createReducer =
     }
 
     if (action.type === "registerZone") {
-      console.log("register zone", action);
       if (zoneCache[action.zone]) {
         return {
           ...data,
