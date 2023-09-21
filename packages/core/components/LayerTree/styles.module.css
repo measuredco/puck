@@ -63,10 +63,7 @@
 }
 
 .Layer--isSelected > .Layer-inner > .Layer-clickable > .Layer-chevron,
-.Layer:has(.Layer--isSelected)
-  > .Layer-inner
-  > .Layer-clickable
-  > .Layer-chevron {
+.Layer--childIsSelected > .Layer-inner > .Layer-clickable > .Layer-chevron {
   transform: scaleY(-1);
 }
 
@@ -76,7 +73,7 @@
 }
 
 .Layer--isSelected > .Layer-zones,
-.Layer:has(.Layer--isSelected) > .Layer-zones {
+.Layer--childIsSelected > .Layer-zones {
   display: block;
 }
 

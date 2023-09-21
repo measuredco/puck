@@ -1,7 +1,7 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Data } from "../../types/Config";
-import { ItemSelector } from "../../lib/get-item";
+import { ItemSelector, getItem } from "../../lib/get-item";
 import { scrollIntoView } from "../../lib/scroll-into-view";
 import { ChevronDown, Grid, Layers, Type } from "react-feather";
 import { rootDroppableId } from "../../lib/root-droppable-id";
@@ -9,6 +9,7 @@ import { useContext } from "react";
 import { dropZoneContext } from "../DropZone/context";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { getZoneId } from "../../lib/get-zone-id";
+import { isChildOfZone } from "../../lib/is-child-of-zone";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -61,7 +62,12 @@ export const LayerTree = ({
             hoveringComponent,
           } = ctx || {};
 
+          const selectedItem =
+            itemSelector && data ? getItem(itemSelector, data) : null;
+
           const isHovering = hoveringComponent === item.props.id;
+
+          const childIsSelected = isChildOfZone(item, selectedItem, ctx);
 
           return (
             <li
@@ -69,6 +75,7 @@ export const LayerTree = ({
                 isSelected,
                 isHovering,
                 containsZone,
+                childIsSelected,
               })}
               key={`${item.props.id}_${i}`}
             >

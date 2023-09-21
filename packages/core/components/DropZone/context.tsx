@@ -18,7 +18,7 @@ type PathData = Record<
   { selector: ItemSelector | null; label: string }[]
 >;
 
-type ContextProps = {
+export type DropZoneContext = {
   data: Data;
   config: Config;
   itemSelector?: ItemSelector | null;
@@ -43,14 +43,14 @@ type ContextProps = {
   mode?: "edit" | "render";
 } | null;
 
-export const dropZoneContext = createContext<ContextProps>(null);
+export const dropZoneContext = createContext<DropZoneContext>(null);
 
 export const DropZoneProvider = ({
   children,
   value,
 }: {
   children: ReactNode;
-  value: ContextProps;
+  value: DropZoneContext;
 }) => {
   const [hoveringArea, setHoveringArea] = useState<string | null>(null);
   const [hoveringZone, setHoveringZone] = useState<string | null>(
