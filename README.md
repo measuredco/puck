@@ -1,5 +1,20 @@
 # puck
 
+<p align="left">
+  <a aria-label="Measured logo" href="https://measured.co">
+    <img src="https://img.shields.io/badge/MADE%20BY%20Measured-000000.svg?style=for-the-badge&labelColor=000">
+  </a>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/@measured/puck">
+    <img alt="" src="https://img.shields.io/npm/v/@measured/puck.svg?style=for-the-badge&labelColor=000000">
+  </a>
+  <a aria-label="License" href="https://github.com/measuredco/puck/blob/main/LICENSE">
+    <img alt="" src="https://img.shields.io/npm/l/@measured/puck.svg?style=for-the-badge&labelColor=000000">
+  </a>
+  <a aria-label="Join the community on Discord" href="https://discord.gg/D9e4E3MQVZ">
+    <img alt="" src="https://img.shields.io/badge/Join%20the%20Discord-blueviolet.svg?style=for-the-badge&logo=Discord&labelColor=000000&logoWidth=20">
+  </a>
+</p>
+
 The self-hosted, drag and drop editor for React.
 
 - 🖱️ **Drag and drop**: Visual editing for your existing React component library
