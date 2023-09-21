@@ -8,6 +8,10 @@ export type Adaptor<AdaptorParams = {}> = {
   ) => Promise<Record<string, any>[] | null>;
 };
 
+type WithId<T> = T & {
+  id: string;
+};
+
 export type Field<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = {
@@ -67,7 +71,7 @@ export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
   DefaultProps = ComponentProps
 > = {
-  render: (props: ComponentProps) => ReactElement;
+  render: (props: WithId<ComponentProps>) => ReactElement;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
 };
@@ -91,9 +95,9 @@ export type Config<
 type MappedItem<Props extends { [key: string]: any } = { [key: string]: any }> =
   {
     type: keyof Props;
-    props: {
+    props: WithId<{
       [key: string]: any;
-    } & { id: string };
+    }>;
   };
 
 export type Data<
