@@ -143,6 +143,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
         isDestination: draggedDestinationId === zoneCompound,
         isDisabled: !isEnabled,
         isAreaSelected,
+        hasChildren: content.length > 0,
       })}
     >
       <DroppableStrictMode
