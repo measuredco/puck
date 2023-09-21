@@ -107,6 +107,7 @@ export const initialData: Record<string, Data> = {
         type: "Columns",
         props: {
           columns: [{}, {}, {}],
+          distribution: "auto",
           id: "Columns-2d650a8ceb081a2c04f3a2d17a7703ca6efb0d06",
         },
       },
@@ -200,22 +201,16 @@ export const initialData: Record<string, Data> = {
       {
         type: "Columns",
         props: {
-          columns: [{}, {}, {}],
+          columns: [
+            { span: 4 },
+            { span: 4 },
+            { span: 4 },
+            { span: 4 },
+            { span: 4 },
+            { span: 4 },
+          ],
           id: "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634",
-        },
-      },
-      {
-        type: "VerticalSpace",
-        props: {
-          size: "24px",
-          id: "VerticalSpace-1a37fa42a5606cd6871613c22365291b8975b5dc",
-        },
-      },
-      {
-        type: "Columns",
-        props: {
-          columns: [{}, {}, {}],
-          id: "Columns-f6dde33fadd73383b2c19ed1e66ada0973dc8317",
+          distribution: "manual",
         },
       },
       {
@@ -325,18 +320,6 @@ export const initialData: Record<string, Data> = {
           },
         },
       ],
-      "Columns-f6dde33fadd73383b2c19ed1e66ada0973dc8317:column-0": [
-        {
-          type: "Card",
-          props: {
-            title: "Title",
-            description: "Description",
-            icon: "Feather",
-            mode: "card",
-            id: "Card-e5cf31b68c8583f5a0f2548823c1eb033c6b4044",
-          },
-        },
-      ],
       "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-1": [
         {
           type: "Card",
@@ -347,18 +330,6 @@ export const initialData: Record<string, Data> = {
             icon: "Feather",
             mode: "card",
             id: "Card-4eea28543d13c41c30934c3e4c4c95a75017a89c",
-          },
-        },
-      ],
-      "Columns-f6dde33fadd73383b2c19ed1e66ada0973dc8317:column-1": [
-        {
-          type: "Card",
-          props: {
-            title: "Title",
-            description: "Description",
-            icon: "Feather",
-            mode: "card",
-            id: "Card-8e0ac4c8ddeb1ba9bbb0c6b2be19a498b23b0371",
           },
         },
       ],
@@ -375,7 +346,7 @@ export const initialData: Record<string, Data> = {
           },
         },
       ],
-      "Columns-f6dde33fadd73383b2c19ed1e66ada0973dc8317:column-2": [
+      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-3": [
         {
           type: "Card",
           props: {
@@ -383,7 +354,31 @@ export const initialData: Record<string, Data> = {
             description: "Description",
             icon: "Feather",
             mode: "card",
-            id: "Card-03850a6871225af73a54bd3d1180c93fdc153b89",
+            id: "Card-49b11940784cfe8dc1a2b2facc5ac2bcf797792f",
+          },
+        },
+      ],
+      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-4": [
+        {
+          type: "Card",
+          props: {
+            title: "Title",
+            description: "Description",
+            icon: "Feather",
+            mode: "card",
+            id: "Card-efb0a1ed06cc4152a7861376aafbe62b0445382d",
+          },
+        },
+      ],
+      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-5": [
+        {
+          type: "Card",
+          props: {
+            title: "Title",
+            description: "Description",
+            icon: "Feather",
+            mode: "card",
+            id: "Card-513cfb17d07ba4b6e0212d931571c0760839f029",
           },
         },
       ],
