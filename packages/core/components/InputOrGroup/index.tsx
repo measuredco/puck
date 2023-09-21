@@ -91,7 +91,7 @@ export const InputOrGroup = ({
                     </IconButton>
                   </div>
                 </summary>
-                <fieldset>
+                <fieldset className={getClassName("fieldset")}>
                   {Object.keys(field.arrayFields!).map((fieldName) => {
                     const subField = field.arrayFields![fieldName];
 
@@ -231,6 +231,7 @@ export const InputOrGroup = ({
               >
                 <input
                   type="radio"
+                  className={getClassName("radioInput")}
                   value={option.value as string | number}
                   name={name}
                   onChange={(e) => {

@@ -92,7 +92,7 @@
   display: none;
 }
 
-.Input-arrayItem > fieldset {
+.Input-arrayItem > .Input-fieldset {
   background-color: var(--puck-color-grey-11);
   border: none;
   border-top: 1px solid var(--puck-color-grey-8);
@@ -101,11 +101,16 @@
   padding-top: 16px;
 }
 
-.Input-arrayItem > fieldset .Input + .Input-arrayItem > fieldset .Input {
+.Input-arrayItem
+  > .Input-fieldset
+  .Input
+  + .Input-arrayItem
+  > .Input-fieldset
+  .Input {
   margin-top: 16px;
 }
 
-.Input-arrayItem > fieldset .Input-label {
+.Input-arrayItem > .Input-fieldset .Input-label {
   padding-bottom: 4px;
 }
 
@@ -178,16 +183,16 @@
   cursor: pointer;
 }
 
-.Input-radio input:checked ~ .Input-radioInner {
+.Input-radio .Input-radioInput:checked ~ .Input-radioInner {
   background-color: var(--puck-color-azure-9);
   color: var(--puck-color-grey-2);
   font-weight: 500;
 }
 
-.Input-radio input {
+.Input-radio .Input-radioInput {
   display: none;
 }
 
-.Input textarea {
+.Input textarea.Input-input {
   margin-bottom: -4px; /* Remove strange bottom border */
 }
