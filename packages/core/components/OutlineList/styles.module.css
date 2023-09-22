@@ -18,12 +18,12 @@
   content: "";
 }
 
-.OutlineList li {
+.OutlineListItem {
   position: relative;
   margin-bottom: 4px;
 }
 
-.OutlineList li::before {
+.OutlineListItem::before {
   background: var(--puck-color-grey-7);
   position: absolute;
   left: -17px;
@@ -33,11 +33,11 @@
   content: "";
 }
 
-.OutlineList .OutlineList-clickableItem:hover {
+.OutlineListItem--clickable:hover {
   color: var(--puck-color-blue);
   cursor: pointer;
 }
 
-.OutlineList li > .OutlineList {
+.OutlineListItem > .OutlineList {
   margin: 8px;
 }
