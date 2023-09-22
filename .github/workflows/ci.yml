@@ -17,10 +17,9 @@ jobs:
         uses: actions/checkout@v2.0.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: "18.16.1"
-          registry-url: "https://registry.npmjs.org"
+          node-version: 18
 
       - name: Check Yarn Version
         run: yarn --version
