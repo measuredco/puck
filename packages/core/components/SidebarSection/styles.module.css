@@ -12,7 +12,7 @@
   background: white;
   padding: 16px;
   border-bottom: 1px solid var(--puck-color-grey-8);
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .SidebarSection-content {
