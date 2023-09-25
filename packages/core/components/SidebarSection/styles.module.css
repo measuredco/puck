@@ -2,6 +2,7 @@
   display: flex;
   position: relative;
   flex-direction: column;
+  color: black;
 }
 
 .SidebarSection:last-of-type {

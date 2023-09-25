@@ -269,6 +269,8 @@ export function Puck({
                   <header
                     style={{
                       gridArea: "header",
+                      color: "var(--puck-color-black)",
+                      background: "var(--puck-color-white)",
                       borderBottom: "1px solid var(--puck-color-grey-8)",
                     }}
                   >
@@ -398,7 +400,6 @@ export function Puck({
 
                   <div
                     style={{
-                      background: "var(--puck-color-grey-10)",
                       padding: 32,
                       overflowY: "auto",
                       gridArea: "editor",
@@ -410,8 +411,8 @@ export function Puck({
                     <div
                       className="puck-root"
                       style={{
-                        background: "white",
                         border: "1px solid var(--puck-color-grey-8)",
+                        boxShadow: "0px 0px 0px 3rem var(--puck-color-grey-10)",
                         zoom: 0.75,
                       }}
                     >
@@ -428,6 +429,7 @@ export function Puck({
                       fontFamily: "var(--puck-font-stack)",
                       display: "flex",
                       flexDirection: "column",
+                      background: "var(--puck-color-white)",
                     }}
                   >
                     <FieldWrapper data={data}>
