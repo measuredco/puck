@@ -1,5 +1,7 @@
 # puck
 
+![logo](./logo.jpg "puck")
+
 <p align="left">
   <a aria-label="Measured logo" href="https://measured.co">
     <img src="https://img.shields.io/badge/MADE%20BY%20Measured-000000.svg?style=for-the-badge&labelColor=000">
