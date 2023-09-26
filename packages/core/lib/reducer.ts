@@ -42,6 +42,13 @@ type ReplaceAction = {
   data: any;
 };
 
+type RecoveryAction = {
+  type: "recovery";
+  destinationIndex: number;
+  destinationZone: string;
+  data: any;
+};
+
 type ReorderAction = {
   type: "reorder";
   sourceIndex: number;
@@ -83,6 +90,7 @@ export type PuckAction =
   | InsertAction
   | MoveAction
   | ReplaceAction
+  | RecoveryAction
   | RemoveAction
   | DuplicateAction
   | SetDataAction
@@ -272,6 +280,35 @@ export const createReducer =
             newData.zones[action.destinationZone],
             action.destinationIndex,
             action.data
+          ),
+        },
+      };
+    }
+
+    if (action.type === "recovery") {
+      const emptyComponentData = action.data;
+
+      if (action.destinationZone === rootDroppableId) {
+        return {
+          ...data,
+          content: insert(
+            data.content,
+            action.destinationIndex,
+            emptyComponentData
+          ),
+        };
+      }
+
+      const newData = setupZone(data, action.destinationZone);
+
+      return {
+        ...data,
+        zones: {
+          ...newData.zones,
+          [action.destinationZone]: insert(
+            newData.zones[action.destinationZone],
+            action.destinationIndex,
+            emptyComponentData
           ),
         },
       };

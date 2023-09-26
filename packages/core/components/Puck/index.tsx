@@ -19,7 +19,7 @@ import { Plugin } from "../../types/Plugin";
 import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
-import { Globe, Sidebar } from "react-feather";
+import { Globe, Sidebar, ChevronLeft, ChevronRight } from "react-feather";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
 import { DropZone, DropZoneProvider, dropZoneContext } from "../DropZone";
@@ -30,6 +30,7 @@ import { LayerTree } from "../LayerTree";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
 import { flushZones } from "../../lib/flush-zones";
+import { usePuckData } from "../../lib/use-puck-data";
 
 const Field = () => {};
 
@@ -85,15 +86,18 @@ export function Puck({
   headerTitle?: string;
   headerPath?: string;
 }) {
-  const [reducer] = useState(() => createReducer({ config }));
-  const [data, dispatch] = useReducer<StateReducer>(
-    reducer,
-    flushZones(initialData)
-  );
-
-  const [itemSelector, setItemSelector] = useState<ItemSelector | null>(null);
-
-  const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
+  const {
+    canForward,
+    canRewind,
+    rewind,
+    forward,
+    record,
+    data,
+    dispatch,
+    itemSelector,
+    setItemSelector,
+    selectedItem,
+  } = usePuckData({ config, initialData });
 
   const Page = useCallback(
     (pageProps) => (
@@ -337,6 +341,28 @@ export function Puck({
                             justifyContent: "flex-end",
                           }}
                         >
+                          <div style={{ display: "flex" }}>
+                            <IconButton
+                              title="undo"
+                              disabled={!canRewind}
+                              onClick={rewind}
+                            >
+                              <ChevronLeft
+                                size={21}
+                                stroke={canRewind ? "black" : "#ddd"}
+                              />
+                            </IconButton>
+                            <IconButton
+                              title="redo"
+                              disabled={!canForward}
+                              onClick={forward}
+                            >
+                              <ChevronRight
+                                size={21}
+                                stroke={canForward ? "black" : "#ddd"}
+                              />
+                            </IconButton>
+                          </div>
                           {renderHeaderActions &&
                             renderHeaderActions({ data, dispatch })}
                           <Button
