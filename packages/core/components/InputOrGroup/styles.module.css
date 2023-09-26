@@ -97,8 +97,7 @@
   border: none;
   border-top: 1px solid var(--puck-color-grey-8);
   margin: 0;
-  padding-bottom: 16px;
-  padding-top: 16px;
+  padding: 16px;
 }
 
 .Input-arrayItem
