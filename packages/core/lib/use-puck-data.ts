@@ -4,6 +4,7 @@ import { StateReducer, createReducer, PuckAction } from "./reducer";
 import { flushZones } from "./flush-zones";
 import { useActionHistory } from "./use-action-history";
 import { getItem, ItemSelector } from "./get-item";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export function usePuckData({
   config,
@@ -20,6 +21,9 @@ export function usePuckData({
   );
   const [itemSelector, setItemSelector] = useState<ItemSelector | null>(null);
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
+
+  useHotkeys("ctrl+z", rewind, [rewind]);
+  useHotkeys("ctrl+y", forward, [forward]);
 
   const dispatch = (action: PuckAction) => {
     if (action.type === "insert") {
