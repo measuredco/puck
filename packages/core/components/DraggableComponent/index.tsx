@@ -4,6 +4,7 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, Trash } from "react-feather";
 import { useModifierHeld } from "../../lib/use-modifier-held";
+import { useHoveringOverChildArea } from "../../lib/use-hovering-over-child-area";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -48,6 +49,8 @@ export const DraggableComponent = ({
 
   useEffect(onMount, []);
 
+  const hoveringOverChildArea = useHoveringOverChildArea();
+
   return (
     <Draggable
       key={id}
@@ -67,6 +70,7 @@ export const DraggableComponent = ({
             isLocked,
             forceHover,
             indicativeHover,
+            hoveringOverChildArea,
           })}
           style={{
             ...style,

@@ -9,7 +9,7 @@ import { useContext } from "react";
 import { dropZoneContext } from "../DropZone/context";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { getZoneId } from "../../lib/get-zone-id";
-import { isChildOfZone } from "../../lib/is-child-of-zone";
+import { isChildOfArea } from "../../lib/is-child-of-area";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -67,7 +67,11 @@ export const LayerTree = ({
 
           const isHovering = hoveringComponent === item.props.id;
 
-          const childIsSelected = isChildOfZone(item, selectedItem, ctx);
+          const childIsSelected = isChildOfArea(
+            item.props.id,
+            selectedItem?.props.id,
+            ctx
+          );
 
           return (
             <li

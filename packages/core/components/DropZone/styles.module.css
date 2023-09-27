@@ -25,7 +25,7 @@
 }
 
 .DropZone--isAreaSelected,
-.DropZone--draggingOverArea:not(:has(.DropZone--hoveringOverArea)),
+.DropZone--draggingOverArea:not(.DropZone--hoveringOverChildArea),
 .DropZone--hoveringOverArea:not(.DropZone--isDisabled):not(
     .DropZone--isRootZone
   ) {

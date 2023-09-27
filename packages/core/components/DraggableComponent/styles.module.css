@@ -54,9 +54,9 @@
 }
 
 /* Won't work in FF */
-.DraggableComponent:not(.DraggableComponent--isSelected):has(
-    .DraggableComponent:hover > .DraggableComponent-overlay
-  )
+.DraggableComponent:not(
+    .DraggableComponent--isSelected
+  ).DraggableComponent--hoveringOverChildArea
   > .DraggableComponent-overlay {
   display: none;
 }

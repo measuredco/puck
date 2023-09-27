@@ -8,6 +8,7 @@ import { getClassNameFactory } from "../../lib";
 import styles from "./styles.module.css";
 import { DropZoneProvider, dropZoneContext } from "./context";
 import { getZoneId } from "../../lib/get-zone-id";
+import { useHoveringOverChildArea } from "../../lib/use-hovering-over-child-area";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -20,6 +21,7 @@ type DropZoneProps = {
 
 function DropZoneEdit({ zone, style }: DropZoneProps) {
   const ctx = useContext(dropZoneContext);
+  const hoveringOverChildArea = useHoveringOverChildArea();
 
   const {
     // These all need setting via context
@@ -139,6 +141,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
         userIsDragging,
         draggingOverArea,
         hoveringOverArea,
+        hoveringOverChildArea,
         draggingNewComponent,
         isDestination: draggedDestinationId === zoneCompound,
         isDisabled: !isEnabled,
