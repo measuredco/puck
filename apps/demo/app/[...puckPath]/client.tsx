@@ -3,32 +3,20 @@
 import { Config, Data } from "@measured/puck";
 import { Puck } from "@measured/puck/components/Puck";
 import { Render } from "@measured/puck/components/Render";
-import { Framework } from "../Framework";
 import { useEffect, useState } from "react";
 import { Button } from "@measured/puck/components/Button";
 import headingAnalyzer from "@measured/puck-plugin-heading-analyzer/src/HeadingAnalyzer";
+import config, { initialData } from "../../config";
 
 const isBrowser = typeof window !== "undefined";
 
-export function Client({
-  path,
-  isEdit,
-  framework,
-}: {
-  path: string;
-  isEdit: boolean;
-  framework: Framework;
-}) {
-  const config: Config = require(`../configs/${framework}/`).default;
-  const initialData: Data =
-    require(`../configs/${framework}/`).initialData || {};
-
+export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   // unique b64 key that updates each time we add / remove components
   const componentKey = Buffer.from(
     Object.keys(config.components).join("-")
   ).toString("base64");
 
-  const key = `puck-demo:${framework}:${componentKey}:${path}`;
+  const key = `puck-demo:${componentKey}:${path}`;
 
   const [data] = useState<Data>(() => {
     if (isBrowser) {
@@ -52,7 +40,7 @@ export function Client({
     return (
       <div>
         <Puck
-          config={config}
+          config={config as Config}
           data={data}
           onPublish={async (data: Data) => {
             localStorage.setItem(key, JSON.stringify(data));
@@ -72,7 +60,7 @@ export function Client({
   }
 
   if (data) {
-    return <Render config={config} data={data} />;
+    return <Render config={config as Config} data={data} />;
   }
 
   return (

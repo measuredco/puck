@@ -9,13 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.5",
     "@measured/puck": "*",
     "@measured/puck-plugin-heading-analyzer": "*",
-    "antd": "^5.6.1",
     "classnames": "^2.3.2",
     "next": "^13.5.2",
     "rc-footer": "^0.6.8",

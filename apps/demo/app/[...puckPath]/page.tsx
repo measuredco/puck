@@ -31,5 +31,5 @@ export default async function Page({
 }) {
   const { isEdit, path } = resolvePuckPath(params.puckPath);
 
-  return <Client isEdit={isEdit} path={path} framework={"custom"} />;
+  return <Client isEdit={isEdit} path={path} />;
 }
