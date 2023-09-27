@@ -349,7 +349,11 @@ export function Puck({
                             >
                               <ChevronLeft
                                 size={21}
-                                stroke={canRewind ? "black" : "#ddd"}
+                                stroke={
+                                  canRewind
+                                    ? "var(--puck-color-black)"
+                                    : "var(--puck-color-grey-7)"
+                                }
                               />
                             </IconButton>
                             <IconButton
@@ -359,7 +363,11 @@ export function Puck({
                             >
                               <ChevronRight
                                 size={21}
-                                stroke={canForward ? "black" : "#ddd"}
+                                stroke={
+                                  canForward
+                                    ? "var(--puck-color-black)"
+                                    : "var(--puck-color-grey-7)"
+                                }
                               />
                             </IconButton>
                           </div>
