@@ -57,6 +57,28 @@ const PluginRenderer = ({
     );
 };
 
+function getDroppableSizes() {
+  // Select all Droppable components on the page using the RBDND attribute
+  const droppables = document.querySelectorAll(
+    "[data-rbd-droppable-context-id]"
+  );
+
+  // Reduce the NodeList to an object with the droppableId as the key
+  const sizes = Array.from(droppables).reduce((acc, droppable) => {
+    const htmlElement = droppable as HTMLElement;
+    const id = htmlElement.getAttribute("data-rbd-droppable-id");
+    if (id) {
+      acc[id] = {
+        width: htmlElement.offsetWidth,
+        height: htmlElement.offsetHeight,
+      };
+    }
+    return acc;
+  }, {});
+
+  return sizes;
+}
+
 export function Puck({
   config,
   data: initialData = { content: [], root: { title: "" } },
@@ -159,6 +181,10 @@ export function Puck({
     DragStart & Partial<DragUpdate>
   >();
 
+  const [droppableSizes, setDroppableSizes] = useState<
+    Record<string, { width: number; height: number }>
+  >({});
+
   return (
     <div className="puck">
       <DragDropContext
@@ -169,6 +195,8 @@ export function Puck({
         onBeforeDragStart={(start) => {
           onDragStartOrUpdate(start);
           setItemSelector(null);
+
+          setDroppableSizes(getDroppableSizes());
         }}
         onDragEnd={(droppedItem) => {
           setDraggedItem(undefined);
@@ -234,6 +262,7 @@ export function Puck({
             placeholderStyle,
             mode: "edit",
             areaId: "root",
+            droppableSizes,
           }}
         >
           <dropZoneContext.Consumer>
@@ -413,7 +442,7 @@ export function Puck({
                       style={{
                         border: "1px solid var(--puck-color-grey-8)",
                         boxShadow: "0px 0px 0px 3rem var(--puck-color-grey-10)",
-                        zoom: 0.75,
+                        // zoom: 0.75,
                       }}
                     >
                       <Page data={data} {...data.root}>

@@ -121,16 +121,27 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
    *    the specific zone (which increases robustness when using flex
    *    layouts)
    */
-  if (userIsDragging) {
-    if (draggingNewComponent) {
-      isEnabled = hoveringOverArea;
-    } else {
-      isEnabled = draggingOverArea && hoveringOverZone;
-    }
+  if (userIsDragging && !ctx.parentDragging) {
+    isEnabled = hoveringOverArea && hoveringOverZone;
+    // if (draggingNewComponent) {
+    //   isEnabled = hoveringOverArea;
+    // } else {
+    //   isEnabled = draggingOverArea && hoveringOverZone;
+    // }
   }
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
   const isAreaSelected = selectedItem && zoneArea === selectedItem.props.id;
+
+  const draggedItemData = draggedItem
+    ? getItem(
+        {
+          zone: draggedSourceId,
+          index: draggedItem!.source.index,
+        },
+        data
+      )
+    : null;
 
   return (
     <div
@@ -150,6 +161,38 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
         droppableId={zoneCompound}
         direction={"vertical"}
         isDropDisabled={!isEnabled}
+        // Clones perform better when dragging between areas
+        // but breaks dragging of items that contain dropzones
+        // as beautiful-dnd can't deal with these being unmounted
+        // renderClone={
+        //   draggedItemData
+        //     ? (provided, snapshot, rubric) => {
+        //         const Render = config.components[draggedItemData.type]
+        //           ? config.components[draggedItemData.type].render
+        //           : () => (
+        //               <div style={{ padding: 48, textAlign: "center" }}>
+        //                 No configuration for {draggedItemData.type}
+        //               </div>
+        //             );
+
+        //         return (
+        //           <div
+        //             {...provided.draggableProps}
+        //             {...provided.dragHandleProps}
+        //             style={{
+        //               ...provided.draggableProps.style,
+        //               // width: 50,
+        //             }}
+        //             ref={provided.innerRef}
+        //           >
+        //             <div style={{ zoom: 0.75 }}>
+        //               <Render {...draggedItemData.props} />
+        //             </div>
+        //           </div>
+        //         );
+        //       }
+        //     : undefined
+        // }
       >
         {(provided, snapshot) => {
           return (
@@ -165,6 +208,8 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                 setHoveringZone(zoneCompound);
               }}
             >
+              {/* {`${isEnabled}`} */}
+              {/* {`${hoveringOverArea} ${hoveringArea}`} */}
               {content.map((item, i) => {
                 const componentId = item.props.id;
 
@@ -176,6 +221,10 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
 
                 const isSelected =
                   selectedItem?.props.id === componentId || false;
+
+                const isDragging =
+                  draggedItem?.draggableId.split("draggable-")[1] ===
+                  componentId;
 
                 const containsZone = areasWithZones
                   ? areasWithZones[componentId]
@@ -190,13 +239,23 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                     );
 
                 return (
-                  <div key={item.props.id} className={getClassName("item")}>
+                  <div
+                    key={item.props.id}
+                    className={getClassName("item")}
+                    // style={{ maxWidth: isDragging ? 128 : undefined }}
+                  >
                     <DropZoneProvider
                       value={{
                         ...ctx,
                         areaId: componentId,
+                        parentDragging: isDragging,
                       }}
                     >
+                      {/* {isDragging && (
+                        <div style={{ zoom: 0.75, opacity: 0.4 }}>
+                          <Render {...defaultedProps} />
+                        </div>
+                      )} */}
                       <DraggableComponent
                         label={item.type.toString()}
                         id={`draggable-${componentId}`}
@@ -268,17 +327,32 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                           e.stopPropagation();
                         }}
                         style={{
-                          pointerEvents:
-                            userIsDragging && draggingNewComponent
-                              ? "all"
-                              : undefined,
+                          pointerEvents: userIsDragging ? "all" : undefined,
                         }}
                       >
-                        <div style={{ zoom: 0.75 }}>
-                          <Render {...defaultedProps} />
+                        <div
+                          style={{
+                            // zoom: 0.75,
+                            width: isDragging ? 0 : "auto",
+                          }}
+                        >
+                          <div
+                            style={{
+                              position: isDragging ? "absolute" : "relative",
+                              width: "100%",
+                            }}
+                          >
+                            <Render {...defaultedProps} />
+                          </div>
                         </div>
                       </DraggableComponent>
                     </DropZoneProvider>
+
+                    {/* {isDragging && (
+                      <div style={{ zoom: 0.75 }}>
+                        <Render {...defaultedProps} />
+                      </div>
+                    )} */}
                     {userIsDragging && (
                       <div
                         className={getClassName("hitbox")}
@@ -292,18 +366,20 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                   </div>
                 );
               })}
-              {provided?.placeholder}
-              {snapshot?.isDraggingOver && (
-                <div
-                  data-puck-placeholder
-                  style={{
-                    ...placeholderStyle,
-                    background: "var(--puck-color-azure-5)",
-                    opacity: 0.3,
-                    zIndex: 0,
-                  }}
-                />
-              )}
+              <div style={{ width: 0 }}>
+                {provided.placeholder}
+                {snapshot.isDraggingOver && (
+                  <div
+                    data-puck-placeholder
+                    style={{
+                      ...placeholderStyle,
+                      background: "var(--puck-color-azure-5)",
+                      opacity: 0.3,
+                      zIndex: 0,
+                    }}
+                  />
+                )}
+              </div>
             </div>
           );
         }}

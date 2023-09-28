@@ -41,6 +41,8 @@ export type DropZoneContext = {
   pathData?: PathData;
   registerPath?: (selector: ItemSelector) => void;
   mode?: "edit" | "render";
+  parentDragging?: boolean;
+  droppableSizes?: Record<string, { width: number; height: number }>;
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
@@ -60,7 +62,7 @@ export const DropZoneProvider = ({
   // Hovering component may match area, but areas must always contain zones
   const [hoveringComponent, setHoveringComponent] = useState<string | null>();
 
-  const [hoveringAreaDb] = useDebounce(hoveringArea, 75, { leading: false });
+  const [hoveringAreaDb] = useDebounce(hoveringArea, 150, { leading: false });
 
   const [areasWithZones, setAreasWithZones] = useState<Record<string, boolean>>(
     {}
@@ -164,7 +166,7 @@ export const DropZoneProvider = ({
             activeZones,
             registerPath,
             pathData,
-
+            parentDragging: false,
             ...value,
           }}
         >

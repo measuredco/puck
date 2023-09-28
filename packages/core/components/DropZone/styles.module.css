@@ -1,7 +1,7 @@
 .DropZone {
   margin-left: auto;
   margin-right: auto;
-  zoom: 1.33;
+  /* zoom: 1.33; */
   position: relative;
   height: 100%;
   outline-offset: -1px;
@@ -17,13 +17,14 @@
   pointer-events: all;
 }
 
-.DropZone--userIsDragging:not(.DropZone--draggingOverArea):not(
+/* .DropZone--userIsDragging:not(.DropZone--draggingOverArea):not(
     .DropZone--draggingNewComponent
   )
   > .DropZone-content {
   pointer-events: none;
-}
+} */
 
+.DropZone--userIsDragging:not(.DropZone--isRootZone),
 .DropZone--isAreaSelected,
 .DropZone--draggingOverArea:not(:has(.DropZone--hoveringOverArea)),
 .DropZone--hoveringOverArea:not(.DropZone--isDisabled):not(
@@ -48,6 +49,7 @@
 
 .DropZone-item {
   position: relative;
+  /* z-index: 0; */
 }
 
 .DropZone-item:has(.DropZone--draggingOverArea) {
@@ -59,5 +61,5 @@
   bottom: -12px;
   height: 24px;
   width: 100%;
-  z-index: 1;
+  z-index: 2;
 }
