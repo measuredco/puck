@@ -28,7 +28,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: getPage(path).root.title,
+    title: getPage(path)?.root.title,
   };
 }
 
