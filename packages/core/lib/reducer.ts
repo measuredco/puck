@@ -105,7 +105,7 @@ const storeInterceptor = (reducer: StateReducer) => {
     const newData = reducer(data, action);
 
     if (!["registerZone", "unregisterZone", "set"].includes(action.type)) {
-      recordDiff(data, newData);
+      recordDiff(newData);
     }
 
     return newData;

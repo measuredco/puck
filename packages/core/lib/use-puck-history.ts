@@ -4,13 +4,14 @@ import { PuckAction } from "./reducer";
 import { useActionHistory } from "./use-action-history";
 import { useHotkeys } from "react-hotkeys-hook";
 import EventEmitter from "event-emitter";
-import { useDebouncedCallback } from "use-debounce";
-import deepDiff from "deep-diff";
+import { useDebouncedCallback, useDebounce } from "use-debounce";
+import { diff, applyChange, revertChange } from "deep-diff";
 
+const DEBOUNCE_TIME = 100;
 const RECORD_DIFF = "RECORD_DIFF";
 export const historyEmitter = EventEmitter();
-export const recordDiff = (data: Data, newData: Data) =>
-  historyEmitter.emit(RECORD_DIFF, data, newData);
+export const recordDiff = (newData: Data) =>
+  historyEmitter.emit(RECORD_DIFF, newData);
 
 export function usePuckHistory({
   data,
@@ -24,33 +25,34 @@ export function usePuckHistory({
   useHotkeys("ctrl+z", rewind, [rewind]);
   useHotkeys("ctrl+y", forward, [forward]);
 
-  const handleRecordDiff = useDebouncedCallback((...args: [Data, Data]) => {
-    const [_data, _newData] = args;
-    const diff = deepDiff.diff(_data, _newData);
+  const [snapshot] = useDebounce(data, DEBOUNCE_TIME);
 
-    if (!diff) {
+  const handleRecordDiff = useDebouncedCallback((newData: Data) => {
+    const _diff = diff(snapshot, newData);
+
+    if (!_diff) {
       return;
     }
 
     record({
       forward: () => {
         const target = structuredClone(data);
-        diff.reduce((target, change) => {
-          deepDiff.applyChange(target, true, change);
+        _diff.reduce((target, change) => {
+          applyChange(target, true, change);
           return target;
         }, target);
         dispatch({ type: "set", data: target });
       },
       rewind: () => {
         const target = structuredClone(data);
-        diff.reduce((target, change) => {
-          deepDiff.revertChange(target, true, change);
+        _diff.reduce((target, change) => {
+          revertChange(target, true, change);
           return target;
         }, target);
         dispatch({ type: "set", data: target });
       },
     });
-  }, 10);
+  }, DEBOUNCE_TIME);
 
   useEffect(() => {
     historyEmitter.on(RECORD_DIFF, handleRecordDiff);
