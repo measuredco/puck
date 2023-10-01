@@ -30,7 +30,7 @@ import { LayerTree } from "../LayerTree";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
 import { flushZones } from "../../lib/flush-zones";
-import { usePuckData } from "../../lib/use-puck-data";
+import { usePuckHistory } from "../../lib/use-puck-history";
 
 const Field = () => {};
 
@@ -86,18 +86,20 @@ export function Puck({
   headerTitle?: string;
   headerPath?: string;
 }) {
-  const {
-    canForward,
-    canRewind,
-    rewind,
-    forward,
-    record,
+  const [reducer] = useState(() => createReducer({ config }));
+  const [data, dispatch] = useReducer<StateReducer>(
+    reducer,
+    flushZones(initialData)
+  );
+
+  const { canForward, canRewind, rewind, forward } = usePuckHistory({
     data,
     dispatch,
-    itemSelector,
-    setItemSelector,
-    selectedItem,
-  } = usePuckData({ config, initialData });
+  });
+
+  const [itemSelector, setItemSelector] = useState<ItemSelector | null>(null);
+
+  const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
   const Page = useCallback(
     (pageProps) => (
