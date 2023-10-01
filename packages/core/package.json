@@ -17,6 +17,8 @@
   ],
   "devDependencies": {
     "@testing-library/react": "^14.0.0",
+    "@types/deep-diff": "^1.0.3",
+    "@types/event-emitter": "^0.3.3",
     "@types/jest": "^29.5.4",
     "@types/react": "^18.2.0",
     "@types/react-beautiful-dnd": "^13.1.4",
@@ -33,6 +35,8 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
+    "deep-diff": "^1.0.2",
+    "event-emitter": "^0.3.5",
     "react-beautiful-dnd": "^13.1.1",
     "react-feather": "^2.0.10",
     "react-hotkeys-hook": "^4.4.1",
