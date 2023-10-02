@@ -20,6 +20,7 @@
     "@types/react-dom": "^18.2.0",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
+    "react-feather": "^2.0.10",
     "tsconfig": "*",
     "tsup": "^6.7.0",
     "tsup-config": "*",
@@ -27,7 +28,6 @@
   },
   "dependencies": {
     "react-beautiful-dnd": "^13.1.1",
-    "react-feather": "^2.0.10",
     "react-spinners": "^0.13.8",
     "use-debounce": "^9.0.4"
   },
