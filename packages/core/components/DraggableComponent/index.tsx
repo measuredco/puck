@@ -1,13 +1,22 @@
 import {
   CSSProperties,
+  MutableRefObject,
   ReactNode,
   SyntheticEvent,
+  useCallback,
   useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
-import { Draggable, DraggingStyle } from "react-beautiful-dnd";
+import {
+  DragStart,
+  DragUpdate,
+  Draggable,
+  DraggableProvided,
+  DraggableStateSnapshot,
+  DraggingStyle,
+} from "react-beautiful-dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, Trash } from "react-feather";
@@ -15,10 +24,11 @@ import { useModifierHeld } from "../../lib/use-modifier-held";
 import { dropZoneContext } from "../DropZone";
 import { getItem } from "../../lib/get-item";
 import { getZoneId } from "../../lib/get-zone-id";
+import { DropZoneContext } from "../DropZone/context";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
-function getCoords(elem) {
+function getAbsCoordinates(elem) {
   // crossbrowser version
   const box = elem.getBoundingClientRect();
 
@@ -36,6 +46,114 @@ function getCoords(elem) {
 
   return { top: Math.round(top), left: Math.round(left) };
 }
+
+export const patchStyles = ({
+  provided,
+  snapshot,
+  draggedEl,
+  draggedItem,
+  droppableSizes,
+  placeholderStyle,
+}: {
+  provided: DraggableProvided;
+  snapshot: DraggableStateSnapshot;
+  draggedEl?: HTMLElement | null;
+  draggedItem?: DragStart & Partial<DragUpdate>;
+  droppableSizes?: Record<string, { width: number; height: number }>;
+  placeholderStyle?: CSSProperties;
+}) => {
+  let additionalStyles: CSSProperties = {};
+
+  let width: CSSProperties["width"];
+  let widthDifference: number = 0;
+
+  let originalWidth: number;
+
+  if (draggedItem?.destination && droppableSizes) {
+    originalWidth = droppableSizes[draggedItem?.source?.droppableId].width;
+
+    width =
+      droppableSizes[draggedItem?.destination?.droppableId].width ||
+      originalWidth;
+
+    widthDifference = originalWidth - width;
+  }
+
+  const destination = draggedItem?.destination;
+
+  const [sourceArea] = getZoneId(draggedItem?.source.droppableId);
+  const [destinationArea] = getZoneId(draggedItem?.destination?.droppableId);
+
+  // We use custom animations when changing area
+  const changedArea = sourceArea !== destinationArea;
+
+  if (destination) {
+    const droppableEl = document.querySelector(
+      `[data-rbd-droppable-id="${destination.droppableId}"]`
+    ) as HTMLElement | null;
+
+    if (
+      snapshot.isDropAnimating &&
+      snapshot.dropAnimation &&
+      typeof width === "number"
+    ) {
+      const { moveTo } = snapshot.dropAnimation;
+
+      if (width) additionalStyles.width = width;
+
+      if (changedArea) {
+        if (draggedEl) {
+          let transform = draggedEl.style.transform;
+
+          if (transform) {
+            const matches =
+              /translate\((-?\d+\.?\d*)px,\s*(-?\d+\.?\d*)px\)/.exec(transform);
+            const existingTransformY = matches ? parseFloat(matches[2]) : 0;
+
+            if (draggedEl && droppableEl && placeholderStyle) {
+              const placeholderTop = parseInt(placeholderStyle.top!.toString());
+
+              const transformY = -(
+                draggedEl?.getBoundingClientRect().y -
+                (placeholderTop + getAbsCoordinates(droppableEl).top)
+              );
+
+              additionalStyles.transform = `translate(${moveTo.x}px, ${
+                transformY + existingTransformY
+              }px)`;
+            }
+          }
+        }
+      }
+    } else if (snapshot.isDragging) {
+      let transform = provided.draggableProps.style?.transform;
+
+      if (transform) {
+        const matches = /translate\((-?\d+\.?\d*)px,\s*(-?\d+\.?\d*)px\)/.exec(
+          transform
+        );
+        const x = matches ? parseFloat(matches[1]) : 0;
+        const y = matches ? parseFloat(matches[2]) : 0;
+
+        const updatedX = x + widthDifference / 2;
+
+        const updatedY = changedArea ? y : y;
+
+        // console.log(getAbsCoordinates(draggedEl).top);
+        // console.log(x, y);
+        // console.log(draggedEl?.getBoundingClientRect());
+
+        transform = `translate(${updatedX}px, ${updatedY}px)`;
+      }
+      if (width) {
+        additionalStyles.width = width;
+      }
+      additionalStyles.transform = transform;
+    }
+
+    return additionalStyles;
+  }
+};
 
 export const DraggableComponent = ({
   children,
@@ -76,33 +194,14 @@ export const DraggableComponent = ({
 }) => {
   const isModifierHeld = useModifierHeld("Alt");
 
-  useEffect(onMount, []);
+  useEffect(() => {
+    if (onMount) onMount();
+  }, []);
 
   const { draggedItem, droppableSizes, data, placeholderStyle } =
     useContext(dropZoneContext) || {};
 
-  let width: CSSProperties["width"];
-  let widthDifference: number = 0;
-
-  let originalWidth: number;
-
-  if (draggedItem?.destination && droppableSizes) {
-    originalWidth = droppableSizes[draggedItem?.source?.droppableId].width;
-
-    width =
-      droppableSizes[draggedItem?.destination?.droppableId].width ||
-      originalWidth;
-
-    widthDifference = originalWidth - width;
-  }
-
-  const destination = draggedItem?.destination;
-
-  const [sourceArea] = getZoneId(draggedItem?.source.droppableId);
-  const [destinationArea] = getZoneId(draggedItem?.destination?.droppableId);
-
-  // We use custom animations when changing area
-  const changedArea = sourceArea !== destinationArea;
+  const ref = useRef(null) as MutableRefObject<HTMLElement | null>;
 
   return (
     <Draggable
@@ -112,72 +211,23 @@ export const DraggableComponent = ({
       isDragDisabled={isDragDisabled}
     >
       {(provided, snapshot) => {
-        let additionalStyles: CSSProperties = {};
+        const draggedEl = ref.current;
 
-        if (
-          snapshot.isDropAnimating &&
-          snapshot.dropAnimation &&
-          typeof width === "number"
-        ) {
-          const { moveTo } = snapshot.dropAnimation;
-
-          if (width) additionalStyles.width = width;
-
-          if (destination && data && changedArea) {
-            const draggedEl = document.querySelector(
-              `[data-rbd-draggable-id="${id}"]`
-            ) as HTMLElement | null;
-
-            if (draggedEl) {
-              let transform = draggedEl.style.transform;
-
-              if (transform) {
-                const matches =
-                  /translate\((-?\d+\.?\d*)px,\s*(-?\d+\.?\d*)px\)/.exec(
-                    transform
-                  );
-                const existingTransformY = matches ? parseFloat(matches[2]) : 0;
-
-                const droppableEl = document.querySelector(
-                  `[data-rbd-droppable-id="${destination.droppableId}"]`
-                ) as HTMLElement | null;
-
-                if (draggedEl && droppableEl && placeholderStyle) {
-                  const placeholderTop = parseInt(
-                    placeholderStyle.top!.toString()
-                  );
-
-                  const transformY = -(
-                    draggedEl?.getBoundingClientRect().y -
-                    (placeholderTop + getCoords(droppableEl).top)
-                  );
-
-                  additionalStyles.transform = `translate(${moveTo.x}px, ${
-                    transformY + existingTransformY
-                  }px)`;
-                }
-              }
-            }
-          }
-        } else if (snapshot.isDragging) {
-          let transform = provided.draggableProps.style?.transform;
-          if (transform) {
-            const matches =
-              /translate\((-?\d+\.?\d*)px,\s*(-?\d+\.?\d*)px\)/.exec(transform);
-            const x = matches ? parseFloat(matches[1]) : 0;
-            const y = matches ? parseFloat(matches[2]) : 0;
-
-            transform = `translate(${x + widthDifference / 2}px, ${y}px)`;
-          }
-          if (width) {
-            additionalStyles.width = width;
-          }
-          additionalStyles.transform = transform;
-        }
+        const additionalStyles = patchStyles({
+          provided,
+          snapshot,
+          draggedEl,
+          draggedItem,
+          droppableSizes,
+          placeholderStyle,
+        });
 
         return (
           <div
-            ref={provided.innerRef}
+            ref={(node) => {
+              ref.current = node;
+              provided.innerRef(node);
+            }}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             id={`draggable-component-${id}`}
@@ -203,7 +253,6 @@ export const DraggableComponent = ({
             onClick={onClick}
           >
             {debug}
-            {/* {`${boundingBox?.y}`} */}
             <div className={getClassName("contents")}>{children}</div>
 
             <div className={getClassName("overlay")}>

@@ -30,6 +30,17 @@ import { LayerTree } from "../LayerTree";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
 import { flushZones } from "../../lib/flush-zones";
+import {
+  DndContext,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { DraggableData } from "../DraggableComponent";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 const Field = () => {};
 
@@ -56,28 +67,6 @@ const PluginRenderer = ({
       children
     );
 };
-
-function getDroppableSizes() {
-  // Select all Droppable components on the page using the RBDND attribute
-  const droppables = document.querySelectorAll(
-    "[data-rbd-droppable-context-id]"
-  );
-
-  // Reduce the NodeList to an object with the droppableId as the key
-  const sizes = Array.from(droppables).reduce((acc, droppable) => {
-    const htmlElement = droppable as HTMLElement;
-    const id = htmlElement.getAttribute("data-rbd-droppable-id");
-    if (id) {
-      acc[id] = {
-        width: htmlElement.offsetWidth,
-        height: htmlElement.offsetHeight,
-      };
-    }
-    return acc;
-  }, {});
-
-  return sizes;
-}
 
 export function Puck({
   config,
@@ -114,6 +103,13 @@ export function Puck({
   );
 
   const [itemSelector, setItemSelector] = useState<ItemSelector | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
@@ -177,85 +173,144 @@ export function Puck({
 
   const [leftSidebarVisible, setLeftSidebarVisible] = useState(true);
 
-  const [draggedItem, setDraggedItem] = useState<
-    DragStart & Partial<DragUpdate>
-  >();
-
-  const [droppableSizes, setDroppableSizes] = useState<
-    Record<string, { width: number; height: number }>
-  >({});
-
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  // useEffect(() => {
-  //   return window.onmousemove && window.onmousemove(_, );
-  // }, []);
+  const [dragEvent, setDragEvent] = useState<DragStartEvent>();
 
   return (
     <div className="puck">
-      <DragDropContext
-        onDragUpdate={(update) => {
-          setDraggedItem({ ...draggedItem, ...update });
-          onDragStartOrUpdate(update);
+      <DndContext
+        collisionDetection={closestCenter}
+        sensors={sensors}
+        onDragStart={(event) => {
+          setDragEvent(event);
         }}
-        onBeforeDragStart={(start) => {
-          onDragStartOrUpdate(start);
-          setItemSelector(null);
+        // onDragOver={(event) => {
+        //   setDragEvent(event);
+        // }}
+        onDragEnd={(event) => {
+          setDragEvent(undefined);
 
-          setDroppableSizes(getDroppableSizes());
-        }}
-        onDragEnd={(droppedItem) => {
-          setDraggedItem(undefined);
-
-          // User cancel drag
-          if (!droppedItem.destination) {
+          if (!event.over?.id) {
             return;
           }
+
+          console.log("drag end", event);
+
+          // event.activatorEvent.ov
 
           // New component
-          if (
-            droppedItem.source.droppableId === "component-list" &&
-            droppedItem.destination
-          ) {
-            dispatch({
-              type: "insert",
-              componentType: droppedItem.draggableId,
-              destinationIndex: droppedItem.destination!.index,
-              destinationZone: droppedItem.destination.droppableId,
-            });
+          // if (
+          //   droppedItem.source.droppableId === "component-list" &&
+          //   droppedItem.destination
+          // ) {
+          //   dispatch({
+          //     type: "insert",
+          //     componentType: droppedItem.draggableId,
+          //     destinationIndex: droppedItem.destination!.index,
+          //     destinationZone: droppedItem.destination.droppableId,
+          //   });
 
-            setItemSelector({
-              index: droppedItem.destination!.index,
-              zone: droppedItem.destination.droppableId,
-            });
+          //   setItemSelector({
+          //     index: droppedItem.destination!.index,
+          //     zone: droppedItem.destination.droppableId,
+          //   });
 
+          //   return;
+          // } else {
+
+          const { active, over } = event;
+          const source = (active.data.current as DraggableData) || null;
+          const destination = (over.data.current as DraggableData) || null;
+
+          if (!source || !destination) {
             return;
+          }
+
+          console.log("source", source);
+          console.log("destination", destination);
+
+          if (source.zoneCompound === destination.zoneCompound) {
+            dispatch({
+              type: "reorder",
+              sourceIndex: source.index,
+              destinationIndex: destination.index,
+              destinationZone: destination.zoneCompound,
+            });
           } else {
-            const { source, destination } = droppedItem;
-
-            if (source.droppableId === destination.droppableId) {
-              dispatch({
-                type: "reorder",
-                sourceIndex: source.index,
-                destinationIndex: destination.index,
-                destinationZone: destination.droppableId,
-              });
-            } else {
-              dispatch({
-                type: "move",
-                sourceZone: source.droppableId,
-                sourceIndex: source.index,
-                destinationIndex: destination.index,
-                destinationZone: destination.droppableId,
-              });
-            }
-
-            setItemSelector({
-              index: destination.index,
-              zone: destination.droppableId,
+            dispatch({
+              type: "move",
+              sourceZone: source.zoneCompound,
+              sourceIndex: source.index,
+              destinationIndex: destination.index,
+              destinationZone: destination.zoneCompound,
             });
           }
+
+          setItemSelector({
+            index: destination.index,
+            zone: destination.zoneCompound,
+          });
+          // }
         }}
+        // onDragUpdate={(update) => {
+        //   setDragEvent({ ...dragEvent, ...update });
+        //   onDragStartOrUpdate(update);
+        // }}
+        // onBeforeDragStart={(start) => {
+        //   onDragStartOrUpdate(start);
+        //   setItemSelector(null);
+        // }}
+        // onDragEnd={(droppedItem) => {
+        //   setDragEvent(undefined);
+
+        //   // User cancel drag
+        //   if (!droppedItem.destination) {
+        //     return;
+        //   }
+
+        //   // New component
+        //   if (
+        //     droppedItem.source.droppableId === "component-list" &&
+        //     droppedItem.destination
+        //   ) {
+        //     dispatch({
+        //       type: "insert",
+        //       componentType: droppedItem.draggableId,
+        //       destinationIndex: droppedItem.destination!.index,
+        //       destinationZone: droppedItem.destination.droppableId,
+        //     });
+
+        //     setItemSelector({
+        //       index: droppedItem.destination!.index,
+        //       zone: droppedItem.destination.droppableId,
+        //     });
+
+        //     return;
+        //   } else {
+        //     const { source, destination } = droppedItem;
+
+        //     if (source.droppableId === destination.droppableId) {
+        //       dispatch({
+        //         type: "reorder",
+        //         sourceIndex: source.index,
+        //         destinationIndex: destination.index,
+        //         destinationZone: destination.droppableId,
+        //       });
+        //     } else {
+        //       dispatch({
+        //         type: "move",
+        //         sourceZone: source.droppableId,
+        //         sourceIndex: source.index,
+        //         destinationIndex: destination.index,
+        //         destinationZone: destination.droppableId,
+        //       });
+        //     }
+
+        //     setItemSelector({
+        //       index: destination.index,
+        //       zone: destination.droppableId,
+        //     });
+        //   }
+        // }}
       >
         <DropZoneProvider
           value={{
@@ -264,11 +319,10 @@ export function Puck({
             setItemSelector,
             config,
             dispatch,
-            draggedItem,
+            dragEvent,
             placeholderStyle,
             mode: "edit",
             areaId: "root",
-            droppableSizes,
           }}
         >
           <dropZoneContext.Consumer>
@@ -309,7 +363,6 @@ export function Puck({
                       borderBottom: "1px solid var(--puck-color-grey-8)",
                     }}
                   >
-                    {JSON.stringify(mousePosition)}
                     {renderHeader ? (
                       renderHeader({
                         children: (
@@ -401,7 +454,7 @@ export function Puck({
                       <ComponentList config={config} />
                     </SidebarSection>
                     <SidebarSection title="Outline">
-                      {ctx?.activeZones &&
+                      {/* {ctx?.activeZones &&
                         ctx?.activeZones[rootDroppableId] && (
                           <LayerTree
                             data={data}
@@ -430,7 +483,7 @@ export function Puck({
                             />
                           );
                         }
-                      )}
+                      )} */}
                     </SidebarSection>
                   </div>
 
@@ -583,7 +636,7 @@ export function Puck({
             }}
           </dropZoneContext.Consumer>
         </DropZoneProvider>
-      </DragDropContext>
+      </DndContext>
     </div>
   );
 }

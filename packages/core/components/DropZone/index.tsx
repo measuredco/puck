@@ -1,5 +1,12 @@
-import { CSSProperties, useContext, useEffect } from "react";
-import { DraggableComponent } from "../DraggableComponent";
+import {
+  CSSProperties,
+  MutableRefObject,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
+import { DraggableComponent, patchStyles } from "../DraggableComponent";
 import DroppableStrictMode from "../DroppableStrictMode";
 import { getItem } from "../../lib/get-item";
 import { setupZone } from "../../lib/setup-zone";
@@ -8,6 +15,7 @@ import { getClassNameFactory } from "../../lib";
 import styles from "./styles.module.css";
 import { DropZoneProvider, dropZoneContext } from "./context";
 import { getZoneId } from "../../lib/get-zone-id";
+import { DraggableStateSnapshot } from "react-beautiful-dnd";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -82,6 +90,8 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
   const draggingOverArea = userIsDragging && zoneArea === draggedSourceArea;
   const draggingNewComponent = draggedSourceId === "component-list";
 
+  const draggedRef = useRef(null) as MutableRefObject<HTMLElement | null>;
+
   if (
     !ctx?.config ||
     !ctx.setHoveringArea ||
@@ -143,6 +153,14 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
       )
     : null;
 
+  const El = !ctx.parentDragging
+    ? ({
+        children,
+      }: {
+        children: (provided: object, snapshot: object) => ReactNode;
+      }) => <>{children({}, {})}</>
+    : DroppableStrictMode;
+
   return (
     <div
       className={getClassName({
@@ -175,17 +193,37 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
         //               </div>
         //             );
 
+        //         const additionalStyles = patchStyles({
+        //           provided,
+        //           snapshot,
+        //           draggedItem,
+        //           draggedEl: draggedRef.current,
+        //           droppableSizes: ctx.droppableSizes,
+        //           placeholderStyle,
+        //         });
+
         //         return (
         //           <div
         //             {...provided.draggableProps}
         //             {...provided.dragHandleProps}
         //             style={{
         //               ...provided.draggableProps.style,
+        //               ...additionalStyles,
         //               // width: 50,
         //             }}
-        //             ref={provided.innerRef}
+        //             ref={(node) => {
+        //               draggedRef.current = node;
+        //               provided.innerRef(node);
+        //             }}
         //           >
-        //             <div style={{ zoom: 0.75 }}>
+        //             <div
+        //               style={
+        //                 {
+        //                   // zoom: 0.75,
+        //                 }
+        //               }
+        //             >
+        //               {/* <div>Test</div> */}
         //               <Render {...draggedItemData.props} />
         //             </div>
         //           </div>
