@@ -1,4 +1,5 @@
 import { CSSProperties, useContext, useEffect } from "react";
+import classnames from "classnames";
 import { DraggableComponent } from "../DraggableComponent";
 import DroppableStrictMode from "../DroppableStrictMode";
 import { getItem } from "../../lib/get-item";
@@ -16,9 +17,10 @@ export { DropZoneProvider, dropZoneContext } from "./context";
 type DropZoneProps = {
   zone: string;
   style?: CSSProperties;
+  className?: string;
 };
 
-function DropZoneEdit({ zone, style }: DropZoneProps) {
+function DropZoneEdit({ zone, style, className }: DropZoneProps) {
   const ctx = useContext(dropZoneContext);
 
   const {
@@ -155,7 +157,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
           return (
             <div
               {...(provided || { droppableProps: {} }).droppableProps}
-              className={getClassName("content")}
+              className={classnames(getClassName("content"), className)}
               ref={provided?.innerRef}
               style={style}
               id={zoneCompound}
