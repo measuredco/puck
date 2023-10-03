@@ -160,6 +160,63 @@ export const MyComponent: ComponentConfig = {
 };
 ```
 
+## DropZones
+
+Puck supports creating complex layouts (like multi-column layouts) using the `<DropZone>` component.
+
+### Example
+
+In this example, we use the `<DropZone>` component to render two nested DropZones within another component:
+
+```tsx
+import { DropZone } from "@measured/puck";
+
+export const MyComponent: ComponentConfig = {
+  render: () => {
+    return (
+      <div>
+        <DropZone zone="first-drop-zone">
+        <DropZone zone="second-drop-zone">
+      </div>
+    )
+  }
+};
+```
+
+### Custom root entry points
+
+You can also do this at the root of your component. This is useful if you have a fixed layout and only want to make certain parts of your page customisable:
+
+```tsx
+import { DropZone, Config } from "@measured/puck";
+
+export const config: Config = {
+  root: {
+    render: ({ children }) => {
+      return (
+        <div>
+          {/* children renders the default zone. This can be omitted if necessary. */}
+          {children}
+
+          <div>
+            <DropZone zone="other-drop-zone">
+          </div>
+        </div>
+      )
+    }
+  }
+};
+```
+
+### The Rules of DropZones
+
+The current DropZone implementation has certain rules and limitations:
+
+1. You can drag from the component list on the LHS into any DropZone
+2. You can drag components between DropZones, so long as those DropZones share a parent (also known as _area_)
+3. You can't drag between DropZones that don't share a parent (or _area_)
+4. Your mouse must be directly over a DropZone for a collision to be detected
+
 ## Reference
 
 ### `<Puck>`
@@ -182,6 +239,13 @@ The `<Render>` component renders user-facing UI using Puck data.
 
 - **config** (`Config`): Puck component configuration
 - **data** (`Data`): Data to render
+
+### `<DropZone>`
+
+The `<DropZone>` component allows you to create advanced layouts, like multi-columns.
+
+- **zone** (`string`): Identifier for the zone of your component, unique to the parent component
+- **style** (`CSSProperties`): Custom inline styles
 
 ### `Config`
 
