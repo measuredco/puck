@@ -16,7 +16,7 @@ describe("use-action-history", () => {
     expect(renderedHook.result.current.canForward).toBe(false);
   });
 
-  describe("when action history is recorded once", () => {
+  describe("when a single action history is recorded", () => {
     let rewind: jest.Mock;
     let forward: jest.Mock;
 
@@ -40,16 +40,16 @@ describe("use-action-history", () => {
       expect(renderedHook.result.current.canForward).toBe(false);
     });
 
-    describe("and when rewind history once", () => {
+    describe("and when history is rewound once", () => {
       beforeEach(() => {
         act(() => renderedHook.result.current.rewind());
       });
 
-      test("first history's rewind function should be executed", () => {
+      test("the rewind function should be executed", () => {
         expect(rewind).toBeCalledTimes(1);
       });
 
-      test("canRewind should be false - there is no left can rewind history", () => {
+      test("canRewind should be false - there is no rewind history remaining", () => {
         expect(renderedHook.result.current.canRewind).toBe(false);
       });
 
@@ -57,26 +57,26 @@ describe("use-action-history", () => {
         expect(renderedHook.result.current.canForward).toBe(true);
       });
 
-      describe("and when rewind history once again", () => {
+      describe("and then rewound again", () => {
         beforeEach(() => {
           act(() => renderedHook.result.current.rewind());
         });
 
-        test("first history's rewind function is no more executed - there is no left can rewind history", () => {
+        test("the rewind function is not executed again - there is no rewind history remaining", () => {
           expect(rewind).toBeCalledTimes(1);
         });
       });
 
-      describe("and when forward history once", () => {
+      describe("and then fast-forwarded once", () => {
         beforeEach(() => {
           act(() => renderedHook.result.current.forward());
         });
 
-        test("first history's forward function should be executed", () => {
+        test("the forward function should be executed", () => {
           expect(forward).toBeCalledTimes(1);
         });
 
-        test("canForward should be false - there is no left can rewind history", () => {
+        test("canForward should be false - there is no forward history remaining", () => {
           expect(renderedHook.result.current.canForward).toBe(false);
         });
 
@@ -87,7 +87,7 @@ describe("use-action-history", () => {
     });
   });
 
-  describe("when run rewind all with action histories", () => {
+  describe("when multiple action histories are recorded and rewound", () => {
     const actions = [
       { rewind: jest.fn(), forward: jest.fn() },
       { rewind: jest.fn(), forward: jest.fn() },
@@ -105,14 +105,14 @@ describe("use-action-history", () => {
       });
     });
 
-    test("rewind function of action should be execute", () => {
+    test("the rewind function should be executed each time an action is rewound", () => {
       actions.reverse().forEach(({ rewind }) => {
         act(() => renderedHook.result.current.rewind());
         expect(rewind).toBeCalled();
       });
     });
 
-    test("canRewind should be true until before last rewind", () => {
+    test("canRewind should be true until the start of the history is reached", () => {
       actions.reverse().forEach((_, i) => {
         act(() => renderedHook.result.current.rewind());
         expect(renderedHook.result.current.canRewind).toBe(
@@ -122,7 +122,7 @@ describe("use-action-history", () => {
     });
   });
 
-  describe("when run forward all with action histories (after all rewinded)", () => {
+  describe("when multiple action histories are recorded, rewound and then fast-forwarded", () => {
     const actions = [
       { rewind: jest.fn(), forward: jest.fn() },
       { rewind: jest.fn(), forward: jest.fn() },
@@ -146,14 +146,14 @@ describe("use-action-history", () => {
       });
     });
 
-    test("forward function of action should be execute", () => {
+    test("the forward function should be executed each time an action is fast-forwarded", () => {
       actions.forEach(({ forward }) => {
         act(() => renderedHook.result.current.forward());
         expect(forward).toBeCalled();
       });
     });
 
-    test("canForward should be true until before last forward", () => {
+    test("canForward should be true until the end of the history is reached", () => {
       actions.forEach((_, i) => {
         act(() => renderedHook.result.current.forward());
         expect(renderedHook.result.current.canForward).toBe(
@@ -182,7 +182,7 @@ describe("use-action-history", () => {
       act(() => renderedHook.result.current.rewind());
     });
 
-    test("recent histories are rewritten when recording a new action ", () => {
+    test("the forward history is overridden when recording a new action ", () => {
       const newAction = { rewind: jest.fn(), forward: jest.fn() };
       act(() => renderedHook.result.current.record(newAction));
 
