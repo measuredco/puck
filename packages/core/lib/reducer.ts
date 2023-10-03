@@ -23,34 +23,34 @@ export const addToZoneCache = (key: string, data: Content) => {
   zoneCache[key] = data;
 };
 
-type InsertAction = {
+export type InsertAction = {
   type: "insert";
   componentType: string;
   destinationIndex: number;
   destinationZone: string;
 };
 
-type DuplicateAction = {
+export type DuplicateAction = {
   type: "duplicate";
   sourceIndex: number;
   sourceZone: string;
 };
 
-type ReplaceAction = {
+export type ReplaceAction = {
   type: "replace";
   destinationIndex: number;
   destinationZone: string;
   data: any;
 };
 
-type ReorderAction = {
+export type ReorderAction = {
   type: "reorder";
   sourceIndex: number;
   destinationIndex: number;
   destinationZone: string;
 };
 
-type MoveAction = {
+export type MoveAction = {
   type: "move";
   sourceIndex: number;
   sourceZone: string;
@@ -58,23 +58,23 @@ type MoveAction = {
   destinationZone: string;
 };
 
-type RemoveAction = {
+export type RemoveAction = {
   type: "remove";
   index: number;
   zone: string;
 };
 
-type SetDataAction = {
+export type SetDataAction = {
   type: "set";
   data: Partial<Data>;
 };
 
-type RegisterZoneAction = {
+export type RegisterZoneAction = {
   type: "registerZone";
   zone: string;
 };
 
-type UnregisterZoneAction = {
+export type UnregisterZoneAction = {
   type: "unregisterZone";
   zone: string;
 };
