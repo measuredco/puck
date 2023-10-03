@@ -22,8 +22,8 @@ export function usePuckHistory({
 }) {
   const { canForward, canRewind, rewind, forward, record } = useActionHistory();
 
-  useHotkeys("ctrl+z", rewind, [rewind]);
-  useHotkeys("ctrl+y", forward, [forward]);
+  useHotkeys("meta+z", rewind, { preventDefault: true });
+  useHotkeys("meta+y", forward, { preventDefault: true });
 
   const [snapshot] = useDebounce(data, DEBOUNCE_TIME);
 
