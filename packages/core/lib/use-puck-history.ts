@@ -7,7 +7,7 @@ import EventEmitter from "event-emitter";
 import { useDebouncedCallback, useDebounce } from "use-debounce";
 import { diff, applyChange, revertChange } from "deep-diff";
 
-const DEBOUNCE_TIME = 100;
+const DEBOUNCE_TIME = 250;
 const RECORD_DIFF = "RECORD_DIFF";
 export const historyEmitter = EventEmitter();
 export const recordDiff = (newData: Data) =>
