@@ -29,7 +29,7 @@ export const FieldLabel = ({
   return (
     <label>
       <div className={getClassName("label")}>
-        {icon && <div className={getClassName("labelIcon")}></div>}
+        {icon ? <div className={getClassName("labelIcon")}>{icon}</div> : <></>}
         {label}
       </div>
       {children}
