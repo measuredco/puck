@@ -23,6 +23,7 @@ export function usePuckHistory({
   const { canForward, canRewind, rewind, forward, record } = useActionHistory();
 
   useHotkeys("meta+z", rewind, { preventDefault: true });
+  useHotkeys("meta+shift+z", forward, { preventDefault: true });
   useHotkeys("meta+y", forward, { preventDefault: true });
 
   const [snapshot] = useDebounce(data, DEBOUNCE_TIME);
