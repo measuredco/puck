@@ -10,6 +10,7 @@
     "release:prepare": "git fetch --tags && conventional-recommended-bump -p angular | xargs yarn version:auto $1",
     "release:canary": "yarn release:prepare && node scripts/get-unstable-version canary | xargs yarn version:auto $1",
     "release-commit": "git add -u && git commit -m \"release: v${npm_package_version}\"",
+    "test": "turbo run test",
     "version": "lerna version --force-publish -y --no-push --no-changelog --no-git-tag-version $npm_package_version",
     "version:auto": "yarn version --no-git-tag-version --new-version $1",
     "changelog": "node scripts/create-changelog"
