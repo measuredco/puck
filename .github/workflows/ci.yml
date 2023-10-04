@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: yarn
 
+      - name: Run tests
+        run: yarn test
+
       - name: Check linting and formatting
         run: |
           if yarn lint && yarn format:check; then
