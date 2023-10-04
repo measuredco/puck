@@ -1,0 +1,23 @@
+{
+  "installation": {
+    "title": "Installation"
+  },
+  "getting-started": {
+    "title": "Getting Started"
+  },
+  "editor": {
+    "title": "Editor"
+  },
+  "data": {
+    "title": "Data"
+  },
+  "fields": {
+    "title": "Fields"
+  },
+  "dropzones": {
+    "title": "Dropzones"
+  },
+  "plugins": {
+    "title": "Plugins"
+  }
+}

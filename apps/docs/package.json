@@ -1,0 +1,25 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.12",
+    "@types/react": "^18.0.22",
+    "@types/react-dom": "^18.0.7",
+    "eslint-config-custom": "*",
+    "typescript": "^4.5.3"
+  },
+  "dependencies": {
+    "next": "^13.5.4",
+    "nextra": "^2.13.1",
+    "nextra-theme-docs": "^2.13.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

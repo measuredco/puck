@@ -1,0 +1,14 @@
+# Config
+
+The `Config` object describes which components Puck should render, how they should render and which inputs are available to them.
+
+- **root** (`object`)
+  - **fields** (`object`):
+    - **title** (`Field`): Title of the content, typically used for the page title.
+    - **[fieldName]** (`Field`): User defined fields, used to describe the input data stored in the `root` key.
+  - **render** (`Component`): Render a React component at the root of your component tree. Useful for defining context providers.
+- **components** (`object`): Definitions for each of the components you want to show in the visual editor
+  - **[componentName]** (`object`)
+    - **fields** (`Field`): The Field objects describing the input data stored against this component.
+    - **render** (`Component`): Render function for your React component. Receives props as defined in fields.
+    - **defaultProps** (`object` [optional]): Default props to pass to your component. Will show in fields.
