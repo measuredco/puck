@@ -2,13 +2,13 @@
 title: Showcase
 ---
 
-import { Cards } from 'nextra/components'
+import { Cards } from "nextra/components";
 
-# Showcase 
+# Showcase
 
 A showcase of projects powered by Puck
 
-<Cards className={'cards'}>
+<Cards className={"cards"}>
   <ShowcaseCard title="Measured Co" href="https://measured.co/">
     <>![Node.js preview](./showcase/measuredco.png)</>
   </ShowcaseCard>
@@ -18,14 +18,14 @@ export const ShowcaseCard = Object.assign(
   // Copy card component and add default props
   Cards.Card.bind(),
   {
-    displayName: 'ShowcaseCard',
+    displayName: "ShowcaseCard",
     defaultProps: {
       image: true,
       arrow: true,
-      target: '_blank'
-    }
+      target: "_blank",
+    },
   }
-)
+);
 
 <style global jsx>{`
   cards > img {
@@ -36,4 +36,4 @@ export const ShowcaseCard = Object.assign(
 
 ### Do you have a Puck powered project?
 
-If you have a Puck powered project that you would like to have listed here, please raise a [PR on Github](https://github.com/measuredco/puck/tree/main/apps/docs/pages/showcase.mdx).  
+If you have a Puck powered project that you would like to have listed here, please raise a [PR on Github](https://github.com/measuredco/puck/tree/main/apps/docs/pages/showcase.mdx).
