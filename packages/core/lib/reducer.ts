@@ -12,6 +12,7 @@ import {
   removeRelatedZones,
 } from "./reduce-related-zones";
 import { generateId } from "./generate-id";
+import { recordDiff } from "./use-puck-history";
 
 export type ActionType = "insert" | "reorder";
 
@@ -91,9 +92,20 @@ export type PuckAction =
 
 export type StateReducer = Reducer<Data, PuckAction>;
 
-export const createReducer =
-  ({ config }: { config: Config }): StateReducer =>
-  (data, action) => {
+const storeInterceptor = (reducer: StateReducer) => {
+  return (data, action) => {
+    const newData = reducer(data, action);
+
+    if (!["registerZone", "unregisterZone", "set"].includes(action.type)) {
+      recordDiff(newData);
+    }
+
+    return newData;
+  };
+};
+
+export const createReducer = ({ config }: { config: Config }): StateReducer =>
+  storeInterceptor((data, action) => {
     if (action.type === "insert") {
       const emptyComponentData = {
         type: action.componentType,
@@ -336,4 +348,4 @@ export const createReducer =
     }
 
     return data;
-  };
+  });
