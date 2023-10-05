@@ -46,6 +46,11 @@
   pointer-events: none;
 }
 
+.DraggableComponent:not(.DraggableComponent--isSelected)
+  > .DraggableComponent-overlay {
+  outline: 2px var(--puck-color-azure-8) solid;
+}
+
 .DraggableComponent--indicativeHover > .DraggableComponent-overlay {
   display: block;
   background: transparent; /* We only use backgrounds on natural hovers */
