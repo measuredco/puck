@@ -436,10 +436,11 @@ export function Puck({
 
                   <div
                     style={{
-                      padding: 32,
                       overflowY: "auto",
                       gridArea: "editor",
                       position: "relative",
+                      display: "flex",
+                      flexDirection: "column",
                     }}
                     onClick={() => setItemSelector(null)}
                     id="puck-frame"
@@ -447,15 +448,29 @@ export function Puck({
                     <div
                       className="puck-root"
                       style={{
-                        border: "1px solid var(--puck-color-grey-8)",
-                        boxShadow: "0px 0px 0px 3rem var(--puck-color-grey-10)",
+                        boxShadow: "0px 0px 0px 32px var(--puck-color-grey-10)",
+                        margin: 32,
                         zoom: 0.75,
                       }}
                     >
-                      <Page data={data} {...data.root}>
-                        <DropZone zone={rootDroppableId} />
-                      </Page>
+                      <div
+                        style={{
+                          border: "1px solid var(--puck-color-grey-8)",
+                        }}
+                      >
+                        <Page data={data} {...data.root}>
+                          <DropZone zone={rootDroppableId} />
+                        </Page>
+                      </div>
                     </div>
+                    {/* Fill empty space under root */}
+                    <div
+                      style={{
+                        background: "var(--puck-color-grey-10)",
+                        height: "100%",
+                        flexGrow: 1,
+                      }}
+                    ></div>
                   </div>
                   <div
                     style={{
