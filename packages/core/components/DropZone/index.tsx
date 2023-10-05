@@ -177,6 +177,11 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                 const isSelected =
                   selectedItem?.props.id === componentId || false;
 
+                const isDragging =
+                  (draggedItem?.draggableId || "draggable-").split(
+                    "draggable-"
+                  )[1] === componentId;
+
                 const containsZone = areasWithZones
                   ? areasWithZones[componentId]
                   : false;
@@ -190,7 +195,11 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                     );
 
                 return (
-                  <div key={item.props.id} className={getClassName("item")}>
+                  <div
+                    key={item.props.id}
+                    className={getClassName("item")}
+                    style={{ zIndex: isDragging ? 1 : undefined }}
+                  >
                     <DropZoneProvider
                       value={{
                         ...ctx,
