@@ -11,6 +11,7 @@
 .DraggableComponent-contents {
   position: relative; /* Reset stacking context */
   pointer-events: none;
+  z-index: 0;
 }
 
 /* Prevent margin collapsing  */
