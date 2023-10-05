@@ -78,8 +78,6 @@ export const DraggableComponent = ({
           onClick={onClick}
         >
           {debug}
-          <div className={getClassName("contents")}>{children}</div>
-
           <div className={getClassName("overlay")}>
             <div className={getClassName("actions")}>
               {label && (
@@ -93,6 +91,7 @@ export const DraggableComponent = ({
               </button>
             </div>
           </div>
+          <div className={getClassName("contents")}>{children}</div>
         </div>
       )}
     </Draggable>

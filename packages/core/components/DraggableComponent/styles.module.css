@@ -1,5 +1,4 @@
 .DraggableComponent {
-  position: relative;
   pointer-events: auto;
 }
 
@@ -24,7 +23,6 @@
 .DraggableComponent-overlay {
   display: none;
   background: #abc7e530;
-  outline: 2px var(--puck-color-azure-8) solid;
   cursor: pointer;
   height: 100%;
   width: 100%;
@@ -61,10 +59,16 @@
   display: none;
 }
 
+.DraggableComponent--isSelected {
+  outline: 2px var(--puck-color-azure-6) solid;
+}
+
 .DraggableComponent--isSelected > .DraggableComponent-overlay {
   background: none;
   display: block;
-  outline: 2px var(--puck-color-azure-6) solid;
+  position: sticky;
+  top: 56px;
+  z-index: 1;
 }
 
 .DraggableComponent-actions {
