@@ -48,10 +48,7 @@
 
 .DropZone-item {
   position: relative;
-}
-
-.DropZone-item:has(.DropZone--draggingOverArea) {
-  z-index: 1;
+  z-index: 0;
 }
 
 .DropZone-hitbox {
