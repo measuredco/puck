@@ -69,6 +69,7 @@ Render the page:
 ```jsx
 // Page.jsx
 import { Render } from "@measured/puck";
+import "@measured/puck/dist/index.css";
 
 export function Page() {
   return <Render config={config} data={data} />;
