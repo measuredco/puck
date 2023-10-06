@@ -41,6 +41,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
   defaultProps: {
     buttons: [{ label: "Learn more", href: "#" }],
   },
+  tag: "Buttons",
   render: ({ align, buttons }) => {
     return (
       <Section className={getClassName({ center: align === "center" })}>

@@ -54,6 +54,7 @@ export const Card: ComponentConfig<CardProps> = {
     icon: "Feather",
     mode: "flat",
   },
+  tag: "Cards",
   render: ({ title, icon, description, mode }) => {
     return (
       <div className={getClassName({ [mode]: mode })}>
