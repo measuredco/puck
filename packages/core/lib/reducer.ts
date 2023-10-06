@@ -119,7 +119,7 @@ export const createReducer = ({ config }: { config: Config }): StateReducer =>
         return {
           ...data,
           content: insert(
-            data.content,
+            data.content || [],
             action.destinationIndex,
             emptyComponentData
           ),
@@ -164,7 +164,7 @@ export const createReducer = ({ config }: { config: Config }): StateReducer =>
       if (action.sourceZone === rootDroppableId) {
         return {
           ...dataWithRelatedDuplicated,
-          content: insert(data.content, action.sourceIndex + 1, newItem),
+          content: insert(data.content || [], action.sourceIndex + 1, newItem),
         };
       }
 
@@ -186,7 +186,7 @@ export const createReducer = ({ config }: { config: Config }): StateReducer =>
         return {
           ...data,
           content: reorder(
-            data.content,
+            data.content || [],
             action.sourceIndex,
             action.destinationIndex
           ),
@@ -270,7 +270,11 @@ export const createReducer = ({ config }: { config: Config }): StateReducer =>
       if (action.destinationZone === rootDroppableId) {
         return {
           ...data,
-          content: replace(data.content, action.destinationIndex, action.data),
+          content: replace(
+            data.content || [],
+            action.destinationIndex,
+            action.data
+          ),
         };
       }
 
@@ -301,7 +305,7 @@ export const createReducer = ({ config }: { config: Config }): StateReducer =>
       if (action.zone === rootDroppableId) {
         return {
           ...dataWithRelatedRemoved,
-          content: remove(data.content, action.index),
+          content: remove(data.content || [], action.index),
         };
       }
 

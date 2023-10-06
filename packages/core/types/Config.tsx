@@ -65,7 +65,7 @@ export type Fields<
 
 export type Content<
   Props extends { [key: string]: any } = { [key: string]: any }
-> = MappedItem<Props>[];
+> = ContentItem<Props>[];
 
 export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
@@ -92,13 +92,14 @@ export type Config<
   >;
 };
 
-type MappedItem<Props extends { [key: string]: any } = { [key: string]: any }> =
-  {
-    type: keyof Props;
-    props: WithId<{
-      [key: string]: any;
-    }>;
-  };
+export type ContentItem<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = {
+  type: keyof Props;
+  props: WithId<{
+    [key: string]: any;
+  }>;
+};
 
 export type Data<
   Props extends { [key: string]: any } = { [key: string]: any },
@@ -107,7 +108,7 @@ export type Data<
     [key: string]: any;
   }
 > = {
-  root: RootProps;
-  content: Content<Props>;
+  root?: RootProps;
+  content?: Content<Props>;
   zones?: Record<string, Content<Props>>;
 };

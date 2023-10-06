@@ -8,7 +8,11 @@ export function Render({ config, data }: { config: Config; data: Data }) {
   if (config.root) {
     return (
       <DropZoneProvider value={{ data, config, mode: "render" }}>
-        <config.root.render {...data.root} editMode={false} id={"puck-root"}>
+        <config.root.render
+          {...(data.root || { title: "" })}
+          editMode={false}
+          id={"puck-root"}
+        >
           <DropZone zone={rootDroppableId} />
         </config.root.render>
       </DropZoneProvider>

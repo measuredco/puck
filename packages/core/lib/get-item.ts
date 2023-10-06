@@ -1,4 +1,4 @@
-import { Data } from "../types/Config";
+import { ContentItem, Data } from "../types/Config";
 import { rootDroppableId } from "./root-droppable-id";
 import { setupZone } from "./setup-zone";
 
@@ -10,8 +10,12 @@ export type ItemSelector = {
 export const getItem = (
   selector: ItemSelector,
   data: Data
-): Data["content"][0] | undefined => {
+): ContentItem | undefined => {
   if (!selector.zone || selector.zone === rootDroppableId) {
+    if (!data.content) {
+      return;
+    }
+
     return data.content[selector.index];
   }
 

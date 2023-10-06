@@ -328,7 +328,7 @@ export function Puck({
                           }}
                         >
                           <Heading rank={2} size="xs">
-                            {headerTitle || data.root.title || "Page"}
+                            {headerTitle || data.root?.title || "Page"}
                             {headerPath && (
                               <small style={{ fontWeight: 400, marginLeft: 4 }}>
                                 <code>{headerPath}</code>
@@ -581,10 +581,12 @@ export function Puck({
                                 name={fieldName}
                                 label={field.label}
                                 readOnly={
-                                  data.root._meta?.locked?.indexOf(fieldName) >
+                                  data.root?._meta?.locked?.indexOf(fieldName) >
                                   -1
                                 }
-                                value={data.root[fieldName]}
+                                value={
+                                  data.root ? data.root[fieldName] : undefined
+                                }
                                 onChange={onChange}
                               />
                             );

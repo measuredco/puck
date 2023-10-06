@@ -44,10 +44,10 @@ export const LayerTree = ({
         </div>
       )}
       <ul className={getClassName()}>
-        {zoneContent.length === 0 && (
+        {zoneContent?.length === 0 && (
           <div className={getClassName("helper")}>No items</div>
         )}
-        {zoneContent.map((item, i) => {
+        {zoneContent?.map((item, i) => {
           const isSelected =
             itemSelector?.index === i &&
             (itemSelector.zone === zone ||
