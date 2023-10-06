@@ -1,0 +1,21 @@
+{
+  "index": {
+    "type": "page",
+    "title": "Puck",
+    "display": "hidden",
+    "theme": {
+      "layout": "full"
+    }
+  },
+  "docs": {
+    "type": "page",
+    "title": "Docs"
+  },
+  "showcase": {
+    "type": "page",
+    "title": "Showcase",
+    "theme": {
+      "layout": "full"
+    }
+  }
+}

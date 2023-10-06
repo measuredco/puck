@@ -1,0 +1,11 @@
+{
+  "index": {
+    "title": "Extending Puck"
+  },
+  "official-plugins": {
+    "title": "Official Plugins"
+  },
+  "developing-plugins": {
+    "title": "Developing Plugins"
+  }
+}
