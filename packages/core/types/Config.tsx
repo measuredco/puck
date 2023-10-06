@@ -74,6 +74,7 @@ export type ComponentConfig<
   render: (props: WithId<ComponentProps>) => ReactElement;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
+  tag?: string;
 };
 
 export type Config<
@@ -85,6 +86,9 @@ export type Config<
       Props[ComponentName],
       Props[ComponentName]
     >;
+  };
+  tags?: {
+    defaultLabel?: string;
   };
   root?: ComponentConfig<
     RootProps & { children: ReactNode },

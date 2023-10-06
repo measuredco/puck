@@ -47,6 +47,7 @@ export const Text: ComponentConfig<TextProps> = {
     size: "m",
     color: "default",
   },
+  tag: "Text",
   render: ({ align, color, text, size, padding, maxWidth }) => {
     return (
       <Section padding={padding} maxWidth={maxWidth}>

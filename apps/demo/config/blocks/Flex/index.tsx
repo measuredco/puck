@@ -33,6 +33,7 @@ export const Flex: ComponentConfig<FlexProps> = {
     items: [{}, {}],
     minItemWidth: 356,
   },
+  tag: "Layout",
   render: ({ items, minItemWidth }) => {
     return (
       <Section>

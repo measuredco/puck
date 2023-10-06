@@ -58,6 +58,7 @@ export const Logos: ComponentConfig<LogosProps> = {
       },
     ],
   },
+  tag: "Section",
   render: ({ logos }) => {
     return (
       <Section className={getClassName()}>

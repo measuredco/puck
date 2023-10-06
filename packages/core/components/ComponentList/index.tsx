@@ -5,10 +5,24 @@ import { Draggable } from "react-beautiful-dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Grid } from "react-feather";
+import { Heading } from "../Heading";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 
 export const ComponentList = ({ config }: { config: Config }) => {
+  const groupedComponents = {};
+  const defaultTagLabel = config?.tags?.defaultLabel
+    ? config.tags.defaultLabel
+    : "Uncategorised";
+
+  Object.entries(config.components).forEach(
+    ([componentName, componentData]) => {
+      const tag = componentData.tag || defaultTagLabel;
+      groupedComponents[tag] = groupedComponents[tag] || {};
+      groupedComponents[tag][componentName] = componentData;
+    }
+  );
+
   return (
     <DroppableStrictMode droppableId="component-list" isDropDisabled>
       {(provided, snapshot) => (
@@ -17,51 +31,67 @@ export const ComponentList = ({ config }: { config: Config }) => {
           ref={provided.innerRef}
           className={getClassName()}
         >
-          {Object.keys(config.components).map((componentKey, i) => {
-            const componentConfig: ComponentConfig = config[componentKey];
+          {Object.entries(groupedComponents)
+            .sort()
+            .map(([tag, components]) => {
+              return (
+                <>
+                  {Object.keys(groupedComponents).length > 1 ? (
+                    <Heading rank={3} size={"xs"}>
+                      {tag}
+                    </Heading>
+                  ) : null}
+                  {Object.keys(components as string[]).map(
+                    (componentKey, i) => {
+                      const componentConfig: ComponentConfig =
+                        config[componentKey];
+                      return (
+                        <Draggable
+                          key={componentKey}
+                          draggableId={componentKey}
+                          index={i}
+                        >
+                          {(provided, snapshot) => (
+                            <>
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={getClassName("item")}
+                                style={{
+                                  ...provided.draggableProps.style,
+                                  transform: snapshot.isDragging
+                                    ? provided.draggableProps.style?.transform
+                                    : "translate(0px, 0px)",
+                                }}
+                              >
+                                {componentKey}
+                                <div className={getClassName("itemIcon")}>
+                                  <Grid size={18} />
+                                </div>
+                              </div>
+                              {/* See https://github.com/atlassian/react-beautiful-dnd/issues/216#issuecomment-906890987 */}
+                              {snapshot.isDragging && (
+                                <div
+                                  className={getClassName("itemShadow")}
+                                  style={{ transform: "none !important" }}
+                                >
+                                  {componentKey}
+                                  <div className={getClassName("itemIcon")}>
+                                    <Grid size={18} />
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </Draggable>
+                      );
+                    }
+                  )}
+                </>
+              );
+            })}
 
-            return (
-              <Draggable
-                key={componentKey}
-                draggableId={componentKey}
-                index={i}
-              >
-                {(provided, snapshot) => (
-                  <>
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className={getClassName("item")}
-                      style={{
-                        ...provided.draggableProps.style,
-                        transform: snapshot.isDragging
-                          ? provided.draggableProps.style?.transform
-                          : "translate(0px, 0px)",
-                      }}
-                    >
-                      {componentKey}
-                      <div className={getClassName("itemIcon")}>
-                        <Grid size={18} />
-                      </div>
-                    </div>
-                    {/* See https://github.com/atlassian/react-beautiful-dnd/issues/216#issuecomment-906890987 */}
-                    {snapshot.isDragging && (
-                      <div
-                        className={getClassName("itemShadow")}
-                        style={{ transform: "none !important" }}
-                      >
-                        {componentKey}
-                        <div className={getClassName("itemIcon")}>
-                          <Grid size={18} />
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-              </Draggable>
-            );
-          })}
           <div style={{ display: "none" }}>{provided.placeholder}</div>
         </div>
       )}

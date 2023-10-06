@@ -47,6 +47,7 @@ export const Columns: ComponentConfig<ColumnsProps> = {
     distribution: "auto",
     columns: [{}, {}],
   },
+  tag: "Layout",
   render: ({ columns, distribution }) => {
     return (
       <Section>

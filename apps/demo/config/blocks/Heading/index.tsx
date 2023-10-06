@@ -60,6 +60,7 @@ export const Heading: ComponentConfig<HeadingProps> = {
     padding: "24px",
     size: "m",
   },
+  tag: "Text",
   render: ({ align, text, size, level, padding }) => {
     return (
       <Section padding={padding}>

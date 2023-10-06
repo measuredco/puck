@@ -77,6 +77,7 @@ export const Hero: ComponentConfig<HeroProps> = {
     buttons: [{ label: "Learn more", href: "#" }],
     padding: "64px",
   },
+  tag: "Section",
   render: ({
     align,
     title,

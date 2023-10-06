@@ -62,6 +62,7 @@ export const FeatureList: ComponentConfig<FeatureListProps> = {
       ],
     },
   },
+  tag: "Section",
   defaultProps: {
     items: [
       {

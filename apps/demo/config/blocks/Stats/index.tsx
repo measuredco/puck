@@ -56,6 +56,7 @@ export const Stats: ComponentConfig<StatsProps> = {
       },
     ],
   },
+  tag: "Section",
   render: ({ items }) => {
     return (
       <Section className={getClassName()} maxWidth={"916px"}>

@@ -17,6 +17,7 @@ export const VerticalSpace: ComponentConfig<VerticalSpaceProps> = {
   defaultProps: {
     size: "24px",
   },
+  tag: "Layout",
   render: ({ size }) => {
     return <div style={{ height: size, width: "100%" }} />;
   },
