@@ -13,14 +13,19 @@ const getClassName = getClassNameFactory("DropZone", styles);
 
 export { DropZoneProvider, dropZoneContext } from "./context";
 
-type DropZoneProps = {
+type DropZoneProps<Props extends Record<string, any> = Record<string, any>> = {
   zone: string;
-  allow?: readonly string[];
-  disallow?: readonly string[];
+  allow?: readonly (keyof Props)[];
+  disallow?: readonly (keyof Props)[];
   style?: CSSProperties;
 };
 
-function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
+function DropZoneEdit<Props extends Record<string, any> = Record<string, any>>({
+  zone,
+  allow,
+  disallow,
+  style,
+}: DropZoneProps<Props>) {
   const ctx = useContext(dropZoneContext);
 
   const {
@@ -339,7 +344,9 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   );
 }
 
-function DropZoneRender({ zone }: DropZoneProps) {
+function DropZoneRender<
+  Props extends Record<string, any> = Record<string, any>
+>({ zone }: DropZoneProps<Props>) {
   const ctx = useContext(dropZoneContext);
 
   const { data, areaId = "root", config } = ctx || {};
@@ -378,7 +385,9 @@ function DropZoneRender({ zone }: DropZoneProps) {
   );
 }
 
-export function DropZone(props: DropZoneProps) {
+export function DropZone<
+  Props extends Record<string, any> = Record<string, any>
+>(props: DropZoneProps<Props>) {
   const ctx = useContext(dropZoneContext);
 
   if (ctx?.mode === "edit") {
