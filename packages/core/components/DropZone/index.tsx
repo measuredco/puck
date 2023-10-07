@@ -138,7 +138,7 @@ function DropZoneEdit<Props extends Record<string, any> = Record<string, any>>({
 
   if (
     draggedItem?.draggableId &&
-    allow?.length &&
+    allow &&
     !allow.includes(draggedItem?.draggableId)
   ) {
     isEnabled = false;
@@ -146,7 +146,7 @@ function DropZoneEdit<Props extends Record<string, any> = Record<string, any>>({
 
   if (
     draggedItem?.draggableId &&
-    disallow?.length &&
+    disallow &&
     disallow.includes(draggedItem?.draggableId)
   ) {
     isEnabled = false;
