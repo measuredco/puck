@@ -15,10 +15,12 @@ export { DropZoneProvider, dropZoneContext } from "./context";
 
 type DropZoneProps = {
   zone: string;
+  allow?: readonly string[];
+  disallow?: readonly string[];
   style?: CSSProperties;
 };
 
-function DropZoneEdit({ zone, style }: DropZoneProps) {
+function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   const ctx = useContext(dropZoneContext);
 
   const {
@@ -127,6 +129,22 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
     } else {
       isEnabled = draggingOverArea && hoveringOverZone;
     }
+  }
+
+  if (
+    draggedItem?.draggableId &&
+    allow?.length &&
+    !allow.includes(draggedItem?.draggableId)
+  ) {
+    isEnabled = false;
+  }
+
+  if (
+    draggedItem?.draggableId &&
+    disallow?.length &&
+    disallow.includes(draggedItem?.draggableId)
+  ) {
+    isEnabled = false;
   }
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
