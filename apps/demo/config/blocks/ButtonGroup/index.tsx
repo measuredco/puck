@@ -10,7 +10,7 @@ const getClassName = getClassNameFactory("ButtonGroup", styles);
 
 export type ButtonGroupProps = {
   align?: string;
-  buttons: { label: string; href: string; variant?: "primary" | "secondary" }[];
+  buttons: { label: string; href: string; variant: "primary" | "secondary" }[];
 };
 
 export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
@@ -29,6 +29,11 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
           ],
         },
       },
+      defaultItemProps: {
+        label: "Button",
+        href: "#",
+        variant: "primary",
+      },
     },
     align: {
       type: "radio",
@@ -39,7 +44,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
     },
   },
   defaultProps: {
-    buttons: [{ label: "Learn more", href: "#" }],
+    buttons: [{ label: "Learn more", href: "#", variant: "primary" }],
   },
   render: ({ align, buttons }) => {
     return (
