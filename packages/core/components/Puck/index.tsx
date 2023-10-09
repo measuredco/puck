@@ -456,7 +456,6 @@ export function Puck({
                       <div
                         style={{
                           border: "1px solid var(--puck-color-grey-8)",
-                          transform: "scale(1, 1)",
                         }}
                       >
                         <Page data={data} {...data.root}>
