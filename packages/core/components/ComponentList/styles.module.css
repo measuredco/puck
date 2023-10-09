@@ -6,8 +6,7 @@
   grid-gap: 12px;
 }
 
-.ComponentList-item,
-.ComponentList-itemShadow {
+.ComponentList-item {
   background: white;
   padding: 12px;
   display: flex;
@@ -20,8 +19,7 @@
   cursor: grab;
 }
 
-.ComponentList-item:last-of-type,
-.ComponentList-itemShadow:last-of-type {
+.ComponentList-item:last-of-type {
   margin-bottom: 0px;
 }
 
@@ -29,6 +27,6 @@
   color: var(--puck-color-grey-4);
 }
 
-.ComponentList-item:hover {
+.ComponentList:not(.ComponentList--isDraggingFrom) .ComponentList-item:hover {
   background-color: var(--puck-color-azure-9);
 }
