@@ -1,9 +1,6 @@
 .ComponentList {
-  display: grid;
   font-family: var(--puck-font-stack);
-  grid-template-columns: 1fr;
   max-width: 100%;
-  grid-gap: 12px;
 }
 
 .ComponentList-item {
@@ -11,12 +8,13 @@
   padding: 12px;
   display: flex;
   border: 1px var(--puck-color-grey-8) solid;
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: var(--puck-font-size-xxs);
   justify-content: space-between;
   align-items: center;
   gap: 12px;
   cursor: grab;
+  margin-bottom: 12px;
 }
 
 .ComponentList-item:last-of-type {
@@ -29,4 +27,5 @@
 
 .ComponentList:not(.ComponentList--isDraggingFrom) .ComponentList-item:hover {
   background-color: var(--puck-color-azure-9);
+  color: var(--puck-color-azure-4);
 }
