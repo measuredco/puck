@@ -1,0 +1,140 @@
+/**
+ * ArrayField
+ */
+
+.ArrayField {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--puck-color-grey-8);
+  border: 1px solid var(--puck-color-grey-8);
+  border-radius: 4px;
+}
+
+.ArrayField--isDraggingFrom {
+  background-color: var(--puck-color-azure-9);
+}
+
+.ArrayField-addButton {
+  background-color: white;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  color: var(--puck-color-azure-4);
+  justify-content: center;
+  cursor: pointer;
+  width: 100%;
+  margin: 0;
+  padding: 16px;
+  text-align: left;
+}
+
+.ArrayField--hasItems > .ArrayField-addButton {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ArrayField:not(.ArrayField--isDraggingFrom) > .ArrayField-addButton:hover {
+  background: var(--puck-color-azure-9);
+  color: var(--puck-color-azure-4);
+}
+
+/**
+ * ArrayFieldItem
+ */
+
+.ArrayFieldItem {
+  background: white;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  display: block;
+  margin-bottom: 1px; /* Simulate border with margin so we can hide it whilst dragging */
+}
+
+.ArrayField--isDraggingFrom > .ArrayFieldItem:not(.ArrayFieldItem--isDragging) {
+  border-bottom: 1px solid var(--puck-color-grey-8);
+  margin-bottom: 0;
+}
+
+.ArrayFieldItem--isExpanded {
+  border-bottom: 0;
+  outline: 1px solid var(--puck-color-azure-6);
+}
+
+.ArrayFieldItem--isDragging {
+  box-shadow: rgba(140, 152, 164, 0.25) 0 3px 6px 0;
+}
+
+.ArrayFieldItem + .ArrayFieldItem {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ArrayFieldItem-summary {
+  color: var(--puck-color-grey-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--puck-font-size-xxs);
+  list-style: none;
+  padding: 12px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ArrayFieldItem--isExpanded > .ArrayFieldItem-summary {
+  font-weight: 600;
+}
+
+.ArrayFieldItem:first-of-type > .ArrayFieldItem-summary {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.ArrayFieldItem-summary:hover,
+.ArrayFieldItem--isExpanded > .ArrayFieldItem-summary {
+  background: var(--puck-color-azure-9);
+  cursor: pointer;
+  color: var(--puck-color-azure-4);
+}
+
+.ArrayFieldItem-summary::-webkit-details-marker {
+  display: none;
+}
+
+.ArrayFieldItem-body {
+  display: none;
+}
+
+.ArrayFieldItem--isExpanded > .ArrayFieldItem-body {
+  display: block;
+}
+
+.ArrayFieldItem-fieldset {
+  border: none;
+  border-top: 1px solid var(--puck-color-grey-8);
+  margin: 0;
+  padding: 16px;
+}
+
+.ArrayFieldItem-rhs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ArrayFieldItem-actions {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+}
+
+.ArrayFieldItem-summary:hover > .ArrayFieldItem-rhs > .ArrayFieldItem-actions {
+  opacity: 1;
+}
+
+.ArrayFieldItem-action:hover {
+  background: var(--puck-color-grey-9);
+  border-radius: 4px;
+  color: var(--puck-color-blue);
+  cursor: pointer;
+}

@@ -28,12 +28,14 @@ export const ComponentList = ({ config }: { config: Config }) => {
                 showShadow
                 disableAnimations
               >
-                <div className={getClassName("item")}>
-                  {componentKey}
-                  <div className={getClassName("itemIcon")}>
-                    <Grid size={18} />
+                {() => (
+                  <div className={getClassName("item")}>
+                    {componentKey}
+                    <div className={getClassName("itemIcon")}>
+                      <Grid size={18} />
+                    </div>
                   </div>
-                </div>
+                )}
               </Draggable>
             );
           })}
