@@ -47,7 +47,10 @@ export const Draggable = ({
           </div>
           {/* See https://github.com/atlassian/react-beautiful-dnd/issues/216#issuecomment-906890987 */}
           {showShadow && snapshot.isDragging && (
-            <div style={{ transform: "none !important" }}>
+            <div
+              className={className && className(provided, snapshot)}
+              style={{ transform: "none !important" }}
+            >
               {children(provided, snapshot)}
             </div>
           )}
