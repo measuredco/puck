@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Field } from "../../types/Config";
@@ -18,6 +18,13 @@ export const ExternalInput = ({
   const [data, setData] = useState<Record<string, any>[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(value);
+  const keys = useMemo(
+    () =>
+      Object.keys(data).filter(
+        (key) => typeof data[key] === "string" || typeof data[key] === "number"
+      ),
+    [data]
+  );
 
   useEffect(() => {
     (async () => {
@@ -85,7 +92,7 @@ export const ExternalInput = ({
               <table>
                 <thead>
                   <tr>
-                    {Object.keys(data[0]).map((key) => (
+                    {keys.map((key) => (
                       <th key={key} style={{ textAlign: "left" }}>
                         {key}
                       </th>
@@ -106,7 +113,7 @@ export const ExternalInput = ({
                           setSelectedData(item);
                         }}
                       >
-                        {Object.keys(item).map((key) => (
+                        {keys.map((key) => (
                           <td key={key}>{item[key]}</td>
                         ))}
                       </tr>
