@@ -1,6 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
-import styles from "../../styles.module.css";
-import { List, Trash } from "react-feather";
+import inputStyles from "../../styles.module.css";
+import styles from "./styles.module.css";
+import { List, Plus, Trash } from "react-feather";
 import { InputOrGroup, type InputProps } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
@@ -9,8 +10,11 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { Draggable } from "../../../Draggable";
 import { generateId } from "../../../../lib/generate-id";
 import { useEffect, useState } from "react";
+import { DragIcon } from "../../../DragIcon";
 
-const getClassName = getClassNameFactory("Input", styles);
+const getClassNameInput = getClassNameFactory("Input", inputStyles);
+const getClassName = getClassNameFactory("ArrayField", styles);
+const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);
 
 type ItemWithId = {
   _arrayId: string;
@@ -36,14 +40,16 @@ export const ArrayField = ({
     setValueWithIds(newValueWithIds);
   }, [value]);
 
+  const [openId, setOpenId] = useState("");
+
   if (!field.arrayFields) {
     return null;
   }
 
   return (
-    <div className={getClassName()}>
-      <b className={getClassName("label")}>
-        <div className={getClassName("labelIcon")}>
+    <div className={getClassNameInput()}>
+      <b className={getClassNameInput("label")}>
+        <div className={getClassNameInput("labelIcon")}>
           <List size={16} />
         </div>
         {label || name}
@@ -63,69 +69,105 @@ export const ArrayField = ({
         }}
       >
         <DroppableStrictMode droppableId="array">
-          {(provided) => {
+          {(provided, snapshot) => {
             return (
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className={getClassName("array")}
+                className={getClassName({
+                  isDraggingFrom: !!snapshot.draggingFromThisWith,
+                  hasItems: value.length > 0,
+                })}
               >
-                {Array.isArray(value) ? (
-                  valueWithIds.map(({ _arrayId, data }, i) => (
-                    <Draggable id={_arrayId} index={i} key={_arrayId}>
-                      <details className={getClassName("arrayItem")}>
-                        <summary>
-                          {field.getItemSummary
-                            ? field.getItemSummary(data, i)
-                            : `Item #${i}`}
-
-                          <div className={getClassName("arrayItemAction")}>
-                            <IconButton
+                {Array.isArray(value) && value.length > 0
+                  ? valueWithIds.map(({ _arrayId, data }, i) => (
+                      <Draggable
+                        id={_arrayId}
+                        index={i}
+                        key={_arrayId}
+                        className={(_, snapshot) =>
+                          getClassNameItem({
+                            isExpanded: openId === _arrayId,
+                            isDragging: snapshot.isDragging,
+                          })
+                        }
+                      >
+                        {() => (
+                          <>
+                            <div
                               onClick={() => {
-                                const existingValue = value || [];
-                                const existingValueWithIds = valueWithIds || [];
-
-                                existingValue.splice(i, 1);
-                                existingValueWithIds.splice(i, 1);
-
-                                onChange(existingValue);
-                                setValueWithIds(existingValueWithIds);
-                              }}
-                              title="Delete"
-                            >
-                              <Trash size={21} />
-                            </IconButton>
-                          </div>
-                        </summary>
-                        <fieldset className={getClassName("fieldset")}>
-                          {Object.keys(field.arrayFields!).map((fieldName) => {
-                            const subField = field.arrayFields![fieldName];
-
-                            return (
-                              <InputOrGroup
-                                key={`${name}_${i}_${fieldName}`}
-                                name={`${name}_${i}_${fieldName}`}
-                                label={subField.label || fieldName}
-                                field={subField}
-                                value={data[fieldName]}
-                                onChange={(val) =>
-                                  onChange(
-                                    replace(value, i, {
-                                      ...data,
-                                      [fieldName]: val,
-                                    })
-                                  )
+                                if (openId === _arrayId) {
+                                  setOpenId("");
+                                } else {
+                                  setOpenId(_arrayId);
                                 }
-                              />
-                            );
-                          })}
-                        </fieldset>
-                      </details>
-                    </Draggable>
-                  ))
-                ) : (
-                  <div />
-                )}
+                              }}
+                              className={getClassNameItem("summary")}
+                            >
+                              {field.getItemSummary
+                                ? field.getItemSummary(data, i)
+                                : `Item #${i}`}
+                              <div className={getClassNameItem("rhs")}>
+                                <div className={getClassNameItem("actions")}>
+                                  <div className={getClassNameItem("action")}>
+                                    <IconButton
+                                      onClick={() => {
+                                        const existingValue = value || [];
+                                        const existingValueWithIds =
+                                          valueWithIds || [];
+
+                                        existingValue.splice(i, 1);
+                                        existingValueWithIds.splice(i, 1);
+
+                                        onChange(existingValue);
+                                        setValueWithIds(existingValueWithIds);
+                                      }}
+                                      title="Delete"
+                                    >
+                                      <Trash size={16} />
+                                    </IconButton>
+                                  </div>
+                                </div>
+                                <div>
+                                  <DragIcon />
+                                </div>
+                              </div>
+                            </div>
+                            <div className={getClassNameItem("body")}>
+                              <fieldset
+                                className={getClassNameItem("fieldset")}
+                              >
+                                {Object.keys(field.arrayFields!).map(
+                                  (fieldName) => {
+                                    const subField =
+                                      field.arrayFields![fieldName];
+
+                                    return (
+                                      <InputOrGroup
+                                        key={`${name}_${i}_${fieldName}`}
+                                        name={`${name}_${i}_${fieldName}`}
+                                        label={subField.label || fieldName}
+                                        field={subField}
+                                        value={data[fieldName]}
+                                        onChange={(val) =>
+                                          onChange(
+                                            replace(value, i, {
+                                              ...data,
+                                              [fieldName]: val,
+                                            })
+                                          )
+                                        }
+                                      />
+                                    );
+                                  }
+                                )}
+                              </fieldset>
+                            </div>
+                          </>
+                        )}
+                      </Draggable>
+                    ))
+                  : null}
 
                 {provided.placeholder}
 
@@ -136,7 +178,7 @@ export const ArrayField = ({
                     onChange([...existingValue, field.defaultItemProps || {}]);
                   }}
                 >
-                  + Add item
+                  <Plus size="21" />
                 </button>
               </div>
             );
