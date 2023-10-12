@@ -77,6 +77,7 @@ export function Puck({
   renderHeader?: (props: {
     children: ReactNode;
     data: Data;
+    toggleLeftSidebar: (visible?: boolean) => void;
     dispatch: (action: PuckAction) => void;
   }) => ReactElement;
   renderHeaderActions?: (props: {
@@ -160,6 +161,10 @@ export function Puck({
   const { onDragStartOrUpdate, placeholderStyle } = usePlaceholderStyle();
 
   const [leftSidebarVisible, setLeftSidebarVisible] = useState(true);
+  const toggleLeftSidebar = (visible?: boolean) =>
+    typeof visible === "boolean"
+      ? setLeftSidebarVisible(visible)
+      : setLeftSidebarVisible(!leftSidebarVisible);
 
   const [draggedItem, setDraggedItem] = useState<
     DragStart & Partial<DragUpdate>
@@ -282,6 +287,7 @@ export function Puck({
                   >
                     {renderHeader ? (
                       renderHeader({
+                        toggleLeftSidebar,
                         children: (
                           <Button
                             onClick={() => {
@@ -312,9 +318,7 @@ export function Puck({
                           }}
                         >
                           <IconButton
-                            onClick={() =>
-                              setLeftSidebarVisible(!leftSidebarVisible)
-                            }
+                            onClick={() => toggleLeftSidebar()}
                             title="Toggle left sidebar"
                           >
                             <Sidebar />
