@@ -25,7 +25,7 @@ import { IconButton } from "../IconButton/IconButton";
 import { DropZone, DropZoneProvider, dropZoneContext } from "../DropZone";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { ItemSelector, getItem } from "../../lib/get-item";
-import { PuckAction, StateReducer, createReducer } from "../../lib/reducer";
+import { PuckAction, StateReducer, createReducer } from "../../reducer";
 import { LayerTree } from "../LayerTree";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
@@ -87,13 +87,18 @@ export function Puck({
   headerPath?: string;
 }) {
   const [reducer] = useState(() => createReducer({ config }));
-  const [data, dispatch] = useReducer<StateReducer>(
+
+  const initialAppData = { data: initialData, state: {} };
+
+  const [appData, dispatch] = useReducer<StateReducer>(
     reducer,
-    flushZones(initialData)
+    flushZones(initialAppData)
   );
 
+  const { data } = appData;
+
   const { canForward, canRewind, rewind, forward } = usePuckHistory({
-    data,
+    appData,
     dispatch,
   });
 
@@ -550,7 +555,7 @@ export function Puck({
                               });
                             } else {
                               dispatch({
-                                type: "set",
+                                type: "setData",
                                 data: { root: newProps },
                               });
                             }

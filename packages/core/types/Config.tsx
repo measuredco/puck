@@ -111,3 +111,5 @@ export type Data<
   content: Content<Props>;
   zones?: Record<string, Content<Props>>;
 };
+
+export type AppData = { data: Data; state: {} };

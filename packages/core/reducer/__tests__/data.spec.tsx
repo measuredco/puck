@@ -9,13 +9,13 @@ import {
   SetDataAction,
   UnregisterZoneAction,
   createReducer,
-} from "../reducer";
-import { Config, Data } from "../../types/Config";
-import { rootDroppableId } from "../root-droppable-id";
+} from "../../reducer";
+import { AppData, Config, Data } from "../../types/Config";
+import { rootDroppableId } from "../../lib/root-droppable-id";
 
-import { generateId } from "../generate-id";
+import { generateId } from "../../lib/generate-id";
 
-jest.mock("../generate-id");
+jest.mock("../../lib/generate-id");
 
 const mockedGenerateId = generateId as jest.MockedFunction<typeof generateId>;
 
@@ -26,7 +26,7 @@ type Props = {
 };
 const defaultData: Data = { root: { title: "" }, content: [], zones: {} };
 
-describe("Reducer", () => {
+describe("Data reducer", () => {
   const config: Config<Props> = {
     components: {
       Comp: {
@@ -40,7 +40,7 @@ describe("Reducer", () => {
 
   describe("insert action", () => {
     it("should insert into rootDroppableId", () => {
-      const state: Data = { ...defaultData };
+      const state: AppData = { state: {}, data: { ...defaultData } };
 
       const action: InsertAction = {
         type: "insert",
@@ -50,12 +50,12 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.content[0]).toHaveProperty("type", "Comp");
-      expect(newState.content[0].props).toHaveProperty("prop", "example");
+      expect(newState.data.content[0]).toHaveProperty("type", "Comp");
+      expect(newState.data.content[0].props).toHaveProperty("prop", "example");
     });
 
     it("should insert into a different zone", () => {
-      const state: Data = { ...defaultData };
+      const state: AppData = { state: {}, data: { ...defaultData } };
       const action: InsertAction = {
         type: "insert",
         componentType: "Comp",
@@ -64,20 +64,26 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.zones?.zone1[0]).toHaveProperty("type", "Comp");
+      expect(newState.data.zones?.zone1[0]).toHaveProperty("type", "Comp");
 
-      expect(newState.zones?.zone1[0].props).toHaveProperty("prop", "example");
+      expect(newState.data.zones?.zone1[0].props).toHaveProperty(
+        "prop",
+        "example"
+      );
     });
   });
 
   describe("reorder action", () => {
     it("should reorder within rootDroppableId", () => {
-      const state: Data = {
-        ...defaultData,
-        content: [
-          { type: "Comp", props: { id: "1" } },
-          { type: "Comp", props: { id: "2" } },
-        ],
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          content: [
+            { type: "Comp", props: { id: "1" } },
+            { type: "Comp", props: { id: "2" } },
+          ],
+        },
       };
       const action: ReorderAction = {
         type: "reorder",
@@ -87,18 +93,21 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.content[0].props.id).toBe("2");
-      expect(newState.content[1].props.id).toBe("1");
+      expect(newState.data.content[0].props.id).toBe("2");
+      expect(newState.data.content[1].props.id).toBe("1");
     });
 
     it("should reorder within a different zone", () => {
-      const state: Data = {
-        ...defaultData,
-        zones: {
-          zone1: [
-            { type: "A", props: { id: "1" } },
-            { type: "B", props: { id: "2" } },
-          ],
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          zones: {
+            zone1: [
+              { type: "A", props: { id: "1" } },
+              { type: "B", props: { id: "2" } },
+            ],
+          },
         },
       };
       const action: ReorderAction = {
@@ -109,39 +118,18 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.zones?.zone1[0].props.id).toBe("2");
-      expect(newState.zones?.zone1[1].props.id).toBe("1");
+      expect(newState.data.zones?.zone1[0].props.id).toBe("2");
+      expect(newState.data.zones?.zone1[1].props.id).toBe("1");
     });
   });
 
   describe("duplicate action", () => {
     it("should duplicate in content", () => {
-      const state: Data = {
-        ...defaultData,
-        content: [
-          {
-            type: "Comp",
-            props: { id: "sampleId", prop: "Some example data" },
-          },
-        ],
-      };
-      const action: DuplicateAction = {
-        type: "duplicate",
-        sourceIndex: 0,
-        sourceZone: rootDroppableId,
-      };
-
-      const newState = reducer(state, action);
-      expect(newState.content).toHaveLength(2);
-      expect(newState.content[1].props.id).not.toBe("sampleId");
-      expect(newState.content[1].props.prop).toBe("Some example data");
-    });
-
-    it("should duplicate in a different zone", () => {
-      const state: Data = {
-        ...defaultData,
-        zones: {
-          zone1: [
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          content: [
             {
               type: "Comp",
               props: { id: "sampleId", prop: "Some example data" },
@@ -152,13 +140,42 @@ describe("Reducer", () => {
       const action: DuplicateAction = {
         type: "duplicate",
         sourceIndex: 0,
+        sourceZone: rootDroppableId,
+      };
+
+      const newState = reducer(state, action);
+      expect(newState.data.content).toHaveLength(2);
+      expect(newState.data.content[1].props.id).not.toBe("sampleId");
+      expect(newState.data.content[1].props.prop).toBe("Some example data");
+    });
+
+    it("should duplicate in a different zone", () => {
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          zones: {
+            zone1: [
+              {
+                type: "Comp",
+                props: { id: "sampleId", prop: "Some example data" },
+              },
+            ],
+          },
+        },
+      };
+      const action: DuplicateAction = {
+        type: "duplicate",
+        sourceIndex: 0,
         sourceZone: "zone1",
       };
 
       const newState = reducer(state, action);
-      expect(newState.zones?.zone1).toHaveLength(2);
-      expect(newState.zones?.zone1[1].props.id).not.toBe("sampleId");
-      expect(newState.zones?.zone1[1].props.prop).toBe("Some example data");
+      expect(newState.data.zones?.zone1).toHaveLength(2);
+      expect(newState.data.zones?.zone1[1].props.id).not.toBe("sampleId");
+      expect(newState.data.zones?.zone1[1].props.prop).toBe(
+        "Some example data"
+      );
     });
 
     it("should recursively duplicate items", () => {
@@ -166,21 +183,24 @@ describe("Reducer", () => {
 
       mockedGenerateId.mockImplementation(() => `mockId-${counter++}`);
 
-      const state: Data = {
-        ...defaultData,
-        zones: {
-          zone1: [
-            {
-              type: "Comp",
-              props: { id: "mycomponent", prop: "Some example data" },
-            },
-          ],
-          "mycomponent:zone1": [
-            {
-              type: "Comp",
-              props: { id: "sampleId", prop: "More example data" },
-            },
-          ],
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          zones: {
+            zone1: [
+              {
+                type: "Comp",
+                props: { id: "mycomponent", prop: "Some example data" },
+              },
+            ],
+            "mycomponent:zone1": [
+              {
+                type: "Comp",
+                props: { id: "sampleId", prop: "More example data" },
+              },
+            ],
+          },
         },
       };
 
@@ -192,7 +212,7 @@ describe("Reducer", () => {
 
       const newState = reducer(state, action);
 
-      expect(newState).toMatchInlineSnapshot(`
+      expect(newState.data).toMatchInlineSnapshot(`
         {
           "content": [],
           "root": {
@@ -241,10 +261,13 @@ describe("Reducer", () => {
 
   describe("move action", () => {
     it("should move from rootDroppableId to another zone", () => {
-      const state: Data = {
-        ...defaultData,
-        content: [{ type: "Comp", props: { id: "1" } }],
-        zones: { zone1: [{ type: "Comp", props: { id: "2" } }] },
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          content: [{ type: "Comp", props: { id: "1" } }],
+          zones: { zone1: [{ type: "Comp", props: { id: "2" } }] },
+        },
       };
       const action: MoveAction = {
         type: "move",
@@ -255,15 +278,18 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.content).toHaveLength(0);
-      expect(newState.zones?.zone1[1].props.id).toBe("1");
+      expect(newState.data.content).toHaveLength(0);
+      expect(newState.data.zones?.zone1[1].props.id).toBe("1");
     });
 
     it("should move from a zone to rootDroppableId", () => {
-      const state: Data = {
-        ...defaultData,
-        content: [{ type: "Comp", props: { id: "1" } }],
-        zones: { zone1: [{ type: "Comp", props: { id: "2" } }] },
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          content: [{ type: "Comp", props: { id: "1" } }],
+          zones: { zone1: [{ type: "Comp", props: { id: "2" } }] },
+        },
       };
       const action: MoveAction = {
         type: "move",
@@ -274,17 +300,20 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.zones?.zone1).toHaveLength(0);
-      expect(newState.content[1].props.id).toBe("2");
+      expect(newState.data.zones?.zone1).toHaveLength(0);
+      expect(newState.data.content[1].props.id).toBe("2");
     });
 
     it("should move between two zones", () => {
-      const state: Data = {
-        ...defaultData,
-        content: [],
-        zones: {
-          zone1: [{ type: "Comp", props: { id: "1" } }],
-          zone2: [{ type: "Comp", props: { id: "2" } }],
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          content: [],
+          zones: {
+            zone1: [{ type: "Comp", props: { id: "1" } }],
+            zone2: [{ type: "Comp", props: { id: "2" } }],
+          },
         },
       };
       const action: MoveAction = {
@@ -296,8 +325,8 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.zones?.zone1).toHaveLength(0);
-      expect(newState.zones?.zone2[0].props.id).toBe("1");
+      expect(newState.data.zones?.zone1).toHaveLength(0);
+      expect(newState.data.zones?.zone2[0].props.id).toBe("1");
     });
   });
 
@@ -305,9 +334,12 @@ describe("Reducer", () => {
     const replacement = { type: "Comp", props: { id: "3" } };
 
     it("should replace in content", () => {
-      const state: Data = {
-        ...defaultData,
-        content: [{ type: "Comp", props: { id: "1" } }],
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          content: [{ type: "Comp", props: { id: "1" } }],
+        },
       };
       const action: ReplaceAction = {
         type: "replace",
@@ -317,14 +349,17 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.content.length).toBe(1);
-      expect(newState.content[0].props.id).toBe("3");
+      expect(newState.data.content.length).toBe(1);
+      expect(newState.data.content[0].props.id).toBe("3");
     });
 
     it("should replace in a zone", () => {
-      const state: Data = {
-        ...defaultData,
-        zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
+        },
       };
       const action: ReplaceAction = {
         type: "replace",
@@ -334,16 +369,19 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.zones?.zone1.length).toBe(1);
-      expect(newState.zones?.zone1[0].props.id).toBe("3");
+      expect(newState.data.zones?.zone1.length).toBe(1);
+      expect(newState.data.zones?.zone1[0].props.id).toBe("3");
     });
   });
 
   describe("remove action", () => {
     it("should remove from content", () => {
-      const state: Data = {
-        ...defaultData,
-        content: [{ type: "Comp", props: { id: "1" } }],
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          content: [{ type: "Comp", props: { id: "1" } }],
+        },
       };
       const action: RemoveAction = {
         type: "remove",
@@ -352,13 +390,16 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.content).toHaveLength(0);
+      expect(newState.data.content).toHaveLength(0);
     });
 
     it("should remove from a zone", () => {
-      const state: Data = {
-        ...defaultData,
-        zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
+        },
       };
       const action: RemoveAction = {
         type: "remove",
@@ -367,7 +408,7 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.zones?.zone1).toHaveLength(0);
+      expect(newState.data.zones?.zone1).toHaveLength(0);
     });
 
     it("should recursively remove items", () => {
@@ -375,21 +416,24 @@ describe("Reducer", () => {
 
       mockedGenerateId.mockImplementation(() => `mockId-${counter++}`);
 
-      const state: Data = {
-        ...defaultData,
-        zones: {
-          zone1: [
-            {
-              type: "Comp",
-              props: { id: "mycomponent", prop: "Some example data" },
-            },
-          ],
-          "mycomponent:zone1": [
-            {
-              type: "Comp",
-              props: { id: "sampleId", prop: "More example data" },
-            },
-          ],
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          zones: {
+            zone1: [
+              {
+                type: "Comp",
+                props: { id: "mycomponent", prop: "Some example data" },
+              },
+            ],
+            "mycomponent:zone1": [
+              {
+                type: "Comp",
+                props: { id: "sampleId", prop: "More example data" },
+              },
+            ],
+          },
         },
       };
 
@@ -401,7 +445,7 @@ describe("Reducer", () => {
 
       const newState = reducer(state, action);
 
-      expect(newState).toMatchInlineSnapshot(`
+      expect(newState.data).toMatchInlineSnapshot(`
         {
           "content": [],
           "root": {
@@ -417,9 +461,12 @@ describe("Reducer", () => {
 
   describe("unregisterZone action", () => {
     it("should unregister a zone", () => {
-      const state: Data = {
-        ...defaultData,
-        zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
+        },
       };
 
       const action: UnregisterZoneAction = {
@@ -428,15 +475,18 @@ describe("Reducer", () => {
       };
 
       const newState = reducer(state, action);
-      expect(newState.zones?.zone1).toBeUndefined();
+      expect(newState.data.zones?.zone1).toBeUndefined();
     });
   });
 
   describe("registerZone action", () => {
     it("should register a zone that's been previously unregistered", () => {
-      const state: Data = {
-        ...defaultData,
-        zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
+      const state: AppData = {
+        state: {},
+        data: {
+          ...defaultData,
+          zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
+        },
       };
 
       const unregisterAction: UnregisterZoneAction = {
@@ -453,13 +503,13 @@ describe("Reducer", () => {
         reducer(state, unregisterAction),
         registerAction
       );
-      expect(newState.zones?.zone1[0].props.id).toEqual("1");
+      expect(newState.data.zones?.zone1[0].props.id).toEqual("1");
     });
   });
 
   describe("set action", () => {
     it("should set new data", () => {
-      const state: Data = { ...defaultData };
+      const state: AppData = { state: {}, data: { ...defaultData } };
       const newData: Data = {
         ...defaultData,
         root: { title: "Hello, world" },
@@ -467,12 +517,12 @@ describe("Reducer", () => {
       };
 
       const action: SetDataAction = {
-        type: "set",
+        type: "setData",
         data: newData,
       };
 
       const newState = reducer(state, action);
-      expect(newState).toEqual(newData);
+      expect(newState.data).toEqual(newData);
     });
   });
 });
