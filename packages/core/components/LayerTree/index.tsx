@@ -24,7 +24,7 @@ export const LayerTree = ({
 }: {
   data: Data;
   zoneContent: Data["content"];
-  itemSelector: ItemSelector | null;
+  itemSelector?: ItemSelector | null;
   setItemSelector: (item: ItemSelector | null) => void;
   zone?: string;
   label?: string;

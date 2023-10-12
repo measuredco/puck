@@ -42,7 +42,7 @@ export function usePuckHistory({
           applyChange(target, true, change);
           return target;
         }, target);
-        dispatch({ type: "setData", data: target.data });
+        dispatch({ type: "set", appData: target });
       },
       rewind: () => {
         const target = structuredClone(appData);
@@ -51,7 +51,7 @@ export function usePuckHistory({
           return target;
         }, target);
 
-        dispatch({ type: "setData", data: target.data });
+        dispatch({ type: "set", appData: target });
       },
     });
   }, DEBOUNCE_TIME);

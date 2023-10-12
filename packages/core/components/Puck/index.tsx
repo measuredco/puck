@@ -88,21 +88,31 @@ export function Puck({
 }) {
   const [reducer] = useState(() => createReducer({ config }));
 
-  const initialAppData = { data: initialData, state: {} };
+  const initialAppData = {
+    data: initialData,
+    state: { leftSideBarVisible: true, itemSelector: null },
+  };
 
   const [appData, dispatch] = useReducer<StateReducer>(
     reducer,
     flushZones(initialAppData)
   );
 
-  const { data } = appData;
+  const { data, state } = appData;
 
   const { canForward, canRewind, rewind, forward } = usePuckHistory({
     appData,
     dispatch,
   });
 
-  const [itemSelector, setItemSelector] = useState<ItemSelector | null>(null);
+  const { itemSelector, leftSideBarVisible } = state;
+
+  const setItemSelector = useCallback(
+    (newItemSelector: ItemSelector | null) => {
+      dispatch({ type: "setState", state: { itemSelector: newItemSelector } });
+    },
+    []
+  );
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
@@ -163,8 +173,6 @@ export function Puck({
   }, [data]);
 
   const { onDragStartOrUpdate, placeholderStyle } = usePlaceholderStyle();
-
-  const [leftSidebarVisible, setLeftSidebarVisible] = useState(true);
 
   const [draggedItem, setDraggedItem] = useState<
     DragStart & Partial<DragUpdate>
@@ -266,7 +274,7 @@ export function Puck({
                     gridTemplateAreas:
                       '"header header header" "left editor right"',
                     gridTemplateColumns: `${
-                      leftSidebarVisible ? "288px" : "0px"
+                      leftSideBarVisible ? "288px" : "0px"
                     } auto 288px`,
                     gridTemplateRows: "min-content auto",
                     height: "100vh",
@@ -318,7 +326,12 @@ export function Puck({
                         >
                           <IconButton
                             onClick={() =>
-                              setLeftSidebarVisible(!leftSidebarVisible)
+                              dispatch({
+                                type: "setState",
+                                state: {
+                                  leftSideBarVisible: !leftSideBarVisible,
+                                },
+                              })
                             }
                             title="Toggle left sidebar"
                           >
