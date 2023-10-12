@@ -1,4 +1,4 @@
-import { Data } from "../types/Config";
+import { AppData, AppState, Data } from "../types/Config";
 
 export type InsertAction = {
   type: "insert";
@@ -41,9 +41,19 @@ export type RemoveAction = {
   zone: string;
 };
 
+export type SetStateAction = {
+  type: "setState";
+  state: Partial<AppState>;
+};
+
 export type SetDataAction = {
   type: "setData";
   data: Partial<Data>;
+};
+
+export type SetAction = {
+  type: "set";
+  appData: Partial<AppData>;
 };
 
 export type RegisterZoneAction = {
@@ -63,6 +73,8 @@ export type PuckAction =
   | ReplaceAction
   | RemoveAction
   | DuplicateAction
+  | SetAction
   | SetDataAction
+  | SetStateAction
   | RegisterZoneAction
   | UnregisterZoneAction;

@@ -1,5 +1,7 @@
 import { ReactElement } from "react";
 import { ReactNode } from "react";
+import { ItemSelector } from "../lib/get-item";
+import { DragStart, DragUpdate } from "react-beautiful-dnd";
 
 export type Adaptor<AdaptorParams = {}> = {
   name: string;
@@ -112,4 +114,11 @@ export type Data<
   zones?: Record<string, Content<Props>>;
 };
 
-export type AppData = { data: Data; state: {} };
+type DraggedItem = DragStart & Partial<DragUpdate>;
+
+export type AppState = {
+  leftSideBarVisible: boolean;
+  itemSelector?: ItemSelector | null;
+};
+
+export type AppData = { data: Data; state: AppState };
