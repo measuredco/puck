@@ -13,13 +13,21 @@ export type ActionType = "insert" | "reorder";
 export type StateReducer = Reducer<AppData, PuckAction>;
 
 const storeInterceptor = (reducer: StateReducer) => {
-  return (data, action) => {
-    const newAppData = reducer(data, action);
+  return (appData: AppData, action: PuckAction) => {
+    const newAppData = reducer(appData, action);
+
+    const isValidType = ![
+      "registerZone",
+      "unregisterZone",
+      "setData",
+      "setState",
+      "set",
+    ].includes(action.type);
 
     if (
-      !["registerZone", "unregisterZone", "setData", "set"].includes(
-        action.type
-      )
+      typeof action.recordHistory !== "undefined"
+        ? action.recordHistory
+        : isValidType
     ) {
       recordDiff(newAppData);
     }
