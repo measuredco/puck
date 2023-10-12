@@ -109,7 +109,10 @@ export function Puck({
 
   const setItemSelector = useCallback(
     (newItemSelector: ItemSelector | null) => {
-      dispatch({ type: "setState", state: { itemSelector: newItemSelector } });
+      dispatch({
+        type: "setState",
+        state: { itemSelector: newItemSelector },
+      });
     },
     []
   );
