@@ -8,7 +8,7 @@ import {
 import { Config, Data } from "../../types/Config";
 import { DragStart, DragUpdate } from "react-beautiful-dnd";
 import { ItemSelector, getItem } from "../../lib/get-item";
-import { PuckAction } from "../../lib/reducer";
+import { PuckAction } from "../../reducer";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { useDebounce } from "use-debounce";
 import { getZoneId } from "../../lib/get-zone-id";
