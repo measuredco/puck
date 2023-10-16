@@ -5,13 +5,23 @@ import { useActionHistory } from "./use-action-history";
 import { useHotkeys } from "react-hotkeys-hook";
 import EventEmitter from "event-emitter";
 import { useDebouncedCallback, useDebounce } from "use-debounce";
-import { diff, applyChange, revertChange } from "deep-diff";
 
 const DEBOUNCE_TIME = 250;
-const RECORD_DIFF = "RECORD_DIFF";
+export const RECORD_DIFF = "RECORD_DIFF";
 export const historyEmitter = EventEmitter();
 export const recordDiff = (newAppData: AppData) =>
   historyEmitter.emit(RECORD_DIFF, newAppData);
+
+export const _recordHistory = ({ snapshot, newSnapshot, record, dispatch }) => {
+  record({
+    forward: () => {
+      dispatch({ type: "set", appData: newSnapshot });
+    },
+    rewind: () => {
+      dispatch({ type: "set", appData: snapshot });
+    },
+  });
+};
 
 export function usePuckHistory({
   appData,
@@ -29,30 +39,11 @@ export function usePuckHistory({
   const [snapshot] = useDebounce(appData, DEBOUNCE_TIME);
 
   const handleRecordDiff = useDebouncedCallback((newAppData: AppData) => {
-    const _diff = diff(snapshot, newAppData);
-
-    if (!_diff) {
-      return;
-    }
-
-    record({
-      forward: () => {
-        const target = structuredClone(appData);
-        _diff.reduce((target, change) => {
-          applyChange(target, true, change);
-          return target;
-        }, target);
-        dispatch({ type: "set", appData: target });
-      },
-      rewind: () => {
-        const target = structuredClone(appData);
-        _diff.reduce((target, change) => {
-          revertChange(target, true, change);
-          return target;
-        }, target);
-
-        dispatch({ type: "set", appData: target });
-      },
+    return _recordHistory({
+      snapshot,
+      newSnapshot: newAppData,
+      record,
+      dispatch,
     });
   }, DEBOUNCE_TIME);
 
@@ -68,6 +59,5 @@ export function usePuckHistory({
     canRewind,
     rewind,
     forward,
-    record,
   };
 }
