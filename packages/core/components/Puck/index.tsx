@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { DragDropContext, DragStart, DragUpdate } from "react-beautiful-dnd";
-import type { Config, Data, Field } from "../../types/Config";
+import type { AppData, Config, Data, Field } from "../../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
 import { filter } from "../../lib";
@@ -31,6 +31,7 @@ import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
 import { flushZones } from "../../lib/flush-zones";
 import { usePuckHistory } from "../../lib/use-puck-history";
+import { AppProvider } from "./context";
 
 const Field = () => {};
 
@@ -88,9 +89,11 @@ export function Puck({
 }) {
   const [reducer] = useState(() => createReducer({ config }));
 
-  const initialAppData = {
+  const initialAppData: AppData = {
     data: initialData,
-    state: { leftSideBarVisible: true, itemSelector: null },
+    state: {
+      leftSideBarVisible: true,
+    },
   };
 
   const [appData, dispatch] = useReducer<StateReducer>(
@@ -183,443 +186,449 @@ export function Puck({
 
   return (
     <div className="puck">
-      <DragDropContext
-        onDragUpdate={(update) => {
-          setDraggedItem({ ...draggedItem, ...update });
-          onDragStartOrUpdate(update);
-        }}
-        onBeforeDragStart={(start) => {
-          onDragStartOrUpdate(start);
-          setItemSelector(null);
-        }}
-        onDragEnd={(droppedItem) => {
-          setDraggedItem(undefined);
+      <AppProvider value={{ appData, dispatch }}>
+        <DragDropContext
+          onDragUpdate={(update) => {
+            setDraggedItem({ ...draggedItem, ...update });
+            onDragStartOrUpdate(update);
+          }}
+          onBeforeDragStart={(start) => {
+            onDragStartOrUpdate(start);
+            setItemSelector(null);
+          }}
+          onDragEnd={(droppedItem) => {
+            setDraggedItem(undefined);
 
-          // User cancel drag
-          if (!droppedItem.destination) {
-            return;
-          }
-
-          // New component
-          if (
-            droppedItem.source.droppableId === "component-list" &&
-            droppedItem.destination
-          ) {
-            dispatch({
-              type: "insert",
-              componentType: droppedItem.draggableId,
-              destinationIndex: droppedItem.destination!.index,
-              destinationZone: droppedItem.destination.droppableId,
-            });
-
-            setItemSelector({
-              index: droppedItem.destination!.index,
-              zone: droppedItem.destination.droppableId,
-            });
-
-            return;
-          } else {
-            const { source, destination } = droppedItem;
-
-            if (source.droppableId === destination.droppableId) {
-              dispatch({
-                type: "reorder",
-                sourceIndex: source.index,
-                destinationIndex: destination.index,
-                destinationZone: destination.droppableId,
-              });
-            } else {
-              dispatch({
-                type: "move",
-                sourceZone: source.droppableId,
-                sourceIndex: source.index,
-                destinationIndex: destination.index,
-                destinationZone: destination.droppableId,
-              });
+            // User cancel drag
+            if (!droppedItem.destination) {
+              return;
             }
 
-            setItemSelector({
-              index: destination.index,
-              zone: destination.droppableId,
-            });
-          }
-        }}
-      >
-        <DropZoneProvider
-          value={{
-            data,
-            itemSelector,
-            setItemSelector,
-            config,
-            dispatch,
-            draggedItem,
-            placeholderStyle,
-            mode: "edit",
-            areaId: "root",
-          }}
-        >
-          <dropZoneContext.Consumer>
-            {(ctx) => {
-              let path =
-                ctx?.pathData && selectedItem
-                  ? ctx?.pathData[selectedItem?.props.id]
-                  : undefined;
+            // New component
+            if (
+              droppedItem.source.droppableId === "component-list" &&
+              droppedItem.destination
+            ) {
+              dispatch({
+                type: "insert",
+                componentType: droppedItem.draggableId,
+                destinationIndex: droppedItem.destination!.index,
+                destinationZone: droppedItem.destination.droppableId,
+              });
 
-              if (path) {
-                path = [{ label: "Page", selector: null }, ...path];
-                path = path.slice(path.length - 2, path.length - 1);
+              setItemSelector({
+                index: droppedItem.destination!.index,
+                zone: droppedItem.destination.droppableId,
+              });
+
+              return;
+            } else {
+              const { source, destination } = droppedItem;
+
+              if (source.droppableId === destination.droppableId) {
+                dispatch({
+                  type: "reorder",
+                  sourceIndex: source.index,
+                  destinationIndex: destination.index,
+                  destinationZone: destination.droppableId,
+                });
+              } else {
+                dispatch({
+                  type: "move",
+                  sourceZone: source.droppableId,
+                  sourceIndex: source.index,
+                  destinationIndex: destination.index,
+                  destinationZone: destination.droppableId,
+                });
               }
 
-              return (
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateAreas:
-                      '"header header header" "left editor right"',
-                    gridTemplateColumns: `${
-                      leftSideBarVisible ? "288px" : "0px"
-                    } auto 288px`,
-                    gridTemplateRows: "min-content auto",
-                    height: "100vh",
-                    position: "fixed",
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                  }}
-                >
-                  <header
-                    style={{
-                      gridArea: "header",
-                      color: "var(--puck-color-black)",
-                      background: "var(--puck-color-white)",
-                      borderBottom: "1px solid var(--puck-color-grey-8)",
-                    }}
-                  >
-                    {renderHeader ? (
-                      renderHeader({
-                        children: (
-                          <Button
-                            onClick={() => {
-                              onPublish(data);
-                            }}
-                            icon={<Globe size="14px" />}
-                          >
-                            Publish
-                          </Button>
-                        ),
-                        data,
-                        dispatch,
-                      })
-                    ) : (
-                      <div
-                        style={{
-                          display: "grid",
-                          padding: 16,
-                          gridTemplateAreas: '"left middle right"',
-                          gridTemplateColumns: "288px auto 288px",
-                          gridTemplateRows: "auto",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: 16,
-                          }}
-                        >
-                          <IconButton
-                            onClick={() =>
-                              dispatch({
-                                type: "setState",
-                                state: {
-                                  leftSideBarVisible: !leftSideBarVisible,
-                                },
-                              })
-                            }
-                            title="Toggle left sidebar"
-                          >
-                            <Sidebar />
-                          </IconButton>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Heading rank={2} size="xs">
-                            {headerTitle || data.root.title || "Page"}
-                            {headerPath && (
-                              <small style={{ fontWeight: 400, marginLeft: 4 }}>
-                                <code>{headerPath}</code>
-                              </small>
-                            )}
-                          </Heading>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: 16,
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                          <div style={{ display: "flex" }}>
-                            <IconButton
-                              title="undo"
-                              disabled={!canRewind}
-                              onClick={rewind}
-                            >
-                              <ChevronLeft
-                                size={21}
-                                stroke={
-                                  canRewind
-                                    ? "var(--puck-color-black)"
-                                    : "var(--puck-color-grey-7)"
-                                }
-                              />
-                            </IconButton>
-                            <IconButton
-                              title="redo"
-                              disabled={!canForward}
-                              onClick={forward}
-                            >
-                              <ChevronRight
-                                size={21}
-                                stroke={
-                                  canForward
-                                    ? "var(--puck-color-black)"
-                                    : "var(--puck-color-grey-7)"
-                                }
-                              />
-                            </IconButton>
-                          </div>
-                          {renderHeaderActions &&
-                            renderHeaderActions({ data, dispatch })}
-                          <Button
-                            onClick={() => {
-                              onPublish(data);
-                            }}
-                            icon={<Globe size="14px" />}
-                          >
-                            Publish
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </header>
+              setItemSelector({
+                index: destination.index,
+                zone: destination.droppableId,
+              });
+            }
+          }}
+        >
+          <DropZoneProvider
+            value={{
+              data,
+              itemSelector,
+              setItemSelector,
+              config,
+              dispatch,
+              draggedItem,
+              placeholderStyle,
+              mode: "edit",
+              areaId: "root",
+            }}
+          >
+            <dropZoneContext.Consumer>
+              {(ctx) => {
+                let path =
+                  ctx?.pathData && selectedItem
+                    ? ctx?.pathData[selectedItem?.props.id]
+                    : undefined;
+
+                if (path) {
+                  path = [{ label: "Page", selector: null }, ...path];
+                  path = path.slice(path.length - 2, path.length - 1);
+                }
+
+                return (
                   <div
                     style={{
-                      gridArea: "left",
-                      background: "var(--puck-color-grey-11)",
-                      borderRight: "1px solid var(--puck-color-grey-8)",
-                      overflowY: "auto",
-                      display: "flex",
-                      flexDirection: "column",
+                      display: "grid",
+                      gridTemplateAreas:
+                        '"header header header" "left editor right"',
+                      gridTemplateColumns: `${
+                        leftSideBarVisible ? "288px" : "0px"
+                      } auto 288px`,
+                      gridTemplateRows: "min-content auto",
+                      height: "100vh",
+                      position: "fixed",
+                      top: 0,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
                     }}
                   >
-                    <SidebarSection title="Components">
-                      <ComponentList config={config} />
-                    </SidebarSection>
-                    <SidebarSection title="Outline">
-                      {ctx?.activeZones &&
-                        ctx?.activeZones[rootDroppableId] && (
-                          <LayerTree
-                            data={data}
-                            label={
-                              areaContainsZones(data, "root")
-                                ? rootDroppableId
-                                : ""
-                            }
-                            zoneContent={data.content}
-                            setItemSelector={setItemSelector}
-                            itemSelector={itemSelector}
-                          />
-                        )}
-
-                      {Object.entries(findZonesForArea(data, "root")).map(
-                        ([zoneKey, zone]) => {
-                          return (
+                    <header
+                      style={{
+                        gridArea: "header",
+                        color: "var(--puck-color-black)",
+                        background: "var(--puck-color-white)",
+                        borderBottom: "1px solid var(--puck-color-grey-8)",
+                      }}
+                    >
+                      {renderHeader ? (
+                        renderHeader({
+                          children: (
+                            <Button
+                              onClick={() => {
+                                onPublish(data);
+                              }}
+                              icon={<Globe size="14px" />}
+                            >
+                              Publish
+                            </Button>
+                          ),
+                          data,
+                          dispatch,
+                        })
+                      ) : (
+                        <div
+                          style={{
+                            display: "grid",
+                            padding: 16,
+                            gridTemplateAreas: '"left middle right"',
+                            gridTemplateColumns: "288px auto 288px",
+                            gridTemplateRows: "auto",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: 16,
+                            }}
+                          >
+                            <IconButton
+                              onClick={() =>
+                                dispatch({
+                                  type: "setState",
+                                  state: {
+                                    leftSideBarVisible: !leftSideBarVisible,
+                                  },
+                                })
+                              }
+                              title="Toggle left sidebar"
+                            >
+                              <Sidebar />
+                            </IconButton>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Heading rank={2} size="xs">
+                              {headerTitle || data.root.title || "Page"}
+                              {headerPath && (
+                                <small
+                                  style={{ fontWeight: 400, marginLeft: 4 }}
+                                >
+                                  <code>{headerPath}</code>
+                                </small>
+                              )}
+                            </Heading>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: 16,
+                              justifyContent: "flex-end",
+                            }}
+                          >
+                            <div style={{ display: "flex" }}>
+                              <IconButton
+                                title="undo"
+                                disabled={!canRewind}
+                                onClick={rewind}
+                              >
+                                <ChevronLeft
+                                  size={21}
+                                  stroke={
+                                    canRewind
+                                      ? "var(--puck-color-black)"
+                                      : "var(--puck-color-grey-7)"
+                                  }
+                                />
+                              </IconButton>
+                              <IconButton
+                                title="redo"
+                                disabled={!canForward}
+                                onClick={forward}
+                              >
+                                <ChevronRight
+                                  size={21}
+                                  stroke={
+                                    canForward
+                                      ? "var(--puck-color-black)"
+                                      : "var(--puck-color-grey-7)"
+                                  }
+                                />
+                              </IconButton>
+                            </div>
+                            {renderHeaderActions &&
+                              renderHeaderActions({ data, dispatch })}
+                            <Button
+                              onClick={() => {
+                                onPublish(data);
+                              }}
+                              icon={<Globe size="14px" />}
+                            >
+                              Publish
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </header>
+                    <div
+                      style={{
+                        gridArea: "left",
+                        background: "var(--puck-color-grey-11)",
+                        borderRight: "1px solid var(--puck-color-grey-8)",
+                        overflowY: "auto",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <SidebarSection title="Components">
+                        <ComponentList config={config} />
+                      </SidebarSection>
+                      <SidebarSection title="Outline">
+                        {ctx?.activeZones &&
+                          ctx?.activeZones[rootDroppableId] && (
                             <LayerTree
-                              key={zoneKey}
                               data={data}
-                              label={zoneKey}
-                              zone={zoneKey}
-                              zoneContent={zone}
+                              label={
+                                areaContainsZones(data, "root")
+                                  ? rootDroppableId
+                                  : ""
+                              }
+                              zoneContent={data.content}
                               setItemSelector={setItemSelector}
                               itemSelector={itemSelector}
                             />
-                          );
-                        }
-                      )}
-                    </SidebarSection>
-                  </div>
+                          )}
 
-                  <div
-                    style={{
-                      overflowY: "auto",
-                      gridArea: "editor",
-                      position: "relative",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                    onClick={() => setItemSelector(null)}
-                    id="puck-frame"
-                  >
-                    <div
-                      className="puck-root"
-                      style={{
-                        boxShadow: "0px 0px 0px 32px var(--puck-color-grey-10)",
-                        margin: 32,
-                        zoom: 0.75,
-                      }}
-                    >
-                      <div
-                        style={{
-                          border: "1px solid var(--puck-color-grey-8)",
-                        }}
-                      >
-                        <Page data={data} {...data.root}>
-                          <DropZone zone={rootDroppableId} />
-                        </Page>
-                      </div>
-                    </div>
-                    {/* Fill empty space under root */}
-                    <div
-                      style={{
-                        background: "var(--puck-color-grey-10)",
-                        height: "100%",
-                        flexGrow: 1,
-                      }}
-                    ></div>
-                  </div>
-                  <div
-                    style={{
-                      borderLeft: "1px solid var(--puck-color-grey-8)",
-                      overflowY: "auto",
-                      gridArea: "right",
-                      fontFamily: "var(--puck-font-stack)",
-                      display: "flex",
-                      flexDirection: "column",
-                      background: "var(--puck-color-white)",
-                    }}
-                  >
-                    <FieldWrapper data={data}>
-                      <SidebarSection
-                        noPadding
-                        breadcrumbs={path}
-                        breadcrumbClick={(breadcrumb) =>
-                          setItemSelector(breadcrumb.selector)
-                        }
-                        title={selectedItem ? selectedItem.type : "Page"}
-                      >
-                        {Object.keys(fields).map((fieldName) => {
-                          const field = fields[fieldName];
-
-                          const onChange = (value: any) => {
-                            let currentProps;
-                            let newProps;
-
-                            if (selectedItem) {
-                              currentProps = selectedItem.props;
-                            } else {
-                              currentProps = data.root;
-                            }
-
-                            if (fieldName === "_data") {
-                              // Reset the link if value is falsey
-                              if (!value) {
-                                const { locked, ..._meta } =
-                                  currentProps._meta || {};
-
-                                newProps = {
-                                  ...currentProps,
-                                  _data: undefined,
-                                  _meta: _meta,
-                                };
-                              } else {
-                                const changedFields = filter(
-                                  // filter out anything not supported by this component
-                                  value,
-                                  Object.keys(fields)
-                                );
-
-                                newProps = {
-                                  ...currentProps,
-                                  ...changedFields,
-                                  _data: value, // TODO perf - this is duplicative and will make payload larger
-                                  _meta: {
-                                    locked: Object.keys(changedFields),
-                                  },
-                                };
-                              }
-                            } else {
-                              newProps = {
-                                ...currentProps,
-                                [fieldName]: value,
-                              };
-                            }
-
-                            if (itemSelector) {
-                              dispatch({
-                                type: "replace",
-                                destinationIndex: itemSelector.index,
-                                destinationZone:
-                                  itemSelector.zone || rootDroppableId,
-                                data: { ...selectedItem, props: newProps },
-                              });
-                            } else {
-                              dispatch({
-                                type: "setData",
-                                data: { root: newProps },
-                              });
-                            }
-                          };
-
-                          if (selectedItem && itemSelector) {
+                        {Object.entries(findZonesForArea(data, "root")).map(
+                          ([zoneKey, zone]) => {
                             return (
-                              <InputOrGroup
-                                key={`${selectedItem.props.id}_${fieldName}`}
-                                field={field}
-                                name={fieldName}
-                                label={field.label}
-                                readOnly={
-                                  getItem(
-                                    itemSelector,
-                                    data
-                                  )!.props._meta?.locked?.indexOf(fieldName) >
-                                  -1
-                                }
-                                value={selectedItem.props[fieldName]}
-                                onChange={onChange}
-                              />
-                            );
-                          } else {
-                            return (
-                              <InputOrGroup
-                                key={`page_${fieldName}`}
-                                field={field}
-                                name={fieldName}
-                                label={field.label}
-                                readOnly={
-                                  data.root._meta?.locked?.indexOf(fieldName) >
-                                  -1
-                                }
-                                value={data.root[fieldName]}
-                                onChange={onChange}
+                              <LayerTree
+                                key={zoneKey}
+                                data={data}
+                                label={zoneKey}
+                                zone={zoneKey}
+                                zoneContent={zone}
+                                setItemSelector={setItemSelector}
+                                itemSelector={itemSelector}
                               />
                             );
                           }
-                        })}
+                        )}
                       </SidebarSection>
-                    </FieldWrapper>
+                    </div>
+
+                    <div
+                      style={{
+                        overflowY: "auto",
+                        gridArea: "editor",
+                        position: "relative",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                      onClick={() => setItemSelector(null)}
+                      id="puck-frame"
+                    >
+                      <div
+                        className="puck-root"
+                        style={{
+                          boxShadow:
+                            "0px 0px 0px 32px var(--puck-color-grey-10)",
+                          margin: 32,
+                          zoom: 0.75,
+                        }}
+                      >
+                        <div
+                          style={{
+                            border: "1px solid var(--puck-color-grey-8)",
+                          }}
+                        >
+                          <Page data={data} {...data.root}>
+                            <DropZone zone={rootDroppableId} />
+                          </Page>
+                        </div>
+                      </div>
+                      {/* Fill empty space under root */}
+                      <div
+                        style={{
+                          background: "var(--puck-color-grey-10)",
+                          height: "100%",
+                          flexGrow: 1,
+                        }}
+                      ></div>
+                    </div>
+                    <div
+                      style={{
+                        borderLeft: "1px solid var(--puck-color-grey-8)",
+                        overflowY: "auto",
+                        gridArea: "right",
+                        fontFamily: "var(--puck-font-stack)",
+                        display: "flex",
+                        flexDirection: "column",
+                        background: "var(--puck-color-white)",
+                      }}
+                    >
+                      <FieldWrapper data={data}>
+                        <SidebarSection
+                          noPadding
+                          breadcrumbs={path}
+                          breadcrumbClick={(breadcrumb) =>
+                            setItemSelector(breadcrumb.selector)
+                          }
+                          title={selectedItem ? selectedItem.type : "Page"}
+                        >
+                          {Object.keys(fields).map((fieldName) => {
+                            const field = fields[fieldName];
+
+                            const onChange = (value: any) => {
+                              let currentProps;
+                              let newProps;
+
+                              if (selectedItem) {
+                                currentProps = selectedItem.props;
+                              } else {
+                                currentProps = data.root;
+                              }
+
+                              if (fieldName === "_data") {
+                                // Reset the link if value is falsey
+                                if (!value) {
+                                  const { locked, ..._meta } =
+                                    currentProps._meta || {};
+
+                                  newProps = {
+                                    ...currentProps,
+                                    _data: undefined,
+                                    _meta: _meta,
+                                  };
+                                } else {
+                                  const changedFields = filter(
+                                    // filter out anything not supported by this component
+                                    value,
+                                    Object.keys(fields)
+                                  );
+
+                                  newProps = {
+                                    ...currentProps,
+                                    ...changedFields,
+                                    _data: value, // TODO perf - this is duplicative and will make payload larger
+                                    _meta: {
+                                      locked: Object.keys(changedFields),
+                                    },
+                                  };
+                                }
+                              } else {
+                                newProps = {
+                                  ...currentProps,
+                                  [fieldName]: value,
+                                };
+                              }
+
+                              if (itemSelector) {
+                                dispatch({
+                                  type: "replace",
+                                  destinationIndex: itemSelector.index,
+                                  destinationZone:
+                                    itemSelector.zone || rootDroppableId,
+                                  data: { ...selectedItem, props: newProps },
+                                });
+                              } else {
+                                dispatch({
+                                  type: "setData",
+                                  data: { root: newProps },
+                                });
+                              }
+                            };
+
+                            if (selectedItem && itemSelector) {
+                              return (
+                                <InputOrGroup
+                                  key={`${selectedItem.props.id}_${fieldName}`}
+                                  field={field}
+                                  name={fieldName}
+                                  label={field.label}
+                                  readOnly={
+                                    getItem(
+                                      itemSelector,
+                                      data
+                                    )!.props._meta?.locked?.indexOf(fieldName) >
+                                    -1
+                                  }
+                                  value={selectedItem.props[fieldName]}
+                                  onChange={onChange}
+                                />
+                              );
+                            } else {
+                              return (
+                                <InputOrGroup
+                                  key={`page_${fieldName}`}
+                                  field={field}
+                                  name={fieldName}
+                                  label={field.label}
+                                  readOnly={
+                                    data.root._meta?.locked?.indexOf(
+                                      fieldName
+                                    ) > -1
+                                  }
+                                  value={data.root[fieldName]}
+                                  onChange={onChange}
+                                />
+                              );
+                            }
+                          })}
+                        </SidebarSection>
+                      </FieldWrapper>
+                    </div>
                   </div>
-                </div>
-              );
-            }}
-          </dropZoneContext.Consumer>
-        </DropZoneProvider>
-      </DragDropContext>
+                );
+              }}
+            </dropZoneContext.Consumer>
+          </DropZoneProvider>
+        </DragDropContext>
+      </AppProvider>
     </div>
   );
 }
