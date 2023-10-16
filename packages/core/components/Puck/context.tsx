@@ -1,12 +1,12 @@
 import { createContext, useContext } from "react";
-import { AppData } from "../../types/Config";
+import { AppData, AppState } from "../../types/Config";
 import { PuckAction } from "../../reducer";
 
 export const defaultAppData: AppData = {
   data: { content: [], root: { title: "" } },
   state: {
     leftSideBarVisible: true,
-    arrayFieldConfig: {},
+    arrayState: {},
   },
 };
 

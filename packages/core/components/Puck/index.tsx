@@ -93,6 +93,7 @@ export function Puck({
     data: initialData,
     state: {
       leftSideBarVisible: true,
+      arrayState: {},
     },
   };
 

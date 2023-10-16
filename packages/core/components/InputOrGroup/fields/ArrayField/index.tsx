@@ -9,17 +9,14 @@ import DroppableStrictMode from "../../../DroppableStrictMode";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Draggable } from "../../../Draggable";
 import { generateId } from "../../../../lib/generate-id";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DragIcon } from "../../../DragIcon";
+import { ArrayState, ItemWithId } from "../../../../types/Config";
+import { useAppContext } from "../../../Puck/context";
 
 const getClassNameInput = getClassNameFactory("Input", inputStyles);
 const getClassName = getClassNameFactory("ArrayField", styles);
 const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);
-
-type ItemWithId = {
-  _arrayId: string;
-  data: any;
-};
 
 export const ArrayField = ({
   field,
@@ -28,19 +25,43 @@ export const ArrayField = ({
   name,
   label,
 }: InputProps) => {
-  const [valueWithIds, setValueWithIds] = useState<ItemWithId[]>(value);
+  const [arrayFieldId] = useState(generateId("ArrayField"));
+
+  const { appData, setState } = useAppContext();
+
+  const arrayState: ArrayState = appData.state.arrayState[arrayFieldId] || {
+    items: Array.from(value).map<ItemWithId>((v) => ({
+      _arrayId: generateId("ArrayItem"),
+      data: v,
+    })),
+    openId: "",
+  };
+
+  const setArrayState = useCallback(
+    (newArrayState: Partial<ArrayState>, recordHistory: boolean = false) => {
+      setState(
+        {
+          arrayState: {
+            ...appData.state.arrayState,
+            [arrayFieldId]: { ...arrayState, ...newArrayState },
+          },
+        },
+        recordHistory
+      );
+    },
+    [arrayState]
+  );
 
   // Create a mirror of value with IDs added for drag and drop
   useEffect(() => {
-    const newValueWithIds = value.map((item, idx) => ({
-      _arrayId: valueWithIds[idx]?._arrayId || generateId("ArrayItem"),
+    const newItems = Array.from(value).map((item, idx) => ({
+      _arrayId: arrayState.items[idx]?._arrayId || generateId("ArrayItem"),
       data: item,
     }));
 
-    setValueWithIds(newValueWithIds);
+    // We don't need to record history during this useEffect, as the history has already been set by onDragEnd
+    setArrayState({ items: newItems });
   }, [value]);
-
-  const [openId, setOpenId] = useState("");
 
   if (!field.arrayFields) {
     return null;
@@ -58,13 +79,13 @@ export const ArrayField = ({
         onDragEnd={(event) => {
           if (event.destination) {
             const newValue: ItemWithId[] = reorder(
-              valueWithIds,
+              arrayState.items,
               event.source.index,
               event.destination?.index
             );
 
-            setValueWithIds(newValue);
-            onChange(newValue.map(({ _arrayId, data }) => data));
+            setArrayState({ ...arrayState, items: newValue }, false);
+            onChange(newValue.map(({ data }) => data));
           }
         }}
       >
@@ -80,14 +101,14 @@ export const ArrayField = ({
                 })}
               >
                 {Array.isArray(value) && value.length > 0
-                  ? valueWithIds.map(({ _arrayId, data }, i) => (
+                  ? arrayState.items.map(({ _arrayId, data }, i) => (
                       <Draggable
                         id={_arrayId}
                         index={i}
                         key={_arrayId}
                         className={(_, snapshot) =>
                           getClassNameItem({
-                            isExpanded: openId === _arrayId,
+                            isExpanded: arrayState.openId === _arrayId,
                             isDragging: snapshot.isDragging,
                           })
                         }
@@ -96,10 +117,14 @@ export const ArrayField = ({
                           <>
                             <div
                               onClick={() => {
-                                if (openId === _arrayId) {
-                                  setOpenId("");
+                                if (arrayState.openId === _arrayId) {
+                                  setArrayState({
+                                    openId: "",
+                                  });
                                 } else {
-                                  setOpenId(_arrayId);
+                                  setArrayState({
+                                    openId: _arrayId,
+                                  });
                                 }
                               }}
                               className={getClassNameItem("summary")}
@@ -112,15 +137,21 @@ export const ArrayField = ({
                                   <div className={getClassNameItem("action")}>
                                     <IconButton
                                       onClick={() => {
-                                        const existingValue = value || [];
-                                        const existingValueWithIds =
-                                          valueWithIds || [];
+                                        const existingValue = [
+                                          ...(value || []),
+                                        ];
+                                        const existingItems = [
+                                          ...(arrayState.items || []),
+                                        ];
 
                                         existingValue.splice(i, 1);
-                                        existingValueWithIds.splice(i, 1);
+                                        existingItems.splice(i, 1);
 
+                                        setArrayState(
+                                          { items: existingItems },
+                                          true
+                                        );
                                         onChange(existingValue);
-                                        setValueWithIds(existingValueWithIds);
                                       }}
                                       title="Delete"
                                     >
