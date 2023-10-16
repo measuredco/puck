@@ -114,11 +114,17 @@ export type Data<
   zones?: Record<string, Content<Props>>;
 };
 
-type DraggedItem = DragStart & Partial<DragUpdate>;
+export type ItemWithId = {
+  _arrayId: string;
+  data: any;
+};
+
+export type ArrayState = { items: ItemWithId[]; openId: string };
 
 export type AppState = {
   leftSideBarVisible: boolean;
   itemSelector?: ItemSelector | null;
+  arrayState: Record<string, ArrayState | undefined>;
 };
 
 export type AppData = { data: Data; state: AppState };

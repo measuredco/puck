@@ -26,7 +26,10 @@ type Props = {
 };
 const defaultData: Data = { root: { title: "" }, content: [], zones: {} };
 
-const defaultState: AppState = { leftSideBarVisible: true };
+const defaultState: AppState = {
+  leftSideBarVisible: true,
+  arrayState: {},
+};
 
 describe("Data reducer", () => {
   const config: Config<Props> = {
