@@ -3,42 +3,46 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Heading } from "../Heading";
 import { ChevronRight } from "react-feather";
-import { ItemSelector } from "../../lib/get-item";
+import { useBreadcrumbs } from "../../lib/use-breadcrumbs";
+import { useAppContext } from "../Puck/context";
 
 const getClassName = getClassNameFactory("SidebarSection", styles);
-
-type Breadcrumb = { label: string; selector: ItemSelector | null };
 
 export const SidebarSection = ({
   children,
   title,
   background,
-  breadcrumbs = [],
-  breadcrumbClick,
+  showBreadcrumbs,
   noPadding,
 }: {
   children: ReactNode;
   title: ReactNode;
   background?: string;
-  breadcrumbs?: Breadcrumb[];
-  breadcrumbClick?: (breadcrumb: Breadcrumb) => void;
+  showBreadcrumbs?: boolean;
   noPadding?: boolean;
 }) => {
+  const { setState } = useAppContext();
+  const breadcrumbs = useBreadcrumbs(1);
+
   return (
     <div className={getClassName({ noPadding })} style={{ background }}>
       <div className={getClassName("title")}>
         <div className={getClassName("breadcrumbs")}>
-          {breadcrumbs.map((breadcrumb, i) => (
-            <div key={i} className={getClassName("breadcrumb")}>
-              <div
-                className={getClassName("breadcrumbLabel")}
-                onClick={() => breadcrumbClick && breadcrumbClick(breadcrumb)}
-              >
-                {breadcrumb.label}
-              </div>
-              <ChevronRight size={16} />
-            </div>
-          ))}
+          {showBreadcrumbs
+            ? breadcrumbs.map((breadcrumb, i) => (
+                <div key={i} className={getClassName("breadcrumb")}>
+                  <div
+                    className={getClassName("breadcrumbLabel")}
+                    onClick={() =>
+                      setState({ itemSelector: breadcrumb.selector })
+                    }
+                  >
+                    {breadcrumb.label}
+                  </div>
+                  <ChevronRight size={16} />
+                </div>
+              ))
+            : null}
           <div className={getClassName("heading")}>
             <Heading rank={2} size="xs">
               {title}

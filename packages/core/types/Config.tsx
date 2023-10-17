@@ -94,13 +94,14 @@ export type Config<
   >;
 };
 
-type MappedItem<Props extends { [key: string]: any } = { [key: string]: any }> =
-  {
-    type: keyof Props;
-    props: WithId<{
-      [key: string]: any;
-    }>;
-  };
+export type MappedItem<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = {
+  type: keyof Props;
+  props: WithId<{
+    [key: string]: any;
+  }>;
+};
 
 export type Data<
   Props extends { [key: string]: any } = { [key: string]: any },

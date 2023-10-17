@@ -13,10 +13,7 @@ import { rootDroppableId } from "../../lib/root-droppable-id";
 import { useDebounce } from "use-debounce";
 import { getZoneId } from "../../lib/get-zone-id";
 
-type PathData = Record<
-  string,
-  { selector: ItemSelector | null; label: string }[]
->;
+export type PathData = Record<string, { path: string[]; label: string }>;
 
 export type DropZoneContext = {
   data: Data;
@@ -129,17 +126,17 @@ export const DropZoneProvider = ({
       const [area] = getZoneId(selector.zone);
 
       setPathData((latestPathData = {}) => {
-        const pathData = latestPathData[area] || [];
+        const parentPathData = latestPathData[area] || { path: [] };
 
         return {
           ...latestPathData,
-          [item.props.id]: [
-            ...pathData,
-            {
-              selector,
-              label: item.type as string,
-            },
-          ],
+          [item.props.id]: {
+            path: [
+              ...parentPathData.path,
+              ...(selector.zone ? [selector.zone] : []),
+            ],
+            label: item.type as string,
+          },
         };
       });
     },
@@ -164,7 +161,6 @@ export const DropZoneProvider = ({
             activeZones,
             registerPath,
             pathData,
-
             ...value,
           }}
         >

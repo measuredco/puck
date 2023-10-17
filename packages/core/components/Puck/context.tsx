@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import { AppData, AppState } from "../../types/Config";
 import { PuckAction } from "../../reducer";
+import { getItem } from "../../lib/get-item";
 
 export const defaultAppData: AppData = {
   data: { content: [], root: { title: "" } },
@@ -25,9 +26,14 @@ export const AppProvider = appContext.Provider;
 export const useAppContext = () => {
   const mainContext = useContext(appContext);
 
+  const selectedItem = mainContext.appData.state.itemSelector
+    ? getItem(mainContext.appData.state.itemSelector, mainContext.appData.data)
+    : undefined;
+
   return {
     ...mainContext,
-    // Helper
+    // Helpers
+    selectedItem,
     setState: (state: Partial<AppState>, recordHistory?: boolean) => {
       return mainContext.dispatch({
         type: "setState",

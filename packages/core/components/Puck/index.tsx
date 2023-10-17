@@ -265,16 +265,6 @@ export function Puck({
           >
             <dropZoneContext.Consumer>
               {(ctx) => {
-                let path =
-                  ctx?.pathData && selectedItem
-                    ? ctx?.pathData[selectedItem?.props.id]
-                    : undefined;
-
-                if (path) {
-                  path = [{ label: "Page", selector: null }, ...path];
-                  path = path.slice(path.length - 2, path.length - 1);
-                }
-
                 return (
                   <div
                     style={{
@@ -515,10 +505,7 @@ export function Puck({
                       <FieldWrapper data={data}>
                         <SidebarSection
                           noPadding
-                          breadcrumbs={path}
-                          breadcrumbClick={(breadcrumb) =>
-                            setItemSelector(breadcrumb.selector)
-                          }
+                          showBreadcrumbs
                           title={selectedItem ? selectedItem.type : "Page"}
                         >
                           {Object.keys(fields).map((fieldName) => {

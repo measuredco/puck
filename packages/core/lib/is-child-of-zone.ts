@@ -1,6 +1,7 @@
 import { DropZoneContext } from "../components/DropZone/context";
 import { Content } from "../types/Config";
 import { getItem } from "./get-item";
+import { getZoneId } from "./get-zone-id";
 
 export const isChildOfZone = (
   item: Content[0],
@@ -10,14 +11,10 @@ export const isChildOfZone = (
   const { data, pathData = {} } = ctx || {};
 
   return maybeChild && data
-    ? !!pathData[maybeChild.props.id]?.find((path) => {
-        if (path.selector) {
-          const pathItem = getItem(path.selector!, data);
+    ? !!pathData[maybeChild.props.id]?.path.find((zoneCompound) => {
+        const [area] = getZoneId(zoneCompound);
 
-          return pathItem?.props.id === item.props.id;
-        }
-
-        return false;
+        return area === item.props.id;
       })
     : false;
 };

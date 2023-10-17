@@ -1,3 +1,5 @@
+import { rootDroppableId } from "./root-droppable-id";
+
 export const getZoneId = (zoneCompound?: string) => {
   if (!zoneCompound) {
     return [];
@@ -7,5 +9,5 @@ export const getZoneId = (zoneCompound?: string) => {
     return zoneCompound.split(":");
   }
 
-  return ["root", zoneCompound];
+  return [rootDroppableId, zoneCompound];
 };
