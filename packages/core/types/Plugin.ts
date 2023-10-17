@@ -1,17 +1,17 @@
 import { ReactElement, ReactNode } from "react";
-import { Data } from "./Config";
+import { AppState } from "./Config";
 
 export type Plugin = {
   renderRootFields?: (props: {
     children: ReactNode;
-    data: Data;
+    state: AppState;
   }) => ReactElement<any>;
   renderRoot?: (props: {
     children: ReactNode;
-    data: Data;
+    state: AppState;
   }) => ReactElement<any>;
   renderFields?: (props: {
     children: ReactNode;
-    data: Data;
+    state: AppState;
   }) => ReactElement<any>;
 };

@@ -41,12 +41,12 @@ const defaultPageFields: Record<string, Field> = {
 
 const PluginRenderer = ({
   children,
-  data,
+  state,
   plugins,
   renderMethod,
 }: {
   children: ReactNode;
-  data: Data;
+  state: AppState;
   plugins;
   renderMethod: "renderRoot" | "renderRootFields" | "renderFields";
 }) => {
@@ -54,7 +54,7 @@ const PluginRenderer = ({
     .filter((item) => item[renderMethod])
     .map((item) => item[renderMethod])
     .reduce(
-      (accChildren, Item) => <Item data={data}>{accChildren}</Item>,
+      (accChildren, Item) => <Item state={state}>{accChildren}</Item>,
       children
     );
 };
@@ -125,7 +125,7 @@ export function Puck({
       <PluginRenderer
         plugins={plugins}
         renderMethod="renderRoot"
-        data={pageProps.data}
+        state={pageProps.state}
       >
         {config.root?.render
           ? config.root?.render({ ...pageProps, editMode: true })
@@ -140,7 +140,7 @@ export function Puck({
       <PluginRenderer
         plugins={plugins}
         renderMethod="renderRootFields"
-        data={props.data}
+        state={props.state}
       >
         {props.children}
       </PluginRenderer>
@@ -153,7 +153,7 @@ export function Puck({
       <PluginRenderer
         plugins={plugins}
         renderMethod="renderFields"
-        data={props.data}
+        state={props.state}
       >
         {props.children}
       </PluginRenderer>
@@ -477,7 +477,7 @@ export function Puck({
                             border: "1px solid var(--puck-color-grey-8)",
                           }}
                         >
-                          <Page data={data} {...data.root}>
+                          <Page state={appState} {...data.root}>
                             <DropZone zone={rootDroppableId} />
                           </Page>
                         </div>
@@ -502,7 +502,7 @@ export function Puck({
                         background: "var(--puck-color-white)",
                       }}
                     >
-                      <FieldWrapper data={data}>
+                      <FieldWrapper state={appState}>
                         <SidebarSection
                           noPadding
                           showBreadcrumbs
