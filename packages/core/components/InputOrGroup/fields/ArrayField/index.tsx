@@ -27,9 +27,9 @@ export const ArrayField = ({
 }: InputProps) => {
   const [arrayFieldId] = useState(generateId("ArrayField"));
 
-  const { appData, setState } = useAppContext();
+  const { state, setUi } = useAppContext();
 
-  const arrayState: ArrayState = appData.state.arrayState[arrayFieldId] || {
+  const arrayState: ArrayState = state.ui.arrayState[arrayFieldId] || {
     items: Array.from(value).map<ItemWithId>((v) => ({
       _arrayId: generateId("ArrayItem"),
       data: v,
@@ -39,10 +39,10 @@ export const ArrayField = ({
 
   const setArrayState = useCallback(
     (newArrayState: Partial<ArrayState>, recordHistory: boolean = false) => {
-      setState(
+      setUi(
         {
           arrayState: {
-            ...appData.state.arrayState,
+            ...state.ui.arrayState,
             [arrayFieldId]: { ...arrayState, ...newArrayState },
           },
         },

@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { DragDropContext, DragStart, DragUpdate } from "react-beautiful-dnd";
-import type { AppData, Config, Data, Field } from "../../types/Config";
+import type { AppState, Config, Data, Field } from "../../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
 import { filter } from "../../lib";
@@ -31,7 +31,7 @@ import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
 import { flushZones } from "../../lib/flush-zones";
 import { usePuckHistory } from "../../lib/use-puck-history";
-import { AppProvider } from "./context";
+import { AppProvider, defaultAppState } from "./context";
 
 const Field = () => {};
 
@@ -89,33 +89,30 @@ export function Puck({
 }) {
   const [reducer] = useState(() => createReducer({ config }));
 
-  const initialAppData: AppData = {
+  const initialAppState: AppState = {
+    ...defaultAppState,
     data: initialData,
-    state: {
-      leftSideBarVisible: true,
-      arrayState: {},
-    },
   };
 
-  const [appData, dispatch] = useReducer<StateReducer>(
+  const [appState, dispatch] = useReducer<StateReducer>(
     reducer,
-    flushZones(initialAppData)
+    flushZones(initialAppState)
   );
 
-  const { data, state } = appData;
+  const { data, ui } = appState;
 
   const { canForward, canRewind, rewind, forward } = usePuckHistory({
-    appData,
+    appState,
     dispatch,
   });
 
-  const { itemSelector, leftSideBarVisible } = state;
+  const { itemSelector, leftSideBarVisible } = ui;
 
   const setItemSelector = useCallback(
     (newItemSelector: ItemSelector | null) => {
       dispatch({
-        type: "setState",
-        state: { itemSelector: newItemSelector },
+        type: "setUi",
+        ui: { itemSelector: newItemSelector },
       });
     },
     []
@@ -187,7 +184,7 @@ export function Puck({
 
   return (
     <div className="puck">
-      <AppProvider value={{ appData, dispatch }}>
+      <AppProvider value={{ state: appState, dispatch }}>
         <DragDropContext
           onDragUpdate={(update) => {
             setDraggedItem({ ...draggedItem, ...update });
@@ -325,8 +322,8 @@ export function Puck({
                             <IconButton
                               onClick={() =>
                                 dispatch({
-                                  type: "setState",
-                                  state: {
+                                  type: "setUi",
+                                  ui: {
                                     leftSideBarVisible: !leftSideBarVisible,
                                   },
                                 })

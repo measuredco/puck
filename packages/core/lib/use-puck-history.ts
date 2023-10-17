@@ -1,4 +1,4 @@
-import type { AppData } from "../types/Config";
+import type { AppState } from "../types/Config";
 import { useEffect } from "react";
 import { PuckAction } from "../reducer";
 import { useActionHistory } from "./use-action-history";
@@ -9,25 +9,35 @@ import { useDebouncedCallback, useDebounce } from "use-debounce";
 const DEBOUNCE_TIME = 250;
 export const RECORD_DIFF = "RECORD_DIFF";
 export const historyEmitter = EventEmitter();
-export const recordDiff = (newAppData: AppData) =>
-  historyEmitter.emit(RECORD_DIFF, newAppData);
+export const recordDiff = (newAppState: AppState) =>
+  historyEmitter.emit(RECORD_DIFF, newAppState);
 
-export const _recordHistory = ({ snapshot, newSnapshot, record, dispatch }) => {
+export const _recordHistory = ({
+  snapshot,
+  newSnapshot,
+  record,
+  dispatch,
+}: {
+  snapshot: Partial<AppState>;
+  newSnapshot: Partial<AppState>;
+  record: (params: any) => void;
+  dispatch: (action: PuckAction) => void;
+}) => {
   record({
     forward: () => {
-      dispatch({ type: "set", appData: newSnapshot });
+      dispatch({ type: "set", state: newSnapshot });
     },
     rewind: () => {
-      dispatch({ type: "set", appData: snapshot });
+      dispatch({ type: "set", state: snapshot });
     },
   });
 };
 
 export function usePuckHistory({
-  appData,
+  appState,
   dispatch,
 }: {
-  appData: AppData;
+  appState: AppState;
   dispatch: (action: PuckAction) => void;
 }) {
   const { canForward, canRewind, rewind, forward, record } = useActionHistory();
@@ -36,12 +46,12 @@ export function usePuckHistory({
   useHotkeys("meta+shift+z", forward, { preventDefault: true });
   useHotkeys("meta+y", forward, { preventDefault: true });
 
-  const [snapshot] = useDebounce(appData, DEBOUNCE_TIME);
+  const [snapshot] = useDebounce(appState, DEBOUNCE_TIME);
 
-  const handleRecordDiff = useDebouncedCallback((newAppData: AppData) => {
+  const handleRecordDiff = useDebouncedCallback((newAppState: AppState) => {
     return _recordHistory({
       snapshot,
-      newSnapshot: newAppData,
+      newSnapshot: newAppState,
       record,
       dispatch,
     });

@@ -21,7 +21,7 @@ export const SidebarSection = ({
   showBreadcrumbs?: boolean;
   noPadding?: boolean;
 }) => {
-  const { setState } = useAppContext();
+  const { setUi } = useAppContext();
   const breadcrumbs = useBreadcrumbs(1);
 
   return (
@@ -33,9 +33,7 @@ export const SidebarSection = ({
                 <div key={i} className={getClassName("breadcrumb")}>
                   <div
                     className={getClassName("breadcrumbLabel")}
-                    onClick={() =>
-                      setState({ itemSelector: breadcrumb.selector })
-                    }
+                    onClick={() => setUi({ itemSelector: breadcrumb.selector })}
                   >
                     {breadcrumb.label}
                   </div>
