@@ -8,6 +8,7 @@ import { OutlineList } from "@measured/puck/components/OutlineList";
 import { scrollIntoView } from "@measured/puck/lib/scroll-into-view";
 
 import ReactFromJSON from "react-from-json";
+import { PuckAction } from "@measured/puck/reducer";
 
 const dataAttr = "data-puck-heading-analyzer-id";
 
@@ -93,6 +94,7 @@ const HeadingOutlineAnalyer = ({
 }: {
   children: ReactNode;
   state: AppState;
+  dispatch: (action: PuckAction) => void;
 }) => {
   const { data } = state;
   const [hierarchy, setHierarchy] = useState<Block[]>([]);

@@ -41,11 +41,13 @@ const defaultPageFields: Record<string, Field> = {
 
 const PluginRenderer = ({
   children,
+  dispatch,
   state,
   plugins,
   renderMethod,
 }: {
   children: ReactNode;
+  dispatch: (action: PuckAction) => void;
   state: AppState;
   plugins;
   renderMethod: "renderRoot" | "renderRootFields" | "renderFields";
@@ -54,7 +56,11 @@ const PluginRenderer = ({
     .filter((item) => item[renderMethod])
     .map((item) => item[renderMethod])
     .reduce(
-      (accChildren, Item) => <Item state={state}>{accChildren}</Item>,
+      (accChildren, Item) => (
+        <Item dispatch={dispatch} state={state}>
+          {accChildren}
+        </Item>
+      ),
       children
     );
 };
@@ -125,6 +131,7 @@ export function Puck({
       <PluginRenderer
         plugins={plugins}
         renderMethod="renderRoot"
+        dispatch={pageProps.dispatch}
         state={pageProps.state}
       >
         {config.root?.render
@@ -140,6 +147,7 @@ export function Puck({
       <PluginRenderer
         plugins={plugins}
         renderMethod="renderRootFields"
+        dispatch={props.dispatch}
         state={props.state}
       >
         {props.children}
@@ -153,6 +161,7 @@ export function Puck({
       <PluginRenderer
         plugins={plugins}
         renderMethod="renderFields"
+        dispatch={props.dispatch}
         state={props.state}
       >
         {props.children}
@@ -477,7 +486,11 @@ export function Puck({
                             border: "1px solid var(--puck-color-grey-8)",
                           }}
                         >
-                          <Page state={appState} {...data.root}>
+                          <Page
+                            dispatch={dispatch}
+                            state={appState}
+                            {...data.root}
+                          >
                             <DropZone zone={rootDroppableId} />
                           </Page>
                         </div>
@@ -502,7 +515,7 @@ export function Puck({
                         background: "var(--puck-color-white)",
                       }}
                     >
-                      <FieldWrapper state={appState}>
+                      <FieldWrapper dispatch={dispatch} state={appState}>
                         <SidebarSection
                           noPadding
                           showBreadcrumbs
