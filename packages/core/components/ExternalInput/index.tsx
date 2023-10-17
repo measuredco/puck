@@ -18,13 +18,19 @@ export const ExternalInput = ({
   const [data, setData] = useState<Record<string, any>[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(value);
-  const keys = useMemo(
-    () =>
-      Object.keys(data).filter(
-        (key) => typeof data[key] === "string" || typeof data[key] === "number"
-      ),
-    [data]
-  );
+  const keys = useMemo(() => {
+    const validKeys: Set<string> = new Set();
+
+    for (const item of data) {
+      for (const key of Object.keys(item)) {
+        if (typeof item[key] === "string" || typeof item[key] === "number") {
+          validKeys.add(key);
+        }
+      }
+    }
+
+    return Array.from(validKeys);
+  }, [data]);
 
   useEffect(() => {
     (async () => {
