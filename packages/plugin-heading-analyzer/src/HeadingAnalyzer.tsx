@@ -1,6 +1,6 @@
 import { ReactElement, ReactNode, useEffect, useState } from "react";
 
-import { Data } from "@measured/puck";
+import { AppState } from "@measured/puck";
 import { Plugin } from "@measured/puck/types/Plugin";
 import { SidebarSection } from "@measured/puck/components/SidebarSection";
 import { OutlineList } from "@measured/puck/components/OutlineList";
@@ -89,11 +89,12 @@ function buildHierarchy(): Block[] {
 
 const HeadingOutlineAnalyer = ({
   children,
-  data,
+  state,
 }: {
   children: ReactNode;
-  data: Data;
+  state: AppState;
 }) => {
+  const { data } = state;
   const [hierarchy, setHierarchy] = useState<Block[]>([]);
   const [firstRender, setFirstRender] = useState(true);
 
