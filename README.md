@@ -112,7 +112,11 @@ The plugin API follows a React paradigm. Each plugin passed to the Puck editor c
 - `renderRootFields` (`Component`): Render the root fields
 - `renderFields` (`Component`): Render the fields for the currently selected component
 
-Each render function receives the `children` prop, which you must render, and the `data` prop, which can be used to read the data model.
+Each render function receives three props:
+
+- **children** (`ReactNode`): The normal contents of the root or field. You must render this.
+- **state** (`AppState`): The current application state, including data and UI state
+- **dispatch** (`(action: PuckAction) => void`): The Puck dispatcher, used for making data changes or updating the UI. See the [action definitions](https://github.com/measuredco/puck/blob/main/packages/core/reducer/actions.tsx) for a full reference of available mutations.
 
 #### Example
 
@@ -285,9 +289,19 @@ A `Field` represents a user input field shown in the Puck interface.
   - **onChange** (`(value: any) => void`): Callback to change the value
   - **readOnly** (`boolean` | `undefined`): Whether or not the field should be in readOnly mode
 
+### `AppState`
+
+The `AppState` object stores the puck application state.
+
+- **data** (`Data`): The page data currently being rendered
+- **ui** (`object`):
+  - **leftSideBarVisible** (boolean): Whether or not the left side bar is visible
+  - **itemSelector** (object): An object describing which item is selected
+  - **arrayState** (object): An object describing the internal state of array items
+
 ### `Data`
 
-The `Data` object stores the puck state.
+The `Data` object stores the puck page data.
 
 - **root** (`object`):
   - **title** (string): Title of the content, typically used for the page title
