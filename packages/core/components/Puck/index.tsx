@@ -77,11 +77,11 @@ export function Puck({
   plugins?: Plugin[];
   renderHeader?: (props: {
     children: ReactNode;
-    data: Data;
     dispatch: (action: PuckAction) => void;
+    state: AppState;
   }) => ReactElement;
   renderHeaderActions?: (props: {
-    data: Data;
+    state: AppState;
     dispatch: (action: PuckAction) => void;
   }) => ReactElement;
   headerTitle?: string;
@@ -300,8 +300,8 @@ export function Puck({
                               Publish
                             </Button>
                           ),
-                          data,
                           dispatch,
+                          state: appState,
                         })
                       ) : (
                         <div
@@ -389,7 +389,10 @@ export function Puck({
                               </IconButton>
                             </div>
                             {renderHeaderActions &&
-                              renderHeaderActions({ data, dispatch })}
+                              renderHeaderActions({
+                                state: appState,
+                                dispatch,
+                              })}
                             <Button
                               onClick={() => {
                                 onPublish(data);
