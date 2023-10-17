@@ -10,10 +10,11 @@ import {
   UnregisterZoneAction,
   createReducer,
 } from "../../reducer";
-import { AppData, AppState, Config, Data } from "../../types/Config";
+import { AppState, Config, Data, UiState } from "../../types/Config";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 
 import { generateId } from "../../lib/generate-id";
+import { defaultAppState } from "../../components/Puck/context";
 
 jest.mock("../../lib/generate-id");
 
@@ -26,10 +27,7 @@ type Props = {
 };
 const defaultData: Data = { root: { title: "" }, content: [], zones: {} };
 
-const defaultState: AppState = {
-  leftSideBarVisible: true,
-  arrayState: {},
-};
+const defaultUi: UiState = defaultAppState.ui;
 
 describe("Data reducer", () => {
   const config: Config<Props> = {
@@ -45,7 +43,7 @@ describe("Data reducer", () => {
 
   describe("insert action", () => {
     it("should insert into rootDroppableId", () => {
-      const state: AppData = { state: defaultState, data: { ...defaultData } };
+      const state: AppState = { ui: defaultUi, data: { ...defaultData } };
 
       const action: InsertAction = {
         type: "insert",
@@ -60,7 +58,7 @@ describe("Data reducer", () => {
     });
 
     it("should insert into a different zone", () => {
-      const state: AppData = { state: defaultState, data: { ...defaultData } };
+      const state: AppState = { ui: defaultUi, data: { ...defaultData } };
       const action: InsertAction = {
         type: "insert",
         componentType: "Comp",
@@ -80,8 +78,8 @@ describe("Data reducer", () => {
 
   describe("reorder action", () => {
     it("should reorder within rootDroppableId", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           content: [
@@ -103,8 +101,8 @@ describe("Data reducer", () => {
     });
 
     it("should reorder within a different zone", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           zones: {
@@ -130,8 +128,8 @@ describe("Data reducer", () => {
 
   describe("duplicate action", () => {
     it("should duplicate in content", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           content: [
@@ -155,8 +153,8 @@ describe("Data reducer", () => {
     });
 
     it("should duplicate in a different zone", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           zones: {
@@ -188,8 +186,8 @@ describe("Data reducer", () => {
 
       mockedGenerateId.mockImplementation(() => `mockId-${counter++}`);
 
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           zones: {
@@ -266,8 +264,8 @@ describe("Data reducer", () => {
 
   describe("move action", () => {
     it("should move from rootDroppableId to another zone", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           content: [{ type: "Comp", props: { id: "1" } }],
@@ -288,8 +286,8 @@ describe("Data reducer", () => {
     });
 
     it("should move from a zone to rootDroppableId", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           content: [{ type: "Comp", props: { id: "1" } }],
@@ -310,8 +308,8 @@ describe("Data reducer", () => {
     });
 
     it("should move between two zones", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           content: [],
@@ -339,8 +337,8 @@ describe("Data reducer", () => {
     const replacement = { type: "Comp", props: { id: "3" } };
 
     it("should replace in content", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           content: [{ type: "Comp", props: { id: "1" } }],
@@ -359,8 +357,8 @@ describe("Data reducer", () => {
     });
 
     it("should replace in a zone", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
@@ -381,8 +379,8 @@ describe("Data reducer", () => {
 
   describe("remove action", () => {
     it("should remove from content", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           content: [{ type: "Comp", props: { id: "1" } }],
@@ -399,8 +397,8 @@ describe("Data reducer", () => {
     });
 
     it("should remove from a zone", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
@@ -421,8 +419,8 @@ describe("Data reducer", () => {
 
       mockedGenerateId.mockImplementation(() => `mockId-${counter++}`);
 
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           zones: {
@@ -466,8 +464,8 @@ describe("Data reducer", () => {
 
   describe("unregisterZone action", () => {
     it("should unregister a zone", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
@@ -486,8 +484,8 @@ describe("Data reducer", () => {
 
   describe("registerZone action", () => {
     it("should register a zone that's been previously unregistered", () => {
-      const state: AppData = {
-        state: defaultState,
+      const state: AppState = {
+        ui: defaultUi,
         data: {
           ...defaultData,
           zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
@@ -514,7 +512,7 @@ describe("Data reducer", () => {
 
   describe("set action", () => {
     it("should set new data", () => {
-      const state: AppData = { state: defaultState, data: { ...defaultData } };
+      const state: AppState = { ui: defaultUi, data: { ...defaultData } };
       const newData: Data = {
         ...defaultData,
         root: { title: "Hello, world" },

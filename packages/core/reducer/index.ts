@@ -1,5 +1,5 @@
 import { Reducer } from "react";
-import { AppData, Config } from "../types/Config";
+import { AppState, Config } from "../types/Config";
 import { recordDiff } from "../lib/use-puck-history";
 import { reduceData } from "./data";
 import { PuckAction } from "./actions";
@@ -10,11 +10,11 @@ export * from "./data";
 
 export type ActionType = "insert" | "reorder";
 
-export type StateReducer = Reducer<AppData, PuckAction>;
+export type StateReducer = Reducer<AppState, PuckAction>;
 
 const storeInterceptor = (reducer: StateReducer) => {
-  return (appData: AppData, action: PuckAction) => {
-    const newAppData = reducer(appData, action);
+  return (state: AppState, action: PuckAction) => {
+    const newAppState = reducer(state, action);
 
     const isValidType = ![
       "registerZone",
@@ -29,21 +29,21 @@ const storeInterceptor = (reducer: StateReducer) => {
         ? action.recordHistory
         : isValidType
     ) {
-      recordDiff(newAppData);
+      recordDiff(newAppState);
     }
 
-    return newAppData;
+    return newAppState;
   };
 };
 
 export const createReducer = ({ config }: { config: Config }): StateReducer =>
-  storeInterceptor((appData, action) => {
-    const data = reduceData(appData.data, action, config);
-    const state = reduceState(appData.state, action);
+  storeInterceptor((state, action) => {
+    const data = reduceData(state.data, action, config);
+    const ui = reduceState(state.ui, action);
 
     if (action.type === "set") {
-      return { ...appData, ...action.appData };
+      return { ...state, ...action.state };
     }
 
-    return { data, state: state };
+    return { data, ui };
   });

@@ -1,4 +1,4 @@
-import { AppData, AppState, Data } from "../types/Config";
+import { AppState, Data, UiState } from "../types/Config";
 
 export type InsertAction = {
   type: "insert";
@@ -42,8 +42,8 @@ export type RemoveAction = {
 };
 
 export type SetStateAction = {
-  type: "setState";
-  state: Partial<AppState>;
+  type: "setUi";
+  ui: Partial<UiState>;
 };
 
 export type SetDataAction = {
@@ -53,7 +53,7 @@ export type SetDataAction = {
 
 export type SetAction = {
   type: "set";
-  appData: Partial<AppData>;
+  state: Partial<AppState>;
 };
 
 export type RegisterZoneAction = {

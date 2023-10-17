@@ -1,13 +1,13 @@
-import { AppState } from "../types/Config";
+import { UiState } from "../types/Config";
 import { PuckAction } from "./actions";
 
-export const reduceState = (state: AppState, action: PuckAction) => {
-  if (action.type === "setState") {
+export const reduceState = (ui: UiState, action: PuckAction) => {
+  if (action.type === "setUi") {
     return {
-      ...state,
-      ...action.state,
+      ...ui,
+      ...action.ui,
     };
   }
 
-  return state;
+  return ui;
 };

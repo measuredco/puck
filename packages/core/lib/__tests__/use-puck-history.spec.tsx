@@ -1,13 +1,13 @@
 import { _recordHistory } from "../use-puck-history";
-import { AppData } from "../../types/Config";
-import { defaultAppData } from "../../components/Puck/context";
+import { AppState } from "../../types/Config";
+import { defaultAppState } from "../../components/Puck/context";
 
 const mockDispatch = jest.fn();
 
-const mockedAppData1: AppData = {
-  ...defaultAppData,
+const mockedAppState1: AppState = {
+  ...defaultAppState,
   data: {
-    ...defaultAppData.data,
+    ...defaultAppState.data,
     content: [
       {
         type: "MyComponent",
@@ -20,10 +20,10 @@ const mockedAppData1: AppData = {
   },
 };
 
-const mockedAppData2: AppData = {
-  ...defaultAppData,
+const mockedAppState2: AppState = {
+  ...defaultAppState,
   data: {
-    ...defaultAppData.data,
+    ...defaultAppState.data,
     content: [
       {
         type: "MyComponent",
@@ -36,7 +36,7 @@ const mockedAppData2: AppData = {
   },
 };
 
-const mockedAppDataArray1: AppData = {
+const mockedAppStateArray1: AppState = {
   data: {
     content: [
       {
@@ -54,7 +54,7 @@ const mockedAppDataArray1: AppData = {
     root: { title: "" },
     zones: {},
   },
-  state: {
+  ui: {
     leftSideBarVisible: true,
     arrayState: {
       "ArrayField-6f94973722d42695d4e7b8678e7dcca5affc70df": {
@@ -79,7 +79,7 @@ const mockedAppDataArray1: AppData = {
   },
 };
 
-const mockedAppDataArray2: AppData = {
+const mockedAppStateArray2: AppState = {
   data: {
     content: [
       {
@@ -96,7 +96,7 @@ const mockedAppDataArray2: AppData = {
     root: { title: "" },
     zones: {},
   },
-  state: {
+  ui: {
     leftSideBarVisible: true,
     arrayState: {
       "ArrayField-6f94973722d42695d4e7b8678e7dcca5affc70df": {
@@ -131,8 +131,8 @@ describe("usePuckHistory", () => {
     const record = (history) => histories.push(history);
 
     _recordHistory({
-      snapshot: mockedAppData1,
-      newSnapshot: mockedAppData2,
+      snapshot: mockedAppState1,
+      newSnapshot: mockedAppState2,
       dispatch: mockDispatch,
       record,
     });
@@ -142,7 +142,7 @@ describe("usePuckHistory", () => {
 
     expect(mockDispatch).toHaveBeenCalledWith({
       type: "set",
-      appData: mockedAppData1,
+      state: mockedAppState1,
     });
   });
 
@@ -153,8 +153,8 @@ describe("usePuckHistory", () => {
     };
 
     _recordHistory({
-      snapshot: mockedAppData1,
-      newSnapshot: mockedAppData2,
+      snapshot: mockedAppState1,
+      newSnapshot: mockedAppState2,
       dispatch: mockDispatch,
       record,
     });
@@ -163,7 +163,7 @@ describe("usePuckHistory", () => {
 
     expect(mockDispatch).toHaveBeenCalledWith({
       type: "set",
-      appData: mockedAppData2,
+      state: mockedAppState2,
     });
   });
 
@@ -172,8 +172,8 @@ describe("usePuckHistory", () => {
     const record = (history) => histories.push(history);
 
     _recordHistory({
-      snapshot: mockedAppDataArray1,
-      newSnapshot: mockedAppDataArray2,
+      snapshot: mockedAppStateArray1,
+      newSnapshot: mockedAppStateArray2,
       dispatch: mockDispatch,
       record,
     });
@@ -183,7 +183,7 @@ describe("usePuckHistory", () => {
 
     expect(mockDispatch).toHaveBeenCalledWith({
       type: "set",
-      appData: mockedAppDataArray1,
+      state: mockedAppStateArray1,
     });
   });
 
@@ -192,8 +192,8 @@ describe("usePuckHistory", () => {
     const record = (history) => histories.push(history);
 
     _recordHistory({
-      snapshot: mockedAppDataArray1,
-      newSnapshot: mockedAppDataArray2,
+      snapshot: mockedAppStateArray1,
+      newSnapshot: mockedAppStateArray2,
       dispatch: mockDispatch,
       record,
     });
@@ -202,7 +202,7 @@ describe("usePuckHistory", () => {
 
     expect(mockDispatch).toHaveBeenCalledWith({
       type: "set",
-      appData: mockedAppDataArray2,
+      state: mockedAppStateArray2,
     });
   });
 });

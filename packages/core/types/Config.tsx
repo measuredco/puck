@@ -122,10 +122,10 @@ export type ItemWithId = {
 
 export type ArrayState = { items: ItemWithId[]; openId: string };
 
-export type AppState = {
+export type UiState = {
   leftSideBarVisible: boolean;
   itemSelector?: ItemSelector | null;
   arrayState: Record<string, ArrayState | undefined>;
 };
 
-export type AppData = { data: Data; state: AppState };
+export type AppState = { data: Data; ui: UiState };
