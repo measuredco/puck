@@ -124,7 +124,7 @@ export type ArrayState = { items: ItemWithId[]; openId: string };
 
 export type UiState = {
   leftSideBarVisible: boolean;
-  itemSelector?: ItemSelector | null;
+  itemSelector: ItemSelector | null;
   arrayState: Record<string, ArrayState | undefined>;
 };
 

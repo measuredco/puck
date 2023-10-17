@@ -23,6 +23,8 @@ export const _recordHistory = ({
   record: (params: any) => void;
   dispatch: (action: PuckAction) => void;
 }) => {
+  if (JSON.stringify(snapshot) === JSON.stringify(newSnapshot)) return;
+
   record({
     forward: () => {
       dispatch({ type: "set", state: newSnapshot });
