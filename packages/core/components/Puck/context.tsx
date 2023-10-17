@@ -8,6 +8,7 @@ export const defaultAppState: AppState = {
   ui: {
     leftSideBarVisible: true,
     arrayState: {},
+    itemSelector: null,
   },
 };
 
