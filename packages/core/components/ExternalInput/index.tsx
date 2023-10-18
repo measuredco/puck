@@ -42,7 +42,7 @@ export const ExternalInput = ({
         }
       }
     })();
-  }, [field.adaptor, field.adaptorParams]);
+  }, [field.adaptor, field.adaptorParams, isOpen]);
 
   if (!field.adaptor) {
     return <div>Incorrectly configured</div>;
