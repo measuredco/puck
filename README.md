@@ -120,15 +120,24 @@ Each render function receives three props:
 
 #### Example
 
-Here's a basic plugin that renders a "My plugin" heading in the root field area:
+Here's an example plugin that creates a button to toggle the left side-bar:
 
 ```jsx
 const myPlugin = {
-  renderRootFields: (props) => (
+  renderRootFields: ({ children, dispatch, state }) => (
     <div>
-      {props.children}
+      {children}
 
-      <h2>My plugin</h2>
+      <button
+        onClick={() => {
+          dispatch({
+            type: "setUi",
+            ui: { leftSideBarVisible: !state.ui.leftSideBarVisible },
+          });
+        }}
+      >
+        Toggle side-bar
+      </button>
     </div>
   ),
 };
