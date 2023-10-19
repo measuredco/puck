@@ -1,0 +1,31 @@
+{
+  "name": "@measured/next-puck",
+  "version": "0.10.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "next-puck": "./cli.js"
+  },
+  "scripts": {
+    "lint": "eslint \"**/*.ts*\"",
+    "build": "rm -rf dist && tsup index.ts",
+    "prepare": "yarn build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^17.0.12",
+    "@types/react": "^18.0.22",
+    "@types/react-dom": "^18.0.7",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "tsup-config": "*",
+    "typescript": "^4.5.3"
+  },
+  "peerDependencies": {
+    "@measured/puck": "^0.10.0",
+    "next": "^13.5.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
