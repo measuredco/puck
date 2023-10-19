@@ -125,7 +125,7 @@ program
       const targetPath = filePath
         .replace(templatePath, appPath)
         .replace(".hbs", "")
-        .replace("gitignore", ".gitignore"); // .gitignore gets ignored by npm during publish, so we have to rename it
+        .replace("gitignore", ".gitignore"); // Rename gitignore back to .gitignore (.gitignore) gets ignored by npm during publish
 
       let data;
 

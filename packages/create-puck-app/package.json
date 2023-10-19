@@ -7,6 +7,10 @@
   "bin": {
     "create-puck-app": "./index.js"
   },
+  "scripts": {
+    "generate": "node scripts/generate.js",
+    "prepublishOnly": "yarn generate"
+  },
   "dependencies": {
     "commander": "^10.0.1",
     "glob": "^10.3.4",
