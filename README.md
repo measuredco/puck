@@ -95,6 +95,7 @@ npx create-puck-app my-app
 Puck is a React component that can be easily integrated into your existing application. We also provide helpful recipes for common use cases:
 
 - [**next**](https://github.com/measuredco/puck/tree/main/recipes/next): Next.js app example
+- [**next-minimal**](https://github.com/measuredco/puck/tree/main/recipes/next-minimal): Next.js app example with minimal configuration using `next-puck`
 
 ## Plugins
 
