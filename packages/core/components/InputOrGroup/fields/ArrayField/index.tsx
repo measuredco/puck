@@ -30,7 +30,7 @@ export const ArrayField = ({
   const { state, setUi } = useAppContext();
 
   const arrayState: ArrayState = state.ui.arrayState[arrayFieldId] || {
-    items: Array.from(value).map<ItemWithId>((v) => ({
+    items: Array.from(value || []).map<ItemWithId>((v) => ({
       _arrayId: generateId("ArrayItem"),
       data: v,
     })),
@@ -54,7 +54,7 @@ export const ArrayField = ({
 
   // Create a mirror of value with IDs added for drag and drop
   useEffect(() => {
-    const newItems = Array.from(value).map((item, idx) => ({
+    const newItems = Array.from(value || []).map((item, idx) => ({
       _arrayId: arrayState.items[idx]?._arrayId || generateId("ArrayItem"),
       data: item,
     }));
