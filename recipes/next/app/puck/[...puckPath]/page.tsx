@@ -1,7 +1,6 @@
 import { Client } from "./client";
-import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { getPage } from "../../lib/get-page";
+import { getPage } from "../../../lib/get-page";
 
 export async function generateMetadata({
   params: { puckPath = [] },
@@ -11,7 +10,7 @@ export async function generateMetadata({
   const path = `/${puckPath.join("/")}`;
 
   return {
-    title: getPage(path)?.root.title,
+    title: "Puck: " + path,
   };
 }
 
@@ -23,11 +22,5 @@ export default async function Page({
   const path = `/${puckPath.join("/")}`;
   const data = getPage(path);
 
-  if (!data) {
-    return notFound();
-  }
-
-  return <Client data={data} />;
+  return <Client path={path} data={data} />;
 }
-
-export const dynamic = "force-static";
