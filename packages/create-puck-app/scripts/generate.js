@@ -26,7 +26,7 @@ const run = async () => {
     return;
   }
 
-  // Compile handlebars templates
+  // Copy recipe files
   const recipeFiles = glob.sync(`**/*`, {
     cwd: recipePath,
     nodir: true,
