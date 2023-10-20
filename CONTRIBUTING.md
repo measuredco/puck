@@ -1,4 +1,4 @@
-# Puck contributing guide
+# Contributing to Puck
 
 Puck is still under heavy development, having gained significant interest at an early stage. The contribution guidelines are designed to help us balance community engagement with our vision and direction.
 
@@ -6,7 +6,7 @@ Puck is still under heavy development, having gained significant interest at an 
 
 Bugs and feature requests are best reported via GitHub issues. Always check if the issue already exists before opening a new one.
 
-If you're unsure whether or not you've encounter a bug, feel free to ask first 👇
+If you're unsure whether or not you've encountered a bug, feel free to ask first 👇
 
 ## Asking questions
 
@@ -15,7 +15,7 @@ There are several ways to ask questions or ask for help:
 - Open a [discussion](https://github.com/measuredco/puck/discussions) via GitHub
 - Use the #chat or #help channels in our [Discord server](https://discord.gg/D9e4E3MQVZ)
 
-_GitHub issues are for bugs and feature requests, not for questions._
+_Please only use GitHub issues for bugs and feature requests, and not for questions._
 
 ## Labels
 
@@ -39,7 +39,7 @@ Denoted by the `type:` prefix.
 
 ### Other labels
 
-- **good first issue** - if you're new to contributing on Puck, this is a good palce to start.
+- **good first issue** - if you're new to contributing on Puck, this is a good place to start.
 - **opinions wanted** - we're looking for opinions on this ticket. Feel free to chime in with comments or suggestions.
 
 ## Contributing code
@@ -68,7 +68,7 @@ Puck uses:
 
 - TypeScript
 - CSS Modules
-- Turbo repo for efficient monorepo scripting
+- Turborepo for monorepo tooling
 - Yarn for package management and release automation
 - Next.js for demo applications
 
@@ -96,18 +96,18 @@ yarn dev
 
 #### CSS
 
-- Class names must follow [SUIT CSS](https://suitcss.github.io) convention. This is a tooling-angostic convention used at [@measuredco](https://github.com/measuredco) for all CSS work.
+- Class names must follow the [SUIT CSS](https://suitcss.github.io) methodology. This is a tooling-angostic convention used at [@measuredco](https://github.com/measuredco) for all CSS work.
 - Don't rely on global styles. Puck is deployed into hostile third-party environments and we have no control over what CSS may be running on the page.
 
 #### Commits
 
 **Keep your PRs focused to a single issue**. This makes it easier to review and is necessary for our release process.
 
-We rely on angular-style conventional commits for automating our releases, determining the version bump and generating our changelog.
+We rely on [angular-style conventional commits](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines) for automating our releases, determining the version bump and generating our changelog.
 
 You generally don't need to write perfect commit messages yourselves - we squash most PRs and rewrite the messages on merge.
 
-If you need to solve multiple issues, it's best to split it into multiple PRs. Or, if you're comfortable writing convential commits, you can also split each change into a separate commit. The team is more likely to have opinions about this and you may be asked to reword your commits.
+If you need to solve multiple issues, it's best to split it into multiple PRs. Or, if you're comfortable writing conventional commits, you can also split each change into a separate commit. The team is more likely to have opinions about this and you may be asked to reword your commits.
 
 ### Additional guidance
 
