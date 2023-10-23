@@ -4,7 +4,7 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Draggable } from "../Draggable";
 import { DragIcon } from "../DragIcon";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { useAppContext } from "../Puck/context";
 import { ChevronDown, ChevronUp } from "react-feather";
 
@@ -44,31 +44,41 @@ const ComponentListItem = ({
 const ComponentList = ({
   children,
   title,
-  defaultExpanded = true,
+  id,
 }: {
+  id: string;
   children?: ReactNode;
   title?: string;
-  defaultExpanded?: boolean;
 }) => {
-  const { config } = useAppContext();
+  const { config, state, setUi } = useAppContext();
 
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  const { expanded = true } = state.ui.componentList[id] || {};
 
   return (
-    <div className={getClassName({ isExpanded })}>
+    <div className={getClassName({ isExpanded: expanded })}>
       {title && (
         <div
           className={getClassName("title")}
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={() =>
+            setUi({
+              componentList: {
+                ...state.ui.componentList,
+                [id]: {
+                  ...state.ui.componentList[id],
+                  expanded: !expanded,
+                },
+              },
+            })
+          }
           title={
-            isExpanded
+            expanded
               ? `Collapse${title ? ` ${title}` : ""}`
               : `Expand${title ? ` ${title}` : ""}`
           }
         >
           <div>{title}</div>
           <div className={getClassName("titleIcon")}>
-            {isExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
           </div>
         </div>
       )}

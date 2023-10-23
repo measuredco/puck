@@ -111,10 +111,11 @@ The plugin API follows a React paradigm. Each plugin passed to the Puck editor c
 - `renderRoot` (`Component`): Render the root node of the preview content
 - `renderRootFields` (`Component`): Render the root fields
 - `renderFields` (`Component`): Render the fields for the currently selected component
+- `renderComponentList` (`Component`): Render the component list
 
 Each render function receives three props:
 
-- **children** (`ReactNode`): The normal contents of the root or field. You must render this.
+- **children** (`ReactNode`): The normal contents of the root or field. You must render this if provided.
 - **state** (`AppState`): The current application state, including data and UI state
 - **dispatch** (`(action: PuckAction) => void`): The Puck dispatcher, used for making data changes or updating the UI. See the [action definitions](https://github.com/measuredco/puck/blob/main/packages/core/reducer/actions.tsx) for a full reference of available mutations.
 
@@ -241,6 +242,7 @@ The `<Puck>` component renders the Puck editor.
 - **data** (`Data`): Initial data to render
 - **onChange** (`(Data) => void` [optional]): Callback that triggers when the user makes a change
 - **onPublish** (`(Data) => void` [optional]): Callback that triggers when the user hits the "Publish" button
+- **renderComponentList** (`Component` [optional]): Render function for wrapping the component list
 - **renderHeader** (`Component` [optional]): Render function for overriding the Puck header component
 - **renderHeaderActions** (`Component` [optional]): Render function for overriding the Puck header actions. Use a fragment.
 - **headerTitle** (`string` [optional]): Set the title shown in the header title
@@ -313,6 +315,11 @@ The `AppState` object stores the puck application state.
   - **leftSideBarVisible** (boolean): Whether or not the left side bar is visible
   - **itemSelector** (object): An object describing which item is selected
   - **arrayState** (object): An object describing the internal state of array items
+  - **componentList** (object): An object describing the component list. Similar shape to `Config.categories`.
+    - **components** (`sting[]`, [optional]): Array containing the names of components in this category
+    - **title** (`sting`, [optional]): Title of the category
+    - **visible** (`boolean`, [optional]): Whether or not the category is visible in the side bar
+    - **expanded** (`boolean`, [optional]): Whether or not the category is expanded in the side bar
 
 ### `Data`
 

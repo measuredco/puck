@@ -9,6 +9,7 @@ export const defaultAppState: AppState = {
     leftSideBarVisible: true,
     arrayState: {},
     itemSelector: null,
+    componentList: {},
   },
 };
 
