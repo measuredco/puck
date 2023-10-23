@@ -80,7 +80,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
 
   const userIsDragging = !!draggedItem;
   const draggingOverArea = userIsDragging && zoneArea === draggedSourceArea;
-  const draggingNewComponent = draggedSourceId === "component-list";
+  const draggingNewComponent = draggedSourceId?.startsWith("component-list");
 
   if (
     !ctx?.config ||

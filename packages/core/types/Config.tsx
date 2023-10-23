@@ -1,7 +1,6 @@
 import { ReactElement } from "react";
 import { ReactNode } from "react";
 import { ItemSelector } from "../lib/get-item";
-import { DragStart, DragUpdate } from "react-beautiful-dnd";
 
 export type Adaptor<AdaptorParams = {}> = {
   name: string;
@@ -78,10 +77,21 @@ export type ComponentConfig<
   fields?: Fields<ComponentProps>;
 };
 
+type Category<ComponentName> = {
+  components?: ComponentName[];
+  title?: string;
+  visible?: boolean;
+  defaultExpanded?: boolean;
+};
+
 export type Config<
   Props extends { [key: string]: any } = { [key: string]: any },
-  RootProps extends DefaultRootProps = DefaultRootProps
+  RootProps extends DefaultRootProps = DefaultRootProps,
+  CategoryName extends string = string
 > = {
+  categories?: Record<CategoryName, Category<keyof Props>> & {
+    other?: Category<Props>;
+  };
   components: {
     [ComponentName in keyof Props]: ComponentConfig<
       Props[ComponentName],

@@ -76,6 +76,7 @@ const mockedAppStateArray1: AppState = {
       },
     },
     itemSelector: { index: 0, zone: "default-zone" },
+    componentList: {},
   },
 };
 
@@ -118,6 +119,7 @@ const mockedAppStateArray2: AppState = {
       },
     },
     itemSelector: { index: 0, zone: "default-zone" },
+    componentList: {},
   },
 };
 
