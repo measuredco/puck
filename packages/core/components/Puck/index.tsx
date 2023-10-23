@@ -51,7 +51,11 @@ const PluginRenderer = ({
   dispatch: (action: PuckAction) => void;
   state: AppState;
   plugins;
-  renderMethod: "renderRoot" | "renderRootFields" | "renderFields";
+  renderMethod:
+    | "renderRoot"
+    | "renderRootFields"
+    | "renderFields"
+    | "renderComponentList";
 }) => {
   return plugins
     .filter((item) => item[renderMethod])
@@ -72,6 +76,7 @@ export function Puck({
   onChange,
   onPublish,
   plugins = [],
+  renderComponentList,
   renderHeader,
   renderHeaderActions,
   headerTitle,
@@ -82,6 +87,11 @@ export function Puck({
   onChange?: (data: Data) => void;
   onPublish: (data: Data) => void;
   plugins?: Plugin[];
+  renderComponentList?: (props: {
+    children: ReactNode;
+    dispatch: (action: PuckAction) => void;
+    state: AppState;
+  }) => ReactElement;
   renderHeader?: (props: {
     children: ReactNode;
     dispatch: (action: PuckAction) => void;
@@ -99,6 +109,27 @@ export function Puck({
   const initialAppState: AppState = {
     ...defaultAppState,
     data: initialData,
+    ui: {
+      ...defaultAppState.ui,
+
+      // Store categories under componentList on state to allow render functions and plugins to modify
+      componentList: config.categories
+        ? Object.entries(config.categories).reduce(
+            (acc, [categoryName, category]) => {
+              return {
+                ...acc,
+                [categoryName]: {
+                  title: category.title,
+                  components: category.components,
+                  expanded: category.defaultExpanded,
+                  visible: category.visible,
+                },
+              };
+            },
+            {}
+          )
+        : {},
+    },
   };
 
   const [appState, dispatch] = useReducer<StateReducer>(
@@ -171,6 +202,28 @@ export function Puck({
     []
   );
 
+  const ComponentListWrapper = useCallback((props) => {
+    const children = (
+      <PluginRenderer
+        plugins={plugins}
+        renderMethod="renderComponentList"
+        dispatch={props.dispatch}
+        state={props.state}
+      >
+        {props.children}
+      </PluginRenderer>
+    );
+
+    // User's render method wraps the plugin render methods
+    return renderComponentList
+      ? renderComponentList({
+          children,
+          dispatch,
+          state: appState,
+        })
+      : children;
+  }, []);
+
   const FieldWrapper = itemSelector ? ComponentFieldWrapper : PageFieldWrapper;
 
   const rootFields = config.root?.fields || defaultPageFields;
@@ -192,7 +245,7 @@ export function Puck({
     DragStart & Partial<DragUpdate>
   >();
 
-  const componentList = useComponentList(config);
+  const componentList = useComponentList(config, appState.ui);
 
   return (
     <div className="puck">
@@ -428,7 +481,13 @@ export function Puck({
                       }}
                     >
                       <SidebarSection title="Components">
-                        {componentList ? componentList : <ComponentList />}
+                        <ComponentListWrapper>
+                          {componentList ? (
+                            componentList
+                          ) : (
+                            <ComponentList id="all" />
+                          )}
+                        </ComponentListWrapper>
                       </SidebarSection>
                       <SidebarSection title="Outline">
                         {ctx?.activeZones &&

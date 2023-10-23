@@ -136,6 +136,15 @@ export type UiState = {
   leftSideBarVisible: boolean;
   itemSelector: ItemSelector | null;
   arrayState: Record<string, ArrayState | undefined>;
+  componentList: Record<
+    string,
+    {
+      components?: string[];
+      title?: string;
+      visible?: boolean;
+      expanded?: boolean;
+    }
+  >;
 };
 
 export type AppState = { data: Data; ui: UiState };

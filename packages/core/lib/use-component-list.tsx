@@ -1,17 +1,17 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Config } from "../types/Config";
+import { Config, UiState } from "../types/Config";
 import { ComponentList } from "../components/ComponentList";
 
-export const useComponentList = (config: Config) => {
+export const useComponentList = (config: Config, ui: UiState) => {
   const [componentList, setComponentList] = useState<ReactNode[]>();
 
   useEffect(() => {
-    if (config.categories) {
+    if (ui.componentList) {
       const matchedComponents: string[] = [];
 
       let _componentList: ReactNode[];
 
-      _componentList = Object.entries(config.categories).map(
+      _componentList = Object.entries(ui.componentList).map(
         ([categoryKey, category]) => {
           if (category.visible === false || !category.components) {
             return null;
@@ -19,9 +19,9 @@ export const useComponentList = (config: Config) => {
 
           return (
             <ComponentList
+              id={categoryKey}
               key={categoryKey}
               title={category.title || categoryKey}
-              defaultExpanded={category.defaultExpanded}
             >
               {category.components.map((componentName, i) => {
                 matchedComponents.push(componentName as string);
@@ -45,15 +45,11 @@ export const useComponentList = (config: Config) => {
 
       if (
         remainingComponents.length > 0 &&
-        !config.categories["other"]?.components &&
-        config.categories["other"]?.visible !== false
+        !ui.componentList.other?.components &&
+        ui.componentList.other?.visible !== false
       ) {
         _componentList.push(
-          <ComponentList
-            key="other"
-            title={"Other"}
-            defaultExpanded={config.categories.other?.defaultExpanded}
-          >
+          <ComponentList id="other" key="other" title={"Other"}>
             {remainingComponents.map((componentName, i) => {
               return (
                 <ComponentList.Item
@@ -69,7 +65,7 @@ export const useComponentList = (config: Config) => {
 
       setComponentList(_componentList);
     }
-  }, [config.categories, config.components]);
+  }, [config.categories, ui.componentList]);
 
   return componentList;
 };
