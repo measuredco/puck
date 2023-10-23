@@ -97,7 +97,7 @@ export const ArrayField = ({
                 ref={provided.innerRef}
                 className={getClassName({
                   isDraggingFrom: !!snapshot.draggingFromThisWith,
-                  hasItems: value.length > 0,
+                  hasItems: Array.isArray(value) && value.length > 0,
                 })}
               >
                 {Array.isArray(value) && value.length > 0
