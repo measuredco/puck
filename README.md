@@ -275,6 +275,12 @@ The `Config` object describes which components Puck should render, how they shou
     - **fields** (`Field`): The Field objects describing the input data stored against this component.
     - **render** (`Component`): Render function for your React component. Receives props as defined in fields.
     - **defaultProps** (`object` [optional]): Default props to pass to your component. Will show in fields.
+- **categories** (`object`): Component categories for rendering in the side bar or restricting in DropZones
+  - **[categoryName]** (`object`)
+    - **components** (`sting[]`, [optional]): Array containing the names of components in this category
+    - **title** (`sting`, [optional]): Title of the category
+    - **visible** (`boolean`, [optional]): Whether or not the category should be visible in the side bar
+    - **defaultExpanded** (`boolean`, [optional]): Whether or not the category should be expanded in the side bar by default
 
 ### `Field`
 

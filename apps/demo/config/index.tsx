@@ -1,4 +1,4 @@
-import { Config, Data } from "@measured/puck";
+import { Config, Data } from "@measured/puck/types/Config";
 import { ButtonGroup, ButtonGroupProps } from "./blocks/ButtonGroup";
 import { Card, CardProps } from "./blocks/Card";
 import { Columns, ColumnsProps } from "./blocks/Columns";
@@ -29,6 +29,18 @@ type Props = {
 export const conf: Config<Props, RootProps> = {
   root: {
     render: Root,
+  },
+  categories: {
+    layout: {
+      components: ["Columns", "Flex", "VerticalSpace"],
+    },
+    typography: {
+      components: ["Heading", "Text"],
+    },
+    interactive: {
+      title: "Actions",
+      components: ["ButtonGroup"],
+    },
   },
   components: {
     ButtonGroup,

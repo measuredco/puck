@@ -3,7 +3,48 @@
   max-width: 100%;
 }
 
-.ComponentList-item {
+.ComponentList--isExpanded + .ComponentList {
+  margin-top: 12px;
+}
+
+.ComponentList-content {
+  display: none;
+}
+
+.ComponentList--isExpanded > .ComponentList-content {
+  display: block;
+}
+
+.ComponentList-title {
+  color: var(--puck-color-grey-4);
+  display: flex;
+  font-size: var(--puck-font-size-xxxs);
+  list-style: none;
+  padding: 8px;
+  text-transform: uppercase;
+  gap: 4px;
+  border-radius: 4px;
+}
+
+.ComponentList--isExpanded .ComponentList-title {
+  margin-bottom: 4px;
+}
+
+.ComponentList-title:hover {
+  background-color: var(--puck-color-azure-9);
+  color: var(--puck-color-azure-4);
+  cursor: pointer;
+}
+
+.ComponentList-titleIcon {
+  margin-left: auto;
+}
+
+.ComponentListItem:last-of-type .ComponentListItem-draggable {
+  margin-bottom: 0px;
+}
+
+.ComponentListItem-draggable {
   background: white;
   padding: 12px;
   display: flex;
@@ -17,15 +58,12 @@
   margin-bottom: 12px;
 }
 
-.ComponentList-item:last-of-type {
-  margin-bottom: 0px;
-}
-
-.ComponentList-itemIcon {
+.ComponentListItemIcon {
   color: var(--puck-color-grey-4);
 }
 
-.ComponentList:not(.ComponentList--isDraggingFrom) .ComponentList-item:hover {
+.ComponentList:not(.ComponentList--isDraggingFrom)
+  .ComponentListItem-draggable:hover {
   background-color: var(--puck-color-azure-9);
   color: var(--puck-color-azure-4);
 }

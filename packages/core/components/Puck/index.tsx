@@ -32,6 +32,7 @@ import { areaContainsZones } from "../../lib/area-contains-zones";
 import { flushZones } from "../../lib/flush-zones";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { AppProvider, defaultAppState } from "./context";
+import { useComponentList } from "../../lib/use-component-list";
 
 const Field = () => {};
 
@@ -191,9 +192,11 @@ export function Puck({
     DragStart & Partial<DragUpdate>
   >();
 
+  const componentList = useComponentList(config);
+
   return (
     <div className="puck">
-      <AppProvider value={{ state: appState, dispatch }}>
+      <AppProvider value={{ state: appState, dispatch, config }}>
         <DragDropContext
           onDragUpdate={(update) => {
             setDraggedItem({ ...draggedItem, ...update });
@@ -213,7 +216,7 @@ export function Puck({
 
             // New component
             if (
-              droppedItem.source.droppableId === "component-list" &&
+              droppedItem.source.droppableId.startsWith("component-list") &&
               droppedItem.destination
             ) {
               dispatch({
@@ -425,7 +428,7 @@ export function Puck({
                       }}
                     >
                       <SidebarSection title="Components">
-                        <ComponentList config={config} />
+                        {componentList ? componentList : <ComponentList />}
                       </SidebarSection>
                       <SidebarSection title="Outline">
                         {ctx?.activeZones &&

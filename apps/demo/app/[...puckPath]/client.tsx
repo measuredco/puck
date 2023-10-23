@@ -1,6 +1,6 @@
 "use client";
 
-import { Config, Data } from "@measured/puck";
+import { Data } from "@measured/puck/types/Config";
 import { Puck } from "@measured/puck/components/Puck";
 import { Render } from "@measured/puck/components/Render";
 import { useEffect, useState } from "react";
@@ -40,7 +40,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     return (
       <div>
         <Puck
-          config={config as Config}
+          config={config}
           data={data}
           onPublish={async (data: Data) => {
             localStorage.setItem(key, JSON.stringify(data));
@@ -60,7 +60,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   }
 
   if (data) {
-    return <Render config={config as Config} data={data} />;
+    return <Render config={config} data={data} />;
   }
 
   return (
