@@ -97,10 +97,6 @@
   color: var(--puck-color-azure-4);
 }
 
-.ArrayFieldItem-summary::-webkit-details-marker {
-  display: none;
-}
-
 .ArrayFieldItem-body {
   display: none;
 }
