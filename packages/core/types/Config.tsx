@@ -9,8 +9,11 @@ export type Adaptor<AdaptorParams = {}> = {
   ) => Promise<Record<string, any>[] | null>;
 };
 
-type WithId<T> = T & {
+type WithPuckProps<Props> = Props & {
   id: string;
+  _meta: {
+    readOnly: Partial<Record<keyof Props, boolean>>;
+  };
 };
 
 export type Field<
@@ -72,9 +75,13 @@ export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
   DefaultProps = ComponentProps
 > = {
-  render: (props: WithId<ComponentProps>) => ReactElement;
+  render: (props: WithPuckProps<ComponentProps>) => ReactElement;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
+  resolveProps?: (props: WithPuckProps<ComponentProps>) => Promise<{
+    props: WithPuckProps<ComponentProps>;
+    readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
+  }>;
 };
 
 type Category<ComponentName> = {
@@ -108,7 +115,7 @@ export type MappedItem<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = {
   type: keyof Props;
-  props: WithId<{
+  props: WithPuckProps<{
     [key: string]: any;
   }>;
 };

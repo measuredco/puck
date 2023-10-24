@@ -1,6 +1,6 @@
 "use client";
 
-import { Data } from "@measured/puck/types/Config";
+import { Data, resolveData } from "@measured/puck";
 import { Puck } from "@measured/puck/components/Puck";
 import { Render } from "@measured/puck/components/Render";
 import { useEffect, useState } from "react";
@@ -29,6 +29,16 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
       return initialData[path] || undefined;
     }
   });
+
+  // Normally this would happen on the server, but we can't
+  // do that because we're using local storage as a database
+  const [resolvedData, setResolvedData] = useState(data);
+
+  useEffect(() => {
+    if (data && !isEdit) {
+      resolveData(data, config).then(setResolvedData);
+    }
+  }, [data, isEdit]);
 
   useEffect(() => {
     if (!isEdit) {
@@ -60,7 +70,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   }
 
   if (data) {
-    return <Render config={config} data={data} />;
+    return <Render config={config} data={resolvedData} />;
   }
 
   return (

@@ -1,4 +1,4 @@
-import { Data } from "../types/Config";
+import { Data, MappedItem } from "../types/Config";
 import { rootDroppableId } from "./root-droppable-id";
 import { setupZone } from "./setup-zone";
 
@@ -9,11 +9,18 @@ export type ItemSelector = {
 
 export const getItem = (
   selector: ItemSelector,
-  data: Data
+  data: Data,
+  dynamicProps: Record<string, any> = {}
 ): Data["content"][0] | undefined => {
   if (!selector.zone || selector.zone === rootDroppableId) {
-    return data.content[selector.index];
+    const item = data.content[selector.index];
+
+    return { ...item, props: dynamicProps[item.props.id] || item.props };
   }
 
-  return setupZone(data, selector.zone).zones[selector.zone][selector.index];
+  const item = setupZone(data, selector.zone).zones[selector.zone][
+    selector.index
+  ];
+
+  return { ...item, props: dynamicProps[item.props.id] || item.props };
 };
