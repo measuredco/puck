@@ -14,15 +14,17 @@ const getClassNameItem = getClassNameFactory("ComponentListItem", styles);
 const ComponentListItem = ({
   component,
   index,
+  id,
 }: {
   component: string;
   index: number;
+  id: string;
 }) => {
   return (
     <div className={getClassNameItem()}>
       <Draggable
         key={component}
-        id={component}
+        id={id}
         index={index}
         showShadow
         disableAnimations
@@ -102,6 +104,7 @@ const ComponentList = ({
                       key={componentKey}
                       component={componentKey}
                       index={i}
+                      id={componentKey}
                     />
                   );
                 })}
