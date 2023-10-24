@@ -10,7 +10,7 @@ import { quotes } from "./quotes";
 const getClassName = getClassNameFactory("Hero", styles);
 
 export type HeroProps = {
-  _data?: object;
+  quote?: { index: number };
   title: string;
   description: string;
   align?: string;
@@ -20,10 +20,12 @@ export type HeroProps = {
   buttons: { label: string; href: string; variant?: "primary" | "secondary" }[];
 };
 
+// TODO add resolveValue prop so the fetch can return different data to the adaptor
 const quotesAdaptor = {
   name: "Quotes API",
   fetchList: async (): Promise<Partial<HeroProps>[]> =>
-    quotes.map((quote) => ({
+    quotes.map((quote, idx) => ({
+      index: idx,
       title: quote.author,
       description: quote.content,
     })),
@@ -31,7 +33,7 @@ const quotesAdaptor = {
 
 export const Hero: ComponentConfig<HeroProps> = {
   fields: {
-    _data: {
+    quote: {
       type: "external",
       adaptor: quotesAdaptor,
       getItemSummary: (item: Partial<HeroProps>) => item.description,
@@ -76,6 +78,29 @@ export const Hero: ComponentConfig<HeroProps> = {
     description: "Description",
     buttons: [{ label: "Learn more", href: "#" }],
     padding: "64px",
+  },
+  /**
+   * The resolveProps method allows us to modify props after the Puck
+   * data has been set.
+   *
+   * It is called after the page data is changed, but before a component
+   * is rendered. This allows us to make dynamic changes to the props
+   * without storing the data in Puck.
+   *
+   * For example, requesting a third-party API for the latest content.
+   */
+  resolveProps: async (props) => {
+    if (!props.quote)
+      return { props, readOnly: { title: false, description: false } };
+
+    return {
+      props: {
+        ...props,
+        title: quotes[props.quote.index].author,
+        description: quotes[props.quote.index].content,
+      },
+      readOnly: { title: true, description: true },
+    };
   },
   render: ({
     align,

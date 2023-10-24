@@ -5,7 +5,7 @@ import {
   useCallback,
   useState,
 } from "react";
-import { Config, Data } from "../../types/Config";
+import { Config, Data, MappedItem } from "../../types/Config";
 import { DragStart, DragUpdate } from "react-beautiful-dnd";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { PuckAction } from "../../reducer";
@@ -18,6 +18,7 @@ export type PathData = Record<string, { path: string[]; label: string }>;
 export type DropZoneContext = {
   data: Data;
   config: Config;
+  dynamicProps?: Record<string, any>;
   itemSelector?: ItemSelector | null;
   setItemSelector?: (newIndex: ItemSelector | null) => void;
   dispatch?: (action: PuckAction) => void;

@@ -20,11 +20,6 @@ export const quotes = [
   },
   {
     content:
-      "A diplomat is a man who always remembers a woman's birthday but never remembers her age.",
-    author: "Robert Frost",
-  },
-  {
-    content:
       "As I grow older, I pay less attention to what men say. I just watch what they do.",
     author: "Andrew Carnegie",
   },
@@ -47,10 +42,5 @@ export const quotes = [
     content:
       "Nobody grows old merely by living a number of years. We grow old by deserting our ideals. Years may wrinkle the skin, but to give up enthusiasm wrinkles the soul.",
     author: "Samuel Ullman",
-  },
-  {
-    content:
-      "An archaeologist is the best husband a woman can have. The older she gets the more interested he is in her.",
-    author: "Agatha Christie",
   },
 ];

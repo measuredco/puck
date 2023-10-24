@@ -24,6 +24,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
   const {
     // These all need setting via context
     data,
+    dynamicProps = {},
     dispatch = () => null,
     config,
     itemSelector,
@@ -170,7 +171,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
 
                 const defaultedProps = {
                   ...config.components[item.type]?.defaultProps,
-                  ...item.props,
+                  ...(dynamicProps[item.props.id] || item.props),
                   editMode: true,
                 };
 

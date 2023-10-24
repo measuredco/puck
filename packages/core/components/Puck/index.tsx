@@ -33,6 +33,7 @@ import { flushZones } from "../../lib/flush-zones";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { AppProvider, defaultAppState } from "./context";
 import { useComponentList } from "../../lib/use-component-list";
+import { resolveAllProps } from "../../lib/resolve-all-props";
 
 const Field = () => {};
 
@@ -104,6 +105,8 @@ export function Puck({
   headerTitle?: string;
   headerPath?: string;
 }) {
+  const [dynamicProps, setDynamicProps] = useState<Record<string, any>>({});
+
   const [reducer] = useState(() => createReducer({ config }));
 
   const initialAppState: AppState = {
@@ -139,6 +142,25 @@ export function Puck({
 
   const { data, ui } = appState;
 
+  useEffect(() => {
+    // Flatten zones
+    const flatContent = Object.keys(data.zones || {}).reduce(
+      (acc, zone) => [...acc, ...data.zones![zone]],
+      data.content
+    );
+
+    resolveAllProps(flatContent, config).then((dynamicContent) => {
+      const newDynamicProps = dynamicContent.reduce<Record<string, any>>(
+        (acc, item) => {
+          return { ...acc, [item.props.id]: item.props };
+        },
+        {}
+      );
+
+      setDynamicProps(newDynamicProps);
+    });
+  }, [data]);
+
   const { canForward, canRewind, rewind, forward } = usePuckHistory({
     appState,
     dispatch,
@@ -156,7 +178,9 @@ export function Puck({
     []
   );
 
-  const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
+  const selectedItem = itemSelector
+    ? getItem(itemSelector, data, dynamicProps)
+    : null;
 
   const Page = useCallback(
     (pageProps) => (
@@ -318,6 +342,7 @@ export function Puck({
             value={{
               data,
               itemSelector,
+              dynamicProps,
               setItemSelector,
               config,
               dispatch,
@@ -598,12 +623,12 @@ export function Puck({
                                 currentProps = data.root;
                               }
 
+                              const { readOnly, ..._meta } =
+                                currentProps._meta || {};
+
                               if (fieldName === "_data") {
                                 // Reset the link if value is falsey
                                 if (!value) {
-                                  const { locked, ..._meta } =
-                                    currentProps._meta || {};
-
                                   newProps = {
                                     ...currentProps,
                                     _data: undefined,
@@ -649,35 +674,29 @@ export function Puck({
                             };
 
                             if (selectedItem && itemSelector) {
+                              const { readOnly = {} } =
+                                selectedItem.props._meta || {};
                               return (
                                 <InputOrGroup
                                   key={`${selectedItem.props.id}_${fieldName}`}
                                   field={field}
                                   name={fieldName}
                                   label={field.label}
-                                  readOnly={
-                                    getItem(
-                                      itemSelector,
-                                      data
-                                    )!.props._meta?.locked?.indexOf(fieldName) >
-                                    -1
-                                  }
+                                  readOnly={readOnly[fieldName]}
                                   value={selectedItem.props[fieldName]}
                                   onChange={onChange}
                                 />
                               );
                             } else {
+                              const { readOnly = {} } = data.root._meta || {};
+
                               return (
                                 <InputOrGroup
                                   key={`page_${fieldName}`}
                                   field={field}
                                   name={fieldName}
                                   label={field.label}
-                                  readOnly={
-                                    data.root._meta?.locked?.indexOf(
-                                      fieldName
-                                    ) > -1
-                                  }
+                                  readOnly={readOnly[fieldName]}
                                   value={data.root[fieldName]}
                                   onChange={onChange}
                                 />
