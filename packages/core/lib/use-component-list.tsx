@@ -6,7 +6,7 @@ export const useComponentList = (config: Config, ui: UiState) => {
   const [componentList, setComponentList] = useState<ReactNode[]>();
 
   useEffect(() => {
-    if (ui.componentList) {
+    if (Object.keys(ui.componentList).length > 0) {
       const matchedComponents: string[] = [];
 
       let _componentList: ReactNode[];
@@ -31,6 +31,7 @@ export const useComponentList = (config: Config, ui: UiState) => {
                     key={componentName}
                     component={componentName as string}
                     index={i}
+                    id={`${categoryKey}::${componentName}`}
                   />
                 );
               })}
@@ -49,13 +50,18 @@ export const useComponentList = (config: Config, ui: UiState) => {
         ui.componentList.other?.visible !== false
       ) {
         _componentList.push(
-          <ComponentList id="other" key="other" title={"Other"}>
+          <ComponentList
+            id="other"
+            key="other"
+            title={ui.componentList.other?.title || "Other"}
+          >
             {remainingComponents.map((componentName, i) => {
               return (
                 <ComponentList.Item
                   key={componentName}
                   component={componentName as string}
                   index={i}
+                  id={`other::${componentName}`}
                 />
               );
             })}
