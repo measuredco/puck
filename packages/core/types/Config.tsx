@@ -14,7 +14,7 @@ export type Adaptor<
 
 type WithPuckProps<Props> = Props & {
   id: string;
-  _meta: {
+  _meta?: {
     readOnly: Partial<Record<keyof Props, boolean>>;
   };
 };
