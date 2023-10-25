@@ -24,7 +24,7 @@ export const ExternalField = ({
           <Link size={16} />
         </div>
 
-        {name === "_data" ? label || "External content" : label || name}
+        {label || name}
       </div>
       <ExternalInput field={field} onChange={onChange} value={value} />
     </div>
