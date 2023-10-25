@@ -232,6 +232,163 @@ The current DropZone implementation has certain rules and limitations:
 3. You can't drag between DropZones that don't share a parent (or _area_)
 4. Your mouse must be directly over a DropZone for a collision to be detected
 
+## Adaptors
+
+Adaptors can be used to import data from a third-party API, such as a headless CMS.
+
+### Example
+
+The `external` field type enables us to use an adaptor to query data from a third party API:
+
+```tsx
+const myAdaptor = {
+  name: "My adaptor",
+  fetchList: async () => {
+    const response = await fetch("https://www.example.com/api");
+
+    return {
+      text: response.json().text,
+    };
+  },
+};
+
+const config = {
+  components: {
+    HeadingBlock: {
+      fields: {
+        myData: {
+          type: "external",
+          adaptor: myAdaptor,
+        },
+      },
+      render: ({ myData }) => {
+        return <h1>{myData.text}</h1>;
+      },
+    },
+  },
+};
+```
+
+When the user interacts with this adaptor, they'll be presented with a list of items to choose from. Once they select an item, the value will be mapped onto the prop. In this case, `myData`.
+
+## Dynamic prop resolution
+
+Dynamic prop resolution allows developers to resolve props for components without saving the data to the Puck data model.
+
+### resolveProps()
+
+`resolveProps` is defined in the component config, and allows the developer to make asynchronous calls to change the props after they've been set by Puck.
+
+#### Args
+
+- **props** (`object`): the current props for your component stored in the Puck data
+
+#### Response
+
+- **props** (`object`): the resolved props for your component. Will not be stored in the Puck data
+- **readOnly** (`object`): an object describing which fields on the component are currently read-only
+  - **[prop]** (`boolean`): boolean describing whether or not the prop field is read-only
+
+#### Examples
+
+##### Basic example
+
+In this example, we remap the `text` prop to the `title` prop and mark the `title` field as read-only.
+
+```tsx
+const config = {
+  components: {
+    HeadingBlock: {
+      fields: {
+        text: {
+          type: "text",
+        },
+        title: {
+          type: "text",
+        },
+      },
+      resolveProps: async (props) => {
+        return {
+          props: {
+            title: props.text,
+          },
+          readOnly: {
+            title: true,
+          },
+        };
+      },
+      render: ({ title }) => {
+        return <h1>{title}</h1>;
+      },
+    },
+  },
+};
+```
+
+##### Combining with adaptors
+
+A more advanced pattern is to combine the `resolveProps` method with the adaptors to dynamically fetch data when rendering the component.
+
+```tsx
+const myAdaptor = {
+  name: "My adaptor",
+  fetchList: async () => {
+    const response = await fetch("https://www.example.com/api");
+
+    return {
+      id: response.json().id,
+    };
+  },
+};
+
+const config = {
+  components: {
+    HeadingBlock: {
+      fields: {
+        myData: {
+          type: "external",
+          adaptor: myAdaptor,
+        },
+        title: {
+          type: "text",
+        },
+      },
+      resolveProps: async (props) => {
+        if (!myData.id) {
+          return { props, readOnly: { title: false } };
+        }
+
+        const latestData = await fetch(
+          `https://www.example.com/api/${myData.id}`
+        );
+
+        return {
+          props: {
+            title: latestData.json().text,
+          },
+          readOnly: {
+            title: true,
+          },
+        };
+      },
+      render: ({ title }) => {
+        return <h1>{title}</h1>;
+      },
+    },
+  },
+};
+```
+
+### resolveData()
+
+`resolveData` is a utility function exported by Puck to enable the developer to resolve their custom props before rendering their component with `<Render>`. This is ideally done on the server. If you're using `resolveProps`, you _must_ use `resolveData` before rendering.
+
+```tsx
+import { resolveData } from "@measured/puck";
+
+const resolvedData = resolveData(data, config);
+```
+
 ## Reference
 
 ### `<Puck>`
@@ -277,6 +434,13 @@ The `Config` object describes which components Puck should render, how they shou
     - **fields** (`Field`): The Field objects describing the input data stored against this component.
     - **render** (`Component`): Render function for your React component. Receives props as defined in fields.
     - **defaultProps** (`object` [optional]): Default props to pass to your component. Will show in fields.
+    - **resolveProps** (`async (props: object) => object` [optional]): Function to dynamically change props before rendering the component.
+      - Args
+        - **props** (`object`): the current props for your component stored in the Puck data
+      - Response
+        - **props** (`object`): the resolved props for your component. Will not be stored in the Puck data
+        - **readOnly** (`object`): an object describing which fields on the component are currently read-only
+          - **[prop]** (`boolean`): boolean describing whether or not the prop field is read-only
 - **categories** (`object`): Component categories for rendering in the side bar or restricting in DropZones
   - **[categoryName]** (`object`)
     - **components** (`sting[]`, [optional]): Array containing the names of components in this category
