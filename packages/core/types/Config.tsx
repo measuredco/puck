@@ -2,11 +2,14 @@ import { ReactElement } from "react";
 import { ReactNode } from "react";
 import { ItemSelector } from "../lib/get-item";
 
-export type Adaptor<AdaptorParams = {}> = {
+export type Adaptor<
+  AdaptorParams = {},
+  TableShape extends Record<string, any> = {},
+  PropShape = TableShape
+> = {
   name: string;
-  fetchList: (
-    adaptorParams?: AdaptorParams
-  ) => Promise<Record<string, any>[] | null>;
+  fetchList: (adaptorParams?: AdaptorParams) => Promise<TableShape[] | null>;
+  mapProp?: (value: TableShape) => PropShape;
 };
 
 type WithPuckProps<Props> = Props & {
@@ -47,7 +50,7 @@ export type ExternalField<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = BaseField & {
   type: "external";
-  adaptor: Adaptor;
+  adaptor: Adaptor<any, any, Props>;
   adaptorParams?: object;
   getItemSummary: (item: Props, index?: number) => string;
 };
