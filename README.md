@@ -1,5 +1,7 @@
 # puck
 
+The self-hosted, drag and drop editor for React.
+
 <p align="left">
   <a aria-label="Measured logo" href="https://measured.co">
     <img src="https://img.shields.io/badge/MADE%20BY%20Measured-000000.svg?style=for-the-badge&labelColor=000">
@@ -15,7 +17,7 @@
   </a>
 </p>
 
-The self-hosted, drag and drop editor for React.
+## Features
 
 - 🖱️ **Drag and drop**: Visual editing for your existing React component library
 - 🌐 **Integrations**: Load your content from a 3rd party headless CMS
