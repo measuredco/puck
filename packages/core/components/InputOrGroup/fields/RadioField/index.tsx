@@ -12,7 +12,7 @@ export const RadioField = ({
   value,
   name,
 }: InputProps) => {
-  if (!field.options) {
+  if (field.type !== "radio" || !field.options) {
     return null;
   }
 

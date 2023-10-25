@@ -1,7 +1,7 @@
 import { useMemo, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Field } from "../../types/Config";
+import { ExternalField } from "../../types/Config";
 import { Link } from "react-feather";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
@@ -11,7 +11,7 @@ export const ExternalInput = ({
   onChange,
   value = null,
 }: {
-  field: Field;
+  field: ExternalField;
   onChange: (value: any) => void;
   value: any;
 }) => {

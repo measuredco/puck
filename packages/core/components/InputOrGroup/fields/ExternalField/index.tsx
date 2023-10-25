@@ -13,7 +13,7 @@ export const ExternalField = ({
   name,
   label,
 }: InputProps) => {
-  if (!field.adaptor) {
+  if (field.type !== "external" || !field.adaptor) {
     return null;
   }
 

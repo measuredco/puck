@@ -12,7 +12,7 @@ export const SelectField = ({
   value,
   name,
 }: InputProps) => {
-  if (!field.options) {
+  if (field.type !== "select" || !field.options) {
     return null;
   }
 
