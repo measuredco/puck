@@ -340,8 +340,6 @@ An `Adaptor` can be used to load content from an external content repository, li
 - **name** (`string`): The human-readable name of the adaptor
 - **fetchList** (`(adaptorParams: object) => object`): Fetch a list of content and return an array
 
-> NB Using an adaptor on the reserved field name `_data` will spread the resulting data over your object, and lock the overridden fields.
-
 ### `Plugin`
 
 Plugins that can be used to enhance Puck.

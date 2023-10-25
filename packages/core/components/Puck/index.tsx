@@ -615,7 +615,6 @@ export function Puck({
 
                             const onChange = (value: any) => {
                               let currentProps;
-                              let newProps;
 
                               if (selectedItem) {
                                 currentProps = selectedItem.props;
@@ -626,36 +625,10 @@ export function Puck({
                               const { readOnly, ..._meta } =
                                 currentProps._meta || {};
 
-                              if (fieldName === "_data") {
-                                // Reset the link if value is falsey
-                                if (!value) {
-                                  newProps = {
-                                    ...currentProps,
-                                    _data: undefined,
-                                    _meta: _meta,
-                                  };
-                                } else {
-                                  const changedFields = filter(
-                                    // filter out anything not supported by this component
-                                    value,
-                                    Object.keys(fields)
-                                  );
-
-                                  newProps = {
-                                    ...currentProps,
-                                    ...changedFields,
-                                    _data: value, // TODO perf - this is duplicative and will make payload larger
-                                    _meta: {
-                                      locked: Object.keys(changedFields),
-                                    },
-                                  };
-                                }
-                              } else {
-                                newProps = {
-                                  ...currentProps,
-                                  [fieldName]: value,
-                                };
-                              }
+                              const newProps = {
+                                ...currentProps,
+                                [fieldName]: value,
+                              };
 
                               if (itemSelector) {
                                 dispatch({
