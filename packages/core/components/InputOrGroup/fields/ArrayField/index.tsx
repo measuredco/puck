@@ -63,7 +63,7 @@ export const ArrayField = ({
     setArrayState({ items: newItems });
   }, [value]);
 
-  if (!field.arrayFields) {
+  if (field.type !== "array" || !field.arrayFields) {
     return null;
   }
 

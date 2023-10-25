@@ -454,17 +454,57 @@ The `Config` object describes which components Puck should render, how they shou
 
 A `Field` represents a user input field shown in the Puck interface.
 
-- **type** (`text` | `textarea` | `number` | `select` | `radio` | `external` | `array` | `custom`): The input type to render
+### All Fields
+
 - **label** (`text` [optional]): A label for the input. Will use the key if not provided.
-- **arrayFields** (`object`): Object describing sub-fields for items in an `array` input
-  - **[fieldName]** (`Field`): The Field objects describing the input data for each item
-- **getItemSummary** (`(object, number) => string` [optional]): Function to get the name of each item when using the `array` or `external` field types
-- **defaultItemProps** (`object` [optional]): Default props to pass to each new item added, when using a `array` field type
-- **options** (`object[]`): array of items to render for select or radio inputs
+
+### Text Fields
+
+- **type** (`"text"`)
+
+### Textarea Fields
+
+- **type** (`"textarea"`)
+
+### Number Fields
+
+- **type** (`"number"`)
+
+### Select Fields
+
+- **type** (`"select"`)
+- **options** (`object[]`): array of items to render
   - **label** (`string`)
   - **value** (`string` | `number` | `boolean`)
-- **adaptor** (`Adaptor`): Content adaptor if using the `external` input type
+
+### Radio Fields
+
+- **type** (`"radio"`)
+- **options** (`object[]`): array of items to render
+  - **label** (`string`)
+  - **value** (`string` | `number` | `boolean`)
+
+### Array Fields
+
+- **type** (`"array"`)
+- **arrayFields** (`object`): Object describing sub-fields for each item
+  - **[fieldName]** (`Field`): The Field objects describing the input data for each item
+  - **getItemSummary** (`(object, number) => string` [optional]): Function to get the label of each item
+- **defaultItemProps** (`object` [optional]): Default props to pass to each new item added, when using a `array` field type
+
+### External Fields
+
+External fields can be used to load content from an external content repository, like Strapi.js, using an `Adaptor`.
+
+- **type** (`"external"`)
+- **adaptor** (`Adaptor`): Content adaptor responsible for fetching data to show in the table
+  - **name** (`string`): The human-readable name of the adaptor
+  - **fetchList** (`(adaptorParams: object) => object`): Fetch a list of content and return an array
 - **adaptorParams** (`object`): Paramaters passed to the adaptor
+
+### Custom Fields
+
+- **type** (`"custom"`)
 - **render** (`Component`): Render a custom field. Receives the props:
   - **field** (`Field`): Field configuration
   - **name** (`string`): Name of the field
@@ -498,13 +538,6 @@ The `Data` object stores the puck page data.
   - **type** (string): Component name
   - **props** (object):
     - **[prop]** (string): User defined data from component fields
-
-### `Adaptor`
-
-An `Adaptor` can be used to load content from an external content repository, like Strapi.js.
-
-- **name** (`string`): The human-readable name of the adaptor
-- **fetchList** (`(adaptorParams: object) => object`): Fetch a list of content and return an array
 
 ### `Plugin`
 

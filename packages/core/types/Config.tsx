@@ -16,38 +16,63 @@ type WithPuckProps<Props> = Props & {
   };
 };
 
-export type Field<
-  Props extends { [key: string]: any } = { [key: string]: any }
-> = {
-  type:
-    | "text"
-    | "textarea"
-    | "number"
-    | "select"
-    | "array"
-    | "external"
-    | "radio"
-    | "custom";
+export type BaseField = {
   label?: string;
-  adaptor?: Adaptor;
-  adaptorParams?: object;
-  arrayFields?: {
-    [SubPropName in keyof Props]: Field<Props[SubPropName][0]>;
-  };
-  getItemSummary?: (item: Props, index?: number) => string;
-  defaultItemProps?: Props;
-  render?: (props: {
-    field: Field;
-    name: string;
-    value: any;
-    onChange: (value: any) => void;
-    readOnly?: boolean;
-  }) => ReactElement;
-  options?: {
+};
+
+export type TextField = BaseField & {
+  type: "text" | "number" | "textarea";
+};
+
+export type SelectField = BaseField & {
+  type: "select" | "radio";
+  options: {
     label: string;
     value: string | number | boolean;
   }[];
 };
+
+export type ArrayField<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = BaseField & {
+  type: "array";
+  arrayFields: {
+    [SubPropName in keyof Props[0]]: Field<Props[0][SubPropName]>;
+  };
+  defaultItemProps?: Props[0];
+  getItemSummary?: (item: Props[0], index?: number) => string;
+};
+
+export type ExternalField<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = BaseField & {
+  type: "external";
+  adaptor: Adaptor;
+  adaptorParams?: object;
+  getItemSummary: (item: Props, index?: number) => string;
+};
+
+export type CustomField<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = BaseField & {
+  type: "custom";
+  render: (props: {
+    field: CustomField;
+    name: string;
+    value: any;
+    onChange: (value: Props) => void;
+    readOnly?: boolean;
+  }) => ReactElement;
+};
+
+export type Field<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> =
+  | TextField
+  | SelectField
+  | ArrayField<Props>
+  | ExternalField<Props>
+  | CustomField;
 
 export type DefaultRootProps = {
   children: ReactNode;
@@ -64,7 +89,7 @@ export type Fields<
   [PropName in keyof Omit<
     Required<ComponentProps>,
     "children" | "editMode"
-  >]: Field<ComponentProps[PropName][0]>;
+  >]: Field<ComponentProps[PropName]>;
 };
 
 export type Content<
