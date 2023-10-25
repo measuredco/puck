@@ -10,7 +10,7 @@ import { quotes } from "./quotes";
 const getClassName = getClassNameFactory("Hero", styles);
 
 export type HeroProps = {
-  quote?: { index: number };
+  quote?: { index: number; label: string };
   title: string;
   description: string;
   align?: string;
@@ -20,23 +20,23 @@ export type HeroProps = {
   buttons: { label: string; href: string; variant?: "primary" | "secondary" }[];
 };
 
-// TODO add resolveValue prop so the fetch can return different data to the adaptor
-const quotesAdaptor = {
-  name: "Quotes API",
-  fetchList: async (): Promise<Partial<HeroProps>[]> =>
-    quotes.map((quote, idx) => ({
-      index: idx,
-      title: quote.author,
-      description: quote.content,
-    })),
-};
-
 export const Hero: ComponentConfig<HeroProps> = {
   fields: {
     quote: {
       type: "external",
-      adaptor: quotesAdaptor,
-      getItemSummary: (item: Partial<HeroProps>) => item.description,
+      adaptor: {
+        name: "Quotes API",
+        fetchList: async () =>
+          quotes.map((quote, idx) => ({
+            index: idx,
+            title: quote.author,
+            description: quote.content,
+          })),
+        mapProp: (result) => {
+          return { index: result.index, label: result.description };
+        },
+      },
+      getItemSummary: (item) => item.label,
     },
     title: { type: "text" },
     description: { type: "textarea" },

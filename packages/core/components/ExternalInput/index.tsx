@@ -15,6 +15,8 @@ export const ExternalInput = ({
   onChange: (value: any) => void;
   value: any;
 }) => {
+  const { mapProp = (val) => val } = field.adaptor || {};
+
   const [data, setData] = useState<Record<string, any>[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(value);
@@ -112,11 +114,11 @@ export const ExternalInput = ({
                         key={i}
                         style={{ whiteSpace: "nowrap" }}
                         onClick={(e) => {
-                          onChange(item);
+                          onChange(mapProp(item));
 
                           setOpen(false);
 
-                          setSelectedData(item);
+                          setSelectedData(mapProp(item));
                         }}
                       >
                         {keys.map((key) => (
