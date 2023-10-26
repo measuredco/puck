@@ -4,6 +4,7 @@ import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ExternalField } from "../../types/Config";
 import { Link } from "react-feather";
 import { Modal } from "../Modal";
+import { Heading } from "../Heading";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
 
@@ -90,7 +91,11 @@ export const ExternalInput = ({
         )}
       </div>
       <Modal onClose={() => setOpen(false)} isOpen={isOpen}>
-        <h2 className={getClassName("modalHeading")}>Select content</h2>
+        <div className={getClassName("masthead")}>
+          <Heading rank={2} size="xxl">
+            Select content
+          </Heading>
+        </div>
 
         {data.length ? (
           <div className={getClassName("modalTableWrapper")}>
