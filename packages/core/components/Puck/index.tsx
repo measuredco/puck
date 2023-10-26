@@ -318,7 +318,7 @@ export function Puck({
                             display: "grid",
                             padding: 16,
                             gridTemplateAreas: '"left middle right"',
-                            gridTemplateColumns: "288px auto 343px",
+                            gridTemplateColumns: "344px auto 344px",
                             gridTemplateRows: "auto",
                           }}
                         >
