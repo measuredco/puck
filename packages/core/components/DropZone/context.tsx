@@ -5,7 +5,7 @@ import {
   useCallback,
   useState,
 } from "react";
-import { Config, Data, MappedItem } from "../../types/Config";
+import { Config, Data } from "../../types/Config";
 import { DragStart, DragUpdate } from "react-beautiful-dnd";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { PuckAction } from "../../reducer";
