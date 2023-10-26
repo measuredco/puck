@@ -1,6 +1,7 @@
 "use client";
 
-import { Data, resolveData } from "@measured/puck";
+import { Data } from "@measured/puck/types/Config";
+import { resolveData } from "@measured/puck/lib/resolve-data";
 import { Puck } from "@measured/puck/components/Puck";
 import { Render } from "@measured/puck/components/Render";
 import { useEffect, useState } from "react";
