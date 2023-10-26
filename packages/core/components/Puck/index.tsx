@@ -370,6 +370,7 @@ export function Puck({
                       bottom: 0,
                       left: 0,
                       right: 0,
+                      transition: "grid 0.2s ease-in-out",
                     }}
                   >
                     <header
