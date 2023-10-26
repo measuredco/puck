@@ -288,7 +288,7 @@ Dynamic prop resolution allows developers to resolve props for components withou
 #### Response
 
 - **props** (`object`): the resolved props for your component. Will not be stored in the Puck data
-- **readOnly** (`object`): an object describing which fields on the component are currently read-only
+- **readOnly** (`object`): an object describing which fields on the component are currently read-only. Can also make array fields read-only by using a dot-notation accessor, like `array[0].text`.
   - **[prop]** (`boolean`): boolean describing whether or not the prop field is read-only
 
 #### Examples

@@ -82,6 +82,7 @@ export type InputProps = {
   label?: string;
   onChange: (value: any) => void;
   readOnly?: boolean;
+  readOnlyFields?: Record<string, boolean | undefined>;
 };
 
 export const InputOrGroup = (props: InputProps) => {
