@@ -499,7 +499,7 @@ External fields can be used to load content from an external content repository,
 - **type** (`"external"`)
 - **adaptor** (`Adaptor`): Content adaptor responsible for fetching data to show in the table
   - **name** (`string`): The human-readable name of the adaptor
-  - **fetchList** (`(adaptorParams: object) => object`): Fetch a list of content and return an array
+  - **fetchList** (`(adaptorParams: object) => object`): Fetch content from a third-party API and return an array
   - **mapProp** (`(selectedItem: object) => object`): Map the selected item into another shape
 - **adaptorParams** (`object`): Paramaters passed to the adaptor
 
