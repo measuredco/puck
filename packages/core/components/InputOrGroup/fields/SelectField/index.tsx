@@ -11,13 +11,14 @@ export const SelectField = ({
   label,
   value,
   name,
+  readOnly,
 }: InputProps) => {
   if (field.type !== "select" || !field.options) {
     return null;
   }
 
   return (
-    <label className={getClassName()}>
+    <label className={getClassName({ readOnly })}>
       <div className={getClassName("label")}>
         <div className={getClassName("labelIcon")}>
           <ChevronDown size={16} />
@@ -26,6 +27,7 @@ export const SelectField = ({
       </div>
       <select
         className={getClassName("input")}
+        disabled={readOnly}
         onChange={(e) => {
           if (
             e.currentTarget.value === "true" ||

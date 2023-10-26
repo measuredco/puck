@@ -24,6 +24,7 @@ export const ArrayField = ({
   value,
   name,
   label,
+  readOnly,
 }: InputProps) => {
   const [arrayFieldId] = useState(generateId("ArrayField"));
 
@@ -89,7 +90,7 @@ export const ArrayField = ({
           }
         }}
       >
-        <DroppableStrictMode droppableId="array">
+        <DroppableStrictMode droppableId="array" isDropDisabled={readOnly}>
           {(provided, snapshot) => {
             return (
               <div
@@ -110,8 +111,10 @@ export const ArrayField = ({
                           getClassNameItem({
                             isExpanded: arrayState.openId === _arrayId,
                             isDragging: snapshot.isDragging,
+                            readOnly,
                           })
                         }
+                        isDragDisabled={readOnly}
                       >
                         {() => (
                           <>
@@ -133,32 +136,34 @@ export const ArrayField = ({
                                 ? field.getItemSummary(data, i)
                                 : `Item #${i}`}
                               <div className={getClassNameItem("rhs")}>
-                                <div className={getClassNameItem("actions")}>
-                                  <div className={getClassNameItem("action")}>
-                                    <IconButton
-                                      onClick={() => {
-                                        const existingValue = [
-                                          ...(value || []),
-                                        ];
-                                        const existingItems = [
-                                          ...(arrayState.items || []),
-                                        ];
+                                {!readOnly && (
+                                  <div className={getClassNameItem("actions")}>
+                                    <div className={getClassNameItem("action")}>
+                                      <IconButton
+                                        onClick={() => {
+                                          const existingValue = [
+                                            ...(value || []),
+                                          ];
+                                          const existingItems = [
+                                            ...(arrayState.items || []),
+                                          ];
 
-                                        existingValue.splice(i, 1);
-                                        existingItems.splice(i, 1);
+                                          existingValue.splice(i, 1);
+                                          existingItems.splice(i, 1);
 
-                                        setArrayState(
-                                          { items: existingItems },
-                                          true
-                                        );
-                                        onChange(existingValue);
-                                      }}
-                                      title="Delete"
-                                    >
-                                      <Trash size={16} />
-                                    </IconButton>
+                                          setArrayState(
+                                            { items: existingItems },
+                                            true
+                                          );
+                                          onChange(existingValue);
+                                        }}
+                                        title="Delete"
+                                      >
+                                        <Trash size={16} />
+                                      </IconButton>
+                                    </div>
                                   </div>
-                                </div>
+                                )}
                                 <div>
                                   <DragIcon />
                                 </div>
