@@ -1,13 +1,18 @@
-const resolvePuckPath = (puckPath: string[] = []) => {
-  const hasPath = puckPath.length > 0;
+const resolvePuckPath = (
+  puckPath: string[] = []
+): {
+  suffix: "edit" | "preview" | "";
+  path: string;
+} => {
+  const lastPath = puckPath.length > 0 && puckPath[puckPath.length - 1];
 
-  const isEdit = hasPath ? puckPath[puckPath.length - 1] === "edit" : false;
+  const suffix = lastPath === "edit" || lastPath === "preview" ? lastPath : "";
 
   return {
-    isEdit,
-    path: `/${(isEdit
+    suffix,
+    path: `/${(Boolean(suffix)
       ? [...puckPath].slice(0, puckPath.length - 1)
-      : [...puckPath]
+      : puckPath
     ).join("/")}`,
   };
 };

@@ -6,29 +6,23 @@ import { Render } from "@measured/puck/components/Render";
 import { useEffect, useState } from "react";
 import { Button } from "@measured/puck/components/Button";
 import headingAnalyzer from "@measured/puck-plugin-heading-analyzer/src/HeadingAnalyzer";
-import config, { initialData } from "../../config";
+import config from "../../config";
+import { useLocalData } from "./hooks";
+import { publishPageData } from "./actions";
 
-const isBrowser = typeof window !== "undefined";
+export function Client({
+  path,
+  data: serverData,
+  isEdit,
+}: {
+  data: Data;
+  path: string;
+  isEdit: boolean;
+}) {
+  const [localData, setLocalData] = useLocalData(path);
 
-export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
-  // unique b64 key that updates each time we add / remove components
-  const componentKey = Buffer.from(
-    Object.keys(config.components).join("-")
-  ).toString("base64");
-
-  const key = `puck-demo:${componentKey}:${path}`;
-
-  const [data] = useState<Data>(() => {
-    if (isBrowser) {
-      const dataStr = localStorage.getItem(key);
-
-      if (dataStr) {
-        return JSON.parse(dataStr);
-      }
-
-      return initialData[path] || undefined;
-    }
-  });
+  // Make sure the demo has seed data even if there is no database
+  const data = localData || serverData || undefined;
 
   // Normally this would happen on the server, but we can't
   // do that because we're using local storage as a database
@@ -52,15 +46,14 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
         <Puck
           config={config}
           data={data}
-          onPublish={async (data: Data) => {
-            localStorage.setItem(key, JSON.stringify(data));
-          }}
+          onChange={(data) => setLocalData(data)}
+          onPublish={(data) => publishPageData(path, data)}
           plugins={[headingAnalyzer]}
           headerPath={path}
           renderHeaderActions={() => (
             <>
-              <Button href={path} newTab variant="secondary">
-                View page
+              <Button href={`${path}/preview`} newTab variant="secondary">
+                Preview page
               </Button>
             </>
           )}

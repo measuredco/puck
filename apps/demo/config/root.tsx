@@ -2,34 +2,15 @@ import { ReactNode } from "react";
 
 import { DefaultRootProps } from "@measured/puck";
 import { Footer } from "./components/Footer";
+import { NavItem } from "./components/NavItem";
 
 export type RootProps = {
   children: ReactNode;
   title: string;
+  suffix?: string;
 } & DefaultRootProps;
 
-const NavItem = ({ label, href }: { label: string; href: string }) => {
-  const navPath = window.location.pathname.replace("/edit", "") || "/";
-
-  const isActive = navPath === (href.replace("/edit", "") || "/");
-
-  return (
-    <a
-      href={href || "/"}
-      style={{
-        textDecoration: "none",
-        color: isActive
-          ? "var(--puck-color-grey-1)"
-          : "var(--puck-color-grey-5)",
-        fontWeight: isActive ? "600" : "400",
-      }}
-    >
-      {label}
-    </a>
-  );
-};
-
-function Root({ children, editMode }: RootProps) {
+function Root({ children, suffix = "" }: RootProps) {
   return (
     <>
       <header>
@@ -54,12 +35,9 @@ function Root({ children, editMode }: RootProps) {
             LOGO
           </div>
           <nav style={{ display: "flex", marginLeft: "auto", gap: 32 }}>
-            <NavItem label="Home" href={`${editMode ? "/edit" : ""}`} />
-            <NavItem
-              label="Pricing"
-              href={`/pricing${editMode ? "/edit" : ""}`}
-            />
-            <NavItem label="About" href={`/about${editMode ? "/edit" : ""}`} />
+            <NavItem label="Home" href={`${suffix || "/"}`} />
+            <NavItem label="Pricing" href={`/pricing${suffix}`} />
+            <NavItem label="About" href={`/about${suffix}`} />
           </nav>
         </div>
       </header>

@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import { ComponentConfig } from "@measured/puck";
