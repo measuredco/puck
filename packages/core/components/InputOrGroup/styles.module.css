@@ -34,6 +34,12 @@
 .Input-labelIcon {
   color: var(--puck-color-grey-6);
   margin-right: 4px;
+  padding-left: 4px;
+}
+
+.Input-disabledIcon {
+  color: var(--puck-color-grey-4);
+  margin-left: auto;
 }
 
 .Input-input {

@@ -11,6 +11,7 @@ import {
   DefaultField,
   TextareaField,
 } from "./fields";
+import { Lock } from "react-feather";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -35,6 +36,12 @@ export const FieldLabel = ({
       <div className={getClassName("label")}>
         {icon ? <div className={getClassName("labelIcon")}>{icon}</div> : <></>}
         {label}
+
+        {readOnly && (
+          <div className={getClassName("disabledIcon")} title="Read-only">
+            <Lock size="12" />
+          </div>
+        )}
       </div>
       {children}
     </El>
