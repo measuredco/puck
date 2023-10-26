@@ -52,35 +52,6 @@
   margin-left: -1px;
 }
 
-.ExternalInput-modal {
-  background: #00000099;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 1;
-  padding: 64px;
-}
-
-.ExternalInput--modalVisible .ExternalInput-modal {
-  display: flex;
-}
-
-.ExternalInput-modalInner {
-  width: 100%;
-  max-width: 1024px;
-  border-radius: 16px;
-  overflow: hidden;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  max-height: 90vh;
-}
-
 .ExternalInput-modalHeading {
   background-color: white;
   padding: 32px 24px;
@@ -92,18 +63,18 @@
   flex-grow: 1;
 }
 
-.ExternalInput table {
+.ExternalInput-table {
   border-spacing: 0px;
   color: var(--puck-color-neutral-4);
   position: relative;
 }
 
-.ExternalInput thead {
+.ExternalInput-table thead {
   position: sticky;
   top: 0;
 }
 
-.ExternalInput th {
+.ExternalInput-table th {
   border-bottom: 1px solid var(--puck-color-grey-8);
   border-top: 1px solid var(--puck-color-grey-8);
   font-weight: 700;
@@ -111,23 +82,23 @@
   opacity: 0.9;
 }
 
-.ExternalInput td {
+.ExternalInput-table td {
   padding: 16px 24px;
 }
 
-.ExternalInput tr:nth-of-type(n) {
+.ExternalInput-table tr:nth-of-type(n) {
   background-color: white;
 }
 
-.ExternalInput tr:nth-of-type(2n) {
+.ExternalInput-table tr:nth-of-type(2n) {
   background-color: var(--puck-color-grey-10);
 }
 
-.ExternalInput tr td:first-of-type {
+.ExternalInput-table tr td:first-of-type {
   font-weight: 500;
 }
 
-.ExternalInput tbody tr:hover {
+.ExternalInput-table tbody tr:hover {
   background: var(--puck-color-grey-11);
   color: var(--puck-color-azure-4);
   cursor: pointer;
@@ -135,7 +106,7 @@
   margin-left: -5px;
 }
 
-.ExternalInput tbody tr:hover td:first-of-type {
+.ExternalInput-table tbody tr:hover td:first-of-type {
   border-left: 4px solid var(--puck-color-azure-4);
   padding-left: 20px;
 }
