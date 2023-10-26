@@ -12,7 +12,6 @@ import { DragDropContext, DragStart, DragUpdate } from "react-beautiful-dnd";
 import type { AppState, Config, Data, Field } from "../../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
-import { filter } from "../../lib";
 import { Button } from "../Button";
 
 import { Plugin } from "../../types/Plugin";
@@ -686,6 +685,7 @@ export function Puck({
           </DropZoneProvider>
         </DragDropContext>
       </AppProvider>
+      <div id="puck-portal-root" />
     </div>
   );
 }
