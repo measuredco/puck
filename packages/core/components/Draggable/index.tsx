@@ -12,6 +12,7 @@ export const Draggable = ({
   index,
   showShadow,
   disableAnimations = false,
+  isDragDisabled = false,
 }: {
   className?: (
     provided: DraggableProvided,
@@ -25,9 +26,14 @@ export const Draggable = ({
   index: number;
   showShadow?: boolean;
   disableAnimations?: boolean;
+  isDragDisabled?: boolean;
 }) => {
   return (
-    <DndDraggable draggableId={id} index={index}>
+    <DndDraggable
+      draggableId={id}
+      index={index}
+      isDragDisabled={isDragDisabled}
+    >
       {(provided, snapshot) => (
         <>
           <div

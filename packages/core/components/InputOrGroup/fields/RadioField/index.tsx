@@ -17,7 +17,7 @@ export const RadioField = ({
   }
 
   return (
-    <div className={getClassName()}>
+    <div className={getClassName({ readOnly })}>
       <div className={getClassName("radioGroup")}>
         <div className={getClassName("label")}>
           <div className={getClassName("labelIcon")}>
@@ -48,7 +48,7 @@ export const RadioField = ({
 
                   onChange(e.currentTarget.value);
                 }}
-                readOnly={readOnly}
+                disabled={readOnly}
                 defaultChecked={value === option.value}
               />
               <div className={getClassName("radioInner")}>

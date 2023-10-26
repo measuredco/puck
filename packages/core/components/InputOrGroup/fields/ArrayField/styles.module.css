@@ -81,6 +81,11 @@
   overflow: hidden;
 }
 
+.ArrayFieldItem--readOnly .ArrayFieldItem-summary {
+  background-color: var(--puck-color-grey-11);
+  color: var(--puck-color-grey-5);
+}
+
 .ArrayFieldItem--isExpanded > .ArrayFieldItem-summary {
   font-weight: 600;
 }

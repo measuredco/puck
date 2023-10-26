@@ -57,9 +57,12 @@
   background-color: white;
 }
 
-.Input--readOnly .Input-input {
-  background-color: var(--puck-color-grey-10);
+.Input--readOnly .Input-input,
+.Input--readOnly select.Input-input {
+  background-color: var(--puck-color-grey-11);
   border-color: var(--puck-color-grey-8);
+  color: var(--puck-color-grey-5);
+  opacity: 1;
 }
 
 .Input-input:hover {
@@ -84,6 +87,7 @@
 }
 
 .Input-radioInner {
+  background-color: white;
   color: var(--puck-color-grey-4);
   font-size: var(--puck-font-size-xxxs);
   padding: 8px 12px;
@@ -95,10 +99,24 @@
   cursor: pointer;
 }
 
+.Input--readOnly .Input-radioGroupItems {
+  border-color: var(--puck-color-grey-8);
+}
+
+.Input--readOnly .Input-radioInner {
+  background-color: var(--puck-color-grey-11);
+  color: var(--puck-color-grey-5);
+}
+
 .Input-radio .Input-radioInput:checked ~ .Input-radioInner {
   background-color: var(--puck-color-azure-9);
-  color: var(--puck-color-grey-2);
+  color: var(--puck-color-grey-1);
   font-weight: 500;
+}
+
+.Input--readOnly .Input-radioInput:checked ~ .Input-radioInner {
+  background-color: var(--puck-color-azure-9);
+  color: var(--puck-color-grey-4);
 }
 
 .Input-radio .Input-radioInput {
