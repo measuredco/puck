@@ -4,8 +4,6 @@ import { FieldLabelInternal, type InputProps } from "../..";
 import { ExternalInput } from "../../../ExternalInput";
 import { Link } from "react-feather";
 
-const getClassName = getClassNameFactory("Input", styles);
-
 export const ExternalField = ({
   field,
   onChange,

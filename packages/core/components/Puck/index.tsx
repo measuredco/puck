@@ -655,6 +655,7 @@ export function Puck({
                                   name={fieldName}
                                   label={field.label}
                                   readOnly={readOnly[fieldName]}
+                                  readOnlyFields={readOnly}
                                   value={selectedItem.props[fieldName]}
                                   onChange={onChange}
                                 />
@@ -669,6 +670,7 @@ export function Puck({
                                   name={fieldName}
                                   label={field.label}
                                   readOnly={readOnly[fieldName]}
+                                  readOnlyFields={readOnly}
                                   value={data.root[fieldName]}
                                   onChange={onChange}
                                 />

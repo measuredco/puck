@@ -1,5 +1,4 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
-import inputStyles from "../../styles.module.css";
 import styles from "./styles.module.css";
 import { List, Plus, Trash } from "react-feather";
 import { FieldLabelInternal, InputOrGroup, type InputProps } from "../..";
@@ -14,7 +13,6 @@ import { DragIcon } from "../../../DragIcon";
 import { ArrayState, ItemWithId } from "../../../../types/Config";
 import { useAppContext } from "../../../Puck/context";
 
-const getClassNameInput = getClassNameFactory("Input", inputStyles);
 const getClassName = getClassNameFactory("ArrayField", styles);
 const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);
 
@@ -25,6 +23,7 @@ export const ArrayField = ({
   name,
   label,
   readOnly,
+  readOnlyFields = {},
 }: InputProps) => {
   const [arrayFieldId] = useState(generateId("ArrayField"));
 
@@ -177,11 +176,19 @@ export const ArrayField = ({
                                     const subField =
                                       field.arrayFields![fieldName];
 
+                                    const subFieldName = `${name}[${i}].${fieldName}`;
+                                    const zeroIndexSubFieldName =
+                                      subFieldName.replace(/\[\d\]/g, "[0]");
+
                                     return (
                                       <InputOrGroup
-                                        key={`${name}_${i}_${fieldName}`}
-                                        name={`${name}_${i}_${fieldName}`}
+                                        key={subFieldName}
+                                        name={subFieldName}
                                         label={subField.label || fieldName}
+                                        readOnly={
+                                          readOnlyFields[zeroIndexSubFieldName]
+                                        }
+                                        readOnlyFields={readOnlyFields}
                                         field={subField}
                                         value={data[fieldName]}
                                         onChange={(val) =>

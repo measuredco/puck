@@ -81,7 +81,7 @@
   overflow: hidden;
 }
 
-.ArrayFieldItem--readOnly .ArrayFieldItem-summary {
+.ArrayFieldItem--readOnly > .ArrayFieldItem-summary {
   background-color: var(--puck-color-grey-11);
   color: var(--puck-color-grey-5);
 }
