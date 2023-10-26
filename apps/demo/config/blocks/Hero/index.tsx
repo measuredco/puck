@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
-import { ComponentConfig } from "@measured/puck";
+import { ComponentConfig } from "@measured/puck/types/Config";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@measured/puck/lib";
 import { Button } from "@measured/puck/components/Button";
@@ -89,7 +89,7 @@ export const Hero: ComponentConfig<HeroProps> = {
    *
    * For example, requesting a third-party API for the latest content.
    */
-  resolveProps: async (props) => {
+  resolveProps: (props) => {
     if (!props.quote)
       return { props, readOnly: { title: false, description: false } };
 
