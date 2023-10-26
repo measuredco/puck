@@ -14,7 +14,7 @@
   background-color: white;
   border: 1px solid var(--puck-color-grey-8);
   border-radius: 4px;
-  color: var(--puck-color-blue);
+  color: var(--puck-color-grey-2);
   padding: 12px 16px;
   font-weight: 500;
   white-space: nowrap;
@@ -27,14 +27,13 @@
 .ExternalInput-button:hover,
 .ExternalInput-detachButton:hover {
   cursor: pointer;
-  background: var(--puck-color-grey-10);
-  border-color: var(--puck-color-neutral-3);
+  background: var(--puck-color-azure-9);
+  color: var(--puck-color-azure-4);
   z-index: 1;
 }
 
 .ExternalInput--hasData .ExternalInput-button {
   display: block;
-  color: var(--puck-color-neutral-4);
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
@@ -43,7 +42,8 @@
   border: 1px solid var(--puck-color-grey-8);
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
-  background-color: var(--puck-color-neutral-1);
+  background-color: var(--puck-color-grey-11);
+  color: var(--puck-color-grey-4);
   display: flex;
   gap: 8px;
   align-items: center;

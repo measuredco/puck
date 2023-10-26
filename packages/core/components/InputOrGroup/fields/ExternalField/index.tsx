@@ -1,5 +1,3 @@
-import getClassNameFactory from "../../../../lib/get-class-name-factory";
-import styles from "../../styles.module.css";
 import { FieldLabelInternal, type InputProps } from "../..";
 import { ExternalInput } from "../../../ExternalInput";
 import { Link } from "react-feather";

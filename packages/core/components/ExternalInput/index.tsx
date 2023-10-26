@@ -2,7 +2,7 @@ import { useMemo, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ExternalField } from "../../types/Config";
-import { Link } from "react-feather";
+import { Link, Unlock } from "react-feather";
 import { Modal } from "../Modal";
 import { Heading } from "../Heading";
 
@@ -86,7 +86,7 @@ export const ExternalInput = ({
               onChange(null);
             }}
           >
-            Detach
+            <Unlock size={16} />
           </button>
         )}
       </div>
