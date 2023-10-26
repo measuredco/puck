@@ -6,7 +6,7 @@ import { Draggable } from "../Draggable";
 import { DragIcon } from "../DragIcon";
 import { ReactNode } from "react";
 import { useAppContext } from "../Puck/context";
-import { ChevronDown, ChevronUp } from "react-feather";
+import { ChevronUp } from "react-feather";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 const getClassNameItem = getClassNameFactory("ComponentListItem", styles);
