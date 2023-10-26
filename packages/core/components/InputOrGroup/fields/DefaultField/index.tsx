@@ -1,7 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { Hash, Type } from "react-feather";
-import type { InputProps } from "../..";
+import { FieldLabelInternal, type InputProps } from "../..";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -14,14 +14,16 @@ export const DefaultField = ({
   label,
 }: InputProps) => {
   return (
-    <label className={getClassName({ readOnly })}>
-      <div className={getClassName("label")}>
-        <div className={getClassName("labelIcon")}>
+    <FieldLabelInternal
+      label={label || name}
+      icon={
+        <>
           {field.type === "text" && <Type size={16} />}
           {field.type === "number" && <Hash size={16} />}
-        </div>
-        {label || name}
-      </div>
+        </>
+      }
+      readOnly={readOnly}
+    >
       <input
         className={getClassName("input")}
         autoComplete="off"
@@ -37,6 +39,6 @@ export const DefaultField = ({
         }}
         readOnly={readOnly}
       />
-    </label>
+    </FieldLabelInternal>
   );
 };

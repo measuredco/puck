@@ -57,8 +57,8 @@
   background-color: white;
 }
 
-.Input--readOnly .Input-input,
-.Input--readOnly select.Input-input {
+.Input--readOnly > .Input-input,
+.Input--readOnly > select.Input-input {
   background-color: var(--puck-color-grey-11);
   border-color: var(--puck-color-grey-8);
   color: var(--puck-color-grey-5);

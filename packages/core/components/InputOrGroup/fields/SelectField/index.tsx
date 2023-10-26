@@ -1,7 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { ChevronDown } from "react-feather";
-import type { InputProps } from "../..";
+import { FieldLabelInternal, type InputProps } from "../..";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -18,13 +18,11 @@ export const SelectField = ({
   }
 
   return (
-    <label className={getClassName({ readOnly })}>
-      <div className={getClassName("label")}>
-        <div className={getClassName("labelIcon")}>
-          <ChevronDown size={16} />
-        </div>
-        {label || name}
-      </div>
+    <FieldLabelInternal
+      label={label || name}
+      icon={<ChevronDown size={16} />}
+      readOnly={readOnly}
+    >
       <select
         className={getClassName("input")}
         disabled={readOnly}
@@ -49,6 +47,6 @@ export const SelectField = ({
           />
         ))}
       </select>
-    </label>
+    </FieldLabelInternal>
   );
 };
