@@ -89,9 +89,13 @@ export const Hero: ComponentConfig<HeroProps> = {
    *
    * For example, requesting a third-party API for the latest content.
    */
-  resolveProps: (props) => {
+  resolveProps: (props, { changed }) => {
     if (!props.quote)
       return { props, readOnly: { title: false, description: false } };
+
+    if (!changed.quote) {
+      return { props };
+    }
 
     return {
       props: {

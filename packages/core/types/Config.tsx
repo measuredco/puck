@@ -106,7 +106,10 @@ export type ComponentConfig<
   render: (props: WithPuckProps<ComponentProps>) => ReactElement;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
-  resolveProps?: (props: WithPuckProps<ComponentProps>) =>
+  resolveProps?: (
+    props: WithPuckProps<ComponentProps>,
+    params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
+  ) =>
     | Promise<{
         props: WithPuckProps<ComponentProps>;
         readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
