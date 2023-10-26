@@ -1,7 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { Type } from "react-feather";
-import type { InputProps } from "../..";
+import { FieldLabelInternal, type InputProps } from "../..";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -13,13 +13,11 @@ export const TextareaField = ({
   label,
 }: InputProps) => {
   return (
-    <label className={getClassName({ readOnly })}>
-      <div className={getClassName("label")}>
-        <div className={getClassName("labelIcon")}>
-          <Type size={16} />
-        </div>
-        {label || name}
-      </div>
+    <FieldLabelInternal
+      label={label || name}
+      icon={<Type size={16} />}
+      readOnly={readOnly}
+    >
       <textarea
         className={getClassName("input")}
         autoComplete="off"
@@ -29,6 +27,6 @@ export const TextareaField = ({
         readOnly={readOnly}
         rows={5}
       />
-    </label>
+    </FieldLabelInternal>
   );
 };

@@ -2,7 +2,7 @@ import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import inputStyles from "../../styles.module.css";
 import styles from "./styles.module.css";
 import { List, Plus, Trash } from "react-feather";
-import { InputOrGroup, type InputProps } from "../..";
+import { FieldLabelInternal, InputOrGroup, type InputProps } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
 import DroppableStrictMode from "../../../DroppableStrictMode";
@@ -69,13 +69,12 @@ export const ArrayField = ({
   }
 
   return (
-    <div className={getClassNameInput()}>
-      <b className={getClassNameInput("label")}>
-        <div className={getClassNameInput("labelIcon")}>
-          <List size={16} />
-        </div>
-        {label || name}
-      </b>
+    <FieldLabelInternal
+      label={label || name}
+      icon={<List size={16} />}
+      el="div"
+      readOnly={readOnly}
+    >
       <DragDropContext
         onDragEnd={(event) => {
           if (event.destination) {
@@ -221,6 +220,6 @@ export const ArrayField = ({
           }}
         </DroppableStrictMode>
       </DragDropContext>
-    </div>
+    </FieldLabelInternal>
   );
 };

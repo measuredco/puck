@@ -18,19 +18,53 @@ export const FieldLabel = ({
   children,
   icon,
   label,
+  el = "label",
+  readOnly,
+  className,
 }: {
   children?: ReactNode;
   icon?: ReactNode;
   label: string;
+  el?: "label" | "div";
+  readOnly?: boolean;
+  className?: string;
 }) => {
+  const El = el;
   return (
-    <label>
+    <El className={className}>
       <div className={getClassName("label")}>
         {icon ? <div className={getClassName("labelIcon")}>{icon}</div> : <></>}
         {label}
       </div>
       {children}
-    </label>
+    </El>
+  );
+};
+
+export const FieldLabelInternal = ({
+  children,
+  icon,
+  label,
+  el = "label",
+  readOnly,
+}: {
+  children?: ReactNode;
+  icon?: ReactNode;
+  label: string;
+  el?: "label" | "div";
+  readOnly?: boolean;
+}) => {
+  const El = el;
+  return (
+    <FieldLabel
+      label={label}
+      icon={icon}
+      className={getClassName({ readOnly })}
+      readOnly={readOnly}
+      el={el}
+    >
+      {children}
+    </FieldLabel>
   );
 };
 

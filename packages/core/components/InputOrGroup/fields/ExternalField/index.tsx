@@ -1,6 +1,6 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
-import type { InputProps } from "../..";
+import { FieldLabelInternal, type InputProps } from "../..";
 import { ExternalInput } from "../../../ExternalInput";
 import { Link } from "react-feather";
 
@@ -18,15 +18,12 @@ export const ExternalField = ({
   }
 
   return (
-    <div className={getClassName()}>
-      <div className={getClassName("label")}>
-        <div className={getClassName("labelIcon")}>
-          <Link size={16} />
-        </div>
-
-        {label || name}
-      </div>
+    <FieldLabelInternal
+      label={label || name}
+      icon={<Link size={16} />}
+      el="div"
+    >
       <ExternalInput field={field} onChange={onChange} value={value} />
-    </div>
+    </FieldLabelInternal>
   );
 };
