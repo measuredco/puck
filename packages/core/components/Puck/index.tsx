@@ -33,6 +33,7 @@ import { usePuckHistory } from "../../lib/use-puck-history";
 import { AppProvider, defaultAppState } from "./context";
 import { useComponentList } from "../../lib/use-component-list";
 import { resolveAllProps } from "../../lib/resolve-all-props";
+import { applyDynamicProps } from "../../lib/apply-dynamic-props";
 
 const Field = () => {};
 
@@ -104,8 +105,6 @@ export function Puck({
   headerTitle?: string;
   headerPath?: string;
 }) {
-  const [dynamicProps, setDynamicProps] = useState<Record<string, any>>({});
-
   const [reducer] = useState(() => createReducer({ config }));
 
   const initialAppState: AppState = {
@@ -141,40 +140,32 @@ export function Puck({
 
   const { data, ui } = appState;
 
-  const setComponentState = useCallback(
-    (id: string, newComponentState: AppState["ui"]["componentState"][0]) => {
-      dispatch({
-        type: "setUi",
-        ui: {
-          ...ui,
-          componentState: {
-            ...ui.componentState,
-            [id]: {
-              ...ui.componentState[id],
-              ...newComponentState,
-            },
-          },
-        },
-      });
-    },
-    [ui]
-  );
+  const [runResolversKey, setRunResolversKey] = useState(0);
 
-  useEffect(() => {
+  const [componentState, setComponentState] = useState<
+    Record<string, { loading }>
+  >({});
+
+  const runResolvers = () => {
     // Flatten zones
-    const flatContent = Object.keys(data.zones || {}).reduce(
-      (acc, zone) => [...acc, ...data.zones![zone]],
-      data.content
-    );
+    const flatContent = Object.keys(data.zones || {})
+      .reduce((acc, zone) => [...acc, ...data.zones![zone]], data.content)
+      .filter((item) => !!config.components[item.type].resolveProps);
 
     resolveAllProps(
       flatContent,
       config,
       (item) => {
-        setComponentState(item.props.id, { loading: true });
+        setComponentState((prev) => ({
+          ...prev,
+          [item.props.id]: { ...prev[item.props.id], loading: true },
+        }));
       },
       (item) => {
-        setComponentState(item.props.id, { loading: false });
+        setComponentState((prev) => ({
+          ...prev,
+          [item.props.id]: { ...prev[item.props.id], loading: false },
+        }));
       }
     ).then((dynamicContent) => {
       const newDynamicProps = dynamicContent.reduce<Record<string, any>>(
@@ -184,9 +175,24 @@ export function Puck({
         {}
       );
 
-      setDynamicProps(newDynamicProps);
+      const processed = applyDynamicProps(data, newDynamicProps);
+
+      const containsChanges =
+        JSON.stringify(data) !== JSON.stringify(processed);
+
+      if (containsChanges) {
+        dispatch({
+          type: "setData",
+          data: (prev) => applyDynamicProps(prev, newDynamicProps),
+          recordHistory: true,
+        });
+      }
     });
-  }, [data]);
+  };
+
+  useEffect(() => {
+    runResolvers();
+  }, [runResolversKey]);
 
   const { canForward, canRewind, rewind, forward } = usePuckHistory({
     appState,
@@ -205,9 +211,7 @@ export function Puck({
     []
   );
 
-  const selectedItem = itemSelector
-    ? getItem(itemSelector, data, dynamicProps)
-    : null;
+  const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
   const Page = useCallback(
     (pageProps) => (
@@ -300,7 +304,9 @@ export function Puck({
 
   return (
     <div className="puck">
-      <AppProvider value={{ state: appState, dispatch, config }}>
+      <AppProvider
+        value={{ state: appState, dispatch, config, componentState }}
+      >
         <DragDropContext
           onDragUpdate={(update) => {
             setDraggedItem({ ...draggedItem, ...update });
@@ -369,7 +375,6 @@ export function Puck({
             value={{
               data,
               itemSelector,
-              dynamicProps,
               setItemSelector,
               config,
               dispatch,
@@ -576,7 +581,6 @@ export function Puck({
                         )}
                       </SidebarSection>
                     </div>
-
                     <div
                       style={{
                         overflowY: "auto",
@@ -638,7 +642,7 @@ export function Puck({
                           title={selectedItem ? selectedItem.type : "Page"}
                           isLoading={
                             selectedItem &&
-                            ui.componentState[selectedItem?.props.id]?.loading
+                            componentState[selectedItem?.props.id]?.loading
                           }
                         >
                           {Object.keys(fields).map((fieldName) => {
@@ -669,11 +673,15 @@ export function Puck({
                                     itemSelector.zone || rootDroppableId,
                                   data: { ...selectedItem, props: newProps },
                                 });
+
+                                setRunResolversKey(runResolversKey + 1);
                               } else {
                                 dispatch({
                                   type: "setData",
                                   data: { root: newProps },
                                 });
+
+                                setRunResolversKey(runResolversKey + 1);
                               }
                             };
 

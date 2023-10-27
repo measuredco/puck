@@ -3,7 +3,7 @@ import { AppState, Config } from "../types/Config";
 import { recordDiff } from "../lib/use-puck-history";
 import { reduceData } from "./data";
 import { PuckAction } from "./actions";
-import { reduceState } from "./state";
+import { reduceUi } from "./state";
 
 export * from "./actions";
 export * from "./data";
@@ -20,7 +20,7 @@ const storeInterceptor = (reducer: StateReducer) => {
       "registerZone",
       "unregisterZone",
       "setData",
-      "setState",
+      "setUi",
       "set",
     ].includes(action.type);
 
@@ -39,7 +39,7 @@ const storeInterceptor = (reducer: StateReducer) => {
 export const createReducer = ({ config }: { config: Config }): StateReducer =>
   storeInterceptor((state, action) => {
     const data = reduceData(state.data, action, config);
-    const ui = reduceState(state.ui, action);
+    const ui = reduceUi(state.ui, action);
 
     if (action.type === "set") {
       return { ...state, ...action.state };

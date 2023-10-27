@@ -17,7 +17,12 @@ export type HeroProps = {
   padding: string;
   imageMode?: "inline" | "background";
   imageUrl?: string;
-  buttons: { label: string; href: string; variant?: "primary" | "secondary" }[];
+  buttons: {
+    label: string;
+    href: string;
+    variant?: "primary" | "secondary";
+    more?: { text: string }[];
+  }[];
 };
 
 export const Hero: ComponentConfig<HeroProps> = {
