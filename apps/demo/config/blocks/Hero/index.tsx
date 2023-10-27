@@ -89,13 +89,16 @@ export const Hero: ComponentConfig<HeroProps> = {
    *
    * For example, requesting a third-party API for the latest content.
    */
-  resolveProps: (props, { changed }) => {
+  resolveProps: async (props, { changed }) => {
     if (!props.quote)
       return { props, readOnly: { title: false, description: false } };
 
     if (!changed.quote) {
       return { props };
     }
+
+    // Simulate a delay
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     return {
       props: {

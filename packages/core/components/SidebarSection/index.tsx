@@ -5,6 +5,7 @@ import { Heading } from "../Heading";
 import { ChevronRight } from "react-feather";
 import { useBreadcrumbs } from "../../lib/use-breadcrumbs";
 import { useAppContext } from "../Puck/context";
+import { ClipLoader } from "react-spinners";
 
 const getClassName = getClassNameFactory("SidebarSection", styles);
 
@@ -14,12 +15,14 @@ export const SidebarSection = ({
   background,
   showBreadcrumbs,
   noPadding,
+  isLoading,
 }: {
   children: ReactNode;
   title: ReactNode;
   background?: string;
   showBreadcrumbs?: boolean;
   noPadding?: boolean;
+  isLoading?: boolean | null;
 }) => {
   const { setUi } = useAppContext();
   const breadcrumbs = useBreadcrumbs(1);
@@ -49,6 +52,11 @@ export const SidebarSection = ({
         </div>
       </div>
       <div className={getClassName("content")}>{children}</div>
+      {isLoading && (
+        <div className={getClassName("loadingOverlay")}>
+          <ClipLoader />
+        </div>
+      )}
     </div>
   );
 };

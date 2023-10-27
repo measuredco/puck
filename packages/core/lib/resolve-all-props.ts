@@ -4,7 +4,9 @@ const lastChangeCache = {};
 
 export const resolveAllProps = async (
   content: MappedItem[],
-  config: Config
+  config: Config,
+  onResolveStart?: (item: MappedItem) => void,
+  onResolveEnd?: (item: MappedItem) => void
 ) => {
   return await Promise.all(
     content.map(async (item) => {
@@ -30,6 +32,10 @@ export const resolveAllProps = async (
           });
         }
 
+        if (onResolveStart) {
+          onResolveStart(item);
+        }
+
         const { props: resolvedProps, readOnly = {} } =
           await configForItem.resolveProps(item.props, { changed });
 
@@ -48,6 +54,10 @@ export const resolveAllProps = async (
           item,
           resolved: resolvedItem,
         };
+
+        if (onResolveEnd) {
+          onResolveEnd(resolvedItem);
+        }
 
         return resolvedItem;
       }

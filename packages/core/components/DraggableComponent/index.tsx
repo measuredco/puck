@@ -4,6 +4,7 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, Trash } from "react-feather";
 import { useModifierHeld } from "../../lib/use-modifier-held";
+import { ClipLoader } from "react-spinners";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -11,6 +12,7 @@ export const DraggableComponent = ({
   children,
   id,
   index,
+  isLoading = false,
   isSelected = false,
   onClick = () => null,
   onMount = () => null,
@@ -43,6 +45,7 @@ export const DraggableComponent = ({
   debug?: string;
   label?: string;
   isLocked: boolean;
+  isLoading: boolean;
   isDragDisabled?: boolean;
   forceHover?: boolean;
   indicativeHover?: boolean;
@@ -84,6 +87,11 @@ export const DraggableComponent = ({
           onClick={onClick}
         >
           {debug}
+          {isLoading && (
+            <div className={getClassName("loadingOverlay")}>
+              <ClipLoader size={16} color="inherit" />
+            </div>
+          )}
           <div className={getClassName("overlay")}>
             <div className={getClassName("actions")}>
               {label && (
