@@ -1,4 +1,4 @@
-import { CSSProperties, useContext, useEffect } from "react";
+import { CSSProperties, useContext, useEffect, useState } from "react";
 import { DraggableComponent } from "../DraggableComponent";
 import DroppableStrictMode from "../DroppableStrictMode";
 import { getItem } from "../../lib/get-item";
@@ -79,6 +79,8 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
   // we use the index rather than spread to prevent down-level iteration warnings: https://stackoverflow.com/questions/53441292/why-downleveliteration-is-not-on-by-default
   const [draggedSourceArea] = getZoneId(draggedSourceId);
 
+  const [userWillDrag, setUserWillDrag] = useState(false);
+
   const userIsDragging = !!draggedItem;
   const draggingOverArea = userIsDragging && zoneArea === draggedSourceArea;
   const draggingNewComponent = draggedSourceId?.startsWith("component-list");
@@ -108,7 +110,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
     : isRootZone;
   const hoveringOverZone = hoveringZone === zoneCompound;
 
-  let isEnabled = false;
+  let isEnabled = userWillDrag;
 
   /**
    * We enable zones when:
@@ -233,6 +235,14 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                             zone: zoneCompound,
                           });
                           e.stopPropagation();
+                        }}
+                        onMouseDown={(e) => {
+                          e.stopPropagation();
+                          setUserWillDrag(true);
+                        }}
+                        onMouseUp={(e) => {
+                          e.stopPropagation();
+                          setUserWillDrag(false);
                         }}
                         onMouseOver={(e) => {
                           e.stopPropagation();

@@ -1,4 +1,4 @@
-import { Data, MappedItem } from "../types/Config";
+import { Data } from "../types/Config";
 import { rootDroppableId } from "./root-droppable-id";
 import { setupZone } from "./setup-zone";
 
