@@ -18,7 +18,7 @@ export type PathData = Record<string, { path: string[]; label: string }>;
 export type DropZoneContext = {
   data: Data;
   config: Config;
-  dynamicProps?: Record<string, any>;
+  componentState?: Record<string, any>;
   itemSelector?: ItemSelector | null;
   setItemSelector?: (newIndex: ItemSelector | null) => void;
   dispatch?: (action: PuckAction) => void;

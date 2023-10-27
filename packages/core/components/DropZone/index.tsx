@@ -26,7 +26,6 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
   const {
     // These all need setting via context
     data,
-    dynamicProps = {},
     dispatch = () => null,
     config,
     itemSelector,
@@ -175,7 +174,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
 
                 const defaultedProps = {
                   ...config.components[item.type]?.defaultProps,
-                  ...(dynamicProps[item.props.id] || item.props),
+                  ...item.props,
                   editMode: true,
                 };
 
@@ -226,8 +225,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                           hoveringArea === componentId
                         }
                         isLoading={
-                          appContext.state.ui.componentState[componentId]
-                            ?.loading
+                          appContext.componentState[componentId]?.loading
                         }
                         onMount={() => {
                           ctx.registerPath!({

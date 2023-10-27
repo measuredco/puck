@@ -188,7 +188,6 @@ export type UiState = {
       expanded?: boolean;
     }
   >;
-  componentState: Record<string, { loading: boolean }>;
 };
 
 export type AppState = { data: Data; ui: UiState };

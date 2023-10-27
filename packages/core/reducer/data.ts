@@ -259,7 +259,14 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   }
 
   if (action.type === "setData") {
-    return { ...data, ...action.data };
+    if (typeof action.data === "object") {
+      return {
+        ...data,
+        ...action.data,
+      };
+    }
+
+    return { ...data, ...action.data(data) };
   }
 
   return data;

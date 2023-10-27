@@ -1,6 +1,6 @@
 import { defaultAppState } from "../../components/Puck/context";
-import { SetStateAction, createReducer } from "../../reducer";
-import { AppState, Config, Data, UiState } from "../../types/Config";
+import { SetUiAction, createReducer } from "../../reducer";
+import { AppState, Config } from "../../types/Config";
 
 type Props = {
   Comp: {
@@ -24,7 +24,7 @@ describe("State reducer", () => {
     it("should insert data into the state", () => {
       const state: AppState = defaultAppState;
 
-      const action: SetStateAction = {
+      const action: SetUiAction = {
         type: "setUi",
         ui: { leftSideBarVisible: false },
       };

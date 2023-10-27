@@ -41,14 +41,14 @@ export type RemoveAction = {
   zone: string;
 };
 
-export type SetStateAction = {
+export type SetUiAction = {
   type: "setUi";
-  ui: Partial<UiState>;
+  ui: Partial<UiState> | ((previous: UiState) => Partial<UiState>);
 };
 
 export type SetDataAction = {
   type: "setData";
-  data: Partial<Data>;
+  data: Partial<Data> | ((previous: Data) => Partial<Data>);
 };
 
 export type SetAction = {
@@ -75,7 +75,7 @@ export type PuckAction = { recordHistory?: boolean } & (
   | DuplicateAction
   | SetAction
   | SetDataAction
-  | SetStateAction
+  | SetUiAction
   | RegisterZoneAction
   | UnregisterZoneAction
 );

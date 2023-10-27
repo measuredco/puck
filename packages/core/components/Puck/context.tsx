@@ -10,7 +10,6 @@ export const defaultAppState: AppState = {
     arrayState: {},
     itemSelector: null,
     componentList: {},
-    componentState: {},
   },
 };
 
@@ -18,12 +17,14 @@ type AppContext = {
   state: AppState;
   dispatch: (action: PuckAction) => void;
   config: Config;
+  componentState: Record<string, { loading: true }>;
 };
 
 export const appContext = createContext<AppContext>({
   state: defaultAppState,
   dispatch: () => null,
   config: { components: {} },
+  componentState: {},
 });
 
 export const AppProvider = appContext.Provider;
