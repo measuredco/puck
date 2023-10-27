@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { Metadata } from "next";
-import { getAllPathParams, getPageData } from "./actions";
+import { getPageData } from "./actions";
 import { notFound } from "next/navigation";
 import resolvePuckPath from "./resolve-puck-path";
 
@@ -11,10 +11,6 @@ const Client = dynamic(() => import("./client"), {
 const Render = dynamic(() => import("./client-render"), {
   ssr: false,
 });
-
-export async function generateStaticParams() {
-  return getAllPathParams();
-}
 
 export async function generateMetadata({
   params,

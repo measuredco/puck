@@ -16,9 +16,3 @@ export const publishPageData = async (
 ): Promise<void> => {
   // no-op
 };
-
-export const getAllPathParams = cache(
-  async (): Promise<{ puckPath: string[] }[]> => {
-    return Object.keys(seedData).map((key) => getPuckParam(key));
-  }
-);
