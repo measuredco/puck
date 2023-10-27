@@ -14,6 +14,8 @@ export const DraggableComponent = ({
   isSelected = false,
   onClick = () => null,
   onMount = () => null,
+  onMouseDown = () => null,
+  onMouseUp = () => null,
   onMouseOver = () => null,
   onMouseOut = () => null,
   onDelete = () => null,
@@ -32,6 +34,8 @@ export const DraggableComponent = ({
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
   onMount?: () => void;
+  onMouseDown?: (e: SyntheticEvent) => void;
+  onMouseUp?: (e: SyntheticEvent) => void;
   onMouseOver?: (e: SyntheticEvent) => void;
   onMouseOut?: (e: SyntheticEvent) => void;
   onDelete?: (e: SyntheticEvent) => void;
@@ -75,6 +79,8 @@ export const DraggableComponent = ({
           }}
           onMouseOver={onMouseOver}
           onMouseOut={onMouseOut}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
           onClick={onClick}
         >
           {debug}
