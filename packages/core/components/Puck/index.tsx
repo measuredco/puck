@@ -141,6 +141,25 @@ export function Puck({
 
   const { data, ui } = appState;
 
+  const setComponentState = useCallback(
+    (id: string, newComponentState: AppState["ui"]["componentState"][0]) => {
+      dispatch({
+        type: "setUi",
+        ui: {
+          ...ui,
+          componentState: {
+            ...ui.componentState,
+            [id]: {
+              ...ui.componentState[id],
+              ...newComponentState,
+            },
+          },
+        },
+      });
+    },
+    [ui]
+  );
+
   useEffect(() => {
     // Flatten zones
     const flatContent = Object.keys(data.zones || {}).reduce(
@@ -148,7 +167,16 @@ export function Puck({
       data.content
     );
 
-    resolveAllProps(flatContent, config).then((dynamicContent) => {
+    resolveAllProps(
+      flatContent,
+      config,
+      (item) => {
+        setComponentState(item.props.id, { loading: true });
+      },
+      (item) => {
+        setComponentState(item.props.id, { loading: false });
+      }
+    ).then((dynamicContent) => {
       const newDynamicProps = dynamicContent.reduce<Record<string, any>>(
         (acc, item) => {
           return { ...acc, [item.props.id]: item.props };
@@ -608,6 +636,10 @@ export function Puck({
                           noPadding
                           showBreadcrumbs
                           title={selectedItem ? selectedItem.type : "Page"}
+                          isLoading={
+                            selectedItem &&
+                            ui.componentState[selectedItem?.props.id]?.loading
+                          }
                         >
                           {Object.keys(fields).map((fieldName) => {
                             const field = fields[fieldName];

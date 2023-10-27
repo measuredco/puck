@@ -8,6 +8,7 @@ import { getClassNameFactory } from "../../lib";
 import styles from "./styles.module.css";
 import { DropZoneProvider, dropZoneContext } from "./context";
 import { getZoneId } from "../../lib/get-zone-id";
+import { useAppContext } from "../Puck/context";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -19,6 +20,7 @@ type DropZoneProps = {
 };
 
 function DropZoneEdit({ zone, style }: DropZoneProps) {
+  const appContext = useAppContext();
   const ctx = useContext(dropZoneContext);
 
   const {
@@ -222,6 +224,10 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                           userIsDragging &&
                           containsZone &&
                           hoveringArea === componentId
+                        }
+                        isLoading={
+                          appContext.state.ui.componentState[componentId]
+                            ?.loading
                         }
                         onMount={() => {
                           ctx.registerPath!({

@@ -56,3 +56,18 @@
 .SidebarSection-heading {
   padding-right: 16px;
 }
+
+.SidebarSection-loadingOverlay {
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  position: absolute;
+  z-index: 1;
+  pointer-events: all;
+  box-sizing: border-box;
+  opacity: 0.8;
+}

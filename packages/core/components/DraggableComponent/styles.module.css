@@ -35,6 +35,22 @@
   box-sizing: border-box;
 }
 
+.DraggableComponent-loadingOverlay {
+  background: var(--puck-color-white);
+  color: var(--puck-color-grey-2);
+  border-radius: 4px;
+  display: flex;
+  padding: 8px;
+  top: 8px;
+  right: 8px;
+  position: absolute;
+  z-index: 1;
+  pointer-events: all;
+  box-sizing: border-box;
+  opacity: 0.8;
+  z-index: 1;
+}
+
 .DraggableComponent:hover:not(.DraggableComponent--isLocked)
   > .DraggableComponent-overlay {
   display: block;
