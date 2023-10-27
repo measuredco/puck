@@ -2,10 +2,13 @@ import dynamic from "next/dynamic";
 import { Metadata } from "next";
 import { getAllPathParams, getPageData } from "./actions";
 import { notFound } from "next/navigation";
-import { ClientRender } from "./render";
 import resolvePuckPath from "./resolve-puck-path";
 
 const Client = dynamic(() => import("./client"), {
+  ssr: false,
+});
+
+const Render = dynamic(() => import("./client-render"), {
   ssr: false,
 });
 
@@ -56,5 +59,5 @@ export default async function Page({
     return notFound();
   }
 
-  return <ClientRender data={data} />;
+  return <Render data={data} />;
 }

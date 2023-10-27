@@ -2,15 +2,8 @@
 
 import { usePathname } from "next/navigation";
 
-export const NavItem = ({
-  label,
-  href = "/",
-}: {
-  label: string;
-  href: string;
-}) => {
-  const navPath =
-    usePathname().replace("/edit", "").replace("/preview", "") || "/";
+export const NavItem = ({ label, href }: { label: string; href: string }) => {
+  const navPath = usePathname().replace(/(edit|preview)(?!.*\1)/, "");
 
   const isActive = navPath === href;
 

@@ -9,6 +9,7 @@ import headingAnalyzer from "@measured/puck-plugin-heading-analyzer/src/HeadingA
 import config from "../../config";
 import { useLocalData } from "./hooks";
 import { publishPageData } from "./actions";
+import { join } from "path";
 
 export function Client({
   path,
@@ -52,7 +53,7 @@ export function Client({
           headerPath={path}
           renderHeaderActions={() => (
             <>
-              <Button href={`${path}/preview`} newTab variant="secondary">
+              <Button href={join(path, "/preview")} newTab variant="secondary">
                 Preview page
               </Button>
             </>

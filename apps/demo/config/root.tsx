@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { DefaultRootProps } from "@measured/puck";
 import { Footer } from "./components/Footer";
 import { NavItem } from "./components/NavItem";
+import { join } from "path";
 
 export type RootProps = {
   children: ReactNode;
@@ -35,9 +36,9 @@ function Root({ children, suffix = "" }: RootProps) {
             LOGO
           </div>
           <nav style={{ display: "flex", marginLeft: "auto", gap: 32 }}>
-            <NavItem label="Home" href={`${suffix || "/"}`} />
-            <NavItem label="Pricing" href={`/pricing${suffix}`} />
-            <NavItem label="About" href={`/about${suffix}`} />
+            <NavItem label="Home" href={join("/", suffix)} />
+            <NavItem label="Pricing" href={join("/pricing", suffix)} />
+            <NavItem label="About" href={join("/about", suffix)} />
           </nav>
         </div>
       </header>
