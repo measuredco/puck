@@ -107,7 +107,6 @@ export const Hero: ComponentConfig<HeroProps> = {
 
     return {
       props: {
-        ...props,
         title: quotes[props.quote.index].author,
         description: quotes[props.quote.index].content,
       },

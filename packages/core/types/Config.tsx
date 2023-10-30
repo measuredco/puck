@@ -107,8 +107,8 @@ export type ComponentConfig<
     data: ComponentData<ComponentProps>,
     params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
   ) =>
-    | Promise<Partial<ComponentData<ComponentProps>>>
-    | Partial<ComponentData<ComponentProps>>;
+    | Promise<Partial<ComponentDataWithOptionalProps<ComponentProps>>>
+    | Partial<ComponentDataWithOptionalProps<ComponentProps>>;
 };
 
 type Category<ComponentName> = {
@@ -142,10 +142,14 @@ export type ComponentData<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = {
   type: keyof Props;
-  props: WithPuckProps<{
-    [key: string]: any;
-  }>;
+  props: WithPuckProps<Props>;
   readOnly?: Partial<Record<keyof Props, boolean>>;
+};
+
+type ComponentDataWithOptionalProps<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = Omit<ComponentData, "props"> & {
+  props: Partial<WithPuckProps<Props>>;
 };
 
 // Backwards compatability

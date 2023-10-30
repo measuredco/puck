@@ -46,6 +46,7 @@ export const resolveAllProps = async (
         const resolvedItem = {
           ...item,
           props: {
+            ...item.props,
             ...resolvedProps,
           },
         };
