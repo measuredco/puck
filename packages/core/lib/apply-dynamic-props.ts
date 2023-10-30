@@ -8,7 +8,7 @@ export const applyDynamicProps = (
     ...data,
     content: data.content.map((item) => {
       return dynamicProps[item.props.id]
-        ? { ...item, props: dynamicProps[item.props.id] }
+        ? { ...item, ...dynamicProps[item.props.id] }
         : item;
     }),
     zones: Object.keys(data.zones || {}).reduce((acc, zoneKey) => {
@@ -16,7 +16,7 @@ export const applyDynamicProps = (
         ...acc,
         [zoneKey]: data.zones![zoneKey].map((item) => {
           return dynamicProps[item.props.id]
-            ? { ...item, props: dynamicProps[item.props.id] }
+            ? { ...item, ...dynamicProps[item.props.id] }
             : item;
         }),
       };

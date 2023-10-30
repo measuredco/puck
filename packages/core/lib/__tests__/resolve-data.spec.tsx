@@ -44,13 +44,11 @@ describe("resolve-data", () => {
         "content": [
           {
             "props": {
-              "_meta": {
-                "readOnly": {
-                  "prop": true,
-                },
-              },
               "id": "MyComponent-1",
               "prop": "Resolved",
+            },
+            "readOnly": {
+              "prop": true,
             },
             "type": "ComponentWithResolveProps",
           },

@@ -14,9 +14,6 @@ export type Adaptor<
 
 type WithPuckProps<Props> = Props & {
   id: string;
-  _meta?: {
-    readOnly: Partial<Record<keyof Props, boolean>>;
-  };
 };
 
 export type BaseField = {
@@ -97,7 +94,7 @@ export type Fields<
 
 export type Content<
   Props extends { [key: string]: any } = { [key: string]: any }
-> = MappedItem<Props>[];
+> = ComponentData<Props>[];
 
 export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
@@ -147,14 +144,18 @@ export type Config<
   >;
 };
 
-export type MappedItem<
+export type ComponentData<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = {
   type: keyof Props;
   props: WithPuckProps<{
     [key: string]: any;
   }>;
+  readOnly?: Partial<Record<keyof Props, boolean>>;
 };
+
+// Backwards compatability
+export type MappedItem = ComponentData;
 
 export type Data<
   Props extends { [key: string]: any } = { [key: string]: any },

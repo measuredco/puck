@@ -170,7 +170,7 @@ export function Puck({
     ).then((dynamicContent) => {
       const newDynamicProps = dynamicContent.reduce<Record<string, any>>(
         (acc, item) => {
-          return { ...acc, [item.props.id]: item.props };
+          return { ...acc, [item.props.id]: item };
         },
         {}
       );
@@ -657,9 +657,6 @@ export function Puck({
                                 currentProps = data.root;
                               }
 
-                              const { readOnly, ..._meta } =
-                                currentProps._meta || {};
-
                               const newProps = {
                                 ...currentProps,
                                 [fieldName]: value,
@@ -686,8 +683,8 @@ export function Puck({
                             };
 
                             if (selectedItem && itemSelector) {
-                              const { readOnly = {} } =
-                                selectedItem.props._meta || {};
+                              const { readOnly = {} } = selectedItem || {};
+
                               return (
                                 <InputOrGroup
                                   key={`${selectedItem.props.id}_${fieldName}`}
@@ -701,7 +698,7 @@ export function Puck({
                                 />
                               );
                             } else {
-                              const { readOnly = {} } = data.root._meta || {};
+                              const { readOnly = {} } = data.root || {};
 
                               return (
                                 <InputOrGroup
