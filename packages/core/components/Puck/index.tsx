@@ -32,8 +32,7 @@ import { flushZones } from "../../lib/flush-zones";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { AppProvider, defaultAppState } from "./context";
 import { useComponentList } from "../../lib/use-component-list";
-import { resolveAllProps } from "../../lib/resolve-all-props";
-import { applyDynamicProps } from "../../lib/apply-dynamic-props";
+import { useResolvedData } from "../../lib/use-resolved-data";
 
 const Field = () => {};
 
@@ -140,59 +139,11 @@ export function Puck({
 
   const { data, ui } = appState;
 
-  const [runResolversKey, setRunResolversKey] = useState(0);
-
-  const [componentState, setComponentState] = useState<
-    Record<string, { loading }>
-  >({});
-
-  const runResolvers = () => {
-    // Flatten zones
-    const flatContent = Object.keys(data.zones || {})
-      .reduce((acc, zone) => [...acc, ...data.zones![zone]], data.content)
-      .filter((item) => !!config.components[item.type].resolveProps);
-
-    resolveAllProps(
-      flatContent,
-      config,
-      (item) => {
-        setComponentState((prev) => ({
-          ...prev,
-          [item.props.id]: { ...prev[item.props.id], loading: true },
-        }));
-      },
-      (item) => {
-        setComponentState((prev) => ({
-          ...prev,
-          [item.props.id]: { ...prev[item.props.id], loading: false },
-        }));
-      }
-    ).then((dynamicContent) => {
-      const newDynamicProps = dynamicContent.reduce<Record<string, any>>(
-        (acc, item) => {
-          return { ...acc, [item.props.id]: item };
-        },
-        {}
-      );
-
-      const processed = applyDynamicProps(data, newDynamicProps);
-
-      const containsChanges =
-        JSON.stringify(data) !== JSON.stringify(processed);
-
-      if (containsChanges) {
-        dispatch({
-          type: "setData",
-          data: (prev) => applyDynamicProps(prev, newDynamicProps),
-          recordHistory: true,
-        });
-      }
-    });
-  };
-
-  useEffect(() => {
-    runResolvers();
-  }, [runResolversKey]);
+  const { resolveData, componentState } = useResolvedData(
+    data,
+    config,
+    dispatch
+  );
 
   const { canForward, canRewind, rewind, forward } = usePuckHistory({
     appState,
@@ -671,14 +622,14 @@ export function Puck({
                                   data: { ...selectedItem, props: newProps },
                                 });
 
-                                setRunResolversKey(runResolversKey + 1);
+                                resolveData();
                               } else {
                                 dispatch({
                                   type: "setData",
                                   data: { root: newProps },
                                 });
 
-                                setRunResolversKey(runResolversKey + 1);
+                                resolveData();
                               }
                             };
 
