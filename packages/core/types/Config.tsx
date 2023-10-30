@@ -103,18 +103,12 @@ export type ComponentConfig<
   render: (props: WithPuckProps<ComponentProps>) => ReactElement;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
-  resolveProps?: (
-    props: WithPuckProps<ComponentProps>,
+  resolveData?: (
+    data: ComponentData<ComponentProps>,
     params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
   ) =>
-    | Promise<{
-        props: WithPuckProps<ComponentProps>;
-        readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
-      }>
-    | {
-        props: WithPuckProps<ComponentProps>;
-        readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
-      };
+    | Promise<Partial<ComponentData<ComponentProps>>>
+    | Partial<ComponentData<ComponentProps>>;
 };
 
 type Category<ComponentName> = {
@@ -133,9 +127,9 @@ export type Config<
     other?: Category<Props>;
   };
   components: {
-    [ComponentName in keyof Props]: ComponentConfig<
-      Props[ComponentName],
-      Props[ComponentName]
+    [ComponentName in keyof Props]: Omit<
+      ComponentConfig<Props[ComponentName], Props[ComponentName]>,
+      "type"
     >;
   };
   root?: ComponentConfig<

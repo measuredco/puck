@@ -19,7 +19,7 @@ export const useResolvedData = (
     // Flatten zones
     const flatContent = Object.keys(data.zones || {})
       .reduce((acc, zone) => [...acc, ...data.zones![zone]], data.content)
-      .filter((item) => !!config.components[item.type].resolveProps);
+      .filter((item) => !!config.components[item.type].resolveData);
 
     resolveAllProps(
       flatContent,

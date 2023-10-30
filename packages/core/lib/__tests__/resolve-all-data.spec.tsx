@@ -22,7 +22,7 @@ const config: Config = {
   components: {
     ComponentWithResolveProps: {
       defaultProps: { prop: "example" },
-      resolveProps: async (props) => {
+      resolveData: async ({ props }) => {
         return {
           props: { ...props, prop: "Resolved" },
           readOnly: { prop: true },
