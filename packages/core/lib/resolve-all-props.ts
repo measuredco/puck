@@ -12,7 +12,7 @@ export const resolveAllProps = async (
     content.map(async (item) => {
       const configForItem = config.components[item.type];
 
-      if (configForItem.resolveProps) {
+      if (configForItem.resolveData) {
         let changed = Object.keys(item.props).reduce(
           (acc, item) => ({ ...acc, [item]: true }),
           {}
@@ -37,7 +37,7 @@ export const resolveAllProps = async (
         }
 
         const { props: resolvedProps, readOnly = {} } =
-          await configForItem.resolveProps(item.props, { changed });
+          await configForItem.resolveData(item, { changed });
 
         const { readOnly: existingReadOnly = {} } = item || {};
 

@@ -21,7 +21,7 @@ const config: Config = {
   components: {
     MyComponent: {
       defaultProps: { prop: "example" },
-      resolveProps: (props) => {
+      resolveData: ({ props }) => {
         return {
           props: {
             ...props,
@@ -121,7 +121,7 @@ describe("use-resolved-data", () => {
               ...config.components,
               MyComponent: {
                 ...config.components.MyComponent,
-                resolveProps: (props) => ({ props }),
+                resolveData: ({ props }) => ({ props }),
               },
             },
           },
@@ -154,7 +154,7 @@ describe("use-resolved-data", () => {
               ...config.components,
               MyComponent: {
                 ...config.components.MyComponent,
-                resolveProps: async (props) => {
+                resolveData: async ({ props }) => {
                   await new Promise<void>((resolve) => setTimeout(resolve, 10));
                   return { props };
                 },

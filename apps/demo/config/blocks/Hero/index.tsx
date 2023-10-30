@@ -85,8 +85,8 @@ export const Hero: ComponentConfig<HeroProps> = {
     padding: "64px",
   },
   /**
-   * The resolveProps method allows us to modify props after the Puck
-   * data has been set.
+   * The resolveData method allows us to modify component data after being
+   * set by the user.
    *
    * It is called after the page data is changed, but before a component
    * is rendered. This allows us to make dynamic changes to the props
@@ -94,7 +94,7 @@ export const Hero: ComponentConfig<HeroProps> = {
    *
    * For example, requesting a third-party API for the latest content.
    */
-  resolveProps: async (props, { changed }) => {
+  resolveData: async ({ props }, { changed }) => {
     if (!props.quote)
       return { props, readOnly: { title: false, description: false } };
 

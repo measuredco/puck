@@ -277,9 +277,9 @@ When the user interacts with this adaptor, they'll be presented with a list of i
 
 Dynamic prop resolution allows developers to resolve props for components without saving the data to the Puck data model.
 
-### resolveProps()
+### resolveData()
 
-`resolveProps` is defined in the component config, and allows the developer to make asynchronous calls to change the props after they've been set by Puck.
+`resolveData` is defined in the component config, and allows the developer to make asynchronous calls to change the props after they've been set by Puck.
 
 #### Args
 
@@ -309,7 +309,7 @@ const config = {
           type: "text",
         },
       },
-      resolveProps: async (props) => {
+      resolveData: async (props) => {
         return {
           props: {
             title: props.text,
@@ -329,7 +329,7 @@ const config = {
 
 ##### Combining with adaptors
 
-A more advanced pattern is to combine the `resolveProps` method with the adaptors to dynamically fetch data when rendering the component.
+A more advanced pattern is to combine the `resolveData` method with the adaptors to dynamically fetch data when rendering the component.
 
 ```tsx
 const myAdaptor = {
@@ -355,7 +355,7 @@ const config = {
           type: "text",
         },
       },
-      resolveProps: async (props) => {
+      resolveData: async (props) => {
         if (!myData.id) {
           return { props, readOnly: { title: false } };
         }
@@ -383,7 +383,7 @@ const config = {
 
 ### resolveAllData()
 
-`resolveAllData` is a utility function exported by Puck to enable the developer to resolve their custom props before rendering their component with `<Render>`. This is ideally done on the server. If you're using `resolveProps`, you _must_ use `resolveAllData` before rendering.
+`resolveAllData` is a utility function exported by Puck to enable the developer to resolve their custom props before rendering their component with `<Render>`. This is ideally done on the server. If you're using `resolveData`, you _must_ use `resolveAllData` before rendering.
 
 ```tsx
 import { resolveAllData } from "@measured/puck";
@@ -436,7 +436,7 @@ The `Config` object describes which components Puck should render, how they shou
     - **fields** (`Field`): The Field objects describing the input data stored against this component.
     - **render** (`Component`): Render function for your React component. Receives props as defined in fields.
     - **defaultProps** (`object` [optional]): Default props to pass to your component. Will show in fields.
-    - **resolveProps** (`async (props: object) => object` [optional]): Function to dynamically change props before rendering the component.
+    - **resolveData** (`async (props: object) => object` [optional]): Function to dynamically change props before rendering the component.
       - Args
         - **props** (`object`): the current props for your component stored in the Puck data
       - Response
