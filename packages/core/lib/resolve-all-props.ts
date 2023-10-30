@@ -39,15 +39,14 @@ export const resolveAllProps = async (
         const { props: resolvedProps, readOnly = {} } =
           await configForItem.resolveProps(item.props, { changed });
 
-        const { _meta: { readOnly: existingReadOnly = {} } = {} } =
-          item.props || {};
+        const { readOnly: existingReadOnly = {} } = item || {};
 
         const resolvedItem = {
           ...item,
           props: {
             ...resolvedProps,
-            _meta: { readOnly: { ...existingReadOnly, ...readOnly } },
           },
+          readOnly: { ...existingReadOnly, ...readOnly },
         };
 
         lastChangeCache[item.props.id] = {
