@@ -29,7 +29,7 @@
   width: 100%;
   top: 0;
   position: absolute;
-  z-index: 1;
+  z-index: 0;
   font-family: var(--puck-font-stack);
   pointer-events: none;
   box-sizing: border-box;

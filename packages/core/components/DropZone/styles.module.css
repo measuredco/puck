@@ -48,7 +48,6 @@
 
 .DropZone-item {
   position: relative;
-  z-index: 0;
 }
 
 .DropZone-hitbox {
