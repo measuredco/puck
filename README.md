@@ -381,14 +381,14 @@ const config = {
 };
 ```
 
-### resolveData()
+### resolveAllData()
 
-`resolveData` is a utility function exported by Puck to enable the developer to resolve their custom props before rendering their component with `<Render>`. This is ideally done on the server. If you're using `resolveProps`, you _must_ use `resolveData` before rendering.
+`resolveAllData` is a utility function exported by Puck to enable the developer to resolve their custom props before rendering their component with `<Render>`. This is ideally done on the server. If you're using `resolveProps`, you _must_ use `resolveAllData` before rendering.
 
 ```tsx
-import { resolveData } from "@measured/puck";
+import { resolveAllData } from "@measured/puck";
 
-const resolvedData = resolveData(data, config);
+const resolvedData = resolveAllData(data, config);
 ```
 
 ## Reference

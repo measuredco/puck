@@ -7,6 +7,6 @@ export * from "./components/IconButton";
 export * from "./components/Puck";
 export * from "./components/Render";
 
-export * from "./lib/resolve-data";
+export * from "./lib/resolve-all-data";
 
 export { FieldLabel } from "./components/InputOrGroup";

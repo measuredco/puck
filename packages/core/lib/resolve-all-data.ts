@@ -1,7 +1,7 @@
 import { Config, Data, MappedItem } from "../types/Config";
 import { resolveAllProps } from "./resolve-all-props";
 
-export const resolveData = async (
+export const resolveAllData = async (
   data: Data,
   config: Config,
   onResolveStart?: (item: MappedItem) => void,

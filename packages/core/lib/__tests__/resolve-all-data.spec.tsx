@@ -1,5 +1,5 @@
 import { Config, Data } from "../../types/Config";
-import { resolveData } from "../resolve-data";
+import { resolveAllData } from "../resolve-all-data";
 
 const item1 = {
   type: "ComponentWithResolveProps",
@@ -39,7 +39,7 @@ const config: Config = {
 
 describe("resolve-data", () => {
   it("should resolve the data for all components in the data", async () => {
-    expect(await resolveData(data, config)).toMatchInlineSnapshot(`
+    expect(await resolveAllData(data, config)).toMatchInlineSnapshot(`
       {
         "content": [
           {
