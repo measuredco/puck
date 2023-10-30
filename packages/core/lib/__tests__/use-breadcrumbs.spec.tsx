@@ -17,7 +17,7 @@ const data: Data = {
 
 const config: Config = {
   components: {
-    Comp: {
+    MyComponent: {
       defaultProps: { prop: "example" },
       render: () => <div />,
     },

@@ -1,6 +1,6 @@
 import { Config, MappedItem } from "../types/Config";
 
-const lastChangeCache = {};
+export const cache = { lastChange: {} };
 
 export const resolveAllProps = async (
   content: MappedItem[],
@@ -18,8 +18,8 @@ export const resolveAllProps = async (
           {}
         );
 
-        if (lastChangeCache[item.props.id]) {
-          const { item: oldItem, resolved } = lastChangeCache[item.props.id];
+        if (cache.lastChange[item.props.id]) {
+          const { item: oldItem, resolved } = cache.lastChange[item.props.id];
 
           if (oldItem === item) {
             return resolved;
@@ -41,15 +41,20 @@ export const resolveAllProps = async (
 
         const { readOnly: existingReadOnly = {} } = item || {};
 
+        const newReadOnly = { ...existingReadOnly, ...readOnly };
+
         const resolvedItem = {
           ...item,
           props: {
             ...resolvedProps,
           },
-          readOnly: { ...existingReadOnly, ...readOnly },
         };
 
-        lastChangeCache[item.props.id] = {
+        if (Object.keys(newReadOnly).length) {
+          resolvedItem.readOnly = newReadOnly;
+        }
+
+        cache.lastChange[item.props.id] = {
           item,
           resolved: resolvedItem,
         };
