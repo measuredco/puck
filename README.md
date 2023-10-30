@@ -383,7 +383,9 @@ const config = {
 
 ### resolveAllData()
 
-`resolveAllData` is a utility function exported by Puck to enable the developer to resolve their custom props before rendering their component with `<Render>`. This is ideally done on the server. If you're using `resolveData`, you _must_ use `resolveAllData` before rendering.
+`resolveAllData` is a utility function exported by Puck to enable the developer to run all their `resolveData` methods before rendering the component with `<Render>`.
+
+If your `resolveData` methods rely on any external APIs, you should run this before rendering your page.
 
 ```tsx
 import { resolveAllData } from "@measured/puck";
