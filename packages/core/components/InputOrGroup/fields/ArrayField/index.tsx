@@ -177,8 +177,7 @@ export const ArrayField = ({
                                       field.arrayFields![fieldName];
 
                                     const subFieldName = `${name}[${i}].${fieldName}`;
-                                    const zeroIndexSubFieldName =
-                                      subFieldName.replace(/\[\d\]/g, "[0]");
+                                    const wildcardFieldName = `${name}[*].${fieldName}`;
 
                                     return (
                                       <InputOrGroup
@@ -186,7 +185,11 @@ export const ArrayField = ({
                                         name={subFieldName}
                                         label={subField.label || fieldName}
                                         readOnly={
-                                          readOnlyFields[zeroIndexSubFieldName]
+                                          typeof readOnlyFields[
+                                            subFieldName
+                                          ] !== "undefined"
+                                            ? readOnlyFields[subFieldName]
+                                            : readOnlyFields[wildcardFieldName]
                                         }
                                         readOnlyFields={readOnlyFields}
                                         field={subField}
