@@ -423,18 +423,13 @@ The `Config` object describes which components Puck should render, how they shou
     - **title** (`Field`): Title of the content, typically used for the page title.
     - **[fieldName]** (`Field`): User defined fields, used to describe the input data stored in the `root` key.
   - **render** (`Component`): Render a React component at the root of your component tree. Useful for defining context providers.
+  - **resolveData** (`async (data: ComponentData) => ComponentData` [optional]): Function to dynamically change props before rendering the root.
 - **components** (`object`): Definitions for each of the components you want to show in the visual editor
   - **[componentName]** (`object`)
     - **fields** (`Field`): The Field objects describing the input data stored against this component.
     - **render** (`Component`): Render function for your React component. Receives props as defined in fields.
     - **defaultProps** (`object` [optional]): Default props to pass to your component. Will show in fields.
-    - **resolveData** (`async (props: object) => object` [optional]): Function to dynamically change props before rendering the component.
-      - Args
-        - **props** (`object`): the current props for your component stored in the Puck data
-      - Response
-        - **props** (`object`): the resolved props for your component. Will not be stored in the Puck data
-        - **readOnly** (`object`): an object describing which fields on the component are currently read-only
-          - **[prop]** (`boolean`): boolean describing whether or not the prop field is read-only
+    - **resolveData** (`async (data: ComponentData) => ComponentData` [optional]): Function to dynamically change props before rendering the component.
 - **categories** (`object`): Component categories for rendering in the side bar or restricting in DropZones
   - **[categoryName]** (`object`)
     - **components** (`sting[]`, [optional]): Array containing the names of components in this category
@@ -526,9 +521,9 @@ The `Data` object stores the puck page data.
 
 - **root** (`ComponentData`): The component data for the root of your configuration.
   - **props** (object): Extends `ComponentData.props`, with some additional props
-    - **title** (string, optional): Title of the content, typically used for the page title
+    - **title** (`string`, [optional]): Title of the content, typically used for the page title
 - **content** (`ComponentData[]`): Component data for the main content
-- **zones** (`object`, optional): Component data for all DropZones
+- **zones** (`object`, [optional]): Component data for all DropZones
   **[zoneCompound]** (`ComponentData[]`): Component data for a specific DropZone `zone` within a component instance
 
 ### `ComponentData`
