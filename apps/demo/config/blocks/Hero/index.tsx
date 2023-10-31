@@ -29,17 +29,15 @@ export const Hero: ComponentConfig<HeroProps> = {
   fields: {
     quote: {
       type: "external",
-      adaptor: {
-        name: "Quotes API",
-        fetchList: async () =>
-          quotes.map((quote, idx) => ({
-            index: idx,
-            title: quote.author,
-            description: quote.content,
-          })),
-        mapProp: (result) => {
-          return { index: result.index, label: result.description };
-        },
+      placeholder: "Select a quote",
+      fetchList: async () =>
+        quotes.map((quote, idx) => ({
+          index: idx,
+          title: quote.author,
+          description: quote.content,
+        })),
+      mapProp: (result) => {
+        return { index: result.index, label: result.description };
       },
       getItemSummary: (item) => item.label,
     },

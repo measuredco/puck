@@ -234,33 +234,28 @@ The current DropZone implementation has certain rules and limitations:
 3. You can't drag between DropZones that don't share a parent (or _area_)
 4. Your mouse must be directly over a DropZone for a collision to be detected
 
-## Adaptors
+## External fields
 
-Adaptors can be used to import data from a third-party API, such as a headless CMS.
+External fields can be used to import data from a third-party API, such as a headless CMS.
 
 ### Example
 
-The `external` field type enables us to use an adaptor to query data from a third party API:
+The `external` field type enables us to query data from a third party API:
 
 ```tsx
-const myAdaptor = {
-  name: "My adaptor",
-  fetchList: async () => {
-    const response = await fetch("https://www.example.com/api");
-
-    return {
-      text: response.json().text,
-    };
-  },
-};
-
 const config = {
   components: {
     HeadingBlock: {
       fields: {
         myData: {
           type: "external",
-          adaptor: myAdaptor,
+          fetchList: async () => {
+            const response = await fetch("https://www.example.com/api");
+
+            return {
+              text: response.json().text,
+            };
+          },
         },
       },
       render: ({ myData }) => {
@@ -271,7 +266,7 @@ const config = {
 };
 ```
 
-When the user interacts with this adaptor, they'll be presented with a list of items to choose from. Once they select an item, the value will be mapped onto the prop. In this case, `myData`.
+When the user interacts with this external field, they'll be presented with a list of items to choose from. Once they select an item, the value will be mapped onto the prop. In this case, `myData`.
 
 ## Dynamic prop resolution
 
@@ -317,29 +312,25 @@ const config = {
 };
 ```
 
-##### Combining with adaptors
+##### Combining with external fields
 
-A more advanced pattern is to combine the `resolveData` method with the adaptors to dynamically fetch data when rendering the component.
+A more advanced pattern is to combine the `resolveData` method with `external` fields to dynamically fetch data when rendering the component.
 
 ```tsx
-const myAdaptor = {
-  name: "My adaptor",
-  fetchList: async () => {
-    const response = await fetch("https://www.example.com/api");
-
-    return {
-      id: response.json().id,
-    };
-  },
-};
-
 const config = {
   components: {
     HeadingBlock: {
       fields: {
         myData: {
           type: "external",
-          adaptor: myAdaptor,
+          placeholder: "Select from example.com",
+          fetchList: async () => {
+            const response = await fetch("https://www.example.com/api");
+
+            return {
+              id: response.json().id,
+            };
+          },
         },
         title: {
           type: "text",
@@ -481,14 +472,12 @@ A `Field` represents a user input field shown in the Puck interface.
 
 ### External Fields
 
-External fields can be used to load content from an external content repository, like Strapi.js, using an `Adaptor`.
+External fields can be used to load content from an external content repository, like Strapi.js.
 
 - **type** (`"external"`)
-- **adaptor** (`Adaptor`): Content adaptor responsible for fetching data to show in the table
-  - **name** (`string`): The human-readable name of the adaptor
-  - **fetchList** (`(adaptorParams: object) => object`): Fetch content from a third-party API and return an array
-  - **mapProp** (`(selectedItem: object) => object`): Map the selected item into another shape
-- **adaptorParams** (`object`): Paramaters passed to the adaptor
+- **placeholder** (`string`): A placeholder for the external field button
+- **fetchList** (`() => object`): Fetch content from a third-party API and return an array
+- **mapProp** (`(selectedItem: object) => object`): Map the selected item into another shape
 
 ### Custom Fields
 
