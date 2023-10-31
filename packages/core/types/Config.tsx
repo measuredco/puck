@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import { ReactNode } from "react";
 import { ItemSelector } from "../lib/get-item";
+import { DropZone } from "../components/DropZone";
 
 type WithPuckProps<Props> = Props & {
   id: string;
@@ -93,11 +94,18 @@ export type DefaultRootProps = {
   [key: string]: any;
 };
 
-export type DefaultRootRenderProps = {
-  editMode: boolean;
-} & DefaultRootProps;
+export type DefaultComponentProps = {
+  [key: string]: any;
+  editMode?: boolean;
+};
 
-export type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
+export type PuckComponent<
+  Props extends DefaultComponentProps = DefaultComponentProps
+> = (props: WithPuckProps<Props & { puckCtx: PuckContext }>) => JSX.Element;
+
+export type PuckContext = {
+  DropZone: typeof DropZone;
+};
 
 export type Fields<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps
@@ -112,12 +120,39 @@ export type Content<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = ComponentData<Props>[];
 
+// JSX.Element
+
+export type ComponentFields<
+  ComponentProps extends DefaultComponentProps = DefaultComponentProps,
+  DefaultProps = ComponentProps
+> = {
+  defaultProps?: DefaultProps;
+  fields?: Fields<ComponentProps>;
+  resolveProps?: (props: WithPuckProps<ComponentProps>) => Promise<{
+    props: WithPuckProps<ComponentProps>;
+    readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
+  }>;
+};
+
 export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
   DefaultProps = ComponentProps,
   DataShape = ComponentData<ComponentProps>
 > = {
-  render: (props: WithPuckProps<ComponentProps>) => ReactElement;
+  render: PuckComponent<ComponentProps>;
+  defaultProps?: DefaultProps;
+  fields?: Fields<ComponentProps>;
+  resolveProps?: (props: WithPuckProps<ComponentProps>) => Promise<{
+    props: WithPuckProps<ComponentProps>;
+    readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
+  }>;
+};
+
+type RootComponentConfig<
+  ComponentProps extends DefaultComponentProps = DefaultComponentProps,
+  DefaultProps = ComponentProps
+> = {
+  render: (props: ComponentProps) => JSX.Element;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
   resolveData?: (
@@ -149,12 +184,9 @@ export type Config<
       "type"
     >;
   };
-  root?: Partial<
-    ComponentConfig<
-      RootProps & { children: ReactNode },
-      Partial<RootProps & { children: ReactNode }>,
-      RootDataWithProps<RootProps>
-    >
+  root?: RootComponentConfig<
+    RootProps & { children: ReactNode },
+    Partial<RootProps & { children: ReactNode }>
   >;
 };
 

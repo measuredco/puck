@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts*\"",
-    "build": "rm -rf dist && tsup index.ts",
+    "build": "rm -rf dist && tsup index.ts headless.ts",
     "test": "jest",
     "prepare": "cp ../../README.md . && yarn build",
     "postpublish": "rm README.md"
