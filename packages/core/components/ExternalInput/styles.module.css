@@ -14,7 +14,7 @@
   background-color: white;
   border: 1px solid var(--puck-color-grey-8);
   border-radius: 4px;
-  color: var(--puck-color-grey-2);
+  color: var(--puck-color-azure-4);
   padding: 12px 16px;
   font-weight: 500;
   white-space: nowrap;
@@ -33,6 +33,7 @@
 }
 
 .ExternalInput--hasData .ExternalInput-button {
+  color: var(--puck-color-grey-2);
   display: block;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
