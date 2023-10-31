@@ -32,7 +32,7 @@
   z-index: 1;
 }
 
-.ExternalInput--hasData .ExternalInput-button {
+.ExternalInput--dataSelected .ExternalInput-button {
   color: var(--puck-color-grey-2);
   display: block;
   border-top-right-radius: 0px;
@@ -53,29 +53,33 @@
   margin-left: -1px;
 }
 
-.ExternalInput-masthead {
+.ExternalInputModal {
+  position: relative;
+}
+
+.ExternalInputModal-masthead {
   background-color: white;
   padding: 32px 24px;
 }
 
-.ExternalInput-modalTableWrapper {
+.ExternalInputModal-tableWrapper {
   overflow-x: scroll;
   overflow-y: scroll;
   flex-grow: 1;
 }
 
-.ExternalInput-table {
+.ExternalInputModal-table {
   border-spacing: 0px;
   color: var(--puck-color-neutral-4);
   position: relative;
 }
 
-.ExternalInput-table thead {
+.ExternalInputModal-table thead {
   position: sticky;
   top: 0;
 }
 
-.ExternalInput-table th {
+.ExternalInputModal-table th {
   border-bottom: 1px solid var(--puck-color-grey-8);
   border-top: 1px solid var(--puck-color-grey-8);
   font-weight: 700;
@@ -83,23 +87,23 @@
   opacity: 0.9;
 }
 
-.ExternalInput-table td {
+.ExternalInputModal-table td {
   padding: 16px 24px;
 }
 
-.ExternalInput-table tr:nth-of-type(n) {
+.ExternalInputModal-table tr:nth-of-type(n) {
   background-color: white;
 }
 
-.ExternalInput-table tr:nth-of-type(2n) {
+.ExternalInputModal-table tr:nth-of-type(2n) {
   background-color: var(--puck-color-grey-10);
 }
 
-.ExternalInput-table tr td:first-of-type {
+.ExternalInputModal-table tr td:first-of-type {
   font-weight: 500;
 }
 
-.ExternalInput-table tbody tr:hover {
+.ExternalInputModal-table tbody tr:hover {
   background: var(--puck-color-grey-11);
   color: var(--puck-color-azure-4);
   cursor: pointer;
@@ -107,7 +111,37 @@
   margin-left: -5px;
 }
 
-.ExternalInput-table tbody tr:hover td:first-of-type {
+.ExternalInputModal-table tbody tr:hover td:first-of-type {
   border-left: 4px solid var(--puck-color-azure-4);
   padding-left: 20px;
+}
+
+.ExternalInputModal-tableWrapper {
+  display: none;
+}
+
+.ExternalInputModal--hasData .ExternalInputModal-tableWrapper {
+  display: block;
+}
+
+.ExternalInputModal-loadingBanner {
+  display: none;
+  background-color: white;
+  padding: 64px;
+  align-items: center;
+  justify-content: center;
+}
+
+.ExternalInputModal--isLoading .ExternalInputModal-loadingBanner {
+  display: flex;
+}
+
+.ExternalInputModal-noContentBanner {
+  display: none;
+}
+
+.ExternalInputModal--loaded:not(.ExternalInputModal--hasData)
+  .ExternalInputModal-noContentBanner {
+  display: block;
+  padding: 24px;
 }
