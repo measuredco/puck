@@ -6,7 +6,7 @@ import { Draggable } from "../Draggable";
 import { DragIcon } from "../DragIcon";
 import { ReactNode } from "react";
 import { useAppContext } from "../Puck/context";
-import { ChevronDown, ChevronUp } from "react-feather";
+import { ChevronUp } from "react-feather";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 const getClassNameItem = getClassNameFactory("ComponentListItem", styles);
@@ -80,39 +80,41 @@ const ComponentList = ({
         >
           <div>{title}</div>
           <div className={getClassName("titleIcon")}>
-            {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            <ChevronUp size={12} />
           </div>
         </div>
       )}
       <div className={getClassName("content")}>
-        <DroppableStrictMode
-          droppableId={`component-list${title ? `:${title}` : ""}`}
-          isDropDisabled
-        >
-          {(provided, snapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className={getClassName({
-                isDraggingFrom: !!snapshot.draggingFromThisWith,
-              })}
-            >
-              {children ||
-                Object.keys(config.components).map((componentKey, i) => {
-                  return (
-                    <ComponentListItem
-                      key={componentKey}
-                      component={componentKey}
-                      index={i}
-                      id={componentKey}
-                    />
-                  );
+        <div className={getClassName("list")}>
+          <DroppableStrictMode
+            droppableId={`component-list${title ? `:${title}` : ""}`}
+            isDropDisabled
+          >
+            {(provided, snapshot) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className={getClassName({
+                  isDraggingFrom: !!snapshot.draggingFromThisWith,
                 })}
-              {/* Use different element so we don't clash with :last-of-type */}
-              <span style={{ display: "none" }}>{provided.placeholder}</span>
-            </div>
-          )}
-        </DroppableStrictMode>
+              >
+                {children ||
+                  Object.keys(config.components).map((componentKey, i) => {
+                    return (
+                      <ComponentListItem
+                        key={componentKey}
+                        component={componentKey}
+                        index={i}
+                        id={componentKey}
+                      />
+                    );
+                  })}
+                {/* Use different element so we don't clash with :last-of-type */}
+                <span style={{ display: "none" }}>{provided.placeholder}</span>
+              </div>
+            )}
+          </DroppableStrictMode>
+        </div>
       </div>
     </div>
   );

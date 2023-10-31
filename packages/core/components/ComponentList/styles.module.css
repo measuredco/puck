@@ -3,16 +3,29 @@
   max-width: 100%;
 }
 
-.ComponentList--isExpanded + .ComponentList {
-  margin-top: 12px;
+.ComponentList-list {
+  overflow: hidden;
 }
 
 .ComponentList-content {
-  display: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
 }
 
 .ComponentList--isExpanded > .ComponentList-content {
-  display: block;
+  opacity: 1;
+  grid-template-rows: 1fr;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ComponentList-content {
+    transition: none;
+  }
 }
 
 .ComponentList-title {
@@ -38,6 +51,11 @@
 
 .ComponentList-titleIcon {
   margin-left: auto;
+  transition: transform 0.2s ease-in-out;
+}
+
+.ComponentList--isExpanded .ComponentList-titleIcon {
+  transform: rotate(180deg);
 }
 
 .ComponentListItem:last-of-type .ComponentListItem-draggable {
