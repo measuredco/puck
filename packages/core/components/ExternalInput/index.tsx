@@ -17,7 +17,7 @@ export const ExternalInput = ({
   onChange: (value: any) => void;
   value: any;
 }) => {
-  const { mapProp = (val) => val } = field.adaptor || {};
+  const { mapProp = (val) => val } = field || {};
 
   const [data, setData] = useState<Record<string, any>[]>([]);
   const [isOpen, setOpen] = useState(false);
@@ -38,19 +38,13 @@ export const ExternalInput = ({
 
   useEffect(() => {
     (async () => {
-      if (field.adaptor) {
-        const listData = await field.adaptor.fetchList(field.adaptorParams);
+      const listData = await field.fetchList();
 
-        if (listData) {
-          setData(listData);
-        }
+      if (listData) {
+        setData(listData);
       }
     })();
-  }, [field.adaptor, field.adaptorParams]);
-
-  if (!field.adaptor) {
-    return <div>Incorrectly configured</div>;
-  }
+  }, [field]);
 
   return (
     <div
@@ -69,12 +63,12 @@ export const ExternalInput = ({
             field.getItemSummary ? (
               field.getItemSummary(selectedData)
             ) : (
-              `${field.adaptor.name} item`
+              "External item"
             )
           ) : (
             <>
               <Link size="16" />
-              <span>Select from {field.adaptor.name}</span>
+              <span>{field.placeholder}</span>
             </>
           )}
         </button>

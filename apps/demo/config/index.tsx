@@ -184,7 +184,7 @@ export const initialData: Record<string, Data> = {
         props: {
           align: "center",
           level: 2,
-          text: "Plugins",
+          text: "Extending Puck",
           padding: "0px",
           size: "xxl",
           id: "Heading-1687296184321",
@@ -198,7 +198,7 @@ export const initialData: Record<string, Data> = {
         type: "Text",
         props: {
           align: "center",
-          text: "Puck can also be extended with plugins and headless CMS content adaptors, transforming Puck into the perfect tool for your Content Ops.",
+          text: "Puck can also be extended with plugins and headless CMS content fields, transforming Puck into the perfect tool for your Content Ops.",
           padding: "0px",
           size: "m",
           id: "Text-1687296579834",
@@ -336,9 +336,9 @@ export const initialData: Record<string, Data> = {
         {
           type: "Card",
           props: {
-            title: "Strapi.js Adaptor",
+            title: "External data",
             description:
-              "Connect your components with existing content from Strapi.js.",
+              "Connect your components with an existing data source, like Strapi.js.",
             icon: "Feather",
             mode: "card",
             id: "Card-4eea28543d13c41c30934c3e4c4c95a75017a89c",
@@ -349,7 +349,7 @@ export const initialData: Record<string, Data> = {
         {
           type: "Card",
           props: {
-            title: "Your custom plugin",
+            title: "Custom plugins",
             description:
               "Create your own plugin to extend Puck for your use case using React.",
             icon: "Feather",
