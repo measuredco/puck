@@ -604,8 +604,9 @@ export function Puck({
                           showBreadcrumbs
                           title={selectedItem ? selectedItem.type : "Page"}
                           isLoading={
-                            selectedItem &&
-                            componentState[selectedItem?.props.id]?.loading
+                            selectedItem
+                              ? componentState[selectedItem?.props.id]?.loading
+                              : componentState["puck-root"]?.loading
                           }
                         >
                           {Object.keys(fields).map((fieldName) => {
