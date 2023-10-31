@@ -104,21 +104,26 @@ export const ExternalInput = ({
 
           <div className={getClassNameModal("tableWrapper")}>
             <table className={getClassNameModal("table")}>
-              <thead>
-                <tr>
+              <thead className={getClassNameModal("thead")}>
+                <tr className={getClassNameModal("tr")}>
                   {keys.map((key) => (
-                    <th key={key} style={{ textAlign: "left" }}>
+                    <th
+                      key={key}
+                      className={getClassNameModal("th")}
+                      style={{ textAlign: "left" }}
+                    >
                       {key}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className={getClassNameModal("tbody")}>
                 {data.map((item, i) => {
                   return (
                     <tr
                       key={i}
                       style={{ whiteSpace: "nowrap" }}
+                      className={getClassNameModal("tr")}
                       onClick={(e) => {
                         onChange(mapProp(item));
 
@@ -128,7 +133,9 @@ export const ExternalInput = ({
                       }}
                     >
                       {keys.map((key) => (
-                        <td key={key}>{item[key]}</td>
+                        <td key={key} className={getClassNameModal("td")}>
+                          {item[key]}
+                        </td>
                       ))}
                     </tr>
                   );

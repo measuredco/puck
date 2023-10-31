@@ -69,17 +69,18 @@
 }
 
 .ExternalInputModal-table {
+  border-collapse: unset;
   border-spacing: 0px;
   color: var(--puck-color-neutral-4);
   position: relative;
 }
 
-.ExternalInputModal-table thead {
+.ExternalInputModal-thead {
   position: sticky;
   top: 0;
 }
 
-.ExternalInputModal-table th {
+.ExternalInputModal-th {
   border-bottom: 1px solid var(--puck-color-grey-8);
   border-top: 1px solid var(--puck-color-grey-8);
   font-weight: 700;
@@ -87,23 +88,24 @@
   opacity: 0.9;
 }
 
-.ExternalInputModal-table td {
+.ExternalInputModal-td {
+  font-family: var(--puck-font-stack);
   padding: 16px 24px;
 }
 
-.ExternalInputModal-table tr:nth-of-type(n) {
+.ExternalInputModal-tr:nth-of-type(n) {
   background-color: white;
 }
 
-.ExternalInputModal-table tr:nth-of-type(2n) {
+.ExternalInputModal-tr:nth-of-type(2n) {
   background-color: var(--puck-color-grey-10);
 }
 
-.ExternalInputModal-table tr td:first-of-type {
+.ExternalInputModal-tr .ExternalInputModal-td:first-of-type {
   font-weight: 500;
 }
 
-.ExternalInputModal-table tbody tr:hover {
+.ExternalInputModal-tbody .ExternalInputModal-tr:hover {
   background: var(--puck-color-grey-11);
   color: var(--puck-color-azure-4);
   cursor: pointer;
@@ -111,7 +113,9 @@
   margin-left: -5px;
 }
 
-.ExternalInputModal-table tbody tr:hover td:first-of-type {
+.ExternalInputModal-tbody
+  .ExternalInputModal-tr:hover
+  .ExternalInputModal-td:first-of-type {
   border-left: 4px solid var(--puck-color-azure-4);
   padding-left: 20px;
 }
