@@ -38,7 +38,17 @@ export const useResolvedData = (
         }));
       }
     ).then(async (dynamicContent) => {
+      setComponentState((prev) => ({
+        ...prev,
+        "puck-root": { ...prev["puck-root"], loading: true },
+      }));
+
       const dynamicRoot = await resolveRootData(data, config);
+
+      setComponentState((prev) => ({
+        ...prev,
+        "puck-root": { ...prev["puck-root"], loading: false },
+      }));
 
       const newDynamicProps = dynamicContent.reduce<Record<string, any>>(
         (acc, item) => {
