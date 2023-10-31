@@ -2,7 +2,7 @@ import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Field } from "../../types/Config";
 
 import styles from "./styles.module.css";
-import { ReactNode } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import {
   RadioField,
   SelectField,
@@ -12,6 +12,7 @@ import {
   TextareaField,
 } from "./fields";
 import { Lock } from "react-feather";
+import { useDebouncedCallback, useDebounce } from "use-debounce";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -85,27 +86,44 @@ export type InputProps = {
   readOnlyFields?: Record<string, boolean | undefined>;
 };
 
-export const InputOrGroup = (props: InputProps) => {
-  const { name, field, value, onChange, readOnly } = props;
+export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
+  const { name, field, value, readOnly } = props;
+
+  const [localValue, setLocalValue] = useState(value);
+
+  const [localValueDb] = useDebounce(localValue, 50, { leading: true });
+
+  useEffect(() => {
+    onChange(localValueDb);
+  }, [localValueDb]);
+
+  const onChangeLocal = useCallback((val) => {
+    setLocalValue(val);
+  }, []);
+
+  const localProps = {
+    value: localValue,
+    onChange: onChangeLocal,
+  };
 
   if (field.type === "array") {
-    return <ArrayField {...props} />;
+    return <ArrayField {...props} {...localProps} />;
   }
 
   if (field.type === "external") {
-    return <ExternalField {...props} />;
+    return <ExternalField {...props} {...localProps} />;
   }
 
   if (field.type === "select") {
-    return <SelectField {...props} />;
+    return <SelectField {...props} {...localProps} />;
   }
 
   if (field.type === "textarea") {
-    return <TextareaField {...props} />;
+    return <TextareaField {...props} {...localProps} />;
   }
 
   if (field.type === "radio") {
-    return <RadioField {...props} />;
+    return <RadioField {...props} {...localProps} />;
   }
 
   if (field.type === "custom") {
@@ -118,13 +136,12 @@ export const InputOrGroup = (props: InputProps) => {
         {field.render({
           field,
           name,
-          value,
-          onChange,
           readOnly,
+          ...localProps,
         })}
       </div>
     );
   }
 
-  return <DefaultField {...props} />;
+  return <DefaultField {...props} {...localProps} />;
 };
