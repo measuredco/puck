@@ -634,7 +634,7 @@ export function Puck({
                             };
 
                             if (selectedItem && itemSelector) {
-                              const { readOnly = {} } = selectedItem || {};
+                              const { readOnly = {} } = selectedItem;
 
                               return (
                                 <InputOrGroup
@@ -649,7 +649,7 @@ export function Puck({
                                 />
                               );
                             } else {
-                              const { readOnly = {} } = data.root || {};
+                              const { readOnly = {} } = data.root;
 
                               return (
                                 <InputOrGroup
