@@ -75,11 +75,13 @@ export type Field<
   | CustomField;
 
 export type DefaultRootProps = {
-  children: ReactNode;
-  title: string;
-  editMode: boolean;
+  title?: string;
   [key: string]: any;
 };
+
+export type DefaultRootRenderProps = {
+  editMode: boolean;
+} & DefaultRootProps;
 
 export type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
 
@@ -98,13 +100,14 @@ export type Content<
 
 export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
-  DefaultProps = ComponentProps
+  DefaultProps = ComponentProps,
+  DataShape = ComponentData<ComponentProps>
 > = {
   render: (props: WithPuckProps<ComponentProps>) => ReactElement;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
   resolveData?: (
-    data: ComponentData<ComponentProps>,
+    data: DataShape,
     params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
   ) =>
     | Promise<Partial<ComponentDataWithOptionalProps<ComponentProps>>>
@@ -132,19 +135,43 @@ export type Config<
       "type"
     >;
   };
-  root?: ComponentConfig<
-    RootProps & { children: ReactNode },
-    Partial<RootProps & { children: ReactNode }>
+  root?: Partial<
+    ComponentConfig<
+      RootProps & { children: ReactNode },
+      Partial<RootProps & { children: ReactNode }>,
+      RootDataWithProps<RootProps>
+    >
   >;
 };
 
-export type ComponentData<
+export type BaseData<
   Props extends { [key: string]: any } = { [key: string]: any }
+> = {
+  readOnly?: Partial<Record<keyof Props, boolean>>;
+};
+
+export type ComponentData<
+  Props extends DefaultComponentProps = DefaultComponentProps
 > = {
   type: keyof Props;
   props: WithPuckProps<Props>;
-  readOnly?: Partial<Record<keyof Props, boolean>>;
+} & BaseData<Props>;
+
+export type RootDataWithProps<
+  Props extends DefaultRootProps = DefaultRootProps
+> = {
+  props: Props;
 };
+
+// DEPRECATED
+export type RootDataWithoutProps<
+  Props extends DefaultRootProps = DefaultRootProps
+> = Props;
+
+export type RootData<Props extends DefaultRootProps = DefaultRootProps> =
+  BaseData<Props> &
+    Partial<RootDataWithProps<Props>> &
+    Partial<RootDataWithoutProps<Props>>; // DEPRECATED
 
 type ComponentDataWithOptionalProps<
   Props extends { [key: string]: any } = { [key: string]: any }
@@ -156,15 +183,12 @@ type ComponentDataWithOptionalProps<
 export type MappedItem = ComponentData;
 
 export type Data<
-  Props extends { [key: string]: any } = { [key: string]: any },
-  RootProps extends { title: string; [key: string]: any } = {
-    title: string;
-    [key: string]: any;
-  }
+  Props extends DefaultComponentProps = DefaultComponentProps,
+  RootProps extends DefaultRootProps = DefaultRootProps
 > = {
-  root: RootProps;
-  content: Content<Props>;
-  zones?: Record<string, Content<Props>>;
+  root: RootData<RootProps>;
+  content: Content<WithPuckProps<Props>>;
+  zones?: Record<string, Content<WithPuckProps<Props>>>;
 };
 
 export type ItemWithId = {

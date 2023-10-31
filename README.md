@@ -524,9 +524,9 @@ The `AppState` object stores the puck application state.
 
 The `Data` object stores the puck page data.
 
-- **root** (`object`):
-  - **title** (string): Title of the content, typically used for the page title
-  - **[prop]** (string): User defined data from `root` fields
+- **root** (`ComponentData`): The component data for the root of your configuration.
+  - **props** (object): Extends `ComponentData.props`, with some additional props
+    - **title** (string, optional): Title of the content, typically used for the page title
 - **content** (`ComponentData[]`): Component data for the main content
 - **zones** (`object`, optional): Component data for all DropZones
   **[zoneCompound]** (`ComponentData[]`): Component data for a specific DropZone `zone` within a component instance

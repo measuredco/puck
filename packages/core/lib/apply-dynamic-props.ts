@@ -1,11 +1,16 @@
-import { Data } from "../types/Config";
+import { ComponentData, Data, RootData } from "../types/Config";
 
 export const applyDynamicProps = (
   data: Data,
-  dynamicProps: Record<string, any>
+  dynamicProps: Record<string, ComponentData>,
+  rootData?: RootData
 ) => {
   return {
     ...data,
+    root: {
+      ...data.root,
+      ...(rootData ? rootData : {}),
+    },
     content: data.content.map((item) => {
       return dynamicProps[item.props.id]
         ? { ...item, ...dynamicProps[item.props.id] }
