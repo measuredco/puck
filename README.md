@@ -279,17 +279,7 @@ Dynamic prop resolution allows developers to resolve props for components withou
 
 ### resolveData()
 
-`resolveData` is defined in the component config, and allows the developer to make asynchronous calls to change the props after they've been set by Puck.
-
-#### Args
-
-- **props** (`object`): the current props for your component stored in the Puck data
-
-#### Response
-
-- **props** (`object`): the resolved props for your component. Will not be stored in the Puck data
-- **readOnly** (`object`): an object describing which fields on the component are currently read-only. Can also make array fields read-only by using a dot-notation accessor, like `array[0].text`.
-  - **[prop]** (`boolean`): boolean describing whether or not the prop field is read-only
+`resolveData` is defined in the component config, and allows the developer to make asynchronous calls to change the [ComponentData](#componentdata) after they've been set by Puck. Receives [ComponentData](#componentdata) and returns [ComponentData](#componentdata).
 
 #### Examples
 
@@ -537,10 +527,17 @@ The `Data` object stores the puck page data.
 - **root** (`object`):
   - **title** (string): Title of the content, typically used for the page title
   - **[prop]** (string): User defined data from `root` fields
-- **content** (`object[]`):
-  - **type** (string): Component name
-  - **props** (object):
-    - **[prop]** (string): User defined data from component fields
+- **content** (`ComponentData[]`): Component data for the main content
+- **zones** (`object`, optional): Component data for all DropZones
+  **[zoneCompound]** (`ComponentData[]`): Component data for a specific DropZone `zone` within a component instance
+
+### `ComponentData`
+
+- **type** (`string`): Component name
+- **props** (`object`):
+  - **[prop]** (`any`): User defined data from component fields
+- **readOnly** (`object`): Object describing which fields on the component are currently read-only. Can use dot-notation for arrays, like `array[1].text` or `array[*].text`.
+  - **[prop]** (`boolean`): boolean describing whether or not the prop field is read-only
 
 ### `Plugin`
 
