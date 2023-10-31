@@ -5,8 +5,10 @@ import { ExternalField } from "../../types/Config";
 import { Link, Unlock } from "react-feather";
 import { Modal } from "../Modal";
 import { Heading } from "../Heading";
+import { ClipLoader } from "react-spinners";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
+const getClassNameModal = getClassNameFactory("ExternalInputModal", styles);
 
 export const ExternalInput = ({
   field,
@@ -22,6 +24,7 @@ export const ExternalInput = ({
   const [data, setData] = useState<Record<string, any>[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(value);
+  const [isLoading, setIsLoading] = useState(true);
   const keys = useMemo(() => {
     const validKeys: Set<string> = new Set();
 
@@ -42,6 +45,7 @@ export const ExternalInput = ({
 
       if (listData) {
         setData(listData);
+        setIsLoading(false);
       }
     })();
   }, [field]);
@@ -49,7 +53,7 @@ export const ExternalInput = ({
   return (
     <div
       className={getClassName({
-        hasData: !!selectedData,
+        dataSelected: !!selectedData,
         modalVisible: isOpen,
       })}
     >
@@ -85,15 +89,21 @@ export const ExternalInput = ({
         )}
       </div>
       <Modal onClose={() => setOpen(false)} isOpen={isOpen}>
-        <div className={getClassName("masthead")}>
-          <Heading rank={2} size="xxl">
-            Select content
-          </Heading>
-        </div>
+        <div
+          className={getClassNameModal({
+            isLoading,
+            loaded: !isLoading,
+            hasData: !!data,
+          })}
+        >
+          <div className={getClassNameModal("masthead")}>
+            <Heading rank={2} size="xxl">
+              Select content
+            </Heading>
+          </div>
 
-        {data.length ? (
-          <div className={getClassName("modalTableWrapper")}>
-            <table className={getClassName("table")}>
+          <div className={getClassNameModal("tableWrapper")}>
+            <table className={getClassNameModal("table")}>
               <thead>
                 <tr>
                   {keys.map((key) => (
@@ -126,9 +136,13 @@ export const ExternalInput = ({
               </tbody>
             </table>
           </div>
-        ) : (
-          <div style={{ padding: 24 }}>No content</div>
-        )}
+
+          <div className={getClassNameModal("noContentBanner")}>No content</div>
+
+          <div className={getClassNameModal("loadingBanner")}>
+            <ClipLoader size="24" />
+          </div>
+        </div>
       </Modal>
     </div>
   );
