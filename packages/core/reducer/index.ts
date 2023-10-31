@@ -36,7 +36,11 @@ const storeInterceptor = (reducer: StateReducer) => {
   };
 };
 
-export const createReducer = ({ config }: { config: Config }): StateReducer =>
+export const createReducer = ({
+  config,
+}: {
+  config: Config<any>;
+}): StateReducer =>
   storeInterceptor((state, action) => {
     const data = reduceData(state.data, action, config);
     const ui = reduceUi(state.ui, action);

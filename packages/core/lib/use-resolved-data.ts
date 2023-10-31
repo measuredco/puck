@@ -3,6 +3,7 @@ import { Dispatch, useEffect, useState } from "react";
 import { PuckAction } from "../reducer";
 import { resolveAllProps } from "./resolve-all-props";
 import { applyDynamicProps } from "./apply-dynamic-props";
+import { resolveRootData } from "./resolve-root-data";
 
 export const useResolvedData = (
   data: Data,
@@ -36,7 +37,9 @@ export const useResolvedData = (
           [item.props.id]: { ...prev[item.props.id], loading: false },
         }));
       }
-    ).then((dynamicContent) => {
+    ).then(async (dynamicContent) => {
+      const dynamicRoot = await resolveRootData(data, config);
+
       const newDynamicProps = dynamicContent.reduce<Record<string, any>>(
         (acc, item) => {
           return { ...acc, [item.props.id]: item };
@@ -44,7 +47,7 @@ export const useResolvedData = (
         {}
       );
 
-      const processed = applyDynamicProps(data, newDynamicProps);
+      const processed = applyDynamicProps(data, newDynamicProps, dynamicRoot);
 
       const containsChanges =
         JSON.stringify(data) !== JSON.stringify(processed);
@@ -52,7 +55,7 @@ export const useResolvedData = (
       if (containsChanges) {
         dispatch({
           type: "setData",
-          data: (prev) => applyDynamicProps(prev, newDynamicProps),
+          data: (prev) => applyDynamicProps(prev, newDynamicProps, dynamicRoot),
           recordHistory: true,
         });
       }

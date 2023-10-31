@@ -1,5 +1,6 @@
 import { Config, Data, MappedItem } from "../types/Config";
 import { resolveAllProps } from "./resolve-all-props";
+import { resolveRootData } from "./resolve-root-data";
 
 export const resolveAllData = async (
   data: Data,
@@ -7,6 +8,8 @@ export const resolveAllData = async (
   onResolveStart?: (item: MappedItem) => void,
   onResolveEnd?: (item: MappedItem) => void
 ) => {
+  const dynamicRoot = await resolveRootData(data, config);
+
   const { zones = {} } = data;
 
   const zoneKeys = Object.keys(zones);
@@ -24,6 +27,7 @@ export const resolveAllData = async (
 
   return {
     ...data,
+    root: dynamicRoot,
     content: await resolveAllProps(
       data.content,
       config,

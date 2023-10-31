@@ -278,7 +278,7 @@ export const initialData: Record<string, Data> = {
         props: { size: "96px", id: "VerticalSpace-1687284290127" },
       },
     ],
-    root: { title: "Puck Example" },
+    root: { props: { title: "Puck Example" } },
     zones: {
       "Columns-2d650a8ceb081a2c04f3a2d17a7703ca6efb0d06:column-0": [
         {
@@ -398,11 +398,11 @@ export const initialData: Record<string, Data> = {
   },
   "/pricing": {
     content: [],
-    root: { title: "Pricing" },
+    root: { props: { title: "Pricing" } },
   },
   "/about": {
     content: [],
-    root: { title: "About Us" },
+    root: { props: { title: "About Us" } },
   },
 };
 

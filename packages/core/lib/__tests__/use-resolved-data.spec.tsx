@@ -9,7 +9,7 @@ const item2 = { type: "MyComponent", props: { id: "MyComponent-2" } };
 const item3 = { type: "MyComponent", props: { id: "MyComponent-3" } };
 
 const data: Data = {
-  root: { title: "" },
+  root: { props: { title: "" } },
   content: [item1],
   zones: {
     "MyComponent-1:zone": [item2],
@@ -18,6 +18,15 @@ const data: Data = {
 };
 
 const config: Config = {
+  root: {
+    resolveData: (data) => {
+      return {
+        ...data,
+        props: { title: "Resolved title" },
+        readOnly: { title: true },
+      };
+    },
+  },
   components: {
     MyComponent: {
       defaultProps: { prop: "example" },
@@ -76,7 +85,12 @@ describe("use-resolved-data", () => {
               },
             ],
             "root": {
-              "title": "",
+              "props": {
+                "title": "Resolved title",
+              },
+              "readOnly": {
+                "title": true,
+              },
             },
             "zones": {
               "MyComponent-1:zone": [
@@ -117,6 +131,7 @@ describe("use-resolved-data", () => {
           data,
           {
             ...config,
+            root: {},
             components: {
               ...config.components,
               MyComponent: {

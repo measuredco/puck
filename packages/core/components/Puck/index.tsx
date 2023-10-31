@@ -72,7 +72,7 @@ const PluginRenderer = ({
 
 export function Puck({
   config,
-  data: initialData = { content: [], root: { title: "" } },
+  data: initialData = { content: [], root: { props: { title: "" } } },
   onChange,
   onPublish,
   plugins = [],
@@ -253,6 +253,18 @@ export function Puck({
 
   const componentList = useComponentList(config, appState.ui);
 
+  // DEPRECATED
+  const rootProps = data.root.props || data.root;
+
+  // DEPRECATED
+  useEffect(() => {
+    if (Object.keys(data.root).length > 0 && !data.root.props) {
+      console.error(
+        "Warning: Defining props on `root` is deprecated. Please use `root.props`. This will be a breaking change in a future release "
+      );
+    }
+  }, []);
+
   return (
     <div className="puck">
       <AppProvider
@@ -416,7 +428,7 @@ export function Puck({
                             }}
                           >
                             <Heading rank={2} size="xs">
-                              {headerTitle || data.root.title || "Page"}
+                              {headerTitle || rootProps.title || "Page"}
                               {headerPath && (
                                 <small
                                   style={{ fontWeight: 400, marginLeft: 4 }}
@@ -624,10 +636,18 @@ export function Puck({
 
                                 resolveData();
                               } else {
-                                dispatch({
-                                  type: "setData",
-                                  data: { root: newProps },
-                                });
+                                if (data.root.props) {
+                                  dispatch({
+                                    type: "setData",
+                                    data: { root: { props: { newProps } } },
+                                  });
+                                } else {
+                                  // DEPRECATED
+                                  dispatch({
+                                    type: "setData",
+                                    data: { root: newProps },
+                                  });
+                                }
 
                                 resolveData();
                               }
@@ -659,7 +679,7 @@ export function Puck({
                                   label={field.label}
                                   readOnly={readOnly[fieldName]}
                                   readOnlyFields={readOnly}
-                                  value={data.root[fieldName]}
+                                  value={rootProps[fieldName]}
                                   onChange={onChange}
                                 />
                               );
