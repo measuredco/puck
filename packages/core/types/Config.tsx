@@ -131,21 +131,6 @@ export type ComponentConfig<
   }>;
 };
 
-type RootComponentConfig<
-  ComponentProps extends DefaultComponentProps = DefaultComponentProps,
-  DefaultProps = ComponentProps
-> = {
-  render: (props: ComponentProps) => JSX.Element;
-  defaultProps?: DefaultProps;
-  fields?: Fields<ComponentProps>;
-  resolveData?: (
-    data: DataShape,
-    params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
-  ) =>
-    | Promise<Partial<ComponentDataWithOptionalProps<ComponentProps>>>
-    | Partial<ComponentDataWithOptionalProps<ComponentProps>>;
-};
-
 type Category<ComponentName> = {
   components?: ComponentName[];
   title?: string;
