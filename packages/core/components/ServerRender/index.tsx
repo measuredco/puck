@@ -40,16 +40,14 @@ function DropZoneRender({
               key={item.props.id}
               {...item.props}
               puckCtx={{
-                DropZone: ({ zone }: { zone: string }) => {
-                  return (
-                    <DropZoneRender
-                      zone={zone}
-                      data={data}
-                      areaId={item.props.id}
-                      config={config}
-                    />
-                  );
-                },
+                renderDropZone: ({ zone }: { zone: string }) => (
+                  <DropZoneRender
+                    zone={zone}
+                    data={data}
+                    areaId={item.props.id}
+                    config={config}
+                  />
+                ),
               }}
             />
           );

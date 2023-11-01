@@ -114,7 +114,7 @@ export type PuckComponent<
 > = (props: WithPuckProps<Props & { puckCtx: PuckContext }>) => JSX.Element;
 
 export type PuckContext = {
-  DropZone: typeof DropZone;
+  renderDropZone: typeof DropZone;
 };
 
 export type ComponentConfig<
