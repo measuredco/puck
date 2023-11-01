@@ -125,10 +125,28 @@ export type ComponentConfig<
   render: PuckComponent<ComponentProps>;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
-  resolveProps?: (props: WithPuckProps<ComponentProps>) => Promise<{
-    props: WithPuckProps<ComponentProps>;
-    readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
-  }>;
+  resolveData?: (
+    data: DataShape,
+    params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
+  ) =>
+    | Promise<Partial<ComponentDataWithOptionalProps<ComponentProps>>>
+    | Partial<ComponentDataWithOptionalProps<ComponentProps>>;
+};
+
+type RootComponentConfig<
+  ComponentProps extends DefaultComponentProps = DefaultComponentProps,
+  DefaultProps = ComponentProps,
+  DataShape = ComponentData<ComponentProps>
+> = {
+  render: (props: ComponentProps) => JSX.Element;
+  defaultProps?: DefaultProps;
+  fields?: Fields<ComponentProps>;
+  resolveData?: (
+    data: DataShape,
+    params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
+  ) =>
+    | Promise<Partial<ComponentDataWithOptionalProps<ComponentProps>>>
+    | Partial<ComponentDataWithOptionalProps<ComponentProps>>;
 };
 
 type Category<ComponentName> = {
@@ -152,9 +170,12 @@ export type Config<
       "type"
     >;
   };
-  root?: RootComponentConfig<
-    RootProps & { children: ReactNode },
-    Partial<RootProps & { children: ReactNode }>
+  root?: Partial<
+    RootComponentConfig<
+      RootProps & { children: ReactNode },
+      Partial<RootProps & { children: ReactNode }>,
+      RootDataWithProps<RootProps>
+    >
   >;
 };
 
