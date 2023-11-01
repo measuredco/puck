@@ -61,8 +61,18 @@ function DropZoneRender({
 
 export function Render({ config, data }: { config: Config; data: Data }) {
   if (config.root?.render) {
+    // DEPRECATED
+    const rootProps = data.root.props || data.root;
+
+    const title = rootProps.title || "";
+
     return (
-      <config.root.render {...data.root} editMode={false} id={"puck-root"}>
+      <config.root.render
+        {...rootProps}
+        title={title}
+        editMode={false}
+        id={"puck-root"}
+      >
         <DropZoneRender config={config} data={data} zone={rootDroppableId} />
       </config.root.render>
     );
