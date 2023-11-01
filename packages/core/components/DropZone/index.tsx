@@ -365,10 +365,7 @@ function DropZoneRender({ zone }: DropZoneProps) {
               key={item.props.id}
               value={{ data, config, areaId: item.props.id }}
             >
-              <Component.render
-                {...item.props}
-                puckCtx={{ DropZone: DropZoneRender }}
-              />
+              <Component.render {...item.props} puckCtx={{ DropZone }} />
             </DropZoneProvider>
           );
         }
