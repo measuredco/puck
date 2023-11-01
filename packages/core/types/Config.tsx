@@ -94,18 +94,7 @@ export type DefaultRootProps = {
   [key: string]: any;
 };
 
-export type DefaultComponentProps = {
-  [key: string]: any;
-  editMode?: boolean;
-};
-
-export type PuckComponent<
-  Props extends DefaultComponentProps = DefaultComponentProps
-> = (props: WithPuckProps<Props & { puckCtx: PuckContext }>) => JSX.Element;
-
-export type PuckContext = {
-  DropZone: typeof DropZone;
-};
+export type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
 
 export type Fields<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps
@@ -120,18 +109,12 @@ export type Content<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = ComponentData<Props>[];
 
-// JSX.Element
+export type PuckComponent<
+  Props extends DefaultComponentProps = DefaultComponentProps
+> = (props: WithPuckProps<Props & { puckCtx: PuckContext }>) => JSX.Element;
 
-export type ComponentFields<
-  ComponentProps extends DefaultComponentProps = DefaultComponentProps,
-  DefaultProps = ComponentProps
-> = {
-  defaultProps?: DefaultProps;
-  fields?: Fields<ComponentProps>;
-  resolveProps?: (props: WithPuckProps<ComponentProps>) => Promise<{
-    props: WithPuckProps<ComponentProps>;
-    readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
-  }>;
+export type PuckContext = {
+  DropZone: typeof DropZone;
 };
 
 export type ComponentConfig<
