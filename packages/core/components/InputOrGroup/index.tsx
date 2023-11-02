@@ -104,6 +104,10 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
     setLocalValue(val);
   }, []);
 
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
   const localProps = {
     value: localValue,
     onChange: onChangeLocal,

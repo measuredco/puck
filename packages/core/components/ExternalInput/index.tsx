@@ -23,7 +23,6 @@ export const ExternalInput = ({
 
   const [data, setData] = useState<Record<string, any>[]>([]);
   const [isOpen, setOpen] = useState(false);
-  const [selectedData, setSelectedData] = useState(value);
   const [isLoading, setIsLoading] = useState(true);
   const keys = useMemo(() => {
     const validKeys: Set<string> = new Set();
@@ -53,7 +52,7 @@ export const ExternalInput = ({
   return (
     <div
       className={getClassName({
-        dataSelected: !!selectedData,
+        dataSelected: !!value,
         modalVisible: isOpen,
       })}
     >
@@ -63,9 +62,9 @@ export const ExternalInput = ({
           className={getClassName("button")}
         >
           {/* NB this is hardcoded to strapi for now */}
-          {selectedData ? (
+          {value ? (
             field.getItemSummary ? (
-              field.getItemSummary(selectedData)
+              field.getItemSummary(value)
             ) : (
               "External item"
             )
@@ -76,11 +75,10 @@ export const ExternalInput = ({
             </>
           )}
         </button>
-        {selectedData && (
+        {value && (
           <button
             className={getClassName("detachButton")}
             onClick={() => {
-              setSelectedData(null);
               onChange(null);
             }}
           >
@@ -128,8 +126,6 @@ export const ExternalInput = ({
                         onChange(mapProp(item));
 
                         setOpen(false);
-
-                        setSelectedData(mapProp(item));
                       }}
                     >
                       {keys.map((key) => (
