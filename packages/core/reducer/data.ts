@@ -11,13 +11,36 @@ import {
   removeRelatedZones,
 } from "../lib/reduce-related-zones";
 import { generateId } from "../lib/generate-id";
-import { PuckAction } from "./actions";
+import { PuckAction, ReplaceAction } from "./actions";
 
 // Restore unregistered zones when re-registering in same session
 export const zoneCache = {};
 
 export const addToZoneCache = (key: string, data: Content) => {
   zoneCache[key] = data;
+};
+
+export const replaceAction = (data: Data, action: ReplaceAction) => {
+  if (action.destinationZone === rootDroppableId) {
+    return {
+      ...data,
+      content: replace(data.content, action.destinationIndex, action.data),
+    };
+  }
+
+  const newData = setupZone(data, action.destinationZone);
+
+  return {
+    ...newData,
+    zones: {
+      ...newData.zones,
+      [action.destinationZone]: replace(
+        newData.zones[action.destinationZone],
+        action.destinationIndex,
+        action.data
+      ),
+    },
+  };
 };
 
 export const reduceData = (data: Data, action: PuckAction, config: Config) => {
@@ -182,26 +205,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   }
 
   if (action.type === "replace") {
-    if (action.destinationZone === rootDroppableId) {
-      return {
-        ...data,
-        content: replace(data.content, action.destinationIndex, action.data),
-      };
-    }
-
-    const newData = setupZone(data, action.destinationZone);
-
-    return {
-      ...newData,
-      zones: {
-        ...newData.zones,
-        [action.destinationZone]: replace(
-          newData.zones[action.destinationZone],
-          action.destinationIndex,
-          action.data
-        ),
-      },
-    };
+    return replaceAction(data, action);
   }
 
   if (action.type === "remove") {

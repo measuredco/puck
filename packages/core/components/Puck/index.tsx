@@ -24,7 +24,13 @@ import { IconButton } from "../IconButton/IconButton";
 import { DropZone, DropZoneProvider, dropZoneContext } from "../DropZone";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { ItemSelector, getItem } from "../../lib/get-item";
-import { PuckAction, StateReducer, createReducer } from "../../reducer";
+import {
+  PuckAction,
+  ReplaceAction,
+  StateReducer,
+  createReducer,
+  replaceAction,
+} from "../../reducer";
 import { LayerTree } from "../LayerTree";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
@@ -627,21 +633,37 @@ export function Puck({
                               };
 
                               if (itemSelector) {
-                                dispatch({
+                                const action: ReplaceAction = {
                                   type: "replace",
                                   destinationIndex: itemSelector.index,
                                   destinationZone:
                                     itemSelector.zone || rootDroppableId,
                                   data: { ...selectedItem, props: newProps },
-                                });
+                                };
 
-                                resolveData();
+                                // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
+                                if (
+                                  config.components[selectedItem!.type]
+                                    ?.resolveData
+                                ) {
+                                  resolveData(replaceAction(data, action));
+                                } else {
+                                  dispatch(action);
+                                }
                               } else {
                                 if (data.root.props) {
-                                  dispatch({
-                                    type: "setData",
-                                    data: { root: { props: { newProps } } },
-                                  });
+                                  // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
+                                  if (config.root?.resolveData) {
+                                    resolveData({
+                                      ...data,
+                                      root: { props: { newProps } },
+                                    });
+                                  } else {
+                                    dispatch({
+                                      type: "setData",
+                                      data: { root: { props: { newProps } } },
+                                    });
+                                  }
                                 } else {
                                   // DEPRECATED
                                   dispatch({
@@ -649,8 +671,6 @@ export function Puck({
                                     data: { root: newProps },
                                   });
                                 }
-
-                                resolveData();
                               }
                             };
 
