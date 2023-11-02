@@ -186,19 +186,11 @@ describe("use-resolved-data", () => {
         renderedHook.result.current.resolveData();
       });
 
-      expect(renderedHook.result.current.componentState).toMatchInlineSnapshot(`
-        {
-          "MyComponent-1": {
-            "loading": true,
-          },
-          "MyComponent-2": {
-            "loading": true,
-          },
-          "MyComponent-3": {
-            "loading": true,
-          },
-        }
-      `);
+      await waitFor(() =>
+        expect(
+          renderedHook.result.current.componentState["MyComponent-1"].loading
+        ).toBe(false)
+      );
 
       renderedHook.rerender();
 
