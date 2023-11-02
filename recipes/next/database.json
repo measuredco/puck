@@ -1,1 +1,18 @@
-{"/":{"content":[{"type":"HeadingBlock","props":{"title":"Edit this page by adding /edit to the end of the URL","id":"HeadingBlock-1694032984497"}}],"root":{"title":""}}}
+{
+  "/": {
+    "content": [{ "type": "Columns", "props": { "id": "Columns-0" } }],
+    "root": { "title": "Example Page" },
+    "zones": {
+      "Columns-0:0": [
+        {
+          "type": "Paragraph",
+          "props": {
+            "text": "Edit this page by adding /edit to the end of the URL",
+            "id": "Paragraph-0"
+          }
+        }
+      ],
+      "Columns-0:1": []
+    }
+  }
+}

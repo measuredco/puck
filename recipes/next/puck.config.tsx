@@ -1,23 +1,48 @@
 import type { Config } from "@measured/puck";
 
-type Props = {
-  HeadingBlock: { title: string };
-};
-
-export const config: Config<Props> = {
+export const config: Config<{
+  Paragraph: { text: string };
+  Columns: {};
+}> = {
+  root: {
+    fields: {
+      title: {
+        type: "text",
+      },
+    },
+    defaultProps: {
+      title: "Title",
+    },
+    render: ({ title, children }) => {
+      return (
+        <div style={{ padding: "3rem" }}>
+          <h1>{title}</h1>
+          {children}
+        </div>
+      );
+    },
+  },
   components: {
-    HeadingBlock: {
+    Columns: {
+      render: ({ puckCtx: { renderDropZone } }) => {
+        return (
+          <div style={{ display: "flex", gap: "3rem" }}>
+            <div style={{ flexGrow: 1 }}>{renderDropZone({ zone: "0" })}</div>
+            <div style={{ flexGrow: 1 }}>{renderDropZone({ zone: "1" })}</div>
+          </div>
+        );
+      },
+    },
+    Paragraph: {
       fields: {
-        title: { type: "text" },
+        text: {
+          type: "textarea",
+        },
       },
       defaultProps: {
-        title: "Heading",
+        text: "Lorem ipsum.",
       },
-      render: ({ title }) => (
-        <div style={{ padding: 64 }}>
-          <h1>{title}</h1>
-        </div>
-      ),
+      render: ({ text }) => <p>{text}</p>,
     },
   },
 };
