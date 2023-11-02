@@ -10,7 +10,10 @@ export const useResolvedData = (
   config: Config,
   dispatch: Dispatch<PuckAction>
 ) => {
-  const [runResolversKey, setRunResolversKey] = useState(0);
+  const [{ resolverKey, newData }, setResolverState] = useState({
+    resolverKey: 0,
+    newData: data,
+  });
 
   const [componentState, setComponentState] = useState<
     Record<string, { loading }>
@@ -40,8 +43,8 @@ export const useResolvedData = (
 
   const runResolvers = () => {
     // Flatten zones
-    const flatContent = Object.keys(data.zones || {})
-      .reduce((acc, zone) => [...acc, ...data.zones![zone]], data.content)
+    const flatContent = Object.keys(newData.zones || {})
+      .reduce((acc, zone) => [...acc, ...newData.zones![zone]], newData.content)
       .filter((item) => !!config.components[item.type].resolveData);
 
     resolveAllProps(
@@ -58,7 +61,7 @@ export const useResolvedData = (
     ).then(async (dynamicContent) => {
       setComponentLoading("puck-root", true, 50);
 
-      const dynamicRoot = await resolveRootData(data, config);
+      const dynamicRoot = await resolveRootData(newData, config);
 
       setComponentLoading("puck-root", false);
 
@@ -69,6 +72,7 @@ export const useResolvedData = (
         {}
       );
 
+      // Apply the dynamic content to `data`, not `newData`, in case `data` has been changed by the user
       const processed = applyDynamicProps(data, newDynamicProps, dynamicRoot);
 
       const containsChanges =
@@ -78,7 +82,7 @@ export const useResolvedData = (
         dispatch({
           type: "setData",
           data: (prev) => applyDynamicProps(prev, newDynamicProps, dynamicRoot),
-          recordHistory: runResolversKey > 0,
+          recordHistory: resolverKey > 0,
         });
       }
     });
@@ -86,12 +90,17 @@ export const useResolvedData = (
 
   useEffect(() => {
     runResolvers();
-  }, [runResolversKey]);
+  }, [resolverKey]);
+
+  const resolveData = useCallback((newData: Data = data) => {
+    setResolverState((curr) => ({
+      resolverKey: curr.resolverKey + 1,
+      newData,
+    }));
+  }, []);
 
   return {
-    resolveData: () => {
-      setRunResolversKey((curr) => curr + 1);
-    },
+    resolveData,
     componentState,
   };
 };
