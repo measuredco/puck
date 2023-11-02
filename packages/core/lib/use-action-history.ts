@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { generateId } from "./generate-id";
 
 export type History = {
   id: string;
@@ -19,7 +20,7 @@ export function useActionHistory() {
 
   const record = (params: Pick<History, "forward" | "rewind">) => {
     const history: History = {
-      id: Math.random().toString(),
+      id: generateId("history"),
       ...params,
     };
 
