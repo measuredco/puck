@@ -4,7 +4,6 @@
   font-family: var(--puck-font-stack);
   font-weight: 700;
   margin: 0;
-  word-break: break-word;
 }
 
 .Heading b {
