@@ -78,7 +78,7 @@ export const useResolvedData = (
         dispatch({
           type: "setData",
           data: (prev) => applyDynamicProps(prev, newDynamicProps, dynamicRoot),
-          recordHistory: true,
+          recordHistory: runResolversKey > 0,
         });
       }
     });
