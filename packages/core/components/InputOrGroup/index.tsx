@@ -94,7 +94,10 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
   const [localValueDb] = useDebounce(localValue, 50, { leading: true });
 
   useEffect(() => {
-    onChange(localValueDb);
+    // Compare initial value to prevent calling on render
+    if (value !== localValueDb) {
+      onChange(localValueDb);
+    }
   }, [localValueDb]);
 
   const onChangeLocal = useCallback((val) => {
