@@ -1,5 +1,5 @@
 import { Config, Data } from "../types/Config";
-import { Dispatch, useEffect, useState } from "react";
+import { Dispatch, useCallback, useEffect, useState } from "react";
 import { PuckAction } from "../reducer";
 import { resolveAllProps } from "./resolve-all-props";
 import { applyDynamicProps } from "./apply-dynamic-props";
@@ -16,6 +16,28 @@ export const useResolvedData = (
     Record<string, { loading }>
   >({});
 
+  const deferredSetStates: Record<string, NodeJS.Timeout> = {};
+
+  const setComponentLoading = useCallback(
+    (id: string, loading: boolean, defer: number = 0) => {
+      if (deferredSetStates[id]) {
+        clearTimeout(deferredSetStates[id]);
+
+        delete deferredSetStates[id];
+      }
+
+      const setLoading = (deferredSetStates[id] = setTimeout(() => {
+        setComponentState((prev) => ({
+          ...prev,
+          [id]: { ...prev[id], loading },
+        }));
+
+        delete deferredSetStates[id];
+      }, defer));
+    },
+    []
+  );
+
   const runResolvers = () => {
     // Flatten zones
     const flatContent = Object.keys(data.zones || {})
@@ -26,29 +48,19 @@ export const useResolvedData = (
       flatContent,
       config,
       (item) => {
-        setComponentState((prev) => ({
-          ...prev,
-          [item.props.id]: { ...prev[item.props.id], loading: true },
-        }));
+        setComponentLoading(item.props.id, true, 50);
       },
       (item) => {
-        setComponentState((prev) => ({
-          ...prev,
-          [item.props.id]: { ...prev[item.props.id], loading: false },
-        }));
+        deferredSetStates[item.props.id];
+
+        setComponentLoading(item.props.id, false);
       }
     ).then(async (dynamicContent) => {
-      setComponentState((prev) => ({
-        ...prev,
-        "puck-root": { ...prev["puck-root"], loading: true },
-      }));
+      setComponentLoading("puck-root", true, 50);
 
       const dynamicRoot = await resolveRootData(data, config);
 
-      setComponentState((prev) => ({
-        ...prev,
-        "puck-root": { ...prev["puck-root"], loading: false },
-      }));
+      setComponentLoading("puck-root", false);
 
       const newDynamicProps = dynamicContent.reduce<Record<string, any>>(
         (acc, item) => {
