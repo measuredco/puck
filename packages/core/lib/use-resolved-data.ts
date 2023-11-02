@@ -1,7 +1,7 @@
-import { Config, Data } from "../types/Config";
+import { ComponentData, Config, Data, RootData } from "../types/Config";
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { PuckAction } from "../reducer";
-import { resolveAllProps } from "./resolve-all-props";
+import { resolveComponentData } from "./resolve-component-data";
 import { applyDynamicProps } from "./apply-dynamic-props";
 import { resolveRootData } from "./resolve-root-data";
 
@@ -41,39 +41,18 @@ export const useResolvedData = (
     []
   );
 
-  const runResolvers = () => {
+  const runResolvers = async () => {
     // Flatten zones
     const flatContent = Object.keys(newData.zones || {})
       .reduce((acc, zone) => [...acc, ...newData.zones![zone]], newData.content)
       .filter((item) => !!config.components[item.type].resolveData);
 
-    resolveAllProps(
-      flatContent,
-      config,
-      (item) => {
-        setComponentLoading(item.props.id, true, 50);
-      },
-      (item) => {
-        deferredSetStates[item.props.id];
-
-        setComponentLoading(item.props.id, false);
-      }
-    ).then(async (dynamicContent) => {
-      setComponentLoading("puck-root", true, 50);
-
-      const dynamicRoot = await resolveRootData(newData, config);
-
-      setComponentLoading("puck-root", false);
-
-      const newDynamicProps = dynamicContent.reduce<Record<string, any>>(
-        (acc, item) => {
-          return { ...acc, [item.props.id]: item };
-        },
-        {}
-      );
-
+    const applyIfChange = (
+      dynamicDataMap: Record<string, ComponentData>,
+      dynamicRoot?: RootData
+    ) => {
       // Apply the dynamic content to `data`, not `newData`, in case `data` has been changed by the user
-      const processed = applyDynamicProps(data, newDynamicProps, dynamicRoot);
+      const processed = applyDynamicProps(data, dynamicDataMap, dynamicRoot);
 
       const containsChanges =
         JSON.stringify(data) !== JSON.stringify(processed);
@@ -81,11 +60,50 @@ export const useResolvedData = (
       if (containsChanges) {
         dispatch({
           type: "setData",
-          data: (prev) => applyDynamicProps(prev, newDynamicProps, dynamicRoot),
+          data: (prev) => applyDynamicProps(prev, dynamicDataMap, dynamicRoot),
           recordHistory: resolverKey > 0,
         });
       }
+    };
+
+    const promises: Promise<void>[] = [];
+
+    promises.push(
+      (async () => {
+        setComponentLoading("puck-root", true, 50);
+
+        const dynamicRoot = await resolveRootData(newData, config);
+
+        applyIfChange({}, dynamicRoot);
+
+        setComponentLoading("puck-root", false);
+      })()
+    );
+
+    flatContent.forEach((item) => {
+      promises.push(
+        (async () => {
+          const dynamicData: ComponentData = await resolveComponentData(
+            item,
+            config,
+            (item) => {
+              setComponentLoading(item.props.id, true, 50);
+            },
+            (item) => {
+              deferredSetStates[item.props.id];
+
+              setComponentLoading(item.props.id, false);
+            }
+          );
+
+          const dynamicDataMap = { [item.props.id]: dynamicData };
+
+          applyIfChange(dynamicDataMap);
+        })()
+      );
     });
+
+    await Promise.all(promises);
   };
 
   useEffect(() => {
