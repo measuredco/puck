@@ -54,7 +54,10 @@
 }
 
 .ExternalInputModal {
+  display: flex;
+  flex-direction: column;
   position: relative;
+  max-height: 90vh;
 }
 
 .ExternalInputModal-masthead {
@@ -63,8 +66,8 @@
 }
 
 .ExternalInputModal-tableWrapper {
-  overflow-x: scroll;
-  overflow-y: scroll;
+  overflow-x: auto;
+  overflow-y: auto;
   flex-grow: 1;
 }
 
@@ -73,11 +76,13 @@
   border-spacing: 0px;
   color: var(--puck-color-neutral-4);
   position: relative;
+  z-index: 0;
 }
 
 .ExternalInputModal-thead {
   position: sticky;
   top: 0;
+  z-index: 1;
 }
 
 .ExternalInputModal-th {
