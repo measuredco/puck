@@ -147,7 +147,7 @@ export const ExternalInput = ({
           <div className={getClassNameModal("noContentBanner")}>No content</div>
 
           <div className={getClassNameModal("loadingBanner")}>
-            <ClipLoader size="24" />
+            <ClipLoader size={24} />
           </div>
         </div>
       </Modal>
