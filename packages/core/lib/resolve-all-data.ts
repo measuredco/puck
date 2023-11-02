@@ -1,5 +1,5 @@
 import { Config, Data, MappedItem } from "../types/Config";
-import { resolveAllProps } from "./resolve-all-props";
+import { resolveAllComponentData } from "./resolve-component-data";
 import { resolveRootData } from "./resolve-root-data";
 
 export const resolveAllData = async (
@@ -17,7 +17,7 @@ export const resolveAllData = async (
 
   for (let i = 0; i < zoneKeys.length; i++) {
     const zoneKey = zoneKeys[i];
-    resolvedZones[zoneKey] = await resolveAllProps(
+    resolvedZones[zoneKey] = await resolveAllComponentData(
       zones[zoneKey],
       config,
       onResolveStart,
@@ -28,7 +28,7 @@ export const resolveAllData = async (
   return {
     ...data,
     root: dynamicRoot,
-    content: await resolveAllProps(
+    content: await resolveAllComponentData(
       data.content,
       config,
       onResolveStart,

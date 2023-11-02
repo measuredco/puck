@@ -2,7 +2,7 @@ import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
 import { Config, Data } from "../../types/Config";
 import { useResolvedData } from "../use-resolved-data";
 import { SetDataAction } from "../../reducer";
-import { cache } from "../resolve-all-props";
+import { cache } from "../resolve-component-data";
 
 const item1 = { type: "MyComponent", props: { id: "MyComponent-1" } };
 const item2 = { type: "MyComponent", props: { id: "MyComponent-2" } };
@@ -55,27 +55,55 @@ describe("use-resolved-data", () => {
     });
 
     it("should call the `setData` action with resolved data", async () => {
-      let dispatchedEvent: SetDataAction = {} as any;
+      let dispatchedEvents: SetDataAction[] = [];
+      let currentData = data;
 
-      const renderedHook = renderHook(() =>
-        useResolvedData(data, config, (args) => {
-          dispatchedEvent = args as any;
-        })
-      );
-      const { resolveData } = renderedHook.result.current;
-      await act(async () => {
-        resolveData();
+      const renderedHook = renderHook(() => {
+        return useResolvedData(currentData, config, (args) => {
+          const action = args as SetDataAction;
+          const newData = action.data as any;
+
+          dispatchedEvents.push(action);
+
+          currentData = { ...currentData, ...newData(currentData) };
+        });
       });
 
-      expect(dispatchedEvent?.type).toBe("setData");
+      await act(async () => {
+        // resolveData gets called on render
+        renderedHook.rerender();
+      });
 
-      if (typeof dispatchedEvent?.data === "function") {
-        expect(dispatchedEvent?.data(data)).toMatchInlineSnapshot(`
-          {
-            "content": [
+      expect(dispatchedEvents.length).toBe(4); // calls dispatcher for each resolver
+
+      const fn = dispatchedEvents[dispatchedEvents.length - 1].data as any;
+      expect(currentData).toMatchInlineSnapshot(`
+        {
+          "content": [
+            {
+              "props": {
+                "id": "MyComponent-1",
+                "prop": "Hello, world",
+              },
+              "readOnly": {
+                "prop": true,
+              },
+              "type": "MyComponent",
+            },
+          ],
+          "root": {
+            "props": {
+              "title": "Resolved title",
+            },
+            "readOnly": {
+              "title": true,
+            },
+          },
+          "zones": {
+            "MyComponent-1:zone": [
               {
                 "props": {
-                  "id": "MyComponent-1",
+                  "id": "MyComponent-2",
                   "prop": "Hello, world",
                 },
                 "readOnly": {
@@ -84,43 +112,21 @@ describe("use-resolved-data", () => {
                 "type": "MyComponent",
               },
             ],
-            "root": {
-              "props": {
-                "title": "Resolved title",
-              },
-              "readOnly": {
-                "title": true,
-              },
-            },
-            "zones": {
-              "MyComponent-1:zone": [
-                {
-                  "props": {
-                    "id": "MyComponent-2",
-                    "prop": "Hello, world",
-                  },
-                  "readOnly": {
-                    "prop": true,
-                  },
-                  "type": "MyComponent",
+            "MyComponent-2:zone": [
+              {
+                "props": {
+                  "id": "MyComponent-3",
+                  "prop": "Hello, world",
                 },
-              ],
-              "MyComponent-2:zone": [
-                {
-                  "props": {
-                    "id": "MyComponent-3",
-                    "prop": "Hello, world",
-                  },
-                  "readOnly": {
-                    "prop": true,
-                  },
-                  "type": "MyComponent",
+                "readOnly": {
+                  "prop": true,
                 },
-              ],
-            },
-          }
-        `);
-      }
+                "type": "MyComponent",
+              },
+            ],
+          },
+        }
+      `);
     });
 
     it("should NOT call the `setData` action with resolved data, when the data is unchanged", async () => {
