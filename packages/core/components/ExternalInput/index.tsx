@@ -10,14 +10,18 @@ import { ClipLoader } from "react-spinners";
 const getClassName = getClassNameFactory("ExternalInput", styles);
 const getClassNameModal = getClassNameFactory("ExternalInputModal", styles);
 
+const dataCache: Record<string, any> = {};
+
 export const ExternalInput = ({
   field,
   onChange,
   value = null,
+  name,
 }: {
   field: ExternalField;
   onChange: (value: any) => void;
   value: any;
+  name: string;
 }) => {
   const { mapProp = (val) => val } = field || {};
 
@@ -40,14 +44,16 @@ export const ExternalInput = ({
 
   useEffect(() => {
     (async () => {
-      const listData = await field.fetchList();
+      const listData = dataCache[name] || (await field.fetchList());
 
       if (listData) {
         setData(listData);
         setIsLoading(false);
+
+        dataCache[name] = listData;
       }
     })();
-  }, [field]);
+  }, []);
 
   return (
     <div

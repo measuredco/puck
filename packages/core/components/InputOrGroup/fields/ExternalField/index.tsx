@@ -37,6 +37,7 @@ export const ExternalField = ({
       el="div"
     >
       <ExternalInput
+        name={name}
         field={{
           ...validField,
           // DEPRECATED
