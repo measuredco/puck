@@ -266,7 +266,7 @@ export function Puck({
   useEffect(() => {
     if (Object.keys(data.root).length > 0 && !data.root.props) {
       console.error(
-        "Warning: Defining props on `root` is deprecated. Please use `root.props`. This will be a breaking change in a future release "
+        "Warning: Defining props on `root` is deprecated. Please use `root.props`. This will be a breaking change in a future release."
       );
     }
   }, []);

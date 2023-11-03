@@ -33,6 +33,28 @@ export type ArrayField<
   getItemSummary?: (item: Props[0], index?: number) => string;
 };
 
+// DEPRECATED
+export type Adaptor<
+  AdaptorParams = {},
+  TableShape extends Record<string, any> = {},
+  PropShape = TableShape
+> = {
+  name: string;
+  fetchList: (adaptorParams?: AdaptorParams) => Promise<TableShape[] | null>;
+  mapProp?: (value: TableShape) => PropShape;
+};
+
+// DEPRECATED
+export type ExternalFieldWithAdaptor<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = BaseField & {
+  type: "external";
+  placeholder?: string;
+  adaptor: Adaptor<any, any, Props>;
+  adaptorParams?: object;
+  getItemSummary: (item: Props, index?: number) => string;
+};
+
 export type ExternalField<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = BaseField & {
@@ -63,6 +85,7 @@ export type Field<
   | SelectField
   | ArrayField<Props>
   | ExternalField<Props>
+  | ExternalFieldWithAdaptor<Props>
   | CustomField;
 
 export type DefaultRootProps = {
