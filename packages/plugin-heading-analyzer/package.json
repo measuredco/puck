@@ -1,6 +1,6 @@
 {
   "name": "@measured/puck-plugin-heading-analyzer",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,7 +14,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@measured/puck": "^0.10.0",
+    "@measured/puck": "^0.11.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "eslint": "^7.32.0",
