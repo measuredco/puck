@@ -21,7 +21,6 @@
     "@types/event-emitter": "^0.3.3",
     "@types/jest": "^29.5.4",
     "@types/react": "^18.2.0",
-    "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-dom": "^18.2.0",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
@@ -37,7 +36,7 @@
   "dependencies": {
     "deep-diff": "^1.0.2",
     "event-emitter": "^0.3.5",
-    "react-beautiful-dnd": "^13.1.1",
+    "@hello-pangea/dnd ": "^16.3.0",
     "react-hotkeys-hook": "^4.4.1",
     "react-spinners": "^0.13.8",
     "use-debounce": "^9.0.4"

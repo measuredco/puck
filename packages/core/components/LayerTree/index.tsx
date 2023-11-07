@@ -97,7 +97,7 @@ export const LayerTree = ({
 
                     scrollIntoView(
                       document.querySelector(
-                        `[data-rbd-drag-handle-draggable-id="draggable-${id}"]`
+                        `[data-rfd-drag-handle-draggable-id="draggable-${id}"]`
                       ) as HTMLElement
                     );
                   }}

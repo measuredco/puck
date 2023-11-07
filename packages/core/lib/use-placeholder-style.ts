@@ -1,8 +1,8 @@
 import { CSSProperties, useState } from "react";
-import { DragStart, DragUpdate } from "react-beautiful-dnd";
+import { DragStart, DragUpdate } from "@hello-pangea/dnd";
 
 export const usePlaceholderStyle = () => {
-  const queryAttr = "data-rbd-drag-handle-draggable-id";
+  const queryAttr = "data-rfd-drag-handle-draggable-id";
 
   const [placeholderStyle, setPlaceholderStyle] = useState<CSSProperties>();
 
@@ -23,7 +23,7 @@ export const usePlaceholderStyle = () => {
     }
 
     const targetListElement = document.querySelector(
-      `[data-rbd-droppable-id='${droppableId}']`
+      `[data-rfd-droppable-id='${droppableId}']`
     );
 
     const { clientHeight } = draggedDOM;
@@ -50,7 +50,7 @@ export const usePlaceholderStyle = () => {
             item.getAttributeNames().indexOf("data-puck-placeholder") === -1 &&
             item
               .getAttributeNames()
-              .indexOf("data-rbd-placeholder-context-id") === -1
+              .indexOf("data-rfd-placeholder-context-id") === -1
         )
         .slice(0, end);
 
