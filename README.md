@@ -270,7 +270,7 @@ When the user interacts with this external field, they'll be presented with a li
 
 ## Dynamic prop resolution
 
-Dynamic prop resolution allows developers to resolve props for components without saving the data to the Puck data model.
+Dynamic prop resolution allows developers to change the props for a component after the props have been changed by the user. This is useful for making third-party API calls, such as requesting the latest content from a headless CMS.
 
 ### resolveData()
 
