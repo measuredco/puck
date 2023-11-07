@@ -4,7 +4,7 @@ import { List, Plus, Trash } from "react-feather";
 import { FieldLabelInternal, InputOrGroup, type InputProps } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
-import DroppableStrictMode from "../../../DroppableStrictMode";
+import { Droppable } from "@hello-pangea/dnd";
 import { DragDropContext } from "@hello-pangea/dnd";
 import { Draggable } from "../../../Draggable";
 import { generateId } from "../../../../lib/generate-id";
@@ -88,7 +88,7 @@ export const ArrayField = ({
           }
         }}
       >
-        <DroppableStrictMode droppableId="array" isDropDisabled={readOnly}>
+        <Droppable droppableId="array" isDropDisabled={readOnly}>
           {(provided, snapshot) => {
             return (
               <div
@@ -228,7 +228,7 @@ export const ArrayField = ({
               </div>
             );
           }}
-        </DroppableStrictMode>
+        </Droppable>
       </DragDropContext>
     </FieldLabelInternal>
   );

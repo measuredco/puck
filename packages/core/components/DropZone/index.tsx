@@ -1,6 +1,6 @@
 import { CSSProperties, useContext, useEffect, useState } from "react";
 import { DraggableComponent } from "../DraggableComponent";
-import DroppableStrictMode from "../DroppableStrictMode";
+import { Droppable } from "@hello-pangea/dnd";
 import { getItem } from "../../lib/get-item";
 import { setupZone } from "../../lib/setup-zone";
 import { rootDroppableId } from "../../lib/root-droppable-id";
@@ -150,7 +150,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
         hasChildren: content.length > 0,
       })}
     >
-      <DroppableStrictMode
+      <Droppable
         droppableId={zoneCompound}
         direction={"vertical"}
         isDropDisabled={!isEnabled}
@@ -331,7 +331,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
             </div>
           );
         }}
-      </DroppableStrictMode>
+      </Droppable>
     </div>
   );
 }

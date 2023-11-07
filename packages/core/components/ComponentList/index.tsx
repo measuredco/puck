@@ -1,5 +1,4 @@
-import DroppableStrictMode from "../DroppableStrictMode";
-
+import { Droppable } from "@hello-pangea/dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Draggable } from "../Draggable";
@@ -85,7 +84,7 @@ const ComponentList = ({
         </div>
       )}
       <div className={getClassName("content")}>
-        <DroppableStrictMode
+        <Droppable
           droppableId={`component-list${title ? `:${title}` : ""}`}
           isDropDisabled
         >
@@ -112,7 +111,7 @@ const ComponentList = ({
               <span style={{ display: "none" }}>{provided.placeholder}</span>
             </div>
           )}
-        </DroppableStrictMode>
+        </Droppable>
       </div>
     </div>
   );
