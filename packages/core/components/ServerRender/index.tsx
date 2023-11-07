@@ -39,7 +39,7 @@ function DropZoneRender({
             <Component.render
               key={item.props.id}
               {...item.props}
-              puckCtx={{
+              puck={{
                 renderDropZone: ({ zone }: { zone: string }) => (
                   <DropZoneRender
                     zone={zone}
@@ -69,6 +69,11 @@ export function Render({ config, data }: { config: Config; data: Data }) {
     return (
       <config.root.render
         {...rootProps}
+        puck={{
+          renderDropZone: ({ zone }: { zone: string }) => (
+            <DropZoneRender zone={zone} data={data} config={config} />
+          ),
+        }}
         title={title}
         editMode={false}
         id={"puck-root"}

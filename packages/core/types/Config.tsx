@@ -111,7 +111,7 @@ export type Content<
 
 export type PuckComponent<
   Props extends DefaultComponentProps = DefaultComponentProps
-> = (props: WithPuckProps<Props & { puckCtx: PuckContext }>) => JSX.Element;
+> = (props: WithPuckProps<Props & { puck: PuckContext }>) => JSX.Element;
 
 export type PuckContext = {
   renderDropZone: typeof DropZone;
@@ -123,22 +123,6 @@ export type ComponentConfig<
   DataShape = ComponentData<ComponentProps>
 > = {
   render: PuckComponent<ComponentProps>;
-  defaultProps?: DefaultProps;
-  fields?: Fields<ComponentProps>;
-  resolveData?: (
-    data: DataShape,
-    params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
-  ) =>
-    | Promise<Partial<ComponentDataWithOptionalProps<ComponentProps>>>
-    | Partial<ComponentDataWithOptionalProps<ComponentProps>>;
-};
-
-type RootComponentConfig<
-  ComponentProps extends DefaultComponentProps = DefaultComponentProps,
-  DefaultProps = ComponentProps,
-  DataShape = ComponentData<ComponentProps>
-> = {
-  render: (props: ComponentProps) => JSX.Element;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
   resolveData?: (
@@ -171,7 +155,7 @@ export type Config<
     >;
   };
   root?: Partial<
-    RootComponentConfig<
+    ComponentConfig<
       RootProps & { children: ReactNode },
       Partial<RootProps & { children: ReactNode }>,
       RootDataWithProps<RootProps>

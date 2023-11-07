@@ -175,7 +175,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                 const defaultedProps = {
                   ...config.components[item.type]?.defaultProps,
                   ...item.props,
-                  puckCtx: { renderDropZone: DropZone },
+                  puck: { renderDropZone: DropZone },
                   editMode: true,
                 };
 
@@ -367,7 +367,7 @@ function DropZoneRender({ zone }: DropZoneProps) {
             >
               <Component.render
                 {...item.props}
-                puckCtx={{ renderDropZone: DropZone }}
+                puck={{ renderDropZone: DropZone }}
               />
             </DropZoneProvider>
           );
