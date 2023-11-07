@@ -1,5 +1,5 @@
 import { CSSProperties, ReactNode, SyntheticEvent, useEffect } from "react";
-import { Draggable } from "react-beautiful-dnd";
+import { Draggable } from "@hello-pangea/dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, Trash } from "react-feather";

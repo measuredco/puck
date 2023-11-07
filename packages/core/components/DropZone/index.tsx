@@ -121,7 +121,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
    *    but within the area
    * 2. This is an existing component and the user a) is dragging over the
    *    area (which prevents drags between zone areas, breaking the rules
-   *    of react-beautiful-dnd) and b) has the cursor hovering directly over
+   *    of @hello-pangea/dnd) and b) has the cursor hovering directly over
    *    the specific zone (which increases robustness when using flex
    *    layouts)
    */

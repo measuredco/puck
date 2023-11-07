@@ -5,7 +5,7 @@ import { FieldLabelInternal, InputOrGroup, type InputProps } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
 import DroppableStrictMode from "../../../DroppableStrictMode";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext } from "@hello-pangea/dnd";
 import { Draggable } from "../../../Draggable";
 import { generateId } from "../../../../lib/generate-id";
 import { useCallback, useEffect, useState } from "react";

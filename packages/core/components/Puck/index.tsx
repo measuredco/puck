@@ -8,7 +8,7 @@ import {
   useReducer,
   useState,
 } from "react";
-import { DragDropContext, DragStart, DragUpdate } from "react-beautiful-dnd";
+import { DragDropContext, DragStart, DragUpdate } from "@hello-pangea/dnd";
 import type { AppState, Config, Data, Field } from "../../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
