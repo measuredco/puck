@@ -1,0 +1,11 @@
+{
+  "custom-fields": {
+    "title": "Custom Fields"
+  },
+  "render-functions": {
+    "title": "Render Functions"
+  },
+  "plugin-api": {
+    "title": "Plugin API"
+  }
+}

@@ -9,11 +9,11 @@ export const Home = () => {
         textAlign: "center",
       }}
     >
-      <div style={{ maxWidth: 1128 }}>
+      <div style={{ maxWidth: 1156 }}>
         <h1 style={{ visibility: "hidden" }}>Puck</h1>
 
         <h2 style={{ fontSize: 64, fontWeight: 700, lineHeight: 1.2 }}>
-          The self-hosted visual editor for React
+          The open-source visual editor for React
         </h2>
       </div>
       <div style={{ maxWidth: 896 }}>
@@ -34,7 +34,7 @@ export const Home = () => {
               borderRadius: 8,
               fontWeight: 500,
             }}
-            href="/docs/installation"
+            href="/docs/introduction"
           >
             Get started
           </a>
