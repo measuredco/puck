@@ -1,0 +1,17 @@
+{
+  "components": {
+    "title": "Components"
+  },
+  "config": {
+    "title": "Config"
+  },
+  "data": {
+    "title": "Data"
+  },
+  "fields": {
+    "title": "Fields"
+  },
+  "functions": {
+    "title": "Functions"
+  }
+}

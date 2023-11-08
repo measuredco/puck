@@ -1,4 +1,20 @@
-# Welcome to Puck
+# Getting Started
+
+Use this guide to set-up Puck
+
+## Installation
+
+Install the package
+
+```sh npm2yarn
+npm i @measured/puck --save
+```
+
+Or generate a Puck application using a [recipe](recipes)
+
+```sh
+npx create-puck-app my-app
+```
 
 ## Render the editor
 
@@ -7,7 +23,7 @@
 import { Puck } from "@measured/puck";
 import "@measured/puck/dist/index.css";
 
-// Create puck component config
+// Create Puck component config
 const config = {
   components: {
     HeadingBlock: {
@@ -48,9 +64,3 @@ export function Page() {
   return <Render config={config} data={data} />;
 }
 ```
-
-## Recipes
-
-Puck is a React component that can be easily integrated into your existing application. We also provide helpful recipes for common use cases:
-
-- [**next**](https://github.com/measuredco/puck/tree/main/recipes/next): Next.js app example

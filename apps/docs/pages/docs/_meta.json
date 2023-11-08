@@ -1,23 +1,20 @@
 {
-  "installation": {
-    "title": "Installation"
+  "introduction": {
+    "title": "Introduction"
   },
   "getting-started": {
     "title": "Getting Started"
   },
-  "editor": {
-    "title": "Editor"
+  "integrating-puck": {
+    "title": "Integrating Puck"
   },
-  "data": {
-    "title": "Data"
+  "extending-puck": {
+    "title": "Extending Puck"
   },
-  "fields": {
-    "title": "Fields"
+  "api-reference": {
+    "title": "API Reference"
   },
-  "dropzones": {
-    "title": "Dropzones"
-  },
-  "plugins": {
-    "title": "Plugins"
+  "recipes": {
+    "title": "Recipes"
   }
 }
