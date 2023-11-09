@@ -1,0 +1,136 @@
+# Array
+
+Array fields are used to render a list of items with a subset of fields. Extends [Base](base).
+
+```tsx {5-10} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+          },
+        },
+      },
+      render: ({ items }) => {
+        return (
+          <ul>
+            {items.map((item, i) => (
+              <li key={i}>{item.title}</li>
+            ))}
+          </ul>
+        );
+      },
+    },
+  },
+};
+```
+
+## Params
+
+| Prop                                    | Example                                       | Type     | Status   |
+| --------------------------------------- | --------------------------------------------- | -------- | -------- |
+| [`type`](#type)                         | `type: "array"`                               | "array"  | Required |
+| [`arrayFields`](#arrayfields)           | `arrayFields: { title: { type: "text" } }`    | Object   | Required |
+| [`getItemSummary()`](#getitemsummary)   | `getItemSummary: (item) => item.title`        | Function | -        |
+| [`defaultItemProps`](#defaultitemprops) | `defaultItemProps: { title: "Hello, world" }` | String   | -        |
+
+## Required params
+
+### `type`
+
+The type of the field. Must be `"array"` for array fields.
+
+```tsx {6} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+          },
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `arrayFields`
+
+An object describing the fields for each item in the array. Shares an API with `fields`.
+
+Can include any field type, including nested array fields.
+
+```tsx {7-9} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+          },
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+## Optional params
+
+### `defaultItemProps`
+
+The default values to set when a new item is added to your array.
+
+```tsx {10-12} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+          },
+          defaultItemProps: {
+            title: "Hello, world",
+          },
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `getItemSummary(item, index)`
+
+A function to get the label of each item.
+
+```tsx {10} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+          },
+          getItemSummary: (item) => item.title,
+        },
+      },
+      // ...
+    },
+  },
+};
+```
