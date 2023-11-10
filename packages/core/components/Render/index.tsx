@@ -15,6 +15,9 @@ export function Render({ config, data }: { config: Config; data: Data }) {
       <DropZoneProvider value={{ data, config, mode: "render" }}>
         <config.root.render
           {...rootProps}
+          puck={{
+            renderDropZone: DropZone,
+          }}
           title={title}
           editMode={false}
           id={"puck-root"}

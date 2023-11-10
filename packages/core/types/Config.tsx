@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import { ReactNode } from "react";
 import { ItemSelector } from "../lib/get-item";
+import { DropZone } from "../components/DropZone";
 
 type WithPuckProps<Props> = Props & {
   id: string;
@@ -93,10 +94,6 @@ export type DefaultRootProps = {
   [key: string]: any;
 };
 
-export type DefaultRootRenderProps = {
-  editMode: boolean;
-} & DefaultRootProps;
-
 export type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
 
 export type Fields<
@@ -112,12 +109,20 @@ export type Content<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = ComponentData<Props>[];
 
+export type PuckComponent<
+  Props extends DefaultComponentProps = DefaultComponentProps
+> = (props: WithPuckProps<Props & { puck: PuckContext }>) => JSX.Element;
+
+export type PuckContext = {
+  renderDropZone: typeof DropZone;
+};
+
 export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
   DefaultProps = ComponentProps,
   DataShape = ComponentData<ComponentProps>
 > = {
-  render: (props: WithPuckProps<ComponentProps>) => ReactElement;
+  render: PuckComponent<ComponentProps>;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
   resolveData?: (

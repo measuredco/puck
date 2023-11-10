@@ -175,6 +175,7 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
                 const defaultedProps = {
                   ...config.components[item.type]?.defaultProps,
                   ...item.props,
+                  puck: { renderDropZone: DropZone },
                   editMode: true,
                 };
 
@@ -364,7 +365,10 @@ function DropZoneRender({ zone }: DropZoneProps) {
               key={item.props.id}
               value={{ data, config, areaId: item.props.id }}
             >
-              <Component.render {...item.props} />
+              <Component.render
+                {...item.props}
+                puck={{ renderDropZone: DropZone }}
+              />
             </DropZoneProvider>
           );
         }
