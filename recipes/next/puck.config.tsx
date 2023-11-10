@@ -24,7 +24,7 @@ export const config: Config<{
   },
   components: {
     Columns: {
-      render: ({ puckCtx: { renderDropZone } }) => {
+      render: ({ puck: { renderDropZone } }) => {
         return (
           <div style={{ display: "flex", gap: "3rem" }}>
             <div style={{ flexGrow: 1 }}>{renderDropZone({ zone: "0" })}</div>
