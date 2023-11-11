@@ -32,5 +32,3 @@ yarn-error.log*
 
 # vercel
 .vercel
-
-database.json
