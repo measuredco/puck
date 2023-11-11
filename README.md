@@ -374,6 +374,36 @@ import { resolveAllData } from "@measured/puck";
 const resolvedData = resolveAllData(data, config);
 ```
 
+### React server components
+
+If you want to use React server components, use ` <Render>` from the `@measured/puck/rsc` bundle instead of the main bundle.
+
+```tsx
+import { Render } from "@measured/puck/rsc";
+import "@measured/puck/dist/index.css";
+
+export function Page() {
+  return <Render config={config} data={data} />;
+}
+```
+
+If you're using DropZones with React server components, use the `puck.renderDropZone` prop provided to your render function instead of the `<DropZone>` component.
+
+```tsx
+export const MyComponent: ComponentConfig = {
+  render: ({ puck: { renderDropZone } }) => {
+    return (
+      <div>
+        {renderDropZone({ zone: "first-drop-zone" })}
+        {renderDropZone({ zone: "second-drop-zone" })}
+      </div>
+    );
+  },
+};
+```
+
+In future, we may deprecate DropZone in favour of renderDropZone.
+
 ## Reference
 
 ### `<Puck>`
