@@ -2,6 +2,16 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.11.1](https://github.com/measuredco/puck/compare/v0.11.0...v0.11.1) (2023-11-11)
+
+
+### Bug Fixes
+
+* include next recipe in generator ([5b833ef](https://github.com/measuredco/puck/commit/5b833efd0f87b21e57303256e89f1456254b82bf))
+
+
+
+
 ## [0.11.0](https://github.com/measuredco/puck/compare/v0.10.0...v0.11.0) (2023-11-03)
 
 
