@@ -7,9 +7,15 @@
   "bin": {
     "create-puck-app": "./index.js"
   },
+  "files": [
+    "templates",
+    "index.js"
+  ],
   "scripts": {
     "generate": "node scripts/generate.js",
-    "prepublishOnly": "yarn generate"
+    "prepublishOnly": "yarn generate",
+    "removeGitignore": "mv templates/.gitignore templates/gitignore",
+    "restoreGitignore": "mv templates/gitignore templates/.gitignore"
   },
   "dependencies": {
     "commander": "^10.0.1",
