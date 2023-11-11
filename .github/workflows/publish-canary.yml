@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - "main"
+      - "releases/**"
 
 jobs:
   tag-and-publish-to-npm:
