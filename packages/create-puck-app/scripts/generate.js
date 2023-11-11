@@ -42,9 +42,7 @@ const run = async () => {
   for (const recipeFile of recipeFiles) {
     const filePath = path.join(recipePath, recipeFile);
 
-    const targetPath = filePath
-      .replace(recipePath, templatePath)
-      .replace(".gitignore", "gitignore"); // rename .gitignore to gitignore so NPM publish doesn't ignore it
+    const targetPath = filePath.replace(recipePath, templatePath);
 
     // Don't copy file if it's templated by handlebars
     if (fs.existsSync(`${targetPath}.hbs`)) {
@@ -61,6 +59,13 @@ const run = async () => {
       await fs.mkdirSync(dir, { recursive: true });
 
       await fs.writeFileSync(targetPath, data);
+
+      if (targetPath.indexOf(".gitignore") > -1) {
+        await fs.copyFileSync(
+          filePath,
+          targetPath.replace(".gitignore", "gitignore") // rename .gitignore to gitignore so NPM publish doesn't ignore it
+        );
+      }
 
       counter += 1;
     }
