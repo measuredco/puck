@@ -103,7 +103,7 @@ program
       return;
     }
 
-    await fs.mkdirSync(appName);
+    fs.mkdirSync(appName);
 
     const packageManager = !!options.useNpm
       ? "npm"
@@ -130,7 +130,7 @@ program
       let data;
 
       if (path.extname(filePath) === ".hbs") {
-        const templateString = await fs.readFileSync(filePath, "utf-8");
+        const templateString = fs.readFileSync(filePath, "utf-8");
 
         const template = Handlebars.compile(templateString);
         data = template({
@@ -139,14 +139,14 @@ program
           puckVersion: `^${packageJson.version}`,
         });
       } else {
-        data = await fs.readFileSync(filePath, "utf-8");
+        data = fs.readFileSync(filePath, "utf-8");
       }
 
       const dir = path.dirname(targetPath);
 
-      await fs.mkdirSync(dir, { recursive: true });
+      fs.mkdirSync(dir, { recursive: true });
 
-      await fs.writeFileSync(targetPath, data);
+      fs.writeFileSync(targetPath, data);
     }
 
     if (packageManager === "yarn") {
@@ -159,22 +159,24 @@ program
 
     try {
       inGitRepo =
-        execSync("git status", {
-          cwd: appPath,
-        })
+        execSync("git status", { cwd: appPath })
           .toString()
           .indexOf("fatal:") !== 0;
     } catch {}
 
     // Only commit if this is a new repo
     if (!inGitRepo) {
-      execSync("git init", { cwd: appPath, stdio: "inherit" });
+      try {
+        execSync("git init", { cwd: appPath, stdio: "inherit" });
 
-      execSync("git add .", { cwd: appPath, stdio: "inherit" });
-      execSync("git commit -m 'build(puck): generate app'", {
-        cwd: appPath,
-        stdio: "inherit",
-      });
+        execSync("git add .", { cwd: appPath, stdio: "inherit" });
+        execSync('git commit -m "build(puck): generate app"', {
+          cwd: appPath,
+          stdio: "inherit",
+        });
+      } catch (error) {
+        console.log("Failed to commit git changes");
+      }
     }
   })
   .parse(process.argv);
