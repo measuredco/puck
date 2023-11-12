@@ -12,7 +12,7 @@ import {
   TextareaField,
 } from "./fields";
 import { Lock } from "react-feather";
-import { useDebouncedCallback, useDebounce } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -91,17 +91,17 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
 
   const [localValue, setLocalValue] = useState(value);
 
-  const [localValueDb] = useDebounce(localValue, 50, { leading: true });
-
-  useEffect(() => {
-    // Compare initial value to prevent calling on render
-    if (value !== localValueDb) {
-      onChange(localValueDb);
-    }
-  }, [localValueDb]);
+  const onChangeDb = useDebouncedCallback(
+    (val) => {
+      onChange(val);
+    },
+    50,
+    { leading: true }
+  );
 
   const onChangeLocal = useCallback((val) => {
     setLocalValue(val);
+    onChangeDb(val);
   }, []);
 
   useEffect(() => {
