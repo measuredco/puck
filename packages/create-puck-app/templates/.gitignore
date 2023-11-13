@@ -1,8 +1,8 @@
 # # Ignore everything
-# *.*
+*.*
 
 # # Explicitly ignore gitignore without extension
-# gitignore
+gitignore
 
 # # Except for handlebars files
-# !*.hbs
+!*.hbs
