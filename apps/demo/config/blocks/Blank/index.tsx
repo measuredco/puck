@@ -1,7 +1,7 @@
 import React from "react";
-import { ComponentConfig } from "@measured/puck";
+import { ComponentConfig } from "@/core";
 import styles from "./styles.module.css";
-import { getClassNameFactory } from "@measured/puck/lib";
+import { getClassNameFactory } from "@/core/lib";
 
 const getClassName = getClassNameFactory("Hero", styles);
 

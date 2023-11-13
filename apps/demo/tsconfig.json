@@ -1,7 +1,15 @@
 {
   "extends": "./tsconfig/nextjs.json",
   "compilerOptions": {
-    "plugins": [{ "name": "next" }]
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/core": ["../../packages/core"],
+      "@/core/*": ["../../packages/core/*"],
+      "@/plugin-heading-analyzer": ["../../packages/plugin-heading-analyzer"],
+      "@/plugin-heading-analyzer/*": [
+        "../../packages/plugin-heading-analyzer/*"
+      ]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

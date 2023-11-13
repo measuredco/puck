@@ -1,4 +1,4 @@
-import { Config } from "@measured/puck";
+import { Config } from "@/core";
 
 type Props = {
   HeadingBlock: { title: string };

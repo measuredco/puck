@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { ComponentConfig } from "@measured/puck/types/Config";
+import { ComponentConfig } from "@/core/types/Config";
 import styles from "./styles.module.css";
-import { getClassNameFactory } from "@measured/puck/lib";
+import { getClassNameFactory } from "@/core/lib";
 import * as reactFeather from "react-feather";
 
 const getClassName = getClassNameFactory("Card", styles);
