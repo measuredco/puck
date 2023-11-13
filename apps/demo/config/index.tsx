@@ -1,4 +1,4 @@
-import { Config, Data } from "@measured/puck/types/Config";
+import { Config, Data } from "@/core/types/Config";
 import { ButtonGroup, ButtonGroupProps } from "./blocks/ButtonGroup";
 import { Card, CardProps } from "./blocks/Card";
 import { Columns, ColumnsProps } from "./blocks/Columns";

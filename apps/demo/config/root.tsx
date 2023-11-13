@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { DefaultRootProps } from "@measured/puck";
+import { DefaultRootProps } from "@/core";
 import { Footer } from "./components/Footer";
 
 export type RootProps = {

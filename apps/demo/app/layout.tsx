@@ -1,4 +1,4 @@
-import "@measured/puck/styles.css";
+import "@/core/styles.css";
 import "./styles.css";
 
 import { Inter } from "next/font/google";

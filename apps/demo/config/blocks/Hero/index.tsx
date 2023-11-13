@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
-import { ComponentConfig } from "@measured/puck/types/Config";
+import { ComponentConfig } from "@/core/types/Config";
 import styles from "./styles.module.css";
-import { getClassNameFactory } from "@measured/puck/lib";
-import { Button } from "@measured/puck/components/Button";
+import { getClassNameFactory } from "@/core/lib";
+import { Button } from "@/core/components/Button";
 import { Section } from "../../components/Section";
 import { quotes } from "./quotes";
 

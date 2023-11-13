@@ -1,12 +1,12 @@
 "use client";
 
-import { Data } from "@measured/puck/types/Config";
-import { resolveAllData } from "@measured/puck/lib/resolve-all-data";
-import { Puck } from "@measured/puck/components/Puck";
-import { Render } from "@measured/puck/components/Render";
+import { Data } from "@/core/types/Config";
+import { resolveAllData } from "@/core/lib/resolve-all-data";
+import { Puck } from "@/core/components/Puck";
+import { Render } from "@/core/components/Render";
 import { useEffect, useState } from "react";
-import { Button } from "@measured/puck/components/Button";
-import headingAnalyzer from "@measured/puck-plugin-heading-analyzer/src/HeadingAnalyzer";
+import { Button } from "@/core/components/Button";
+import headingAnalyzer from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config, { initialData } from "../../config";
 
 const isBrowser = typeof window !== "undefined";

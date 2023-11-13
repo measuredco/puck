@@ -1,14 +1,14 @@
 import { ReactElement, ReactNode, useEffect, useState } from "react";
 
-import { AppState } from "@measured/puck";
-import { Plugin } from "@measured/puck/types/Plugin";
-import { SidebarSection } from "@measured/puck/components/SidebarSection";
-import { OutlineList } from "@measured/puck/components/OutlineList";
+import { AppState } from "@/core";
+import { Plugin } from "@/core/types/Plugin";
+import { SidebarSection } from "@/core/components/SidebarSection";
+import { OutlineList } from "@/core/components/OutlineList";
 
-import { scrollIntoView } from "@measured/puck/lib/scroll-into-view";
+import { scrollIntoView } from "@/core/lib/scroll-into-view";
 
 import ReactFromJSON from "react-from-json";
-import { PuckAction } from "@measured/puck/reducer";
+import { PuckAction } from "@/core/reducer";
 
 const dataAttr = "data-puck-heading-analyzer-id";
 
