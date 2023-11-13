@@ -480,8 +480,7 @@
   dependencies:
     client-only "^0.0.1"
 
-"@hello-pangea/dnd @^16.3.0":
-  name "@hello-pangea/dnd"
+"@hello-pangea/dnd@^16.3.0":
   version "16.3.0"
   resolved "https://registry.yarnpkg.com/@hello-pangea/dnd/-/dnd-16.3.0.tgz#3776212f812df4e8e69c42831ec8ab7ff3a087d6"
   integrity sha512-RYQ/K8shtJoyNPvFWz0gfXIK7HF3P3mL9UZFGMuHB0ljRSXVgMjVFI/FxcZmakMzw6tO7NflWLriwTNBow/4vw==
