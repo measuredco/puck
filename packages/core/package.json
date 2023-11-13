@@ -4,6 +4,20 @@
   "private": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./rsc": {
+      "import": "./dist/rsc.js",
+      "require": "./dist/rsc.js",
+      "types": "./dist/rsc.d.ts"
+    },
+    "./puck.css": "./dist/index.css",
+    "./dist/index.css": "./dist/index.css"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts*\"",
