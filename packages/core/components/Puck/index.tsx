@@ -110,7 +110,7 @@ export function Puck({
 }) {
   const [reducer] = useState(() => createReducer({ config }));
 
-  const initialAppState: AppState = {
+  const [initialAppState] = useState<AppState>({
     ...defaultAppState,
     data: initialData,
     ui: {
@@ -134,7 +134,7 @@ export function Puck({
           )
         : {},
     },
-  };
+  });
 
   const [appState, dispatch] = useReducer<StateReducer>(
     reducer,
