@@ -18,6 +18,13 @@
     "./puck.css": "./dist/index.css",
     "./dist/index.css": "./dist/index.css"
   },
+  "typesVersions": {
+    "*": {
+      "rsc": [
+        "./dist/rsc.js"
+      ]
+    }
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts*\"",
