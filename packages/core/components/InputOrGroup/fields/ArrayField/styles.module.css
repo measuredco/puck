@@ -57,7 +57,8 @@
 
 .ArrayFieldItem--isExpanded {
   border-bottom: 0;
-  outline: 1px solid var(--puck-color-azure-6);
+  outline-offset: 0px !important; /* Important helps to override Nextra docs */
+  outline: 1px solid var(--puck-color-azure-6) !important; /* Important helps to override Nextra docs */
 }
 
 .ArrayFieldItem--isDragging {
