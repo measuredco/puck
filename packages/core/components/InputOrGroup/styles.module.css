@@ -43,6 +43,7 @@
 }
 
 .Input-input {
+  background: white;
   border-width: 1px;
   border-style: solid;
   border-color: var(--puck-color-grey-8);
