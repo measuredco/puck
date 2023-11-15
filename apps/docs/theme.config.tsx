@@ -32,7 +32,10 @@ const theme: DocsThemeConfig = {
     text: (
       <div className="flex w-full flex-col items-center sm:items-start">
         <p className="mt-6 text-xs">
-          MIT © {new Date().getFullYear()} Measured Co.
+          MIT © {new Date().getFullYear()}{" "}
+          <a style={{ textDecoration: "underline" }} href="https://measured.co">
+            Measured Corporation Ltd.
+          </a>
         </p>
       </div>
     ),
