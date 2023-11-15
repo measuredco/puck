@@ -33,7 +33,7 @@ Render the editor:
 ```jsx
 // Editor.jsx
 import { Puck } from "@measured/puck";
-import "@measured/puck/dist/index.css";
+import "@measured/puck/puck.css";
 
 // Create puck component config
 const config = {
@@ -71,7 +71,7 @@ Render the page:
 ```jsx
 // Page.jsx
 import { Render } from "@measured/puck";
-import "@measured/puck/dist/index.css";
+import "@measured/puck/puck.css";
 
 export function Page() {
   return <Render config={config} data={data} />;
@@ -380,7 +380,7 @@ If you want to use React server components, use ` <Render>` from the `@measured/
 
 ```tsx
 import { Render } from "@measured/puck/rsc";
-import "@measured/puck/dist/index.css";
+import "@measured/puck/puck.css";
 
 export function Page() {
   return <Render config={config} data={data} />;
