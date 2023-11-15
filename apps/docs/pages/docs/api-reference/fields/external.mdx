@@ -1,0 +1,276 @@
+import { ConfigPreview } from "../../../../components/Preview";
+
+# External
+
+Select data from a list, typically populated via a third-party API. Extends [Base](base).
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async () => {
+          return [
+            { title: "Hello, world", description: "Lorem ipsum 1" },
+            { title: "Goodbye, world", description: "Lorem ipsum 2 2" },
+          ];
+        },
+      },
+    },
+    render: ({ data }) => {
+      return <p style={{ margin: 0 }}>{data?.title || "No data selected"}</p>;
+    },
+  }}
+/>
+
+```tsx {5-15} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            // ... fetch data from a third party API, or other async source
+
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+        },
+      },
+      render: ({ data }) => {
+        return <p>{data?.title || "No data selected"}</p>;
+      },
+    },
+  },
+};
+```
+
+## Params
+
+| Param                                     | Example                                      | Type       | Status   |
+| ----------------------------------------- | -------------------------------------------- | ---------- | -------- |
+| [`type`](#type)                           | `type: "external"`                           | "external" | Required |
+| [`fetchList()`](#fetchlist)               | `fetchList: async () => []`                  | Function   | Required |
+| [`getItemSummary()`](#getitemsummaryitem) | `getItemSummary: async ({ title }) => title` | Function   | -        |
+| [`mapProp()`](#mappropitem)               | `mapProp: async ({ title }) => title`        | Function   | -        |
+| [`placeholder`](#placeholder)             | `placeholder: "Select content"`              | String     | -        |
+
+## Required params
+
+### `type`
+
+The type of the field. Must be `"external"` for Array fields.
+
+```tsx {6} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `fetchList()`
+
+Return a promise with a list of objects to be rendered in a tabular format via the external input modal.
+
+The table will only render strings and numbers.
+
+```tsx {7-14} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            // ... fetch data from a third party API, or other async source
+
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+## Optional params
+
+### `getItemSummary(item)`
+
+Get the label to show once the item is selected.
+
+```tsx {13} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+          getItemSummary: (item) => item.title,
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+          getItemSummary: (item) => item.title,
+        },
+      },
+      defaultProps: {
+        data: {
+          title: 'Hello, world',
+          description: 'Lorem ipsum 1'
+        }
+      },
+      render: ({ data }) => {
+        return <p>{data?.title || "No data selected"}</p>;
+      },
+      // ...
+    }}
+
+/>
+
+### `mapProp(item)`
+
+Modify the shape of the item selected by the user in the table before writing to the page data.
+
+```tsx {13} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+          mapProp: (item) => item.description,
+        },
+      },
+      render: ({ data }) => {
+        return <p>{data || "No data selected"}</p>;
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+          mapProp: (item) => item.description,
+        },
+      },
+      render: ({ data }) => {
+        return <p>{data || "No data selected"}</p>;
+      },
+      // ...
+    }}
+
+/>
+
+### `placeholder`
+
+Set the placeholder text when no item is selected.
+
+```tsx {13} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1" },
+              { title: "Orange", description: "Lorem ipsum 2" },
+            ];
+          },
+          placeholder: "Pick your favorite fruit",
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Apple", description: "An apple is a round, edible fruit produced by an apple tree." },
+              { title: "Orange", description: "An orange is a fruit of various citrus species in the family Rutaceae." },
+            ];
+          },
+          placeholder: "Pick your favorite fruit",
+        },
+      },
+      render: ({ data }) => {
+        return <p>{data?.title || "No data selected"}</p>;
+      },
+      // ...
+    }}
+
+/>
+
+<div id="puck-portal-root" />

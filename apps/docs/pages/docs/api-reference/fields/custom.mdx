@@ -1,0 +1,146 @@
+import { ConfigPreview } from "../../../../components/Preview";
+import { FieldLabel } from "@/core";
+
+# Custom
+
+Implement a field with a custom UI. Extends [Base](base).
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      title: {
+        type: "custom",
+        render: ({ name, onChange, value }) => {
+          return (
+            <FieldLabel label="Test">
+              <input
+                defaultValue={value}
+                name={name}
+                onChange={(e) => onChange(e.currentTarget.value)}
+                style={{ border: "1px solid hotpink", padding: 4 }}
+              />
+            </FieldLabel>
+          );
+        },
+      },
+    },
+    defaultProps: {
+      title: "Hello, world",
+    },
+    render: ({ title }) => {
+      return <p style={{ margin: 0 }}>{title}</p>;
+    },
+  }}
+/>
+
+```tsx {7-20} copy
+import { FieldLabel } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "custom",
+          render: ({ name, onChange, value }) => (
+            // You'll normally want to wrap with FieldLabel to get the default field label styles
+            <FieldLabel label="Test" icon>
+              <input
+                defaultValue={value}
+                name={name}
+                onChange={(e) => onChange(e.currentTarget.value)}
+                style={{ border: "1px solid hotpink", padding: 4 }}
+              />
+            </FieldLabel>
+          ),
+        },
+      },
+      render: ({ title }) => {
+        return <p>{title}</p>;
+      },
+    },
+  },
+};
+```
+
+## Params
+
+| Param                       | Example                   | Type     | Status   |
+| --------------------------- | ------------------------- | -------- | -------- |
+| [`type`](#type)             | `type: "custom"`          | "custom" | Required |
+| [`render()`](#renderparams) | `render: () => <input />` | Function | Required |
+
+## Required params
+
+### `type`
+
+The type of the field. Must be `"custom"` for Custom fields.
+
+```tsx {8} copy
+import { FieldLabel } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "custom",
+          render: ({ name, onChange, value }) => (
+            // You'll normally want to wrap with FieldLabel to get the default field label styles
+            <FieldLabel label="Test" icon>
+              <input
+                defaultValue={value}
+                name={name}
+                onChange={(e) => onChange(e.currentTarget.value)}
+                style={{ border: "1px solid hotpink", padding: 4 }}
+              />
+            </FieldLabel>
+          ),
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `render(params)`
+
+Render the custom field. It's normally best to wrap your custom input in the `<FieldLabel>` component to get the default field label styling.
+
+```tsx {11-18} copy
+import { FieldLabel } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "custom",
+          render: ({ name, onChange, value }) => (
+            // You'll normally want to wrap with FieldLabel to get the default field label styles
+            <FieldLabel label="Test" icon>
+              <input
+                defaultValue={value}
+                name={name}
+                onChange={(e) => onChange(e.currentTarget.value)}
+                style={{ border: "1px solid hotpink", padding: 4 }}
+              />
+            </FieldLabel>
+          ),
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+#### `params`
+
+| Param             | Example                    | Type     |
+| ----------------- | -------------------------- | -------- |
+| `name`            | `"title"`                  | String   |
+| `onChange(value)` | `onChange("Hello, world")` | Function |
+| `value`           | `"Hello, world"`           | Any      |
