@@ -1,0 +1,46 @@
+.Preview {
+  border: 1px solid var(--puck-color-grey-8);
+  border-radius: 16px;
+  margin-top: 32px;
+  overflow: hidden;
+}
+
+.Preview-label {
+  background: var(--puck-color-azure-9);
+  color: var(--puck-color-azure-4);
+  font-weight: 0;
+  padding: 12px 16px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom: 1px solid var(--puck-color-grey-8);
+}
+
+.ConfigPreview {
+  display: flex;
+  flex-wrap: wrap;
+  background: var(--puck-color-grey-8);
+  gap: 1px;
+}
+
+.ConfigPreview-field {
+  flex-grow: 1;
+  flex-basis: 49%;
+  min-width: 1;
+  padding: 8px;
+  background: white;
+}
+
+.ConfigPreview-preview {
+  color: var(--puck-color-grey-2);
+  flex-grow: 1;
+  flex-basis: 49%;
+  min-width: 256px;
+  padding: 16px;
+  background: white;
+}
+
+.ConfigPreview-preview > * {
+  color: var(
+    --puck-color-grey-2
+  ) !important; /* Override any injected Nextra/Tailwind styles */
+}
