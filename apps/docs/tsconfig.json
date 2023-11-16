@@ -8,7 +8,8 @@
       "@/plugin-heading-analyzer": ["../../packages/plugin-heading-analyzer"],
       "@/plugin-heading-analyzer/*": [
         "../../packages/plugin-heading-analyzer/*"
-      ]
+      ],
+      "@/docs/*": ["./*"]
     }
   },
   "include": [
