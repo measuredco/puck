@@ -2,7 +2,6 @@
   color: var(--puck-color-grey-2);
   font-family: var(--puck-font-stack);
   margin: 0;
-  margin-left: 16px;
   padding-left: 16px;
   position: relative;
   list-style: none;
@@ -39,5 +38,5 @@
 }
 
 .OutlineListItem > .OutlineList {
-  margin: 8px;
+  margin: 8px 0;
 }

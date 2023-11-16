@@ -128,7 +128,7 @@ export const LayerTree = ({
                         <Grid size="16" />
                       )}
                     </div>
-                    {item.type}
+                    <div className={getClassNameLayer("name")}>{item.type}</div>
                   </div>
                 </div>
               </div>

@@ -31,7 +31,7 @@ const ComponentListItem = ({
       >
         {() => (
           <>
-            {component}
+            <div className={getClassNameItem("name")}>{component}</div>
             <div className={getClassNameItem("icon")}>
               <DragIcon />
             </div>
