@@ -8,6 +8,7 @@ import { InputOrGroup } from "@/core/components/InputOrGroup";
 import { AppState, ComponentConfig, Config, Data } from "@/core/types/Config";
 import { rootDroppableId } from "@/core/lib/root-droppable-id";
 import { getClassNameFactory } from "@/core/lib";
+import { useResolvedData } from "@/core/lib/use-resolved-data";
 
 import styles from "./styles.module.css";
 
@@ -21,7 +22,8 @@ const PreviewApp = ({
 }: {
   children: (
     appState: AppState,
-    dispatch: (action: PuckAction) => void
+    dispatch: (action: PuckAction) => void,
+    componentState: Record<string, { loading: boolean }>
   ) => ReactNode;
   config: Config;
   data: Data;
@@ -32,6 +34,8 @@ const PreviewApp = ({
     data,
   });
 
+  const { componentState } = useResolvedData(data, config, dispatch);
+
   return (
     <AppProvider
       value={{
@@ -41,7 +45,7 @@ const PreviewApp = ({
         componentState: {},
       }}
     >
-      {children(appState, dispatch)}
+      {children(appState, dispatch, componentState)}
     </AppProvider>
   );
 };
@@ -113,7 +117,25 @@ export const ConfigPreview = ({
                 name={name}
                 field={componentConfig.fields[name]}
                 value={appState.data["content"][0].props[name]}
-                onChange={(val) =>
+                readOnly={
+                  appState.data["content"][0].readOnly &&
+                  appState.data["content"][0].readOnly[name]
+                }
+                onChange={async (val) => {
+                  const { resolveData = (data) => data } = componentConfig;
+
+                  const newData = await resolveData(
+                    {
+                      props: {
+                        ...appState.data.content[0].props,
+                        [name]: val,
+                      },
+                      type: "Example",
+                      readOnly: {},
+                    },
+                    { changed: { [name]: true } }
+                  );
+
                   dispatch({
                     type: "replace",
                     destinationIndex: 0,
@@ -122,11 +144,11 @@ export const ConfigPreview = ({
                       ...appState.data.content[0],
                       props: {
                         ...appState.data.content[0].props,
-                        [name]: val,
+                        ...newData.props,
                       },
                     },
-                  })
-                }
+                  });
+                }}
               />
             ))}
           </div>
