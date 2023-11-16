@@ -8,7 +8,7 @@ import { Globe } from "react-feather";
 
 # \<FieldLabel\>
 
-Render a styled `label` when creating [`custom` fields](/docs/api-reference/fields/custom).
+Render a styled `label` when creating [`custom` fields](/docs/api-reference/configuration/fields/custom).
 
 <ConfigPreview
   label="Example"
@@ -19,7 +19,9 @@ Render a styled `label` when creating [`custom` fields](/docs/api-reference/fiel
         render: () => {
           return (
             <FieldLabel label="Title">
-              <input style={{ border: "1px solid black" }} />
+              <input
+                style={{ background: "white", border: "1px solid black" }}
+              />
             </FieldLabel>
           );
         },
