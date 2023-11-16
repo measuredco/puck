@@ -6,22 +6,21 @@ Use this guide to set-up Puck
 
 Install the package
 
-```sh npm2yarn
+```sh npm2yarn copy
 npm i @measured/puck --save
 ```
 
 Or generate a Puck application using a [recipe](recipes)
 
-```sh
+```sh copy
 npx create-puck-app my-app
 ```
 
 ## Render the editor
 
-```jsx
-// Editor.jsx
+```jsx copy filename="Editor.jsx"
 import { Puck } from "@measured/puck";
-import "@measured/puck/dist/index.css";
+import "@measured/puck/puck.css";
 
 // Create Puck component config
 const config = {
@@ -56,8 +55,7 @@ export function Editor() {
 
 ## Render the page
 
-```jsx
-// Page.jsx
+```jsx copy filename="Page.jsx"
 import { Render } from "@measured/puck";
 
 export function Page() {
