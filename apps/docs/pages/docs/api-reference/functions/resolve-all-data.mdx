@@ -4,7 +4,7 @@ title: resolveAllData
 
 # resolveAllData
 
-Utility function to execute all [`resolveData` methods](/docs/api-reference/component-config#resolvedatadata-params) on a data payload outside of the [`<Puck>`](/docs/api-reference/components/puck) editor, returning the updated value.
+Utility function to execute all [`resolveData` methods](/docs/api-reference/configuration/component-config#resolvedatadata-params) on a data payload outside of the [`<Puck>`](/docs/api-reference/components/puck) editor, returning the updated value.
 
 ```tsx copy
 import { resolveAllData } from "@measured/puck";
@@ -16,10 +16,10 @@ This is useful if you need to run your resolvers before passing your data to [`<
 
 ## Args
 
-| Param    | Example                     | Type                                 |
-| -------- | --------------------------- | ------------------------------------ |
-| `data`   | `{ content: {}, root: {} }` | [Data](/docs/api-reference/data)     |
-| `config` | `{ components: {} }`        | [Config](/docs/api-reference/config) |
+| Param    | Example                     | Type                                               |
+| -------- | --------------------------- | -------------------------------------------------- |
+| `data`   | `{ content: {}, root: {} }` | [Data](/docs/api-reference/data)                   |
+| `config` | `{ components: {} }`        | [Config](/docs/api-reference/configuration/config) |
 
 ## Returns
 

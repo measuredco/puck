@@ -1,6 +1,6 @@
 # Config
 
-The main configuration for Puck, describing the available components, fields and more.
+The main configuration object describing what Puck can render.
 
 ```tsx copy
 const config = {
@@ -21,17 +21,17 @@ const config = {
 
 ## Params
 
-| Param                       | Example                                                        | Type                                                      | Status   |
-| --------------------------- | -------------------------------------------------------------- | --------------------------------------------------------- | -------- |
-| [`components`](#components) | `components: { HeadingBlock: {{ render: () => <h1 /> } }`      | Object                                                    | Required |
-| [`root`](#root)             | `root: { render: () => <div /> }`                              | [`ComponentConfig`](/docs/api-reference/component-config) | -        |
-| [`categories`](#categories) | `categories: { typography: { components: ["HeadingBlock"] } }` | Object                                                    | -        |
+| Param                       | Example                                                        | Type                                                                    | Status   |
+| --------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------- | -------- |
+| [`components`](#components) | `components: { HeadingBlock: {{ render: () => <h1 /> } }`      | Object                                                                  | Required |
+| [`root`](#root)             | `root: { render: () => <div /> }`                              | [`ComponentConfig`](/docs/api-reference/configuration/component-config) | -        |
+| [`categories`](#categories) | `categories: { typography: { components: ["HeadingBlock"] } }` | Object                                                                  | -        |
 
 ## Required params
 
 ### `components`
 
-An object describing the components available to Puck. Each component definition implements the [`ComponentConfig` API](/docs/api-reference/component-config).
+An object describing the components available to Puck. Each component definition implements the [`ComponentConfig` API](/docs/api-reference/configuration/component-config).
 
 ```tsx {2-13} copy showLineNumbers
 const config = {
@@ -54,7 +54,7 @@ const config = {
 
 ### `root`
 
-An object describing the root of your component tree. This component wraps the rest of your components. Implements the [`ComponentConfig` API](/docs/api-reference/component-config).
+An object describing the root of your component tree. This component wraps the rest of your components. Implements the [`ComponentConfig` API](/docs/api-reference/configuration/component-config).
 
 - You must return children to render the internal Puck [`DropZone`](/docs/api-reference/components/drop-zone).
 
