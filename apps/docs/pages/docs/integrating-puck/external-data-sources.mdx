@@ -186,7 +186,7 @@ const config = {
       },
       resolveData: async ({ props }, { changed }) => {
         // Remove read-only from the title field if `data` is empty
-        if (!props.data) {return { props, readOnly: { title: false } };
+        if (!props.data) return { props, readOnly: { title: false } };
 
         // Don't query unless `data` has changed since resolveData was last run
         if (!changed.data) return { props };
@@ -198,10 +198,16 @@ const config = {
           },
         };
       },
-      render: ({ title }) => (<b>{title}</b>)
+      render: ({ title }) => <b>{title}</b>,
     },
   },
 };
 ```
+
+## Further reading
+
+- [`external` field API reference](/docs/api-reference/configuration/fields/external)
+- [`resolveData` API reference](/docs/api-reference/configuration/component-config#resolvedatadata-params)
+- [`resolveAllData` API reference](/docs/api-reference/functions/resolve-all-data)
 
 <div id="puck-portal-root" />
