@@ -1,17 +1,8 @@
 {
-  "defining-components": {
-    "title": "Defining Components"
-  },
-  "categories": {
-    "title": "Categories"
-  },
-  "dynamic-data": {
-    "title": "Dynamic Data"
-  },
-  "drop-zones": {
-    "title": "Nested Components"
-  },
-  "server-components": {
-    "title": "Server Components"
-  }
+  "defining-components": {},
+  "categories": {},
+  "dynamic-props": {},
+  "external-data-sources": {},
+  "drop-zones": {},
+  "server-components": {}
 }

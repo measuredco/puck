@@ -146,6 +146,10 @@ export const ConfigPreview = ({
                         ...appState.data.content[0].props,
                         ...newData.props,
                       },
+                      readOnly: {
+                        ...appState.data["content"][0].readOnly,
+                        ...newData.readOnly,
+                      },
                     },
                   });
                 }}
