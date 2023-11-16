@@ -1,20 +1,23 @@
-import { ConfigPreview } from "../../../../components/Preview";
+import { ConfigPreview } from "../../../../../components/Preview";
 
-# Select
+# Radio
 
-Render a `select` input with a list of options. Extends [Base](base).
+Render a `radio` input with a list of options. Extends [Base](base).
 
 <ConfigPreview
   label="Example"
   componentConfig={{
     fields: {
       textAlign: {
-        type: "select",
+        type: "radio",
         options: [
           { label: "Left", value: "left" },
           { label: "Right", value: "right" },
         ],
       },
+    },
+    defaultProps: {
+      textAlign: "left",
     },
     render: ({ textAlign }) => {
       return <p style={{ textAlign, margin: 0 }}>Hello, world</p>;
@@ -28,12 +31,15 @@ const config = {
     Example: {
       fields: {
         textAlign: {
-          type: "select",
+          type: "radio",
           options: [
             { label: "Left", value: "left" },
             { label: "Right", value: "right" },
           ],
         },
+      },
+      defaultProps: {
+        textAlign: "left",
       },
       render: ({ textAlign }) => {
         return <p style={{ textAlign }}>Hello, world</p>;
@@ -47,14 +53,14 @@ const config = {
 
 | Param                 | Example                                               | Type     | Status   |
 | --------------------- | ----------------------------------------------------- | -------- | -------- |
-| [`type`](#type)       | `type: "select"`                                      | "select" | Required |
+| [`type`](#type)       | `type: "radio"`                                       | "radio"  | Required |
 | [`options`](#options) | `options: [{ label: "Option 1", value: "option-1" }]` | Object[] | Required |
 
 ## Required params
 
 ### `type`
 
-The type of the field. Must be `"select"` for Array fields.
+The type of the field. Must be `"radio"` for Array fields.
 
 ```tsx {6} copy
 const config = {
@@ -62,7 +68,7 @@ const config = {
     Example: {
       fields: {
         textAlign: {
-          type: "select",
+          type: "radio",
           options: [
             { label: "Left", value: "left" },
             { label: "Right", value: "right" },
@@ -77,7 +83,7 @@ const config = {
 
 ### `options`
 
-The options for the select field. The `value` can be a String, Number or Boolean.
+The options for the radio field. The `value` can be a String, Number or Boolean.
 
 ```tsx {7-10} copy
 const config = {
@@ -85,7 +91,7 @@ const config = {
     Example: {
       fields: {
         textAlign: {
-          type: "select",
+          type: "radio",
           options: [
             { label: "Left", value: "left" },
             { label: "Right", value: "right" },
