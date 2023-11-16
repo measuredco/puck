@@ -24,16 +24,21 @@ An array containing an object for each component in the main content region.
 
 ### `content[*]`
 
-| Param   | Example                     | Type   |
-| ------- | --------------------------- | ------ |
-| `type`  | `"HeadingBlock"`            | String |
-| `props` | `{ title: "Hello, world" }` | Object |
+#### Params
 
-#### `content[*].type`
+| Param                          | Example                            | Type    | Status   |
+| ------------------------------ | ---------------------------------- | ------- | -------- |
+| [`type`](#contenttype)         | `type: "HeadingBlock"`             | "array" | Required |
+| [`props`](#contentprops)       | `props: { title: "Hello, world" }` | Object  | Required |
+| [`readOnly`](#contentreadonly) | `readOnly: { title: true }`        | Object  | -        |
+
+#### Required params
+
+##### `content[*].type`
 
 The type of the component, which tells Puck to run the [`render()`](/docs/api-reference/configuration/component-config#renderprops) method for the component of the [same key](/docs/api-reference/config#components).
 
-#### `content[*].props`
+##### `content[*].props`
 
 The props stored based on the [`component config`](/docs/api-reference/configuration/component-config) that Puck will pass to the [`render()`](/docs/api-reference/configuration/component-config#renderprops) method for the component of the [same key](/docs/api-reference/config#components).
 
@@ -53,13 +58,43 @@ The props stored based on the [`component config`](/docs/api-reference/configura
 }
 ```
 
+#### Optional params
+
+##### `content[*].readOnly`
+
+An object describing which fields are set to [read-only](/docs/api-reference/configuration/component-config#datareadonly-1).
+
+```json {9-11} copy
+{
+  "content": [
+    {
+      "type": "HeadingBlock",
+      "props": {
+        "id": "HeadingBlock-1234",
+        "title": "Hello, world"
+      },
+      "readOnly": {
+        "title": true
+      }
+    }
+  ],
+  "root": {},
+  "zones": {}
+}
+```
+
 ## `root`
 
 An object describing data for the [`root` config](/docs/api-reference/config#root).
 
-| Param   | Example                     | Type   |
-| ------- | --------------------------- | ------ |
-| `props` | `{ title: "Hello, world" }` | Object |
+### Params
+
+| Param                       | Example                            | Type   | Status |
+| --------------------------- | ---------------------------------- | ------ | ------ |
+| [`props`](#rootprops)       | `props: { title: "Hello, world" }` | Object | -      |
+| [`readOnly`](#rootreadonly) | `readOnly: { title: true }`        | Object | -      |
+
+### Optional params
 
 #### `root.props`
 
@@ -69,6 +104,22 @@ The props stored based on the [`component config`](/docs/api-reference/configura
 {
   "content": [],
   "root": { "props": { "title": "Puck Example" } },
+  "zones": {}
+}
+```
+
+#### `root.readOnly`
+
+An object describing which fields are set to [read-only](/docs/api-reference/configuration/component-config#datareadonly-1).
+
+```json {4-6} copy
+{
+  "content": [],
+  "root": {
+    "readOnly": {
+      "title": true
+    }
+  },
   "zones": {}
 }
 ```
