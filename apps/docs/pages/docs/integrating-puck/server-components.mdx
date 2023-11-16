@@ -1,0 +1,29 @@
+# React Server Components
+
+Puck provides **opt-in** support for [React Server Components](https://react.dev/reference/react/use-server#use-server) (RSC) via the included `rsc` bundle.
+
+The `rsc` bundle includes an RSC-friendly version of [`<Render>`](/docs/api-reference/components/render):
+
+```tsx
+import { Render } from "@measured/puck/rsc";
+
+export function Page() {
+  return <Render config={config} data={data} />;
+}
+```
+
+## DropZones and RSC
+
+If you're using DropZones with React server components, you must use the [`puck.renderDropZone` prop](/docs/api-reference/configuration/component-config#propspuckrenderdropzone) provided to your render function instead of the `<DropZone>` component.
+
+```tsx copy
+const config = {
+  components: {
+    Columns: {
+      render: ({ puck: { renderDropZone } }) => (
+        <div>{renderDropZone({ zone: "my-content" })}</div>
+      ),
+    },
+  },
+};
+```
