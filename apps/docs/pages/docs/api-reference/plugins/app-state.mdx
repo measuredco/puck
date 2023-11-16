@@ -1,0 +1,68 @@
+# `AppState`
+
+> **⚠️ The plugin API is highly experimental and is likely to experience breaking changes.**
+
+The internal state of the [`<Puck>`](/docs/api-reference/components/puck) component.
+
+## `data`
+
+The current [`Data`](/api-reference/data) payload being managed by Puck.
+
+## `ui`
+
+The current state of the Puck editor interface.
+
+| Param                                         | Example                                              | Type    |
+| --------------------------------------------- | ---------------------------------------------------- | ------- |
+| [`leftSideBarVisible`](#uileftsidebarvisible) | `false`                                              | Boolean |
+| [`itemSelector`](#uiitemselector)             | `{ index: 0, zone: "my-content" }`                   | Object  |
+| [`arrayState`](#uiarraystate)                 | `{}`                                                 | Object  |
+| [`componentList`](#uicomponentlist)           | `{ typography: { components: [ "HeadingBlock" ] } }` | Object  |
+
+---
+
+### `ui.leftSideBarVisible`
+
+Whether or not the left side bar is visible.
+
+---
+
+### `ui.itemSelector`
+
+An object describing which item is selected.
+
+#### `ui.itemSelector.index`
+
+The index of the item within the zone.
+
+#### `ui.itemSelector.zone`
+
+The zone that the item is defined within. **Defaults to [main content zone](/docs/api-reference/data#content).**
+
+---
+
+### `ui.arrayState`
+
+An object describing the internal state of array items
+
+---
+
+### `ui.componentList`
+
+An object describing the component list. Similar shape to the [categories API](/docs/api-reference/configuration/config#categories)
+
+#### `ui.componentList[key].components`
+
+Array containing the names of components in this category
+
+#### `ui.componentList[key].title`
+
+Title of the category
+
+#### `ui.componentList[key].visible`
+
+Whether or not the category is visible in the side bar
+
+#### `ui.componentList[key].expanded`
+
+Whether or not the category is expanded in the side bar
