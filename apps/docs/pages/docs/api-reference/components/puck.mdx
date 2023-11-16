@@ -25,24 +25,24 @@ export function Editor() {
 
 ## Props
 
-| Param                                                 | Example                              | Type                                 | Status   |
-| ----------------------------------------------------- | ------------------------------------ | ------------------------------------ | -------- |
-| [`config`](#config)                                   | `config: { components: {} }`         | [Config](/docs/api-reference/config) | Required |
-| [`data`](#data)                                       | `data: { content: [], root: {} }`    | [Data](/docs/api-reference/data)     | Required |
-| [`onPublish()`](#onpublishdata)                       | `onPublish: async (data) => {}`      | Function                             | Required |
-| [`headerPath`](#headerpath)                           | `headerPath: "/my-page"`             | String                               | -        |
-| [`headerTitle`](#headertitle)                         | `headerTitle: "My Page"`             | String                               | -        |
-| [`onChange()`](#onchangedata)                         | `onChange: (data) => {}`             | Function                             | -        |
-| [`plugins`](#plugins)                                 | `plugins: [myPlugin]`                | Plugin[]                             | -        |
-| [`renderComponentList()`](#rendercomponentlistparams) | `renderComponentList: () => <div />` | Function                             | -        |
-| [`renderHeader()`](#renderheaderparams)               | `renderHeader: () => <div />`        | Function                             | -        |
-| [`renderHeaderActions()`](#renderheaderactionsparams) | `renderHeaderActions: () => <div />` | Function                             | -        |
+| Param                                                 | Example                              | Type                                               | Status   |
+| ----------------------------------------------------- | ------------------------------------ | -------------------------------------------------- | -------- |
+| [`config`](#config)                                   | `config: { components: {} }`         | [Config](/docs/api-reference/configuration/config) | Required |
+| [`data`](#data)                                       | `data: { content: [], root: {} }`    | [Data](/docs/api-reference/data)                   | Required |
+| [`onPublish()`](#onpublishdata)                       | `onPublish: async (data) => {}`      | Function                                           | Required |
+| [`headerPath`](#headerpath)                           | `headerPath: "/my-page"`             | String                                             | -        |
+| [`headerTitle`](#headertitle)                         | `headerTitle: "My Page"`             | String                                             | -        |
+| [`onChange()`](#onchangedata)                         | `onChange: (data) => {}`             | Function                                           | -        |
+| [`plugins`](#plugins)                                 | `plugins: [myPlugin]`                | Plugin[]                                           | -        |
+| [`renderComponentList()`](#rendercomponentlistparams) | `renderComponentList: () => <div />` | Function                                           | -        |
+| [`renderHeader()`](#renderheaderparams)               | `renderHeader: () => <div />`        | Function                                           | -        |
+| [`renderHeaderActions()`](#renderheaderactionsparams) | `renderHeaderActions: () => <div />` | Function                                           | -        |
 
 ## Required props
 
 ### `config`
 
-An object describing the available components, fields and more. See the [`Config` docs](/docs/api-reference/config) for a full reference.
+An object describing the available components, fields and more. See the [`Config` docs](/docs/api-reference/configuration/config) for a full reference.
 
 ```tsx {4-17} copy
 export function Editor() {
@@ -183,7 +183,7 @@ export function Editor() {
 
 ### `renderComponentList(params)`
 
-Render function for wrapping the component list. Receives the Plugin render params.
+Render function for wrapping the component list. Receives the Plugin [render args](/docs/api-reference/plugins/functions#render-args).
 
 ```tsx {4-6} copy
 export function Editor() {
@@ -202,7 +202,7 @@ export function Editor() {
 
 Render function for overriding the Puck header component.
 
-Receives the Plugin render params.
+Receives the Plugin [render args](/docs/api-reference/plugins/functions#render-args).
 
 ```tsx {4-19} filename="renderHeader example with toggle side-bar button" copy
 export function Editor() {
@@ -232,7 +232,9 @@ export function Editor() {
 
 ### `renderHeaderActions(params)`
 
-Render function for overriding the Puck header actions. Use a fragment. Receives the Plugin render params.
+Render function for overriding the Puck header actions. Use a fragment.
+
+Receives the Plugin [render args](/docs/api-reference/plugins/functions#render-args).
 
 ```tsx {4-14} filename="renderHeaderActions example with save draft button" copy
 export function Editor() {

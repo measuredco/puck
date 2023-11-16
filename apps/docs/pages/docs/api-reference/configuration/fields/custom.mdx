@@ -18,7 +18,11 @@ Implement a field with a custom UI. Extends [Base](base).
                 defaultValue={value}
                 name={name}
                 onChange={(e) => onChange(e.currentTarget.value)}
-                style={{ border: "1px solid hotpink", padding: 4 }}
+                style={{
+                  background: "white",
+                  border: "1px solid hotpink",
+                  padding: 4,
+                }}
               />
             </FieldLabel>
           );
