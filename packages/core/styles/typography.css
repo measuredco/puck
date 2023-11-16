@@ -92,7 +92,6 @@
     Segoe UI Symbol;
 
   /* Values */
-  --puck-font-family-monospaced: "Menlo", "Monaco", "Liberation Mono",
-    "Consolas", "Courier New", monospace;
+  --puck-font-family-monospaced: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
   --puck-font-family-proportional: var(--puck-font-stack), sans-serif;
 }
