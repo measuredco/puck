@@ -63,6 +63,8 @@ export const Columns: ComponentConfig<ColumnsProps> = {
             <div
               key={idx}
               style={{
+                display: "flex",
+                flexDirection: "column",
                 gridColumn:
                   span && distribution === "manual"
                     ? `span ${Math.max(Math.min(span, 12), 1)}`
