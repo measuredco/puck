@@ -33,10 +33,14 @@ import { LayerTree } from "../LayerTree";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
 import { flushZones } from "../../lib/flush-zones";
+import getClassNameFactory from "../../lib/get-class-name-factory";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { AppProvider, defaultAppState } from "./context";
 import { useComponentList } from "../../lib/use-component-list";
 import { useResolvedData } from "../../lib/use-resolved-data";
+import styles from "./styles.module.css";
+
+const getClassName = getClassNameFactory("Puck", styles);
 
 const Field = () => {};
 
@@ -270,7 +274,7 @@ export function Puck({
   }, []);
 
   return (
-    <div className="puck">
+    <div>
       <AppProvider
         value={{ state: appState, dispatch, config, componentState }}
       >
@@ -354,31 +358,8 @@ export function Puck({
             <dropZoneContext.Consumer>
               {(ctx) => {
                 return (
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateAreas:
-                        '"header header header" "left editor right"',
-                      gridTemplateColumns: `${
-                        leftSideBarVisible ? "288px" : "0px"
-                      } auto 288px`,
-                      gridTemplateRows: "min-content auto",
-                      height: "100vh",
-                      position: "fixed",
-                      top: 0,
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                    }}
-                  >
-                    <header
-                      style={{
-                        gridArea: "header",
-                        color: "var(--puck-color-black)",
-                        background: "var(--puck-color-white)",
-                        borderBottom: "1px solid var(--puck-color-grey-8)",
-                      }}
-                    >
+                  <div className={getClassName({ leftSideBarVisible })}>
+                    <header className={getClassName("header")}>
                       {renderHeader ? (
                         renderHeader({
                           children: (
@@ -395,21 +376,8 @@ export function Puck({
                           state: appState,
                         })
                       ) : (
-                        <div
-                          style={{
-                            display: "grid",
-                            padding: 16,
-                            gridTemplateAreas: '"left middle right"',
-                            gridTemplateColumns: "344px auto 344px",
-                            gridTemplateRows: "auto",
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              gap: 16,
-                            }}
-                          >
+                        <div className={getClassName("headerInner")}>
+                          <div className={getClassName("headerToggle")}>
                             <IconButton
                               onClick={() =>
                                 dispatch({
@@ -424,31 +392,20 @@ export function Puck({
                               <Sidebar />
                             </IconButton>
                           </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
+                          <div className={getClassName("headerTitle")}>
                             <Heading rank={2} size="xs">
                               {headerTitle || rootProps.title || "Page"}
                               {headerPath && (
-                                <small
-                                  style={{ fontWeight: 400, marginLeft: 4 }}
-                                >
-                                  <code>{headerPath}</code>
-                                </small>
+                                <>
+                                  {" "}
+                                  <code className={getClassName("headerPath")}>
+                                    {headerPath}
+                                  </code>
+                                </>
                               )}
                             </Heading>
                           </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              gap: 16,
-                              justifyContent: "flex-end",
-                            }}
-                          >
+                          <div className={getClassName("headerTools")}>
                             <div style={{ display: "flex" }}>
                               <IconButton
                                 title="undo"
@@ -479,33 +436,28 @@ export function Puck({
                                 />
                               </IconButton>
                             </div>
-                            {renderHeaderActions &&
-                              renderHeaderActions({
-                                state: appState,
-                                dispatch,
-                              })}
-                            <Button
-                              onClick={() => {
-                                onPublish(data);
-                              }}
-                              icon={<Globe size="14px" />}
-                            >
-                              Publish
-                            </Button>
+                            <div>
+                              {renderHeaderActions &&
+                                renderHeaderActions({
+                                  state: appState,
+                                  dispatch,
+                                })}
+                            </div>
+                            <div>
+                              <Button
+                                onClick={() => {
+                                  onPublish(data);
+                                }}
+                                icon={<Globe size="14px" />}
+                              >
+                                Publish
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       )}
                     </header>
-                    <div
-                      style={{
-                        gridArea: "left",
-                        background: "var(--puck-color-grey-11)",
-                        borderRight: "1px solid var(--puck-color-grey-8)",
-                        overflowY: "auto",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
+                    <div className={getClassName("leftSideBar")}>
                       <SidebarSection title="Components">
                         <ComponentListWrapper>
                           {componentList ? (
@@ -549,30 +501,12 @@ export function Puck({
                       </SidebarSection>
                     </div>
                     <div
-                      style={{
-                        overflowY: "auto",
-                        gridArea: "editor",
-                        position: "relative",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
+                      className={getClassName("frame")}
                       onClick={() => setItemSelector(null)}
                       id="puck-frame"
                     >
-                      <div
-                        className="puck-root"
-                        style={{
-                          boxShadow:
-                            "0px 0px 0px 32px var(--puck-color-grey-10)",
-                          margin: 32,
-                          zoom: 0.75,
-                        }}
-                      >
-                        <div
-                          style={{
-                            border: "1px solid var(--puck-color-grey-8)",
-                          }}
-                        >
+                      <div className={getClassName("root")}>
+                        <div className={getClassName("page")}>
                           <Page
                             dispatch={dispatch}
                             state={appState}
@@ -591,17 +525,7 @@ export function Puck({
                         }}
                       ></div>
                     </div>
-                    <div
-                      style={{
-                        borderLeft: "1px solid var(--puck-color-grey-8)",
-                        overflowY: "auto",
-                        gridArea: "right",
-                        fontFamily: "var(--puck-font-stack)",
-                        display: "flex",
-                        flexDirection: "column",
-                        background: "var(--puck-color-white)",
-                      }}
-                    >
+                    <div className={getClassName("rightSideBar")}>
                       <FieldWrapper dispatch={dispatch} state={appState}>
                         <SidebarSection
                           noPadding

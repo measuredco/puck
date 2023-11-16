@@ -53,13 +53,14 @@
   font-size: var(--puck-font-size-xxs);
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
   cursor: grab;
   margin-bottom: 12px;
 }
 
-.ComponentListItemIcon {
-  color: var(--puck-color-grey-4);
+.ComponentListItem-name {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ComponentList:not(.ComponentList--isDraggingFrom)
