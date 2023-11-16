@@ -1,7 +1,7 @@
 export { InputOrGroup } from "@/core/components/InputOrGroup";
 
 import { ReactNode, useReducer, useState } from "react";
-import "@/core/styles/global.css";
+import "@/core/styles.css";
 import { AppProvider, defaultAppState } from "@/core/components/Puck/context";
 import { PuckAction, createReducer } from "@/core/reducer";
 import { InputOrGroup } from "@/core/components/InputOrGroup";
@@ -130,12 +130,14 @@ export const ConfigPreview = ({
               />
             ))}
           </div>
-          <div className={getClassNameConfigPreview("preview")}>
-            {componentConfig.render({
-              ...appState.data["content"][0].props,
-              puck: { renderDropZone: () => <div /> },
-            })}
-          </div>
+          {componentConfig.render && (
+            <div className={getClassNameConfigPreview("preview")}>
+              {componentConfig.render({
+                ...appState.data["content"][0].props,
+                puck: { renderDropZone: () => <div /> },
+              })}
+            </div>
+          )}
         </div>
       )}
     />

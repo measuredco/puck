@@ -1,5 +1,5 @@
 import { ConfigPreview } from "../../../../components/Preview";
-import { FieldLabel } from "@/core";
+import { FieldLabel } from "@/core/components/InputOrGroup";
 
 # Custom
 
@@ -13,7 +13,7 @@ Implement a field with a custom UI. Extends [Base](base).
         type: "custom",
         render: ({ name, onChange, value }) => {
           return (
-            <FieldLabel label="Test">
+            <FieldLabel label="Title">
               <input
                 defaultValue={value}
                 name={name}
@@ -34,8 +34,19 @@ Implement a field with a custom UI. Extends [Base](base).
   }}
 />
 
-```tsx {7-20} copy
+```tsx {3-12, 18-21} copy
 import { FieldLabel } from "@measured/puck";
+
+const render = ({ name, onChange, value }) => (
+  // You'll normally want to wrap with FieldLabel to get the default field label styles
+  <FieldLabel label="Title">
+    <input
+      defaultValue={value}
+      name={name}
+      onChange={(e) => onChange(e.currentTarget.value)}
+    />
+  </FieldLabel>
+);
 
 const config = {
   components: {
@@ -43,17 +54,7 @@ const config = {
       fields: {
         title: {
           type: "custom",
-          render: ({ name, onChange, value }) => (
-            // You'll normally want to wrap with FieldLabel to get the default field label styles
-            <FieldLabel label="Test" icon>
-              <input
-                defaultValue={value}
-                name={name}
-                onChange={(e) => onChange(e.currentTarget.value)}
-                style={{ border: "1px solid hotpink", padding: 4 }}
-              />
-            </FieldLabel>
-          ),
+          render,
         },
       },
       render: ({ title }) => {
@@ -77,26 +78,14 @@ const config = {
 
 The type of the field. Must be `"custom"` for Custom fields.
 
-```tsx {8} copy
-import { FieldLabel } from "@measured/puck";
-
+```tsx {6} copy
 const config = {
   components: {
     Example: {
       fields: {
         title: {
           type: "custom",
-          render: ({ name, onChange, value }) => (
-            // You'll normally want to wrap with FieldLabel to get the default field label styles
-            <FieldLabel label="Test" icon>
-              <input
-                defaultValue={value}
-                name={name}
-                onChange={(e) => onChange(e.currentTarget.value)}
-                style={{ border: "1px solid hotpink", padding: 4 }}
-              />
-            </FieldLabel>
-          ),
+          render: CustomField,
         },
       },
       // ...
@@ -107,10 +96,20 @@ const config = {
 
 ### `render(params)`
 
-Render the custom field. It's normally best to wrap your custom input in the `<FieldLabel>` component to get the default field label styling.
+Render the custom field. It's normally best to wrap your custom input in the [`<FieldLabel>` component](/docs/api-reference/components/FieldLabel) to get the default field label styling.
 
-```tsx {11-18} copy
+```tsx {3-11,19} copy
 import { FieldLabel } from "@measured/puck";
+
+const render = ({ name, onChange, value }) => (
+  <FieldLabel label="Title">
+    <input
+      defaultValue={value}
+      name={name}
+      onChange={(e) => onChange(e.currentTarget.value)}
+    />
+  </FieldLabel>
+);
 
 const config = {
   components: {
@@ -118,17 +117,7 @@ const config = {
       fields: {
         title: {
           type: "custom",
-          render: ({ name, onChange, value }) => (
-            // You'll normally want to wrap with FieldLabel to get the default field label styles
-            <FieldLabel label="Test" icon>
-              <input
-                defaultValue={value}
-                name={name}
-                onChange={(e) => onChange(e.currentTarget.value)}
-                style={{ border: "1px solid hotpink", padding: 4 }}
-              />
-            </FieldLabel>
-          ),
+          render,
         },
       },
       // ...
