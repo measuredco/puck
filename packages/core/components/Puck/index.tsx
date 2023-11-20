@@ -546,7 +546,7 @@ export function Puck({
                               if (selectedItem) {
                                 currentProps = selectedItem.props;
                               } else {
-                                currentProps = data.root;
+                                currentProps = rootProps;
                               }
 
                               const newProps = {
@@ -578,12 +578,12 @@ export function Puck({
                                   if (config.root?.resolveData) {
                                     resolveData({
                                       ...data,
-                                      root: { props: { newProps } },
+                                      root: { props: newProps },
                                     });
                                   } else {
                                     dispatch({
                                       type: "setData",
-                                      data: { root: { props: { newProps } } },
+                                      data: { root: { props: newProps } },
                                     });
                                   }
                                 } else {
