@@ -26,7 +26,7 @@ export const Home = () => {
       <div style={{ paddingTop: 32 }} />
       <div className={getClassName("ctas")}>
         <div className={getClassName("actions")}>
-          <Button href="/docs/introduction">Get started</Button>
+          <Button href="/docs/introduction">Read docs</Button>
           <Button
             href="https://puck-demo-measured.vercel.app/edit"
             variant="secondary"
