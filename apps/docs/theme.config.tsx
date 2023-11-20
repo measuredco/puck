@@ -60,13 +60,13 @@ const theme: DocsThemeConfig = {
   },
   banner: {
     dismissible: true,
-    key: "open-source",
+    key: "v0.11.0",
     text: (
       <a
         href="https://github.com/measuredco/puck/releases/tag/v0.11.0"
         target="_blank"
       >
-        <b>🎉 Puck 0.11.0 out now</b>: includes the new categories API for
+        <b>🎉 Puck 0.11.0 released</b>: introduces the categories API for
         grouping components, and new ways to load external data →
       </a>
     ),
