@@ -1,0 +1,102 @@
+---
+title: Multi-column Layouts
+---
+
+# Multi-column Layouts
+
+Multi-column and other complex layouts can be achieved by nesting components.
+
+## Using DropZones
+
+Puck provides support for nesting components via the [`<DropZone>` API](/docs/api-reference/components/drop-zone).
+
+### Nesting components
+
+The `<DropZone>` component can be rendered anywhere within your component.
+
+```tsx {1,9} showLineNumbers copy
+import { DropZone } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+### Creating multi-column layouts
+
+Combine multiple `<DropZone>` components with something like [CSS Grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout) or [Flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox) to achieve multi-column layouts.
+
+```tsx {9,11,12} showLineNumbers copy
+import { DropZone } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div
+            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}
+          >
+            <DropZone zone="left-column" />
+            <DropZone zone="right-column" />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+### Reusing the `zone`
+
+The [`zone` identifier](/docs/api-reference/components/drop-zone#zone) is unique to the component, and can be reused in different components.
+
+```tsx {3-8,16,25} showLineNumbers copy
+import { DropZone } from "@measured/puck";
+
+const Columns = () => (
+  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+    <DropZone zone="left-column" />
+    <DropZone zone="right-column" />
+  </div>
+);
+
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <Columns />
+          </div>
+        );
+      },
+    },
+    Alternative: {
+      render: () => {
+        return (
+          <div>
+            <Columns />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+## Further reading
+
+- [The `<DropZone>` API](/docs/api-reference/components/drop-zone)
+- [How DropZones store data](/docs/api-reference/data#zones)
+- [DropZones and React Server Components](/docs/integrating-puck/server-components)
