@@ -510,7 +510,7 @@ export function Puck({
                           <Page
                             dispatch={dispatch}
                             state={appState}
-                            {...data.root}
+                            {...rootProps}
                           >
                             <DropZone zone={rootDroppableId} />
                           </Page>
