@@ -1,6 +1,6 @@
 {
-  "configuring-components": {},
-  "configuring-the-root": {},
+  "component-configuration": {},
+  "root-configuration": {},
   "multi-column-layouts": {},
   "categories": {},
   "dynamic-props": {},
