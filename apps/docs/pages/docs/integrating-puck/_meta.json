@@ -1,8 +1,9 @@
 {
-  "defining-components": {},
+  "configuring-components": {},
+  "configuring-the-root": {},
+  "nested-components": {},
   "categories": {},
   "dynamic-props": {},
   "external-data-sources": {},
-  "drop-zones": {},
   "server-components": {}
 }
