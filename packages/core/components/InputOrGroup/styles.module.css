@@ -77,6 +77,12 @@
   border-color: var(--puck-color-neutral-3);
 }
 
+.Input-input:focus {
+  border-color: var(--puck-color-azure-4);
+  outline: var(--puck-color-azure-8) 4px solid;
+  outline-offset: 0;
+}
+
 .Input-radioGroupItems {
   display: flex;
   border: 1px solid var(--puck-color-grey-7);
