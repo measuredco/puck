@@ -56,11 +56,12 @@ export const IconButton = ({
       href={href}
       title={title}
     >
+      <span className={getClassName("title")}>{title}</span>
       {children}
       {loading && (
         <>
           &nbsp;&nbsp;
-          <ClipLoader color="inherit" size="14px" />
+          <ClipLoader aria-label="Loading" color="inherit" size="14px" />
         </>
       )}
     </ElementType>
