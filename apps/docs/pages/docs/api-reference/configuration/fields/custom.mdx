@@ -1,5 +1,4 @@
 import { ConfigPreview } from "@/docs/components/Preview";
-import { FieldLabel } from "@/core/components/InputOrGroup";
 
 # Custom
 
@@ -13,18 +12,16 @@ Implement a field with a custom UI. Extends [Base](base).
         type: "custom",
         render: ({ name, onChange, value }) => {
           return (
-            <FieldLabel label="Title">
-              <input
-                defaultValue={value}
-                name={name}
-                onChange={(e) => onChange(e.currentTarget.value)}
-                style={{
-                  background: "white",
-                  border: "1px solid black",
-                  padding: 4,
-                }}
-              />
-            </FieldLabel>
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) => onChange(e.currentTarget.value)}
+              style={{
+                background: "white",
+                border: "1px solid black",
+                padding: 4,
+              }}
+            />
           );
         },
       },
@@ -38,20 +35,8 @@ Implement a field with a custom UI. Extends [Base](base).
   }}
 />
 
-```tsx {3-13, 19-22} copy
+```tsx {7-16} copy showLineNumbers
 import { FieldLabel } from "@measured/puck";
-
-const render = ({ name, onChange, value }) => (
-  // You'll normally want to wrap with FieldLabel to get the default field label styles
-  <FieldLabel label="Title">
-    <input
-      defaultValue={value}
-      name={name}
-      onChange={(e) => onChange(e.currentTarget.value)}
-      style={{ border: "1px solid black", padding: 4 }}
-    />
-  </FieldLabel>
-);
 
 const config = {
   components: {
@@ -59,7 +44,13 @@ const config = {
       fields: {
         title: {
           type: "custom",
-          render,
+          render: ({ name, onChange, value }) => (
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) => onChange(e.currentTarget.value)}
+            />
+          ),
         },
       },
       render: ({ title }) => {
@@ -83,14 +74,20 @@ const config = {
 
 The type of the field. Must be `"custom"` for Custom fields.
 
-```tsx {6} copy
+```tsx {6} showLineNumbers copy
 const config = {
   components: {
     Example: {
       fields: {
         title: {
           type: "custom",
-          render: CustomField,
+          render: ({ name, onChange, value }) => (
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) => onChange(e.currentTarget.value)}
+            />
+          ),
         },
       },
       // ...
@@ -101,20 +98,10 @@ const config = {
 
 ### `render(params)`
 
-Render the custom field. It's normally best to wrap your custom input in the [`<FieldLabel>` component](/docs/api-reference/components/FieldLabel) to get the default field label styling.
+Render the custom field.
 
-```tsx {3-11,19} copy
+```tsx {9-14} showLineNumbers copy
 import { FieldLabel } from "@measured/puck";
-
-const render = ({ name, onChange, value }) => (
-  <FieldLabel label="Title">
-    <input
-      defaultValue={value}
-      name={name}
-      onChange={(e) => onChange(e.currentTarget.value)}
-    />
-  </FieldLabel>
-);
 
 const config = {
   components: {
@@ -122,7 +109,13 @@ const config = {
       fields: {
         title: {
           type: "custom",
-          render,
+          render: ({ name, onChange, value }) => (
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) => onChange(e.currentTarget.value)}
+            />
+          ),
         },
       },
       // ...
@@ -135,6 +128,12 @@ const config = {
 
 | Param             | Example                    | Type     |
 | ----------------- | -------------------------- | -------- |
+| `field`           | `{ type: "custom" }`       | Object   |
 | `name`            | `"title"`                  | String   |
 | `onChange(value)` | `onChange("Hello, world")` | Function |
 | `value`           | `"Hello, world"`           | Any      |
+
+## Further reading
+
+- [Custom Fields guide](/docs/extending-puck/custom-fields)
+- [The `<FieldLabel>` API reference](/docs/api-reference/components/field-label)

@@ -1,0 +1,133 @@
+import { ConfigPreview } from "@/docs/components/Preview";
+import { FieldLabel } from "@/core/components/InputOrGroup";
+
+# Custom Fields
+
+Puck can be extended with completely custom fields for different use-cases.
+
+## Creating a custom field
+
+Creating a custom field is possible using the [`custom` field type](/docs/api-reference/configuration/fields/custom):
+
+```tsx copy showLineNumbers {5-15}
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "custom",
+          render: ({ name, onChange, value }) => (
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) => onChange(e.currentTarget.value)}
+              style={{ border: "1px solid black", padding: 4 }}
+            />
+          ),
+        },
+      },
+      render: ({ title }) => {
+        return <p>{title}</p>;
+      },
+    },
+  },
+};
+```
+
+The `onChange` function updates the Puck data payload for the field name, in this case "title".
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      title: {
+        type: "custom",
+        render: ({ name, onChange, value }) => {
+          return (
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) => onChange(e.currentTarget.value)}
+              style={{
+                background: "white",
+                border: "1px solid black",
+                padding: 4,
+              }}
+            />
+          );
+        },
+      },
+    },
+    defaultProps: {
+      title: "Hello, world",
+    },
+    render: ({ title }) => {
+      return <p style={{ margin: 0 }}>{title}</p>;
+    },
+  }}
+/>
+
+## Adding a label
+
+You can add your own label, but it's recommended to use the [`<FieldLabel>` component](/docs/api-reference/components/field-label) provided by Puck to seamlessly integrate into the Puck field UI.
+
+```tsx copy showLineNumbers {1, 9-14}
+import { FieldLabel } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "custom",
+          label: "Label Example"
+          render: ({ field }) => (
+            <FieldLabel label={field.label}>
+              <input {/*...*/} />
+            </FieldLabel>
+          ),
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      title: {
+        type: "custom",
+        label: "Label Example",
+        render: ({ field, name, onChange, value }) => {
+          return (
+            <FieldLabel label={field.label}>
+              <input
+                defaultValue={value}
+                name={name}
+                onChange={(e) => onChange(e.currentTarget.value)}
+                style={{
+                  background: "white",
+                  border: "1px solid black",
+                  padding: 4,
+                }}
+              />
+            </FieldLabel>
+          );
+        },
+      },
+    },
+    defaultProps: {
+      title: "Hello, world",
+    },
+    render: ({ title }) => {
+      return <p style={{ margin: 0 }}>{title}</p>;
+    },
+  }}
+/>
+
+## Further reading
+
+- [The `custom` field API reference](/docs/api-reference/configuration/fields/custom):
