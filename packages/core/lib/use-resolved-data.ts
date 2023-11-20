@@ -29,14 +29,14 @@ export const useResolvedData = (
         delete deferredSetStates[id];
       }
 
-      const setLoading = (deferredSetStates[id] = setTimeout(() => {
+      deferredSetStates[id] = setTimeout(() => {
         setComponentState((prev) => ({
           ...prev,
           [id]: { ...prev[id], loading },
         }));
 
         delete deferredSetStates[id];
-      }, defer));
+      }, defer);
     },
     []
   );
