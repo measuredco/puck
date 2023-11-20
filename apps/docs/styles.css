@@ -1,0 +1,14 @@
+p a,
+li a {
+  color: var(--puck-color-azure-4) !important;
+}
+
+p a:hover,
+li a:hover {
+  color: var(--puck-color-azure-2) !important;
+}
+
+html.dark p a:hover,
+html.dark li a:hover {
+  color: var(--puck-color-azure-6) !important;
+}
