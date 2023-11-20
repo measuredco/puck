@@ -17,7 +17,7 @@ type AppContext = {
   state: AppState;
   dispatch: (action: PuckAction) => void;
   config: Config;
-  componentState: Record<string, { loading: true }>;
+  componentState: Record<string, { loading: boolean }>;
 };
 
 export const appContext = createContext<AppContext>({
