@@ -20,7 +20,7 @@ Implement a field with a custom UI. Extends [Base](base).
                 onChange={(e) => onChange(e.currentTarget.value)}
                 style={{
                   background: "white",
-                  border: "1px solid hotpink",
+                  border: "1px solid black",
                   padding: 4,
                 }}
               />
@@ -38,7 +38,7 @@ Implement a field with a custom UI. Extends [Base](base).
   }}
 />
 
-```tsx {3-12, 18-21} copy
+```tsx {3-13, 19-22} copy
 import { FieldLabel } from "@measured/puck";
 
 const render = ({ name, onChange, value }) => (
@@ -48,6 +48,7 @@ const render = ({ name, onChange, value }) => (
       defaultValue={value}
       name={name}
       onChange={(e) => onChange(e.currentTarget.value)}
+      style={{ border: "1px solid black", padding: 4 }}
     />
   </FieldLabel>
 );
