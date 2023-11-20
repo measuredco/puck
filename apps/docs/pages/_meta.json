@@ -10,12 +10,5 @@
   "docs": {
     "type": "page",
     "title": "Docs"
-  },
-  "showcase": {
-    "type": "page",
-    "title": "Showcase",
-    "theme": {
-      "layout": "full"
-    }
   }
 }
