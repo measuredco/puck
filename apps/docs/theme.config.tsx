@@ -39,9 +39,9 @@ const Head = () => {
 
 const theme: DocsThemeConfig = {
   useNextSeoProps() {
-    const { asPath } = useRouter();
+    const { pathname } = useRouter();
 
-    if (asPath !== "/") {
+    if (pathname !== "/") {
       return {
         titleTemplate: "%s – Puck",
       };
