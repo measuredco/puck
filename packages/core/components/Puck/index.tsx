@@ -436,13 +436,13 @@ export function Puck({
                                 />
                               </IconButton>
                             </div>
-                            <div>
+                            <>
                               {renderHeaderActions &&
                                 renderHeaderActions({
                                   state: appState,
                                   dispatch,
                                 })}
-                            </div>
+                            </>
                             <div>
                               <Button
                                 onClick={() => {
