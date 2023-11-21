@@ -41,11 +41,15 @@ const theme: DocsThemeConfig = {
   useNextSeoProps() {
     const { pathname } = useRouter();
 
-    if (pathname !== "/") {
+    if (pathname && pathname !== "/") {
       return {
         titleTemplate: "%s – Puck",
       };
     }
+
+    return {
+      titleTemplate: "%s",
+    };
   },
   head: Head,
   logo: (
