@@ -97,7 +97,7 @@ const theme: DocsThemeConfig = {
       </a>
     ),
   },
-  docsRepositoryBase: "https://github.com/measuredco/puck/tree/main/app/docs",
+  docsRepositoryBase: "https://github.com/measuredco/puck/tree/main/apps/docs",
   primarySaturation: 0,
 };
 
