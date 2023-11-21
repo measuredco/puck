@@ -19,7 +19,7 @@ export const Home = () => {
       <div className={getClassName("description")}>
         <p style={{ fontSize: 18, lineHeight: 1.5, opacity: 0.7 }}>
           Puck empowers developers to build amazing visual editing experiences
-          into their own React application, powering the next generation of
+          into their own React applications, powering the next generation of
           content tools, no-code builders and WYSIWYG editors.
         </p>
       </div>
