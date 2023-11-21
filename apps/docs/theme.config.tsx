@@ -22,6 +22,16 @@ const Head = () => {
         property="og:description"
         content={config.frontMatter.description || defaultDescription}
       />
+      <meta property="og:image" content="https://puckeditor.com/social.png" />
+      <meta property="og:image:height" content="675" />
+      <meta property="og:image:width" content="1200" />
+      <meta name="image" content="https://puckeditor.com/social.png" />
+      <meta itemProp="image" content="https://puckeditor.com/social.png" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:image" content="https://puckeditor.com/social.png" />
+
+      <link rel="icon" href="favicon.png" type="image/png" />
+      <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     </>
   );
 };
