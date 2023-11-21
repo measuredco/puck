@@ -61,9 +61,11 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           headerPath={path}
           renderHeaderActions={() => (
             <>
-              <Button href={path} newTab variant="secondary">
-                View page
-              </Button>
+              <div>
+                <Button href={path} newTab variant="secondary">
+                  View page
+                </Button>
+              </div>
             </>
           )}
         />
