@@ -8,24 +8,19 @@ const Head = () => {
     "https://puckeditor.com" +
     (defaultLocale === locale ? asPath : `/${locale}${asPath}`);
 
-  console.log(config.frontMatter);
+  const defaultDescription =
+    "Puck empowers developers to build amazing visual editing experiences into their own React applications, powering the next generation of content tools.";
 
   return (
     <>
       <meta property="og:url" content={url} />
       <meta
         property="description"
-        content={
-          config.frontMatter.description ||
-          "Puck empowers developers to build amazing visual editing experiences into their own React application, powering the next generation of content tools."
-        }
+        content={config.frontMatter.description || defaultDescription}
       />
       <meta
         property="og:description"
-        content={
-          config.frontMatter.description ||
-          "Puck empowers developers to build amazing visual editing experiences into their own React application, powering the next generation of content tools."
-        }
+        content={config.frontMatter.description || defaultDescription}
       />
     </>
   );
