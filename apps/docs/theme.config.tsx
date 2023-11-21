@@ -22,6 +22,7 @@ const Head = () => {
         property="og:description"
         content={config.frontMatter.description || defaultDescription}
       />
+      <meta property="og:type" content="website" />
       <meta property="og:image" content="https://puckeditor.com/social.png" />
       <meta property="og:image:height" content="675" />
       <meta property="og:image:width" content="1200" />
