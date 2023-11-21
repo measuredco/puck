@@ -1,5 +1,35 @@
 import { useRouter } from "next/router";
-import { DocsThemeConfig } from "nextra-theme-docs";
+import { DocsThemeConfig, useConfig } from "nextra-theme-docs";
+
+const Head = () => {
+  const { asPath, defaultLocale, locale } = useRouter();
+  const config = useConfig();
+  const url =
+    "https://puckeditor.com" +
+    (defaultLocale === locale ? asPath : `/${locale}${asPath}`);
+
+  console.log(config.frontMatter);
+
+  return (
+    <>
+      <meta property="og:url" content={url} />
+      <meta
+        property="description"
+        content={
+          config.frontMatter.description ||
+          "Puck empowers developers to build amazing visual editing experiences into their own React application, powering the next generation of content tools."
+        }
+      />
+      <meta
+        property="og:description"
+        content={
+          config.frontMatter.description ||
+          "Puck empowers developers to build amazing visual editing experiences into their own React application, powering the next generation of content tools."
+        }
+      />
+    </>
+  );
+};
 
 const theme: DocsThemeConfig = {
   useNextSeoProps() {
@@ -11,6 +41,7 @@ const theme: DocsThemeConfig = {
       };
     }
   },
+  head: Head,
   logo: (
     <div>
       <svg
