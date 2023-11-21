@@ -19,7 +19,7 @@ The self-hosted, drag and drop editor for React.
 
 ## Demo
 
-Visit https://demo.puckeditor.com to try the demo.
+Visit https://demo.puckeditor.com/edit to try the demo.
 
 ## Documentation
 
