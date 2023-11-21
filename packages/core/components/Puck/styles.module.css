@@ -16,7 +16,7 @@
  * 1598px   | 1212px
  */
 
- .Puck {
+.Puck {
   --puck-frame-width: minmax(266px, auto);
   --puck-side-bar-width: minmax(186px, 250px);
   --puck-space-px: 16px;
@@ -27,7 +27,6 @@
   grid-template-rows: min-content auto;
   height: 100vh;
   left: 0;
-  overflow-x: auto;
   position: fixed;
   right: 0;
   top: 0;
