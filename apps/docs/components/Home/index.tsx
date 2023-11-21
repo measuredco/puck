@@ -27,7 +27,7 @@ export const Home = () => {
       <div className={getClassName("ctas")}>
         <div className={getClassName("actions")}>
           <Button href="/docs">Read docs</Button>
-          <Button href="https://docs.puckeditor.com/edit" variant="secondary">
+          <Button href="https://demo.puckeditor.com/edit" variant="secondary">
             View demo
           </Button>
         </div>
