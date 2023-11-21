@@ -27,10 +27,7 @@ export const Home = () => {
       <div className={getClassName("ctas")}>
         <div className={getClassName("actions")}>
           <Button href="/docs/introduction">Read docs</Button>
-          <Button
-            href="https://puck-demo-measured.vercel.app/edit"
-            variant="secondary"
-          >
+          <Button href="https://docs.puckeditor.com/edit" variant="secondary">
             View demo
           </Button>
         </div>
