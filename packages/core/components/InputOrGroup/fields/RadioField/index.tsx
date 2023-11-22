@@ -11,6 +11,7 @@ export const RadioField = ({
   readOnly,
   value,
   name,
+  id,
 }: InputProps) => {
   if (field.type !== "radio" || !field.options) {
     return null;
@@ -23,7 +24,7 @@ export const RadioField = ({
       readOnly={readOnly}
       el="div"
     >
-      <div className={getClassName("radioGroupItems")}>
+      <div className={getClassName("radioGroupItems")} id={id}>
         {field.options.map((option) => (
           <label
             key={option.label + option.value}
