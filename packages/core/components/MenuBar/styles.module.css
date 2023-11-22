@@ -1,0 +1,47 @@
+.MenuBar {
+  background-color: var(--puck-color-white);
+  border-bottom: 1px solid var(--puck-color-grey-8);
+  display: none;
+  left: 0;
+  margin-top: 1px;
+  padding: 8px 16px;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 2;
+}
+
+.MenuBar--menuOpen {
+  display: block;
+}
+
+@media (min-width: 638px) {
+  .MenuBar {
+    border: none;
+    display: block;
+    margin-top: 0;
+    overflow-y: visible;
+    padding: 0;
+    position: static;
+  }
+}
+
+.MenuBar-inner {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  justify-content: flex-end;
+}
+
+@media (min-width: 638px) {
+  .MenuBar-inner {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+}
+
+.MenuBar-history {
+  display: flex;
+}
