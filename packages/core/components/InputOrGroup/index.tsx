@@ -62,7 +62,6 @@ export const FieldLabelInternal = ({
   el?: "label" | "div";
   readOnly?: boolean;
 }) => {
-  const El = el;
   return (
     <FieldLabel
       label={label}
@@ -80,6 +79,7 @@ export type InputProps = {
   name: string;
   field: Field<any>;
   value: any;
+  id: string;
   label?: string;
   onChange: (value: any) => void;
   readOnly?: boolean;

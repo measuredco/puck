@@ -639,6 +639,7 @@ export function Puck({
                                   key={`${selectedItem.props.id}_${fieldName}`}
                                   field={field}
                                   name={fieldName}
+                                  id={`${selectedItem.props.id}_${fieldName}`}
                                   label={field.label}
                                   readOnly={readOnly[fieldName]}
                                   readOnlyFields={readOnly}
@@ -654,6 +655,7 @@ export function Puck({
                                   key={`page_${fieldName}`}
                                   field={field}
                                   name={fieldName}
+                                  id={`root_${fieldName}`}
                                   label={field.label}
                                   readOnly={readOnly[fieldName]}
                                   readOnlyFields={readOnly}
