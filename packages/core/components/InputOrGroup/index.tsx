@@ -1,5 +1,5 @@
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Field } from "../../types/Config";
+import { Field, UiState } from "../../types/Config";
 
 import styles from "./styles.module.css";
 import { ReactNode, useCallback, useEffect, useState } from "react";
@@ -81,7 +81,7 @@ export type InputProps = {
   value: any;
   id: string;
   label?: string;
-  onChange: (value: any) => void;
+  onChange: (value: any, uiState?: Partial<UiState>) => void;
   readOnly?: boolean;
   readOnlyFields?: Record<string, boolean | undefined>;
 };
@@ -92,16 +92,16 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
   const [localValue, setLocalValue] = useState(value);
 
   const onChangeDb = useDebouncedCallback(
-    (val) => {
-      onChange(val);
+    (val, ui) => {
+      onChange(val, ui);
     },
     50,
     { leading: true }
   );
 
-  const onChangeLocal = useCallback((val) => {
+  const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
     setLocalValue(val);
-    onChangeDb(val);
+    onChangeDb(val, ui);
   }, []);
 
   useEffect(() => {

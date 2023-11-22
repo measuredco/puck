@@ -1,4 +1,10 @@
-import { ComponentData, Config, Data, RootData } from "../types/Config";
+import {
+  AppState,
+  ComponentData,
+  Config,
+  Data,
+  RootData,
+} from "../types/Config";
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { PuckAction } from "../reducer";
 import { resolveComponentData } from "./resolve-component-data";
@@ -6,13 +12,13 @@ import { applyDynamicProps } from "./apply-dynamic-props";
 import { resolveRootData } from "./resolve-root-data";
 
 export const useResolvedData = (
-  data: Data,
+  appState: AppState,
   config: Config,
   dispatch: Dispatch<PuckAction>
 ) => {
-  const [{ resolverKey, newData }, setResolverState] = useState({
+  const [{ resolverKey, newAppState }, setResolverState] = useState({
     resolverKey: 0,
-    newData: data,
+    newAppState: appState,
   });
 
   const [componentState, setComponentState] = useState<
@@ -43,6 +49,8 @@ export const useResolvedData = (
 
   const runResolvers = async () => {
     // Flatten zones
+    const newData = newAppState.data;
+
     const flatContent = Object.keys(newData.zones || {})
       .reduce((acc, zone) => [...acc, ...newData.zones![zone]], newData.content)
       .filter((item) => !!config.components[item.type].resolveData);
@@ -52,15 +60,25 @@ export const useResolvedData = (
       dynamicRoot?: RootData
     ) => {
       // Apply the dynamic content to `data`, not `newData`, in case `data` has been changed by the user
-      const processed = applyDynamicProps(data, dynamicDataMap, dynamicRoot);
+      const processed = applyDynamicProps(
+        appState.data,
+        dynamicDataMap,
+        dynamicRoot
+      );
+
+      const processedAppState = { ...appState, data: processed };
 
       const containsChanges =
-        JSON.stringify(data) !== JSON.stringify(processed);
+        JSON.stringify(appState) !== JSON.stringify(processedAppState);
 
       if (containsChanges) {
         dispatch({
-          type: "setData",
-          data: (prev) => applyDynamicProps(prev, dynamicDataMap, dynamicRoot),
+          type: "set",
+          state: (prev) => ({
+            ...prev,
+            data: applyDynamicProps(prev.data, dynamicDataMap, dynamicRoot),
+            ui: { ...prev.ui, ...newAppState.ui },
+          }),
           recordHistory: resolverKey > 0,
         });
       }
@@ -110,10 +128,10 @@ export const useResolvedData = (
     runResolvers();
   }, [resolverKey]);
 
-  const resolveData = useCallback((newData: Data = data) => {
+  const resolveData = useCallback((newAppState: AppState = appState) => {
     setResolverState((curr) => ({
       resolverKey: curr.resolverKey + 1,
-      newData,
+      newAppState,
     }));
   }, []);
 

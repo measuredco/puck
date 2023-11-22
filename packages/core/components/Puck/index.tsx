@@ -7,7 +7,13 @@ import {
   useState,
 } from "react";
 import { DragDropContext, DragStart, DragUpdate } from "@hello-pangea/dnd";
-import type { AppState, Config, Data, Field } from "../../types/Config";
+import type {
+  AppState,
+  Config,
+  Data,
+  Field,
+  UiState,
+} from "../../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
 import { Button } from "../Button";
@@ -25,9 +31,11 @@ import { ItemSelector, getItem } from "../../lib/get-item";
 import {
   PuckAction,
   ReplaceAction,
+  SetAction,
   StateReducer,
   createReducer,
   replaceAction,
+  setAction,
 } from "../../reducer";
 import { LayerTree } from "../LayerTree";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
@@ -148,7 +156,7 @@ export function Puck({
   const { data, ui } = appState;
 
   const { resolveData, componentState } = useResolvedData(
-    data,
+    appState,
     config,
     dispatch
   );
@@ -575,7 +583,10 @@ export function Puck({
                           {Object.keys(fields).map((fieldName) => {
                             const field = fields[fieldName];
 
-                            const onChange = (value: any) => {
+                            const onChange = (
+                              value: any,
+                              updatedUi?: Partial<UiState>
+                            ) => {
                               let currentProps;
 
                               if (selectedItem) {
@@ -590,7 +601,7 @@ export function Puck({
                               };
 
                               if (itemSelector) {
-                                const action: ReplaceAction = {
+                                const replaceActionData: ReplaceAction = {
                                   type: "replace",
                                   destinationIndex: itemSelector.index,
                                   destinationZone:
@@ -598,27 +609,56 @@ export function Puck({
                                   data: { ...selectedItem, props: newProps },
                                 };
 
+                                // We use `replace` action, then feed into `set` action so we can also process any UI changes
+                                const replacedData = replaceAction(
+                                  data,
+                                  replaceActionData
+                                );
+
+                                const setActionData: SetAction = {
+                                  type: "set",
+                                  state: {
+                                    data: { ...data, ...replacedData },
+                                    ui: { ...ui, ...updatedUi },
+                                  },
+                                };
+
                                 // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
                                 if (
                                   config.components[selectedItem!.type]
                                     ?.resolveData
                                 ) {
-                                  resolveData(replaceAction(data, action));
+                                  resolveData(
+                                    setAction(appState, setActionData)
+                                  );
                                 } else {
-                                  dispatch(action);
+                                  dispatch({
+                                    ...setActionData,
+                                    recordHistory: true,
+                                  });
                                 }
                               } else {
                                 if (data.root.props) {
                                   // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
                                   if (config.root?.resolveData) {
                                     resolveData({
-                                      ...data,
-                                      root: { props: newProps },
+                                      ui: { ...ui, ...updatedUi },
+                                      data: {
+                                        ...data,
+                                        root: { props: newProps },
+                                      },
                                     });
                                   } else {
                                     dispatch({
-                                      type: "setData",
-                                      data: { root: { props: newProps } },
+                                      type: "set",
+                                      state: {
+                                        ui: { ...ui, ...updatedUi },
+                                        data: {
+                                          ...data,
+                                          root: { props: newProps },
+                                        },
+                                      },
+                                      recordHistory: true,
                                     });
                                   }
                                 } else {
