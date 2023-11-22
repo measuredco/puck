@@ -1,5 +1,5 @@
 import { Puck, type Data, type Config } from "@measured/puck";
-import styles from "@measured/puck/dist/index.css";
+import styles from "@measured/puck/puck.css";
 import type {
   ActionFunctionArgs,
   LinksFunction,
@@ -53,11 +53,6 @@ export default function Edit() {
    * TypeStript error
    * Type 'Config<Props>' is not assignable to type 'Config'. Use 'as Config' for now.
    * @see https://github.com/measuredco/puck/issues/185
-   */
-
-  /**
-   * On page load I see the following warning in the browser console. I don't know it it's caused by to Puck or Remix.
-   * Warning: Defining props on `root` is deprecated. Please use `root.props`. This will be a breaking change in a future release. index.js:34421:14
    */
 
   return (
