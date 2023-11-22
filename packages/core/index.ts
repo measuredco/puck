@@ -1,5 +1,7 @@
 import "./styles/global.css";
 
+export type { PuckAction } from "./reducer/actions";
+
 export * from "./types/Config";
 export * from "./components/Button";
 // DEPRECATED
