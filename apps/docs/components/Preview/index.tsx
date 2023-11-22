@@ -5,7 +5,7 @@ export { InputOrGroup } from "@/core/components/InputOrGroup";
 import { ReactNode, useReducer, useState } from "react";
 import "@/core/styles.css";
 import { AppProvider, defaultAppState } from "@/core/components/Puck/context";
-import { PuckAction, createReducer } from "@/core/reducer";
+import { PuckAction, createReducer, replaceAction } from "@/core/reducer";
 import { InputOrGroup } from "@/core/components/InputOrGroup";
 import { AppState, ComponentConfig, Config, Data } from "@/core/types/Config";
 import { rootDroppableId } from "@/core/lib/root-droppable-id";
@@ -36,7 +36,7 @@ const PreviewApp = ({
     data,
   });
 
-  const { componentState } = useResolvedData(data, config, dispatch);
+  const { componentState } = useResolvedData(appState, config, dispatch);
 
   return (
     <AppProvider
@@ -123,7 +123,8 @@ export const ConfigPreview = ({
                   appState.data["content"][0].readOnly &&
                   appState.data["content"][0].readOnly[name]
                 }
-                onChange={async (val) => {
+                id={`example_${name}`}
+                onChange={async (val, ui) => {
                   const { resolveData = (data) => data } = componentConfig;
 
                   const newData = await resolveData(
@@ -138,7 +139,7 @@ export const ConfigPreview = ({
                     { changed: { [name]: true } }
                   );
 
-                  dispatch({
+                  const replacedData = replaceAction(appState.data, {
                     type: "replace",
                     destinationIndex: 0,
                     destinationZone: rootDroppableId,
@@ -152,6 +153,17 @@ export const ConfigPreview = ({
                         ...appState.data["content"][0].readOnly,
                         ...newData.readOnly,
                       },
+                    },
+                  });
+
+                  dispatch({
+                    type: "set",
+                    state: {
+                      ui: {
+                        ...appState.ui,
+                        ...ui,
+                      },
+                      data: replacedData,
                     },
                   });
                 }}
