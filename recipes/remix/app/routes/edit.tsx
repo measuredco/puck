@@ -1,4 +1,4 @@
-import { Puck, type Data } from "@measured/puck";
+import { Puck, type Data, type Config } from "@measured/puck";
 import styles from "@measured/puck/dist/index.css";
 import type {
   ActionFunctionArgs,
@@ -18,9 +18,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const puckData = formData.get("puckData");
 
-  // TODO This validation is basic. You should add more here.
   invariant(puckData, "Missing data");
-  invariant(typeof puckData === "string", "Missing data");
+  invariant(typeof puckData === "string", "Invalid data");
 
   setPage(puckPath, JSON.parse(puckData));
 
@@ -52,7 +51,7 @@ export default function Edit() {
 
   /**
    * TypeStript error
-   * Type 'Config<Props>' is not assignable to type 'Config'.
+   * Type 'Config<Props>' is not assignable to type 'Config'. Use 'as Config' for now.
    * @see https://github.com/measuredco/puck/issues/185
    */
 
@@ -63,7 +62,7 @@ export default function Edit() {
 
   return (
     <Puck
-      config={puckConfig}
+      config={puckConfig as Config}
       data={initialData}
       onPublish={async (data: Data) => {
         // Use form data here because it's the usual remix way.

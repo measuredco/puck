@@ -32,7 +32,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  const title = data?.puckData?.root?.title || "Untitled page";
+  const title = data?.puckData?.root?.title || "Page";
 
   return [{ title }];
 };
