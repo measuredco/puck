@@ -2,7 +2,7 @@
 
 > **⚠️ The plugin API is highly experimental and is likely to experience breaking changes.**
 
-Actions enable you to make changes to the internal [AppState](app-state) via the [`dispatch` method](functions#dispatch).
+Actions enable you to make changes to the internal [AppState](/docs/api-reference/app-state) via the [`dispatch` method](functions#dispatch).
 
 This is a partial reference of the most useful actions. A full reference is available in [the codebase](https://github.com/measuredco/puck/blob/main/packages/core/reducer/actions.tsx).
 
@@ -25,12 +25,12 @@ dispatch({ type: "setData", data: {} });
 
 ### `setUi`
 
-Change a value on Puck's [UI state](/docs/api-reference/plugins/app-state/#ui).
+Change a value on Puck's [UI state](/docs/api-reference/app-state/#ui).
 
-| Param  | Example                             | Type                                                 | Status   |
-| ------ | ----------------------------------- | ---------------------------------------------------- | -------- |
-| `type` | `type: "setData"`                   | "setData"                                            | Required |
-| `ui`   | `ui: { leftSideBarVisible: false }` | [UiState](/docs/api-reference/plugins/app-state/#ui) | Required |
+| Param  | Example                             | Type                                         | Status   |
+| ------ | ----------------------------------- | -------------------------------------------- | -------- |
+| `type` | `type: "setData"`                   | "setData"                                    | Required |
+| `ui`   | `ui: { leftSideBarVisible: false }` | [UiState](/docs/api-reference/app-state/#ui) | Required |
 
 #### Example
 
