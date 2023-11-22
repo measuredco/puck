@@ -16,7 +16,7 @@ import { Plugin } from "../../types/Plugin";
 import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
-import { Globe, Sidebar, ChevronLeft, ChevronRight } from "react-feather";
+import { ChevronDown, ChevronUp, Globe, Sidebar } from "react-feather";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
 import { DropZone, DropZoneProvider, dropZoneContext } from "../DropZone";
@@ -34,10 +34,10 @@ import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
 import { flushZones } from "../../lib/flush-zones";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { usePuckHistory } from "../../lib/use-puck-history";
 import { AppProvider, defaultAppState } from "./context";
 import { useComponentList } from "../../lib/use-component-list";
 import { useResolvedData } from "../../lib/use-resolved-data";
+import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 
 const getClassName = getClassNameFactory("Puck", styles);
@@ -153,10 +153,7 @@ export function Puck({
     dispatch
   );
 
-  const { canForward, canRewind, rewind, forward } = usePuckHistory({
-    appState,
-    dispatch,
-  });
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const { itemSelector, leftSideBarVisible, rightSideBarVisible } = ui;
 
@@ -410,6 +407,7 @@ export function Puck({
                   <div
                     className={getClassName({
                       leftSideBarVisible,
+                      menuOpen,
                       rightSideBarVisible,
                     })}
                   >
@@ -467,53 +465,29 @@ export function Puck({
                             </Heading>
                           </div>
                           <div className={getClassName("headerTools")}>
-                            <div style={{ display: "flex" }}>
+                            <div className={getClassName("menuButton")}>
                               <IconButton
-                                title="undo"
-                                disabled={!canRewind}
-                                onClick={rewind}
-                              >
-                                <ChevronLeft
-                                  size={21}
-                                  stroke={
-                                    canRewind
-                                      ? "var(--puck-color-black)"
-                                      : "var(--puck-color-grey-7)"
-                                  }
-                                />
-                              </IconButton>
-                              <IconButton
-                                title="redo"
-                                disabled={!canForward}
-                                onClick={forward}
-                              >
-                                <ChevronRight
-                                  size={21}
-                                  stroke={
-                                    canForward
-                                      ? "var(--puck-color-black)"
-                                      : "var(--puck-color-grey-7)"
-                                  }
-                                />
-                              </IconButton>
-                            </div>
-                            <>
-                              {renderHeaderActions &&
-                                renderHeaderActions({
-                                  state: appState,
-                                  dispatch,
-                                })}
-                            </>
-                            <div>
-                              <Button
                                 onClick={() => {
-                                  onPublish(data);
+                                  return setMenuOpen(!menuOpen);
                                 }}
-                                icon={<Globe size="14px" />}
+                                title="Toggle menu bar"
                               >
-                                Publish
-                              </Button>
+                                {menuOpen ? (
+                                  <ChevronUp focusable="false" />
+                                ) : (
+                                  <ChevronDown focusable="false" />
+                                )}
+                              </IconButton>
                             </div>
+                            <MenuBar
+                              appState={appState}
+                              data={data}
+                              dispatch={dispatch}
+                              onPublish={onPublish}
+                              menuOpen={menuOpen}
+                              renderHeaderActions={renderHeaderActions}
+                              setMenuOpen={setMenuOpen}
+                            />
                           </div>
                         </div>
                       )}
