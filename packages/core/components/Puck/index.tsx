@@ -158,7 +158,7 @@ export function Puck({
     dispatch,
   });
 
-  const { itemSelector, leftSideBarVisible } = ui;
+  const { itemSelector, leftSideBarVisible, rightSideBarVisible } = ui;
 
   const setItemSelector = useCallback(
     (newItemSelector: ItemSelector | null) => {
@@ -273,6 +273,55 @@ export function Puck({
     }
   }, []);
 
+  const toggleSidebars = useCallback(
+    (sidebar: "left" | "right") => {
+      const widerViewport = window.matchMedia("(min-width: 638px)").matches;
+      const sideBarVisible =
+        sidebar === "left" ? leftSideBarVisible : rightSideBarVisible;
+      const oppositeSideBar =
+        sidebar === "left" ? "rightSideBarVisible" : "leftSideBarVisible";
+
+      dispatch({
+        type: "setUi",
+        ui: {
+          [`${sidebar}SideBarVisible`]: !sideBarVisible,
+          ...(!widerViewport ? { [oppositeSideBar]: false } : {}),
+        },
+      });
+    },
+    [dispatch, leftSideBarVisible, rightSideBarVisible]
+  );
+
+  useEffect(() => {
+    if (!window.matchMedia("(min-width: 638px)").matches) {
+      dispatch({
+        type: "setUi",
+        ui: {
+          leftSideBarVisible: false,
+          rightSideBarVisible: false,
+        },
+      });
+    }
+
+    const handleResize = () => {
+      if (!window.matchMedia("(min-width: 638px)").matches) {
+        dispatch({
+          type: "setUi",
+          ui: (ui) => ({
+            ...ui,
+            ...(ui.rightSideBarVisible ? { leftSideBarVisible: false } : {}),
+          }),
+        });
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div>
       <AppProvider
@@ -358,7 +407,12 @@ export function Puck({
             <dropZoneContext.Consumer>
               {(ctx) => {
                 return (
-                  <div className={getClassName({ leftSideBarVisible })}>
+                  <div
+                    className={getClassName({
+                      leftSideBarVisible,
+                      rightSideBarVisible,
+                    })}
+                  >
                     <header className={getClassName("header")}>
                       {renderHeader ? (
                         renderHeader({
@@ -378,19 +432,26 @@ export function Puck({
                       ) : (
                         <div className={getClassName("headerInner")}>
                           <div className={getClassName("headerToggle")}>
-                            <IconButton
-                              onClick={() =>
-                                dispatch({
-                                  type: "setUi",
-                                  ui: {
-                                    leftSideBarVisible: !leftSideBarVisible,
-                                  },
-                                })
-                              }
-                              title="Toggle left sidebar"
-                            >
-                              <Sidebar />
-                            </IconButton>
+                            <div className={getClassName("leftSideBarToggle")}>
+                              <IconButton
+                                onClick={() => {
+                                  toggleSidebars("left");
+                                }}
+                                title="Toggle left sidebar"
+                              >
+                                <Sidebar focusable="false" />
+                              </IconButton>
+                            </div>
+                            <div className={getClassName("rightSideBarToggle")}>
+                              <IconButton
+                                onClick={() => {
+                                  toggleSidebars("right");
+                                }}
+                                title="Toggle right sidebar"
+                              >
+                                <Sidebar focusable="false" />
+                              </IconButton>
+                            </div>
                           </div>
                           <div className={getClassName("headerTitle")}>
                             <Heading rank={2} size="xs">

@@ -3,7 +3,7 @@
   background: transparent;
   border: none;
   border-radius: 4px;
-  color: var(--puck-color-grey-3);
+  color: currentColor;
   display: flex;
   justify-content: center;
   padding: 4px;

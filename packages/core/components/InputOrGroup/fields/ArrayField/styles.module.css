@@ -126,6 +126,7 @@
 }
 
 .ArrayFieldItem-actions {
+  color: var(--puck-color-grey-3);
   display: flex;
   gap: 4px;
   opacity: 0;
@@ -138,6 +139,5 @@
 .ArrayFieldItem-action:hover {
   background: var(--puck-color-grey-9);
   border-radius: 4px;
-  color: var(--puck-color-blue);
   cursor: pointer;
 }

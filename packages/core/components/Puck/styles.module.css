@@ -7,8 +7,8 @@
  *
  * Viewport | Puck page @ zoom 0.75
  * --------------------------------
- * 638px    | 321px
- * 766px    | 321px
+ * -        | 322px
+ * 766px    | 322px
  * 990px    | 604px
  * 1022px   | 646px
  * 1198px   | 801px
@@ -16,14 +16,14 @@
  * 1598px   | 1212px
  */
 
-.Puck {
-  --puck-frame-width: minmax(266px, auto);
-  --puck-side-bar-width: minmax(186px, 250px);
+ .Puck {
+  --puck-frame-width: auto;
+  --puck-side-bar-width: 186px;
   --puck-space-px: 16px;
   bottom: 0;
   display: grid;
   grid-template-areas: "header header header" "left editor right";
-  grid-template-columns: 0 var(--puck-frame-width) var(--puck-side-bar-width);
+  grid-template-columns: 0 var(--puck-frame-width) 0;
   grid-template-rows: min-content auto;
   height: 100vh;
   left: 0;
@@ -35,7 +35,31 @@
 .Puck--leftSideBarVisible {
   grid-template-columns:
     var(--puck-side-bar-width) var(--puck-frame-width)
+    0;
+}
+
+.Puck--rightSideBarVisible {
+  grid-template-columns:
+    0 var(--puck-frame-width)
     var(--puck-side-bar-width);
+}
+
+.Puck--leftSideBarVisible.Puck--rightSideBarVisible  {
+  grid-template-columns:
+  var(--puck-side-bar-width) var(--puck-frame-width)
+    var(--puck-side-bar-width);
+}
+
+@media (min-width: 458px) {
+  .Puck {
+    --puck-frame-width: minmax(266px, auto);
+  }
+}
+
+@media (min-width: 638px) {
+  .Puck {
+    --puck-side-bar-width: minmax(186px, 250px);
+  }
 }
 
 @media (min-width: 766px) {
@@ -86,7 +110,19 @@
 }
 
 .Puck-headerToggle {
+  color: var(--puck-color-grey-4);
+  display: flex;
+  margin-left: -4px;
   padding-top: 2px;
+}
+
+.Puck-rightSideBarToggle {
+  transform: rotate(180deg);
+}
+
+.Puck--rightSideBarVisible .Puck-rightSideBarToggle,
+.Puck--leftSideBarVisible .Puck-leftSideBarToggle {
+  color: var(--puck-color-black);
 }
 
 .Puck-headerTitle {
@@ -119,13 +155,14 @@
   display: flex;
   flex-direction: column;
   grid-area: editor;
-  overflow-y: auto;
+  overflow: auto;
   position: relative;
 }
 
 .Puck-root {
   box-shadow: 0 0 0 calc(var(--puck-space-px) * 2) var(--puck-color-grey-10);
   margin: var(--puck-space-px);
+  min-width: 321px;
   zoom: 0.75;
 }
 
