@@ -1,0 +1,22 @@
+@import "../../packages/core/styles.css";
+
+article p a,
+article li a,
+article td a {
+  color: var(--puck-color-azure-4) !important;
+}
+
+article p a:hover,
+article li a:hover,
+article td a:hover {
+  color: var(--puck-color-azure-2) !important;
+}
+
+html.dark p a:hover,
+html.dark li a:hover {
+  color: var(--puck-color-azure-6) !important;
+}
+
+li > a {
+  white-space: nowrap;
+}

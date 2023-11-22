@@ -8,8 +8,9 @@
   align-items: center;
   gap: 8px;
   letter-spacing: 0.05ch;
+  font-family: var(--puck-font-family-proportional);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   text-align: center;
   text-decoration: none;
   cursor: pointer;

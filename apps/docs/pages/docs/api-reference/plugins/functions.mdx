@@ -1,0 +1,51 @@
+# Plugin functions
+
+> **⚠️ The plugin API is highly experimental and is likely to experience breaking changes.**
+
+Each plugin can define different render functions to modify the Puck UI.
+
+## Functions
+
+### `renderRoot(func)`
+
+Render the root node of the preview content. Receives [render args](#render-args).
+
+### `renderRootFields(func)`
+
+Render the root fields. Receives [render args](#render-args).
+
+### `renderFields(func)`
+
+Render the fields for the currently selected component. Receives [render args](#render-args).
+
+### `renderComponentList(func)`
+
+Render the fields for the component list in the left side bar. Receives [render args](#render-args).
+
+## Render args
+
+### `func(props)`
+
+A render function that receives several props
+
+| Param                           | Example                        | Type      |
+| ------------------------------- | ------------------------------ | --------- |
+| [`children`](#children)         | `<div />`                      | ReactNode |
+| [`state`](#state)               | `{ data: {}, ui: {} }`         | Object    |
+| [`dispatch()`](#dispatchaction) | `(action: PuckAction) => void` | Function  |
+
+#### `children`
+
+A ReactNode that contains the normal content for this field. You must render this.
+
+#### `state`
+
+The current application state, including data and UI.
+
+See [AppState](app-state).
+
+#### `dispatch(action)`
+
+The Puck dispatcher, used for making data changes or updating the UI.
+
+See [actions](actions).

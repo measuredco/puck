@@ -25,6 +25,7 @@
 }
 
 .Input-label {
+  align-items: center;
   display: flex;
   padding-bottom: 12px;
   font-size: var(--puck-font-size-xxs);
@@ -43,12 +44,13 @@
 }
 
 .Input-input {
+  background: white;
   border-width: 1px;
   border-style: solid;
   border-color: var(--puck-color-grey-8);
   border-radius: 4px;
   font-family: inherit;
-  padding: 12px 16px;
+  padding: 12px 15px;
   width: 100%;
 }
 
@@ -73,6 +75,12 @@
 
 .Input-input:hover {
   border-color: var(--puck-color-neutral-3);
+}
+
+.Input-input:focus {
+  border-color: var(--puck-color-azure-4);
+  outline: var(--puck-color-azure-8) 4px solid;
+  outline-offset: 0;
 }
 
 .Input-radioGroupItems {

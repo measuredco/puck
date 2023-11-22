@@ -12,6 +12,7 @@
   background: white;
   box-shadow: rgba(140, 152, 164, 0.25) 0px 3px 6px 0px;
   border-radius: 8px;
+  flex: 1;
   max-width: 100%;
   margin-left: unset;
   margin-right: unset;

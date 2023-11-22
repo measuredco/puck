@@ -1,0 +1,31 @@
+# Base
+
+The base type shared by all fields.
+
+## Params
+
+| Param             | Example          | Type   | Status |
+| ----------------- | ---------------- | ------ | ------ |
+| [`label`](#label) | `label: "Title"` | String | -      |
+
+## Optional params
+
+### `label`
+
+Set the label for the input. Puck will use the key if not provided.
+
+```tsx {6} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          label: "My Field",
+          // ...
+        },
+      },
+      // ...
+    },
+  },
+};
+```

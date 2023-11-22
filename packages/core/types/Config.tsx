@@ -212,6 +212,7 @@ export type Data<
 
 export type ItemWithId = {
   _arrayId: string;
+  _originalIndex: number;
   data: any;
 };
 

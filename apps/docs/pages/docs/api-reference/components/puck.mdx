@@ -1,0 +1,258 @@
+---
+title: <Puck>
+---
+
+# \<Puck\>
+
+Render the Puck editor.
+
+```tsx copy
+import { Puck } from "@measured/puck";
+
+const config = {
+  components: {},
+};
+
+const initialData = {
+  content: [],
+  root: {},
+};
+
+export function Editor() {
+  return <Puck config={config} data={initialData} onPublish={() => {}} />;
+}
+```
+
+## Props
+
+| Param                                                 | Example                              | Type                                               | Status   |
+| ----------------------------------------------------- | ------------------------------------ | -------------------------------------------------- | -------- |
+| [`config`](#config)                                   | `config: { components: {} }`         | [Config](/docs/api-reference/configuration/config) | Required |
+| [`data`](#data)                                       | `data: { content: [], root: {} }`    | [Data](/docs/api-reference/data)                   | Required |
+| [`onPublish()`](#onpublishdata)                       | `onPublish: async (data) => {}`      | Function                                           | Required |
+| [`headerPath`](#headerpath)                           | `headerPath: "/my-page"`             | String                                             | -        |
+| [`headerTitle`](#headertitle)                         | `headerTitle: "My Page"`             | String                                             | -        |
+| [`onChange()`](#onchangedata)                         | `onChange: (data) => {}`             | Function                                           | -        |
+| [`plugins`](#plugins)                                 | `plugins: [myPlugin]`                | Plugin[]                                           | -        |
+| [`renderComponentList()`](#rendercomponentlistparams) | `renderComponentList: () => <div />` | Function                                           | -        |
+| [`renderHeader()`](#renderheaderparams)               | `renderHeader: () => <div />`        | Function                                           | -        |
+| [`renderHeaderActions()`](#renderheaderactionsparams) | `renderHeaderActions: () => <div />` | Function                                           | -        |
+
+## Required props
+
+### `config`
+
+An object describing the available components, fields and more. See the [`Config` docs](/docs/api-reference/configuration/config) for a full reference.
+
+```tsx {4-17} copy
+export function Editor() {
+  return (
+    <Puck
+      config={{
+        components: {
+          HeadingBlock: {
+            fields: {
+              children: {
+                type: "text",
+              },
+            },
+            render: ({ children }) => {
+              return <h1>{children}</h1>;
+            },
+          },
+        },
+      }}
+      // ...
+    />
+  );
+}
+```
+
+### `data`
+
+The initial data to render. Cannot be changed once `<Puck>` has been mounted. See the [`Data` docs](/docs/api-reference/data) for a full reference.
+
+```tsx {4-12} copy
+export function Editor() {
+  return (
+    <Puck
+      data={{
+        content: [
+          {
+            props: { children: "Hello, world", id: "id" },
+            type: "HeadingBlock",
+          },
+        ],
+        root: {},
+      }}
+      // ...
+    />
+  );
+}
+```
+
+### `onPublish(data)`
+
+Callback that triggers when the user hits the "Publish" button. Use this to save the Puck data to your database.
+
+Receives a single [`Data`](/docs/api-reference/data) arg.
+
+```tsx {4-9} copy
+export function Editor() {
+  return (
+    <Puck
+      onPublish={async (data) => {
+        await fetch("/my-api", {
+          method: "post",
+          body: JSON.stringify({ data }),
+        });
+      }}
+      // ...
+    />
+  );
+}
+```
+
+## Optional props
+
+### `headerPath`
+
+Set a path to show after the header title
+
+```tsx {4} copy
+export function Editor() {
+  return (
+    <Puck
+      headerPath="/my-page"
+      // ...
+    />
+  );
+}
+```
+
+### `headerTitle`
+
+Set the title shown in the header
+
+```tsx {4} copy
+export function Editor() {
+  return (
+    <Puck
+      headerPath="My page"
+      // ...
+    />
+  );
+}
+```
+
+### `onChange(data)`
+
+Callback that triggers when the user makes a change.
+
+Receives a single [`Data`](/docs/api-reference/data) arg.
+
+```tsx {4-6} copy
+export function Editor() {
+  return (
+    <Puck
+      onChange={(data) => {
+        console.log("Puck data was updated", data);
+      }}
+      // ...
+    />
+  );
+}
+```
+
+### `plugins`
+
+An array of plugins to enhance Puck's behaviour. See the [Plugin API reference](/docs/api-reference/plugins).
+
+```tsx {6} copy
+import headingAnalyzer from "@measured/puck-plugin-heading-analyzer";
+
+export function Editor() {
+  return (
+    <Puck
+      plugins={[headingAnalyzer]}
+      // ...
+    />
+  );
+}
+```
+
+### `renderComponentList(params)`
+
+Render function for wrapping the component list. Receives the Plugin [render args](/docs/api-reference/plugins/functions#render-args).
+
+```tsx {4-6} copy
+export function Editor() {
+  return (
+    <Puck
+      renderComponentList={({ children, appState, dispatch }) => (
+        <div>{children}</div>
+      )}
+      // ...
+    />
+  );
+}
+```
+
+### `renderHeader(params)`
+
+Render function for overriding the Puck header component.
+
+Receives the Plugin [render args](/docs/api-reference/plugins/functions#render-args).
+
+```tsx {4-19} filename="renderHeader example with toggle side-bar button" copy
+export function Editor() {
+  return (
+    <Puck
+      renderHeader={({ appState, dispatch }) => (
+        <header>
+          <span>My Custom Header</span>
+
+          <button
+            onClick={() => {
+              dispatch({
+                type: "setUi",
+                ui: { leftSideBarVisible: !state.ui.leftSideBarVisible },
+              });
+            }}
+          >
+            Toggle side-bar
+          </button>
+        </header>
+      )}
+      // ...
+    />
+  );
+}
+```
+
+### `renderHeaderActions(params)`
+
+Render function for overriding the Puck header actions. Use a fragment.
+
+Receives the Plugin [render args](/docs/api-reference/plugins/functions#render-args).
+
+```tsx {4-14} filename="renderHeaderActions example with save draft button" copy
+export function Editor() {
+  return (
+    <Puck
+      renderHeaderActions={({ appState }) => (
+        <>
+          <button
+            onClick={() => {
+              saveDraft(appState.data, "/my-page");
+            }}
+          >
+            Save draft
+          </button>
+        </>
+      )}
+      // ...
+    />
+  );
+}
+```

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
 import { createPortal } from "react-dom";
@@ -14,7 +14,11 @@ export const Modal = ({
   onClose: () => void;
   isOpen: boolean;
 }) => {
-  const rootEl = document.getElementById("puck-portal-root");
+  const [rootEl, setRootEl] = useState<any>(null);
+
+  useEffect(() => {
+    setRootEl(document.getElementById("puck-portal-root"));
+  }, []);
 
   if (!rootEl) {
     return <div />;

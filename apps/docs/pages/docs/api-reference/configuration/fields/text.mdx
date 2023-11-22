@@ -1,0 +1,64 @@
+import { ConfigPreview } from "@/docs/components/Preview";
+
+# Text
+
+Render a `text` input. Extends [Base](base).
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      title: {
+        type: "text",
+      },
+    },
+    defaultProps: { title: "Hello, world" },
+    render: ({ title }) => {
+      return <p style={{ margin: 0 }}>{title}</p>;
+    },
+  }}
+/>
+
+```tsx {5-7} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "text",
+        },
+      },
+      render: ({ title }) => {
+        return <p>{title}</p>;
+      },
+    },
+  },
+};
+```
+
+## Params
+
+| Param           | Example        | Type   | Status   |
+| --------------- | -------------- | ------ | -------- |
+| [`type`](#type) | `type: "text"` | "text" | Required |
+
+## Required params
+
+### `type`
+
+The type of the field. Must be `"text"` for Text fields.
+
+```tsx {6} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "text",
+        },
+      },
+      // ...
+    },
+  },
+};
+```

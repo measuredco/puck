@@ -11,11 +11,10 @@
     "type": "page",
     "title": "Docs"
   },
-  "showcase": {
+  "measured": {
     "type": "page",
-    "title": "Showcase",
-    "theme": {
-      "layout": "full"
-    }
+    "href": "https://measured.co",
+    "title": "Hire us",
+    "newWindow": true
   }
 }

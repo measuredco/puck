@@ -27,13 +27,13 @@
 }
 
 .Layer-inner {
-  padding-left: 20px;
-  padding-right: 8px;
-  border-radius: 3px;
+  padding-left: 12px;
+  padding-right: 4px;
+  border-radius: 4px;
 }
 
 .Layer--containsZone > .Layer-inner {
-  padding-left: 8px;
+  padding-left: 0;
 }
 
 .Layer-clickable {
@@ -69,7 +69,7 @@
 
 .Layer-zones {
   display: none;
-  margin-left: 20px;
+  margin-left: 12px;
 }
 
 .Layer--isSelected > .Layer-zones,
@@ -78,7 +78,7 @@
 }
 
 .Layer-zones > .LayerTree {
-  margin-left: 16px;
+  margin-left: 12px;
 }
 
 .Layer-title,
@@ -87,6 +87,13 @@
   gap: 8px;
   align-items: center;
   margin: 8px 4px;
+  overflow-x: hidden;
+}
+
+.Layer-name {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .Layer-icon {

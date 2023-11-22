@@ -1,0 +1,150 @@
+/*
+ * Puck's responsive layout uses minimum viewport widths slightly _below_ common
+ * framework/device breakpoints, and ensures that the width of the resulting
+ * Puck page preview (zoomed at 75%) is slightly _above_ common framework/device
+ * breakpoints. This can help alleviate some of the pain when editing responsive
+ * pages in a preview area that is narrower than the reported viewport width.
+ *
+ * Viewport | Puck page @ zoom 0.75
+ * --------------------------------
+ * 638px    | 321px
+ * 766px    | 321px
+ * 990px    | 604px
+ * 1022px   | 646px
+ * 1198px   | 801px
+ * 1398px   | 1025px
+ * 1598px   | 1212px
+ */
+
+.Puck {
+  --puck-frame-width: minmax(266px, auto);
+  --puck-side-bar-width: minmax(186px, 250px);
+  --puck-space-px: 16px;
+  bottom: 0;
+  display: grid;
+  grid-template-areas: "header header header" "left editor right";
+  grid-template-columns: 0 var(--puck-frame-width) var(--puck-side-bar-width);
+  grid-template-rows: min-content auto;
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+.Puck--leftSideBarVisible {
+  grid-template-columns:
+    var(--puck-side-bar-width) var(--puck-frame-width)
+    var(--puck-side-bar-width);
+}
+
+@media (min-width: 766px) {
+  .Puck {
+    --puck-frame-width: auto;
+  }
+}
+
+@media (min-width: 990px) {
+  .Puck {
+    --puck-side-bar-width: 256px;
+  }
+}
+
+@media (min-width: 1198px) {
+  .Puck {
+    --puck-side-bar-width: 274px;
+  }
+}
+
+@media (min-width: 1398px) {
+  .Puck {
+    --puck-side-bar-width: 290px;
+  }
+}
+
+@media (min-width: 1598px) {
+  .Puck {
+    --puck-side-bar-width: 320px;
+  }
+}
+
+.Puck-header {
+  background: var(--puck-color-white);
+  border-bottom: 1px solid var(--puck-color-grey-8);
+  color: var(--puck-color-black);
+  grid-area: header;
+}
+
+.Puck-headerInner {
+  align-items: start;
+  display: grid;
+  gap: var(--puck-space-px);
+  grid-template-areas: "left middle right";
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: auto;
+  padding: var(--puck-space-px);
+}
+
+.Puck-headerToggle {
+  padding-top: 2px;
+}
+
+.Puck-headerTitle {
+  align-self: center;
+}
+
+.Puck-headerPath {
+  font-family: var(--puck-font-family-monospaced);
+  font-size: var(--puck-font-size-xxs);
+  font-weight: normal;
+  word-break: break-all;
+}
+
+.Puck-headerTools {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
+.Puck-leftSideBar {
+  background: var(--puck-color-grey-11);
+  border-right: 1px solid var(--puck-color-grey-8);
+  display: flex;
+  flex-direction: column;
+  grid-area: left;
+  overflow-y: auto;
+}
+
+.Puck-frame {
+  display: flex;
+  flex-direction: column;
+  grid-area: editor;
+  overflow-y: auto;
+  position: relative;
+}
+
+.Puck-root {
+  box-shadow: 0 0 0 calc(var(--puck-space-px) * 2) var(--puck-color-grey-10);
+  margin: var(--puck-space-px);
+  zoom: 0.75;
+}
+
+@media (min-width: 1198px) {
+  .Puck-root {
+    margin: calc(var(--puck-space-px) * 2);
+  }
+}
+
+.Puck-page {
+  border: 1px solid var(--puck-color-grey-8);
+}
+
+.Puck-rightSideBar {
+  background: var(--puck-color-white);
+  border-left: 1px solid var(--puck-color-grey-8);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--puck-font-stack);
+  grid-area: right;
+  overflow-y: auto;
+}

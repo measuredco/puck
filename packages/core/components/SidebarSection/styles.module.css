@@ -25,6 +25,10 @@
   padding: 0px;
 }
 
+.SidebarSection--noPadding .SidebarSection-content:last-child {
+  padding-bottom: 4px;
+}
+
 .SidebarSection:last-of-type .SidebarSection-content {
   border-bottom: none;
   flex-grow: 1;

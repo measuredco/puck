@@ -1,0 +1,139 @@
+import { ConfigPreview } from "@/docs/components/Preview";
+
+# Custom
+
+Implement a field with a custom UI. Extends [Base](base).
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      title: {
+        type: "custom",
+        render: ({ name, onChange, value }) => {
+          return (
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) => onChange(e.currentTarget.value)}
+              style={{
+                background: "white",
+                border: "1px solid black",
+                padding: 4,
+              }}
+            />
+          );
+        },
+      },
+    },
+    defaultProps: {
+      title: "Hello, world",
+    },
+    render: ({ title }) => {
+      return <p style={{ margin: 0 }}>{title}</p>;
+    },
+  }}
+/>
+
+```tsx {7-16} copy showLineNumbers
+import { FieldLabel } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "custom",
+          render: ({ name, onChange, value }) => (
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) => onChange(e.currentTarget.value)}
+            />
+          ),
+        },
+      },
+      render: ({ title }) => {
+        return <p>{title}</p>;
+      },
+    },
+  },
+};
+```
+
+## Params
+
+| Param                       | Example                   | Type     | Status   |
+| --------------------------- | ------------------------- | -------- | -------- |
+| [`type`](#type)             | `type: "custom"`          | "custom" | Required |
+| [`render()`](#renderparams) | `render: () => <input />` | Function | Required |
+
+## Required params
+
+### `type`
+
+The type of the field. Must be `"custom"` for Custom fields.
+
+```tsx {6} showLineNumbers copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "custom",
+          render: ({ name, onChange, value }) => (
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) => onChange(e.currentTarget.value)}
+            />
+          ),
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `render(params)`
+
+Render the custom field.
+
+```tsx {9-14} showLineNumbers copy
+import { FieldLabel } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "custom",
+          render: ({ name, onChange, value }) => (
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) => onChange(e.currentTarget.value)}
+            />
+          ),
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+#### `params`
+
+| Param             | Example                    | Type     |
+| ----------------- | -------------------------- | -------- |
+| `field`           | `{ type: "custom" }`       | Object   |
+| `name`            | `"title"`                  | String   |
+| `onChange(value)` | `onChange("Hello, world")` | Function |
+| `value`           | `"Hello, world"`           | Any      |
+
+## Further reading
+
+- [Custom Fields guide](/docs/extending-puck/custom-fields)
+- [The `<FieldLabel>` API reference](/docs/api-reference/components/field-label)

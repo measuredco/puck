@@ -1,0 +1,65 @@
+---
+title: <DropZone>
+---
+
+# \<DropZone\>
+
+Place droppable regions (zones) inside other components to enable nested components.
+
+```tsx {1,9} copy
+import { DropZone } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+## Props
+
+| Param           | Example           | Type   | Status   |
+| --------------- | ----------------- | ------ | -------- |
+| [`zone`](#zone) | `zone: "my-zone"` | String | Required |
+
+## Required props
+
+### `zone`
+
+Set the zone identifier for the given DropZone.
+
+Must be unique within this component, but two different components can both define DropZones with the same `zone` value.
+
+```tsx /zone="my-content"/ copy
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+## Restrictions
+
+You can't drag between DropZones that don't share a parent component.
+
+## React server components
+
+By default, DropZones don't work with React server components as they rely on context.
+
+Instead, you can use the [`renderDropZone` method](/docs/api-reference/configuration/component-config#propspuckrenderdropzone) passed to your component render function.

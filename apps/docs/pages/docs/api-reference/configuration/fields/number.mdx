@@ -1,0 +1,64 @@
+import { ConfigPreview } from "@/docs/components/Preview";
+
+# Number
+
+Render a `number` input. Extends [Base](base).
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      myNumber: {
+        type: "number",
+      },
+    },
+    defaultProps: { myNumber: 5 },
+    render: ({ myNumber }) => {
+      return <div>{myNumber}</div>;
+    },
+  }}
+/>
+
+```tsx {5-7} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        myNumber: {
+          type: "number",
+        },
+      },
+      render: ({ myNumber }) => {
+        return <div>{myNumber}</div>;
+      },
+    },
+  },
+};
+```
+
+## Params
+
+| Param           | Example          | Type     | Status   |
+| --------------- | ---------------- | -------- | -------- |
+| [`type`](#type) | `type: "number"` | "number" | Required |
+
+## Required params
+
+### `type`
+
+The type of the field. Must be `"number"` for Number fields.
+
+```tsx {6} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "number",
+        },
+      },
+      // ...
+    },
+  },
+};
+```

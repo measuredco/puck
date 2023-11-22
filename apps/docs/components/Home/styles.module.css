@@ -1,0 +1,44 @@
+.Home {
+  display: flex;
+  padding-bottom: 48px;
+  padding-top: 48px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  /* max-width: 1024px; */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .Home {
+    padding-bottom: 156px;
+    padding-top: 156px;
+  }
+}
+
+.Home-title {
+  max-width: 1156px;
+}
+
+.Home-description {
+  max-width: 896px;
+}
+
+.Home-heading {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .Home-heading {
+    font-size: 64px;
+  }
+}
+
+.Home-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
