@@ -7,8 +7,7 @@ import { reorder, replace } from "../../../../lib";
 import { Droppable } from "@hello-pangea/dnd";
 import { DragDropContext } from "@hello-pangea/dnd";
 import { Draggable } from "../../../Draggable";
-import { generateId } from "../../../../lib/generate-id";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DragIcon } from "../../../DragIcon";
 import { ArrayState, ItemWithId } from "../../../../types/Config";
 import { useAppContext } from "../../../Puck/context";
@@ -29,15 +28,21 @@ export const ArrayField = ({
   const { state, setUi } = useAppContext();
 
   const arrayState = state.ui.arrayState[id] || {
-    items: Array.from(value).map((item, idx) => {
+    items: Array.from(value || []).map((item, idx) => {
       return {
         _originalIndex: idx,
-        _arrayId: generateId("ArrayItem"),
+        _arrayId: `${id}-${idx}`,
         data: item,
       };
     }),
     openId: "",
   };
+
+  const [localState, setLocalState] = useState({ arrayState, value });
+
+  useEffect(() => {
+    setLocalState({ arrayState, value });
+  }, [value, state.ui.arrayState[id]]);
 
   const mapArrayStateToUi = useCallback(
     (partialArrayState: Partial<ArrayState>) => {
@@ -70,7 +75,7 @@ export const ArrayField = ({
             typeof arrayStateItem?._originalIndex !== "undefined"
               ? arrayStateItem._originalIndex
               : ++highestIndex,
-          _arrayId: arrayState.items[idx]?._arrayId || generateId("ArrayItem"),
+          _arrayId: arrayState.items[idx]?._arrayId || `${id}-${highestIndex}`,
           data: item,
         };
       });
@@ -83,7 +88,7 @@ export const ArrayField = ({
 
   // Create a mirror of value with IDs added for drag and drop
   useEffect(() => {
-    setUi(mapArrayStateToUi(regenerateArrayState(value)));
+    setUi(mapArrayStateToUi(arrayState));
   }, []);
 
   if (field.type !== "array" || !field.arrayFields) {
@@ -118,6 +123,11 @@ export const ArrayField = ({
                 [id]: { ...arrayState, items: newArrayStateItems },
               },
             });
+
+            setLocalState({
+              value: newValue,
+              arrayState: { ...arrayState, items: newArrayStateItems },
+            });
           }
         }}
       >
@@ -132,137 +142,129 @@ export const ArrayField = ({
                   hasItems: Array.isArray(value) && value.length > 0,
                 })}
               >
-                {Array.isArray(value) &&
-                  value.map((data, i) => {
-                    const { _arrayId, _originalIndex = i } =
-                      arrayState.items[i] || {};
+                {localState.arrayState.items.map((item, i) => {
+                  const { _arrayId = `${id}-${i}`, _originalIndex = i } = item;
+                  const data = Array.from(localState.value || [])[i] as object;
 
-                    if (!_arrayId) {
-                      return null;
-                    }
+                  return (
+                    <Draggable
+                      id={_arrayId}
+                      index={i}
+                      key={_arrayId}
+                      className={(_, snapshot) =>
+                        getClassNameItem({
+                          isExpanded: arrayState.openId === _arrayId,
+                          isDragging: snapshot?.isDragging,
+                          readOnly,
+                        })
+                      }
+                      isDragDisabled={readOnly}
+                    >
+                      {() => (
+                        <>
+                          <div
+                            onClick={() => {
+                              if (arrayState.openId === _arrayId) {
+                                setUi(
+                                  mapArrayStateToUi({
+                                    openId: "",
+                                  })
+                                );
+                              } else {
+                                setUi(
+                                  mapArrayStateToUi({
+                                    openId: _arrayId,
+                                  })
+                                );
+                              }
+                            }}
+                            className={getClassNameItem("summary")}
+                          >
+                            {field.getItemSummary
+                              ? field.getItemSummary(data, i)
+                              : `Item #${_originalIndex}`}
+                            <div className={getClassNameItem("rhs")}>
+                              {!readOnly && (
+                                <div className={getClassNameItem("actions")}>
+                                  <div className={getClassNameItem("action")}>
+                                    <IconButton
+                                      onClick={(e) => {
+                                        e.stopPropagation();
 
-                    return (
-                      <Draggable
-                        id={_arrayId}
-                        index={i}
-                        key={_arrayId}
-                        className={(_, snapshot) =>
-                          getClassNameItem({
-                            isExpanded: arrayState.openId === _arrayId,
-                            isDragging: snapshot.isDragging,
-                            readOnly,
-                          })
-                        }
-                        isDragDisabled={readOnly}
-                      >
-                        {() => (
-                          <>
-                            <div
-                              onClick={() => {
-                                if (arrayState.openId === _arrayId) {
-                                  setUi(
-                                    mapArrayStateToUi({
-                                      openId: "",
-                                    })
-                                  );
-                                } else {
-                                  setUi(
-                                    mapArrayStateToUi({
-                                      openId: _arrayId,
-                                    })
-                                  );
-                                }
-                              }}
-                              className={getClassNameItem("summary")}
-                            >
-                              {field.getItemSummary
-                                ? field.getItemSummary(data, i)
-                                : `Item #${_originalIndex}`}
-                              <div className={getClassNameItem("rhs")}>
-                                {!readOnly && (
-                                  <div className={getClassNameItem("actions")}>
-                                    <div className={getClassNameItem("action")}>
-                                      <IconButton
-                                        onClick={(e) => {
-                                          e.stopPropagation();
+                                        const existingValue = [
+                                          ...(value || []),
+                                        ];
 
-                                          const existingValue = [
-                                            ...(value || []),
-                                          ];
+                                        const existingItems = [
+                                          ...(arrayState.items || []),
+                                        ];
 
-                                          const existingItems = [
-                                            ...(arrayState.items || []),
-                                          ];
+                                        existingValue.splice(i, 1);
+                                        existingItems.splice(i, 1);
 
-                                          existingValue.splice(i, 1);
-                                          existingItems.splice(i, 1);
-
-                                          onChange(
-                                            existingValue,
-                                            mapArrayStateToUi({
-                                              items: existingItems,
-                                            })
-                                          );
-                                        }}
-                                        title="Delete"
-                                      >
-                                        <Trash size={16} />
-                                      </IconButton>
-                                    </div>
+                                        onChange(
+                                          existingValue,
+                                          mapArrayStateToUi({
+                                            items: existingItems,
+                                          })
+                                        );
+                                      }}
+                                      title="Delete"
+                                    >
+                                      <Trash size={16} />
+                                    </IconButton>
                                   </div>
-                                )}
-                                <div>
-                                  <DragIcon />
                                 </div>
+                              )}
+                              <div>
+                                <DragIcon />
                               </div>
                             </div>
-                            <div className={getClassNameItem("body")}>
-                              <fieldset
-                                className={getClassNameItem("fieldset")}
-                              >
-                                {Object.keys(field.arrayFields!).map(
-                                  (fieldName) => {
-                                    const subField =
-                                      field.arrayFields![fieldName];
+                          </div>
+                          <div className={getClassNameItem("body")}>
+                            <fieldset className={getClassNameItem("fieldset")}>
+                              {Object.keys(field.arrayFields!).map(
+                                (fieldName) => {
+                                  const subField =
+                                    field.arrayFields![fieldName];
 
-                                    const subFieldName = `${name}[${i}].${fieldName}`;
-                                    const wildcardFieldName = `${name}[*].${fieldName}`;
+                                  const subFieldName = `${name}[${i}].${fieldName}`;
+                                  const wildcardFieldName = `${name}[*].${fieldName}`;
 
-                                    return (
-                                      <InputOrGroup
-                                        key={subFieldName}
-                                        name={subFieldName}
-                                        label={subField.label || fieldName}
-                                        id={`${id}_${fieldName}`}
-                                        readOnly={
-                                          typeof readOnlyFields[
-                                            subFieldName
-                                          ] !== "undefined"
-                                            ? readOnlyFields[subFieldName]
-                                            : readOnlyFields[wildcardFieldName]
-                                        }
-                                        readOnlyFields={readOnlyFields}
-                                        field={subField}
-                                        value={data[fieldName]}
-                                        onChange={(val) => {
-                                          onChange(
-                                            replace(value, i, {
-                                              ...data,
-                                              [fieldName]: val,
-                                            })
-                                          );
-                                        }}
-                                      />
-                                    );
-                                  }
-                                )}
-                              </fieldset>
-                            </div>
-                          </>
-                        )}
-                      </Draggable>
-                    );
-                  })}
+                                  return (
+                                    <InputOrGroup
+                                      key={subFieldName}
+                                      name={subFieldName}
+                                      label={subField.label || fieldName}
+                                      id={`${id}_${fieldName}`}
+                                      readOnly={
+                                        typeof readOnlyFields[subFieldName] !==
+                                        "undefined"
+                                          ? readOnlyFields[subFieldName]
+                                          : readOnlyFields[wildcardFieldName]
+                                      }
+                                      readOnlyFields={readOnlyFields}
+                                      field={subField}
+                                      value={data[fieldName]}
+                                      onChange={(val) => {
+                                        onChange(
+                                          replace(value, i, {
+                                            ...data,
+                                            [fieldName]: val,
+                                          })
+                                        );
+                                      }}
+                                    />
+                                  );
+                                }
+                              )}
+                            </fieldset>
+                          </div>
+                        </>
+                      )}
+                    </Draggable>
+                  );
+                })}
 
                 {provided.placeholder}
 
