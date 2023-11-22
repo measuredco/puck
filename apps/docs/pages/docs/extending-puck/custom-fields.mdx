@@ -34,7 +34,7 @@ const config = {
 };
 ```
 
-The `onChange` function updates the Puck data payload for the field name, in this case "title".
+The [`onChange` function](/docs/api-reference/configuration/fields/custom#onchangevalue-ui) updates the Puck data payload for the field name, in this case "title".
 
 <ConfigPreview
   label="Example"
@@ -128,6 +128,41 @@ const config = {
   }}
 />
 
+## Updating the UI state
+
+The [`onChange` function](/docs/api-reference/configuration/fields/custom#onchangevalue-ui) can also be used to modify the [Puck UI state](/docs/api-reference/app-state#ui) at the same time as updating the field value:
+
+```tsx copy showLineNumbers {14,15}
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "custom",
+          render: ({ name, onChange, value }) => (
+            <input
+              defaultValue={value}
+              name={name}
+              onChange={(e) =>
+                onChange(
+                  e.currentTarget.value,
+                  // Close the left side bar when this field is changed
+                  { leftSideBarVisible: false }
+                )
+              }
+              style={{ border: "1px solid black", padding: 4 }}
+            />
+          ),
+        },
+      },
+      render: ({ title }) => {
+        return <p>{title}</p>;
+      },
+    },
+  },
+};
+```
+
 ## Further reading
 
-- [The `custom` field API reference](/docs/api-reference/configuration/fields/custom):
+- [The `custom` field API reference](/docs/api-reference/configuration/fields/custom)

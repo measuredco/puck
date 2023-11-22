@@ -126,13 +126,22 @@ const config = {
 
 #### `params`
 
-| Param             | Example                    | Type     |
-| ----------------- | -------------------------- | -------- |
-| `field`           | `{ type: "custom" }`       | Object   |
-| `id`              | `id`                       | String   |
-| `name`            | `"title"`                  | String   |
-| `onChange(value)` | `onChange("Hello, world")` | Function |
-| `value`           | `"Hello, world"`           | Any      |
+| Param                 | Example                    | Type     |
+| --------------------- | -------------------------- | -------- |
+| `field`               | `{ type: "custom" }`       | Object   |
+| `id`                  | `id`                       | String   |
+| `name`                | `"title"`                  | String   |
+| `onChange(value, ui)` | `onChange("Hello, world")` | Function |
+| `value`               | `"Hello, world"`           | Any      |
+
+##### onChange(value, [ui])
+
+Set the value of the field and optionally update the [Puck UI state](/docs/api-reference/app-state#ui).
+
+| Param   | Example                       | Type                                        | Status   |
+| ------- | ----------------------------- | ------------------------------------------- | -------- |
+| `value` | `"Hello, world"`              | Any                                         | Required |
+| `ui`    | `{leftSideBarVisible: false}` | [UiState](/docs/api-reference/app-state#ui) |          |
 
 ## Further reading
 
