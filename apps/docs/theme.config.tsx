@@ -31,8 +31,8 @@ const Head = () => {
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:image" content="https://puckeditor.com/social.png" />
 
-      <link rel="icon" href="favicon.png" type="image/png" />
-      <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+      <link rel="icon" href="/favicon.png" type="image/png" />
+      <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     </>
   );
 };
