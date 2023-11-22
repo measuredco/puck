@@ -1,7 +1,6 @@
-import { Render } from "@measured/puck";
-import styles from "@measured/puck/dist/index.css";
+import { Render, type Config } from "@measured/puck";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { json, LinksFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import puckConfig from "../../puck.config";
@@ -42,9 +41,9 @@ export default function Page() {
 
   /**
    * TypeStript error
-   * Type 'Config<Props>' is not assignable to type 'Config'.
+   * Type 'Config<Props>' is not assignable to type 'Config'. Use 'as Config' for now.
    * @see https://github.com/measuredco/puck/issues/185
    */
 
-  return <Render config={puckConfig} data={puckData} />;
+  return <Render config={puckConfig as Config} data={puckData} />;
 }
