@@ -145,6 +145,7 @@ describe("use-resolved-data", () => {
             "componentList": {},
             "itemSelector": null,
             "leftSideBarVisible": false,
+            "rightSideBarVisible": true,
           },
         }
       `);
