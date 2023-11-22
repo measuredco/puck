@@ -56,6 +56,7 @@ const mockedAppStateArray1: AppState = {
   },
   ui: {
     leftSideBarVisible: true,
+    rightSideBarVisible: true,
     arrayState: {
       "ArrayField-6f94973722d42695d4e7b8678e7dcca5affc70df": {
         items: [
@@ -102,6 +103,7 @@ const mockedAppStateArray2: AppState = {
   },
   ui: {
     leftSideBarVisible: true,
+    rightSideBarVisible: true,
     arrayState: {
       "ArrayField-6f94973722d42695d4e7b8678e7dcca5affc70df": {
         items: [
