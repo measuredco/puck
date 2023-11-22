@@ -53,7 +53,7 @@ export type SetDataAction = {
 
 export type SetAction = {
   type: "set";
-  state: Partial<AppState>;
+  state: Partial<AppState> | ((previous: AppState) => Partial<AppState>);
 };
 
 export type RegisterZoneAction = {

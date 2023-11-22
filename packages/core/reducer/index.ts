@@ -2,7 +2,7 @@ import { Reducer } from "react";
 import { AppState, Config } from "../types/Config";
 import { recordDiff } from "../lib/use-puck-history";
 import { reduceData } from "./data";
-import { PuckAction } from "./actions";
+import { PuckAction, SetAction } from "./actions";
 import { reduceUi } from "./state";
 
 export * from "./actions";
@@ -36,6 +36,17 @@ const storeInterceptor = (reducer: StateReducer) => {
   };
 };
 
+export const setAction = (state: AppState, action: SetAction) => {
+  if (typeof action.state === "object") {
+    return {
+      ...state,
+      ...action.state,
+    };
+  }
+
+  return { ...state, ...action.state(state) };
+};
+
 export const createReducer = ({
   config,
 }: {
@@ -46,7 +57,7 @@ export const createReducer = ({
     const ui = reduceUi(state.ui, action);
 
     if (action.type === "set") {
-      return { ...state, ...action.state };
+      return setAction(state, action);
     }
 
     return { data, ui };
