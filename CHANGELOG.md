@@ -2,6 +2,43 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.12.0](https://github.com/measuredco/puck/compare/v0.11.0...v0.12.0) (2023-11-23)
+
+
+**### Features**
+
+* support React server components via @measured/puck/rsc bundle ([90ac161](~https://github.com/measuredco/puck/commit/90ac161513d0c8c84f6b2bb968f7e5400c732a0a~))
+* add remix recipe ([f882878](https://github.com/measuredco/puck/commit/f882878e081b44a2b0bd1f773114f3c35b8398b1))
+* improve responsive behaviour ([889b4c7](~https://github.com/measuredco/puck/commit/889b4c7a91f1a9b95c9fd7d4b3cdb20b2ee4946b~))
+* add explicit css exports ([0b6a527](~https://github.com/measuredco/puck/commit/0b6a52792628225d392775ba6b3d549aab5be59b~))
+* add visibility toggle for right-hand sidebar ([3d6c5d4](~https://github.com/measuredco/puck/commit/3d6c5d479f2237400e0dc7cab6d5ed5773058d3b~))
+* allow custom fields to set UI state during onChange ([388793c](~https://github.com/measuredco/puck/commit/388793c9b0ac27b14a538b70357abd0dc4f26779~))
+* expose field "id" to custom fields ([849161e](~https://github.com/measuredco/puck/commit/849161ef0e2e2e01f6a1b9f517ba4bcc66cf6bd1~))
+* improve IconButton accessibility ([4c71d39](~https://github.com/measuredco/puck/commit/4c71d39d1138f0fc823ada04710d0057433475b7~))
+* add new monospaced font stack ([c484ea6](~https://github.com/measuredco/puck/commit/c484ea6bae5e6283bf82860e9a84413e60720163~))
+* tweak Field input focus state ([8012afd](~https://github.com/measuredco/puck/commit/8012afdd9be2e3bc96185b4f0208b3ebdef0ed21~))
+
+
+**### Bug Fixes**
+
+* don't enable style pollution of input background color ([bb1a76b](~https://github.com/measuredco/puck/commit/bb1a76b314f744b76197cb670c448abc7896a45e~))
+* don't reset array item labels when changing order ([57563e1](~https://github.com/measuredco/puck/commit/57563e1da1826dbfa08a32fabb27153e4618ab40~))
+* ensure field icon and label are vertically aligned ([caa40e0](~https://github.com/measuredco/puck/commit/caa40e0499570831e5779f9a6a031e38f054c3f8~))
+* ensure root render receives props from latest data API ([abb6ff1](~https://github.com/measuredco/puck/commit/abb6ff1bd53d7f93ef0ac287290712943ca2c1ce~))
+* export missing PuckAction type ([f22f32d](~https://github.com/measuredco/puck/commit/f22f32dc5569eaa9cea90f896cf4cdafc59940fe~))
+* fix rootResolver behaviour when using recommended root data API ([5c13de5](~https://github.com/measuredco/puck/commit/5c13de58a335f2b4c81f2b424fee8b4a356fb563~))
+* migrate to @hello-pangea/dnd to fix defaultProps warning ([2c97362](~https://github.com/measuredco/puck/commit/2c97362e15f5d2046dc216c6e5fc25f5199d0a37~))
+* prevent inconsistent default input font-size ([99f90b3](~https://github.com/measuredco/puck/commit/99f90b3ba81bf286758685f7c2a457abaffeb2e1~))
+* show a default value when no placeholder set on external fields ([e30b5b6](~https://github.com/measuredco/puck/commit/e30b5b69b6a9f6467db4b05c55ffdc5f1ecebcfb~))
+* stop `zones` getting wiped out if data prop updated ([0c4514f](~https://github.com/measuredco/puck/commit/0c4514fcde24d0ba585fea0981d73e7a8188840f~))
+* stop style pollution into array field items ([03b89d5](~https://github.com/measuredco/puck/commit/03b89d568ded7cae6eb34e0dcf45e60eb758b552~))
+* stretch external field table to width of modal ([f6d89f6](~https://github.com/measuredco/puck/commit/f6d89f69f1a24f94479365b9d955a3ea60b17b8d~))
+* use correct root data API in next recipe example database ([b598144](~https://github.com/measuredco/puck/commit/b5981446ee64a3b5451eb17b8d42263f42df179f~))
+* use Inter font in button type Buttons ([1973847](~https://github.com/measuredco/puck/commit/19738473723c49ddb0d764864283bf597280c7c5~))
+
+
+
+
 ## [0.11.3](https://github.com/measuredco/puck/compare/v0.11.2...v0.11.3) (2023-11-12)
 
 

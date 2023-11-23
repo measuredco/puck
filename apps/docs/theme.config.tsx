@@ -101,14 +101,11 @@ const theme: DocsThemeConfig = {
   },
   banner: {
     dismissible: true,
-    key: "v0.11.0",
+    key: "v0.12.0",
     text: (
-      <a
-        href="https://github.com/measuredco/puck/releases/tag/v0.11.0"
-        target="_blank"
-      >
-        <b>🎉 Puck 0.11.0 released</b>: introduces the categories API for
-        grouping components, and new ways to load external data →
+      <a href="https://github.com/measuredco/puck/releases" target="_blank">
+        <b>🦄 Puck 0.12.0 released</b>: React Server Components, mobile support
+        and a Remix recipe →
       </a>
     ),
   },
