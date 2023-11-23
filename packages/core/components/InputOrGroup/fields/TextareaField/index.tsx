@@ -11,6 +11,7 @@ export const TextareaField = ({
   value,
   name,
   label,
+  id,
 }: InputProps) => {
   return (
     <FieldLabelInternal
@@ -19,6 +20,7 @@ export const TextareaField = ({
       readOnly={readOnly}
     >
       <textarea
+        id={id}
         className={getClassName("input")}
         autoComplete="off"
         name={name}

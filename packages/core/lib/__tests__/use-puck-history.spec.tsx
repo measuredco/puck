@@ -56,23 +56,21 @@ const mockedAppStateArray1: AppState = {
   },
   ui: {
     leftSideBarVisible: true,
+    rightSideBarVisible: true,
     arrayState: {
       "ArrayField-6f94973722d42695d4e7b8678e7dcca5affc70df": {
         items: [
           {
             _originalIndex: 0,
             _arrayId: "ArrayItem-46a064dbef49e8441afd782b10320b74f27f8bcb",
-            data: { label: "Learn more", href: "#", variant: "primary" },
           },
           {
             _originalIndex: 1,
             _arrayId: "ArrayItem-5d99e3a7721edad0d127c9a6b010a37097dad610",
-            data: { label: "Button", href: "#", variant: "primary" },
           },
           {
             _originalIndex: 2,
             _arrayId: "ArrayItem-222ea8b444fa799a8863eb32d057f3080ec99c65",
-            data: { label: "Button", href: "#", variant: "primary" },
           },
         ],
         openId: "",
@@ -102,23 +100,21 @@ const mockedAppStateArray2: AppState = {
   },
   ui: {
     leftSideBarVisible: true,
+    rightSideBarVisible: true,
     arrayState: {
       "ArrayField-6f94973722d42695d4e7b8678e7dcca5affc70df": {
         items: [
           {
             _originalIndex: 0,
             _arrayId: "ArrayItem-5d99e3a7721edad0d127c9a6b010a37097dad610",
-            data: { label: "Button", href: "#", variant: "primary" },
           },
           {
             _originalIndex: 1,
             _arrayId: "ArrayItem-222ea8b444fa799a8863eb32d057f3080ec99c65",
-            data: { label: "Button", href: "#", variant: "primary" },
           },
           {
             _originalIndex: 2,
             _arrayId: "ArrayItem-46a064dbef49e8441afd782b10320b74f27f8bcb",
-            data: { label: "Learn more", href: "#", variant: "primary" },
           },
         ],
         openId: "",

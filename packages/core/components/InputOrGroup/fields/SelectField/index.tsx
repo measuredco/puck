@@ -12,6 +12,7 @@ export const SelectField = ({
   value,
   name,
   readOnly,
+  id,
 }: InputProps) => {
   if (field.type !== "select" || !field.options) {
     return null;
@@ -24,6 +25,7 @@ export const SelectField = ({
       readOnly={readOnly}
     >
       <select
+        id={id}
         className={getClassName("input")}
         disabled={readOnly}
         onChange={(e) => {

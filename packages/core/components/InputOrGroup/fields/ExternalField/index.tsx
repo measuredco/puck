@@ -13,6 +13,7 @@ export const ExternalField = ({
   value,
   name,
   label,
+  id,
 }: InputProps) => {
   // DEPRECATED
   const validField = field as ExternalFieldType;
@@ -55,6 +56,7 @@ export const ExternalField = ({
         }}
         onChange={onChange}
         value={value}
+        id={id}
       />
     </FieldLabelInternal>
   );

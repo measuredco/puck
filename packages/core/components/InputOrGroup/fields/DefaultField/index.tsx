@@ -12,6 +12,7 @@ export const DefaultField = ({
   value,
   name,
   label,
+  id,
 }: InputProps) => {
   return (
     <FieldLabelInternal
@@ -38,6 +39,7 @@ export const DefaultField = ({
           }
         }}
         readOnly={readOnly}
+        id={id}
       />
     </FieldLabelInternal>
   );

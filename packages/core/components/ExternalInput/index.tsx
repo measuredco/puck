@@ -17,11 +17,13 @@ export const ExternalInput = ({
   onChange,
   value = null,
   name,
+  id,
 }: {
   field: ExternalField;
   onChange: (value: any) => void;
   value: any;
   name: string;
+  id: string;
 }) => {
   const { mapProp = (val) => val } = field || {};
 
@@ -61,6 +63,7 @@ export const ExternalInput = ({
         dataSelected: !!value,
         modalVisible: isOpen,
       })}
+      id={id}
     >
       <div className={getClassName("actions")}>
         <button

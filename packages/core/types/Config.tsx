@@ -213,13 +213,13 @@ export type Data<
 export type ItemWithId = {
   _arrayId: string;
   _originalIndex: number;
-  data: any;
 };
 
 export type ArrayState = { items: ItemWithId[]; openId: string };
 
 export type UiState = {
   leftSideBarVisible: boolean;
+  rightSideBarVisible: boolean;
   itemSelector: ItemSelector | null;
   arrayState: Record<string, ArrayState | undefined>;
   componentList: Record<

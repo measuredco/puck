@@ -7,7 +7,13 @@ import {
   useState,
 } from "react";
 import { DragDropContext, DragStart, DragUpdate } from "@hello-pangea/dnd";
-import type { AppState, Config, Data, Field } from "../../types/Config";
+import type {
+  AppState,
+  Config,
+  Data,
+  Field,
+  UiState,
+} from "../../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
 import { ComponentList } from "../ComponentList";
 import { Button } from "../Button";
@@ -16,7 +22,7 @@ import { Plugin } from "../../types/Plugin";
 import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
-import { Globe, Sidebar, ChevronLeft, ChevronRight } from "react-feather";
+import { ChevronDown, ChevronUp, Globe, Sidebar } from "react-feather";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
 import { DropZone, DropZoneProvider, dropZoneContext } from "../DropZone";
@@ -25,19 +31,21 @@ import { ItemSelector, getItem } from "../../lib/get-item";
 import {
   PuckAction,
   ReplaceAction,
+  SetAction,
   StateReducer,
   createReducer,
   replaceAction,
+  setAction,
 } from "../../reducer";
 import { LayerTree } from "../LayerTree";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
 import { flushZones } from "../../lib/flush-zones";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { usePuckHistory } from "../../lib/use-puck-history";
 import { AppProvider, defaultAppState } from "./context";
 import { useComponentList } from "../../lib/use-component-list";
 import { useResolvedData } from "../../lib/use-resolved-data";
+import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 
 const getClassName = getClassNameFactory("Puck", styles);
@@ -148,17 +156,14 @@ export function Puck({
   const { data, ui } = appState;
 
   const { resolveData, componentState } = useResolvedData(
-    data,
+    appState,
     config,
     dispatch
   );
 
-  const { canForward, canRewind, rewind, forward } = usePuckHistory({
-    appState,
-    dispatch,
-  });
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const { itemSelector, leftSideBarVisible } = ui;
+  const { itemSelector, leftSideBarVisible, rightSideBarVisible } = ui;
 
   const setItemSelector = useCallback(
     (newItemSelector: ItemSelector | null) => {
@@ -273,6 +278,55 @@ export function Puck({
     }
   }, []);
 
+  const toggleSidebars = useCallback(
+    (sidebar: "left" | "right") => {
+      const widerViewport = window.matchMedia("(min-width: 638px)").matches;
+      const sideBarVisible =
+        sidebar === "left" ? leftSideBarVisible : rightSideBarVisible;
+      const oppositeSideBar =
+        sidebar === "left" ? "rightSideBarVisible" : "leftSideBarVisible";
+
+      dispatch({
+        type: "setUi",
+        ui: {
+          [`${sidebar}SideBarVisible`]: !sideBarVisible,
+          ...(!widerViewport ? { [oppositeSideBar]: false } : {}),
+        },
+      });
+    },
+    [dispatch, leftSideBarVisible, rightSideBarVisible]
+  );
+
+  useEffect(() => {
+    if (!window.matchMedia("(min-width: 638px)").matches) {
+      dispatch({
+        type: "setUi",
+        ui: {
+          leftSideBarVisible: false,
+          rightSideBarVisible: false,
+        },
+      });
+    }
+
+    const handleResize = () => {
+      if (!window.matchMedia("(min-width: 638px)").matches) {
+        dispatch({
+          type: "setUi",
+          ui: (ui) => ({
+            ...ui,
+            ...(ui.rightSideBarVisible ? { leftSideBarVisible: false } : {}),
+          }),
+        });
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div>
       <AppProvider
@@ -358,7 +412,13 @@ export function Puck({
             <dropZoneContext.Consumer>
               {(ctx) => {
                 return (
-                  <div className={getClassName({ leftSideBarVisible })}>
+                  <div
+                    className={getClassName({
+                      leftSideBarVisible,
+                      menuOpen,
+                      rightSideBarVisible,
+                    })}
+                  >
                     <header className={getClassName("header")}>
                       {renderHeader ? (
                         renderHeader({
@@ -378,19 +438,26 @@ export function Puck({
                       ) : (
                         <div className={getClassName("headerInner")}>
                           <div className={getClassName("headerToggle")}>
-                            <IconButton
-                              onClick={() =>
-                                dispatch({
-                                  type: "setUi",
-                                  ui: {
-                                    leftSideBarVisible: !leftSideBarVisible,
-                                  },
-                                })
-                              }
-                              title="Toggle left sidebar"
-                            >
-                              <Sidebar />
-                            </IconButton>
+                            <div className={getClassName("leftSideBarToggle")}>
+                              <IconButton
+                                onClick={() => {
+                                  toggleSidebars("left");
+                                }}
+                                title="Toggle left sidebar"
+                              >
+                                <Sidebar focusable="false" />
+                              </IconButton>
+                            </div>
+                            <div className={getClassName("rightSideBarToggle")}>
+                              <IconButton
+                                onClick={() => {
+                                  toggleSidebars("right");
+                                }}
+                                title="Toggle right sidebar"
+                              >
+                                <Sidebar focusable="false" />
+                              </IconButton>
+                            </div>
                           </div>
                           <div className={getClassName("headerTitle")}>
                             <Heading rank={2} size="xs">
@@ -406,53 +473,29 @@ export function Puck({
                             </Heading>
                           </div>
                           <div className={getClassName("headerTools")}>
-                            <div style={{ display: "flex" }}>
+                            <div className={getClassName("menuButton")}>
                               <IconButton
-                                title="undo"
-                                disabled={!canRewind}
-                                onClick={rewind}
-                              >
-                                <ChevronLeft
-                                  size={21}
-                                  stroke={
-                                    canRewind
-                                      ? "var(--puck-color-black)"
-                                      : "var(--puck-color-grey-7)"
-                                  }
-                                />
-                              </IconButton>
-                              <IconButton
-                                title="redo"
-                                disabled={!canForward}
-                                onClick={forward}
-                              >
-                                <ChevronRight
-                                  size={21}
-                                  stroke={
-                                    canForward
-                                      ? "var(--puck-color-black)"
-                                      : "var(--puck-color-grey-7)"
-                                  }
-                                />
-                              </IconButton>
-                            </div>
-                            <>
-                              {renderHeaderActions &&
-                                renderHeaderActions({
-                                  state: appState,
-                                  dispatch,
-                                })}
-                            </>
-                            <div>
-                              <Button
                                 onClick={() => {
-                                  onPublish(data);
+                                  return setMenuOpen(!menuOpen);
                                 }}
-                                icon={<Globe size="14px" />}
+                                title="Toggle menu bar"
                               >
-                                Publish
-                              </Button>
+                                {menuOpen ? (
+                                  <ChevronUp focusable="false" />
+                                ) : (
+                                  <ChevronDown focusable="false" />
+                                )}
+                              </IconButton>
                             </div>
+                            <MenuBar
+                              appState={appState}
+                              data={data}
+                              dispatch={dispatch}
+                              onPublish={onPublish}
+                              menuOpen={menuOpen}
+                              renderHeaderActions={renderHeaderActions}
+                              setMenuOpen={setMenuOpen}
+                            />
                           </div>
                         </div>
                       )}
@@ -540,7 +583,10 @@ export function Puck({
                           {Object.keys(fields).map((fieldName) => {
                             const field = fields[fieldName];
 
-                            const onChange = (value: any) => {
+                            const onChange = (
+                              value: any,
+                              updatedUi?: Partial<UiState>
+                            ) => {
                               let currentProps;
 
                               if (selectedItem) {
@@ -555,7 +601,7 @@ export function Puck({
                               };
 
                               if (itemSelector) {
-                                const action: ReplaceAction = {
+                                const replaceActionData: ReplaceAction = {
                                   type: "replace",
                                   destinationIndex: itemSelector.index,
                                   destinationZone:
@@ -563,27 +609,56 @@ export function Puck({
                                   data: { ...selectedItem, props: newProps },
                                 };
 
+                                // We use `replace` action, then feed into `set` action so we can also process any UI changes
+                                const replacedData = replaceAction(
+                                  data,
+                                  replaceActionData
+                                );
+
+                                const setActionData: SetAction = {
+                                  type: "set",
+                                  state: {
+                                    data: { ...data, ...replacedData },
+                                    ui: { ...ui, ...updatedUi },
+                                  },
+                                };
+
                                 // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
                                 if (
                                   config.components[selectedItem!.type]
                                     ?.resolveData
                                 ) {
-                                  resolveData(replaceAction(data, action));
+                                  resolveData(
+                                    setAction(appState, setActionData)
+                                  );
                                 } else {
-                                  dispatch(action);
+                                  dispatch({
+                                    ...setActionData,
+                                    recordHistory: true,
+                                  });
                                 }
                               } else {
                                 if (data.root.props) {
                                   // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
                                   if (config.root?.resolveData) {
                                     resolveData({
-                                      ...data,
-                                      root: { props: newProps },
+                                      ui: { ...ui, ...updatedUi },
+                                      data: {
+                                        ...data,
+                                        root: { props: newProps },
+                                      },
                                     });
                                   } else {
                                     dispatch({
-                                      type: "setData",
-                                      data: { root: { props: newProps } },
+                                      type: "set",
+                                      state: {
+                                        ui: { ...ui, ...updatedUi },
+                                        data: {
+                                          ...data,
+                                          root: { props: newProps },
+                                        },
+                                      },
+                                      recordHistory: true,
                                     });
                                   }
                                 } else {
@@ -604,6 +679,7 @@ export function Puck({
                                   key={`${selectedItem.props.id}_${fieldName}`}
                                   field={field}
                                   name={fieldName}
+                                  id={`${selectedItem.props.id}_${fieldName}`}
                                   label={field.label}
                                   readOnly={readOnly[fieldName]}
                                   readOnlyFields={readOnly}
@@ -619,6 +695,7 @@ export function Puck({
                                   key={`page_${fieldName}`}
                                   field={field}
                                   name={fieldName}
+                                  id={`root_${fieldName}`}
                                   label={field.label}
                                   readOnly={readOnly[fieldName]}
                                   readOnlyFields={readOnly}

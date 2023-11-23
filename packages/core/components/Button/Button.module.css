@@ -4,13 +4,14 @@
   border: none;
   border-radius: 4px;
   color: white;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   letter-spacing: 0.05ch;
   font-family: var(--puck-font-family-proportional);
   font-size: 14px;
   font-weight: 400;
+  line-height: 1;
   text-align: center;
   text-decoration: none;
   cursor: pointer;

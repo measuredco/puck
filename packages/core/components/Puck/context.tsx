@@ -7,6 +7,7 @@ export const defaultAppState: AppState = {
   data: { content: [], root: { title: "" } },
   ui: {
     leftSideBarVisible: true,
+    rightSideBarVisible: true,
     arrayState: {},
     itemSelector: null,
     componentList: {},
