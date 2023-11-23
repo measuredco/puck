@@ -49,12 +49,6 @@ export default function Edit() {
   const { initialData } = useLoaderData<typeof loader>();
   const submit = useSubmit();
 
-  /**
-   * TypeStript error
-   * Type 'Config<Props>' is not assignable to type 'Config'. Use 'as Config' for now.
-   * @see https://github.com/measuredco/puck/issues/185
-   */
-
   return (
     <Puck
       config={puckConfig as Config}

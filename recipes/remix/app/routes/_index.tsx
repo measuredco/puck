@@ -6,15 +6,6 @@ import { useLoaderData } from "@remix-run/react";
 import puckConfig from "../../puck.config";
 import { getPage } from "~/models/page.server";
 
-/**
- * Disable client-side JS - Optional
- * If you know that your Puck content doesn't need react.
- * Then you can disable JS for this route.
- * @see https://remix.run/docs/en/main/guides/disabling-javascript
- */
-
-// export const handle = { hydrate: false };
-
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   // Get path, and default to slash for root path.
   const puckPath = params.puckPath || "/";
@@ -38,12 +29,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function Page() {
   const { puckData } = useLoaderData<typeof loader>();
-
-  /**
-   * TypeStript error
-   * Type 'Config<Props>' is not assignable to type 'Config'. Use 'as Config' for now.
-   * @see https://github.com/measuredco/puck/issues/185
-   */
 
   return <Render config={puckConfig as Config} data={puckData} />;
 }
