@@ -47,6 +47,10 @@ jobs:
         run: |
           yarn build --scope next-recipe --no-deps
 
+      - name: Build recipe/remix
+        run: |
+          yarn build --scope remix-recipe --no-deps
+
       - name: Check for build failures
         run: |
           if [ $? -ne 0 ]; then
