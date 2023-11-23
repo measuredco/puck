@@ -7,7 +7,6 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  // useMatches,
 } from "@remix-run/react";
 
 export const links: LinksFunction = () => [
@@ -15,13 +14,6 @@ export const links: LinksFunction = () => [
 ];
 
 export default function App() {
-  /**
-   * Disable client-side JS - Optional
-   * @see https://remix.run/docs/en/main/guides/disabling-javascript
-   */
-  // const matches = useMatches();
-  // const includeScripts = matches.some((match) => match.handle?.hydrate);
-
   return (
     <html lang="en">
       <head>
@@ -33,8 +25,6 @@ export default function App() {
       <body>
         <Outlet />
         <ScrollRestoration />
-        {/* Conditionally render scripts - Optional */}
-        {/* {includeScripts ? <Scripts /> : null} */}
         <Scripts />
         <LiveReload />
       </body>

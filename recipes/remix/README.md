@@ -37,6 +37,10 @@ To adopt this recipe you will need to:
 
 By default, this recipe will have JavaScript enable on all routes - like a usual react app. If you know that your Puck content doesn't need react, then you can disable JS uncommenting the relevant code in `/app/root.tsx` and the example route `/app/routes/_index.tsx`. Check the network tab for no JS downloads, and verify that the page still works.
 
+## Disabling JavaScript
+
+This recipe can be adapted to disable JavaScript. See the [Remix docs](https://remix.run/docs/en/main/guides/disabling-javascript) for steps on how to do this.
+
 ## License
 
 MIT © [Measured Co.](https://github.com/measuredco)
