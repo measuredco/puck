@@ -94,6 +94,7 @@ npx create-puck-app my-app
 Available recipes include:
 
 - [**next**](https://github.com/measuredco/puck/tree/main/recipes/next): Next.js 13 app example, using App Router and static page generation
+- [**remix**](https://github.com/measuredco/puck/tree/main/recipes/remix): Remix Run v2 app example, using dynamic routes at root-level
 
 ## Hire the Puck team
 
