@@ -171,7 +171,7 @@ export function Puck<
 
   const toggleSidebars = useCallback(
     (sidebar: "left" | "right") => {
-      const widerViewport = window.matchMedia("(min-width: 638px)").matches;
+      const widerViewport = window.matchMedia("(min-width: 766px)").matches;
       const sideBarVisible =
         sidebar === "left" ? leftSideBarVisible : rightSideBarVisible;
       const oppositeSideBar =
@@ -189,7 +189,7 @@ export function Puck<
   );
 
   useEffect(() => {
-    if (!window.matchMedia("(min-width: 638px)").matches) {
+    if (!window.matchMedia("(min-width: 766px)").matches) {
       dispatch({
         type: "setUi",
         ui: {
@@ -200,7 +200,7 @@ export function Puck<
     }
 
     const handleResize = () => {
-      if (!window.matchMedia("(min-width: 638px)").matches) {
+      if (!window.matchMedia("(min-width: 766px)").matches) {
         dispatch({
           type: "setUi",
           ui: (ui) => ({

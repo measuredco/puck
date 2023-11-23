@@ -7,8 +7,8 @@
  *
  * Viewport | Puck page @ zoom 0.75
  * --------------------------------
- * -        | 322px
- * 766px    | 322px
+ * -        | 391px
+ * 766px    | 391px
  * 990px    | 604px
  * 1022px   | 646px
  * 1198px   | 801px
@@ -18,7 +18,7 @@
 
 .Puck {
   --puck-frame-width: auto;
-  --puck-side-bar-width: 186px;
+  --puck-side-bar-width: 195px;
   --puck-space-px: 16px;
   bottom: 0;
   display: grid;
@@ -50,21 +50,17 @@
     var(--puck-side-bar-width);
 }
 
-@media (min-width: 458px) {
+/* Min viewport width with no side scroll on 390px wide (@ 75%) page preview */
+@media (min-width: 514px) {
   .Puck {
-    --puck-frame-width: minmax(266px, auto);
-  }
-}
-
-@media (min-width: 638px) {
-  .Puck {
-    --puck-side-bar-width: minmax(186px, 250px);
+    --puck-side-bar-width: minmax(195px, 224px);
+    --puck-frame-width: minmax(318px, auto);
   }
 }
 
 @media (min-width: 766px) {
   .Puck {
-    --puck-frame-width: auto;
+    --puck-side-bar-width: 224px;
   }
 }
 
@@ -176,7 +172,7 @@
   border: 1px solid var(--puck-color-grey-8);
   box-shadow: 0 0 0 calc(var(--puck-space-px) * 1.5) var(--puck-color-grey-10);
   margin: var(--puck-space-px);
-  min-width: 321px;
+  min-width: 392px;
 }
 
 @media (min-width: 1198px) {
