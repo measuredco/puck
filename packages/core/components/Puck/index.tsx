@@ -10,6 +10,7 @@ import { DragDropContext, DragStart, DragUpdate } from "@hello-pangea/dnd";
 import type {
   AppState,
   Config,
+  CurrentData,
   Data,
   Field,
   UiState,
@@ -123,12 +124,11 @@ export function Puck({
 }) {
   const [reducer] = useState(() => createReducer({ config }));
 
-  const [initialAppState] = useState<AppState>({
+  const [initialAppState] = useState<AppState>(() => ({
     ...defaultAppState,
-    data: initialData,
+    data: runTransforms(initialData as CurrentData, []),
     ui: {
       ...defaultAppState.ui,
-
       // Store categories under componentList on state to allow render functions and plugins to modify
       componentList: config.categories
         ? Object.entries(config.categories).reduce(
@@ -147,12 +147,11 @@ export function Puck({
           )
         : {},
     },
-  });
+  }));
 
-  const [appState, dispatch] = useReducer<StateReducer, AppState>(
+  const [appState, dispatch] = useReducer<StateReducer>(
     reducer,
-    initialAppState,
-    (initialArg) => flushZones(runTransforms(initialArg, []))
+    initialAppState
   );
 
   const { data, ui } = appState;
@@ -451,7 +450,7 @@ export function Puck({
                           </div>
                           <div className={getClassName("headerTitle")}>
                             <Heading rank={2} size="xs">
-                              {headerTitle || rootProps.title || "Page"}
+                              {headerTitle || data.root.props.title || "Page"}
                               {headerPath && (
                                 <>
                                   {" "}
@@ -543,7 +542,7 @@ export function Puck({
                           <Page
                             dispatch={dispatch}
                             state={appState}
-                            {...rootProps}
+                            {...data.root.props}
                           >
                             <DropZone zone={rootDroppableId} />
                           </Page>
@@ -582,7 +581,7 @@ export function Puck({
                               if (selectedItem) {
                                 currentProps = selectedItem.props;
                               } else {
-                                currentProps = rootProps;
+                                currentProps = data.root.props;
                               }
 
                               const newProps = {
@@ -681,7 +680,7 @@ export function Puck({
                                   label={field.label}
                                   readOnly={readOnly[fieldName]}
                                   readOnlyFields={readOnly}
-                                  value={rootProps[fieldName]}
+                                  value={data.root.props[fieldName]}
                                   onChange={onChange}
                                 />
                               );
