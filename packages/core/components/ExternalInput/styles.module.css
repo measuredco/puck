@@ -62,10 +62,14 @@
 
 .ExternalInputModal-masthead {
   background-color: white;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
   padding: 32px 24px;
 }
 
 .ExternalInputModal-tableWrapper {
+  position: relative;
   overflow-x: auto;
   overflow-y: auto;
   flex-grow: 1;
@@ -136,10 +140,15 @@
 
 .ExternalInputModal-loadingBanner {
   display: none;
-  background-color: white;
+  background-color: #ffffff90;
   padding: 64px;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .ExternalInputModal--isLoading .ExternalInputModal-loadingBanner {
@@ -148,10 +157,74 @@
 
 .ExternalInputModal-noContentBanner {
   display: none;
+  border-top: 1px solid var(--puck-color-grey-8);
+  padding: 24px;
+  text-align: center;
 }
 
 .ExternalInputModal--loaded:not(.ExternalInputModal--hasData)
   .ExternalInputModal-noContentBanner {
   display: block;
-  padding: 24px;
+}
+
+.ExternalInputModal-searchForm {
+  display: flex;
+  margin-left: auto;
+  height: 43px;
+  gap: 12px;
+}
+
+.ExternalInputModal-search {
+  display: flex;
+  background: white;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--puck-color-grey-8);
+  border-radius: 4px;
+  width: 100%;
+}
+
+.ExternalInputModal-search:focus-within {
+  border-color: var(--puck-color-azure-4);
+  outline: var(--puck-color-azure-8) 4px solid;
+  outline-offset: 0;
+}
+
+.ExternalInputModal-searchIcon {
+  align-items: center;
+  background: var(--puck-color-grey-11);
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  border-right: 1px solid var(--puck-color-grey-8);
+  color: var(--puck-color-grey-6);
+  display: flex;
+  justify-content: center;
+  padding: 12px 15px;
+}
+
+.ExternalInputModal-searchIconText {
+  clip: rect(0 0 0 0);
+  clip-path: inset(100%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.ExternalInputModal-searchInput {
+  border: none;
+  border-radius: 4px;
+  background: white;
+  color: black;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 12px 15px;
+  width: 100%;
+}
+
+.ExternalInputModal-searchInput:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
 }

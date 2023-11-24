@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import styles from "./Button.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ClipLoader } from "react-spinners";
@@ -17,6 +17,7 @@ export const Button = ({
   fullWidth,
   icon,
   size = "medium",
+  loading: loadingProp = false,
 }: {
   children: ReactNode;
   href?: string;
@@ -29,8 +30,11 @@ export const Button = ({
   fullWidth?: boolean;
   icon?: ReactNode;
   size?: "medium" | "large";
+  loading?: boolean;
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(loadingProp);
+
+  useEffect(() => setLoading(loadingProp), [loadingProp]);
 
   const ElementType = href ? "a" : "button";
 
