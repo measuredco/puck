@@ -151,7 +151,7 @@ export function Puck({
 
   const [appState, dispatch] = useReducer<StateReducer>(
     reducer,
-    initialAppState
+    flushZones(initialAppState)
   );
 
   const { data, ui } = appState;
