@@ -146,30 +146,29 @@ const config = {
 <ConfigPreview
   label="Example"
   componentConfig={{
-      fields: {
-        data: {
-          type: "external",
-          fetchList: async () => {
-            return [
-              { title: "Hello, world", description: "Lorem ipsum 1" },
-              { title: "Goodbye, world", description: "Lorem ipsum 2" },
-            ];
-          },
-          getItemSummary: (item) => item.title,
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async () => {
+          return [
+            { title: "Hello, world", description: "Lorem ipsum 1" },
+            { title: "Goodbye, world", description: "Lorem ipsum 2" },
+          ];
         },
+        getItemSummary: (item) => item.title,
       },
-      defaultProps: {
-        data: {
-          title: 'Hello, world',
-          description: 'Lorem ipsum 1'
-        }
+    },
+    defaultProps: {
+      data: {
+        title: "Hello, world",
+        description: "Lorem ipsum 1",
       },
-      render: ({ data }) => {
-        return <p>{data?.title || "No data selected"}</p>;
-      },
-      // ...
-    }}
-
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+    // ...
+  }}
 />
 
 ### `mapProp(item)`
@@ -204,24 +203,23 @@ const config = {
 <ConfigPreview
   label="Example"
   componentConfig={{
-      fields: {
-        data: {
-          type: "external",
-          fetchList: async () => {
-            return [
-              { title: "Hello, world", description: "Lorem ipsum 1" },
-              { title: "Goodbye, world", description: "Lorem ipsum 2" },
-            ];
-          },
-          mapProp: (item) => item.description,
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async () => {
+          return [
+            { title: "Hello, world", description: "Lorem ipsum 1" },
+            { title: "Goodbye, world", description: "Lorem ipsum 2" },
+          ];
         },
+        mapProp: (item) => item.description,
       },
-      render: ({ data }) => {
-        return <p>{data || "No data selected"}</p>;
-      },
-      // ...
-    }}
-
+    },
+    render: ({ data }) => {
+      return <p>{data || "No data selected"}</p>;
+    },
+    // ...
+  }}
 />
 
 ### `placeholder`
@@ -253,24 +251,31 @@ const config = {
 <ConfigPreview
   label="Example"
   componentConfig={{
-      fields: {
-        data: {
-          type: "external",
-          fetchList: async () => {
-            return [
-              { title: "Apple", description: "An apple is a round, edible fruit produced by an apple tree." },
-              { title: "Orange", description: "An orange is a fruit of various citrus species in the family Rutaceae." },
-            ];
-          },
-          placeholder: "Pick your favorite fruit",
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async () => {
+          return [
+            {
+              title: "Apple",
+              description:
+                "An apple is a round, edible fruit produced by an apple tree.",
+            },
+            {
+              title: "Orange",
+              description:
+                "An orange is a fruit of various citrus species in the family Rutaceae.",
+            },
+          ];
         },
+        placeholder: "Pick your favorite fruit",
       },
-      render: ({ data }) => {
-        return <p>{data?.title || "No data selected"}</p>;
-      },
-      // ...
-    }}
-
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+    // ...
+  }}
 />
 
 <div id="puck-portal-root" />
