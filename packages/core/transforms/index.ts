@@ -1,7 +1,9 @@
-import { AppState, Data } from "../types/Config";
+import { CurrentData, LegacyData } from "../types/Config";
 import { dataTransforms } from "./data-transforms";
 
-export type DataTransform = (props: Data & { [key: string]: any }) => Data;
+export type DataTransform = (
+  props: LegacyData & { [key: string]: any }
+) => CurrentData;
 
 type PropTransform<Components = any> = {
   [ComponentName in keyof Components]: (
@@ -10,13 +12,13 @@ type PropTransform<Components = any> = {
 };
 
 export const runTransforms = (
-  appState: AppState,
+  data: LegacyData,
   propTransforms: PropTransform[]
-): AppState => {
+): CurrentData => {
   const afterDataTransforms = dataTransforms.reduce(
     (acc, dataTransform) => dataTransform(acc),
-    appState.data
-  );
+    data
+  ) as CurrentData;
 
-  return { ...appState, data: afterDataTransforms };
+  return afterDataTransforms;
 };
