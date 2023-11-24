@@ -47,6 +47,7 @@ import { useComponentList } from "../../lib/use-component-list";
 import { useResolvedData } from "../../lib/use-resolved-data";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
+import { runTransforms } from "../../transforms";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -148,9 +149,10 @@ export function Puck({
     },
   });
 
-  const [appState, dispatch] = useReducer<StateReducer>(
+  const [appState, dispatch] = useReducer<StateReducer, AppState>(
     reducer,
-    flushZones(initialAppState)
+    initialAppState,
+    (initialArg) => flushZones(runTransforms(initialArg, []))
   );
 
   const { data, ui } = appState;
