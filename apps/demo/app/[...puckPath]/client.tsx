@@ -14,7 +14,7 @@ const isBrowser = typeof window !== "undefined";
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   // unique b64 key that updates each time we add / remove components
   const componentKey = Buffer.from(
-    Object.keys(config.components).join("-")
+    `${Object.keys(config.components).join("-")}-${JSON.stringify(initialData)}`
   ).toString("base64");
 
   const key = `puck-demo:${componentKey}:${path}`;
