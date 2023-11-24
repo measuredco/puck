@@ -70,6 +70,22 @@ const config = {
 };
 ```
 
+## TypeScript
+
+You can pass in available category names to the `Config` type if using TypeScript
+
+```tsx copy {3}
+import type { Config } from "@measured/puck";
+
+const config: Config<{}, {}, "typography" | "interactive"> = {
+  categories: {
+    typography: {},
+    interactive: {},
+  },
+  // ...
+};
+```
+
 ## Further reading
 
 - [`categories` API reference](/docs/api-reference/configuration/config#categories)

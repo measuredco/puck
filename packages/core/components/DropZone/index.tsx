@@ -16,10 +16,12 @@ export { DropZoneProvider, dropZoneContext } from "./context";
 
 type DropZoneProps = {
   zone: string;
+  allow?: string[];
+  disallow?: string[];
   style?: CSSProperties;
 };
 
-function DropZoneEdit({ zone, style }: DropZoneProps) {
+function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   const appContext = useAppContext();
   const ctx = useContext(dropZoneContext);
 
@@ -130,6 +132,27 @@ function DropZoneEdit({ zone, style }: DropZoneProps) {
       isEnabled = hoveringOverArea;
     } else {
       isEnabled = draggingOverArea && hoveringOverZone;
+    }
+  }
+
+  if (isEnabled && userIsDragging && (allow || disallow)) {
+    const [_, componentType] = draggedItem.draggableId.split("::");
+
+    if (disallow) {
+      const defaultedAllow = allow || [];
+
+      // remove any explicitly allowed items from disallow
+      const filteredDisallow = (disallow || []).filter(
+        (item) => defaultedAllow.indexOf(item) === -1
+      );
+
+      if (filteredDisallow.indexOf(componentType) !== -1) {
+        isEnabled = false;
+      }
+    } else if (allow) {
+      if (allow.indexOf(componentType) === -1) {
+        isEnabled = false;
+      }
     }
   }
 

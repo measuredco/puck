@@ -26,9 +26,11 @@ const config = {
 
 ## Props
 
-| Param           | Example           | Type   | Status   |
-| --------------- | ----------------- | ------ | -------- |
-| [`zone`](#zone) | `zone: "my-zone"` | String | Required |
+| Param                   | Example                      | Type   | Status   |
+| ----------------------- | ---------------------------- | ------ | -------- |
+| [`zone`](#zone)         | `zone: "my-zone"`            | String | Required |
+| [`allow`](#allow)       | `allow: ["HeadingBlock"]`    | Array  |          |
+| [`disallow`](#disallow) | `disallow: ["HeadingBlock"]` | Array  |          |
 
 ## Required props
 
@@ -46,6 +48,48 @@ const config = {
         return (
           <div>
             <DropZone zone="my-content" />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+## Optional props
+
+### `allow`
+
+Only allow specific components to be dragged into the DropZone:
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" allow={["HeadingBlock"]} />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+### `disallow`
+
+Allow all but specific components to be dragged into the DropZone. Any items in `allow` will override `disallow`.
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" disallow={["HeadingBlock"]} />
           </div>
         );
       },
