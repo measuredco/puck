@@ -4,7 +4,7 @@ import { resolveRootData } from "./resolve-root-data";
 
 export const resolveAllData = async (
   data: Data,
-  config: Config,
+  config: Config<any, any, any>,
   onResolveStart?: (item: MappedItem) => void,
   onResolveEnd?: (item: MappedItem) => void
 ) => {

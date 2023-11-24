@@ -98,7 +98,7 @@ export function Puck({
   headerTitle,
   headerPath,
 }: {
-  config: Config;
+  config: Config<any, any, any>;
   data: Data;
   onChange?: (data: Data) => void;
   onPublish: (data: Data) => void;
