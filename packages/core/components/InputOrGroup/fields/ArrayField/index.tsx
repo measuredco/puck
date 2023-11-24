@@ -69,14 +69,20 @@ export const ArrayField = ({
       const newItems = Array.from(value || []).map((item, idx) => {
         const arrayStateItem = arrayState.items[idx];
 
-        return {
+        const newItem = {
           _originalIndex:
             typeof arrayStateItem?._originalIndex !== "undefined"
               ? arrayStateItem._originalIndex
-              : ++highestIndex,
-          _arrayId: arrayState.items[idx]?._arrayId || `${id}-${highestIndex}`,
-          data: item,
+              : highestIndex + 1,
+          _arrayId:
+            arrayState.items[idx]?._arrayId || `${id}-${highestIndex + 1}`,
         };
+
+        if (newItem._originalIndex > highestIndex) {
+          highestIndex = newItem._originalIndex;
+        }
+
+        return newItem;
       });
 
       // We don't need to record history during this useEffect, as the history has already been set by onDragEnd
