@@ -58,6 +58,8 @@ const config = {
 | [`getItemSummary()`](#getitemsummaryitem) | `getItemSummary: async ({ title }) => title` | Function   | -        |
 | [`mapProp()`](#mappropitem)               | `mapProp: async ({ title }) => title`        | Function   | -        |
 | [`placeholder`](#placeholder)             | `placeholder: "Select content"`              | String     | -        |
+| [`showSearch`](#showsearch)               | `showSearch: true`                           | Boolean    | -        |
+| [`initialQuery`](#initialquery)           | `initialQuery: "Hello, world"`               | String     | -        |
 
 ## Required params
 
@@ -276,6 +278,150 @@ const config = {
     },
     // ...
   }}
+/>
+
+### `showSearch`
+
+Show a search input, the value of which will be passed to `fetchList` as the `query` param.
+
+```tsx {15} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async ({ params }) => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1" },
+              { title: "Orange", description: "Lorem ipsum 2" },
+            ].filter((item) => {
+              // ...
+            });
+          },
+          showSearch: true,
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async ({ query }) => {
+          return [
+            {
+              title: "Apple",
+              description:
+                "An apple is a round, edible fruit produced by an apple tree.",
+            },
+            {
+              title: "Orange",
+              description:
+                "An orange is a fruit of various citrus species in the family Rutaceae.",
+            },
+          ].filter((item) => {
+            if (!query) return item;
+
+            const queryLowercase = query.toLowerCase();
+
+            if (item.title.toLowerCase().indexOf(queryLowercase) > -1) {
+              return item;
+            }
+
+            if (item.description.toLowerCase().indexOf(queryLowercase) > -1) {
+              return item;
+            }
+          })
+        },
+        showSearch: true,
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+    // ...
+
+}}
+/>
+
+### `initialQuery`
+
+Set an initial query when using showing a search input with [`showSearch`](#showsearch).
+
+```tsx {16} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async ({ params }) => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1" },
+              { title: "Orange", description: "Lorem ipsum 2" },
+            ].filter((item) => {
+              // ...
+            });
+          },
+          showSearch: true,
+          initialQuery: "Apple",
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async ({ query }) => {
+          return [
+            {
+              title: "Apple",
+              description:
+                "An apple is a round, edible fruit produced by an apple tree.",
+            },
+            {
+              title: "Orange",
+              description:
+                "An orange is a fruit of various citrus species in the family Rutaceae.",
+            },
+          ].filter((item) => {
+            if (!query) return item;
+
+            const queryLowercase = query.toLowerCase();
+
+            if (item.title.toLowerCase().indexOf(queryLowercase) > -1) {
+              return item;
+            }
+
+            if (item.description.toLowerCase().indexOf(queryLowercase) > -1) {
+              return item;
+            }
+          })
+        },
+        showSearch: true,
+        initialQuery: 'apple'
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+    // ...
+
+}}
 />
 
 <div id="puck-portal-root" />
