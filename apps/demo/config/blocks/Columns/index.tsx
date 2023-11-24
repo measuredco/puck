@@ -71,7 +71,10 @@ export const Columns: ComponentConfig<ColumnsProps> = {
                     : "",
               }}
             >
-              <DropZone zone={`column-${idx}`} />
+              <DropZone
+                zone={`column-${idx}`}
+                disallow={["Hero", "Logos", "Stats"]}
+              />
             </div>
           ))}
         </div>

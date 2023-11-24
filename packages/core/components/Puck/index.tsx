@@ -354,11 +354,11 @@ export function Puck({
               droppedItem.source.droppableId.startsWith("component-list") &&
               droppedItem.destination
             ) {
-              const [_, componentId] = droppedItem.draggableId.split("::");
+              const [_, componentType] = droppedItem.draggableId.split("::");
 
               dispatch({
                 type: "insert",
-                componentType: componentId || droppedItem.draggableId,
+                componentType: componentType || droppedItem.draggableId,
                 destinationIndex: droppedItem.destination!.index,
                 destinationZone: droppedItem.destination.droppableId,
               });

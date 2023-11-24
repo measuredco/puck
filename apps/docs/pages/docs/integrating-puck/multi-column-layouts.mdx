@@ -95,6 +95,53 @@ const config = {
 };
 ```
 
+### Restricting components
+
+The [`allow`](/docs/api-reference/components/drop-zone#allow) and [`disallow`](/docs/api-reference/components/drop-zone#disallow) props allow us to restrict which components can be dragged into a DropZone.
+
+```tsx {9} showLineNumbers copy
+import { DropZone } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" allow={["HeadingBlock"]} />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+This can be combined with [categories](/docs/integrating-puck/categories) to restrict based on your existing groups:
+
+```tsx {4-8,14} showLineNumbers copy
+import { DropZone } from "@measured/puck";
+
+const config = {
+  config: {
+    typography: {
+      components: ["HeadingBlock"],
+    },
+  },
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" allow={config.typography.components} />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
 ## Further reading
 
 - [The `<DropZone>` API](/docs/api-reference/components/drop-zone)

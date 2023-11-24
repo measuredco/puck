@@ -26,7 +26,11 @@ type Props = {
 };
 
 // We avoid the name config as next gets confused
-export const conf: Config<Props, RootProps> = {
+export const conf: Config<
+  Props,
+  RootProps,
+  "layout" | "typography" | "interactive"
+> = {
   root: {
     render: Root,
   },
