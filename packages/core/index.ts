@@ -11,5 +11,6 @@ export * from "./components/Puck";
 export * from "./components/Render";
 
 export * from "./lib/resolve-all-data";
+export { transformProps } from "./transforms";
 
 export { FieldLabel } from "./components/InputOrGroup";

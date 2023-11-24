@@ -1,0 +1,68 @@
+# Prop Migration
+
+Renaming or removing the props passed to your components are considering breaking changes. Any existing [Data](/docs/api-reference/data) payloads that reference these props will be unable to render.
+
+There are two strategies for dealing with this:
+
+1. Retaining backwards-compatible props
+2. Implementing a prop migration
+
+## Retaining backwards-compatibility
+
+The easiest way to avoid breaking changes is to implement your prop changes in a backwards compatible manor:
+
+```tsx copy showLineNumbers {2}
+const config = {
+  HeadingBlock: ({ title, heading }) => <h1>{heading || title}</h1>,
+};
+```
+
+## Implementing a prop migration
+
+It will often be preferrable to update the underlying [Data](/docs/api-reference/data) payload. Puck provides the [`transformProps`](/docs/api-reference/functions/transform-props) utility method to conveniently transform the props for a given component throughout the payload.
+
+```tsx copy showLineNumbers {15-18}
+import { transformProps } from "@measured/puck";
+
+const config = {
+  // Renamed `title` prop to `heading`
+  HeadingBlock: ({ heading }) => <h1>{heading}</h1>,
+};
+
+const data = {
+  content: [
+    // HeadingBlock references the legacy `title` prop
+    { type: "HeadingBlock", props: { title: "Hello, world" } },
+  ],
+};
+
+const updatedData = transformProps(data, {
+  // Map `heading` to the legacy `title` prop
+  HeadingBlock: ({ title, ...props }) => ({ heading: title, ...props }),
+});
+
+console.log(updatedData);
+// { content: [{ type: "HeadingBlock", props: { heading: "Hello, world" } }] };
+```
+
+You may choose to run this transform every time you render your content, or perform a batch operation against your database.
+
+```tsx copy showLineNumbers filename="Example showing data being updated before rendering"
+import { Puck, Render, transformProps } from "@measured/puck";
+
+const transforms = {
+  HeadingBlock: ({ title, ...props }) => ({ heading: title, ...props }),
+};
+
+export const MyEditor = ({ data, config }) => (
+  <Puck data={transformProps(data, transforms)} config={config} />
+);
+
+export const MyPage = ({ data, config }) => (
+  <Render data={transformProps(data, transforms)} config={config} />
+);
+```
+
+## Further reading
+
+- [`transformProps` API reference](/docs/api-reference/functions/transform-props)

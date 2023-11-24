@@ -12,7 +12,9 @@ import { VerticalSpace, VerticalSpaceProps } from "./blocks/VerticalSpace";
 
 import Root, { RootProps } from "./root";
 
-type Props = {
+export type { RootProps } from "./root";
+
+export type Props = {
   ButtonGroup: ButtonGroupProps;
   Card: CardProps;
   Columns: ColumnsProps;

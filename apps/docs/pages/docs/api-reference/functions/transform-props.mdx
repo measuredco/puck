@@ -1,0 +1,50 @@
+---
+title: transformProps
+---
+
+# transformProps
+
+Transform component props stored in a [Data payload](/docs/api-reference/data). This convenience method can be used for [prop renames and other data migrations](/docs/integrating-puck/prop-migration).
+
+This method will modify all data in [`content`](/docs/api-reference/data#content) and [`zones`](/docs/api-reference/data#zones).
+
+```tsx copy showLineNumbers {7-10}
+import { transformProps } from "@measured/puck";
+
+const data = {
+  content: [{ type: "HeadingBlock", props: { title: "Hello, world" } }],
+};
+
+const updatedData = transformProps(data, {
+  // Rename `title` to `heading`
+  HeadingBlock: ({ title, ...props }) => ({ heading: title, ...props }),
+});
+
+console.log(updatedData);
+// { content: [{ type: "HeadingBlock", props: { heading: "Hello, world" } }] };
+```
+
+## Args
+
+| Param        | Example                                | Type                             |
+| ------------ | -------------------------------------- | -------------------------------- |
+| `data`       | `{ content: {}, root: {} }`            | [Data](/docs/api-reference/data) |
+| `transforms` | `{ HeadingBlock: (props) => (props) }` | Object                           |
+
+### `data`
+
+The [Data payload](/docs/api-reference/data) to be transformed.
+
+### `transforms`
+
+An object describing the transform functions for each component defined in your [`config`](/docs/api-reference/configuration/config).
+
+- `root` is a reserved property, and can be used to update the [`root` component](/docs/api-reference/configuration/config#root) props.
+
+## Returns
+
+The updated [Data](/docs/api-reference/data) object.
+
+## Notes
+
+- It's important to consider that data may include both components with old data and new data, and write your transform accordingly.
