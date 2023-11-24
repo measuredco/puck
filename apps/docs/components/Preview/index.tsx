@@ -7,7 +7,12 @@ import "@/core/styles.css";
 import { AppProvider, defaultAppState } from "@/core/components/Puck/context";
 import { PuckAction, createReducer, replaceAction } from "@/core/reducer";
 import { InputOrGroup } from "@/core/components/InputOrGroup";
-import { AppState, ComponentConfig, Config, Data } from "@/core/types/Config";
+import {
+  AppState,
+  ComponentConfig,
+  Config,
+  CurrentData,
+} from "@/core/types/Config";
 import { rootDroppableId } from "@/core/lib/root-droppable-id";
 import { getClassNameFactory } from "@/core/lib";
 import { useResolvedData } from "@/core/lib/use-resolved-data";
@@ -28,7 +33,7 @@ const PreviewApp = ({
     componentState: Record<string, { loading: boolean }>
   ) => ReactNode;
   config: Config;
-  data: Data;
+  data: CurrentData;
 }) => {
   const [reducer] = useState(() => createReducer({ config }));
   const [appState, dispatch] = useReducer(reducer, {
@@ -62,7 +67,7 @@ export const Preview = ({
 }: {
   children?: ReactNode;
   config?: Config;
-  data?: Data;
+  data?: CurrentData;
   label: string;
   render?: (
     appState: AppState,
@@ -106,7 +111,7 @@ export const ConfigPreview = ({
             props: { ...componentConfig.defaultProps, id: "example" },
           },
         ],
-        root: {},
+        root: { props: {} },
       }}
       label={label}
       padding={0}

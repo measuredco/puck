@@ -4,7 +4,7 @@ import { useAppContext } from "../components/Puck/context";
 import { getZoneId } from "./get-zone-id";
 import { rootDroppableId } from "./root-droppable-id";
 import { ItemSelector } from "./get-item";
-import { Data, MappedItem } from "../types/Config";
+import { CurrentData, MappedItem } from "../types/Config";
 
 export type Breadcrumb = {
   label: string;
@@ -15,7 +15,7 @@ export type Breadcrumb = {
 export const convertPathDataToBreadcrumbs = (
   selectedItem: MappedItem | undefined,
   pathData: PathData | undefined,
-  data: Data
+  data: CurrentData
 ) => {
   const id = selectedItem ? selectedItem?.props.id : "";
 

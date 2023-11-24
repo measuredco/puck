@@ -102,8 +102,8 @@ export function Puck({
 }: {
   config: Config<any, any, any>;
   data: Data;
-  onChange?: (data: Data) => void;
-  onPublish: (data: Data) => void;
+  onChange?: (data: CurrentData) => void;
+  onPublish: (data: CurrentData) => void;
   plugins?: Plugin[];
   renderComponentList?: (props: {
     children: ReactNode;

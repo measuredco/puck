@@ -1,4 +1,4 @@
-import { AppState, Data, UiState } from "../types/Config";
+import { AppState, CurrentData, Data, UiState } from "../types/Config";
 
 export type InsertAction = {
   type: "insert";
@@ -48,7 +48,9 @@ export type SetUiAction = {
 
 export type SetDataAction = {
   type: "setData";
-  data: Partial<Data> | ((previous: Data) => Partial<Data>);
+  data:
+    | Partial<CurrentData>
+    | ((previous: CurrentData) => Partial<CurrentData>);
 };
 
 export type SetAction = {

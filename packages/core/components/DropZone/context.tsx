@@ -5,7 +5,7 @@ import {
   useCallback,
   useState,
 } from "react";
-import { Config, Data } from "../../types/Config";
+import { Config, CurrentData } from "../../types/Config";
 import { DragStart, DragUpdate } from "@hello-pangea/dnd";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { PuckAction } from "../../reducer";
@@ -16,7 +16,7 @@ import { getZoneId } from "../../lib/get-zone-id";
 export type PathData = Record<string, { path: string[]; label: string }>;
 
 export type DropZoneContext = {
-  data: Data;
+  data: CurrentData;
   config: Config;
   componentState?: Record<string, any>;
   itemSelector?: ItemSelector | null;

@@ -1,19 +1,19 @@
-import { Data } from "../types/Config";
+import { CurrentData } from "../types/Config";
 import { generateId } from "./generate-id";
 import { getZoneId } from "./get-zone-id";
 
 export const reduceRelatedZones = (
-  item: Data["content"][0],
-  data: Data,
+  item: CurrentData["content"][0],
+  data: CurrentData,
   fn: (
-    zones: Required<Data>["zones"],
+    zones: Required<CurrentData>["zones"],
     key: string,
-    zone: Required<Data>["zones"][0]
-  ) => Required<Data>["zones"]
+    zone: Required<CurrentData>["zones"][0]
+  ) => Required<CurrentData>["zones"]
 ) => {
   return {
     ...data,
-    zones: Object.keys(data.zones || {}).reduce<Required<Data>["zones"]>(
+    zones: Object.keys(data.zones || {}).reduce<Required<CurrentData>["zones"]>(
       (acc, key) => {
         const [parentId] = getZoneId(key);
 
@@ -29,7 +29,7 @@ export const reduceRelatedZones = (
   };
 };
 
-const findRelatedByZoneId = (zoneId: string, data: Data) => {
+const findRelatedByZoneId = (zoneId: string, data: CurrentData) => {
   const [zoneParentId] = getZoneId(zoneId);
 
   return (data.zones![zoneId] || []).reduce((acc, zoneItem) => {
@@ -43,7 +43,10 @@ const findRelatedByZoneId = (zoneId: string, data: Data) => {
   }, {});
 };
 
-const findRelatedByItem = (item: Data["content"][0], data: Data) => {
+const findRelatedByItem = (
+  item: CurrentData["content"][0],
+  data: CurrentData
+) => {
   return Object.keys(data.zones || {}).reduce((acc, zoneId) => {
     const [zoneParentId] = getZoneId(zoneId);
 
@@ -64,7 +67,10 @@ const findRelatedByItem = (item: Data["content"][0], data: Data) => {
 /**
  * Remove all related zones
  */
-export const removeRelatedZones = (item: Data["content"][0], data: Data) => {
+export const removeRelatedZones = (
+  item: CurrentData["content"][0],
+  data: CurrentData
+) => {
   const newData = { ...data };
 
   const related = findRelatedByItem(item, data);
@@ -77,8 +83,8 @@ export const removeRelatedZones = (item: Data["content"][0], data: Data) => {
 };
 
 export const duplicateRelatedZones = (
-  item: Data["content"][0],
-  data: Data,
+  item: CurrentData["content"][0],
+  data: CurrentData,
   newId: string
 ) => {
   return reduceRelatedZones(item, data, (acc, key, zone) => {

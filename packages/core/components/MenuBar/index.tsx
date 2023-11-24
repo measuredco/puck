@@ -6,7 +6,7 @@ import { IconButton } from "../IconButton/IconButton";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { PuckAction } from "../../reducer";
-import type { AppState, Data } from "../../types/Config";
+import type { AppState, CurrentData } from "../../types/Config";
 
 import styles from "./styles.module.css";
 
@@ -22,9 +22,9 @@ export const MenuBar = ({
   setMenuOpen,
 }: {
   appState: AppState;
-  data: Data;
+  data: CurrentData;
   dispatch: (action: PuckAction) => void;
-  onPublish: (data: Data) => void;
+  onPublish: (data: CurrentData) => void;
   menuOpen: boolean;
   renderHeaderActions?: (props: {
     state: AppState;
