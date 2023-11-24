@@ -268,18 +268,6 @@ export function Puck({
 
   const componentList = useComponentList(config, appState.ui);
 
-  // DEPRECATED
-  const rootProps = data.root.props || data.root;
-
-  // DEPRECATED
-  useEffect(() => {
-    if (Object.keys(data.root).length > 0 && !data.root.props) {
-      console.error(
-        "Warning: Defining props on `root` is deprecated. Please use `root.props`. This will be a breaking change in a future release."
-      );
-    }
-  }, []);
-
   const toggleSidebars = useCallback(
     (sidebar: "left" | "right") => {
       const widerViewport = window.matchMedia("(min-width: 638px)").matches;
@@ -640,34 +628,26 @@ export function Puck({
                                   });
                                 }
                               } else {
-                                if (data.root.props) {
-                                  // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-                                  if (config.root?.resolveData) {
-                                    resolveData({
+                                // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
+                                if (config.root?.resolveData) {
+                                  resolveData({
+                                    ui: { ...ui, ...updatedUi },
+                                    data: {
+                                      ...data,
+                                      root: { props: newProps },
+                                    },
+                                  });
+                                } else {
+                                  dispatch({
+                                    type: "set",
+                                    state: {
                                       ui: { ...ui, ...updatedUi },
                                       data: {
                                         ...data,
                                         root: { props: newProps },
                                       },
-                                    });
-                                  } else {
-                                    dispatch({
-                                      type: "set",
-                                      state: {
-                                        ui: { ...ui, ...updatedUi },
-                                        data: {
-                                          ...data,
-                                          root: { props: newProps },
-                                        },
-                                      },
-                                      recordHistory: true,
-                                    });
-                                  }
-                                } else {
-                                  // DEPRECATED
-                                  dispatch({
-                                    type: "setData",
-                                    data: { root: newProps },
+                                    },
+                                    recordHistory: true,
                                   });
                                 }
                               }
