@@ -1,3 +1,4 @@
+import { transformData } from "../transforms";
 import { Config, Data, MappedItem } from "../types/Config";
 import { resolveAllComponentData } from "./resolve-component-data";
 import { resolveRootData } from "./resolve-root-data";
@@ -8,7 +9,9 @@ export const resolveAllData = async (
   onResolveStart?: (item: MappedItem) => void,
   onResolveEnd?: (item: MappedItem) => void
 ) => {
-  const dynamicRoot = await resolveRootData(data, config);
+  const currentData = transformData(data);
+
+  const dynamicRoot = await resolveRootData(currentData, config);
 
   const { zones = {} } = data;
 

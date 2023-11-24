@@ -1,7 +1,7 @@
-import { ComponentData, Data, RootData } from "../types/Config";
+import { ComponentData, CurrentData, RootData } from "../types/Config";
 
 export const applyDynamicProps = (
-  data: Data,
+  data: CurrentData,
   dynamicProps: Record<string, ComponentData>,
   rootData?: RootData
 ) => {

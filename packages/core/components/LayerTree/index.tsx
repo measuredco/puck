@@ -1,6 +1,6 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Data } from "../../types/Config";
+import { CurrentData } from "../../types/Config";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { scrollIntoView } from "../../lib/scroll-into-view";
 import { ChevronDown, Grid, Layers, Type } from "react-feather";
@@ -22,8 +22,8 @@ export const LayerTree = ({
   zone,
   label,
 }: {
-  data: Data;
-  zoneContent: Data["content"];
+  data: CurrentData;
+  zoneContent: CurrentData["content"];
   itemSelector?: ItemSelector | null;
   setItemSelector: (item: ItemSelector | null) => void;
   zone?: string;

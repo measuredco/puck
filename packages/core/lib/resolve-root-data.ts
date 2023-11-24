@@ -1,10 +1,10 @@
-import { Config, Data, RootDataWithProps } from "../types/Config";
+import { Config, CurrentData, RootDataWithProps } from "../types/Config";
 
 export const cache: {
   lastChange?: { original: RootDataWithProps; resolved: RootDataWithProps };
 } = {};
 
-export const resolveRootData = async (data: Data, config: Config) => {
+export const resolveRootData = async (data: CurrentData, config: Config) => {
   if (config.root?.resolveData && data.root.props) {
     let changed = Object.keys(data.root.props).reduce(
       (acc, item) => ({ ...acc, [item]: true }),

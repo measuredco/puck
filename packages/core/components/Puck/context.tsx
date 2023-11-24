@@ -4,7 +4,7 @@ import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
 
 export const defaultAppState: AppState = {
-  data: { content: [], root: { title: "" } },
+  data: { content: [], root: { props: { title: "" } } },
   ui: {
     leftSideBarVisible: true,
     rightSideBarVisible: true,
