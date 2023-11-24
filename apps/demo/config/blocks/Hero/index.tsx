@@ -30,12 +30,31 @@ export const Hero: ComponentConfig<HeroProps> = {
     quote: {
       type: "external",
       placeholder: "Select a quote",
-      fetchList: async () =>
-        quotes.map((quote, idx) => ({
-          index: idx,
-          title: quote.author,
-          description: quote.content,
-        })),
+      showSearch: true,
+      fetchList: async ({ query }) => {
+        // Simulate delay
+        await new Promise((res) => setTimeout(res, 500));
+
+        return quotes
+          .map((quote, idx) => ({
+            index: idx,
+            title: quote.author,
+            description: quote.content,
+          }))
+          .filter((item) => {
+            if (!query) return item;
+
+            const queryLowercase = query.toLowerCase();
+
+            if (item.title.toLowerCase().indexOf(queryLowercase) > -1) {
+              return item;
+            }
+
+            if (item.description.toLowerCase().indexOf(queryLowercase) > -1) {
+              return item;
+            }
+          });
+      },
       mapProp: (result) => {
         return { index: result.index, label: result.description };
       },

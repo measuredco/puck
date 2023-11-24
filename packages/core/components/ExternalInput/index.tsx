@@ -1,11 +1,12 @@
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useCallback } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ExternalField } from "../../types/Config";
-import { Link, Unlock } from "react-feather";
+import { Link, Search, Unlock } from "react-feather";
 import { Modal } from "../Modal";
 import { Heading } from "../Heading";
 import { ClipLoader } from "react-spinners";
+import { Button } from "../Button";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
 const getClassNameModal = getClassNameFactory("ExternalInputModal", styles);
@@ -44,17 +45,29 @@ export const ExternalInput = ({
     return Array.from(validKeys);
   }, [data]);
 
-  useEffect(() => {
-    (async () => {
-      const listData = dataCache[name] || (await field.fetchList());
+  const [searchQuery, setSearchQuery] = useState(field.initialQuery || "");
+
+  const search = useCallback(
+    async (query) => {
+      setIsLoading(true);
+
+      const cacheKey = `${id}-${name}-${query}`;
+
+      const listData =
+        dataCache[cacheKey] || (await field.fetchList({ query }));
 
       if (listData) {
         setData(listData);
         setIsLoading(false);
 
-        dataCache[name] = listData;
+        dataCache[cacheKey] = listData;
       }
-    })();
+    },
+    [name, field]
+  );
+
+  useEffect(() => {
+    search(searchQuery);
   }, []);
 
   return (
@@ -100,13 +113,47 @@ export const ExternalInput = ({
           className={getClassNameModal({
             isLoading,
             loaded: !isLoading,
-            hasData: !!data,
+            hasData: data.length > 0,
           })}
         >
           <div className={getClassNameModal("masthead")}>
             <Heading rank={2} size="xxl">
               Select content
             </Heading>
+
+            {field.showSearch && (
+              <form
+                className={getClassNameModal("searchForm")}
+                onSubmit={(e) => {
+                  e.preventDefault();
+
+                  search(searchQuery);
+                }}
+              >
+                <label className={getClassNameModal("search")}>
+                  <span className={getClassNameModal("searchIconText")}>
+                    Search
+                  </span>
+                  <div className={getClassNameModal("searchIcon")}>
+                    <Search size="18" />
+                  </div>
+                  <input
+                    className={getClassNameModal("searchInput")}
+                    name="q"
+                    type="search"
+                    placeholder="Search"
+                    onChange={(e) => {
+                      setSearchQuery(e.currentTarget.value);
+                    }}
+                    autoComplete="off"
+                    value={searchQuery}
+                  ></input>
+                </label>
+                <Button type="submit" loading={isLoading} disabled={isLoading}>
+                  Search
+                </Button>
+              </form>
+            )}
           </div>
 
           <div className={getClassNameModal("tableWrapper")}>
@@ -147,12 +194,14 @@ export const ExternalInput = ({
                 })}
               </tbody>
             </table>
+
+            <div className={getClassNameModal("loadingBanner")}>
+              <ClipLoader size={24} aria-label="Loading" />
+            </div>
           </div>
 
-          <div className={getClassNameModal("noContentBanner")}>No content</div>
-
-          <div className={getClassNameModal("loadingBanner")}>
-            <ClipLoader size={24} />
+          <div className={getClassNameModal("noContentBanner")}>
+            No results.
           </div>
         </div>
       </Modal>
