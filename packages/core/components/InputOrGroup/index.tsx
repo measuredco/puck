@@ -13,6 +13,7 @@ import {
 } from "./fields";
 import { Lock } from "react-feather";
 import { useDebouncedCallback } from "use-debounce";
+import { ObjectField } from "./fields/ObjectField";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -119,6 +120,10 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
 
   if (field.type === "external") {
     return <ExternalField {...props} {...localProps} />;
+  }
+
+  if (field.type === "object") {
+    return <ObjectField {...props} {...localProps} />;
   }
 
   if (field.type === "select") {

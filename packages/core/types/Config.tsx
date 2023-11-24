@@ -34,6 +34,15 @@ export type ArrayField<
   getItemSummary?: (item: Props[0], index?: number) => string;
 };
 
+export type ObjectField<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = BaseField & {
+  type: "object";
+  objectFields: {
+    [SubPropName in keyof Props[0]]: Field<Props[0][SubPropName]>;
+  };
+};
+
 // DEPRECATED
 export type Adaptor<
   AdaptorParams = {},
@@ -87,6 +96,7 @@ export type Field<
   | TextField
   | SelectField
   | ArrayField<Props>
+  | ObjectField<Props>
   | ExternalField<Props>
   | ExternalFieldWithAdaptor<Props>
   | CustomField;
