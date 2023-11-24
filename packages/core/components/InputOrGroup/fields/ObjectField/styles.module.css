@@ -1,0 +1,17 @@
+/**
+ * ObjectField
+ */
+
+.ObjectField {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid var(--puck-color-grey-8);
+  border-radius: 4px;
+}
+
+.ObjectField-fieldset {
+  border: none;
+  margin: 0;
+  padding: 16px 15px;
+}

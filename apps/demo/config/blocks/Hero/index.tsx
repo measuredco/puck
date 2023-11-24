@@ -15,8 +15,10 @@ export type HeroProps = {
   description: string;
   align?: string;
   padding: string;
-  imageMode?: "inline" | "background";
-  imageUrl?: string;
+  image?: {
+    mode?: "inline" | "background";
+    url?: string;
+  };
   buttons: {
     label: string;
     href: string;
@@ -65,13 +67,18 @@ export const Hero: ComponentConfig<HeroProps> = {
         { label: "center", value: "center" },
       ],
     },
-    imageUrl: { type: "text" },
-    imageMode: {
-      type: "radio",
-      options: [
-        { label: "inline", value: "inline" },
-        { label: "background", value: "background" },
-      ],
+    image: {
+      type: "object",
+      objectFields: {
+        url: { type: "text" },
+        mode: {
+          type: "radio",
+          options: [
+            { label: "inline", value: "inline" },
+            { label: "background", value: "background" },
+          ],
+        },
+      },
     },
     padding: { type: "text" },
   },
@@ -111,15 +118,7 @@ export const Hero: ComponentConfig<HeroProps> = {
       readOnly: { title: true, description: true },
     };
   },
-  render: ({
-    align,
-    title,
-    description,
-    buttons,
-    padding,
-    imageUrl,
-    imageMode,
-  }) => {
+  render: ({ align, title, description, buttons, padding, image }) => {
     // Empty state allows us to test that components support hooks
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [_] = useState(0);
@@ -130,15 +129,15 @@ export const Hero: ComponentConfig<HeroProps> = {
         className={getClassName({
           left: align === "left",
           center: align === "center",
-          hasImageBackground: imageMode === "background",
+          hasImageBackground: image?.mode === "background",
         })}
       >
-        {imageMode === "background" && (
+        {image?.mode === "background" && (
           <>
             <div
               className={getClassName("image")}
               style={{
-                backgroundImage: `url("${imageUrl}")`,
+                backgroundImage: `url("${image?.url}")`,
               }}
             ></div>
 
@@ -164,10 +163,10 @@ export const Hero: ComponentConfig<HeroProps> = {
             </div>
           </div>
 
-          {align !== "center" && imageMode !== "background" && imageUrl && (
+          {align !== "center" && image?.mode !== "background" && image?.url && (
             <div
               style={{
-                backgroundImage: `url('${imageUrl}')`,
+                backgroundImage: `url('${image?.url}')`,
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
