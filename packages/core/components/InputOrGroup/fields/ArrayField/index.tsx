@@ -32,7 +32,6 @@ export const ArrayField = ({
       return {
         _originalIndex: idx,
         _arrayId: `${id}-${idx}`,
-        data: item,
       };
     }),
     openId: "",
@@ -91,6 +90,8 @@ export const ArrayField = ({
     setUi(mapArrayStateToUi(arrayState));
   }, []);
 
+  const [hovering, setHovering] = useState(false);
+
   if (field.type !== "array" || !field.arrayFields) {
     return null;
   }
@@ -141,6 +142,14 @@ export const ArrayField = ({
                   isDraggingFrom: !!snapshot.draggingFromThisWith,
                   hasItems: Array.isArray(value) && value.length > 0,
                 })}
+                onMouseOver={(e) => {
+                  e.stopPropagation();
+                  setHovering(true);
+                }}
+                onMouseOut={(e) => {
+                  e.stopPropagation();
+                  setHovering(false);
+                }}
               >
                 {localState.arrayState.items.map((item, i) => {
                   const { _arrayId = `${id}-${i}`, _originalIndex = i } = item;
@@ -158,7 +167,7 @@ export const ArrayField = ({
                           readOnly,
                         })
                       }
-                      isDragDisabled={readOnly}
+                      isDragDisabled={readOnly || !hovering}
                     >
                       {() => (
                         <>
@@ -236,7 +245,7 @@ export const ArrayField = ({
                                       key={subFieldName}
                                       name={subFieldName}
                                       label={subField.label || fieldName}
-                                      id={`${id}_${fieldName}`}
+                                      id={`${_arrayId}_${fieldName}`}
                                       readOnly={
                                         typeof readOnlyFields[subFieldName] !==
                                         "undefined"
@@ -246,12 +255,13 @@ export const ArrayField = ({
                                       readOnlyFields={readOnlyFields}
                                       field={subField}
                                       value={data[fieldName]}
-                                      onChange={(val) => {
+                                      onChange={(val, ui) => {
                                         onChange(
                                           replace(value, i, {
                                             ...data,
                                             [fieldName]: val,
-                                          })
+                                          }),
+                                          ui
                                         );
                                       }}
                                     />
