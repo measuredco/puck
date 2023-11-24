@@ -12,6 +12,7 @@ export const RadioField = ({
   value,
   name,
   id,
+  label,
 }: InputProps) => {
   if (field.type !== "radio" || !field.options) {
     return null;
@@ -20,7 +21,7 @@ export const RadioField = ({
   return (
     <FieldLabelInternal
       icon={<CheckCircle size={16} />}
-      label={field.label || name}
+      label={label || name}
       readOnly={readOnly}
       el="div"
     >
