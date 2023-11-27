@@ -2,7 +2,7 @@ import { CSSProperties } from "react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { Config, CurrentData, Data } from "../../types/Config";
 import { setupZone } from "../../lib/setup-zone";
-import { transformData } from "../../transforms";
+import { migrate } from "../../transforms";
 
 type DropZoneRenderProps = {
   zone: string;
@@ -67,7 +67,7 @@ export function Render({
   config: Config<any, any, any>;
   data: Data;
 }) {
-  const currentData = transformData(data);
+  const currentData = migrate(data);
 
   if (config.root?.render) {
     const rootProps = currentData.root.props;
