@@ -48,7 +48,7 @@ import { useComponentList } from "../../lib/use-component-list";
 import { useResolvedData } from "../../lib/use-resolved-data";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
-import { transformData } from "../../transforms";
+import { migrate } from "../../transforms";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -126,7 +126,7 @@ export function Puck({
 
   const [initialAppState] = useState<AppState>(() => ({
     ...defaultAppState,
-    data: transformData(initialData),
+    data: migrate(initialData),
     ui: {
       ...defaultAppState.ui,
       // Store categories under componentList on state to allow render functions and plugins to modify

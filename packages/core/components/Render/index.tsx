@@ -3,7 +3,7 @@
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { Config, Data } from "../../types/Config";
 import { DropZone, DropZoneProvider } from "../DropZone";
-import { transformData } from "../../transforms";
+import { migrate } from "../../transforms";
 
 export function Render({
   config,
@@ -12,7 +12,7 @@ export function Render({
   config: Config<any, any, any>;
   data: Data;
 }) {
-  const currentData = transformData(data);
+  const currentData = migrate(data);
 
   const rootProps = currentData.root.props;
   const title = rootProps?.title || "";

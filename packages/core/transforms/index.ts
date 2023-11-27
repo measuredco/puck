@@ -22,7 +22,7 @@ type PropTransform<
   } & { root: (props: RootProps & { [key: string]: any }) => RootProps }
 >;
 
-export function transformData(data: Data): CurrentData {
+export function migrate(data: Data): CurrentData {
   return dataTransforms?.reduce(
     (acc, dataTransform) => dataTransform(acc),
     data
@@ -33,7 +33,7 @@ export function transformProps<
   Props extends DefaultComponentProps = DefaultComponentProps,
   RootProps extends DefaultComponentProps = DefaultComponentProps
 >(data: Data, propTransforms: PropTransform<Props, RootProps>): CurrentData {
-  const afterDataTransform = transformData(data);
+  const afterDataTransform = migrate(data);
 
   const mapItem = (item) => {
     if (propTransforms[item.type]) {
