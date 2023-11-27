@@ -9,16 +9,17 @@ export const dataTransforms: DataTransform[] = [
       console.warn(
         "Migration applied: Root props moved from `root` to `root.props`."
       );
+
+      return {
+        ...data,
+        root: {
+          props: {
+            ...rootProps,
+          },
+        },
+      };
     }
 
-    return {
-      ...data,
-      root: {
-        ...data.root,
-        props: {
-          ...rootProps,
-        },
-      },
-    };
+    return data;
   },
 ];

@@ -8,7 +8,7 @@ import { dataTransforms } from "./data-transforms";
 
 export type DataTransform = (
   props: LegacyData & { [key: string]: any }
-) => CurrentData;
+) => Data;
 
 // type TransformFn =
 type PropTransform<
