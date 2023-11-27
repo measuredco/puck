@@ -18,13 +18,17 @@ An object produced by Puck describing the shape of content.
 }
 ```
 
-## `content`
+This document describes the latest supported data. To learn more about automatic data migration, visit the [Data Migration docs](/docs/integrating-puck/data-migration).
+
+## Params
+
+#### `content`
 
 An array containing an object for each component in the main content region.
 
-### `content[*]`
+#### `content[*]`
 
-#### Params
+##### Params
 
 | Param                          | Example                            | Type    | Status   |
 | ------------------------------ | ---------------------------------- | ------- | -------- |
@@ -32,13 +36,13 @@ An array containing an object for each component in the main content region.
 | [`props`](#contentprops)       | `props: { title: "Hello, world" }` | Object  | Required |
 | [`readOnly`](#contentreadonly) | `readOnly: { title: true }`        | Object  | -        |
 
-#### Required params
+##### Required params
 
-##### `content[*].type`
+###### `content[*].type`
 
 The type of the component, which tells Puck to run the [`render()`](/docs/api-reference/configuration/component-config#renderprops) method for the component of the [same key](/docs/api-reference/config#components).
 
-##### `content[*].props`
+###### `content[*].props`
 
 The props stored based on the [`component config`](/docs/api-reference/configuration/component-config) that Puck will pass to the [`render()`](/docs/api-reference/configuration/component-config#renderprops) method for the component of the [same key](/docs/api-reference/config#components).
 
@@ -58,9 +62,9 @@ The props stored based on the [`component config`](/docs/api-reference/configura
 }
 ```
 
-#### Optional params
+##### Optional params
 
-##### `content[*].readOnly`
+###### `content[*].readOnly`
 
 An object describing which fields are set to [read-only](/docs/api-reference/configuration/component-config#datareadonly-1).
 
@@ -83,20 +87,20 @@ An object describing which fields are set to [read-only](/docs/api-reference/con
 }
 ```
 
-## `root`
+### `root`
 
 An object describing data for the [`root` config](/docs/api-reference/config#root).
 
-### Params
+#### Params
 
 | Param                       | Example                            | Type   | Status |
 | --------------------------- | ---------------------------------- | ------ | ------ |
 | [`props`](#rootprops)       | `props: { title: "Hello, world" }` | Object | -      |
 | [`readOnly`](#rootreadonly) | `readOnly: { title: true }`        | Object | -      |
 
-### Optional params
+#### Optional params
 
-#### `root.props`
+##### `root.props`
 
 The props stored based on the [`component config`](/docs/api-reference/configuration/component-config) that Puck will pass to the [`render()`](/docs/api-reference/configuration/component-config#renderprops) method for the [`root` config](/docs/api-reference/config#root).
 
@@ -108,7 +112,7 @@ The props stored based on the [`component config`](/docs/api-reference/configura
 }
 ```
 
-#### `root.readOnly`
+##### `root.readOnly`
 
 An object describing which fields are set to [read-only](/docs/api-reference/configuration/component-config#datareadonly-1).
 
@@ -124,11 +128,11 @@ An object describing which fields are set to [read-only](/docs/api-reference/con
 }
 ```
 
-## `zones`
+### `zones`
 
 An object describing nested content regions for each [DropZone](/docs/api-reference/components/drop-zone).
 
-### `zones[zoneKey]`
+#### `zones[zoneKey]`
 
 An array describing the content for a particular region. Shares a shape with [`content`](#content).
 
