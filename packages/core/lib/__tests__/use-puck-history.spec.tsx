@@ -51,7 +51,7 @@ const mockedAppStateArray1: AppState = {
         },
       },
     ],
-    root: { title: "" },
+    root: { props: { title: "" } },
     zones: {},
   },
   ui: {
@@ -95,7 +95,7 @@ const mockedAppStateArray2: AppState = {
         },
       },
     ],
-    root: { title: "" },
+    root: { props: { title: "" } },
     zones: {},
   },
   ui: {
