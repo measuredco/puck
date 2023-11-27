@@ -54,6 +54,7 @@
 }
 
 .ExternalInputModal {
+  color: black;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -216,7 +217,6 @@
   border: none;
   border-radius: 4px;
   background: white;
-  color: black;
   font-family: inherit;
   font-size: 14px;
   padding: 12px 15px;
