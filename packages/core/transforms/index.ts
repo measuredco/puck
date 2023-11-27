@@ -2,6 +2,7 @@ import {
   CurrentData,
   Data,
   DefaultComponentProps,
+  DefaultRootProps,
   LegacyData,
 } from "../types/Config";
 import { dataTransforms } from "./data-transforms";
@@ -10,10 +11,9 @@ export type DataTransform = (
   props: LegacyData & { [key: string]: any }
 ) => Data;
 
-// type TransformFn =
 type PropTransform<
   Props extends DefaultComponentProps = DefaultComponentProps,
-  RootProps extends DefaultComponentProps = DefaultComponentProps
+  RootProps extends DefaultRootProps = DefaultRootProps
 > = Partial<
   {
     [ComponentName in keyof Props]: (
@@ -49,7 +49,10 @@ export function transformProps<
   const afterPropTransforms: CurrentData = {
     ...data,
     root: propTransforms["root"]
-      ? propTransforms["root"](afterDataTransform.root.props as any)
+      ? {
+          ...afterDataTransform.root,
+          props: propTransforms["root"](afterDataTransform.root.props as any),
+        }
       : afterDataTransform.root,
     content: data.content.map(mapItem),
     zones: Object.keys(data.zones || {}).reduce(
