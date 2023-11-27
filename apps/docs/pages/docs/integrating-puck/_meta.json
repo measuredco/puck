@@ -5,5 +5,7 @@
   "categories": {},
   "dynamic-props": {},
   "external-data-sources": {},
-  "server-components": {}
+  "server-components": {},
+  "prop-migration": {},
+  "data-migration": {}
 }

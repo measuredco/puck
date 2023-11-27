@@ -1,0 +1,21 @@
+---
+title: migrate
+---
+
+# migrate
+
+Migrate the [Data payload](/docs/api-reference/data) to the latest shape, automatically transforming deprecated data.
+
+```tsx copy showLineNumbers {7-10}
+import { migrate } from "@measured/puck";
+
+migrate(legacyData);
+```
+
+## Returns
+
+The updated [Data](/docs/api-reference/data) object.
+
+## Notes
+
+- Called internally whenever you pass data to [`<Puck>`](/docs/api-reference/components/puck) or [`<Render>`](/docs/api-reference/components/render), or calling [`transformProps`](/docs/api-reference/functions/transform-props).
