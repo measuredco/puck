@@ -1,5 +1,5 @@
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
-import { AppState, Config, Data } from "../../types/Config";
+import { AppState, Config, CurrentData } from "../../types/Config";
 import { useResolvedData } from "../use-resolved-data";
 import { SetAction, SetDataAction } from "../../reducer";
 import { cache } from "../resolve-component-data";
@@ -9,7 +9,7 @@ const item1 = { type: "MyComponent", props: { id: "MyComponent-1" } };
 const item2 = { type: "MyComponent", props: { id: "MyComponent-2" } };
 const item3 = { type: "MyComponent", props: { id: "MyComponent-3" } };
 
-const data: Data = {
+const data: CurrentData = {
   root: { props: { title: "" } },
   content: [item1],
   zones: {

@@ -10,7 +10,7 @@ import {
   UnregisterZoneAction,
   createReducer,
 } from "../../reducer";
-import { AppState, Config, Data, UiState } from "../../types/Config";
+import { AppState, Config, CurrentData, UiState } from "../../types/Config";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 
 import { generateId } from "../../lib/generate-id";
@@ -25,7 +25,11 @@ type Props = {
     prop: string;
   };
 };
-const defaultData: Data = { root: { title: "" }, content: [], zones: {} };
+const defaultData: CurrentData = {
+  root: { props: { title: "" } },
+  content: [],
+  zones: {},
+};
 
 const defaultUi: UiState = defaultAppState.ui;
 
@@ -219,7 +223,9 @@ describe("Data reducer", () => {
         {
           "content": [],
           "root": {
-            "title": "",
+            "props": {
+              "title": "",
+            },
           },
           "zones": {
             "mockId-0:zone1": [
@@ -452,7 +458,9 @@ describe("Data reducer", () => {
         {
           "content": [],
           "root": {
-            "title": "",
+            "props": {
+              "title": "",
+            },
           },
           "zones": {
             "zone1": [],
@@ -513,9 +521,9 @@ describe("Data reducer", () => {
   describe("set action", () => {
     it("should set new data", () => {
       const state: AppState = { ui: defaultUi, data: { ...defaultData } };
-      const newData: Data = {
+      const newData: CurrentData = {
         ...defaultData,
-        root: { title: "Hello, world" },
+        root: { props: { title: "Hello, world" } },
         content: [{ type: "Comp", props: { id: "1" } }],
       };
 

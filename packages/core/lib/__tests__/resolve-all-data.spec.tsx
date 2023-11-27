@@ -1,4 +1,4 @@
-import { Config, Data } from "../../types/Config";
+import { Config, CurrentData } from "../../types/Config";
 import { resolveAllData } from "../resolve-all-data";
 
 const item1 = {
@@ -10,8 +10,8 @@ const item2 = {
   props: { id: "MyComponent-2", prop: "Original" },
 };
 
-const data: Data = {
-  root: { title: "" },
+const data: CurrentData = {
+  root: { props: { title: "" } },
   content: [item1],
   zones: {
     "MyComponent-1:zone": [item2],
@@ -54,7 +54,9 @@ describe("resolve-data", () => {
           },
         ],
         "root": {
-          "title": "",
+          "props": {
+            "title": "",
+          },
         },
         "zones": {
           "MyComponent-1:zone": [

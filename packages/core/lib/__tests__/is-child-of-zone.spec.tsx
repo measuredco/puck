@@ -1,13 +1,13 @@
 import { DropZoneContext } from "../../components/DropZone/context";
-import { Config, Data } from "../../types/Config";
+import { Config, CurrentData } from "../../types/Config";
 import { isChildOfZone } from "../is-child-of-zone";
 
 const item1 = { type: "MyComponent", props: { id: "MyComponent-1" } };
 const item2 = { type: "MyComponent", props: { id: "MyComponent-2" } };
 const item3 = { type: "MyComponent", props: { id: "MyComponent-3" } };
 
-const data: Data = {
-  root: { title: "" },
+const data: CurrentData = {
+  root: { props: { title: "" } },
   content: [item1],
   zones: {
     "MyComponent-1:zone": [item2],
