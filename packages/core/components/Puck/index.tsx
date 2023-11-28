@@ -35,6 +35,7 @@ import { useResolvedData } from "../../lib/use-resolved-data";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
+import { Components } from "./components/Components";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -480,13 +481,7 @@ export function Puck({
                     </header>
                     <div className={getClassName("leftSideBar")}>
                       <SidebarSection title="Components">
-                        <ComponentListWrapper>
-                          {componentList ? (
-                            componentList
-                          ) : (
-                            <ComponentList id="all" />
-                          )}
-                        </ComponentListWrapper>
+                        <Components />
                       </SidebarSection>
                       <SidebarSection title="Outline">
                         {ctx?.activeZones &&
@@ -569,4 +564,5 @@ export function Puck({
   );
 }
 
+Puck.Components = Components;
 Puck.Fields = Fields;
