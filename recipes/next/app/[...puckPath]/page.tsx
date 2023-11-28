@@ -23,7 +23,7 @@ export async function generateMetadata({
   const path = `/${puckPath.join("/")}`;
 
   return {
-    title: getPage(path)?.root.title,
+    title: getPage(path)?.root.props.title,
   };
 }
 

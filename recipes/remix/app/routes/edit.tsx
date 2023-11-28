@@ -40,7 +40,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  const title = data?.initialData?.root?.title || "Untitled page";
+  const title = data?.initialData?.root?.props?.title || "Untitled page";
 
   return [{ title: `Editing: ${title}` }];
 };
