@@ -43,7 +43,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
 
   useEffect(() => {
     if (!isEdit) {
-      const title = data?.root.props?.title || data.root.title;
+      const title = data?.root.props?.title || data?.root?.title;
       document.title = title || "";
     }
   }, [data, isEdit]);
