@@ -7,10 +7,8 @@ import {
   useState,
 } from "react";
 import { DragDropContext, DragStart, DragUpdate } from "@hello-pangea/dnd";
-import type { AppState, Config, Data, UiState } from "../../types/Config";
-import { InputOrGroup } from "../InputOrGroup";
 
-import { ComponentList } from "../ComponentList";
+import type { AppState, Config, Data } from "../../types/Config";
 import { Button } from "../Button";
 
 import { Plugin } from "../../types/Plugin";
@@ -20,23 +18,19 @@ import { SidebarSection } from "../SidebarSection";
 import { ChevronDown, ChevronUp, Globe, Sidebar } from "react-feather";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
-import { DropZone, DropZoneProvider, dropZoneContext } from "../DropZone";
-import { rootDroppableId } from "../../lib/root-droppable-id";
+import { DropZoneProvider } from "../DropZone";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { PuckAction, StateReducer, createReducer } from "../../reducer";
-import { LayerTree } from "../LayerTree";
-import { findZonesForArea } from "../../lib/find-zones-for-area";
-import { areaContainsZones } from "../../lib/area-contains-zones";
 import { flushZones } from "../../lib/flush-zones";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { AppProvider, defaultAppState } from "./context";
-import { useComponentList } from "../../lib/use-component-list";
 import { useResolvedData } from "../../lib/use-resolved-data";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
+import { Outline } from "./components/Outline";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -222,8 +216,6 @@ export function Puck({
     DragStart & Partial<DragUpdate>
   >();
 
-  const componentList = useComponentList(config, appState.ui);
-
   // DEPRECATED
   const rootProps = data.root.props || data.root;
 
@@ -374,165 +366,130 @@ export function Puck({
               areaId: "root",
             }}
           >
-            <dropZoneContext.Consumer>
-              {(ctx) => {
-                return (
-                  <div
-                    className={getClassName({
-                      leftSideBarVisible,
-                      menuOpen,
-                      rightSideBarVisible,
-                    })}
-                  >
-                    <header className={getClassName("header")}>
-                      {renderHeader ? (
-                        renderHeader({
-                          children: (
-                            <Button
-                              onClick={() => {
-                                onPublish(data);
-                              }}
-                              icon={<Globe size="14px" />}
-                            >
-                              Publish
-                            </Button>
-                          ),
-                          dispatch,
-                          state: appState,
-                        })
-                      ) : (
-                        <div className={getClassName("headerInner")}>
-                          <div className={getClassName("headerToggle")}>
-                            <div className={getClassName("leftSideBarToggle")}>
-                              <IconButton
-                                onClick={() => {
-                                  toggleSidebars("left");
-                                }}
-                                title="Toggle left sidebar"
-                              >
-                                <Sidebar focusable="false" />
-                              </IconButton>
-                            </div>
-                            <div className={getClassName("rightSideBarToggle")}>
-                              <IconButton
-                                onClick={() => {
-                                  toggleSidebars("right");
-                                }}
-                                title="Toggle right sidebar"
-                              >
-                                <Sidebar focusable="false" />
-                              </IconButton>
-                            </div>
-                          </div>
-                          <div className={getClassName("headerTitle")}>
-                            <Heading rank={2} size="xs">
-                              {headerTitle || rootProps.title || "Page"}
-                              {headerPath && (
-                                <>
-                                  {" "}
-                                  <code className={getClassName("headerPath")}>
-                                    {headerPath}
-                                  </code>
-                                </>
-                              )}
-                            </Heading>
-                          </div>
-                          <div className={getClassName("headerTools")}>
-                            <div className={getClassName("menuButton")}>
-                              <IconButton
-                                onClick={() => {
-                                  return setMenuOpen(!menuOpen);
-                                }}
-                                title="Toggle menu bar"
-                              >
-                                {menuOpen ? (
-                                  <ChevronUp focusable="false" />
-                                ) : (
-                                  <ChevronDown focusable="false" />
-                                )}
-                              </IconButton>
-                            </div>
-                            <MenuBar
-                              appState={appState}
-                              data={data}
-                              dispatch={dispatch}
-                              onPublish={onPublish}
-                              menuOpen={menuOpen}
-                              renderHeaderActions={renderHeaderActions}
-                              setMenuOpen={setMenuOpen}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </header>
-                    <div className={getClassName("leftSideBar")}>
-                      <SidebarSection title="Components">
-                        <Components />
-                      </SidebarSection>
-                      <SidebarSection title="Outline">
-                        {ctx?.activeZones &&
-                          ctx?.activeZones[rootDroppableId] && (
-                            <LayerTree
-                              data={data}
-                              label={
-                                areaContainsZones(data, "root")
-                                  ? rootDroppableId
-                                  : ""
-                              }
-                              zoneContent={data.content}
-                              setItemSelector={setItemSelector}
-                              itemSelector={itemSelector}
-                            />
-                          )}
-
-                        {Object.entries(findZonesForArea(data, "root")).map(
-                          ([zoneKey, zone]) => {
-                            return (
-                              <LayerTree
-                                key={zoneKey}
-                                data={data}
-                                label={zoneKey}
-                                zone={zoneKey}
-                                zoneContent={zone}
-                                setItemSelector={setItemSelector}
-                                itemSelector={itemSelector}
-                              />
-                            );
-                          }
-                        )}
-                      </SidebarSection>
-                    </div>
-                    <div
-                      className={getClassName("frame")}
-                      onClick={() => setItemSelector(null)}
-                    >
-                      <div className={getClassName("root")}>
-                        <Preview />
-                      </div>
-                      {/* Fill empty space under root */}
-                      <div
-                        style={{
-                          background: "var(--puck-color-grey-10)",
-                          height: "100%",
-                          flexGrow: 1,
+            <div
+              className={getClassName({
+                leftSideBarVisible,
+                menuOpen,
+                rightSideBarVisible,
+              })}
+            >
+              <header className={getClassName("header")}>
+                {renderHeader ? (
+                  renderHeader({
+                    children: (
+                      <Button
+                        onClick={() => {
+                          onPublish(data);
                         }}
-                      ></div>
-                    </div>
-                    <div className={getClassName("rightSideBar")}>
-                      <FieldWrapper dispatch={dispatch} state={appState}>
-                        <SidebarSection
-                          noPadding
-                          showBreadcrumbs
-                          title={selectedItem ? selectedItem.type : "Page"}
+                        icon={<Globe size="14px" />}
+                      >
+                        Publish
+                      </Button>
+                    ),
+                    dispatch,
+                    state: appState,
+                  })
+                ) : (
+                  <div className={getClassName("headerInner")}>
+                    <div className={getClassName("headerToggle")}>
+                      <div className={getClassName("leftSideBarToggle")}>
+                        <IconButton
+                          onClick={() => {
+                            toggleSidebars("left");
+                          }}
+                          title="Toggle left sidebar"
                         >
-                          <Fields />
-                        </SidebarSection>
-                      </FieldWrapper>
+                          <Sidebar focusable="false" />
+                        </IconButton>
+                      </div>
+                      <div className={getClassName("rightSideBarToggle")}>
+                        <IconButton
+                          onClick={() => {
+                            toggleSidebars("right");
+                          }}
+                          title="Toggle right sidebar"
+                        >
+                          <Sidebar focusable="false" />
+                        </IconButton>
+                      </div>
+                    </div>
+                    <div className={getClassName("headerTitle")}>
+                      <Heading rank={2} size="xs">
+                        {headerTitle || rootProps.title || "Page"}
+                        {headerPath && (
+                          <>
+                            {" "}
+                            <code className={getClassName("headerPath")}>
+                              {headerPath}
+                            </code>
+                          </>
+                        )}
+                      </Heading>
+                    </div>
+                    <div className={getClassName("headerTools")}>
+                      <div className={getClassName("menuButton")}>
+                        <IconButton
+                          onClick={() => {
+                            return setMenuOpen(!menuOpen);
+                          }}
+                          title="Toggle menu bar"
+                        >
+                          {menuOpen ? (
+                            <ChevronUp focusable="false" />
+                          ) : (
+                            <ChevronDown focusable="false" />
+                          )}
+                        </IconButton>
+                      </div>
+                      <MenuBar
+                        appState={appState}
+                        data={data}
+                        dispatch={dispatch}
+                        onPublish={onPublish}
+                        menuOpen={menuOpen}
+                        renderHeaderActions={renderHeaderActions}
+                        setMenuOpen={setMenuOpen}
+                      />
                     </div>
                   </div>
-                );
-              }}
-            </dropZoneContext.Consumer>
+                )}
+              </header>
+              <div className={getClassName("leftSideBar")}>
+                <SidebarSection title="Components">
+                  <Components />
+                </SidebarSection>
+                <SidebarSection title="Outline">
+                  <Outline />
+                </SidebarSection>
+              </div>
+              <div
+                className={getClassName("frame")}
+                onClick={() => setItemSelector(null)}
+              >
+                <div className={getClassName("root")}>
+                  <Preview />
+                </div>
+                {/* Fill empty space under root */}
+                <div
+                  style={{
+                    background: "var(--puck-color-grey-10)",
+                    height: "100%",
+                    flexGrow: 1,
+                  }}
+                ></div>
+              </div>
+              <div className={getClassName("rightSideBar")}>
+                <FieldWrapper dispatch={dispatch} state={appState}>
+                  <SidebarSection
+                    noPadding
+                    showBreadcrumbs
+                    title={selectedItem ? selectedItem.type : "Page"}
+                  >
+                    <Fields />
+                  </SidebarSection>
+                </FieldWrapper>
+              </div>
+            </div>
           </DropZoneProvider>
         </DragDropContext>
       </AppProvider>
@@ -543,4 +500,5 @@ export function Puck({
 
 Puck.Components = Components;
 Puck.Fields = Fields;
+Puck.Outline = Outline;
 Puck.Preview = Preview;
