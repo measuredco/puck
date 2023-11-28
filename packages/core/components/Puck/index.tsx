@@ -36,10 +36,11 @@ import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
+import { Preview } from "./components/Preview";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
-const PluginRenderer = ({
+export const PluginRenderer = ({
   children,
   dispatch,
   state,
@@ -158,22 +159,6 @@ export function Puck({
   );
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
-
-  const Page = useCallback(
-    (pageProps) => (
-      <PluginRenderer
-        plugins={plugins}
-        renderMethod="renderRoot"
-        dispatch={pageProps.dispatch}
-        state={pageProps.state}
-      >
-        {config.root?.render
-          ? config.root?.render({ ...pageProps, editMode: true })
-          : pageProps.children}
-      </PluginRenderer>
-    ),
-    [config.root]
-  );
 
   const PageFieldWrapper = useCallback(
     (props) => (
@@ -309,6 +294,7 @@ export function Puck({
           config,
           componentState,
           resolveData,
+          plugins,
         }}
       >
         <DragDropContext
@@ -519,18 +505,9 @@ export function Puck({
                     <div
                       className={getClassName("frame")}
                       onClick={() => setItemSelector(null)}
-                      id="puck-frame"
                     >
                       <div className={getClassName("root")}>
-                        <div className={getClassName("page")}>
-                          <Page
-                            dispatch={dispatch}
-                            state={appState}
-                            {...rootProps}
-                          >
-                            <DropZone zone={rootDroppableId} />
-                          </Page>
-                        </div>
+                        <Preview />
                       </div>
                       {/* Fill empty space under root */}
                       <div
@@ -566,3 +543,4 @@ export function Puck({
 
 Puck.Components = Components;
 Puck.Fields = Fields;
+Puck.Preview = Preview;
