@@ -189,10 +189,6 @@
   }
 }
 
-.Puck-page {
-  border: 1px solid var(--puck-color-grey-8);
-}
-
 .Puck-rightSideBar {
   background: var(--puck-color-white);
   border-left: 1px solid var(--puck-color-grey-8);

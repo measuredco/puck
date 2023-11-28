@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 import { AppState, Config, UiState } from "../../types/Config";
 import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
+import { Plugin } from "../../types/Plugin";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: { props: { title: "" } } },
@@ -20,6 +21,7 @@ type AppContext = {
   config: Config;
   componentState: Record<string, { loading: boolean }>;
   resolveData: (newAppState: AppState) => void;
+  plugins: Plugin[];
 };
 
 export const appContext = createContext<AppContext>({
@@ -28,6 +30,7 @@ export const appContext = createContext<AppContext>({
   config: { components: {} },
   componentState: {},
   resolveData: () => {},
+  plugins: [],
 });
 
 export const AppProvider = appContext.Provider;

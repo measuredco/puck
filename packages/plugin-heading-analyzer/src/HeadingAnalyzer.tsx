@@ -16,7 +16,7 @@ const getOutline = ({
   addDataAttr = false,
 }: { addDataAttr?: boolean } = {}) => {
   const headings = window.document
-    .querySelector("#puck-frame")!
+    .querySelector("#puck-preview")!
     .querySelectorAll("h1,h2,h3,h4,h5,h6");
 
   const _outline: { rank: number; text: string; analyzeId: string }[] = [];
