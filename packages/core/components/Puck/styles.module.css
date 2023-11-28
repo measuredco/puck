@@ -16,7 +16,7 @@
  * 1598px   | 1212px
  */
 
- .Puck {
+.Puck {
   --puck-frame-width: auto;
   --puck-side-bar-width: 186px;
   --puck-space-px: 16px;

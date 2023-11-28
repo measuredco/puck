@@ -7,14 +7,9 @@ import {
   useState,
 } from "react";
 import { DragDropContext, DragStart, DragUpdate } from "@hello-pangea/dnd";
-import type {
-  AppState,
-  Config,
-  Data,
-  Field,
-  UiState,
-} from "../../types/Config";
+import type { AppState, Config, Data, UiState } from "../../types/Config";
 import { InputOrGroup } from "../InputOrGroup";
+
 import { ComponentList } from "../ComponentList";
 import { Button } from "../Button";
 
@@ -28,15 +23,7 @@ import { IconButton } from "../IconButton/IconButton";
 import { DropZone, DropZoneProvider, dropZoneContext } from "../DropZone";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { ItemSelector, getItem } from "../../lib/get-item";
-import {
-  PuckAction,
-  ReplaceAction,
-  SetAction,
-  StateReducer,
-  createReducer,
-  replaceAction,
-  setAction,
-} from "../../reducer";
+import { PuckAction, StateReducer, createReducer } from "../../reducer";
 import { LayerTree } from "../LayerTree";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { areaContainsZones } from "../../lib/area-contains-zones";
@@ -47,14 +34,9 @@ import { useComponentList } from "../../lib/use-component-list";
 import { useResolvedData } from "../../lib/use-resolved-data";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
+import { Fields } from "./components/Fields";
 
 const getClassName = getClassNameFactory("Puck", styles);
-
-const Field = () => {};
-
-const defaultPageFields: Record<string, Field> = {
-  title: { type: "text" },
-};
 
 const PluginRenderer = ({
   children,
@@ -244,15 +226,6 @@ export function Puck({
 
   const FieldWrapper = itemSelector ? ComponentFieldWrapper : PageFieldWrapper;
 
-  const rootFields = config.root?.fields || defaultPageFields;
-
-  let fields = selectedItem
-    ? (config.components[selectedItem.type]?.fields as Record<
-        string,
-        Field<any>
-      >) || {}
-    : rootFields;
-
   useEffect(() => {
     if (onChange) onChange(data);
   }, [data]);
@@ -329,7 +302,13 @@ export function Puck({
   return (
     <div>
       <AppProvider
-        value={{ state: appState, dispatch, config, componentState }}
+        value={{
+          state: appState,
+          dispatch,
+          config,
+          componentState,
+          resolveData,
+        }}
       >
         <DragDropContext
           onDragUpdate={(update) => {
@@ -573,137 +552,8 @@ export function Puck({
                           noPadding
                           showBreadcrumbs
                           title={selectedItem ? selectedItem.type : "Page"}
-                          isLoading={
-                            selectedItem
-                              ? componentState[selectedItem?.props.id]?.loading
-                              : componentState["puck-root"]?.loading
-                          }
                         >
-                          {Object.keys(fields).map((fieldName) => {
-                            const field = fields[fieldName];
-
-                            const onChange = (
-                              value: any,
-                              updatedUi?: Partial<UiState>
-                            ) => {
-                              let currentProps;
-
-                              if (selectedItem) {
-                                currentProps = selectedItem.props;
-                              } else {
-                                currentProps = rootProps;
-                              }
-
-                              const newProps = {
-                                ...currentProps,
-                                [fieldName]: value,
-                              };
-
-                              if (itemSelector) {
-                                const replaceActionData: ReplaceAction = {
-                                  type: "replace",
-                                  destinationIndex: itemSelector.index,
-                                  destinationZone:
-                                    itemSelector.zone || rootDroppableId,
-                                  data: { ...selectedItem, props: newProps },
-                                };
-
-                                // We use `replace` action, then feed into `set` action so we can also process any UI changes
-                                const replacedData = replaceAction(
-                                  data,
-                                  replaceActionData
-                                );
-
-                                const setActionData: SetAction = {
-                                  type: "set",
-                                  state: {
-                                    data: { ...data, ...replacedData },
-                                    ui: { ...ui, ...updatedUi },
-                                  },
-                                };
-
-                                // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-                                if (
-                                  config.components[selectedItem!.type]
-                                    ?.resolveData
-                                ) {
-                                  resolveData(
-                                    setAction(appState, setActionData)
-                                  );
-                                } else {
-                                  dispatch({
-                                    ...setActionData,
-                                    recordHistory: true,
-                                  });
-                                }
-                              } else {
-                                if (data.root.props) {
-                                  // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-                                  if (config.root?.resolveData) {
-                                    resolveData({
-                                      ui: { ...ui, ...updatedUi },
-                                      data: {
-                                        ...data,
-                                        root: { props: newProps },
-                                      },
-                                    });
-                                  } else {
-                                    dispatch({
-                                      type: "set",
-                                      state: {
-                                        ui: { ...ui, ...updatedUi },
-                                        data: {
-                                          ...data,
-                                          root: { props: newProps },
-                                        },
-                                      },
-                                      recordHistory: true,
-                                    });
-                                  }
-                                } else {
-                                  // DEPRECATED
-                                  dispatch({
-                                    type: "setData",
-                                    data: { root: newProps },
-                                  });
-                                }
-                              }
-                            };
-
-                            if (selectedItem && itemSelector) {
-                              const { readOnly = {} } = selectedItem;
-
-                              return (
-                                <InputOrGroup
-                                  key={`${selectedItem.props.id}_${fieldName}`}
-                                  field={field}
-                                  name={fieldName}
-                                  id={`${selectedItem.props.id}_${fieldName}`}
-                                  label={field.label}
-                                  readOnly={readOnly[fieldName]}
-                                  readOnlyFields={readOnly}
-                                  value={selectedItem.props[fieldName]}
-                                  onChange={onChange}
-                                />
-                              );
-                            } else {
-                              const { readOnly = {} } = data.root;
-
-                              return (
-                                <InputOrGroup
-                                  key={`page_${fieldName}`}
-                                  field={field}
-                                  name={fieldName}
-                                  id={`root_${fieldName}`}
-                                  label={field.label}
-                                  readOnly={readOnly[fieldName]}
-                                  readOnlyFields={readOnly}
-                                  value={rootProps[fieldName]}
-                                  onChange={onChange}
-                                />
-                              );
-                            }
-                          })}
+                          <Fields />
                         </SidebarSection>
                       </FieldWrapper>
                     </div>
@@ -718,3 +568,5 @@ export function Puck({
     </div>
   );
 }
+
+Puck.Fields = Fields;
