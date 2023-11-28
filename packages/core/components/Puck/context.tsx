@@ -19,6 +19,7 @@ type AppContext = {
   dispatch: (action: PuckAction) => void;
   config: Config;
   componentState: Record<string, { loading: boolean }>;
+  resolveData: (newAppState: AppState) => void;
 };
 
 export const appContext = createContext<AppContext>({
@@ -26,6 +27,7 @@ export const appContext = createContext<AppContext>({
   dispatch: () => null,
   config: { components: {} },
   componentState: {},
+  resolveData: () => {},
 });
 
 export const AppProvider = appContext.Provider;
