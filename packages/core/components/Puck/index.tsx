@@ -65,6 +65,7 @@ export const PluginRenderer = ({
 };
 
 export function Puck({
+  children,
   config,
   data: initialData = { content: [], root: { props: { title: "" } } },
   onChange,
@@ -76,6 +77,7 @@ export function Puck({
   headerTitle,
   headerPath,
 }: {
+  children?: ReactNode;
   config: Config<any, any, any>;
   data: Data;
   onChange?: (data: Data) => void;
@@ -277,6 +279,8 @@ export function Puck({
     };
   }, []);
 
+  const disableZoom = children ? true : false;
+
   return (
     <div>
       <AppProvider
@@ -364,132 +368,136 @@ export function Puck({
               placeholderStyle,
               mode: "edit",
               areaId: "root",
+              disableZoom,
             }}
           >
-            <div
-              className={getClassName({
-                leftSideBarVisible,
-                menuOpen,
-                rightSideBarVisible,
-              })}
-            >
-              <header className={getClassName("header")}>
-                {renderHeader ? (
-                  renderHeader({
-                    children: (
-                      <Button
-                        onClick={() => {
-                          onPublish(data);
-                        }}
-                        icon={<Globe size="14px" />}
-                      >
-                        Publish
-                      </Button>
-                    ),
-                    dispatch,
-                    state: appState,
-                  })
-                ) : (
-                  <div className={getClassName("headerInner")}>
-                    <div className={getClassName("headerToggle")}>
-                      <div className={getClassName("leftSideBarToggle")}>
-                        <IconButton
-                          onClick={() => {
-                            toggleSidebars("left");
-                          }}
-                          title="Toggle left sidebar"
-                        >
-                          <Sidebar focusable="false" />
-                        </IconButton>
-                      </div>
-                      <div className={getClassName("rightSideBarToggle")}>
-                        <IconButton
-                          onClick={() => {
-                            toggleSidebars("right");
-                          }}
-                          title="Toggle right sidebar"
-                        >
-                          <Sidebar focusable="false" />
-                        </IconButton>
-                      </div>
-                    </div>
-                    <div className={getClassName("headerTitle")}>
-                      <Heading rank={2} size="xs">
-                        {headerTitle || rootProps.title || "Page"}
-                        {headerPath && (
-                          <>
-                            {" "}
-                            <code className={getClassName("headerPath")}>
-                              {headerPath}
-                            </code>
-                          </>
-                        )}
-                      </Heading>
-                    </div>
-                    <div className={getClassName("headerTools")}>
-                      <div className={getClassName("menuButton")}>
-                        <IconButton
-                          onClick={() => {
-                            return setMenuOpen(!menuOpen);
-                          }}
-                          title="Toggle menu bar"
-                        >
-                          {menuOpen ? (
-                            <ChevronUp focusable="false" />
-                          ) : (
-                            <ChevronDown focusable="false" />
-                          )}
-                        </IconButton>
-                      </div>
-                      <MenuBar
-                        appState={appState}
-                        data={data}
-                        dispatch={dispatch}
-                        onPublish={onPublish}
-                        menuOpen={menuOpen}
-                        renderHeaderActions={renderHeaderActions}
-                        setMenuOpen={setMenuOpen}
-                      />
-                    </div>
-                  </div>
-                )}
-              </header>
-              <div className={getClassName("leftSideBar")}>
-                <SidebarSection title="Components">
-                  <Components />
-                </SidebarSection>
-                <SidebarSection title="Outline">
-                  <Outline />
-                </SidebarSection>
-              </div>
+            {children || (
               <div
-                className={getClassName("frame")}
-                onClick={() => setItemSelector(null)}
+                className={getClassName({
+                  leftSideBarVisible,
+                  menuOpen,
+                  rightSideBarVisible,
+                  disableZoom,
+                })}
               >
-                <div className={getClassName("root")}>
-                  <Preview />
-                </div>
-                {/* Fill empty space under root */}
-                <div
-                  style={{
-                    background: "var(--puck-color-grey-10)",
-                    height: "100%",
-                    flexGrow: 1,
-                  }}
-                ></div>
-              </div>
-              <div className={getClassName("rightSideBar")}>
-                <FieldWrapper dispatch={dispatch} state={appState}>
-                  <SidebarSection
-                    noPadding
-                    showBreadcrumbs
-                    title={selectedItem ? selectedItem.type : "Page"}
-                  >
-                    <Fields />
+                <header className={getClassName("header")}>
+                  {renderHeader ? (
+                    renderHeader({
+                      children: (
+                        <Button
+                          onClick={() => {
+                            onPublish(data);
+                          }}
+                          icon={<Globe size="14px" />}
+                        >
+                          Publish
+                        </Button>
+                      ),
+                      dispatch,
+                      state: appState,
+                    })
+                  ) : (
+                    <div className={getClassName("headerInner")}>
+                      <div className={getClassName("headerToggle")}>
+                        <div className={getClassName("leftSideBarToggle")}>
+                          <IconButton
+                            onClick={() => {
+                              toggleSidebars("left");
+                            }}
+                            title="Toggle left sidebar"
+                          >
+                            <Sidebar focusable="false" />
+                          </IconButton>
+                        </div>
+                        <div className={getClassName("rightSideBarToggle")}>
+                          <IconButton
+                            onClick={() => {
+                              toggleSidebars("right");
+                            }}
+                            title="Toggle right sidebar"
+                          >
+                            <Sidebar focusable="false" />
+                          </IconButton>
+                        </div>
+                      </div>
+                      <div className={getClassName("headerTitle")}>
+                        <Heading rank={2} size="xs">
+                          {headerTitle || data.root.props.title || "Page"}
+                          {headerPath && (
+                            <>
+                              {" "}
+                              <code className={getClassName("headerPath")}>
+                                {headerPath}
+                              </code>
+                            </>
+                          )}
+                        </Heading>
+                      </div>
+                      <div className={getClassName("headerTools")}>
+                        <div className={getClassName("menuButton")}>
+                          <IconButton
+                            onClick={() => {
+                              return setMenuOpen(!menuOpen);
+                            }}
+                            title="Toggle menu bar"
+                          >
+                            {menuOpen ? (
+                              <ChevronUp focusable="false" />
+                            ) : (
+                              <ChevronDown focusable="false" />
+                            )}
+                          </IconButton>
+                        </div>
+                        <MenuBar
+                          appState={appState}
+                          data={data}
+                          dispatch={dispatch}
+                          onPublish={onPublish}
+                          menuOpen={menuOpen}
+                          renderHeaderActions={renderHeaderActions}
+                          setMenuOpen={setMenuOpen}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </header>
+                <div className={getClassName("leftSideBar")}>
+                  <SidebarSection title="Components">
+                    <Components />
                   </SidebarSection>
-                </FieldWrapper>
+                  <SidebarSection title="Outline">
+                    <Outline />
+                  </SidebarSection>
+                </div>
+                <div
+                  className={getClassName("frame")}
+                  onClick={() => setItemSelector(null)}
+                >
+                  <div className={getClassName("root")}>
+                    <Preview />
+                  </div>
+                  {/* Fill empty space under root */}
+                  <div
+                    style={{
+                      background: "var(--puck-color-grey-10)",
+                      height: "100%",
+                      flexGrow: 1,
+                    }}
+                  ></div>
+                </div>
+                <div className={getClassName("rightSideBar")}>
+                  <FieldWrapper dispatch={dispatch} state={appState}>
+                    <SidebarSection
+                      noPadding
+                      showBreadcrumbs
+                      title={selectedItem ? selectedItem.type : "Page"}
+                    >
+                      <Fields />
+                    </SidebarSection>
+                  </FieldWrapper>
+                </div>
               </div>
-            </div>
+            )}
           </DropZoneProvider>
         </DragDropContext>
       </AppProvider>

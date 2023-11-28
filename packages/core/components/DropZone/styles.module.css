@@ -1,11 +1,18 @@
 .DropZone {
   margin-left: auto;
   margin-right: auto;
-  zoom: 1.33;
   position: relative;
   height: 100%;
   outline-offset: -1px;
   width: 100%;
+}
+
+.DropZone--zoomEnabled {
+  zoom: 1.33;
+}
+
+.DropZone--zoomEnabled .DropZone-renderWrapper {
+  zoom: 0.75;
 }
 
 .DropZone-content {

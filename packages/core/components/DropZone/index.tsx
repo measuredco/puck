@@ -38,6 +38,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
     registerZoneArea,
     areasWithZones,
     hoveringComponent,
+    disableZoom = false,
   } = ctx! || {};
 
   let content = data.content || [];
@@ -171,6 +172,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
         isDisabled: !isEnabled,
         isAreaSelected,
         hasChildren: content.length > 0,
+        zoomEnabled: !disableZoom,
       })}
     >
       <Droppable
@@ -322,7 +324,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                               : undefined,
                         }}
                       >
-                        <div style={{ zoom: 0.75 }}>
+                        <div className={getClassName("renderWrapper")}>
                           <Render {...defaultedProps} />
                         </div>
                       </DraggableComponent>
