@@ -60,26 +60,19 @@ describe("use-resolved-data", () => {
       cache.lastChange = {};
     });
 
-    it("should call the `set` action with resolved data and state", async () => {
+    it("should call the `set` action with resolved data", async () => {
       let dispatchedEvents: SetAction[] = [];
       let currentState: AppState = state;
 
       const renderedHook = renderHook(() => {
-        return useResolvedData(
-          {
-            ...currentState,
-            ui: { ...currentState.ui, leftSideBarVisible: false },
-          },
-          config,
-          (args) => {
-            const action = args as SetAction;
-            const newState = action.state as any;
+        return useResolvedData(currentState, config, (args) => {
+          const action = args as SetAction;
+          const newState = action.state as any;
 
-            dispatchedEvents.push(action);
+          dispatchedEvents.push(action);
 
-            currentState = { ...currentState, ...newState(currentState) };
-          }
-        );
+          currentState = { ...currentState, ...newState(currentState) };
+        });
       });
 
       await act(async () => {
@@ -89,7 +82,6 @@ describe("use-resolved-data", () => {
 
       expect(dispatchedEvents.length).toBe(4); // calls dispatcher for each resolver
 
-      const fn = dispatchedEvents[dispatchedEvents.length - 1].state as any;
       expect(currentState).toMatchInlineSnapshot(`
         {
           "data": {
@@ -144,11 +136,82 @@ describe("use-resolved-data", () => {
             "arrayState": {},
             "componentList": {},
             "itemSelector": null,
-            "leftSideBarVisible": false,
+            "leftSideBarVisible": true,
             "rightSideBarVisible": true,
           },
         }
       `);
+    });
+
+    it("should NOT set the UI on the first resolveData call", async () => {
+      let dispatchedEvents: SetAction[] = [];
+      let currentState: AppState = state;
+
+      const renderedHook = renderHook(() => {
+        return useResolvedData(
+          {
+            ...currentState,
+            ui: { ...currentState.ui, leftSideBarVisible: false },
+          },
+          config,
+          (args) => {
+            const action = args as SetAction;
+            const newState = action.state as any;
+
+            dispatchedEvents.push(action);
+
+            currentState = { ...currentState, ...newState(currentState) };
+          }
+        );
+      });
+
+      await act(async () => {
+        // resolveData gets called on render
+        renderedHook.rerender();
+      });
+
+      expect(dispatchedEvents.length).toBe(4); // calls dispatcher for each resolver
+
+      expect(currentState.ui.leftSideBarVisible).toBe(true);
+    });
+
+    it("should set the UI on subsequent resolveData calls", async () => {
+      let dispatchedEvents: SetAction[] = [];
+      let currentState: AppState = state;
+
+      const hookArgs: any = [
+        currentState,
+        config,
+        (args) => {
+          const action = args as SetAction;
+          const newState = action.state as any;
+
+          dispatchedEvents.push(action);
+          currentState = { ...currentState, ...newState(currentState) };
+        },
+      ];
+
+      const renderedHook = renderHook(() =>
+        useResolvedData(hookArgs[0], hookArgs[1], hookArgs[2])
+      );
+
+      await act(async () => {
+        // resolveData gets called on render
+        renderedHook.rerender(() =>
+          useResolvedData(hookArgs[0], hookArgs[1], hookArgs[2])
+        );
+
+        renderedHook.result.current.resolveData({
+          ...currentState,
+          ui: { ...currentState.ui, leftSideBarVisible: false },
+        });
+
+        renderedHook.rerender(() =>
+          useResolvedData(hookArgs[0], hookArgs[1], hookArgs[2])
+        );
+      });
+
+      expect(currentState.ui.leftSideBarVisible).toBe(false);
     });
 
     it("should NOT call the `setData` action with resolved data, when the data is unchanged", async () => {
