@@ -8,7 +8,7 @@ import {
 } from "react";
 import { DragDropContext, DragStart, DragUpdate } from "@hello-pangea/dnd";
 
-import type { AppState, Config, Data } from "../../types/Config";
+import type { AppState, Config, Data, UiState } from "../../types/Config";
 import { Button } from "../Button";
 
 import { Plugin } from "../../types/Plugin";
@@ -68,6 +68,7 @@ export function Puck({
   children,
   config,
   data: initialData = { content: [], root: { props: { title: "" } } },
+  ui: initialUi = defaultAppState.ui,
   onChange,
   onPublish,
   plugins = [],
@@ -80,6 +81,7 @@ export function Puck({
   children?: ReactNode;
   config: Config<any, any, any>;
   data: Data;
+  ui?: Partial<UiState>;
   onChange?: (data: Data) => void;
   onPublish: (data: Data) => void;
   plugins?: Plugin[];
@@ -107,6 +109,7 @@ export function Puck({
     data: initialData,
     ui: {
       ...defaultAppState.ui,
+      ...initialUi,
       // Store categories under componentList on state to allow render functions and plugins to modify
       componentList: config.categories
         ? Object.entries(config.categories).reduce(
@@ -422,7 +425,7 @@ export function Puck({
                       </div>
                       <div className={getClassName("headerTitle")}>
                         <Heading rank={2} size="xs">
-                          {headerTitle || data.root.props.title || "Page"}
+                          {headerTitle || rootProps.title || "Page"}
                           {headerPath && (
                             <>
                               {" "}
