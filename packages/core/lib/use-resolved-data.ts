@@ -1,10 +1,4 @@
-import {
-  AppState,
-  ComponentData,
-  Config,
-  Data,
-  RootData,
-} from "../types/Config";
+import { AppState, ComponentData, Config, RootData } from "../types/Config";
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { PuckAction } from "../reducer";
 import { resolveComponentData } from "./resolve-component-data";
@@ -77,7 +71,7 @@ export const useResolvedData = (
           state: (prev) => ({
             ...prev,
             data: applyDynamicProps(prev.data, dynamicDataMap, dynamicRoot),
-            ui: { ...prev.ui, ...newAppState.ui },
+            ui: resolverKey > 0 ? { ...prev.ui, ...newAppState.ui } : prev.ui,
           }),
           recordHistory: resolverKey > 0,
         });
