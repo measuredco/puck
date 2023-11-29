@@ -2,6 +2,9 @@
 title: Multi-column Layouts
 ---
 
+import { PuckPreview } from "@/docs/components/Preview";
+import { Puck } from "@/core";
+
 # Multi-column Layouts
 
 Multi-column and other complex layouts can be achieved by nesting components.
@@ -28,9 +31,45 @@ const config = {
         );
       },
     },
+    HeadingBlock: {
+      render: () => <p>Hello, world</p>,
+    },
   },
 };
 ```
+
+<PuckPreview
+  label="Nested components example"
+  config={{
+    components: {
+      Example: {
+        render: ({ puck: { renderDropZone: DropZone } }) => {
+          return (
+            <div style={{ padding: 32 }}>
+              <DropZone zone="my-content" />
+            </div>
+          );
+        },
+      },
+      HeadingBlock: {
+        render: () => {
+          return <p style={{ color: "black" }}>Hello, world</p>;
+        },
+      },
+    },
+  }}
+  data={{
+    content: [{ type: "Example", props: { id: "Example-1" } }],
+    root: { props: {} },
+    zones: {
+      "Example-1:my-content": [
+        { type: "HeadingBlock", props: { id: "Example-2" } },
+      ],
+    },
+  }}
+>
+  <Puck.Preview />
+</PuckPreview>
 
 ### Creating multi-column layouts
 
@@ -53,9 +92,62 @@ const config = {
         );
       },
     },
+    HeadingBlock: {
+      render: ({ text }) => <p>{text}</p>,
+    },
   },
 };
 ```
+
+<PuckPreview
+  label="Multi-column DropZone example"
+  config={{
+    components: {
+      Example: {
+        render: ({ puck: { renderDropZone: DropZone } }) => {
+          return (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 16,
+                padding: 32,
+              }}
+            >
+              <DropZone zone="left-column" />
+              <DropZone zone="right-column" />
+            </div>
+          );
+        },
+      },
+      HeadingBlock: {
+        render: ({ content }) => {
+          return <p>{content}</p>;
+        },
+      },
+    },
+  }}
+  data={{
+    content: [{ type: "Example", props: { id: "Example-1" } }],
+    root: { props: {} },
+    zones: {
+      "Example-1:left-column": [
+        {
+          type: "HeadingBlock",
+          props: { id: "Example-2", content: "Left column" },
+        },
+      ],
+      "Example-1:right-column": [
+        {
+          type: "HeadingBlock",
+          props: { id: "Example-3", content: "Right column" },
+        },
+      ],
+    },
+  }}
+>
+  <Puck.Preview />
+</PuckPreview>
 
 ### Reusing the `zone`
 
