@@ -13,5 +13,6 @@ export * from "./components/Render";
 export * from "./lib/migrate";
 export * from "./lib/transform-props";
 export * from "./lib/resolve-all-data";
+export { usePuck } from "./lib/use-puck";
 
 export { FieldLabel } from "./components/InputOrGroup";
