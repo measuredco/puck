@@ -42,7 +42,12 @@ export const Fields = () => {
   const rootProps = data.root.props || data.root;
 
   return (
-    <div className={getClassName()}>
+    <form
+      className={getClassName()}
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+    >
       <div>
         {Object.keys(fields).map((fieldName) => {
           const field = fields[fieldName];
@@ -163,6 +168,6 @@ export const Fields = () => {
           <ClipLoader />
         </div>
       )}
-    </div>
+    </form>
   );
 };
