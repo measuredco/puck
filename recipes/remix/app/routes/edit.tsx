@@ -12,10 +12,11 @@ import invariant from "tiny-invariant";
 
 import puckConfig from "../../puck.config";
 import { getPage, setPage } from "~/models/page.server";
+import { getPuckPath } from "~/getPuckPath";
 
-export const action = async ({ params, request }: ActionFunctionArgs) => {
-  const puckPath = params.puckPath || "/";
-  const formData = await request.formData();
+export const action = async (args: ActionFunctionArgs) => {
+  const puckPath = getPuckPath(args);
+  const formData = await args.request.formData();
   const puckData = formData.get("puckData");
 
   invariant(puckData, "Missing data");
@@ -30,8 +31,8 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles, id: "puck-css" },
 ];
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const puckPath = params.puckPath || "/";
+export const loader = async (args: LoaderFunctionArgs) => {
+  const puckPath = getPuckPath(args);
   const initialData = getPage(puckPath) || {
     content: [],
     root: {},

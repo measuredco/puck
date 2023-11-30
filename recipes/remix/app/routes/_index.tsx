@@ -5,10 +5,10 @@ import { useLoaderData } from "@remix-run/react";
 
 import puckConfig from "../../puck.config";
 import { getPage } from "~/models/page.server";
+import { getPuckPath } from "~/getPuckPath";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  // Get path, and default to slash for root path.
-  const puckPath = params.puckPath || "/";
+export const loader = async (args: LoaderFunctionArgs) => {
+  const puckPath = getPuckPath(args);
   // Get puckData for this path, this could be a database call.
   const puckData = getPage(puckPath);
   if (!puckData) {
