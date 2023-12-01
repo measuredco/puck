@@ -2,7 +2,13 @@ import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Field, UiState } from "../../types/Config";
 
 import styles from "./styles.module.css";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import {
+  ReactElement,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import {
   RadioField,
   SelectField,
@@ -146,7 +152,7 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
     number: customUi.fields?.number || DefaultField,
   };
 
-  const Render = render[field.type] as (props: InputProps) => ReactNode;
+  const Render = render[field.type] as (props: InputProps) => ReactElement;
 
   return <Render {...props} {...localProps} field={field} />;
 };
