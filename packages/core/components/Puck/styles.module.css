@@ -178,20 +178,15 @@
 
 .Puck-root {
   border: 1px solid var(--puck-color-grey-8);
-  box-shadow: 0 0 0 calc(var(--puck-space-px) * 2) var(--puck-color-grey-10);
+  box-shadow: 0 0 0 calc(var(--puck-space-px) * 1.5) var(--puck-color-grey-10);
   margin: var(--puck-space-px);
   min-width: 321px;
-  zoom: 0.75;
 }
 
 @media (min-width: 1198px) {
   .Puck-root {
-    margin: calc(var(--puck-space-px) * 2);
+    margin: calc(var(--puck-space-px) * 1.5);
   }
-}
-
-.Puck--disableZoom .Puck-root {
-  zoom: 1;
 }
 
 .Puck-rightSideBar {
