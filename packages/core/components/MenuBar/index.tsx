@@ -24,7 +24,7 @@ export const MenuBar = ({
   appState: AppState;
   data: Data;
   dispatch: (action: PuckAction) => void;
-  onPublish: (data: Data) => void;
+  onPublish?: (data: Data) => void;
   menuOpen: boolean;
   renderHeaderActions?: (props: {
     state: AppState;
@@ -87,7 +87,7 @@ export const MenuBar = ({
         <div>
           <Button
             onClick={() => {
-              onPublish(data);
+              onPublish && onPublish(data);
             }}
             icon={<Globe size="14px" />}
           >

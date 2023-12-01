@@ -56,7 +56,7 @@ export function Puck({
   data: Data;
   ui?: Partial<UiState>;
   onChange?: (data: Data) => void;
-  onPublish: (data: Data) => void;
+  onPublish?: (data: Data) => void;
   plugins?: Plugin[];
   customUi?: Partial<CustomUi>;
   renderComponentList?: (props: {
@@ -392,7 +392,7 @@ export function Puck({
                         <CustomHeaderActions />
                         <Button
                           onClick={() => {
-                            onPublish(data);
+                            onPublish && onPublish(data);
                           }}
                           icon={<Globe size="14px" />}
                         >
@@ -425,47 +425,9 @@ export function Puck({
                             </IconButton>
                           </div>
                         </div>
-<<<<<<< HEAD
-                        <div className={getClassName("rightSideBarToggle")}>
-                          <IconButton
-                            onClick={() => {
-                              toggleSidebars("right");
-                            }}
-                            title="Toggle right sidebar"
-                          >
-                            <Sidebar focusable="false" />
-                          </IconButton>
-                        </div>
-                      </div>
-                      <div className={getClassName("headerTitle")}>
-                        <Heading rank={2} size="xs">
-                          {headerTitle || rootProps.title || "Page"}
-                          {headerPath && (
-                            <>
-                              {" "}
-                              <code className={getClassName("headerPath")}>
-                                {headerPath}
-                              </code>
-                            </>
-                          )}
-                        </Heading>
-                      </div>
-                      <div className={getClassName("headerTools")}>
-                        <div className={getClassName("menuButton")}>
-                          <IconButton
-                            onClick={() => {
-                              return setMenuOpen(!menuOpen);
-                            }}
-                            title="Toggle menu bar"
-                          >
-                            {menuOpen ? (
-                              <ChevronUp focusable="false" />
-                            ) : (
-                              <ChevronDown focusable="false" />
-=======
                         <div className={getClassName("headerTitle")}>
                           <Heading rank={2} size="xs">
-                            {headerTitle || data.root.props.title || "Page"}
+                            {headerTitle || rootProps.title || "Page"}
                             {headerPath && (
                               <>
                                 {" "}
@@ -473,7 +435,6 @@ export function Puck({
                                   {headerPath}
                                 </code>
                               </>
->>>>>>> b9c0ed2 (feat: introduce UI overrides API)
                             )}
                           </Heading>
                         </div>

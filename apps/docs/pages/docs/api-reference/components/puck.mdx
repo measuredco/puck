@@ -29,7 +29,7 @@ export function Editor() {
 | ----------------------------------------------------- | ------------------------------------ | -------------------------------------------------- | -------- |
 | [`config`](#config)                                   | `config: { components: {} }`         | [Config](/docs/api-reference/configuration/config) | Required |
 | [`data`](#data)                                       | `data: { content: [], root: {} }`    | [Data](/docs/api-reference/data)                   | Required |
-| [`onPublish()`](#onpublishdata)                       | `onPublish: async (data) => {}`      | Function                                           | Required |
+| [`onPublish()`](#onpublishdata)                       | `onPublish: async (data) => {}`      | Function                                           | -        |
 | [`headerPath`](#headerpath)                           | `headerPath: "/my-page"`             | String                                             | -        |
 | [`headerTitle`](#headertitle)                         | `headerTitle: "My Page"`             | String                                             | -        |
 | [`onChange()`](#onchangedata)                         | `onChange: (data) => {}`             | Function                                           | -        |
@@ -91,6 +91,8 @@ export function Editor() {
 }
 ```
 
+## Optional props
+
 ### `onPublish(data)`
 
 Callback that triggers when the user hits the "Publish" button. Use this to save the Puck data to your database.
@@ -112,8 +114,6 @@ export function Editor() {
   );
 }
 ```
-
-## Optional props
 
 ### `headerPath`
 
