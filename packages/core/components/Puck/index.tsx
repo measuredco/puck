@@ -3,6 +3,7 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useReducer,
   useState,
 } from "react";
@@ -31,38 +32,9 @@ import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
+import { CustomUi } from "../../types/CustomUi";
 
 const getClassName = getClassNameFactory("Puck", styles);
-
-export const PluginRenderer = ({
-  children,
-  dispatch,
-  state,
-  plugins,
-  renderMethod,
-}: {
-  children: ReactNode;
-  dispatch: (action: PuckAction) => void;
-  state: AppState;
-  plugins;
-  renderMethod:
-    | "renderRoot"
-    | "renderRootFields"
-    | "renderFields"
-    | "renderComponentList";
-}) => {
-  return plugins
-    .filter((item) => item[renderMethod])
-    .map((item) => item[renderMethod])
-    .reduce(
-      (accChildren, Item) => (
-        <Item dispatch={dispatch} state={state}>
-          {accChildren}
-        </Item>
-      ),
-      children
-    );
-};
 
 export function Puck({
   children,
@@ -72,6 +44,7 @@ export function Puck({
   onChange,
   onPublish,
   plugins = [],
+  customUi = {},
   renderComponentList,
   renderHeader,
   renderHeaderActions,
@@ -85,6 +58,7 @@ export function Puck({
   onChange?: (data: Data) => void;
   onPublish: (data: Data) => void;
   plugins?: Plugin[];
+  customUi?: Partial<CustomUi>;
   renderComponentList?: (props: {
     children: ReactNode;
     dispatch: (action: PuckAction) => void;
@@ -159,58 +133,6 @@ export function Puck({
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
-  const PageFieldWrapper = useCallback(
-    (props) => (
-      <PluginRenderer
-        plugins={plugins}
-        renderMethod="renderRootFields"
-        dispatch={props.dispatch}
-        state={props.state}
-      >
-        {props.children}
-      </PluginRenderer>
-    ),
-    []
-  );
-
-  const ComponentFieldWrapper = useCallback(
-    (props) => (
-      <PluginRenderer
-        plugins={plugins}
-        renderMethod="renderFields"
-        dispatch={props.dispatch}
-        state={props.state}
-      >
-        {props.children}
-      </PluginRenderer>
-    ),
-    []
-  );
-
-  const ComponentListWrapper = useCallback((props) => {
-    const children = (
-      <PluginRenderer
-        plugins={plugins}
-        renderMethod="renderComponentList"
-        dispatch={props.dispatch}
-        state={props.state}
-      >
-        {props.children}
-      </PluginRenderer>
-    );
-
-    // User's render method wraps the plugin render methods
-    return renderComponentList
-      ? renderComponentList({
-          children,
-          dispatch,
-          state: appState,
-        })
-      : children;
-  }, []);
-
-  const FieldWrapper = itemSelector ? ComponentFieldWrapper : PageFieldWrapper;
-
   useEffect(() => {
     if (onChange) onChange(data);
   }, [data]);
@@ -284,6 +206,85 @@ export function Puck({
 
   const disableZoom = children ? true : false;
 
+  const defaultRender = ({ children }) => children;
+  const defaultRenderNoChildren = () => <></>;
+
+  // DEPRECATED
+  const defaultHeaderRender = useMemo(() => {
+    if (renderHeader) {
+      console.warn(
+        "`renderHeader` is deprecated. Please use `customUi.header` and the `usePuck` hook instead"
+      );
+
+      const RenderHeader = ({ actions, ...props }) => {
+        const Comp = renderHeader!;
+
+        return (
+          <Comp {...props} dispatch={dispatch} state={appState}>
+            {actions}
+          </Comp>
+        );
+      };
+
+      return RenderHeader;
+    }
+
+    return defaultRender;
+  }, [renderHeader]);
+
+  // DEPRECATED
+  const defaultHeaderActionsRender = useMemo(() => {
+    if (renderHeaderActions) {
+      console.warn(
+        "`renderHeaderActions` is deprecated. Please use `customUi.headerActions` and the `usePuck` hook instead."
+      );
+
+      const RenderHeader = (props) => {
+        const Comp = renderHeaderActions!;
+
+        return <Comp {...props} dispatch={dispatch} state={appState}></Comp>;
+      };
+
+      return RenderHeader;
+    }
+
+    return defaultRenderNoChildren;
+  }, [renderHeader]);
+
+  // Load all plugins into the custom ui
+  const loadedCustomUi = useMemo(() => {
+    const collected: Partial<CustomUi> = customUi;
+
+    plugins.forEach((plugin) => {
+      Object.keys(plugin.customUi).forEach((customUiType) => {
+        const childNode = collected[customUiType];
+
+        const Comp = (props) =>
+          plugin.customUi[customUiType]({
+            ...props,
+            children: childNode ? childNode(props) : props.children,
+          });
+
+        collected[customUiType] = Comp;
+      });
+    });
+
+    return collected;
+  }, [plugins]);
+
+  const CustomPuck = useMemo(
+    () => loadedCustomUi.puck || defaultRender,
+    [loadedCustomUi]
+  );
+  const CustomHeader = useMemo(
+    () => loadedCustomUi.header || defaultHeaderRender,
+    [loadedCustomUi]
+  );
+  const CustomHeaderActions = useMemo(
+    () => loadedCustomUi.headerActions || defaultHeaderActionsRender,
+    [loadedCustomUi]
+  );
+
   return (
     <div>
       <AppProvider
@@ -294,6 +295,7 @@ export function Puck({
           componentState,
           resolveData,
           plugins,
+          customUi: loadedCustomUi,
         }}
       >
         <DragDropContext
@@ -374,19 +376,20 @@ export function Puck({
               disableZoom,
             }}
           >
-            {children || (
-              <div
-                className={getClassName({
-                  leftSideBarVisible,
-                  menuOpen,
-                  rightSideBarVisible,
-                  disableZoom,
-                })}
-              >
-                <header className={getClassName("header")}>
-                  {renderHeader ? (
-                    renderHeader({
-                      children: (
+            <CustomPuck>
+              {children || (
+                <div
+                  className={getClassName({
+                    leftSideBarVisible,
+                    menuOpen,
+                    rightSideBarVisible,
+                    disableZoom,
+                  })}
+                >
+                  <CustomHeader
+                    actions={
+                      <>
+                        <CustomHeaderActions />
                         <Button
                           onClick={() => {
                             onPublish(data);
@@ -395,23 +398,34 @@ export function Puck({
                         >
                           Publish
                         </Button>
-                      ),
-                      dispatch,
-                      state: appState,
-                    })
-                  ) : (
-                    <div className={getClassName("headerInner")}>
-                      <div className={getClassName("headerToggle")}>
-                        <div className={getClassName("leftSideBarToggle")}>
-                          <IconButton
-                            onClick={() => {
-                              toggleSidebars("left");
-                            }}
-                            title="Toggle left sidebar"
-                          >
-                            <Sidebar focusable="false" />
-                          </IconButton>
+                      </>
+                    }
+                  >
+                    <header className={getClassName("header")}>
+                      <div className={getClassName("headerInner")}>
+                        <div className={getClassName("headerToggle")}>
+                          <div className={getClassName("leftSideBarToggle")}>
+                            <IconButton
+                              onClick={() => {
+                                toggleSidebars("left");
+                              }}
+                              title="Toggle left sidebar"
+                            >
+                              <Sidebar focusable="false" />
+                            </IconButton>
+                          </div>
+                          <div className={getClassName("rightSideBarToggle")}>
+                            <IconButton
+                              onClick={() => {
+                                toggleSidebars("right");
+                              }}
+                              title="Toggle right sidebar"
+                            >
+                              <Sidebar focusable="false" />
+                            </IconButton>
+                          </div>
                         </div>
+<<<<<<< HEAD
                         <div className={getClassName("rightSideBarToggle")}>
                           <IconButton
                             onClick={() => {
@@ -448,59 +462,86 @@ export function Puck({
                               <ChevronUp focusable="false" />
                             ) : (
                               <ChevronDown focusable="false" />
+=======
+                        <div className={getClassName("headerTitle")}>
+                          <Heading rank={2} size="xs">
+                            {headerTitle || data.root.props.title || "Page"}
+                            {headerPath && (
+                              <>
+                                {" "}
+                                <code className={getClassName("headerPath")}>
+                                  {headerPath}
+                                </code>
+                              </>
+>>>>>>> b9c0ed2 (feat: introduce UI overrides API)
                             )}
-                          </IconButton>
+                          </Heading>
                         </div>
-                        <MenuBar
-                          appState={appState}
-                          data={data}
-                          dispatch={dispatch}
-                          onPublish={onPublish}
-                          menuOpen={menuOpen}
-                          renderHeaderActions={renderHeaderActions}
-                          setMenuOpen={setMenuOpen}
-                        />
+                        <div className={getClassName("headerTools")}>
+                          <div className={getClassName("menuButton")}>
+                            <IconButton
+                              onClick={() => {
+                                return setMenuOpen(!menuOpen);
+                              }}
+                              title="Toggle menu bar"
+                            >
+                              {menuOpen ? (
+                                <ChevronUp focusable="false" />
+                              ) : (
+                                <ChevronDown focusable="false" />
+                              )}
+                            </IconButton>
+                          </div>
+                          <MenuBar
+                            appState={appState}
+                            data={data}
+                            dispatch={dispatch}
+                            onPublish={onPublish}
+                            menuOpen={menuOpen}
+                            renderHeaderActions={() => <CustomHeaderActions />}
+                            setMenuOpen={setMenuOpen}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </header>
-                <div className={getClassName("leftSideBar")}>
-                  <SidebarSection title="Components">
-                    <Components />
-                  </SidebarSection>
-                  <SidebarSection title="Outline">
-                    <Outline />
-                  </SidebarSection>
-                </div>
-                <div
-                  className={getClassName("frame")}
-                  onClick={() => setItemSelector(null)}
-                >
-                  <div className={getClassName("root")}>
-                    <Preview />
+                    </header>
+                  </CustomHeader>
+                  <div className={getClassName("leftSideBar")}>
+                    <SidebarSection title="Components" noBorderTop>
+                      <Components />
+                    </SidebarSection>
+                    <SidebarSection title="Outline">
+                      <Outline />
+                    </SidebarSection>
                   </div>
-                  {/* Fill empty space under root */}
                   <div
-                    style={{
-                      background: "var(--puck-color-grey-10)",
-                      height: "100%",
-                      flexGrow: 1,
-                    }}
-                  ></div>
-                </div>
-                <div className={getClassName("rightSideBar")}>
-                  <FieldWrapper dispatch={dispatch} state={appState}>
+                    className={getClassName("frame")}
+                    onClick={() => setItemSelector(null)}
+                  >
+                    <div className={getClassName("root")}>
+                      <Preview />
+                    </div>
+                    {/* Fill empty space under root */}
+                    <div
+                      style={{
+                        background: "var(--puck-color-grey-10)",
+                        height: "100%",
+                        flexGrow: 1,
+                      }}
+                    ></div>
+                  </div>
+                  <div className={getClassName("rightSideBar")}>
                     <SidebarSection
                       noPadding
+                      noBorderTop
                       showBreadcrumbs
                       title={selectedItem ? selectedItem.type : "Page"}
                     >
                       <Fields />
                     </SidebarSection>
-                  </FieldWrapper>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </CustomPuck>
           </DropZoneProvider>
         </DragDropContext>
       </AppProvider>

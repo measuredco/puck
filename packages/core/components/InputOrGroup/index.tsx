@@ -14,6 +14,7 @@ import {
 import { Lock } from "react-feather";
 import { useDebouncedCallback } from "use-debounce";
 import { ObjectField } from "./fields/ObjectField";
+import { useAppContext } from "../Puck/context";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -76,9 +77,9 @@ export const FieldLabelInternal = ({
   );
 };
 
-export type InputProps = {
+export type InputProps<F = Field<any>> = {
   name: string;
-  field: Field<any>;
+  field: F;
   value: any;
   id: string;
   label?: string;
@@ -88,6 +89,8 @@ export type InputProps = {
 };
 
 export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
+  const { customUi } = useAppContext();
+
   const { name, field, value, readOnly } = props;
 
   const [localValue, setLocalValue] = useState(value);
@@ -114,30 +117,6 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
     onChange: onChangeLocal,
   };
 
-  if (field.type === "array") {
-    return <ArrayField {...props} {...localProps} />;
-  }
-
-  if (field.type === "external") {
-    return <ExternalField {...props} {...localProps} />;
-  }
-
-  if (field.type === "object") {
-    return <ObjectField {...props} {...localProps} />;
-  }
-
-  if (field.type === "select") {
-    return <SelectField {...props} {...localProps} />;
-  }
-
-  if (field.type === "textarea") {
-    return <TextareaField {...props} {...localProps} />;
-  }
-
-  if (field.type === "radio") {
-    return <RadioField {...props} {...localProps} />;
-  }
-
   if (field.type === "custom") {
     if (!field.render) {
       return null;
@@ -155,5 +134,19 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
     );
   }
 
-  return <DefaultField {...props} {...localProps} />;
+  const render = {
+    ...customUi.fields,
+    array: customUi.fields?.array || ArrayField,
+    external: customUi.fields?.external || ExternalField,
+    object: customUi.fields?.object || ObjectField,
+    select: customUi.fields?.select || SelectField,
+    textarea: customUi.fields?.textarea || TextareaField,
+    radio: customUi.fields?.radio || RadioField,
+    text: customUi.fields?.text || DefaultField,
+    number: customUi.fields?.number || DefaultField,
+  };
+
+  const Render = render[field.type] as (props: InputProps) => ReactNode;
+
+  return <Render {...props} {...localProps} field={field} />;
 };

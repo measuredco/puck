@@ -4,11 +4,11 @@ import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { LayerTree } from "../../../LayerTree";
 import { useAppContext } from "../../context";
 import { dropZoneContext } from "../../../DropZone";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 
 export const Outline = () => {
-  const { dispatch, state } = useAppContext();
+  const { dispatch, state, customUi } = useAppContext();
   const { data, ui } = state;
   const { itemSelector } = ui;
 
@@ -22,8 +22,10 @@ export const Outline = () => {
     []
   );
 
+  const Wrapper = useMemo(() => customUi.outline || "div", [customUi]);
+
   return (
-    <div>
+    <Wrapper>
       <dropZoneContext.Consumer>
         {(ctx) => (
           <>
@@ -54,6 +56,6 @@ export const Outline = () => {
           </>
         )}
       </dropZoneContext.Consumer>
-    </div>
+    </Wrapper>
   );
 };

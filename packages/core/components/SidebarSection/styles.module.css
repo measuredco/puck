@@ -13,19 +13,23 @@
   background: white;
   padding: 16px;
   border-bottom: 1px solid var(--puck-color-grey-8);
+  border-top: 1px solid var(--puck-color-grey-8);
   overflow-x: auto;
 }
 
+.SidebarSection--noBorderTop > .SidebarSection-title {
+  border-top: 0px;
+}
+
 .SidebarSection-content {
-  border-bottom: 1px solid var(--puck-color-grey-8);
   padding: 16px;
 }
 
-.SidebarSection--noPadding .SidebarSection-content {
+.SidebarSection--noPadding > .SidebarSection-content {
   padding: 0px;
 }
 
-.SidebarSection--noPadding .SidebarSection-content:last-child {
+.SidebarSection--noPadding > .SidebarSection-content:last-child {
   padding-bottom: 4px;
 }
 

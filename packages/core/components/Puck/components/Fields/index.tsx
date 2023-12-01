@@ -12,6 +12,7 @@ import { useAppContext } from "../../context";
 
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
+import { ReactNode, useMemo } from "react";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -19,9 +20,35 @@ const defaultPageFields: Record<string, Field> = {
   title: { type: "text" },
 };
 
+const DefaultForm = ({
+  children,
+  isLoading,
+}: {
+  children: ReactNode;
+  isLoading: boolean;
+}) => {
+  return (
+    <div className={getClassName()}>
+      {children}
+      {isLoading && (
+        <div className={getClassName("loadingOverlay")}>
+          <ClipLoader />
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const Fields = () => {
-  const { selectedItem, state, dispatch, config, resolveData, componentState } =
-    useAppContext();
+  const {
+    selectedItem,
+    state,
+    dispatch,
+    config,
+    resolveData,
+    componentState,
+    customUi,
+  } = useAppContext();
   const { data, ui } = state;
   const { itemSelector } = ui;
 
@@ -41,6 +68,13 @@ export const Fields = () => {
   // DEPRECATED
   const rootProps = data.root.props || data.root;
 
+  const Wrapper = useMemo(
+    () =>
+      (itemSelector ? customUi.form : customUi.rootForm || customUi.form) ||
+      DefaultForm,
+    [customUi, itemSelector]
+  );
+
   return (
     <form
       className={getClassName()}
@@ -48,7 +82,7 @@ export const Fields = () => {
         e.preventDefault();
       }}
     >
-      <div>
+      <Wrapper isLoading={isLoading}>
         {Object.keys(fields).map((fieldName) => {
           const field = fields[fieldName];
 
@@ -162,12 +196,7 @@ export const Fields = () => {
             );
           }
         })}
-      </div>
-      {isLoading && (
-        <div className={getClassName("loadingOverlay")}>
-          <ClipLoader />
-        </div>
-      )}
+      </Wrapper>
     </form>
   );
 };

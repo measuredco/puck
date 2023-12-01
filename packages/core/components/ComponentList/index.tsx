@@ -3,42 +3,85 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Draggable } from "../Draggable";
 import { DragIcon } from "../DragIcon";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { useAppContext } from "../Puck/context";
 import { ChevronDown, ChevronUp } from "react-feather";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 const getClassNameItem = getClassNameFactory("ComponentListItem", styles);
 
-const ComponentListItem = ({
+export const ComponentListDraggable = ({
+  children,
+  id,
+  index,
+}: {
+  children: ReactNode;
+  id: string;
+  index: number;
+}) => (
+  <Draggable key={id} id={id} index={index} showShadow disableAnimations>
+    {() => children}
+  </Draggable>
+);
+
+export const ComponentListItem = ({
   component,
   index,
-  id,
 }: {
   component: string;
   index: number;
-  id: string;
 }) => {
+  const { customUi } = useAppContext();
+
+  const CustomComponentListItem = useMemo(
+    () => customUi.componentListItem || "div",
+    [customUi]
+  );
+
   return (
     <div className={getClassNameItem()}>
-      <Draggable
-        key={component}
-        id={id}
-        index={index}
-        showShadow
-        disableAnimations
-        className={() => getClassNameItem("draggable")}
-      >
-        {() => (
-          <>
-            <div className={getClassNameItem("name")}>{component}</div>
-            <div className={getClassNameItem("icon")}>
-              <DragIcon />
+      <ComponentListDraggable id={component} index={index}>
+        <CustomComponentListItem name={component}>
+          <div className={getClassNameItem("draggableWrapper")}>
+            <div className={getClassNameItem("draggable")}>
+              <div className={getClassNameItem("name")}>{component}</div>
+              <div className={getClassNameItem("icon")}>
+                <DragIcon />
+              </div>
             </div>
-          </>
-        )}
-      </Draggable>
+          </div>
+        </CustomComponentListItem>
+      </ComponentListDraggable>
     </div>
+  );
+};
+
+export const ComponentListDroppable = ({
+  children,
+  droppableId = "component-list",
+  direction = "vertical",
+}: {
+  children: ReactNode;
+  droppableId?: string;
+  direction?: "vertical" | "horizontal";
+}) => {
+  return (
+    <Droppable droppableId={droppableId} isDropDisabled direction={direction}>
+      {(provided, snapshot) => (
+        <div
+          {...provided.droppableProps}
+          ref={provided.innerRef}
+          className={getClassName({
+            isDraggingFrom: !!snapshot.draggingFromThisWith,
+          })}
+        >
+          {children}
+
+          {/* Use different element so we don't clash with :last-of-type */}
+          <span style={{ display: "none" }}>{provided.placeholder}</span>
+        </div>
+      )}
+    </Droppable>
   );
 };
 
@@ -84,34 +127,20 @@ const ComponentList = ({
         </div>
       )}
       <div className={getClassName("content")}>
-        <Droppable
+        <ComponentListDroppable
           droppableId={`component-list${title ? `:${title}` : ""}`}
-          isDropDisabled
         >
-          {(provided, snapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className={getClassName({
-                isDraggingFrom: !!snapshot.draggingFromThisWith,
-              })}
-            >
-              {children ||
-                Object.keys(config.components).map((componentKey, i) => {
-                  return (
-                    <ComponentListItem
-                      key={componentKey}
-                      component={componentKey}
-                      index={i}
-                      id={componentKey}
-                    />
-                  );
-                })}
-              {/* Use different element so we don't clash with :last-of-type */}
-              <span style={{ display: "none" }}>{provided.placeholder}</span>
-            </div>
-          )}
-        </Droppable>
+          {children ||
+            Object.keys(config.components).map((componentKey, i) => {
+              return (
+                <ComponentListItem
+                  key={componentKey}
+                  component={componentKey}
+                  index={i}
+                />
+              );
+            })}
+        </ComponentListDroppable>
       </div>
     </div>
   );
