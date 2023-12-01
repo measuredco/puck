@@ -22,12 +22,10 @@ const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
         flexWrap: "wrap",
         gap: 16,
         padding: "16px 24px",
-        background: "#ffffff90",
+        background: "white",
         color: "black",
         alignItems: "center",
         borderBottom: "1px solid #ddd",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
       }}
       onClick={() => dispatch({ type: "setUi", ui: { itemSelector: null } })}
     >
@@ -49,9 +47,11 @@ const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
 const Tabs = ({
   tabs,
   onTabCollapse,
+  scrollTop,
 }: {
   tabs: { label: string; body: ReactNode }[];
   onTabCollapse: () => void;
+  scrollTop: number;
 }) => {
   const [currentTab, setCurrentTab] = useState(-1);
   const { appState } = usePuck();
@@ -74,6 +74,13 @@ const Tabs = ({
     }
   }, [currentTab, appState.ui.isDragging]);
 
+  useEffect(() => {
+    if (scrollTop === 0) {
+      setCurrentTab(-1);
+      onTabCollapse();
+    }
+  }, [scrollTop]);
+
   return (
     <div
       onClick={(e) => e.stopPropagation()}
@@ -90,8 +97,7 @@ const Tabs = ({
           paddingLeft: 16,
           paddingRight: 16,
           borderBottom: "1px solid #ddd",
-          justifyContent: "center",
-          alignItems: "center",
+          overflowX: "auto",
         }}
       >
         {tabs.map((tab, idx) => {
@@ -100,7 +106,18 @@ const Tabs = ({
             <div
               key={idx}
               onClick={() => {
-                setCurrentTab(idx);
+                if (currentTab === idx) {
+                  setCurrentTab(-1);
+                } else {
+                  setCurrentTab(idx);
+                  if (scrollTop < 20) {
+                    setTimeout(() => {
+                      document
+                        .querySelector("#action-bar")
+                        .scroll({ top: 128, behavior: "smooth" });
+                    }, 25);
+                  }
+                }
               }}
               style={{
                 padding: "16px 16px",
@@ -119,19 +136,30 @@ const Tabs = ({
           style={{
             marginLeft: "auto",
             display: "flex",
-            justifyContent: "center",
+            alignItems: "center",
             gap: 8,
           }}
         >
-          <IconButton
-            onClick={() => {
-              setCurrentTab(currentTab === -1 ? 0 : -1);
-              onTabCollapse();
-            }}
-            title={currentTab !== -1 ? "Collapse Tabs" : "Expand Tabs"}
-          >
-            {currentTab === -1 ? <ChevronUp /> : <ChevronDown />}
-          </IconButton>
+          <div>
+            <IconButton
+              onClick={() => {
+                setCurrentTab(currentTab === -1 ? 0 : -1);
+
+                if (currentTab !== -1) {
+                  onTabCollapse();
+                } else {
+                  setTimeout(() => {
+                    document
+                      .querySelector("#action-bar")
+                      .scroll({ top: 128, behavior: "smooth" });
+                  }, 25);
+                }
+              }}
+              title={currentTab !== -1 ? "Collapse Tabs" : "Expand Tabs"}
+            >
+              {currentTab === -1 ? <ChevronUp /> : <ChevronDown />}
+            </IconButton>
+          </div>
         </div>
       </div>
       <div style={{ overflowX: "auto" }}>
@@ -153,10 +181,10 @@ const Tabs = ({
   );
 };
 
-const CustomPuck = ({ key }: { key: string }) => {
+const CustomPuck = ({ dataKey }: { dataKey: string }) => {
   const [hoveringTabs, setHoveringTabs] = useState(false);
 
-  const tabsOffset = "75vh";
+  const [actionBarScroll, setActionBarScroll] = useState(0);
 
   return (
     <div
@@ -167,7 +195,7 @@ const CustomPuck = ({ key }: { key: string }) => {
       <div style={{ position: "sticky", top: 0, zIndex: 2 }}>
         <CustomHeader
           onPublish={async (data: Data) => {
-            localStorage.setItem(key, JSON.stringify(data));
+            localStorage.setItem(dataKey, JSON.stringify(data));
           }}
         />
       </div>
@@ -175,7 +203,6 @@ const CustomPuck = ({ key }: { key: string }) => {
         style={{
           position: "relative",
           overflowY: hoveringTabs ? "hidden" : "auto",
-          marginBottom: 58, // Magic number: height of action bar
           height: "100vh",
           zIndex: 0,
         }}
@@ -183,23 +210,30 @@ const CustomPuck = ({ key }: { key: string }) => {
         <Puck.Preview />
       </div>
       <div
+        id="action-bar"
         style={{
           position: "fixed",
           bottom: 0,
           overflowY: "auto",
+          overflowX: "hidden",
           maxHeight: "100vh",
           width: "100%",
           boxSizing: "border-box",
-          paddingTop: tabsOffset,
+          paddingTop: "calc(100vh - 58px)",
           pointerEvents: hoveringTabs ? undefined : "none",
           zIndex: 1,
+          overscrollBehavior: "none",
         }}
         onTouchStart={() => setHoveringTabs(false)}
+        onScrollCapture={(e) => {
+          setActionBarScroll(e.currentTarget.scrollTop);
+        }}
       >
         <div
           style={{
             background: "white",
             position: "relative",
+            pointerEvents: "none",
             zIndex: 0,
           }}
           onMouseOver={(e) => {
@@ -210,7 +244,9 @@ const CustomPuck = ({ key }: { key: string }) => {
             e.stopPropagation();
             setHoveringTabs(true);
           }}
-          onMouseOut={() => setHoveringTabs(false)}
+          onMouseOut={() => {
+            setHoveringTabs(false);
+          }}
         >
           {/* Force react to render when hoveringTabs changes, otherwise scroll gets trapped */}
           {hoveringTabs && <span />}
@@ -218,9 +254,11 @@ const CustomPuck = ({ key }: { key: string }) => {
             onTabCollapse={() => {
               setTimeout(() => setHoveringTabs(false), 50);
             }}
+            scrollTop={actionBarScroll}
             tabs={[
               { label: "Components", body: <Puck.Components /> },
               { label: "Fields", body: <Puck.Fields /> },
+              { label: "Outline", body: <Puck.Outline /> },
               {
                 label: "Headings",
                 body: (
@@ -261,9 +299,19 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           ),
           componentListItem: ({ children }) => {
             return (
-              <div style={{ marginRight: 8, color: "black" }}>{children}</div>
+              <div
+                style={{
+                  marginRight: 8,
+                  color: "black",
+                }}
+              >
+                {children}
+              </div>
             );
           },
+          outline: ({ children }) => (
+            <div style={{ padding: 16 }}>{children}</div>
+          ),
           componentList: () => {
             return (
               <ComponentListDroppable
@@ -274,7 +322,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                   style={{
                     display: "flex",
                     pointerEvents: "all",
-                    padding: "16px 24px",
+                    padding: "16px",
                     background: "var(--puck-color-grey-11)",
                   }}
                 >
@@ -284,14 +332,14 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                         key={componentKey}
                         component={componentKey}
                         index={componentIndex}
-                      ></ComponentListItem>
+                      />
                     )
                   )}
                 </div>
               </ComponentListDroppable>
             );
           },
-          puck: () => <CustomPuck key={key} />,
+          puck: () => <CustomPuck dataKey={key} />,
         }}
       ></Puck>
     );
