@@ -12,11 +12,26 @@ export type BaseField = {
 };
 
 export type TextField = BaseField & {
-  type: "text" | "number" | "textarea";
+  type: "text";
+};
+export type NumberField = BaseField & {
+  type: "number";
+};
+
+export type TextareaField = BaseField & {
+  type: "textarea";
 };
 
 export type SelectField = BaseField & {
-  type: "select" | "radio";
+  type: "select";
+  options: {
+    label: string;
+    value: string | number | boolean;
+  }[];
+};
+
+export type RadioField = BaseField & {
+  type: "radio";
   options: {
     label: string;
     value: string | number | boolean;
@@ -94,7 +109,10 @@ export type Field<
   Props extends { [key: string]: any } = { [key: string]: any }
 > =
   | TextField
+  | NumberField
+  | TextareaField
   | SelectField
+  | RadioField
   | ArrayField<Props>
   | ObjectField<Props>
   | ExternalField<Props>

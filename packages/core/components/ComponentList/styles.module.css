@@ -40,8 +40,12 @@
   margin-left: auto;
 }
 
-.ComponentListItem:last-of-type .ComponentListItem-draggable {
-  margin-bottom: 0px;
+.ComponentListItem:last-of-type .ComponentListItem-draggableWrapper {
+  padding-bottom: 0px;
+}
+
+.ComponentListItem-draggableWrapper {
+  padding-bottom: 12px;
 }
 
 .ComponentListItem-draggable {
@@ -54,7 +58,6 @@
   justify-content: space-between;
   align-items: center;
   cursor: grab;
-  margin-bottom: 12px;
 }
 
 .ComponentListItem-name {

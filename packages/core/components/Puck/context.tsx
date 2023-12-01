@@ -3,6 +3,7 @@ import { AppState, Config, UiState } from "../../types/Config";
 import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
 import { Plugin } from "../../types/Plugin";
+import { CustomUi } from "../../types/CustomUi";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: { props: { title: "" } } },
@@ -22,6 +23,7 @@ type AppContext = {
   componentState: Record<string, { loading: boolean }>;
   resolveData: (newAppState: AppState) => void;
   plugins: Plugin[];
+  customUi: Partial<CustomUi>;
 };
 
 export const appContext = createContext<AppContext>({
@@ -31,6 +33,7 @@ export const appContext = createContext<AppContext>({
   componentState: {},
   resolveData: () => {},
   plugins: [],
+  customUi: {},
 });
 
 export const AppProvider = appContext.Provider;

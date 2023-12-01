@@ -4,6 +4,10 @@ export type { PuckAction } from "./reducer/actions";
 
 export * from "./types/Config";
 export * from "./components/Button";
+export {
+  ComponentListDraggable,
+  ComponentListDroppable,
+} from "./components/ComponentList";
 // DEPRECATED
 export * from "./components/DropZone";
 export * from "./components/IconButton";

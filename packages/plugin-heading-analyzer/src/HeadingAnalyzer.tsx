@@ -1,6 +1,6 @@
-import { ReactElement, ReactNode, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
-import { AppState } from "@/core";
+import { usePuck } from "@/core";
 import { Plugin } from "@/core/types/Plugin";
 import { SidebarSection } from "@/core/components/SidebarSection";
 import { OutlineList } from "@/core/components/OutlineList";
@@ -8,7 +8,6 @@ import { OutlineList } from "@/core/components/OutlineList";
 import { scrollIntoView } from "@/core/lib/scroll-into-view";
 
 import ReactFromJSON from "react-from-json";
-import { PuckAction } from "@/core/reducer";
 
 const dataAttr = "data-puck-heading-analyzer-id";
 
@@ -88,15 +87,8 @@ function buildHierarchy(): Block[] {
   return root.children;
 }
 
-const HeadingOutlineAnalyer = ({
-  children,
-  state,
-}: {
-  children: ReactNode;
-  state: AppState;
-  dispatch: (action: PuckAction) => void;
-}) => {
-  const { data } = state;
+export const HeadingAnalyzer = () => {
+  const { appState } = usePuck();
   const [hierarchy, setHierarchy] = useState<Block[]>([]);
   const [firstRender, setFirstRender] = useState(true);
 
@@ -112,91 +104,97 @@ const HeadingOutlineAnalyer = ({
     } else {
       setHierarchy(buildHierarchy());
     }
-  }, [data.content]);
+  }, [appState.data.content]);
 
   return (
     <>
-      {children}
-      <SidebarSection title="Heading Outline">
-        {hierarchy.length === 0 && <div>No headings.</div>}
+      {hierarchy.length === 0 && <div>No headings.</div>}
 
-        <OutlineList>
-          <ReactFromJSON<{
-            Root: (any) => ReactElement;
-            OutlineListItem: (any) => ReactElement;
-          }>
-            mapping={{
-              Root: (props) => <>{props.children}</>,
-              OutlineListItem: (props) => (
-                <OutlineList.Item>
-                  <OutlineList.Clickable>
-                    <small
-                      onClick={
-                        typeof props.analyzeId == "undefined"
-                          ? undefined
-                          : (e) => {
-                              e.stopPropagation();
+      <OutlineList>
+        <ReactFromJSON<{
+          Root: (any) => ReactElement;
+          OutlineListItem: (any) => ReactElement;
+        }>
+          mapping={{
+            Root: (props) => <>{props.children}</>,
+            OutlineListItem: (props) => (
+              <OutlineList.Item>
+                <OutlineList.Clickable>
+                  <small
+                    onClick={
+                      typeof props.analyzeId == "undefined"
+                        ? undefined
+                        : (e) => {
+                            e.stopPropagation();
 
-                              const el = document.querySelector(
-                                `[${dataAttr}="${props.analyzeId}"]`
-                              ) as HTMLElement;
+                            const el = document.querySelector(
+                              `[${dataAttr}="${props.analyzeId}"]`
+                            ) as HTMLElement;
 
-                              const oldStyle = { ...el.style };
+                            const oldStyle = { ...el.style };
 
-                              if (el) {
-                                scrollIntoView(el);
+                            if (el) {
+                              scrollIntoView(el);
 
-                                el.style.outline =
-                                  "4px solid var(--puck-color-rose-5)";
-                                el.style.outlineOffset = "4px";
+                              el.style.outline =
+                                "4px solid var(--puck-color-rose-5)";
+                              el.style.outlineOffset = "4px";
 
-                                setTimeout(() => {
-                                  el.style.outline = oldStyle.outline || "";
-                                  el.style.outlineOffset =
-                                    oldStyle.outlineOffset || "";
-                                }, 2000);
-                              }
+                              setTimeout(() => {
+                                el.style.outline = oldStyle.outline || "";
+                                el.style.outlineOffset =
+                                  oldStyle.outlineOffset || "";
+                              }, 2000);
                             }
-                      }
-                    >
-                      {props.missing ? (
-                        <span style={{ color: "var(--puck-color-red)" }}>
-                          <b>H{props.rank}</b>: Missing
-                        </span>
-                      ) : (
-                        <span>
-                          <b>H{props.rank}</b>: {props.text}
-                        </span>
-                      )}
-                    </small>
-                  </OutlineList.Clickable>
-                  <OutlineList>{props.children}</OutlineList>
-                </OutlineList.Item>
-              ),
-            }}
-            entry={{
-              props: { children: hierarchy },
-              type: "Root",
-            }}
-            mapProp={(prop) => {
-              if (prop && prop.rank) {
-                return {
-                  type: "OutlineListItem",
-                  props: prop,
-                };
-              }
+                          }
+                    }
+                  >
+                    {props.missing ? (
+                      <span style={{ color: "var(--puck-color-red)" }}>
+                        <b>H{props.rank}</b>: Missing
+                      </span>
+                    ) : (
+                      <span>
+                        <b>H{props.rank}</b>: {props.text}
+                      </span>
+                    )}
+                  </small>
+                </OutlineList.Clickable>
+                <OutlineList>{props.children}</OutlineList>
+              </OutlineList.Item>
+            ),
+          }}
+          entry={{
+            props: { children: hierarchy },
+            type: "Root",
+          }}
+          mapProp={(prop) => {
+            if (prop && prop.rank) {
+              return {
+                type: "OutlineListItem",
+                props: prop,
+              };
+            }
 
-              return prop;
-            }}
-          />
-        </OutlineList>
-      </SidebarSection>
+            return prop;
+          }}
+        />
+      </OutlineList>
     </>
   );
 };
 
-const HeadingAnalyzer: Plugin = {
-  renderRootFields: HeadingOutlineAnalyer,
+const headingAnalyzer: Plugin = {
+  customUi: {
+    rootForm: ({ children }) => (
+      <>
+        {children}
+        <SidebarSection title="Heading Outline">
+          <HeadingAnalyzer />
+        </SidebarSection>
+      </>
+    ),
+  },
 };
 
-export default HeadingAnalyzer;
+export default headingAnalyzer;

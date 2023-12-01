@@ -14,6 +14,7 @@ export const SidebarSection = ({
   title,
   background,
   showBreadcrumbs,
+  noBorderTop,
   noPadding,
   isLoading,
 }: {
@@ -21,6 +22,7 @@ export const SidebarSection = ({
   title: ReactNode;
   background?: string;
   showBreadcrumbs?: boolean;
+  noBorderTop?: boolean;
   noPadding?: boolean;
   isLoading?: boolean | null;
 }) => {
@@ -28,7 +30,10 @@ export const SidebarSection = ({
   const breadcrumbs = useBreadcrumbs(1);
 
   return (
-    <div className={getClassName({ noPadding })} style={{ background }}>
+    <div
+      className={getClassName({ noBorderTop, noPadding })}
+      style={{ background }}
+    >
       <div className={getClassName("title")}>
         <div className={getClassName("breadcrumbs")}>
           {showBreadcrumbs
