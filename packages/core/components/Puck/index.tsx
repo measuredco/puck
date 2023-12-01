@@ -300,9 +300,11 @@ export function Puck({
           onBeforeDragStart={(start) => {
             onDragStartOrUpdate(start);
             setItemSelector(null);
+            dispatch({ type: "setUi", ui: { isDragging: true } });
           }}
           onDragEnd={(droppedItem) => {
             setDraggedItem(undefined);
+            dispatch({ type: "setUi", ui: { isDragging: false } });
 
             // User cancel drag
             if (!droppedItem.destination) {

@@ -13,6 +13,7 @@ export const defaultAppState: AppState = {
     arrayState: {},
     itemSelector: null,
     componentList: {},
+    isDragging: false,
   },
 };
 
