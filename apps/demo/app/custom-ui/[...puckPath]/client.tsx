@@ -68,6 +68,12 @@ const Tabs = ({
     currentTabRef.current = currentTab;
   }, [currentTab]);
 
+  useEffect(() => {
+    if (appState.ui.isDragging && currentTab === 1) {
+      setCurrentTab(-1);
+    }
+  }, [currentTab, appState.ui.isDragging]);
+
   return (
     <div
       onClick={(e) => e.stopPropagation()}

@@ -261,6 +261,7 @@ export type UiState = {
       expanded?: boolean;
     }
   >;
+  isDragging: boolean;
 };
 
 export type AppState = { data: Data; ui: UiState };
