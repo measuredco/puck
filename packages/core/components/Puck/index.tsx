@@ -198,8 +198,6 @@ export function Puck({
     };
   }, []);
 
-  const disableZoom = children ? true : false;
-
   const defaultRender = ({ children }) => children;
   const defaultRenderNoChildren = () => <></>;
 
@@ -278,6 +276,8 @@ export function Puck({
     () => loadedCustomUi.headerActions || defaultHeaderActionsRender,
     [loadedCustomUi]
   );
+
+  const disableZoom = children || loadedCustomUi.puck ? true : false;
 
   return (
     <div>
