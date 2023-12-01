@@ -38,7 +38,7 @@ export const ComponentListItem = ({
   const CustomComponentListItem = useMemo(
     () =>
       customUi.componentListItem ||
-      (({ children }) => (
+      (({ children }: { name: string; children: ReactNode }) => (
         <div className={getClassNameItem("default")}>{children}</div>
       )),
     [customUi]
