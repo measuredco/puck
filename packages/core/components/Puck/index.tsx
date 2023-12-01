@@ -45,7 +45,6 @@ export function Puck({
   onPublish,
   plugins = [],
   customUi = {},
-  renderComponentList,
   renderHeader,
   renderHeaderActions,
   headerTitle,
@@ -59,11 +58,6 @@ export function Puck({
   onPublish?: (data: Data) => void;
   plugins?: Plugin[];
   customUi?: Partial<CustomUi>;
-  renderComponentList?: (props: {
-    children: ReactNode;
-    dispatch: (action: PuckAction) => void;
-    state: AppState;
-  }) => ReactElement;
   renderHeader?: (props: {
     children: ReactNode;
     dispatch: (action: PuckAction) => void;
