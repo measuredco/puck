@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import resolvePuckPath from "./resolve-puck-path";
+import resolvePuckPath from "../../lib/resolve-puck-path";
 import { Metadata } from "next";
 
 const Client = dynamic(() => import("./client"), {
