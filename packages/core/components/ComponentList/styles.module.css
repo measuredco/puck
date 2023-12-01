@@ -40,11 +40,13 @@
   margin-left: auto;
 }
 
-.ComponentListItem:last-of-type .ComponentListItem-draggableWrapper {
+.ComponentListItem:last-of-type
+  .ComponentListItem-default
+  .ComponentListItem-draggableWrapper {
   padding-bottom: 0px;
 }
 
-.ComponentListItem-draggableWrapper {
+.ComponentListItem-default .ComponentListItem-draggableWrapper {
   padding-bottom: 12px;
 }
 

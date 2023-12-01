@@ -25,15 +25,17 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           }}
           plugins={[headingAnalyzer]}
           headerPath={path}
-          renderHeaderActions={() => (
-            <>
-              <div>
-                <Button href={path} newTab variant="secondary">
-                  View page
-                </Button>
-              </div>
-            </>
-          )}
+          customUi={{
+            headerActions: () => (
+              <>
+                <div>
+                  <Button href={path} newTab variant="secondary">
+                    View page
+                  </Button>
+                </div>
+              </>
+            ),
+          }}
         />
       </div>
     );

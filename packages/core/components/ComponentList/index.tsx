@@ -26,21 +26,27 @@ export const ComponentListDraggable = ({
 
 export const ComponentListItem = ({
   component,
+  id = component,
   index,
 }: {
   component: string;
+  id?: string;
   index: number;
 }) => {
   const { customUi } = useAppContext();
 
   const CustomComponentListItem = useMemo(
-    () => customUi.componentListItem || "div",
+    () =>
+      customUi.componentListItem ||
+      (({ children }) => (
+        <div className={getClassNameItem("default")}>{children}</div>
+      )),
     [customUi]
   );
 
   return (
     <div className={getClassNameItem()}>
-      <ComponentListDraggable id={component} index={index}>
+      <ComponentListDraggable id={id} index={index}>
         <CustomComponentListItem name={component}>
           <div className={getClassNameItem("draggableWrapper")}>
             <div className={getClassNameItem("draggable")}>
