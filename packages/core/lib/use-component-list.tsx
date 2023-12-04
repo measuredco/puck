@@ -29,7 +29,7 @@ export const useComponentList = (config: Config, ui: UiState) => {
                 return (
                   <ComponentList.Item
                     key={componentName}
-                    component={componentName as string}
+                    name={componentName as string}
                     index={i}
                     id={`${categoryKey}::${componentName}`}
                   />
@@ -59,7 +59,7 @@ export const useComponentList = (config: Config, ui: UiState) => {
               return (
                 <ComponentList.Item
                   key={componentName}
-                  component={componentName as string}
+                  name={componentName as string}
                   index={i}
                   id={`other::${componentName}`}
                 />

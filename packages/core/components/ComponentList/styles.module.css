@@ -39,37 +39,3 @@
 .ComponentList-titleIcon {
   margin-left: auto;
 }
-
-.ComponentListItem:last-of-type
-  .ComponentListItem-default
-  .ComponentListItem-draggableWrapper {
-  padding-bottom: 0px;
-}
-
-.ComponentListItem-default .ComponentListItem-draggableWrapper {
-  padding-bottom: 12px;
-}
-
-.ComponentListItem-draggable {
-  background: white;
-  padding: 12px;
-  display: flex;
-  border: 1px var(--puck-color-grey-8) solid;
-  border-radius: 4px;
-  font-size: var(--puck-font-size-xxs);
-  justify-content: space-between;
-  align-items: center;
-  cursor: grab;
-}
-
-.ComponentListItem-name {
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ComponentList:not(.ComponentList--isDraggingFrom)
-  .ComponentListItem-draggable:hover {
-  background-color: var(--puck-color-azure-9);
-  color: var(--puck-color-azure-4);
-}
