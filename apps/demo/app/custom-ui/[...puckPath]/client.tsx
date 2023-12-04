@@ -9,7 +9,7 @@ import config from "../../../config";
 import { useDemoData } from "../../../lib/use-demo-data";
 import { IconButton, usePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { Drawer, DrawerItem } from "@/core/components/Drawer";
+import { Drawer } from "@/core/components/Drawer";
 import { ChevronUp, ChevronDown, Globe } from "react-feather";
 
 const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
@@ -313,7 +313,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                 >
                   {Object.keys(config.components).map(
                     (componentKey, componentIndex) => (
-                      <DrawerItem
+                      <Drawer.Item
                         key={componentKey}
                         name={componentKey}
                         index={componentIndex}
@@ -327,7 +327,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                             {children}
                           </div>
                         )}
-                      </DrawerItem>
+                      </Drawer.Item>
                     )
                   )}
                 </div>

@@ -8,7 +8,7 @@ import { ReactNode, useMemo } from "react";
 const getClassName = getClassNameFactory("Drawer", styles);
 const getClassNameItem = getClassNameFactory("DrawerItem", styles);
 
-export const DrawerDraggable = ({
+const DrawerDraggable = ({
   children,
   id,
   index,
@@ -22,7 +22,7 @@ export const DrawerDraggable = ({
   </Draggable>
 );
 
-export const DrawerItem = ({
+const DrawerItem = ({
   name,
   children,
   id = name,
@@ -88,3 +88,6 @@ export const Drawer = ({
     </Droppable>
   );
 };
+
+Drawer.Draggable = DrawerDraggable;
+Drawer.Item = DrawerItem;

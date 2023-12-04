@@ -3,7 +3,7 @@ import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ReactNode } from "react";
 import { useAppContext } from "../Puck/context";
 import { ChevronDown, ChevronUp } from "react-feather";
-import { Drawer, DrawerItem } from "../Drawer";
+import { Drawer } from "../Drawer";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 
@@ -19,9 +19,9 @@ const ComponentListItem = ({
   const { customUi } = useAppContext();
 
   return (
-    <DrawerItem name={name} id={id} index={index}>
+    <Drawer.Item name={name} id={id} index={index}>
       {customUi.componentDrawerItem}
-    </DrawerItem>
+    </Drawer.Item>
   );
 };
 
@@ -71,7 +71,7 @@ const ComponentList = ({
           {children ||
             Object.keys(config.components).map((componentKey, i) => {
               return (
-                <DrawerItem key={componentKey} name={componentKey} index={i} />
+                <Drawer.Item key={componentKey} name={componentKey} index={i} />
               );
             })}
         </Drawer>

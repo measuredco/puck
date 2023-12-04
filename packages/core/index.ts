@@ -4,7 +4,7 @@ export type { PuckAction } from "./reducer/actions";
 
 export * from "./types/Config";
 export * from "./components/Button";
-export { Drawer, DrawerDraggable, DrawerItem } from "./components/Drawer";
+export { Drawer } from "./components/Drawer";
 
 // DEPRECATED
 export * from "./components/DropZone";
