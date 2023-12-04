@@ -1,0 +1,39 @@
+---
+title: <Puck.Preview>
+---
+
+# \<Puck.Preview\>
+
+Render a drag-and-drop preview for the current data when composing a custom Puck UI.
+
+```tsx {5} copy
+import { Puck } from "@measured/puck";
+
+export function Editor() {
+  return <Puck {/*...*/}>
+    <Puck.Preview />
+  </Puck>;
+}
+```
+
+## Props
+
+| Param       | Example                    | Type   | Status |
+| ----------- | -------------------------- | ------ | ------ |
+| [`id`](#id) | `id: "my-preview-content"` | String | -      |
+
+## Optional props
+
+### `id`
+
+A unique identifier for the preview frame. Default: `puck-preview`.
+
+```tsx {5} copy
+import { Puck } from "@measured/puck";
+
+export function Editor() {
+  return <Puck {/*...*/}>
+    <Puck.Preview id="my-frame" />
+  </Puck>;
+}
+```

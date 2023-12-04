@@ -19,7 +19,7 @@ const initialData = {
 };
 
 export function Editor() {
-  return <Puck config={config} data={initialData} onPublish={() => {}} />;
+  return <Puck config={config} data={initialData} />;
 }
 ```
 
@@ -30,6 +30,7 @@ export function Editor() {
 | [`config`](#config)                                   | `config: { components: {} }`         | [Config](/docs/api-reference/configuration/config) | Required |
 | [`data`](#data)                                       | `data: { content: [], root: {} }`    | [Data](/docs/api-reference/data)                   | Required |
 | [`onPublish()`](#onpublishdata)                       | `onPublish: async (data) => {}`      | Function                                           | -        |
+| [`children()`](#onpublishdata)                        | `children: <Puck.Preview />`         | ReactNode                                          | -        |
 | [`headerPath`](#headerpath)                           | `headerPath: "/my-page"`             | String                                             | -        |
 | [`headerTitle`](#headertitle)                         | `headerTitle: "My Page"`             | String                                             | -        |
 | [`onChange()`](#onchangedata)                         | `onChange: (data) => {}`             | Function                                           | -        |
@@ -111,6 +112,20 @@ export function Editor() {
       }}
       // ...
     />
+  );
+}
+```
+
+### `children`
+
+Render custom nodes to compose custom Puck interfaces.
+
+```tsx {4-9} copy
+export function Editor() {
+  return (
+    <Puck /*...*/>
+      <Puck.Preview />
+    </Puck>
   );
 }
 ```

@@ -1,0 +1,21 @@
+---
+title: <Puck.Components>
+---
+
+# \<Puck.Components\>
+
+Render a draggable list of components based on the [user-defined components](/docs/api-reference/configuration/config#components) when composing a custom Puck UI. Respects the [`categories` API](/docs/api-reference/configuration/config#categories).
+
+```tsx {5} copy
+import { Puck } from "@measured/puck";
+
+export function Editor() {
+  return <Puck {/*...*/}>
+    <Puck.Components />
+  </Puck>;
+}
+```
+
+## Props
+
+This component doesn't accept any props.
