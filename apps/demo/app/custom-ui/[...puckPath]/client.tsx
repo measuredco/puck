@@ -7,9 +7,9 @@ import { Button } from "@/core/components/Button";
 import { HeadingAnalyzer } from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config from "../../../config";
 import { useDemoData } from "../../../lib/use-demo-data";
-import { ComponentListDroppable, IconButton, usePuck } from "@/core";
+import { IconButton, usePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { ComponentListItem } from "@/core/components/ComponentList";
+import { Drawer, DrawerItem } from "@/core/components/Drawer";
 import { ChevronUp, ChevronDown, Globe } from "react-feather";
 
 const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
@@ -297,27 +297,12 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
               </div>
             </>
           ),
-          componentListItem: ({ children }) => {
-            return (
-              <div
-                style={{
-                  marginRight: 8,
-                  color: "black",
-                }}
-              >
-                {children}
-              </div>
-            );
-          },
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
           ),
-          componentList: () => {
+          componentDrawer: () => {
             return (
-              <ComponentListDroppable
-                droppableId={`component-list`}
-                direction="horizontal"
-              >
+              <Drawer droppableId={`component-list`} direction="horizontal">
                 <div
                   style={{
                     display: "flex",
@@ -328,15 +313,25 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                 >
                   {Object.keys(config.components).map(
                     (componentKey, componentIndex) => (
-                      <ComponentListItem
+                      <DrawerItem
                         key={componentKey}
-                        component={componentKey}
+                        name={componentKey}
                         index={componentIndex}
-                      />
+                      >
+                        {({ children }) => (
+                          <div
+                            style={{
+                              marginRight: 8,
+                            }}
+                          >
+                            {children}
+                          </div>
+                        )}
+                      </DrawerItem>
                     )
                   )}
                 </div>
-              </ComponentListDroppable>
+              </Drawer>
             );
           },
           puck: () => <CustomPuck dataKey={key} />,
