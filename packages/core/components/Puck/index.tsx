@@ -198,8 +198,13 @@ export function Puck({
     };
   }, []);
 
-  const defaultRender = ({ children }) => children;
-  const defaultRenderNoChildren = () => <></>;
+  const defaultRender = useMemo(
+    () =>
+      ({ children }) =>
+        children,
+    []
+  );
+  const defaultRenderNoChildren = useMemo(() => () => <></>, []);
 
   // DEPRECATED
   const defaultHeaderRender = useMemo(() => {
