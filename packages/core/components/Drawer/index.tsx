@@ -17,7 +17,14 @@ const DrawerDraggable = ({
   id: string;
   index: number;
 }) => (
-  <Draggable key={id} id={id} index={index} showShadow disableAnimations>
+  <Draggable
+    key={id}
+    id={id}
+    index={index}
+    showShadow
+    disableAnimations
+    className={() => getClassNameItem()}
+  >
     {() => children}
   </Draggable>
 );
@@ -43,20 +50,18 @@ const DrawerItem = ({
   );
 
   return (
-    <div className={getClassNameItem()}>
-      <DrawerDraggable id={id} index={index}>
-        <CustomInner name={name}>
-          <div className={getClassNameItem("draggableWrapper")}>
-            <div className={getClassNameItem("draggable")}>
-              <div className={getClassNameItem("name")}>{name}</div>
-              <div className={getClassNameItem("icon")}>
-                <DragIcon />
-              </div>
+    <DrawerDraggable id={id} index={index}>
+      <CustomInner name={name}>
+        <div className={getClassNameItem("draggableWrapper")}>
+          <div className={getClassNameItem("draggable")}>
+            <div className={getClassNameItem("name")}>{name}</div>
+            <div className={getClassNameItem("icon")}>
+              <DragIcon />
             </div>
           </div>
-        </CustomInner>
-      </DrawerDraggable>
-    </div>
+        </div>
+      </CustomInner>
+    </DrawerDraggable>
   );
 };
 
@@ -89,5 +94,4 @@ export const Drawer = ({
   );
 };
 
-Drawer.Draggable = DrawerDraggable;
 Drawer.Item = DrawerItem;
