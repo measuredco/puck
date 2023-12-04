@@ -1,0 +1,30 @@
+.DrawerItem:last-of-type .DrawerItem-default .DrawerItem-draggableWrapper {
+  padding-bottom: 0px;
+}
+
+.DrawerItem-default .DrawerItem-draggableWrapper {
+  padding-bottom: 12px;
+}
+
+.DrawerItem-draggable {
+  background: white;
+  padding: 12px;
+  display: flex;
+  border: 1px var(--puck-color-grey-8) solid;
+  border-radius: 4px;
+  font-size: var(--puck-font-size-xxs);
+  justify-content: space-between;
+  align-items: center;
+  cursor: grab;
+}
+
+.Drawer:not(.Drawer--isDraggingFrom) .DrawerItem-draggable:hover {
+  background-color: var(--puck-color-azure-9);
+  color: var(--puck-color-azure-4);
+}
+
+.DrawerItem-name {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
