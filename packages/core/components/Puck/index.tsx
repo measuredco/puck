@@ -32,7 +32,7 @@ import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
-import { CustomUi } from "../../types/CustomUi";
+import { Overrides } from "../../types/Overrides";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -44,7 +44,7 @@ export function Puck({
   onChange,
   onPublish,
   plugins = [],
-  customUi = {},
+  overrides = {},
   renderHeader,
   renderHeaderActions,
   headerTitle,
@@ -57,7 +57,7 @@ export function Puck({
   onChange?: (data: Data) => void;
   onPublish?: (data: Data) => void;
   plugins?: Plugin[];
-  customUi?: Partial<CustomUi>;
+  overrides?: Partial<Overrides>;
   renderHeader?: (props: {
     children: ReactNode;
     dispatch: (action: PuckAction) => void;
@@ -210,7 +210,7 @@ export function Puck({
   const defaultHeaderRender = useMemo(() => {
     if (renderHeader) {
       console.warn(
-        "`renderHeader` is deprecated. Please use `customUi.header` and the `usePuck` hook instead"
+        "`renderHeader` is deprecated. Please use `overrides.header` and the `usePuck` hook instead"
       );
 
       const RenderHeader = ({ actions, ...props }) => {
@@ -233,7 +233,7 @@ export function Puck({
   const defaultHeaderActionsRender = useMemo(() => {
     if (renderHeaderActions) {
       console.warn(
-        "`renderHeaderActions` is deprecated. Please use `customUi.headerActions` and the `usePuck` hook instead."
+        "`renderHeaderActions` is deprecated. Please use `overrides.headerActions` and the `usePuck` hook instead."
       );
 
       const RenderHeader = (props) => {
@@ -249,20 +249,20 @@ export function Puck({
   }, [renderHeader]);
 
   // Load all plugins into the custom ui
-  const loadedCustomUi = useMemo(() => {
-    const collected: Partial<CustomUi> = customUi;
+  const loadedOverrides = useMemo(() => {
+    const collected: Partial<Overrides> = overrides;
 
     plugins.forEach((plugin) => {
-      Object.keys(plugin.customUi).forEach((customUiType) => {
-        const childNode = collected[customUiType];
+      Object.keys(plugin.overrides).forEach((overridesType) => {
+        const childNode = collected[overridesType];
 
         const Comp = (props) =>
-          plugin.customUi[customUiType]({
+          plugin.overrides[overridesType]({
             ...props,
             children: childNode ? childNode(props) : props.children,
           });
 
-        collected[customUiType] = Comp;
+        collected[overridesType] = Comp;
       });
     });
 
@@ -270,19 +270,19 @@ export function Puck({
   }, [plugins]);
 
   const CustomPuck = useMemo(
-    () => loadedCustomUi.puck || defaultRender,
-    [loadedCustomUi]
+    () => loadedOverrides.puck || defaultRender,
+    [loadedOverrides]
   );
   const CustomHeader = useMemo(
-    () => loadedCustomUi.header || defaultHeaderRender,
-    [loadedCustomUi]
+    () => loadedOverrides.header || defaultHeaderRender,
+    [loadedOverrides]
   );
   const CustomHeaderActions = useMemo(
-    () => loadedCustomUi.headerActions || defaultHeaderActionsRender,
-    [loadedCustomUi]
+    () => loadedOverrides.headerActions || defaultHeaderActionsRender,
+    [loadedOverrides]
   );
 
-  const disableZoom = children || loadedCustomUi.puck ? true : false;
+  const disableZoom = children || loadedOverrides.puck ? true : false;
 
   return (
     <div>
@@ -294,7 +294,7 @@ export function Puck({
           componentState,
           resolveData,
           plugins,
-          customUi: loadedCustomUi,
+          overrides: loadedOverrides,
         }}
       >
         <DragDropContext

@@ -287,16 +287,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
         config={config}
         data={data}
         headerPath={path}
-        customUi={{
-          headerActions: () => (
-            <>
-              <div>
-                <Button href={path} newTab variant="secondary">
-                  View page
-                </Button>
-              </div>
-            </>
-          ),
+        overrides={{
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
           ),
@@ -336,7 +327,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           },
           puck: () => <CustomPuck dataKey={key} />,
         }}
-      ></Puck>
+      />
     );
   }
 

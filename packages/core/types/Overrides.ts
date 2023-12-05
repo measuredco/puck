@@ -9,7 +9,7 @@ type RenderFunc<
 > = (props: Props) => ReactElement;
 
 // All direct render methods, excluding fields
-export const customUiKeys = [
+export const overrideKeys = [
   "header",
   "headerActions",
   "root",
@@ -20,11 +20,11 @@ export const customUiKeys = [
   "puck",
 ] as const;
 
-type CustomUiGeneric<
-  Shape extends { [key in (typeof customUiKeys)[number]]: any }
+type OverridesGeneric<
+  Shape extends { [key in (typeof overrideKeys)[number]]: any }
 > = Shape;
 
-export type CustomUi = CustomUiGeneric<{
+export type Overrides = OverridesGeneric<{
   fieldTypes: Partial<FieldRenderFunctions>;
   header: RenderFunc<{ actions: ReactNode; children: ReactNode }>;
   headerActions: RenderFunc<{}>;

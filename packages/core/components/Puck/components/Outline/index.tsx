@@ -8,7 +8,7 @@ import { useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 
 export const Outline = () => {
-  const { dispatch, state, customUi } = useAppContext();
+  const { dispatch, state, overrides } = useAppContext();
   const { data, ui } = state;
   const { itemSelector } = ui;
 
@@ -22,7 +22,7 @@ export const Outline = () => {
     []
   );
 
-  const Wrapper = useMemo(() => customUi.outline || "div", [customUi]);
+  const Wrapper = useMemo(() => overrides.outline || "div", [overrides]);
 
   return (
     <Wrapper>

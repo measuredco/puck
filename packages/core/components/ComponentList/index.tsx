@@ -16,11 +16,11 @@ const ComponentListItem = ({
   id?: string;
   index: number;
 }) => {
-  const { customUi } = useAppContext();
+  const { overrides } = useAppContext();
 
   return (
     <Drawer.Item name={name} id={id} index={index}>
-      {customUi.componentDrawerItem}
+      {overrides.componentDrawerItem}
     </Drawer.Item>
   );
 };
