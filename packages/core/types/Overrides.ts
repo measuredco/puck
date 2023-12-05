@@ -12,12 +12,12 @@ type RenderFunc<
 export const overrideKeys = [
   "header",
   "headerActions",
-  "root",
   "fields",
   "components",
   "componentItem",
   "outline",
   "puck",
+  "preview",
 ] as const;
 
 type OverridesGeneric<
@@ -28,9 +28,7 @@ export type Overrides = OverridesGeneric<{
   fieldTypes: Partial<FieldRenderFunctions>;
   header: RenderFunc<{ actions: ReactNode; children: ReactNode }>;
   headerActions: RenderFunc<{}>;
-  root: RenderFunc;
-  rootForm: RenderFunc<{ children: ReactNode; isLoading: boolean }>;
-  form: RenderFunc<{ children: ReactNode; isLoading: boolean }>;
+  preview: RenderFunc;
   fields: RenderFunc<{
     children: ReactNode;
     isLoading: boolean;
