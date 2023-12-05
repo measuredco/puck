@@ -14,8 +14,8 @@ export const overrideKeys = [
   "headerActions",
   "root",
   "fields",
-  "componentList",
-  "componentListItem",
+  "components",
+  "componentItem",
   "outline",
   "puck",
 ] as const;
@@ -36,8 +36,8 @@ export type Overrides = OverridesGeneric<{
     isLoading: boolean;
     itemSelector?: ItemSelector | null;
   }>;
-  componentList: RenderFunc;
-  componentListItem: RenderFunc<{ children: ReactNode; name: string }>;
+  components: RenderFunc;
+  componentItem: RenderFunc;
   outline: RenderFunc;
   puck: RenderFunc;
 }>;
