@@ -1,5 +1,5 @@
-import { CustomUi } from "./CustomUi";
+import { Overrides } from "./Overrides";
 
 export type Plugin = {
-  customUi: Partial<CustomUi>;
+  overrides: Partial<Overrides>;
 };

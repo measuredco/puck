@@ -95,7 +95,7 @@ export type InputProps<F = Field<any>> = {
 };
 
 export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
-  const { customUi } = useAppContext();
+  const { overrides } = useAppContext();
 
   const { name, field, value, readOnly } = props;
 
@@ -152,15 +152,15 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
   };
 
   const render = {
-    ...customUi.fieldTypes,
-    array: customUi.fieldTypes?.array || defaultFields.array,
-    external: customUi.fieldTypes?.external || defaultFields.external,
-    object: customUi.fieldTypes?.object || defaultFields.object,
-    select: customUi.fieldTypes?.select || defaultFields.select,
-    textarea: customUi.fieldTypes?.textarea || defaultFields.textarea,
-    radio: customUi.fieldTypes?.radio || defaultFields.radio,
-    text: customUi.fieldTypes?.text || defaultFields.text,
-    number: customUi.fieldTypes?.number || defaultFields.number,
+    ...overrides.fieldTypes,
+    array: overrides.fieldTypes?.array || defaultFields.array,
+    external: overrides.fieldTypes?.external || defaultFields.external,
+    object: overrides.fieldTypes?.object || defaultFields.object,
+    select: overrides.fieldTypes?.select || defaultFields.select,
+    textarea: overrides.fieldTypes?.textarea || defaultFields.textarea,
+    radio: overrides.fieldTypes?.radio || defaultFields.radio,
+    text: overrides.fieldTypes?.text || defaultFields.text,
+    number: overrides.fieldTypes?.number || defaultFields.number,
   };
 
   const mergedProps = { ...props, ...localProps, field };

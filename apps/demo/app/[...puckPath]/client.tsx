@@ -25,7 +25,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           }}
           plugins={[headingAnalyzer]}
           headerPath={path}
-          customUi={{
+          overrides={{
             headerActions: () => (
               <>
                 <div>

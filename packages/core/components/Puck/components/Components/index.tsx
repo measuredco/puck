@@ -4,11 +4,11 @@ import { ComponentList } from "../../../ComponentList";
 import { useMemo } from "react";
 
 export const Components = () => {
-  const { config, state, customUi } = useAppContext();
+  const { config, state, overrides } = useAppContext();
 
   const componentList = useComponentList(config, state.ui);
 
-  const Wrapper = useMemo(() => customUi.componentList || "div", [customUi]);
+  const Wrapper = useMemo(() => overrides.componentList || "div", [overrides]);
 
   return (
     <Wrapper>

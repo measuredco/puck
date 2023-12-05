@@ -185,7 +185,7 @@ export const HeadingAnalyzer = () => {
 };
 
 const headingAnalyzer: Plugin = {
-  customUi: {
+  overrides: {
     fields: ({ children, itemSelector }) => (
       <>
         {children}

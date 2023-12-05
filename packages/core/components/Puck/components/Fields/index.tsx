@@ -47,7 +47,7 @@ export const Fields = () => {
     config,
     resolveData,
     componentState,
-    customUi,
+    overrides,
   } = useAppContext();
   const { data, ui } = state;
   const { itemSelector } = ui;
@@ -68,7 +68,7 @@ export const Fields = () => {
   // DEPRECATED
   const rootProps = data.root.props || data.root;
 
-  const Wrapper = useMemo(() => customUi.fields || DefaultFields, [customUi]);
+  const Wrapper = useMemo(() => overrides.fields || DefaultFields, [overrides]);
 
   return (
     <form
