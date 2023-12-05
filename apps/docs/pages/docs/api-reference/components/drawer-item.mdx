@@ -1,0 +1,95 @@
+---
+title: <Drawer.Item>
+---
+
+import { PuckPreview } from "@/docs/components/Preview";
+import { Drawer } from "@/core/components/Drawer";
+
+# \<Drawer.Item\>
+
+An item that can be dragged from a [`<Drawer>`](drawer).
+
+```tsx {7} copy
+import { Puck, Drawer } from "@measured/puck";
+
+export function Editor() {
+  return (
+    <Puck>
+      <Drawer>
+        <Drawer.Item name="Orange" index={0} />
+      </Drawer>
+    </Puck>
+  );
+}
+```
+
+## Props
+
+| Prop                    | Example                   | Type     | Status   |
+| ----------------------- | ------------------------- | -------- | -------- |
+| [`name`](#name)         | `name: "Orange"`          | String   | Required |
+| [`index`](#index)       | `index: 0`                | Number   | Required |
+| [`children`](#children) | `children: () => <div />` | Function | -        |
+| [`id`](#id)             | `id: "OrangeComponent"`   | String   | -        |
+
+## Required props
+
+### `name`
+
+The name of this drawer item.
+
+- This will be rendered on the item by default.
+- Will be used as the `id`, unless otherwise specified
+
+### `index`
+
+A numerical index for each item in the drawer.
+
+- Must be sequential, i.e. `0`, `1`, `2`.
+- Must start at `0`.
+
+## Optional props
+
+### `children`
+
+A custom render function to render inside the component.
+
+```tsx {8} copy
+import { Puck, Drawer } from "@measured/puck";
+
+export function Editor() {
+  return (
+    <Puck>
+      <Drawer>
+        <Drawer.Item name="Orange" index={0}>
+          {() => <div>Orange 🍊</div>}
+        </Drawer.Item>
+      </Drawer>
+    </Puck>
+  );
+}
+```
+
+<PuckPreview config={{}} data={{ root: { props: {} }, content: [] }}>
+  <Drawer>
+    <Drawer.Item name="Orange" index={0}>
+      {() => <div>Orange 🍊</div>}
+    </Drawer.Item>
+  </Drawer>
+</PuckPreview>
+
+#### Render Props
+
+| Prop                      | Example             | Type   |
+| ------------------------- | ------------------- | ------ |
+| [`children`](#children-1) | `children: <div />` | String |
+
+##### `children`
+
+The original node for the drawer item.
+
+### `id`
+
+A unique id for this drawer item. Defaults to the value of [`name`](#name).
+
+If using the `<Drawer>` as a component list to be dragged into `<Puck.Preview>`, this should be the key of a component defined in the [Config](/docs/api-reference/configuration/config).
