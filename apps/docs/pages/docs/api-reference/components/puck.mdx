@@ -25,19 +25,19 @@ export function Editor() {
 
 ## Props
 
-| Param                                                 | Example                              | Type                                               | Status   |
-| ----------------------------------------------------- | ------------------------------------ | -------------------------------------------------- | -------- |
-| [`config`](#config)                                   | `config: { components: {} }`         | [Config](/docs/api-reference/configuration/config) | Required |
-| [`data`](#data)                                       | `data: { content: [], root: {} }`    | [Data](/docs/api-reference/data)                   | Required |
-| [`onPublish()`](#onpublishdata)                       | `onPublish: async (data) => {}`      | Function                                           | -        |
-| [`children()`](#onpublishdata)                        | `children: <Puck.Preview />`         | ReactNode                                          | -        |
-| [`headerPath`](#headerpath)                           | `headerPath: "/my-page"`             | String                                             | -        |
-| [`headerTitle`](#headertitle)                         | `headerTitle: "My Page"`             | String                                             | -        |
-| [`onChange()`](#onchangedata)                         | `onChange: (data) => {}`             | Function                                           | -        |
-| [`plugins`](#plugins)                                 | `plugins: [myPlugin]`                | Plugin[]                                           | -        |
-| [`renderComponentList()`](#rendercomponentlistparams) | `renderComponentList: () => <div />` | Function                                           | -        |
-| [`renderHeader()`](#renderheaderparams)               | `renderHeader: () => <div />`        | Function                                           | -        |
-| [`renderHeaderActions()`](#renderheaderactionsparams) | `renderHeaderActions: () => <div />` | Function                                           | -        |
+| Param                                                 | Example                                | Type                                               | Status     |
+| ----------------------------------------------------- | -------------------------------------- | -------------------------------------------------- | ---------- |
+| [`config`](#config)                                   | `config: { components: {} }`           | [Config](/docs/api-reference/configuration/config) | Required   |
+| [`data`](#data)                                       | `data: { content: [], root: {} }`      | [Data](/docs/api-reference/data)                   | Required   |
+| [`onPublish()`](#onpublishdata)                       | `onPublish: async (data) => {}`        | Function                                           | -          |
+| [`children`](#children)                               | `children: <Puck.Preview />`           | ReactNode                                          | -          |
+| [`headerPath`](#headerpath)                           | `headerPath: "/my-page"`               | String                                             | -          |
+| [`headerTitle`](#headertitle)                         | `headerTitle: "My Page"`               | String                                             | -          |
+| [`onChange()`](#onchangedata)                         | `onChange: (data) => {}`               | Function                                           | -          |
+| [`overrides`](#overrides)                             | `overrides: { header: () => <div /> }` | [Overrides](/docs/api-reference/overrides)         | -          |
+| [`plugins`](#plugins)                                 | `plugins: [myPlugin]`                  | Plugin[]                                           | -          |
+| [`renderHeader()`](#renderheaderparams)               | `renderHeader: () => <div />`          | Function                                           | Deprecated |
+| [`renderHeaderActions()`](#renderheaderactionsparams) | `renderHeaderActions: () => <div />`   | Function                                           | Deprecated |
 
 ## Required props
 
@@ -172,6 +172,23 @@ export function Editor() {
     <Puck
       onChange={(data) => {
         console.log("Puck data was updated", data);
+      }}
+      // ...
+    />
+  );
+}
+```
+
+### `overrides`
+
+An [`Overrides`](/docs/api-reference/overrides) object defining custom render methods for various parts of the Puck UI.
+
+```tsx {4-6} copy
+export function Editor() {
+  return (
+    <Puck
+      overrides={{
+        header: () => <div />,
       }}
       // ...
     />
