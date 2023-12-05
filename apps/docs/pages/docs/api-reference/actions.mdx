@@ -18,7 +18,10 @@ Modify the [data payload](/docs/api-reference/data) currently managed by Puck.
 #### Example
 
 ```tsx
-dispatch({ type: "setData", data: {} });
+dispatch({
+  type: "setData",
+  data: {},
+});
 ```
 
 ### `setUi`
@@ -33,5 +36,28 @@ Change a value on Puck's [UI state](/docs/api-reference/app-state#ui).
 #### Example
 
 ```tsx
-dispatch({ type: "setUi", ui: { leftSideBarVisible: false } });
+dispatch({
+  type: "setUi",
+  ui: {
+    leftSideBarVisible: false,
+  },
+});
+```
+
+### `set`
+
+Change the entire [AppState](/docs/api-reference/app-state) in a single action.
+
+| Param   | Example                       | Type                                      | Status   |
+| ------- | ----------------------------- | ----------------------------------------- | -------- |
+| `type`  | `type: "setData"`             | "setData"                                 | Required |
+| `state` | `state: { data: {}, ui: {} }` | [AppState](/docs/api-reference/app-state) | Required |
+
+#### Example
+
+```tsx
+dispatch({
+  type: "set",
+  data: { data: {}, ui: {} },
+});
 ```
