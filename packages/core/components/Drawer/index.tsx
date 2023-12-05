@@ -3,7 +3,13 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Draggable } from "../Draggable";
 import { DragIcon } from "../DragIcon";
-import { ReactNode, createContext, useContext, useMemo } from "react";
+import {
+  ReactElement,
+  ReactNode,
+  createContext,
+  useContext,
+  useMemo,
+} from "react";
 
 const getClassName = getClassNameFactory("Drawer", styles);
 const getClassNameItem = getClassNameFactory("DrawerItem", styles);
@@ -40,7 +46,7 @@ const DrawerItem = ({
   index,
 }: {
   name: string;
-  children?: (props: { children: ReactNode }) => ReactNode;
+  children?: (props: { children: ReactNode }) => ReactElement;
   id?: string;
   index: number;
 }) => {

@@ -13,6 +13,7 @@ import { useAppContext } from "../../context";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useMemo } from "react";
+import { ItemSelector } from "../../../../lib/get-item";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -26,6 +27,7 @@ const DefaultFields = ({
 }: {
   children: ReactNode;
   isLoading: boolean;
+  itemSelector?: ItemSelector | null;
 }) => {
   return (
     <div className={getClassName()}>
