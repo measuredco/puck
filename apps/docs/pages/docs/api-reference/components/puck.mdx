@@ -213,24 +213,9 @@ export function Editor() {
 }
 ```
 
-### `renderComponentList(params)`
-
-Render function for wrapping the component list. Receives the Plugin [render args](/docs/api-reference/plugins/functions#render-args).
-
-```tsx {4-6} copy
-export function Editor() {
-  return (
-    <Puck
-      renderComponentList={({ children, appState, dispatch }) => (
-        <div>{children}</div>
-      )}
-      // ...
-    />
-  );
-}
-```
-
 ### `renderHeader(params)`
+
+**Deprecated in favour of [`overrides`](#overrides).**
 
 Render function for overriding the Puck header component.
 
@@ -263,6 +248,8 @@ export function Editor() {
 ```
 
 ### `renderHeaderActions(params)`
+
+**Deprecated in favour of [`overrides`](#overrides).**
 
 Render function for overriding the Puck header actions. Use a fragment.
 
