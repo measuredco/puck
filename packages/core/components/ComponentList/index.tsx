@@ -9,18 +9,16 @@ const getClassName = getClassNameFactory("ComponentList", styles);
 
 const ComponentListItem = ({
   name,
-  id,
   index,
 }: {
   name: string;
-  id?: string;
   index: number;
 }) => {
   const { overrides } = useAppContext();
 
   return (
-    <Drawer.Item name={name} id={id} index={index}>
-      {overrides.componentDrawerItem}
+    <Drawer.Item name={name} index={index}>
+      {overrides.componentItem}
     </Drawer.Item>
   );
 };
@@ -71,7 +69,11 @@ const ComponentList = ({
           {children ||
             Object.keys(config.components).map((componentKey, i) => {
               return (
-                <Drawer.Item key={componentKey} name={componentKey} index={i} />
+                <ComponentListItem
+                  key={componentKey}
+                  name={componentKey}
+                  index={i}
+                />
               );
             })}
         </Drawer>
