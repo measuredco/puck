@@ -1,0 +1,56 @@
+---
+title: usePuck
+---
+
+# usePuck
+
+A hook for building custom components that can interact with Puck.
+
+```tsx copy /usePuck/1 {4}
+import { Puck, usePuck } from "@measured/puck";
+
+const JSONRenderer = () => {
+  const { appState } = usePuck();
+
+  return <div>{JSON.stringify(appState.data)}</div>;
+};
+
+export function Editor() {
+  return (
+    <Puck>
+      <JSONRenderer />
+    </Puck>
+  );
+}
+```
+
+**Components using the `usePuck` hook must be rendered within the [`<Puck>`](/docs/api-reference/components/puck) context as [`children`](/docs/api-reference/components/puck#children), [`overrides`](/docs/api-reference/components/puck#overrides) or [`plugins`](/docs/api-reference/components/puck#plugins).**
+
+## Returns
+
+| Param                   | Example                        | Type                                      |
+| ----------------------- | ------------------------------ | ----------------------------------------- |
+| [`appState`](#appstate) | `{ data: {}, ui: {} }`         | [AppState](/docs/api-reference/app-state) |
+| [`dispatch`](#dispatch) | `(action: PuckAction) => void` | Function                                  |
+
+### `appState`
+
+The current [application state](/docs/api-reference/app-state) for this Puck instance.
+
+```tsx
+console.log(appState.data);
+// { content: [], root: {}, zones: {} }
+```
+
+### `dispatch`
+
+Execute an [action](/docs/api-reference/actions) to mutate the Puck [application state](/docs/api-reference/app-state).
+
+```tsx
+dispatch({
+  type: "setUi",
+  ui: {
+    leftSideBarVisible: false,
+  },
+});
+```
