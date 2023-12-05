@@ -291,7 +291,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
           ),
-          componentDrawer: () => {
+          components: () => {
             return (
               <Drawer direction="horizontal">
                 <div

@@ -8,7 +8,7 @@ export const Components = () => {
 
   const componentList = useComponentList(config, state.ui);
 
-  const Wrapper = useMemo(() => overrides.componentList || "div", [overrides]);
+  const Wrapper = useMemo(() => overrides.components || "div", [overrides]);
 
   return (
     <Wrapper>
