@@ -25,20 +25,18 @@ export function Editor() {
 
 ## Props
 
-| Param                                                 | Example                                | Type                                               | Status     |
-| ----------------------------------------------------- | -------------------------------------- | -------------------------------------------------- | ---------- |
-| [`config`](#config)                                   | `config: { components: {} }`           | [Config](/docs/api-reference/configuration/config) | Required   |
-| [`data`](#data)                                       | `data: { content: [], root: {} }`      | [Data](/docs/api-reference/data)                   | Required   |
-| [`onPublish()`](#onpublishdata)                       | `onPublish: async (data) => {}`        | Function                                           | -          |
-| [`children`](#children)                               | `children: <Puck.Preview />`           | ReactNode                                          | -          |
-| [`headerPath`](#headerpath)                           | `headerPath: "/my-page"`               | String                                             | -          |
-| [`headerTitle`](#headertitle)                         | `headerTitle: "My Page"`               | String                                             | -          |
-| [`onChange()`](#onchangedata)                         | `onChange: (data) => {}`               | Function                                           | -          |
-| [`overrides`](#overrides)                             | `overrides: { header: () => <div /> }` | [Overrides](/docs/api-reference/overrides)         | -          |
-| [`plugins`](#plugins)                                 | `plugins: [myPlugin]`                  | Plugin[]                                           | -          |
-| [`ui`](#ui)                                           | `ui: {leftSideBarVisible: false}`      | [AppState.ui](/docs/api-reference/app-state#ui)    | -          |
-| [`renderHeader()`](#renderheaderparams)               | `renderHeader: () => <div />`          | Function                                           | Deprecated |
-| [`renderHeaderActions()`](#renderheaderactionsparams) | `renderHeaderActions: () => <div />`   | Function                                           | Deprecated |
+| Param                           | Example                                | Type                                               | Status   |
+| ------------------------------- | -------------------------------------- | -------------------------------------------------- | -------- |
+| [`config`](#config)             | `config: { components: {} }`           | [Config](/docs/api-reference/configuration/config) | Required |
+| [`data`](#data)                 | `data: { content: [], root: {} }`      | [Data](/docs/api-reference/data)                   | Required |
+| [`onPublish()`](#onpublishdata) | `onPublish: async (data) => {}`        | Function                                           | -        |
+| [`children`](#children)         | `children: <Puck.Preview />`           | ReactNode                                          | -        |
+| [`headerPath`](#headerpath)     | `headerPath: "/my-page"`               | String                                             | -        |
+| [`headerTitle`](#headertitle)   | `headerTitle: "My Page"`               | String                                             | -        |
+| [`onChange()`](#onchangedata)   | `onChange: (data) => {}`               | Function                                           | -        |
+| [`overrides`](#overrides)       | `overrides: { header: () => <div /> }` | [Overrides](/docs/api-reference/overrides)         | -        |
+| [`plugins`](#plugins)           | `plugins: [myPlugin]`                  | Plugin[]                                           | -        |
+| [`ui`](#ui)                     | `ui: {leftSideBarVisible: false}`      | [AppState.ui](/docs/api-reference/app-state#ui)    | -        |
 
 ## Required props
 
@@ -224,69 +222,6 @@ export function Editor() {
     <Puck
       // Hide the left side bar by default
       ui={{ leftSideBarVisible: false }}
-      // ...
-    />
-  );
-}
-```
-
-### `renderHeader(params)`
-
-**Deprecated in favour of [`overrides`](#overrides).**
-
-Render function for overriding the Puck header component.
-
-Receives the Plugin [render args](/docs/api-reference/plugins/functions#render-args).
-
-```tsx {4-19} filename="renderHeader example with toggle side-bar button" copy
-export function Editor() {
-  return (
-    <Puck
-      renderHeader={({ appState, dispatch }) => (
-        <header>
-          <span>My Custom Header</span>
-
-          <button
-            onClick={() => {
-              dispatch({
-                type: "setUi",
-                ui: { leftSideBarVisible: !state.ui.leftSideBarVisible },
-              });
-            }}
-          >
-            Toggle side-bar
-          </button>
-        </header>
-      )}
-      // ...
-    />
-  );
-}
-```
-
-### `renderHeaderActions(params)`
-
-**Deprecated in favour of [`overrides`](#overrides).**
-
-Render function for overriding the Puck header actions. Use a fragment.
-
-Receives the Plugin [render args](/docs/api-reference/plugins/functions#render-args).
-
-```tsx {4-14} filename="renderHeaderActions example with save draft button" copy
-export function Editor() {
-  return (
-    <Puck
-      renderHeaderActions={({ appState }) => (
-        <>
-          <button
-            onClick={() => {
-              saveDraft(appState.data, "/my-page");
-            }}
-          >
-            Save draft
-          </button>
-        </>
-      )}
       // ...
     />
   );
