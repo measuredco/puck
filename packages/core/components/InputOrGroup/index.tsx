@@ -140,19 +140,34 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
     );
   }
 
+  const defaultFields = {
+    array: ArrayField,
+    external: ExternalField,
+    object: ObjectField,
+    select: SelectField,
+    textarea: TextareaField,
+    radio: RadioField,
+    text: DefaultField,
+    number: DefaultField,
+  };
+
   const render = {
     ...customUi.fields,
-    array: customUi.fields?.array || ArrayField,
-    external: customUi.fields?.external || ExternalField,
-    object: customUi.fields?.object || ObjectField,
-    select: customUi.fields?.select || SelectField,
-    textarea: customUi.fields?.textarea || TextareaField,
-    radio: customUi.fields?.radio || RadioField,
-    text: customUi.fields?.text || DefaultField,
-    number: customUi.fields?.number || DefaultField,
+    array: customUi.fields?.array || defaultFields.array,
+    external: customUi.fields?.external || defaultFields.external,
+    object: customUi.fields?.object || defaultFields.object,
+    select: customUi.fields?.select || defaultFields.select,
+    textarea: customUi.fields?.textarea || defaultFields.textarea,
+    radio: customUi.fields?.radio || defaultFields.radio,
+    text: customUi.fields?.text || defaultFields.text,
+    number: customUi.fields?.number || defaultFields.number,
   };
+
+  const mergedProps = { ...props, ...localProps, field };
+
+  const children = defaultFields[field.type](mergedProps);
 
   const Render = render[field.type] as (props: InputProps) => ReactElement;
 
-  return <Render {...props} {...localProps} field={field} />;
+  return <Render {...mergedProps}>{children}</Render>;
 };

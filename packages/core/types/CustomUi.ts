@@ -40,7 +40,9 @@ export type CustomUi = CustomUiGeneric<{
 export type FieldRenderFunctions = Omit<
   {
     [Type in Field["type"]]: (
-      props: InputProps<Extract<Field, { type: Type }>>
+      props: InputProps<Extract<Field, { type: Type }>> & {
+        children: ReactNode;
+      }
     ) => ReactNode;
   },
   "custom"
