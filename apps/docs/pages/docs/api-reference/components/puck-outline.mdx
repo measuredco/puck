@@ -2,17 +2,41 @@
 title: <Puck.Outline>
 ---
 
+import { PuckPreview } from "@/docs/components/Preview";
+import { Puck } from "@/core";
+
 # \<Puck.Outline\>
 
 Render an interactive outline of the current data payload when composing a custom Puck UI.
 
-```tsx {5} copy
+<PuckPreview
+  config={{
+    components: {
+      HeadingBlock: { render: () => <div>Hello world</div> },
+      ParagraphBlock: {},
+    },
+  }}
+  data={{
+    root: { props: {} },
+    content: [{ type: "HeadingBlock", props: { id: "HeadingBlock-123" } }],
+  }}
+>
+  <Puck.Outline />
+  {/* Outline doesn't render unless Preview is rendered due to zone flushing */}
+  <div style={{ display: "none" }}>
+    <Puck.Preview />
+  </div>
+</PuckPreview>
+
+```tsx {12} showLineNumbers copy
 import { Puck } from "@measured/puck";
 
 export function Editor() {
-  return <Puck {/*...*/}>
-    <Puck.Outline />
-  </Puck>;
+  return (
+    <Puck>
+      <Puck.Outline />
+    </Puck>
+  );
 }
 ```
 

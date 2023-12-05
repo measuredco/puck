@@ -2,17 +2,34 @@
 title: <Puck.Components>
 ---
 
+import { PuckPreview } from "@/docs/components/Preview";
+import { Puck } from "@/core";
+
 # \<Puck.Components\>
 
 Render a draggable list of components based on the [user-defined components](/docs/api-reference/configuration/config#components) when composing a custom Puck UI. Respects the [`categories` API](/docs/api-reference/configuration/config#categories).
 
-```tsx {5} copy
+<PuckPreview
+  config={{
+    components: {
+      HeadingBlock: {},
+      ParagraphBlock: {},
+    },
+  }}
+  data={{ root: { props: {} }, content: [] }}
+>
+  <Puck.Components />
+</PuckPreview>
+
+```tsx {} showLineNumbers copy
 import { Puck } from "@measured/puck";
 
 export function Editor() {
-  return <Puck {/*...*/}>
-    <Puck.Components />
-  </Puck>;
+  return (
+    <Puck>
+      <Puck.Components />
+    </Puck>
+  );
 }
 ```
 
