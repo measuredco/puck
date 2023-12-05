@@ -273,6 +273,11 @@ export function Puck({
     () => loadedOverrides.puck || defaultRender,
     [loadedOverrides]
   );
+
+  const CustomPreview = useMemo(
+    () => loadedOverrides.preview || defaultRender,
+    [loadedOverrides]
+  );
   const CustomHeader = useMemo(
     () => loadedOverrides.header || defaultHeaderRender,
     [loadedOverrides]
@@ -480,7 +485,9 @@ export function Puck({
                     onClick={() => setItemSelector(null)}
                   >
                     <div className={getClassName("root")}>
-                      <Preview />
+                      <CustomPreview>
+                        <Preview />
+                      </CustomPreview>
                     </div>
                     {/* Fill empty space under root */}
                     <div
