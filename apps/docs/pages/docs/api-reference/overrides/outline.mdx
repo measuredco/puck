@@ -1,0 +1,23 @@
+---
+title: outline
+---
+
+# outline
+
+Override the outline.
+
+```tsx copy
+const overrides = {
+  outline: ({ children }) => <div>{children}</div>,
+};
+```
+
+## Props
+
+| Prop                    | Example     | Type      |
+| ----------------------- | ----------- | --------- |
+| [`children`](#children) | `<input />` | ReactNode |
+
+### `children`
+
+The default node for the outline.

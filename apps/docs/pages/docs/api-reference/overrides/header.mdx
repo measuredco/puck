@@ -1,0 +1,33 @@
+---
+title: header
+---
+
+# header
+
+Override the header.
+
+```tsx copy
+const overrides = {
+  header: ({ actions }) => (
+    <header>
+      <span>My header</span>
+      <div>{actions}</div>
+    </header>
+  ),
+};
+```
+
+## Props
+
+| Prop                    | Example     | Type      |
+| ----------------------- | ----------- | --------- |
+| [`actions`](#actions)   | `<div />`   | ReactNode |
+| [`children`](#children) | `<input />` | ReactNode |
+
+### `actions`
+
+A node containing the [`headerActions`](header-actions).
+
+### `children`
+
+The default node for the component item.

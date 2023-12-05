@@ -1,0 +1,63 @@
+---
+title: fieldTypes
+---
+
+# fieldTypes
+
+Override each [field type](/docs/api-reference/configuration/fields).
+
+```tsx copy
+const overrides = {
+  fieldType: {text: ({ name }) => <input name={name} />)},
+};
+```
+
+## Props
+
+| Prop                                | Example                      | Type                                              |
+| ----------------------------------- | ---------------------------- | ------------------------------------------------- |
+| [`children`](#children)             | `<input />`                  | ReactNode                                         |
+| [`field`](#field)                   | `{ type: "text" }`           | [Field](/docs/api-reference/configuration/fields) |
+| [`id`](#id)                         | `"my-input"`                 | String                                            |
+| [`label`](#label)                   | `"Title"`                    | String                                            |
+| [`name`](#name)                     | `"title"`                    | String                                            |
+| [`onChange`](#onchange)             | `onChange("Goodbye, world")` | Function                                          |
+| [`readOnly`](#readonly)             | `false`                      | Boolean                                           |
+| [`readOnlyFields`](#readonlyfields) | `{ title: true }`            | Object                                            |
+| [`value`](#value)                   | `"Hello, world"`             | Any                                               |
+
+### `children`
+
+The default node for this field type.
+
+### `field`
+
+An object containing the user defined [Field](/docs/api-reference/configuration/fields) configuration.
+
+### `id`
+
+A unique ID for this field.
+
+### `label`
+
+The label for this field.
+
+### `name`
+
+The name of the prop this field is rendering for.
+
+### `onChange`
+
+A callback to set a new value for this input.
+
+### `readOnly`
+
+A boolean describing whether or not this field is set to `readOnly` by [`resolveData`](/docs/api-reference/configuration/component-config#resolvedatadata-params).
+
+### `readOnlyFields`
+
+An object describing all fields that are currently set to `readOnly` by [`resolveData`](/docs/api-reference/configuration/component-config#resolvedatadata-params).
+
+### `value`
+
+The current value for the prop.
