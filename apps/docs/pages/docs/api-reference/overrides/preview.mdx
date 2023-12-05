@@ -1,0 +1,23 @@
+---
+title: preview
+---
+
+# preview
+
+Override the drag-and-drop preview.
+
+```tsx copy
+const overrides = {
+  preview: ({ children }) => <div>{children}</div>,
+};
+```
+
+## Props
+
+| Prop                    | Example     | Type      |
+| ----------------------- | ----------- | --------- |
+| [`children`](#children) | `<input />` | ReactNode |
+
+### `children`
+
+The default node for the preview.
