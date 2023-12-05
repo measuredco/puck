@@ -8,11 +8,17 @@ Override each [field type](/docs/api-reference/configuration/fields).
 
 ```tsx copy
 const overrides = {
-  fieldType: {text: ({ name }) => <input name={name} />)},
+  fieldType: {
+    number: ({ name }) => <input name={name} type="number" />,
+    text: ({ name }) => <input name={name} type="text" />,
+    // ...
+  },
 };
 ```
 
-## Props
+You can specify a custom render method for each known [field type](/docs/api-reference/configuration/fields), or introduce completely new ones.
+
+## Render Props
 
 | Prop                                | Example                      | Type                                              |
 | ----------------------------------- | ---------------------------- | ------------------------------------------------- |
