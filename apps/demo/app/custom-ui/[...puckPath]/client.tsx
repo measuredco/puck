@@ -293,7 +293,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           ),
           componentDrawer: () => {
             return (
-              <Drawer droppableId={`component-list`} direction="horizontal">
+              <Drawer direction="horizontal">
                 <div
                   style={{
                     display: "flex",

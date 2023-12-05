@@ -31,7 +31,6 @@ export const useComponentList = (config: Config, ui: UiState) => {
                     key={componentName}
                     name={componentName as string}
                     index={i}
-                    id={`${categoryKey}::${componentName}`}
                   />
                 );
               })}
@@ -61,7 +60,6 @@ export const useComponentList = (config: Config, ui: UiState) => {
                   key={componentName}
                   name={componentName as string}
                   index={i}
-                  id={`other::${componentName}`}
                 />
               );
             })}
