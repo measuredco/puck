@@ -20,7 +20,7 @@ const defaultPageFields: Record<string, Field> = {
   title: { type: "text" },
 };
 
-const DefaultForm = ({
+const DefaultFields = ({
   children,
   isLoading,
 }: {
@@ -68,12 +68,7 @@ export const Fields = () => {
   // DEPRECATED
   const rootProps = data.root.props || data.root;
 
-  const Wrapper = useMemo(
-    () =>
-      (itemSelector ? customUi.form : customUi.rootForm || customUi.form) ||
-      DefaultForm,
-    [customUi, itemSelector]
-  );
+  const Wrapper = useMemo(() => customUi.fields || DefaultFields, [customUi]);
 
   return (
     <form
@@ -82,7 +77,7 @@ export const Fields = () => {
         e.preventDefault();
       }}
     >
-      <Wrapper isLoading={isLoading}>
+      <Wrapper isLoading={isLoading} itemSelector={itemSelector}>
         {Object.keys(fields).map((fieldName) => {
           const field = fields[fieldName];
 

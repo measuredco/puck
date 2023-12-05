@@ -152,15 +152,15 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
   };
 
   const render = {
-    ...customUi.fields,
-    array: customUi.fields?.array || defaultFields.array,
-    external: customUi.fields?.external || defaultFields.external,
-    object: customUi.fields?.object || defaultFields.object,
-    select: customUi.fields?.select || defaultFields.select,
-    textarea: customUi.fields?.textarea || defaultFields.textarea,
-    radio: customUi.fields?.radio || defaultFields.radio,
-    text: customUi.fields?.text || defaultFields.text,
-    number: customUi.fields?.number || defaultFields.number,
+    ...customUi.fieldTypes,
+    array: customUi.fieldTypes?.array || defaultFields.array,
+    external: customUi.fieldTypes?.external || defaultFields.external,
+    object: customUi.fieldTypes?.object || defaultFields.object,
+    select: customUi.fieldTypes?.select || defaultFields.select,
+    textarea: customUi.fieldTypes?.textarea || defaultFields.textarea,
+    radio: customUi.fieldTypes?.radio || defaultFields.radio,
+    text: customUi.fieldTypes?.text || defaultFields.text,
+    number: customUi.fieldTypes?.number || defaultFields.number,
   };
 
   const mergedProps = { ...props, ...localProps, field };

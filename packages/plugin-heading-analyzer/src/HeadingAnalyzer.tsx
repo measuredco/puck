@@ -186,12 +186,14 @@ export const HeadingAnalyzer = () => {
 
 const headingAnalyzer: Plugin = {
   customUi: {
-    rootForm: ({ children }) => (
+    fields: ({ children, itemSelector }) => (
       <>
         {children}
-        <SidebarSection title="Heading Outline">
-          <HeadingAnalyzer />
-        </SidebarSection>
+        {itemSelector && (
+          <SidebarSection title="Heading Outline">
+            <HeadingAnalyzer />
+          </SidebarSection>
+        )}
       </>
     ),
   },

@@ -1,6 +1,7 @@
 import { ReactElement, ReactNode } from "react";
 import { InputProps } from "../components/InputOrGroup";
 import { Field } from "./Config";
+import { ItemSelector } from "../lib/get-item";
 
 // Plugins can use `usePuck` instead of relying on props
 type RenderFunc<
@@ -12,8 +13,7 @@ export const customUiKeys = [
   "header",
   "headerActions",
   "root",
-  "rootForm",
-  "form",
+  "fields",
   "componentList",
   "componentListItem",
   "outline",
@@ -25,12 +25,17 @@ type CustomUiGeneric<
 > = Shape;
 
 export type CustomUi = CustomUiGeneric<{
-  fields: Partial<FieldRenderFunctions>;
+  fieldTypes: Partial<FieldRenderFunctions>;
   header: RenderFunc<{ actions: ReactNode; children: ReactNode }>;
   headerActions: RenderFunc<{}>;
   root: RenderFunc;
   rootForm: RenderFunc<{ children: ReactNode; isLoading: boolean }>;
   form: RenderFunc<{ children: ReactNode; isLoading: boolean }>;
+  fields: RenderFunc<{
+    children: ReactNode;
+    isLoading: boolean;
+    itemSelector?: ItemSelector | null;
+  }>;
   componentList: RenderFunc;
   componentListItem: RenderFunc<{ children: ReactNode; name: string }>;
   outline: RenderFunc;
