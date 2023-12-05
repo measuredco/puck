@@ -2,17 +2,40 @@
 title: <Puck.Preview>
 ---
 
+import { PuckPreview } from "@/docs/components/Preview";
+import { Puck } from "@/core";
+
 # \<Puck.Preview\>
 
 Render a drag-and-drop preview for the current data when composing a custom Puck UI.
 
-```tsx {5} copy
+<PuckPreview
+  config={{
+    components: {
+      HeadingBlock: {
+        fields: {title: {type: 'text'}},
+        render: ({title}) => <div>{title}</div>
+      }
+    }
+  }}
+  data={{
+    root: { props: {} },
+    content: [{ type: "HeadingBlock", props: { id: "HeadingBlock-123", title: 'Hello, world' } }],
+  }}
+>
+
+  <Puck.Preview />
+</PuckPreview>
+
+```tsx {17} showLineNumbers copy
 import { Puck } from "@measured/puck";
 
 export function Editor() {
-  return <Puck {/*...*/}>
-    <Puck.Preview />
-  </Puck>;
+  return (
+    <Puck>
+      <Puck.Preview />
+    </Puck>
+  );
 }
 ```
 
@@ -32,8 +55,10 @@ A unique identifier for the preview frame. Default: `puck-preview`.
 import { Puck } from "@measured/puck";
 
 export function Editor() {
-  return <Puck {/*...*/}>
-    <Puck.Preview id="my-frame" />
-  </Puck>;
+  return (
+    <Puck>
+      <Puck.Preview id="my-frame" />
+    </Puck>
+  );
 }
 ```
