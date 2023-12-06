@@ -296,7 +296,7 @@ export function Puck<
   const disableZoom = children || loadedOverrides.puck ? true : false;
 
   return (
-    <div>
+    <div className="Puck">
       <AppProvider
         value={{
           state: appState,
