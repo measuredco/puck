@@ -328,7 +328,7 @@ export function Puck({
   }, []);
 
   return (
-    <div>
+    <div className="Puck">
       <AppProvider
         value={{ state: appState, dispatch, config, componentState }}
       >
