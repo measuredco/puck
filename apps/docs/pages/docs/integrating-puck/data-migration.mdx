@@ -1,33 +1,14 @@
 # Data Migration
 
-Puck automatically migrates legacy data payloads on render, transforming any deprecated properties to their latest counterparts as described by [Data](/docs/api-reference/data).
+Puck follows semantic versioning. Major releases may introduce breaking changes for your Data payload.
 
-This data migration strategy reduces the number of breaking changes required.
-
-Specifically, Puck will migrate the data when rendering [`<Puck>`](/docs/api-reference/components/puck) or [`<Render>`](/docs/api-reference/components/render), or calling [`transformProps`](/docs/api-reference/functions/transform-props).
-
-## Types
-
-Puck exports two types:
-
-- `Data`, a backwards compatible type that supports all deprecated data shapes still supported.
-- `CurrentData`, the latest data shape used by Puck internally.
-
-You'll generally want to use `Data` to avoid breaking changes during minor version upgrades, but can use `CurrentData` to stay on the bleeding edge.
-
-## Manually migrating data
-
-If you manually want to update your data payload to the latest `CurrentData`, you can run the `migrate` method:
+Puck provides the `migrate` helper method to help migrate legacy data payloads to the latest data model, transforming any deprecated properties to their latest counterparts as described by the [Data API reference](/docs/api-reference/data).
 
 ```tsx
 import { migrate } from "@measured/puck";
 
 migrate(legacyData);
 ```
-
-## Opting out
-
-There is currently no way to opt-out of automatic data migrations.
 
 ## Further reading
 

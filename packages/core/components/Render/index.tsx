@@ -3,7 +3,6 @@
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { Config, Data } from "../../types/Config";
 import { DropZone, DropZoneProvider } from "../DropZone";
-import { migrate } from "../../transforms";
 
 export function Render({
   config,
@@ -12,14 +11,13 @@ export function Render({
   config: Config<any, any, any>;
   data: Data;
 }) {
-  const currentData = migrate(data);
-
-  const rootProps = currentData.root.props;
+  // DEPRECATED
+  const rootProps = data.root.props || data.root;
   const title = rootProps?.title || "";
 
   if (config.root?.render) {
     return (
-      <DropZoneProvider value={{ data: currentData, config, mode: "render" }}>
+      <DropZoneProvider value={{ data, config, mode: "render" }}>
         <config.root.render
           {...rootProps}
           puck={{
@@ -36,7 +34,7 @@ export function Render({
   }
 
   return (
-    <DropZoneProvider value={{ data: currentData, config, mode: "render" }}>
+    <DropZoneProvider value={{ data, config, mode: "render" }}>
       <DropZone zone={rootDroppableId} />
     </DropZoneProvider>
   );

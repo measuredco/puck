@@ -1,12 +1,11 @@
 import { CSSProperties } from "react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
-import { Config, CurrentData, Data } from "../../types/Config";
+import { Config, Data } from "../../types/Config";
 import { setupZone } from "../../lib/setup-zone";
-import { migrate } from "../../transforms";
 
 type DropZoneRenderProps = {
   zone: string;
-  data: CurrentData;
+  data: Data;
   config: Config;
   areaId?: string;
   style?: CSSProperties;
@@ -67,10 +66,9 @@ export function Render({
   config: Config<any, any, any>;
   data: Data;
 }) {
-  const currentData = migrate(data);
-
   if (config.root?.render) {
-    const rootProps = currentData.root.props;
+    // DEPRECATED
+    const rootProps = data.root.props || data.root;
 
     const title = rootProps.title || "";
 
@@ -79,23 +77,17 @@ export function Render({
         {...rootProps}
         puck={{
           renderDropZone: ({ zone }: { zone: string }) => (
-            <DropZoneRender zone={zone} data={currentData} config={config} />
+            <DropZoneRender zone={zone} data={data} config={config} />
           ),
         }}
         title={title}
         editMode={false}
         id={"puck-root"}
       >
-        <DropZoneRender
-          config={config}
-          data={currentData}
-          zone={rootDroppableId}
-        />
+        <DropZoneRender config={config} data={data} zone={rootDroppableId} />
       </config.root.render>
     );
   }
 
-  return (
-    <DropZoneRender config={config} data={currentData} zone={rootDroppableId} />
-  );
+  return <DropZoneRender config={config} data={data} zone={rootDroppableId} />;
 }

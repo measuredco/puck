@@ -10,7 +10,7 @@ import {
   UnregisterZoneAction,
   createReducer,
 } from "../../reducer";
-import { AppState, Config, CurrentData, UiState } from "../../types/Config";
+import { AppState, Config, Data, UiState } from "../../types/Config";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 
 import { generateId } from "../../lib/generate-id";
@@ -25,7 +25,7 @@ type Props = {
     prop: string;
   };
 };
-const defaultData: CurrentData = {
+const defaultData: Data = {
   root: { props: { title: "" } },
   content: [],
   zones: {},
@@ -521,7 +521,7 @@ describe("Data reducer", () => {
   describe("set action", () => {
     it("should set new data", () => {
       const state: AppState = { ui: defaultUi, data: { ...defaultData } };
-      const newData: CurrentData = {
+      const newData: Data = {
         ...defaultData,
         root: { props: { title: "Hello, world" } },
         content: [{ type: "Comp", props: { id: "1" } }],
