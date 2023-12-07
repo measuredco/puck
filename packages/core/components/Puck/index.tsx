@@ -199,12 +199,15 @@ export function Puck({
     };
   }, []);
 
-  const defaultRender = useMemo(
-    () =>
-      ({ children }: { children?: ReactNode }) =>
-        children,
-    []
-  );
+  const defaultRender = useMemo<
+    React.FunctionComponent<{ children?: ReactNode }>
+  >(() => {
+    const PuckDefault = ({ children }: { children?: ReactNode }) => (
+      <>{children}</>
+    );
+
+    return PuckDefault;
+  }, []);
 
   // DEPRECATED
   const defaultHeaderRender = useMemo(() => {
