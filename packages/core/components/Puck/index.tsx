@@ -33,6 +33,7 @@ import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
 import { Overrides } from "../../types/Overrides";
+import { loadOverrides } from "../../lib/load-overrides";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -247,25 +248,9 @@ export function Puck({
     return defaultRender;
   }, [renderHeader]);
 
-  // Load all plugins into the custom ui
+  // Load all plugins into the overrides
   const loadedOverrides = useMemo(() => {
-    const collected: Partial<Overrides> = overrides;
-
-    plugins.forEach((plugin) => {
-      Object.keys(plugin.overrides).forEach((overridesType) => {
-        const childNode = collected[overridesType];
-
-        const Comp = (props) =>
-          plugin.overrides[overridesType]({
-            ...props,
-            children: childNode ? childNode(props) : props.children,
-          });
-
-        collected[overridesType] = Comp;
-      });
-    });
-
-    return collected;
+    return loadOverrides({ overrides, plugins });
   }, [plugins]);
 
   const CustomPuck = useMemo(
