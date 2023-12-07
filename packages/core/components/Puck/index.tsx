@@ -200,11 +200,10 @@ export function Puck({
 
   const defaultRender = useMemo(
     () =>
-      ({ children }) =>
+      ({ children }: { children?: ReactNode }) =>
         children,
     []
   );
-  const defaultRenderNoChildren = useMemo(() => () => <></>, []);
 
   // DEPRECATED
   const defaultHeaderRender = useMemo(() => {
@@ -245,7 +244,7 @@ export function Puck({
       return RenderHeader;
     }
 
-    return defaultRenderNoChildren;
+    return defaultRender;
   }, [renderHeader]);
 
   // Load all plugins into the custom ui

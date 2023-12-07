@@ -27,7 +27,7 @@ type OverridesGeneric<
 export type Overrides = OverridesGeneric<{
   fieldTypes: Partial<FieldRenderFunctions>;
   header: RenderFunc<{ actions: ReactNode; children: ReactNode }>;
-  headerActions: RenderFunc<{}>;
+  headerActions: RenderFunc<{ children?: ReactNode }>;
   preview: RenderFunc;
   fields: RenderFunc<{
     children: ReactNode;

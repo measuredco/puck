@@ -8,8 +8,9 @@ Override the header actions. Return a fragment so your items appear inline.
 
 ```tsx copy
 const overrides = {
-  headerActions: () => (
+  headerActions: ({ children }) => (
     <>
+      {children}
       <button>Click me</button>
     </>
   ),
@@ -18,4 +19,10 @@ const overrides = {
 
 ## Props
 
-This render function does not receive any props.
+| Prop                    | Example     | Type      |
+| ----------------------- | ----------- | --------- |
+| [`children`](#children) | `<input />` | ReactNode |
+
+### `children`
+
+The default node for the header actions.
