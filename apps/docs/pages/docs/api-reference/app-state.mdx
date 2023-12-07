@@ -17,6 +17,7 @@ The current state of the Puck editor interface.
 | [`leftSideBarVisible`](#uileftsidebarvisible)   | `false`                                              | Boolean |
 | [`rightSideBarVisible`](#uirightsidebarvisible) | `false`                                              | Boolean |
 | [`itemSelector`](#uiitemselector)               | `{ index: 0, zone: "my-content" }`                   | Object  |
+| [`isDragging`](#isdragging)                     | `false`                                              | Boolean |
 | [`arrayState`](#uiarraystate)                   | `{}`                                                 | Object  |
 | [`componentList`](#uicomponentlist)             | `{ typography: { components: [ "HeadingBlock" ] } }` | Object  |
 
@@ -45,6 +46,12 @@ The index of the item within the zone.
 #### `ui.itemSelector.zone`
 
 The zone that the item is defined within. **Defaults to [main content zone](/docs/api-reference/data#content).**
+
+---
+
+### `ui.isDragging`
+
+A boolean stating whether or not the user is currently dragging a component.
 
 ---
 
