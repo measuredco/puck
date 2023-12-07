@@ -1,5 +1,4 @@
 import { Data, DefaultComponentProps, DefaultRootProps } from "../types/Config";
-import { migrations } from "./migrations";
 
 type PropTransform<
   Props extends DefaultComponentProps = DefaultComponentProps,
@@ -11,10 +10,6 @@ type PropTransform<
     ) => Props[ComponentName];
   } & { root: (props: RootProps & { [key: string]: any }) => RootProps }
 >;
-
-export function migrate(data: Data): Data {
-  return migrations?.reduce((acc, migration) => migration(acc), data) as Data;
-}
 
 export function transformProps<
   Props extends DefaultComponentProps = DefaultComponentProps,

@@ -2,7 +2,7 @@ import { Data } from "../types/Config";
 
 type Migration = (props: Data & { [key: string]: any }) => Data;
 
-export const migrations: Migration[] = [
+const migrations: Migration[] = [
   // Migrate root to root.props
   (data) => {
     const rootProps = data.root.props || data.root;
@@ -25,3 +25,7 @@ export const migrations: Migration[] = [
     return data;
   },
 ];
+
+export function migrate(data: Data): Data {
+  return migrations?.reduce((acc, migration) => migration(acc), data) as Data;
+}
