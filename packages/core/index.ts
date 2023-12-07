@@ -10,7 +10,8 @@ export * from "./components/IconButton";
 export * from "./components/Puck";
 export * from "./components/Render";
 
+export * from "./lib/migrate";
+export * from "./lib/transform-props";
 export * from "./lib/resolve-all-data";
-export { migrate, transformProps } from "./transforms";
 
 export { FieldLabel } from "./components/InputOrGroup";
