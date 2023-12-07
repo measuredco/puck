@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from "react";
+import { ReactNode } from "react";
 import { InputProps } from "../components/InputOrGroup";
 import { Field } from "./Config";
 import { ItemSelector } from "../lib/get-item";
@@ -6,7 +6,7 @@ import { ItemSelector } from "../lib/get-item";
 // Plugins can use `usePuck` instead of relying on props
 type RenderFunc<
   Props extends { [key: string]: any } = { children: ReactNode }
-> = (props: Props) => ReactElement;
+> = React.FunctionComponent<Props>;
 
 // All direct render methods, excluding fields
 export const overrideKeys = [
@@ -42,17 +42,17 @@ export type Overrides = OverridesGeneric<{
 
 export type FieldRenderFunctions = Omit<
   {
-    [Type in Field["type"]]: (
-      props: InputProps<Extract<Field, { type: Type }>> & {
+    [Type in Field["type"]]: React.FunctionComponent<
+      InputProps<Extract<Field, { type: Type }>> & {
         children: ReactNode;
       }
-    ) => ReactNode;
+    >;
   },
   "custom"
 > & {
-  [key: string]: (
-    props: InputProps<any> & {
+  [key: string]: React.FunctionComponent<
+    InputProps<any> & {
       children: ReactNode;
     }
-  ) => ReactNode;
+  >;
 };
