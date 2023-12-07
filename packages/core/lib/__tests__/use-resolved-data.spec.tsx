@@ -135,6 +135,7 @@ describe("use-resolved-data", () => {
           "ui": {
             "arrayState": {},
             "componentList": {},
+            "isDragging": false,
             "itemSelector": null,
             "leftSideBarVisible": true,
             "rightSideBarVisible": true,
