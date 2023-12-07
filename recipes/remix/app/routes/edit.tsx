@@ -10,7 +10,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData, useSubmit } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import puckConfig from "../../puck.config";
+import puckConfig from "~/puck.config";
 import { getPage, setPage } from "~/models/page.server";
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
