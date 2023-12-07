@@ -1,6 +1,8 @@
-import { DataTransform } from ".";
+import { Data } from "../types/Config";
 
-export const dataTransforms: DataTransform[] = [
+type Migration = (props: Data & { [key: string]: any }) => Data;
+
+export const migrations: Migration[] = [
   // Migrate root to root.props
   (data) => {
     const rootProps = data.root.props || data.root;
