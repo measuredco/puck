@@ -20,9 +20,9 @@ export const overrideKeys = [
   "preview",
 ] as const;
 
-type OverridesGeneric<
-  Shape extends { [key in (typeof overrideKeys)[number]]: any }
-> = Shape;
+export type OverrideKey = (typeof overrideKeys)[number];
+
+type OverridesGeneric<Shape extends { [key in OverrideKey]: any }> = Shape;
 
 export type Overrides = OverridesGeneric<{
   fieldTypes: Partial<FieldRenderFunctions>;
@@ -49,4 +49,10 @@ export type FieldRenderFunctions = Omit<
     ) => ReactNode;
   },
   "custom"
-> & { [key: string]: (props: InputProps<any>) => ReactNode };
+> & {
+  [key: string]: (
+    props: InputProps<any> & {
+      children: ReactNode;
+    }
+  ) => ReactNode;
+};
