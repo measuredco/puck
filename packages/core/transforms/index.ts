@@ -1,15 +1,7 @@
-import {
-  CurrentData,
-  Data,
-  DefaultComponentProps,
-  DefaultRootProps,
-  LegacyData,
-} from "../types/Config";
+import { Data, DefaultComponentProps, DefaultRootProps } from "../types/Config";
 import { dataTransforms } from "./data-transforms";
 
-export type DataTransform = (
-  props: LegacyData & { [key: string]: any }
-) => Data;
+export type DataTransform = (props: Data & { [key: string]: any }) => Data;
 
 type PropTransform<
   Props extends DefaultComponentProps = DefaultComponentProps,
@@ -22,19 +14,17 @@ type PropTransform<
   } & { root: (props: RootProps & { [key: string]: any }) => RootProps }
 >;
 
-export function migrate(data: Data): CurrentData {
+export function migrate(data: Data): Data {
   return dataTransforms?.reduce(
     (acc, dataTransform) => dataTransform(acc),
     data
-  ) as CurrentData;
+  ) as Data;
 }
 
 export function transformProps<
   Props extends DefaultComponentProps = DefaultComponentProps,
   RootProps extends DefaultComponentProps = DefaultComponentProps
->(data: Data, propTransforms: PropTransform<Props, RootProps>): CurrentData {
-  const afterDataTransform = migrate(data);
-
+>(data: Data, propTransforms: PropTransform<Props, RootProps>): Data {
   const mapItem = (item) => {
     if (propTransforms[item.type]) {
       return {
@@ -46,14 +36,17 @@ export function transformProps<
     return item;
   };
 
-  const afterPropTransforms: CurrentData = {
+  // DEPRECATED
+  const rootProps = data.root.props || data.root;
+
+  const afterPropTransforms: Data = {
     ...data,
     root: propTransforms["root"]
       ? {
-          ...afterDataTransform.root,
-          props: propTransforms["root"](afterDataTransform.root.props as any),
+          ...rootProps,
+          props: propTransforms["root"](rootProps as any),
         }
-      : afterDataTransform.root,
+      : data.root,
     content: data.content.map(mapItem),
     zones: Object.keys(data.zones || {}).reduce(
       (acc, zoneKey) => ({

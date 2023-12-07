@@ -1,4 +1,4 @@
-import { CurrentData } from "../types/Config";
+import { Data } from "../types/Config";
 import { rootDroppableId } from "./root-droppable-id";
 import { setupZone } from "./setup-zone";
 
@@ -9,9 +9,9 @@ export type ItemSelector = {
 
 export const getItem = (
   selector: ItemSelector,
-  data: CurrentData,
+  data: Data,
   dynamicProps: Record<string, any> = {}
-): CurrentData["content"][0] | undefined => {
+): Data["content"][0] | undefined => {
   if (!selector.zone || selector.zone === rootDroppableId) {
     const item = data.content[selector.index];
 

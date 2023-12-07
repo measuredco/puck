@@ -1,4 +1,4 @@
-import { Config, Content, CurrentData } from "../types/Config";
+import { Config, Content, Data } from "../types/Config";
 import { reorder } from "../lib/reorder";
 import { rootDroppableId } from "../lib/root-droppable-id";
 import { insert } from "../lib/insert";
@@ -20,7 +20,7 @@ export const addToZoneCache = (key: string, data: Content) => {
   zoneCache[key] = data;
 };
 
-export const replaceAction = (data: CurrentData, action: ReplaceAction) => {
+export const replaceAction = (data: Data, action: ReplaceAction) => {
   if (action.destinationZone === rootDroppableId) {
     return {
       ...data,
@@ -43,11 +43,7 @@ export const replaceAction = (data: CurrentData, action: ReplaceAction) => {
   };
 };
 
-export const reduceData = (
-  data: CurrentData,
-  action: PuckAction,
-  config: Config
-) => {
+export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   if (action.type === "insert") {
     const emptyComponentData = {
       type: action.componentType,

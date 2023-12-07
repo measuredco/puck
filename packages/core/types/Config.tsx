@@ -195,15 +195,14 @@ export type RootDataWithProps<
 };
 
 // DEPRECATED
-type RootDataWithoutProps<Props extends DefaultRootProps = DefaultRootProps> =
-  Props;
+export type RootDataWithoutProps<
+  Props extends DefaultRootProps = DefaultRootProps
+> = Props;
 
 export type RootData<Props extends DefaultRootProps = DefaultRootProps> =
-  BaseData<Props> & RootDataWithProps<Props>;
-
-// Backwards compatability
-export type LegacyRootData<Props extends DefaultRootProps = DefaultRootProps> =
-  Partial<RootData> & Partial<RootDataWithoutProps<Props>>;
+  BaseData<Props> &
+    Partial<RootDataWithProps<Props>> &
+    Partial<RootDataWithoutProps<Props>>; // DEPRECATED
 
 type ComponentDataWithOptionalProps<
   Props extends { [key: string]: any } = { [key: string]: any }
@@ -214,7 +213,7 @@ type ComponentDataWithOptionalProps<
 // Backwards compatability
 export type MappedItem = ComponentData;
 
-export type CurrentData<
+export type Data<
   Props extends DefaultComponentProps = DefaultComponentProps,
   RootProps extends DefaultRootProps = DefaultRootProps
 > = {
@@ -222,21 +221,6 @@ export type CurrentData<
   content: Content<WithPuckProps<Props>>;
   zones?: Record<string, Content<WithPuckProps<Props>>>;
 };
-
-// Backwards compatability
-export type LegacyData<
-  Props extends DefaultComponentProps = DefaultComponentProps,
-  RootProps extends DefaultRootProps = DefaultRootProps
-> = {
-  root: LegacyRootData<RootProps>;
-  content: Content<WithPuckProps<Props>>;
-  zones?: Record<string, Content<WithPuckProps<Props>>>;
-};
-
-export type Data<
-  Props extends DefaultComponentProps = DefaultComponentProps,
-  RootProps extends DefaultRootProps = DefaultRootProps
-> = LegacyData<Props, RootProps>;
 
 export type ItemWithId = {
   _arrayId: string;
@@ -261,4 +245,4 @@ export type UiState = {
   >;
 };
 
-export type AppState = { data: CurrentData; ui: UiState };
+export type AppState = { data: Data; ui: UiState };

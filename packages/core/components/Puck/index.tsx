@@ -10,7 +10,6 @@ import { DragDropContext, DragStart, DragUpdate } from "@hello-pangea/dnd";
 import type {
   AppState,
   Config,
-  CurrentData,
   Data,
   Field,
   UiState,
@@ -48,7 +47,6 @@ import { useComponentList } from "../../lib/use-component-list";
 import { useResolvedData } from "../../lib/use-resolved-data";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
-import { migrate } from "../../transforms";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -102,8 +100,8 @@ export function Puck({
 }: {
   config: Config<any, any, any>;
   data: Data;
-  onChange?: (data: CurrentData) => void;
-  onPublish: (data: CurrentData) => void;
+  onChange?: (data: Data) => void;
+  onPublish: (data: Data) => void;
   plugins?: Plugin[];
   renderComponentList?: (props: {
     children: ReactNode;
@@ -126,7 +124,7 @@ export function Puck({
 
   const [initialAppState] = useState<AppState>(() => ({
     ...defaultAppState,
-    data: migrate(initialData),
+    data: initialData,
     ui: {
       ...defaultAppState.ui,
       // Store categories under componentList on state to allow render functions and plugins to modify
@@ -266,6 +264,18 @@ export function Puck({
   >();
 
   const componentList = useComponentList(config, appState.ui);
+
+  // DEPRECATED
+  const rootProps = data.root.props || data.root;
+
+  // DEPRECATED
+  useEffect(() => {
+    if (Object.keys(data.root).length > 0 && !data.root.props) {
+      console.error(
+        "Warning: Defining props on `root` is deprecated. Please use `root.props`. This will be a breaking change in a future release."
+      );
+    }
+  }, []);
 
   const toggleSidebars = useCallback(
     (sidebar: "left" | "right") => {
@@ -450,7 +460,7 @@ export function Puck({
                           </div>
                           <div className={getClassName("headerTitle")}>
                             <Heading rank={2} size="xs">
-                              {headerTitle || data.root.props.title || "Page"}
+                              {headerTitle || rootProps.title || "Page"}
                               {headerPath && (
                                 <>
                                   {" "}
@@ -542,7 +552,7 @@ export function Puck({
                           <Page
                             dispatch={dispatch}
                             state={appState}
-                            {...data.root.props}
+                            {...rootProps}
                           >
                             <DropZone zone={rootDroppableId} />
                           </Page>
@@ -581,7 +591,7 @@ export function Puck({
                               if (selectedItem) {
                                 currentProps = selectedItem.props;
                               } else {
-                                currentProps = data.root.props;
+                                currentProps = rootProps;
                               }
 
                               const newProps = {
@@ -627,26 +637,34 @@ export function Puck({
                                   });
                                 }
                               } else {
-                                // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-                                if (config.root?.resolveData) {
-                                  resolveData({
-                                    ui: { ...ui, ...updatedUi },
-                                    data: {
-                                      ...data,
-                                      root: { props: newProps },
-                                    },
-                                  });
-                                } else {
-                                  dispatch({
-                                    type: "set",
-                                    state: {
+                                if (data.root.props) {
+                                  // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
+                                  if (config.root?.resolveData) {
+                                    resolveData({
                                       ui: { ...ui, ...updatedUi },
                                       data: {
                                         ...data,
                                         root: { props: newProps },
                                       },
-                                    },
-                                    recordHistory: true,
+                                    });
+                                  } else {
+                                    dispatch({
+                                      type: "set",
+                                      state: {
+                                        ui: { ...ui, ...updatedUi },
+                                        data: {
+                                          ...data,
+                                          root: { props: newProps },
+                                        },
+                                      },
+                                      recordHistory: true,
+                                    });
+                                  }
+                                } else {
+                                  // DEPRECATED
+                                  dispatch({
+                                    type: "setData",
+                                    data: { root: newProps },
                                   });
                                 }
                               }
@@ -680,7 +698,7 @@ export function Puck({
                                   label={field.label}
                                   readOnly={readOnly[fieldName]}
                                   readOnlyFields={readOnly}
-                                  value={data.root.props[fieldName]}
+                                  value={rootProps[fieldName]}
                                   onChange={onChange}
                                 />
                               );

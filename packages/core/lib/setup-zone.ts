@@ -1,12 +1,9 @@
-import { CurrentData } from "../types/Config";
+import { Data } from "../types/Config";
 import { rootDroppableId } from "./root-droppable-id";
 
-export const setupZone = (
-  data: CurrentData,
-  zoneKey: string
-): Required<CurrentData> => {
+export const setupZone = (data: Data, zoneKey: string): Required<Data> => {
   if (zoneKey === rootDroppableId) {
-    return data as Required<CurrentData>;
+    return data as Required<Data>;
   }
 
   const newData = { ...data };
@@ -15,5 +12,5 @@ export const setupZone = (
 
   newData.zones[zoneKey] = newData.zones[zoneKey] || [];
 
-  return newData as Required<CurrentData>;
+  return newData as Required<Data>;
 };
