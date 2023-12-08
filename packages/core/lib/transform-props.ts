@@ -28,15 +28,18 @@ export function transformProps<
 
   // DEPRECATED
   const rootProps = data.root.props || data.root;
+  let newRoot = { ...data.root };
+  if (propTransforms["root"]) {
+    if (data.root.props) {
+      newRoot.props = propTransforms["root"](rootProps as any);
+    } else {
+      newRoot = propTransforms["root"](rootProps as any);
+    }
+  }
 
   const afterPropTransforms: Data = {
     ...data,
-    root: propTransforms["root"]
-      ? {
-          ...rootProps,
-          props: propTransforms["root"](rootProps as any),
-        }
-      : data.root,
+    root: newRoot,
     content: data.content.map(mapItem),
     zones: Object.keys(data.zones || {}).reduce(
       (acc, zoneKey) => ({
