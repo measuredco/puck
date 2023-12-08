@@ -3,8 +3,8 @@ import { Globe, ChevronLeft, ChevronRight } from "react-feather";
 
 import { Button } from "../Button";
 import { IconButton } from "../IconButton/IconButton";
+import { useAppContext } from "../Puck/context";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { usePuckHistory } from "../../lib/use-puck-history";
 import { PuckAction } from "../../reducer";
 import type { AppState, Data } from "../../types/Config";
 
@@ -32,10 +32,11 @@ export const MenuBar = ({
   }) => ReactElement;
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { canForward, canRewind, rewind, forward } = usePuckHistory({
-    appState,
-    dispatch,
-  });
+  const {
+    history: { rewind, forward, historyStore },
+  } = useAppContext();
+
+  const { canForward = false, canRewind = false } = historyStore || {};
 
   return (
     <div

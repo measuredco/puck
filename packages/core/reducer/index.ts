@@ -1,6 +1,5 @@
 import { Reducer } from "react";
 import { AppState, Config } from "../types/Config";
-import { recordDiff } from "../lib/use-puck-history";
 import { reduceData } from "./data";
 import { PuckAction, SetAction } from "./actions";
 import { reduceUi } from "./state";
@@ -12,7 +11,10 @@ export type ActionType = "insert" | "reorder";
 
 export type StateReducer = Reducer<AppState, PuckAction>;
 
-const storeInterceptor = (reducer: StateReducer) => {
+const storeInterceptor = (
+  reducer: StateReducer,
+  record?: (appState: AppState) => void
+) => {
   return (state: AppState, action: PuckAction) => {
     const newAppState = reducer(state, action);
 
@@ -29,7 +31,7 @@ const storeInterceptor = (reducer: StateReducer) => {
         ? action.recordHistory
         : isValidType
     ) {
-      recordDiff(newAppState);
+      if (record) record(newAppState);
     }
 
     return newAppState;
@@ -49,8 +51,10 @@ export const setAction = (state: AppState, action: SetAction) => {
 
 export const createReducer = ({
   config,
+  record,
 }: {
   config: Config<any>;
+  record?: (appState: AppState) => void;
 }): StateReducer =>
   storeInterceptor((state, action) => {
     const data = reduceData(state.data, action, config);
@@ -61,4 +65,4 @@ export const createReducer = ({
     }
 
     return { data, ui };
-  });
+  }, record);
