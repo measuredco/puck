@@ -34,6 +34,8 @@ import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
 import { Overrides } from "../../types/Overrides";
 import { loadOverrides } from "../../lib/load-overrides";
+import { usePuckHistory } from "../../lib/use-puck-history";
+import { useHistoryStore } from "../../lib/use-history-store";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -71,7 +73,11 @@ export function Puck({
   headerTitle?: string;
   headerPath?: string;
 }) {
-  const [reducer] = useState(() => createReducer({ config }));
+  const historyStore = useHistoryStore();
+
+  const [reducer] = useState(() =>
+    createReducer({ config, record: historyStore.record })
+  );
 
   const [initialAppState] = useState<AppState>(() => ({
     ...defaultAppState,
@@ -105,6 +111,8 @@ export function Puck({
   );
 
   const { data, ui } = appState;
+
+  const history = usePuckHistory({ dispatch, initialAppState, historyStore });
 
   const { resolveData, componentState } = useResolvedData(
     appState,
@@ -287,6 +295,7 @@ export function Puck({
           resolveData,
           plugins,
           overrides: loadedOverrides,
+          history,
         }}
       >
         <DragDropContext

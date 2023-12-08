@@ -1,214 +1,102 @@
-import { _recordHistory } from "../use-puck-history";
-import { AppState } from "../../types/Config";
+import { renderHook, act } from "@testing-library/react";
+import { usePuckHistory } from "../use-puck-history";
+import { HistoryStore } from "../use-history-store";
 import { defaultAppState } from "../../components/Puck/context";
 
-const mockDispatch = jest.fn();
+jest.mock("react-hotkeys-hook");
+jest.mock("../use-history-store");
 
-const mockedAppState1: AppState = {
-  ...defaultAppState,
-  data: {
-    ...defaultAppState.data,
-    content: [
-      {
-        type: "MyComponent",
-        props: {
-          id: "123",
-          title: "Hello, world",
-        },
-      },
-    ],
-  },
-};
+const historyStore = {
+  canRewind: false,
+  prevHistory: { data: null },
+  nextHistory: { data: null },
+  rewind: jest.fn(),
+  forward: jest.fn(),
+} as unknown as HistoryStore;
 
-const mockedAppState2: AppState = {
-  ...defaultAppState,
-  data: {
-    ...defaultAppState.data,
-    content: [
-      {
-        type: "MyComponent",
-        props: {
-          id: "123",
-          title: "Goodbye, world",
-        },
-      },
-    ],
-  },
-};
+const initialAppState = defaultAppState;
+const dispatch = jest.fn();
 
-const mockedAppStateArray1: AppState = {
-  data: {
-    content: [
-      {
-        type: "ButtonGroup",
-        props: {
-          buttons: [
-            { label: "Learn more", href: "#", variant: "primary" },
-            { label: "Button", href: "#", variant: "primary" },
-            { label: "Button", href: "#", variant: "primary" },
-          ],
-          id: "ButtonGroup-7fc86319954fbb0551a24282018c3d2a10b14fbd",
-        },
-      },
-    ],
-    root: { props: { title: "" } },
-    zones: {},
-  },
-  ui: {
-    leftSideBarVisible: true,
-    rightSideBarVisible: true,
-    arrayState: {
-      "ArrayField-6f94973722d42695d4e7b8678e7dcca5affc70df": {
-        items: [
-          {
-            _originalIndex: 0,
-            _arrayId: "ArrayItem-46a064dbef49e8441afd782b10320b74f27f8bcb",
-          },
-          {
-            _originalIndex: 1,
-            _arrayId: "ArrayItem-5d99e3a7721edad0d127c9a6b010a37097dad610",
-          },
-          {
-            _originalIndex: 2,
-            _arrayId: "ArrayItem-222ea8b444fa799a8863eb32d057f3080ec99c65",
-          },
-        ],
-        openId: "",
-      },
-    },
-    isDragging: false,
-    itemSelector: { index: 0, zone: "default-zone" },
-    componentList: {},
-  },
-};
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
-const mockedAppStateArray2: AppState = {
-  data: {
-    content: [
-      {
-        type: "ButtonGroup",
-        props: {
-          buttons: [
-            { label: "Button", href: "#", variant: "primary" },
-            { label: "Button", href: "#", variant: "primary" },
-          ],
-          id: "ButtonGroup-7fc86319954fbb0551a24282018c3d2a10b14fbd",
-        },
-      },
-    ],
-    root: { props: { title: "" } },
-    zones: {},
-  },
-  ui: {
-    leftSideBarVisible: true,
-    rightSideBarVisible: true,
-    arrayState: {
-      "ArrayField-6f94973722d42695d4e7b8678e7dcca5affc70df": {
-        items: [
-          {
-            _originalIndex: 0,
-            _arrayId: "ArrayItem-5d99e3a7721edad0d127c9a6b010a37097dad610",
-          },
-          {
-            _originalIndex: 1,
-            _arrayId: "ArrayItem-222ea8b444fa799a8863eb32d057f3080ec99c65",
-          },
-          {
-            _originalIndex: 2,
-            _arrayId: "ArrayItem-46a064dbef49e8441afd782b10320b74f27f8bcb",
-          },
-        ],
-        openId: "",
-      },
-    },
-    isDragging: false,
-    itemSelector: { index: 0, zone: "default-zone" },
-    componentList: {},
-  },
-};
+describe("use-puck-history", () => {
+  test("rewind function does not call dispatch when there is no history", () => {
+    const { result } = renderHook(() =>
+      usePuckHistory({ dispatch, initialAppState, historyStore })
+    );
 
-describe("usePuckHistory", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it("rewinds a diff correctly", () => {
-    const histories: { rewind: () => void; forward: () => void }[] = [];
-    const record = (history) => histories.push(history);
-
-    _recordHistory({
-      snapshot: mockedAppState1,
-      newSnapshot: mockedAppState2,
-      dispatch: mockDispatch,
-      record,
+    act(() => {
+      result.current.rewind();
     });
 
-    // Rewind last history
-    histories[histories.length - 1].rewind();
-
-    expect(mockDispatch).toHaveBeenCalledWith({
-      type: "set",
-      state: mockedAppState1,
-    });
+    expect(historyStore.rewind).not.toHaveBeenCalled();
+    expect(dispatch).not.toHaveBeenCalled();
   });
 
-  it("fast-forwards a diff correctly", () => {
-    const histories: { rewind: () => void; forward: () => void }[] = [];
-    const record = (history) => {
-      histories.push(history);
+  test("rewind function calls dispatch when there is a history", () => {
+    historyStore.canRewind = true;
+    historyStore.prevHistory = {
+      id: "",
+      data: {
+        ...defaultAppState,
+        ui: { ...defaultAppState.ui, leftSideBarVisible: false },
+      },
     };
 
-    _recordHistory({
-      snapshot: mockedAppState1,
-      newSnapshot: mockedAppState2,
-      dispatch: mockDispatch,
-      record,
+    const { result } = renderHook(() =>
+      usePuckHistory({ dispatch, initialAppState, historyStore })
+    );
+
+    act(() => {
+      result.current.rewind();
     });
 
-    histories[histories.length - 1].forward();
-
-    expect(mockDispatch).toHaveBeenCalledWith({
+    expect(historyStore.rewind).toHaveBeenCalled();
+    expect(dispatch).toHaveBeenCalledWith({
       type: "set",
-      state: mockedAppState2,
+      state: historyStore.prevHistory?.data || initialAppState,
     });
   });
 
-  it("rewinds an array diff correctly", () => {
-    const histories: any[] = [];
-    const record = (history) => histories.push(history);
+  test("forward function does not call dispatch when there is no future", () => {
+    historyStore.canRewind = false;
+    historyStore.nextHistory = null;
 
-    _recordHistory({
-      snapshot: mockedAppStateArray1,
-      newSnapshot: mockedAppStateArray2,
-      dispatch: mockDispatch,
-      record,
+    const { result } = renderHook(() =>
+      usePuckHistory({ dispatch, initialAppState, historyStore })
+    );
+
+    act(() => {
+      result.current.forward();
     });
 
-    // Rewind last history
-    histories[histories.length - 1].rewind();
-
-    expect(mockDispatch).toHaveBeenCalledWith({
-      type: "set",
-      state: mockedAppStateArray1,
-    });
+    expect(historyStore.forward).not.toHaveBeenCalled();
+    expect(dispatch).not.toHaveBeenCalled();
   });
 
-  it("fast-forwards a diff correctly", () => {
-    const histories: any[] = [];
-    const record = (history) => histories.push(history);
+  test("forward function calls dispatch when there is a future", () => {
+    historyStore.nextHistory = {
+      id: "",
+      data: {
+        ...defaultAppState,
+        ui: { ...defaultAppState.ui, leftSideBarVisible: false },
+      },
+    };
 
-    _recordHistory({
-      snapshot: mockedAppStateArray1,
-      newSnapshot: mockedAppStateArray2,
-      dispatch: mockDispatch,
-      record,
+    const { result } = renderHook(() =>
+      usePuckHistory({ dispatch, initialAppState, historyStore })
+    );
+
+    act(() => {
+      result.current.forward();
     });
 
-    histories[histories.length - 1].forward();
-
-    expect(mockDispatch).toHaveBeenCalledWith({
+    expect(historyStore.forward).toHaveBeenCalled();
+    expect(dispatch).toHaveBeenCalledWith({
       type: "set",
-      state: mockedAppStateArray2,
+      state: historyStore.nextHistory?.data,
     });
   });
 });

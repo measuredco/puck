@@ -4,6 +4,7 @@ import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
 import { Plugin } from "../../types/Plugin";
 import { Overrides } from "../../types/Overrides";
+import { PuckHistory } from "../../lib/use-puck-history";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: { props: { title: "" } } },
@@ -25,6 +26,7 @@ type AppContext = {
   resolveData: (newAppState: AppState) => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
+  history: Partial<PuckHistory>;
 };
 
 export const appContext = createContext<AppContext>({
@@ -35,6 +37,7 @@ export const appContext = createContext<AppContext>({
   resolveData: () => {},
   plugins: [],
   overrides: {},
+  history: {},
 });
 
 export const AppProvider = appContext.Provider;
