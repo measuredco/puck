@@ -18,31 +18,35 @@ An object produced by Puck describing the shape of content.
 }
 ```
 
-This document describes the latest supported data. To learn more about automatic data migration, visit the [Data Migration docs](/docs/integrating-puck/data-migration).
-
 ## Params
 
-#### `content`
+| Param                 | Example                                  | Type   | Status   |
+| --------------------- | ---------------------------------------- | ------ | -------- |
+| [`content`](#content) | `content: []`                            | Array  | Required |
+| [`root`](#root)       | `root: { props: { title: "My page" } }`  | Object | Required |
+| [`zones`](#zones)     | `zones: { "HeadingBlock-123:zone": [] }` | Object | -        |
+
+### `content`
 
 An array containing an object for each component in the main content region.
 
-#### `content[*]`
+### `content[*]`
 
-##### Params
+#### Params
 
-| Param                          | Example                            | Type    | Status   |
-| ------------------------------ | ---------------------------------- | ------- | -------- |
-| [`type`](#contenttype)         | `type: "HeadingBlock"`             | "array" | Required |
-| [`props`](#contentprops)       | `props: { title: "Hello, world" }` | Object  | Required |
-| [`readOnly`](#contentreadonly) | `readOnly: { title: true }`        | Object  | -        |
+| Param                          | Example                            | Type   | Status   |
+| ------------------------------ | ---------------------------------- | ------ | -------- |
+| [`type`](#contenttype)         | `type: "HeadingBlock"`             | String | Required |
+| [`props`](#contentprops)       | `props: { title: "Hello, world" }` | Object | Required |
+| [`readOnly`](#contentreadonly) | `readOnly: { title: true }`        | Object | -        |
 
-##### Required params
+#### Required params
 
-###### `content[*].type`
+##### `content[*].type`
 
 The type of the component, which tells Puck to run the [`render()`](/docs/api-reference/configuration/component-config#renderprops) method for the component of the [same key](/docs/api-reference/config#components).
 
-###### `content[*].props`
+##### `content[*].props`
 
 The props stored based on the [`component config`](/docs/api-reference/configuration/component-config) that Puck will pass to the [`render()`](/docs/api-reference/configuration/component-config#renderprops) method for the component of the [same key](/docs/api-reference/config#components).
 
@@ -62,9 +66,9 @@ The props stored based on the [`component config`](/docs/api-reference/configura
 }
 ```
 
-##### Optional params
+#### Optional params
 
-###### `content[*].readOnly`
+##### `content[*].readOnly`
 
 An object describing which fields are set to [read-only](/docs/api-reference/configuration/component-config#datareadonly-1).
 
