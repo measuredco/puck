@@ -6,6 +6,5 @@
   "dynamic-props": {},
   "external-data-sources": {},
   "server-components": {},
-  "prop-migration": {},
   "data-migration": {}
 }
