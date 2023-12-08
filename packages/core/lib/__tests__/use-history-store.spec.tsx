@@ -13,8 +13,8 @@ describe("use-history-store", () => {
   });
 
   test("should have the correct initial state", () => {
-    expect(renderedHook.result.current.canRewind).toBe(false);
-    expect(renderedHook.result.current.canForward).toBe(false);
+    expect(renderedHook.result.current.hasPast).toBe(false);
+    expect(renderedHook.result.current.hasFuture).toBe(false);
     expect(renderedHook.result.current.histories.length).toBe(0);
   });
 
@@ -22,8 +22,8 @@ describe("use-history-store", () => {
     act(() => renderedHook.result.current.record("Apples"));
     act(() => renderedHook.result.current.record("Oranges"));
 
-    expect(renderedHook.result.current.canRewind).toBe(true);
-    expect(renderedHook.result.current.canForward).toBe(false);
+    expect(renderedHook.result.current.hasPast).toBe(true);
+    expect(renderedHook.result.current.hasFuture).toBe(false);
     expect(renderedHook.result.current.histories.length).toBe(2);
     expect(renderedHook.result.current.histories[0].data).toBe("Apples");
     expect(renderedHook.result.current.histories[1].data).toBe("Oranges");
@@ -33,57 +33,57 @@ describe("use-history-store", () => {
   test("should enable partial rewinds through history", () => {
     act(() => renderedHook.result.current.record("Apples"));
     act(() => renderedHook.result.current.record("Oranges"));
-    act(() => renderedHook.result.current.rewind());
+    act(() => renderedHook.result.current.back());
 
-    expect(renderedHook.result.current.canRewind).toBe(true);
-    expect(renderedHook.result.current.canForward).toBe(true);
+    expect(renderedHook.result.current.hasPast).toBe(true);
+    expect(renderedHook.result.current.hasFuture).toBe(true);
     expect(renderedHook.result.current.currentHistory.data).toBe("Apples");
   });
 
   test("should enable full rewinds through history", () => {
     act(() => renderedHook.result.current.record("Apples"));
     act(() => renderedHook.result.current.record("Oranges"));
-    act(() => renderedHook.result.current.rewind());
-    act(() => renderedHook.result.current.rewind());
+    act(() => renderedHook.result.current.back());
+    act(() => renderedHook.result.current.back());
 
-    expect(renderedHook.result.current.canRewind).toBe(false);
-    expect(renderedHook.result.current.canForward).toBe(true);
+    expect(renderedHook.result.current.hasPast).toBe(false);
+    expect(renderedHook.result.current.hasFuture).toBe(true);
     expect(renderedHook.result.current.currentHistory).toBeFalsy();
   });
 
   test("should enable partial fast-forwards through history", () => {
     act(() => renderedHook.result.current.record("Apples"));
     act(() => renderedHook.result.current.record("Oranges"));
-    act(() => renderedHook.result.current.rewind());
-    act(() => renderedHook.result.current.rewind());
+    act(() => renderedHook.result.current.back());
+    act(() => renderedHook.result.current.back());
     act(() => renderedHook.result.current.forward());
 
-    expect(renderedHook.result.current.canRewind).toBe(true);
-    expect(renderedHook.result.current.canForward).toBe(true);
+    expect(renderedHook.result.current.hasPast).toBe(true);
+    expect(renderedHook.result.current.hasFuture).toBe(true);
     expect(renderedHook.result.current.currentHistory.data).toBe("Apples");
   });
 
-  test("should enable full rewinds through history", () => {
+  test("should enable full fast-forwards through history", () => {
     act(() => renderedHook.result.current.record("Apples"));
     act(() => renderedHook.result.current.record("Oranges"));
-    act(() => renderedHook.result.current.rewind());
-    act(() => renderedHook.result.current.rewind());
+    act(() => renderedHook.result.current.back());
+    act(() => renderedHook.result.current.back());
     act(() => renderedHook.result.current.forward());
     act(() => renderedHook.result.current.forward());
 
-    expect(renderedHook.result.current.canRewind).toBe(true);
-    expect(renderedHook.result.current.canForward).toBe(false);
+    expect(renderedHook.result.current.hasPast).toBe(true);
+    expect(renderedHook.result.current.hasFuture).toBe(false);
     expect(renderedHook.result.current.currentHistory.data).toBe("Oranges");
   });
 
-  test("should replace the history if record is triggered after rewind", () => {
+  test("should replace the history if record is triggered after back", () => {
     act(() => renderedHook.result.current.record("Apples"));
     act(() => renderedHook.result.current.record("Oranges"));
-    act(() => renderedHook.result.current.rewind());
+    act(() => renderedHook.result.current.back());
     act(() => renderedHook.result.current.record("Banana"));
 
-    expect(renderedHook.result.current.canRewind).toBe(true);
-    expect(renderedHook.result.current.canForward).toBe(false);
+    expect(renderedHook.result.current.hasPast).toBe(true);
+    expect(renderedHook.result.current.hasFuture).toBe(false);
     expect(renderedHook.result.current.histories.length).toBe(2);
     expect(renderedHook.result.current.histories[0].data).toBe("Apples");
     expect(renderedHook.result.current.histories[1].data).toBe("Banana");
