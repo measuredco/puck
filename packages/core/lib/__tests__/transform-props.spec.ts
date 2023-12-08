@@ -20,6 +20,24 @@ describe("transformProps method", () => {
     });
   });
 
+  // DEPRECATED
+  it("should migrate props for the legacy roots", () => {
+    expect(
+      transformProps(
+        { content: [], root: { title: "Hello, world" } },
+        {
+          root: (props) => ({
+            updatedTitle: props.title,
+          }),
+        }
+      )
+    ).toEqual({
+      content: [],
+      root: { updatedTitle: "Hello, world" },
+      zones: {},
+    });
+  });
+
   it("should migrate props for a specified component", () => {
     expect(
       transformProps(
