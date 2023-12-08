@@ -126,12 +126,15 @@ export function Puck({
 
   const setItemSelector = useCallback(
     (newItemSelector: ItemSelector | null) => {
+      if (newItemSelector === itemSelector) return;
+
       dispatch({
         type: "setUi",
         ui: { itemSelector: newItemSelector },
+        recordHistory: true,
       });
     },
-    []
+    [itemSelector]
   );
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
