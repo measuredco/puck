@@ -33,10 +33,10 @@ export const MenuBar = ({
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const {
-    history: { rewind, forward, historyStore },
+    history: { back, forward, historyStore },
   } = useAppContext();
 
-  const { canForward = false, canRewind = false } = historyStore || {};
+  const { hasFuture = false, hasPast = false } = historyStore || {};
 
   return (
     <div
@@ -57,21 +57,19 @@ export const MenuBar = ({
     >
       <div className={getClassName("inner")}>
         <div className={getClassName("history")}>
-          <IconButton title="undo" disabled={!canRewind} onClick={rewind}>
+          <IconButton title="undo" disabled={!hasPast} onClick={back}>
             <ChevronLeft
               size={21}
               stroke={
-                canRewind
-                  ? "var(--puck-color-black)"
-                  : "var(--puck-color-grey-7)"
+                hasPast ? "var(--puck-color-black)" : "var(--puck-color-grey-7)"
               }
             />
           </IconButton>
-          <IconButton title="redo" disabled={!canForward} onClick={forward}>
+          <IconButton title="redo" disabled={!hasFuture} onClick={forward}>
             <ChevronRight
               size={21}
               stroke={
-                canForward
+                hasFuture
                   ? "var(--puck-color-black)"
                   : "var(--puck-color-grey-7)"
               }

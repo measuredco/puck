@@ -10,10 +10,10 @@ export type History<D = any> = {
 export type HistoryStore<D = any> = {
   index: number;
   currentHistory: History;
-  canRewind: boolean;
-  canForward: boolean;
+  hasPast: boolean;
+  hasFuture: boolean;
   record: (data: D) => void;
-  rewind: VoidFunction;
+  back: VoidFunction;
   forward: VoidFunction;
   nextHistory: History<D> | null;
   prevHistory: History<D> | null;
@@ -28,12 +28,12 @@ export function useHistoryStore<D = any>(): HistoryStore<D> {
   const [index, setIndex] = useState(EMPTY_HISTORY_INDEX);
   // const index = useRef(EMPTY_HISTORY_INDEX);
 
-  const canRewind = index > EMPTY_HISTORY_INDEX;
-  const canForward = index < histories.length - 1;
+  const hasPast = index > EMPTY_HISTORY_INDEX;
+  const hasFuture = index < histories.length - 1;
 
   const currentHistory = histories[index];
-  const nextHistory = canForward ? histories[index + 1] : null;
-  const prevHistory = canRewind ? histories[index - 1] : null;
+  const nextHistory = hasFuture ? histories[index + 1] : null;
+  const prevHistory = hasPast ? histories[index - 1] : null;
 
   const record = useDebouncedCallback((data: D) => {
     const history: History = {
@@ -50,7 +50,7 @@ export function useHistoryStore<D = any>(): HistoryStore<D> {
     });
   }, 250);
 
-  const rewind = () => {
+  const back = () => {
     setIndex(index - 1);
   };
 
@@ -61,10 +61,10 @@ export function useHistoryStore<D = any>(): HistoryStore<D> {
   return {
     index: index,
     currentHistory,
-    canRewind,
-    canForward,
+    hasPast,
+    hasFuture,
     record,
-    rewind,
+    back,
     forward,
     nextHistory,
     prevHistory,

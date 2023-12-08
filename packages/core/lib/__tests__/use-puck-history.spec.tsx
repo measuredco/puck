@@ -7,10 +7,10 @@ jest.mock("react-hotkeys-hook");
 jest.mock("../use-history-store");
 
 const historyStore = {
-  canRewind: false,
+  hasPast: false,
   prevHistory: { data: null },
   nextHistory: { data: null },
-  rewind: jest.fn(),
+  back: jest.fn(),
   forward: jest.fn(),
 } as unknown as HistoryStore;
 
@@ -22,21 +22,21 @@ beforeEach(() => {
 });
 
 describe("use-puck-history", () => {
-  test("rewind function does not call dispatch when there is no history", () => {
+  test("back function does not call dispatch when there is no history", () => {
     const { result } = renderHook(() =>
       usePuckHistory({ dispatch, initialAppState, historyStore })
     );
 
     act(() => {
-      result.current.rewind();
+      result.current.back();
     });
 
-    expect(historyStore.rewind).not.toHaveBeenCalled();
+    expect(historyStore.back).not.toHaveBeenCalled();
     expect(dispatch).not.toHaveBeenCalled();
   });
 
-  test("rewind function calls dispatch when there is a history", () => {
-    historyStore.canRewind = true;
+  test("back function calls dispatch when there is a history", () => {
+    historyStore.hasPast = true;
     historyStore.prevHistory = {
       id: "",
       data: {
@@ -50,10 +50,10 @@ describe("use-puck-history", () => {
     );
 
     act(() => {
-      result.current.rewind();
+      result.current.back();
     });
 
-    expect(historyStore.rewind).toHaveBeenCalled();
+    expect(historyStore.back).toHaveBeenCalled();
     expect(dispatch).toHaveBeenCalledWith({
       type: "set",
       state: historyStore.prevHistory?.data || initialAppState,
@@ -61,7 +61,7 @@ describe("use-puck-history", () => {
   });
 
   test("forward function does not call dispatch when there is no future", () => {
-    historyStore.canRewind = false;
+    historyStore.hasPast = false;
     historyStore.nextHistory = null;
 
     const { result } = renderHook(() =>

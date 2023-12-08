@@ -4,7 +4,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { HistoryStore } from "./use-history-store";
 
 export type PuckHistory = {
-  rewind: VoidFunction;
+  back: VoidFunction;
   forward: VoidFunction;
   historyStore: HistoryStore;
 };
@@ -18,14 +18,14 @@ export function usePuckHistory({
   initialAppState: AppState;
   historyStore: HistoryStore;
 }) {
-  const rewind = () => {
-    if (historyStore.canRewind) {
+  const back = () => {
+    if (historyStore.hasPast) {
       dispatch({
         type: "set",
         state: historyStore.prevHistory?.data || initialAppState,
       });
 
-      historyStore.rewind();
+      historyStore.back();
     }
   };
 
@@ -37,12 +37,12 @@ export function usePuckHistory({
     }
   };
 
-  useHotkeys("meta+z", rewind, { preventDefault: true });
+  useHotkeys("meta+z", back, { preventDefault: true });
   useHotkeys("meta+shift+z", forward, { preventDefault: true });
   useHotkeys("meta+y", forward, { preventDefault: true });
 
   return {
-    rewind,
+    back,
     forward,
     historyStore,
   };
