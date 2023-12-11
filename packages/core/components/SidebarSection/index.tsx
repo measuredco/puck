@@ -59,7 +59,7 @@ export const SidebarSection = ({
       <div className={getClassName("content")}>{children}</div>
       {isLoading && (
         <div className={getClassName("loadingOverlay")}>
-          <ClipLoader />
+          <ClipLoader aria-label="loading" />
         </div>
       )}
     </div>
