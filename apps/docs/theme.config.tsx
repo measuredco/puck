@@ -1,5 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useRouter } from "next/router";
 import { DocsThemeConfig, useConfig } from "nextra-theme-docs";
+
+import { ReleaseSwitcher } from "./components/ReleaseSwitcher";
 
 const Head = () => {
   const { asPath, defaultLocale, locale } = useRouter();
@@ -111,6 +114,9 @@ const theme: DocsThemeConfig = {
   },
   docsRepositoryBase: "https://github.com/measuredco/puck/tree/main/apps/docs",
   primarySaturation: 0,
+  navbar: {
+    extraContent: ReleaseSwitcher,
+  },
 };
 
 export default theme;
