@@ -39,7 +39,7 @@ export function Editor() {
 
 ## Plugin currying
 
-Plugins are rendered in the order they are defined. All overrides are _curried_, meaning that the return node of one plugin will be passed as `children` to the next plugin.
+Plugins are rendered in the order they are defined. Unless otherwise specified, all overrides are _curried_, meaning that the return node of one plugin will be passed as `children` to the next plugin.
 
 This may result in some incompatible plugin combinations. To improve your chance of building a widely compatible plugin, consider:
 

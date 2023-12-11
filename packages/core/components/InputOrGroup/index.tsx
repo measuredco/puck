@@ -7,6 +7,7 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import {
@@ -70,8 +71,15 @@ export const FieldLabelInternal = ({
   el?: "label" | "div";
   readOnly?: boolean;
 }) => {
+  const { overrides } = useAppContext();
+
+  const Wrapper = useMemo(
+    () => overrides.fieldLabel || FieldLabel,
+    [overrides]
+  );
+
   return (
-    <FieldLabel
+    <Wrapper
       label={label}
       icon={icon}
       className={getClassName({ readOnly })}
@@ -79,7 +87,7 @@ export const FieldLabelInternal = ({
       el={el}
     >
       {children}
-    </FieldLabel>
+    </Wrapper>
   );
 };
 

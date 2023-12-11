@@ -13,6 +13,7 @@ export const overrideKeys = [
   "header",
   "headerActions",
   "fields",
+  "fieldLabel",
   "components",
   "componentItem",
   "outline",
@@ -33,6 +34,14 @@ export type Overrides = OverridesGeneric<{
     children: ReactNode;
     isLoading: boolean;
     itemSelector?: ItemSelector | null;
+  }>;
+  fieldLabel: RenderFunc<{
+    children?: ReactNode;
+    icon?: ReactNode;
+    label: string;
+    el?: "label" | "div";
+    readOnly?: boolean;
+    className?: string;
   }>;
   components: RenderFunc;
   componentItem: RenderFunc;

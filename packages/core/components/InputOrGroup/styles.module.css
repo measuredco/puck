@@ -55,7 +55,7 @@
   width: 100%;
 }
 
-.Input select.Input-input {
+select.Input-input {
   /* Safari */
   appearance: none;
   background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23c3c3c3'><polygon points='0,0 100,0 50,50'/></svg>")
@@ -138,6 +138,6 @@
   display: none;
 }
 
-.Input textarea.Input-input {
+textarea.Input-input {
   margin-bottom: -4px; /* Remove strange bottom border */
 }
