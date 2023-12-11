@@ -120,6 +120,7 @@ const Tabs = ({
                 }
               }}
               style={{
+                fontSize: 16,
                 padding: "16px 16px",
                 paddingTop: 19,
                 color: isCurrentTab ? "var(--puck-color-azure-3)" : "black",
