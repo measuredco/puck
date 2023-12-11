@@ -103,7 +103,7 @@ const Tabs = ({
         {tabs.map((tab, idx) => {
           const isCurrentTab = currentTab === idx;
           return (
-            <div
+            <button
               key={idx}
               onClick={() => {
                 if (currentTab === idx) {
@@ -123,13 +123,16 @@ const Tabs = ({
                 padding: "16px 16px",
                 paddingTop: 19,
                 color: isCurrentTab ? "var(--puck-color-azure-3)" : "black",
+                border: "none",
                 borderBottom: isCurrentTab
                   ? "3px solid var(--puck-color-azure-3)"
                   : "3px solid transparent",
+                background: "white",
+                cursor: "pointer",
               }}
             >
               {tab.label}
-            </div>
+            </button>
           );
         })}
         <div
