@@ -67,7 +67,7 @@ export const Button = ({
       {loading && (
         <>
           &nbsp;&nbsp;
-          <ClipLoader color="inherit" size="14px" />
+          <ClipLoader aria-label="loading" color="inherit" size="14px" />
         </>
       )}
     </ElementType>

@@ -89,7 +89,7 @@ export const DraggableComponent = ({
           {debug}
           {isLoading && (
             <div className={getClassName("loadingOverlay")}>
-              <ClipLoader size={16} color="inherit" />
+              <ClipLoader aria-label="loading" size={16} color="inherit" />
             </div>
           )}
           <div className={getClassName("overlay")}>

@@ -34,7 +34,7 @@ const DefaultFields = ({
       {children}
       {isLoading && (
         <div className={getClassName("loadingOverlay")}>
-          <ClipLoader />
+          <ClipLoader aria-label="loading" />
         </div>
       )}
     </div>
