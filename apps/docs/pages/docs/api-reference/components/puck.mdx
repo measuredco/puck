@@ -25,18 +25,18 @@ export function Editor() {
 
 ## Props
 
-| Param                           | Example                                | Type                                               | Status   |
-| ------------------------------- | -------------------------------------- | -------------------------------------------------- | -------- |
-| [`config`](#config)             | `config: { components: {} }`           | [Config](/docs/api-reference/configuration/config) | Required |
-| [`data`](#data)                 | `data: { content: [], root: {} }`      | [Data](/docs/api-reference/data)                   | Required |
-| [`children`](#children)         | `children: <Puck.Preview />`           | ReactNode                                          | -        |
-| [`headerPath`](#headerpath)     | `headerPath: "/my-page"`               | String                                             | -        |
-| [`headerTitle`](#headertitle)   | `headerTitle: "My Page"`               | String                                             | -        |
-| [`onChange()`](#onchangedata)   | `onChange: (data) => {}`               | Function                                           | -        |
-| [`onPublish()`](#onpublishdata) | `onPublish: async (data) => {}`        | Function                                           | -        |
-| [`overrides`](#overrides)       | `overrides: { header: () => <div /> }` | [Overrides](/docs/api-reference/overrides)         | -        |
-| [`plugins`](#plugins)           | `plugins: [myPlugin]`                  | [Plugin\[\]](/docs/api-reference/plugin)           | -        |
-| [`ui`](#ui)                     | `ui: {leftSideBarVisible: false}`      | [AppState.ui](/docs/api-reference/app-state#ui)    | -        |
+| Param                           | Example                                | Type                                               | Status       |
+| ------------------------------- | -------------------------------------- | -------------------------------------------------- | ------------ |
+| [`config`](#config)             | `config: { components: {} }`           | [Config](/docs/api-reference/configuration/config) | Required     |
+| [`data`](#data)                 | `data: { content: [], root: {} }`      | [Data](/docs/api-reference/data)                   | Required     |
+| [`children`](#children)         | `children: <Puck.Preview />`           | ReactNode                                          | -            |
+| [`headerPath`](#headerpath)     | `headerPath: "/my-page"`               | String                                             | -            |
+| [`headerTitle`](#headertitle)   | `headerTitle: "My Page"`               | String                                             | -            |
+| [`onChange()`](#onchangedata)   | `onChange: (data) => {}`               | Function                                           | -            |
+| [`onPublish()`](#onpublishdata) | `onPublish: async (data) => {}`        | Function                                           | -            |
+| [`overrides`](#overrides)       | `overrides: { header: () => <div /> }` | [Overrides](/docs/api-reference/overrides)         | Experimental |
+| [`plugins`](#plugins)           | `plugins: [myPlugin]`                  | [Plugin\[\]](/docs/api-reference/plugin)           | Experimental |
+| [`ui`](#ui)                     | `ui: {leftSideBarVisible: false}`      | [AppState.ui](/docs/api-reference/app-state#ui)    | -            |
 
 ## Required props
 
