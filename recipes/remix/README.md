@@ -33,7 +33,7 @@ To adopt this recipe you will need to:
 
 - **IMPORTANT** Add authentication to `/edit` routes. This can be done by modifying the example routes `/app/routes/_index.tsx` and `/app/routes/edit.tsx` or the example model in `/app/models/page.server.ts`. **If you don't do this, Puck will be completely public.**
 - Integrate your database into the API calls in `/app/models/page.server.ts`
-- Implement a custom puck configuration in `puck.config.tsx`
+- Implement a custom puck configuration in `/app/puck.config.tsx`
 
 By default, this recipe will have JavaScript enable on all routes - like a usual react app. If you know that your Puck content doesn't need react, then you can disable JS uncommenting the relevant code in `/app/root.tsx` and the example route `/app/routes/_index.tsx`. Check the network tab for no JS downloads, and verify that the page still works.
 

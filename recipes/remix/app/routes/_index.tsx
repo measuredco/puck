@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import puckConfig from "../../puck.config";
+import puckConfig from "~/puck.config";
 import { getPage } from "~/models/page.server";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
