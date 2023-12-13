@@ -9,7 +9,7 @@ export default function DocsApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!window.parent) return;
+    if (!window || window.parent === window) return;
 
     const message: Message = {
       type: "routeChange",
@@ -25,7 +25,7 @@ export default function DocsApp({ Component, pageProps }: AppProps) {
         title: window.document.title,
       };
 
-      window.parent.postMessage(message);
+      window.parent.postMessage(message, "https://puckeditor.com");
     };
 
     router.events.on("routeChangeComplete", handleRouteChange);
