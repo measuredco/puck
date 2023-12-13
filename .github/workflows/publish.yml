@@ -2,7 +2,6 @@ name: Publish release
 on:
   push:
     branches:
-      - "main"
       - "releases/**"
 
 jobs:
