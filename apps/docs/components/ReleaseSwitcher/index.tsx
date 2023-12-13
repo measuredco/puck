@@ -5,6 +5,8 @@ import { getClassNameFactory } from "@/core/lib";
 
 import styles from "./styles.module.css";
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://puckeditor.com";
+
 const { version } = packageJson;
 
 const getClassName = getClassNameFactory("ReleaseSwitcher", styles);
@@ -31,14 +33,11 @@ export const ReleaseSwitcher = () => {
   ]);
 
   useEffect(() => {
-    fetch("/api/releases").then(async (res) => {
+    fetch(`${BASE_URL}/api/releases`).then(async (res) => {
       const { releases } = await res.json();
-
-      if (releases.length === 0) return;
-
-      const releaseOptions = releases.map((release) => ({
-        label: release.name.split("releases/")[1],
-        value: release.name.split("releases/v")[1], // remove the leading `v`
+      const releaseOptions = Object.keys(releases).map((key) => ({
+        label: key,
+        value: key,
       }));
 
       releaseOptions[0].label = `${releaseOptions[0].label} (latest)`;
@@ -54,7 +53,7 @@ export const ReleaseSwitcher = () => {
       value={currentValue}
       onChange={(e) => {
         const newHref = e.currentTarget.value
-          ? `https://puckeditor.com/v/${e.currentTarget.value}`
+          ? `/v/${e.currentTarget.value}`
           : "https://puckeditor.com";
 
         if (window.parent) {

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export type Message = {
   type: "routeChange";
@@ -6,17 +6,28 @@ export type Message = {
   title: string;
 };
 
-export default function Version({ path, version = "" }) {
-  const versionSlug = version.replace(/\./g, "");
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://puckeditor.com";
 
-  const base =
-    version === "canary"
-      ? `https://puck-docs-git-main-measured.vercel.app`
-      : `https://puck-docs-git-releases-v${versionSlug}-measured.vercel.app`;
+export default function Version({ path, version = "" }) {
+  const [base, setBase] = useState("");
 
   const src = `${base}/${path}`;
 
   useEffect(() => {
+    fetch(`${BASE_URL}/api/releases`).then(async (res) => {
+      const { releases } = await res.json();
+
+      setBase(
+        version === "canary"
+          ? `https://puck-docs-git-main-measured.vercel.app`
+          : releases[version]
+      );
+    });
+  }, [version]);
+
+  useEffect(() => {
+    if (!base) return;
+
     const handleMessageReceived = (event: MessageEvent) => {
       if (event.data.type === "routeChange") {
         if (event.origin !== base) {
@@ -42,7 +53,9 @@ export default function Version({ path, version = "" }) {
     window.addEventListener("message", handleMessageReceived);
 
     return () => window.removeEventListener("message", handleMessageReceived);
-  }, []);
+  }, [base, version]);
+
+  if (!base) return <div />;
 
   return (
     <iframe
