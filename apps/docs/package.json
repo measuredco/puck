@@ -16,7 +16,6 @@
     "typescript": "^4.5.3"
   },
   "dependencies": {
-    "lru-cache": "^10.1.0",
     "next": "^13.5.4",
     "nextra": "^2.13.2",
     "nextra-theme-docs": "^2.13.2",
