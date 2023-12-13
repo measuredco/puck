@@ -31,8 +31,8 @@ export default function Version({ path, version }) {
 
   const src =
     version === "canary"
-      ? `https://puck-docs-git-main-measured.vercel.app`
-      : `https://puck-docs-git-releases-v${versionSlug}-measured.vercel.app`;
+      ? `https://puck-docs-git-main-measured.vercel.app/${path}`
+      : `https://puck-docs-git-releases-v${versionSlug}-measured.vercel.app/${path}`;
 
   return (
     <iframe
