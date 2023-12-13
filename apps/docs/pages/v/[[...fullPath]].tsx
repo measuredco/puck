@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 export type Message = {
   type: "routeChange";
@@ -6,10 +6,27 @@ export type Message = {
   title: string;
 };
 
-export default function Version({ path, version }) {
+export default function Version({ path, version = "" }) {
+  const versionSlug = version.replace(/\./g, "");
+
+  const base =
+    version === "canary"
+      ? `https://puck-docs-git-main-measured.vercel.app`
+      : `https://puck-docs-git-releases-v${versionSlug}-measured.vercel.app`;
+
+  const src = `${base}/${path}`;
+
   useEffect(() => {
     const handleMessageReceived = (event: MessageEvent) => {
       if (event.data.type === "routeChange") {
+        if (event.origin !== base) {
+          console.warn(
+            `Origin does not match expected target: ${event.origin} vs ${base}`
+          );
+
+          return;
+        }
+
         const routeChange = event.data as Message;
 
         if (routeChange.url) {
@@ -26,13 +43,6 @@ export default function Version({ path, version }) {
 
     return () => window.removeEventListener("message", handleMessageReceived);
   }, []);
-
-  const versionSlug = version.replace(/\./g, "");
-
-  const src =
-    version === "canary"
-      ? `https://puck-docs-git-canary-measured.vercel.app`
-      : `https://puck-docs-git-releases-v${versionSlug}-measured.vercel.app`;
 
   return (
     <iframe
