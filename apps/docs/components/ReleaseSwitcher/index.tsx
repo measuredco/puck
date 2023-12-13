@@ -25,7 +25,7 @@ export const ReleaseSwitcher = () => {
       : [
           {
             label: isLatest ? `v${version} (latest)` : `v${version}`,
-            value: "",
+            value: isLatest ? "" : version,
           },
         ]),
   ]);
