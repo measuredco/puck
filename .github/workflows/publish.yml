@@ -4,7 +4,8 @@ on:
     branches:
       - "main"
       - "releases/**"
-
+permissions:
+  contents: write
 jobs:
   tag-and-publish-to-npm:
     runs-on: ubuntu-latest
@@ -33,5 +34,13 @@ jobs:
         run: ./scripts/publish.sh latest
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Trigger a new build to ensure Vercel creates a distinct release branch, rather than reusing latest
+      - name: Triggering new build
+        run: |
+          git config --global user.name 'chrisvxd'
+          git config --global user.email 'chrisvxd@users.noreply.github.com'
+          git commit -m "ci: trigger build" --allow-empty
+          git push
 
     timeout-minutes: 10
