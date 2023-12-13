@@ -4,7 +4,8 @@
   "globalEnv": [
     "NEXT_PUBLIC_PLAUSIBLE_DATA_DOMAIN",
     "NEXT_PUBLIC_IS_LATEST",
-    "NEXT_PUBLIC_IS_CANARY"
+    "NEXT_PUBLIC_IS_CANARY",
+    "NEXT_PUBLIC_BASE_URL"
   ],
   "pipeline": {
     "build": {
