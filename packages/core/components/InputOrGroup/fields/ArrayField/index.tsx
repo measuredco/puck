@@ -18,7 +18,7 @@ const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);
 export const ArrayField = ({
   field,
   onChange,
-  value,
+  value: _value,
   name,
   label,
   readOnly,
@@ -26,6 +26,8 @@ export const ArrayField = ({
   id,
 }: InputProps) => {
   const { state, setUi } = useAppContext();
+
+  const value: object[] = _value;
 
   const arrayState = state.ui.arrayState[id] || {
     items: Array.from(value || []).map((item, idx) => {
@@ -159,7 +161,7 @@ export const ArrayField = ({
               >
                 {localState.arrayState.items.map((item, i) => {
                   const { _arrayId = `${id}-${i}`, _originalIndex = i } = item;
-                  const data = Array.from(localState.value || [])[i] as object;
+                  const data = Array.from(localState.value || [])[i] || {};
 
                   return (
                     <Draggable
