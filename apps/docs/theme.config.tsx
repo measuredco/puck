@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { DocsThemeConfig, useConfig } from "nextra-theme-docs";
 
 import { ReleaseSwitcher } from "./components/ReleaseSwitcher";
+import { FooterActions } from "./components/FooterActions";
+import { Viewport } from "./components/Viewport";
 
 const Head = () => {
   const { asPath, defaultLocale, locale } = useRouter();
@@ -115,7 +117,14 @@ const theme: DocsThemeConfig = {
   docsRepositoryBase: "https://github.com/measuredco/puck/tree/main/apps/docs",
   primarySaturation: 0,
   navbar: {
-    extraContent: ReleaseSwitcher,
+    extraContent: () => (
+      <Viewport desktop>
+        <ReleaseSwitcher />
+      </Viewport>
+    ),
+  },
+  themeSwitch: {
+    component: FooterActions,
   },
 };
 

@@ -13,3 +13,8 @@
   height: 33px; /* Magic number to align with Nextra search */
   width: 156px;
 }
+
+.ReleaseSwitcher--light {
+  background-color: white;
+  border: 1px solid var(--puck-color-grey-9);
+}

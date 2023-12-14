@@ -1,0 +1,18 @@
+.FooterActions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+}
+
+.FooterActions-releaseSwitcher {
+  display: block;
+  margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .FooterActions-releaseSwitcher {
+    display: none;
+  }
+}
