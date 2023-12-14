@@ -16,7 +16,7 @@ export default function DocsApp({ Component, pageProps }: AppProps) {
       title: window.document.title,
     };
 
-    window.parent.postMessage(message);
+    window.parent.postMessage(message, "https://puckeditor.com");
 
     const handleRouteChange = (url) => {
       const message: Message = {
