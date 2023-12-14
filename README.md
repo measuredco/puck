@@ -104,4 +104,4 @@ If you need support integrating Puck or creating a beautiful component library, 
 
 ## License
 
-MIT © [Measured Co.](https://github.com/measuredco)
+MIT © [Measured Corporation Ltd](https://measured.co)
