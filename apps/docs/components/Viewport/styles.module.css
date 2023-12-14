@@ -1,0 +1,17 @@
+.Viewport {
+  display: none;
+}
+
+.Viewport--mobile {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .Viewport--desktop {
+    display: block;
+  }
+
+  .Viewport--mobile:not(.Viewport--desktop) {
+    display: none;
+  }
+}
