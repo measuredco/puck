@@ -11,7 +11,11 @@ const { version } = packageJson;
 
 const getClassName = getClassNameFactory("ReleaseSwitcher", styles);
 
-export const ReleaseSwitcher = () => {
+export const ReleaseSwitcher = ({
+  variant = "default",
+}: {
+  variant?: "light" | "default";
+}) => {
   const isCanary = process.env.NEXT_PUBLIC_IS_CANARY === "true" || false;
   const isLatest = process.env.NEXT_PUBLIC_IS_LATEST === "true" || false;
 
@@ -49,7 +53,7 @@ export const ReleaseSwitcher = () => {
 
   return (
     <select
-      className={getClassName()}
+      className={getClassName({ [variant]: true })}
       value={currentValue}
       onChange={(e) => {
         const newHref = e.currentTarget.value
