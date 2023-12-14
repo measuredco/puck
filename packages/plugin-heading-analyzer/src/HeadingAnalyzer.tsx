@@ -189,11 +189,11 @@ const headingAnalyzer: Plugin = {
     fields: ({ children, itemSelector }) => (
       <>
         {children}
-        {itemSelector && (
+        <div style={{ display: itemSelector ? "none" : "block" }}>
           <SidebarSection title="Heading Outline">
             <HeadingAnalyzer />
           </SidebarSection>
-        )}
+        </div>
       </>
     ),
   },
