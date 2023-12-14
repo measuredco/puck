@@ -1,6 +1,6 @@
 # Puck
 
-The self-hosted, drag and drop editor for React.
+The visual editor for React.
 
 <p align="left">
   <a aria-label="Measured logo" href="https://measured.co">
