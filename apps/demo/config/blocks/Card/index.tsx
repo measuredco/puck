@@ -3,24 +3,21 @@ import React from "react";
 import { ComponentConfig } from "@/core/types/Config";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
-import * as reactFeather from "react-feather";
+import dynamic from "next/dynamic";
+import dynamicIconImports from "lucide-react/dynamicIconImports";
 
 const getClassName = getClassNameFactory("Card", styles);
 
-const icons = Object.keys(reactFeather).reduce((acc, iconName) => {
-  if (typeof reactFeather[iconName] === "object") {
-    const El = reactFeather[iconName];
+const icons = Object.keys(dynamicIconImports).reduce((acc, iconName) => {
+  const El = dynamic(dynamicIconImports[iconName]);
 
-    return {
-      ...acc,
-      [iconName]: <El />,
-    };
-  }
-
-  return acc;
+  return {
+    ...acc,
+    [iconName]: <El />,
+  };
 }, {});
 
-const iconOptions = Object.keys(reactFeather).map((iconName) => ({
+const iconOptions = Object.keys(dynamicIconImports).map((iconName) => ({
   label: iconName,
   value: iconName,
 }));

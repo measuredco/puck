@@ -173,10 +173,10 @@ export const initialData: Record<string, Data> = {
         type: "Stats",
         props: {
           items: [
-            { title: "Users reached", description: "20M+", icon: "Feather" },
-            { title: "Cost savings", description: "$1.5M", icon: "Feather" },
-            { title: "Another stat", description: "5M kg", icon: "Feather" },
-            { title: "Final fake stat", description: "15K", icon: "Feather" },
+            { title: "Users reached", description: "20M+", icon: "feather" },
+            { title: "Cost savings", description: "$1.5M", icon: "feather" },
+            { title: "Another stat", description: "5M kg", icon: "feather" },
+            { title: "Final fake stat", description: "15K", icon: "feather" },
           ],
           mode: "flat",
           id: "Stats-1687297239724",
@@ -294,7 +294,7 @@ export const initialData: Record<string, Data> = {
             title: "Built for content teams",
             description:
               "Puck enables content teams to make changes to their content without a developer or breaking the UI.",
-            icon: "PenTool",
+            icon: "pen-tool",
             mode: "flat",
             id: "Card-0d9077e00e0ad66c34c62ab6986967e1ce04f9e4",
           },
@@ -307,7 +307,7 @@ export const initialData: Record<string, Data> = {
             title: "Easy to integrate",
             description:
               "Front-end developers can easily integrate their own components using a familiar React API.",
-            icon: "GitMerge",
+            icon: "git-merge",
             mode: "flat",
             id: "Card-978bef5d136d4b0d9855f5272429986ceb22e5a6",
           },
@@ -320,7 +320,7 @@ export const initialData: Record<string, Data> = {
             title: "No vendor lock-in",
             description:
               "Completely open-source, Puck is designed to be integrated into your existing React application.",
-            icon: "GitHub",
+            icon: "github",
             mode: "flat",
             id: "Card-133a61826f0019841aec6f0aec011bf07e6bc6de",
           },
@@ -333,7 +333,7 @@ export const initialData: Record<string, Data> = {
             title: "plugin-heading-analyzer",
             description:
               "Analyze the document structure and identify WCAG 2.1 issues with your heading hierarchy.",
-            icon: "AlignLeft",
+            icon: "align-left",
             mode: "card",
             id: "Card-e2e757b0b4a579d5f87564dfa9b4442f9794b45b",
           },
@@ -346,7 +346,7 @@ export const initialData: Record<string, Data> = {
             title: "External data",
             description:
               "Connect your components with an existing data source, like Strapi.js.",
-            icon: "Feather",
+            icon: "feather",
             mode: "card",
             id: "Card-4eea28543d13c41c30934c3e4c4c95a75017a89c",
           },
@@ -359,7 +359,7 @@ export const initialData: Record<string, Data> = {
             title: "Custom plugins",
             description:
               "Create your own plugin to extend Puck for your use case using React.",
-            icon: "Feather",
+            icon: "feather",
             mode: "card",
             id: "Card-3314e8b24aa52843ce22ab7424b8f3b8064acfdf",
           },
@@ -371,7 +371,7 @@ export const initialData: Record<string, Data> = {
           props: {
             title: "Title",
             description: "Description",
-            icon: "Feather",
+            icon: "feather",
             mode: "card",
             id: "Card-49b11940784cfe8dc1a2b2facc5ac2bcf797792f",
           },
@@ -383,7 +383,7 @@ export const initialData: Record<string, Data> = {
           props: {
             title: "Title",
             description: "Description",
-            icon: "Feather",
+            icon: "feather",
             mode: "card",
             id: "Card-efb0a1ed06cc4152a7861376aafbe62b0445382d",
           },
@@ -395,7 +395,7 @@ export const initialData: Record<string, Data> = {
           props: {
             title: "Title",
             description: "Description",
-            icon: "Feather",
+            icon: "feather",
             mode: "card",
             id: "Card-513cfb17d07ba4b6e0212d931571c0760839f029",
           },

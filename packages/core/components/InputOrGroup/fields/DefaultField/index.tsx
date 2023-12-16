@@ -1,6 +1,6 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
-import { Hash, Type } from "react-feather";
+import { Hash, Type } from "lucide-react";
 import { FieldLabelInternal, type InputProps } from "../..";
 
 const getClassName = getClassNameFactory("Input", styles);

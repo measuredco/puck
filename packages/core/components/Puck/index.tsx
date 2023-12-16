@@ -16,7 +16,13 @@ import { Plugin } from "../../types/Plugin";
 import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
-import { ChevronDown, ChevronUp, Globe, Sidebar } from "react-feather";
+import {
+  ChevronDown,
+  ChevronUp,
+  Globe,
+  PanelLeft,
+  PanelRight,
+} from "lucide-react";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
 import { DropZoneProvider } from "../DropZone";
@@ -416,7 +422,7 @@ export function Puck({
                               }}
                               title="Toggle left sidebar"
                             >
-                              <Sidebar focusable="false" />
+                              <PanelLeft focusable="false" />
                             </IconButton>
                           </div>
                           <div className={getClassName("rightSideBarToggle")}>
@@ -426,7 +432,7 @@ export function Puck({
                               }}
                               title="Toggle right sidebar"
                             >
-                              <Sidebar focusable="false" />
+                              <PanelRight focusable="false" />
                             </IconButton>
                           </div>
                         </div>

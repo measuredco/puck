@@ -1,5 +1,5 @@
 import { Dispatch, ReactElement, SetStateAction } from "react";
-import { Globe, ChevronLeft, ChevronRight } from "react-feather";
+import { Globe, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "../Button";
 import { IconButton } from "../IconButton/IconButton";

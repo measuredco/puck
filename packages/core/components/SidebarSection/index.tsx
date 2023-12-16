@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Heading } from "../Heading";
-import { ChevronRight } from "react-feather";
+import { ChevronRight } from "lucide-react";
 import { useBreadcrumbs } from "../../lib/use-breadcrumbs";
 import { useAppContext } from "../Puck/context";
 import { ClipLoader } from "react-spinners";

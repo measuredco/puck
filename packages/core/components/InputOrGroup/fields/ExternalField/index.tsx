@@ -5,7 +5,7 @@ import {
   ExternalFieldWithAdaptor,
 } from "../../../../types/Config";
 import { ExternalInput } from "../../../ExternalInput";
-import { Link } from "react-feather";
+import { Link } from "lucide-react";
 
 export const ExternalField = ({
   field,
