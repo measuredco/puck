@@ -4,7 +4,7 @@ title: <FieldLabel>
 
 import { ConfigPreview } from "../../../../components/Preview";
 import { FieldLabel } from "@/core/components/InputOrGroup";
-import { Globe } from "react-feather";
+import { Globe } from "lucide-react";
 
 # \<FieldLabel\>
 
@@ -137,11 +137,11 @@ const CustomField = () => (
 
 ### `icon`
 
-Render an icon before the label text. Puck uses [react-feather](https://github.com/feathericons/react-feather) internally.
+Render an icon before the label text. Puck uses [lucide-react](https://lucide.dev/guide/packages/lucide-react) internally.
 
 ```tsx /icon={<Globe size="16" />}/ copy
 import { FieldLabel } from "@measured/puck";
-import { Globe } from "react-feather";
+import { Globe } from "lucide-react";
 
 const CustomField = () => (
   <FieldLabel icon={<Globe size="16" />} label="Title">

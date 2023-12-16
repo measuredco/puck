@@ -118,10 +118,6 @@
   padding-top: 2px;
 }
 
-.Puck-rightSideBarToggle {
-  transform: rotate(180deg);
-}
-
 .Puck--rightSideBarVisible .Puck-rightSideBarToggle,
 .Puck--leftSideBarVisible .Puck-leftSideBarToggle {
   color: var(--puck-color-black);

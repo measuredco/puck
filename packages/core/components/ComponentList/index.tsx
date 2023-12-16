@@ -2,7 +2,7 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ReactNode } from "react";
 import { useAppContext } from "../Puck/context";
-import { ChevronDown, ChevronUp } from "react-feather";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { Drawer } from "../Drawer";
 
 const getClassName = getClassNameFactory("ComponentList", styles);

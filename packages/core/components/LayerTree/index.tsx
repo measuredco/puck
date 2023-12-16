@@ -3,7 +3,7 @@ import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Data } from "../../types/Config";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { scrollIntoView } from "../../lib/scroll-into-view";
-import { ChevronDown, Grid, Layers, Type } from "react-feather";
+import { ChevronDown, LayoutGrid, Layers, Type } from "lucide-react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { useContext } from "react";
 import { dropZoneContext } from "../DropZone/context";
@@ -125,7 +125,7 @@ export const LayerTree = ({
                       {item.type === "Text" || item.type === "Heading" ? (
                         <Type size="16" />
                       ) : (
-                        <Grid size="16" />
+                        <LayoutGrid size="16" />
                       )}
                     </div>
                     <div className={getClassNameLayer("name")}>{item.type}</div>

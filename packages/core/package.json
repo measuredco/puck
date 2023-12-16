@@ -46,7 +46,7 @@
     "eslint-config-custom": "*",
     "jest": "^29.6.4",
     "jest-environment-jsdom": "^29.6.4",
-    "react-feather": "^2.0.10",
+    "lucide-react": "^0.298.0",
     "ts-jest": "^29.1.1",
     "tsconfig": "*",
     "tsup": "^6.7.0",

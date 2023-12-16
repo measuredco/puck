@@ -2,7 +2,7 @@ import { useMemo, useEffect, useState, useCallback } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ExternalField } from "../../types/Config";
-import { Link, Search, Unlock } from "react-feather";
+import { Link, Search, Unlock } from "lucide-react";
 import { Modal } from "../Modal";
 import { Heading } from "../Heading";
 import { ClipLoader } from "react-spinners";

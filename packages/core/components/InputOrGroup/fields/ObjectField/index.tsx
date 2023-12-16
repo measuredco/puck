@@ -1,6 +1,6 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
-import { MoreVertical } from "react-feather";
+import { MoreVertical } from "lucide-react";
 import { FieldLabelInternal, InputOrGroup, type InputProps } from "../..";
 
 const getClassName = getClassNameFactory("ObjectField", styles);

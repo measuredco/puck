@@ -18,7 +18,7 @@ import {
   DefaultField,
   TextareaField,
 } from "./fields";
-import { Lock } from "react-feather";
+import { Lock } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { ObjectField } from "./fields/ObjectField";
 import { useAppContext } from "../Puck/context";
