@@ -15,9 +15,11 @@ import { getZoneId } from "../../lib/get-zone-id";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
-export type DropZoneContext = {
+export type DropZoneContext<
+  UserConfig extends Config<any, any, any> = Config<any, any, any>
+> = {
   data: Data;
-  config: Config;
+  config: UserConfig;
   componentState?: Record<string, any>;
   itemSelector?: ItemSelector | null;
   setItemSelector?: (newIndex: ItemSelector | null) => void;

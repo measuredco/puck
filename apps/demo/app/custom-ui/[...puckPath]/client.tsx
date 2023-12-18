@@ -5,7 +5,7 @@ import { Puck } from "@/core/components/Puck";
 import { Render } from "@/core/components/Render";
 import { Button } from "@/core/components/Button";
 import { HeadingAnalyzer } from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
-import config from "../../../config";
+import config, { UserConfig } from "../../../config";
 import { useDemoData } from "../../../lib/use-demo-data";
 import { IconButton, usePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
@@ -287,7 +287,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
 
   if (isEdit) {
     return (
-      <Puck
+      <Puck<UserConfig>
         config={config}
         data={data}
         headerPath={path}
@@ -336,7 +336,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   }
 
   if (data) {
-    return <Render config={config} data={resolvedData} />;
+    return <Render<UserConfig> config={config} data={resolvedData} />;
   }
 
   return (

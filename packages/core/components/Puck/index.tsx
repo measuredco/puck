@@ -45,7 +45,9 @@ import { useHistoryStore } from "../../lib/use-history-store";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
-export function Puck({
+export function Puck<
+  UserConfig extends Config<any, any, any> = Config<any, any, any>
+>({
   children,
   config,
   data: initialData = { content: [], root: { props: { title: "" } } },
@@ -60,7 +62,7 @@ export function Puck({
   headerPath,
 }: {
   children?: ReactNode;
-  config: Config<any, any, any>;
+  config: UserConfig;
   data: Data;
   ui?: Partial<UiState>;
   onChange?: (data: Data) => void;
@@ -82,7 +84,7 @@ export function Puck({
   const historyStore = useHistoryStore();
 
   const [reducer] = useState(() =>
-    createReducer({ config, record: historyStore.record })
+    createReducer<UserConfig>({ config, record: historyStore.record })
   );
 
   const [initialAppState] = useState<AppState>(() => ({

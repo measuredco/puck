@@ -27,12 +27,14 @@ export type Props = {
   VerticalSpace: VerticalSpaceProps;
 };
 
-// We avoid the name config as next gets confused
-export const conf: Config<
+export type UserConfig = Config<
   Props,
   RootProps,
   "layout" | "typography" | "interactive"
-> = {
+>;
+
+// We avoid the name config as next gets confused
+export const conf: UserConfig = {
   root: {
     render: Root,
   },

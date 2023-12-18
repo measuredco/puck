@@ -59,13 +59,9 @@ function DropZoneRender({
   );
 }
 
-export function Render({
-  config,
-  data,
-}: {
-  config: Config<any, any, any>;
-  data: Data;
-}) {
+export function Render<
+  UserConfig extends Config<any, any, any> = Config<any, any, any>
+>({ config, data }: { config: UserConfig; data: Data }) {
   if (config.root?.render) {
     // DEPRECATED
     const rootProps = data.root.props || data.root;
