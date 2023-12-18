@@ -173,7 +173,7 @@ type Category<ComponentName> = {
 export type Config<
   Props extends { [key: string]: any } = { [key: string]: any },
   RootProps extends DefaultRootProps = DefaultRootProps,
-  CategoryName extends string = string
+  CategoryName extends string = any
 > = {
   categories?: Record<CategoryName, Category<keyof Props>> & {
     other?: Category<Props>;

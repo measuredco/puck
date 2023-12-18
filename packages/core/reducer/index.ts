@@ -49,14 +49,16 @@ export const setAction = (state: AppState, action: SetAction) => {
   return { ...state, ...action.state(state) };
 };
 
-export const createReducer = ({
+export function createReducer<
+  UserConfig extends Config<any, any, any> = Config<any, any, any>
+>({
   config,
   record,
 }: {
-  config: Config<any>;
+  config: UserConfig;
   record?: (appState: AppState) => void;
-}): StateReducer =>
-  storeInterceptor((state, action) => {
+}): StateReducer {
+  return storeInterceptor((state, action) => {
     const data = reduceData(state.data, action, config);
     const ui = reduceUi(state.ui, action);
 
@@ -66,3 +68,4 @@ export const createReducer = ({
 
     return { data, ui };
   }, record);
+}

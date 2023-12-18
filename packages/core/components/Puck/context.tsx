@@ -18,10 +18,12 @@ export const defaultAppState: AppState = {
   },
 };
 
-type AppContext = {
+type AppContext<
+  UserConfig extends Config<any, any, any> = Config<any, any, any>
+> = {
   state: AppState;
   dispatch: (action: PuckAction) => void;
-  config: Config;
+  config: UserConfig;
   componentState: Record<string, { loading: boolean }>;
   resolveData: (newAppState: AppState) => void;
   plugins: Plugin[];
@@ -42,8 +44,10 @@ export const appContext = createContext<AppContext>({
 
 export const AppProvider = appContext.Provider;
 
-export const useAppContext = () => {
-  const mainContext = useContext(appContext);
+export function useAppContext<
+  UserConfig extends Config<any, any, any> = Config<any, any, any>
+>() {
+  const mainContext = useContext(appContext) as AppContext<UserConfig>;
 
   const selectedItem = mainContext.state.ui.itemSelector
     ? getItem(mainContext.state.ui.itemSelector, mainContext.state.data)
@@ -61,4 +65,4 @@ export const useAppContext = () => {
       });
     },
   };
-};
+}

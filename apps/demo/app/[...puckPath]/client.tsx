@@ -5,7 +5,7 @@ import { Puck } from "@/core/components/Puck";
 import { Render } from "@/core/components/Render";
 import { Button } from "@/core/components/Button";
 import headingAnalyzer from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
-import config from "../../config";
+import config, { UserConfig } from "../../config";
 import { useDemoData } from "../../lib/use-demo-data";
 
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
@@ -17,7 +17,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   if (isEdit) {
     return (
       <div>
-        <Puck
+        <Puck<UserConfig>
           config={config}
           data={data}
           onPublish={async (data: Data) => {
@@ -42,7 +42,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   }
 
   if (data) {
-    return <Render config={config} data={resolvedData} />;
+    return <Render<UserConfig> config={config} data={resolvedData} />;
   }
 
   return (
