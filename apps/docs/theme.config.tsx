@@ -108,14 +108,14 @@ const theme: DocsThemeConfig = {
     process.env.NEXT_PUBLIC_IS_LATEST === "true"
       ? {
           dismissible: true,
-          key: "v0.12.0",
+          key: "v0.13.0",
           text: (
             <a
               href="https://github.com/measuredco/puck/releases"
               target="_blank"
             >
-              <b>🦄 Puck 0.12.0 released</b>: React Server Components, mobile
-              support and a Remix recipe →
+              <b>🍱 Puck 0.13.0 released</b>: Create custom Puck UIs, object
+              fields and more →
             </a>
           ),
         }
