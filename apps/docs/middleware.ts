@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 import releases from "./releases.json";
 
-const versionPattern = /\/v\/([\d+|\.]+)/;
+const versionPattern = /\/v\/([\d+|\.]+|canary)/;
 
 export function middleware(request: NextRequest) {
   const path = `${request.nextUrl.pathname}${request.nextUrl.search}`;
