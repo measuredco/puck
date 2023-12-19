@@ -2,6 +2,46 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.13.0](https://github.com/measuredco/puck/compare/v0.12.0...v0.13.0) (2023-12-19)
+
+
+### Features
+
+* add "ui" prop to Puck to set the initial state ([71f8b2f](https://github.com/measuredco/puck/commit/71f8b2f1143b9774fd763a8f5a3685957474237b))
+* add APIs to restrict components dropped in DropZones ([28f24f9](https://github.com/measuredco/puck/commit/28f24f927a2d1c378834f124e85abfcc2267a0d7))
+* add data migration API ([f987324](https://github.com/measuredco/puck/commit/f987324804d59e55a3a5e6770389305d88f39194))
+* add generic Config type to Puck and Render components ([1c4b97f](https://github.com/measuredco/puck/commit/1c4b97f0a8487785b5a677a2a1ba168b292e5ca4))
+* add object field type ([243278b](https://github.com/measuredco/puck/commit/243278bb01e34de6123a47d902fcc58ea7678642))
+* add Puck class to outer div ([0698a12](https://github.com/measuredco/puck/commit/0698a127e093cb2cf66fa35dafca80ebd4c73f89))
+* add search to external fields ([fe3b439](https://github.com/measuredco/puck/commit/fe3b4394c7464eeab69e1af5a96bd525bd15872a))
+* add transformProps lib to migrate component props ([1ec2a78](https://github.com/measuredco/puck/commit/1ec2a78968e10efc5666aaf994b6feea6c820449))
+* add usePuck hook ([13f3ccb](https://github.com/measuredco/puck/commit/13f3ccbd314e5a82f5a509c713ad34d3d0614b34))
+* introduce UI overrides API ([8a7c325](https://github.com/measuredco/puck/commit/8a7c3252d8aed2c160e390c1ba7c411d8b884b6f))
+* make onPublish prop optional ([60f317f](https://github.com/measuredco/puck/commit/60f317f75bb1a18bd59819d1323c45266334138c))
+* remove renderComponentList in favour of overrides API ([97f65e3](https://github.com/measuredco/puck/commit/97f65e3f0411abab66a72ea3c9ecd485cd941b4e))
+* replace existing plugin API with plugin overrides ([46cca26](https://github.com/measuredco/puck/commit/46cca26c879a2ae53cf3e668f1dad37bb480bd84))
+* support compositional Puck ([22f053f](https://github.com/measuredco/puck/commit/22f053fa6209735c27b172eb625ea25d9df4bb3d))
+* track isDragging in app state ([841ae12](https://github.com/measuredco/puck/commit/841ae126d3f5e8a9e40c064b69d5ee675169e4cd))
+
+
+### Bug Fixes
+
+* don't crash when loading external data into array field items ([d13d00b](https://github.com/measuredco/puck/commit/d13d00b67a7106889a0fc3beae94fa9c2e5bfcc3))
+* enable user to pass in config without casting ([ee211e2](https://github.com/measuredco/puck/commit/ee211e2a3ae6fbcb3d2b12316172e49f11fecd1e)), closes [#185](https://github.com/measuredco/puck/issues/185)
+* fix broken nested array fields ([7a3949f](https://github.com/measuredco/puck/commit/7a3949f7f10b2323504b31bcae9a9aa5d46f4074))
+* fix initial UI state on mobile ([3aa0057](https://github.com/measuredco/puck/commit/3aa005740b650879d95318a01ac9e2949ec5e9d8))
+* prevent pollution of global styles into component overlay ([3fcf8e3](https://github.com/measuredco/puck/commit/3fcf8e3f9975a14d8bc355e025585c9f55f233b1))
+* record history when a user selects an item ([3a649c9](https://github.com/measuredco/puck/commit/3a649c9922cc0a6c8c6c2b96f5fbe44bd3a6176a))
+* remove packages triggering superficial security warning ([0f52b61](https://github.com/measuredco/puck/commit/0f52b610769550b3365ab91f856b264d02d005c2))
+* respect label in radio fields ([fe550d7](https://github.com/measuredco/puck/commit/fe550d795eed20ce3a3004a2e7c8dfdbaca0b67d))
+* set aria-label on all loaders ([9adca27](https://github.com/measuredco/puck/commit/9adca2774dae5e532134be76de9c79e0b4af751c))
+* stop color pollution in external field modals ([2e1b5ef](https://github.com/measuredco/puck/commit/2e1b5ef330ebbddee8c44b5002be65c2361fda4f))
+* use correct title path in recipes ([60244ba](https://github.com/measuredco/puck/commit/60244ba5637d889530ae646986b1890c6b89efea))
+* watch puck.config.tsx in Remix recipe ([ecb276c](https://github.com/measuredco/puck/commit/ecb276c39fd3cf03d524b221b3f34b3a8df99823))
+
+
+
+
 ## [0.12.0](https://github.com/measuredco/puck/compare/v0.11.0...v0.12.0) (2023-11-23)
 
 

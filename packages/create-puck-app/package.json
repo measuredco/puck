@@ -1,6 +1,6 @@
 {
   "name": "create-puck-app",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "private": false,
   "license": "MIT",
   "type": "module",
