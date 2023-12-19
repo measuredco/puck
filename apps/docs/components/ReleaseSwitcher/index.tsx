@@ -45,7 +45,7 @@ export const ReleaseSwitcher = ({
       }));
 
       releaseOptions[0].label = `v${releaseOptions[0].label} (latest)`;
-      releaseOptions[0].value = "";
+      releaseOptions[0].value = ""; // Okay to set to "" because isLatest will be true for this release option
 
       setOptions([{ label: "canary", value: "canary" }, ...releaseOptions]);
     });
