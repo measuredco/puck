@@ -10,8 +10,9 @@ const IS_RELEASE_BRANCH = BRANCH_NAME.startsWith("releases/");
 
 module.exports = withNextra({
   transpilePackages: ["@measured/puck"],
-  basePath:
-    IS_RELEASE_BRANCH || process.env.NEXT_PUBLIC_IS_CANARY
-      ? `/v/${packageJson.version}`
-      : "",
+  basePath: IS_RELEASE_BRANCH
+    ? `/v/${packageJson.version}`
+    : process.env.NEXT_PUBLIC_IS_CANARY
+    ? "/v/canary"
+    : "",
 });
