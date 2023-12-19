@@ -29,7 +29,11 @@ const getClassNameFactory =
     }
 
     if (descendant) {
-      return baseClass + styles[`${rootClass}-${descendant}`] || "";
+      const style = styles[`${rootClass}-${descendant}`];
+
+      if (style) {
+        return baseClass + styles[`${rootClass}-${descendant}`] || "";
+      }
     } else if (modifiers) {
       const prefixedModifiers = {};
 
