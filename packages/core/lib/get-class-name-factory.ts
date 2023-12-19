@@ -34,6 +34,8 @@ const getClassNameFactory =
       if (style) {
         return baseClass + styles[`${rootClass}-${descendant}`] || "";
       }
+
+      return "";
     } else if (modifiers) {
       const prefixedModifiers = {};
 
