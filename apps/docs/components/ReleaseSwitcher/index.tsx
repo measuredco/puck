@@ -30,7 +30,7 @@ export const ReleaseSwitcher = ({
       ? []
       : [
           {
-            label: isLatest ? `v${version} (latest)` : `v${version}`,
+            label: isLatest ? `${version} (latest)` : version,
             value: isLatest ? "" : version,
           },
         ]),
@@ -44,7 +44,7 @@ export const ReleaseSwitcher = ({
         value: key,
       }));
 
-      releaseOptions[1].label = `v${releaseOptions[1].label} (latest)`;
+      releaseOptions[1].label = `${releaseOptions[1].label} (latest)`;
       releaseOptions[1].value = ""; // Okay to set to "" because isLatest will be true for this release option
 
       setOptions(releaseOptions);
