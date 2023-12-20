@@ -16,6 +16,8 @@ export type TextField = BaseField & {
 };
 export type NumberField = BaseField & {
   type: "number";
+  min?: number;
+  max?: number;
 };
 
 export type TextareaField = BaseField & {
