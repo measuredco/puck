@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "@/core/lib/get-class-name-factory";
 import { Button } from "@/core/components/Button";
+import Link from "next/link";
 
 const getClassName = getClassNameFactory("Home", styles);
 
@@ -26,7 +27,9 @@ export const Home = () => {
       <div style={{ paddingTop: 32 }} />
       <div className={getClassName("ctas")}>
         <div className={getClassName("actions")}>
-          <Button href="/docs">Read docs</Button>
+          <Link href="/docs" style={{ display: "flex" }}>
+            <Button>Read docs</Button>
+          </Link>
           <Button href="https://demo.puckeditor.com/edit" variant="secondary">
             View demo
           </Button>
