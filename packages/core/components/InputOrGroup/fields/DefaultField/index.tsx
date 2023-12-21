@@ -40,6 +40,8 @@ export const DefaultField = ({
         }}
         readOnly={readOnly}
         id={id}
+        min={field.type === "number" ? field.min : undefined}
+        max={field.type === "number" ? field.max : undefined}
       />
     </FieldLabelInternal>
   );

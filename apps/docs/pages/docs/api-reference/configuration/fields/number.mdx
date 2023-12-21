@@ -41,6 +41,8 @@ const config = {
 | Param           | Example          | Type     | Status   |
 | --------------- | ---------------- | -------- | -------- |
 | [`type`](#type) | `type: "number"` | "number" | Required |
+| [`min`](#min)   | `min: 0`         | number   | -        |
+| [`max`](#max)   | `max: 10`        | number   | -        |
 
 ## Required params
 
@@ -62,3 +64,77 @@ const config = {
   },
 };
 ```
+
+## Optional params
+
+### `min`
+
+Set the minimum numeric value to accept for the input field.
+
+```tsx {7} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "number",
+          min: 0,
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      myNumber: {
+        type: "number",
+        min: 0,
+      },
+    },
+    defaultProps: { myNumber: 5 },
+    render: ({ myNumber }) => {
+      return <div>{myNumber}</div>;
+    },
+  }}
+/>
+
+### `max`
+
+Set the maximum numeric value to accept for the input field.
+
+```tsx {7} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "number",
+          max: 10,
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      myNumber: {
+        type: "number",
+        max: 10,
+      },
+    },
+    defaultProps: { myNumber: 5 },
+    render: ({ myNumber }) => {
+      return <div>{myNumber}</div>;
+    },
+  }}
+/>

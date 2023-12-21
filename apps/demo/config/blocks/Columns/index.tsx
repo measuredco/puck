@@ -39,6 +39,8 @@ export const Columns: ComponentConfig<ColumnsProps> = {
         span: {
           label: "Span (1-12)",
           type: "number",
+          min: 0,
+          max: 12,
         },
       },
     },
