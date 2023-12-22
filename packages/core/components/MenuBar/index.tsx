@@ -29,6 +29,7 @@ export const MenuBar = ({
   renderHeaderActions?: (props: {
     state: AppState;
     dispatch: (action: PuckAction) => void;
+    onPublish?: (data: Data) => void;
   }) => ReactElement;
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -77,22 +78,25 @@ export const MenuBar = ({
           </IconButton>
         </div>
         <>
-          {renderHeaderActions &&
+          {renderHeaderActions ? (
             renderHeaderActions({
               state: appState,
               dispatch,
-            })}
+              onPublish: () => onPublish && onPublish(data),
+            })
+          ) : (
+            <div>
+              <Button
+                onClick={() => {
+                  onPublish && onPublish(data);
+                }}
+                icon={<Globe size="14px" />}
+              >
+                Publish
+              </Button>
+            </div>
+          )}
         </>
-        <div>
-          <Button
-            onClick={() => {
-              onPublish && onPublish(data);
-            }}
-            icon={<Globe size="14px" />}
-          >
-            Publish
-          </Button>
-        </div>
       </div>
     </div>
   );
