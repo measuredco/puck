@@ -26,15 +26,20 @@ export const ExternalInput = ({
   name: string;
   id: string;
 }) => {
-  const { mapProp = (val) => val } = field || {};
+  const { mapProp = (val) => val, mapRow = (val) => val } = field || {};
 
   const [data, setData] = useState<Record<string, any>[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const mappedData = useMemo(() => {
+    return data.map(mapRow);
+  }, [data]);
+
   const keys = useMemo(() => {
     const validKeys: Set<string> = new Set();
 
-    for (const item of data) {
+    for (const item of mappedData) {
       for (const key of Object.keys(item)) {
         if (typeof item[key] === "string" || typeof item[key] === "number") {
           validKeys.add(key);
@@ -43,7 +48,7 @@ export const ExternalInput = ({
     }
 
     return Array.from(validKeys);
-  }, [data]);
+  }, [mappedData]);
 
   const [searchQuery, setSearchQuery] = useState(field.initialQuery || "");
 
@@ -113,7 +118,7 @@ export const ExternalInput = ({
           className={getClassNameModal({
             isLoading,
             loaded: !isLoading,
-            hasData: data.length > 0,
+            hasData: mappedData.length > 0,
           })}
         >
           <div className={getClassNameModal("masthead")}>
@@ -172,14 +177,14 @@ export const ExternalInput = ({
                 </tr>
               </thead>
               <tbody className={getClassNameModal("tbody")}>
-                {data.map((item, i) => {
+                {mappedData.map((item, i) => {
                   return (
                     <tr
                       key={i}
                       style={{ whiteSpace: "nowrap" }}
                       className={getClassNameModal("tr")}
-                      onClick={(e) => {
-                        onChange(mapProp(item));
+                      onClick={() => {
+                        onChange(mapProp(data[i]));
 
                         setOpen(false);
                       }}

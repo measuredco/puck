@@ -57,6 +57,7 @@ export const Hero: ComponentConfig<HeroProps> = {
             }
           });
       },
+      mapRow: (item) => ({ title: item.title, description: item.description }),
       mapProp: (result) => {
         return { index: result.index, label: result.description };
       },
