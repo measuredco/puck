@@ -8,7 +8,7 @@ export const loadOverrides = ({
   overrides: Partial<Overrides>;
   plugins: Plugin[];
 }) => {
-  const collected = overrides;
+  const collected = { ...overrides };
 
   plugins.forEach((plugin) => {
     Object.keys(plugin.overrides).forEach((overridesType) => {
