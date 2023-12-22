@@ -13,6 +13,7 @@ npm i @measured/puck-plugin-heading-analyzer
 ```jsx
 import { Puck } from "@measured/puck";
 import headingAnalyzer from "@measured/puck-plugin-heading-analyzer";
+import "@measured/puck-plugin-heading-analyzer/dist/index.css";
 
 ...
 
