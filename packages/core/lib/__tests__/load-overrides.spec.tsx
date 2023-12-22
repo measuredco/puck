@@ -49,4 +49,20 @@ describe("load-overrides", () => {
       "0 | 1 | 2 | 3"
     );
   });
+
+  it("should avoid mutating the provided overrides", () => {
+    const overrides = {};
+    const loaded = loadOverrides({
+      overrides,
+      plugins: [
+        {
+          overrides: {
+            fieldTypes: { text: ({ children }) => `${children} | 1` as any },
+          },
+        },
+      ],
+    });
+
+    expect(overrides).toEqual({});
+  });
 });
