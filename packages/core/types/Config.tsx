@@ -90,6 +90,7 @@ export type ExternalField<
   placeholder?: string;
   fetchList: (params: { query: string }) => Promise<any[] | null>;
   mapProp?: (value: any) => Props;
+  mapRow?: (value: any) => Record<string, string | number>;
   getItemSummary: (item: Props, index?: number) => string;
   showSearch?: boolean;
   initialQuery?: string;

@@ -47,6 +47,7 @@ export const ExternalField = ({
             ? `Select from ${deprecatedField.adaptor.name}`
             : validField.placeholder || "Select data",
           mapProp: deprecatedField.adaptor?.mapProp || validField.mapProp,
+          mapRow: validField.mapRow,
           fetchList: deprecatedField.adaptor?.fetchList
             ? async () =>
                 await deprecatedField.adaptor.fetchList(
