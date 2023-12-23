@@ -1,6 +1,10 @@
 {
   "name": "@measured/puck-plugin-heading-analyzer",
   "version": "0.13.0",
+  "author": "Measured Corporation Ltd <hello@measured.co>",
+  "repository": "measuredco/puck",
+  "bugs": "https://github.com/measuredco/puck/issues",
+  "homepage": "https://puckeditor.com",
   "private": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
