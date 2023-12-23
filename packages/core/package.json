@@ -58,7 +58,8 @@
     "deep-diff": "^1.0.2",
     "react-hotkeys-hook": "^4.4.1",
     "react-spinners": "^0.13.8",
-    "use-debounce": "^9.0.4"
+    "use-debounce": "^9.0.4",
+    "uuid": "^9.0.1"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0"

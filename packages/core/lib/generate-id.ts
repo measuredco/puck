@@ -1,4 +1,3 @@
-import { randomBytes } from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
-export const generateId = (type: string | number) =>
-  `${type}-${randomBytes(20).toString("hex")}`;
+export const generateId = (type: string | number) => `${type}-${uuidv4()}`;
