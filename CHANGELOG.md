@@ -2,6 +2,17 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.13.1](https://github.com/measuredco/puck/compare/v0.13.0...v0.13.1) (2023-12-23)
+
+
+### Bug Fixes
+
+* don't render plugins twice when using React strict mode ([f70c722](https://github.com/measuredco/puck/commit/f70c7222dd844257fab791fb4d5f8cf90e3361df))
+* replace crypto with uuid lib ([a84e06f](https://github.com/measuredco/puck/commit/a84e06feec977bca1ac7e08b6e55ba8afe0141dc))
+
+
+
+
 ## [0.13.0](https://github.com/measuredco/puck/compare/v0.12.0...v0.13.0) (2023-12-19)
 
 
