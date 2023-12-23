@@ -19,7 +19,7 @@
 .Modal-inner {
   width: 100%;
   max-width: 1024px;
-  border-radius: 16px;
+  border-radius: 8px;
   overflow: hidden;
   background: var(--puck-color-white);
   display: flex;

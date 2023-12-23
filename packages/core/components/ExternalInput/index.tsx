@@ -122,11 +122,7 @@ export const ExternalInput = ({
           })}
         >
           <div className={getClassNameModal("masthead")}>
-            <Heading rank={2} size="xxl">
-              Select content
-            </Heading>
-
-            {field.showSearch && (
+            {field.showSearch ? (
               <form
                 className={getClassNameModal("searchForm")}
                 onSubmit={(e) => {
@@ -146,7 +142,7 @@ export const ExternalInput = ({
                     className={getClassNameModal("searchInput")}
                     name="q"
                     type="search"
-                    placeholder="Search"
+                    placeholder={field.placeholder}
                     onChange={(e) => {
                       setSearchQuery(e.currentTarget.value);
                     }}
@@ -158,6 +154,10 @@ export const ExternalInput = ({
                   Search
                 </Button>
               </form>
+            ) : (
+              <Heading rank={2} size="xs">
+                {field.placeholder || "Select data"}
+              </Heading>
             )}
           </div>
 
@@ -205,8 +205,8 @@ export const ExternalInput = ({
             </div>
           </div>
 
-          <div className={getClassNameModal("noContentBanner")}>
-            No results.
+          <div className={getClassNameModal("footer")}>
+            {mappedData.length} result{mappedData.length === 1 ? "" : "s"}
           </div>
         </div>
       </Modal>
