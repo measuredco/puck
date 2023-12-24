@@ -7,6 +7,13 @@ type WithPuckProps<Props> = Props & {
   id: string;
 };
 
+type FieldOption = {
+  label: string;
+  value: string | number | boolean;
+};
+
+type FieldOptions = Array<FieldOption> | ReadonlyArray<FieldOption>;
+
 export type BaseField = {
   label?: string;
 };
@@ -26,18 +33,12 @@ export type TextareaField = BaseField & {
 
 export type SelectField = BaseField & {
   type: "select";
-  options: {
-    label: string;
-    value: string | number | boolean;
-  }[];
+  options: FieldOptions;
 };
 
 export type RadioField = BaseField & {
   type: "radio";
-  options: {
-    label: string;
-    value: string | number | boolean;
-  }[];
+  options: FieldOptions;
 };
 
 export type ArrayField<
