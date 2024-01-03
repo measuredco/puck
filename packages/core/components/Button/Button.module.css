@@ -8,7 +8,7 @@
   align-items: center;
   gap: 8px;
   letter-spacing: 0.05ch;
-  font-family: var(--puck-font-family-proportional);
+  font-family: var(--puck-font-family);
   font-size: 14px;
   font-weight: 400;
   line-height: 1;

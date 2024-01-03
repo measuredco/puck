@@ -1,6 +1,6 @@
 .LayerTree {
   color: var(--puck-color-grey-2);
-  font-family: var(--puck-font-stack);
+  font-family: var(--puck-font-family);
   font-size: var(--puck-font-size-xxs);
   margin: 0;
   position: relative;
@@ -17,7 +17,6 @@
 .LayerTree-helper {
   text-align: center;
   color: var(--puck-color-grey-6);
-  font-family: var(--puck-font-stack);
   margin: 8px 4px;
 }
 

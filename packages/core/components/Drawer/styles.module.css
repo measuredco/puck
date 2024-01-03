@@ -1,3 +1,7 @@
+.Drawer {
+  font-family: var(--puck-font-family);
+}
+
 .DrawerItem:last-of-type .DrawerItem-default .DrawerItem-draggableWrapper {
   padding-bottom: 0px;
 }
