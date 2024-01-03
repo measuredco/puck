@@ -1,4 +1,4 @@
-import "./styles/global.css";
+import "./styles.css";
 
 export type { PuckAction } from "./reducer/actions";
 
