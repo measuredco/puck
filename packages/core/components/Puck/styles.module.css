@@ -22,6 +22,7 @@
   --puck-space-px: 16px;
   bottom: 0;
   display: grid;
+  font-family: var(--puck-font-family);
   grid-template-areas: "header header header" "left editor right";
   grid-template-columns: 0 var(--puck-frame-width) 0;
   grid-template-rows: min-content auto;
@@ -190,7 +191,6 @@
   border-left: 1px solid var(--puck-color-grey-8);
   display: flex;
   flex-direction: column;
-  font-family: var(--puck-font-stack);
   grid-area: right;
   overflow-y: auto;
 }

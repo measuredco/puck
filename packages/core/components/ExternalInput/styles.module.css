@@ -1,7 +1,3 @@
-.ExternalInput {
-  font-family: var(--puck-font-stack);
-}
-
 .ExternalInput-actions {
   display: flex;
 }
@@ -100,7 +96,6 @@
 }
 
 .ExternalInputModal-td {
-  font-family: var(--puck-font-stack);
   padding: 16px 24px;
 }
 

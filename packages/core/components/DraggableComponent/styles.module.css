@@ -31,7 +31,6 @@
   top: 0;
   position: absolute;
   z-index: 0;
-  font-family: var(--puck-font-stack);
   pointer-events: none;
   box-sizing: border-box;
 }
@@ -106,6 +105,7 @@
   background: var(--puck-color-grey-0);
   color: white;
   display: none;
+  font-family: var(--puck-font-family);
   gap: 4px;
   pointer-events: auto;
   box-sizing: border-box;

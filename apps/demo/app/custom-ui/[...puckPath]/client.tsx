@@ -120,6 +120,7 @@ const Tabs = ({
                 }
               }}
               style={{
+                fontFamily: "inherit",
                 fontSize: 16,
                 padding: "16px 16px",
                 paddingTop: 19,

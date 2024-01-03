@@ -1,5 +1,6 @@
 .PuckFields {
   position: relative;
+  font-family: var(--puck-font-family);
 }
 
 .PuckFields-loadingOverlay {

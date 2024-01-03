@@ -1,13 +1,6 @@
 import "@/core/styles.css";
 import "./styles.css";
 
-import { Inter } from "next/font/google";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-});
-
 export default function RootLayout({
   children,
 }: {
@@ -24,7 +17,9 @@ export default function RootLayout({
           ></script>
         )}
       </head>
-      <body className={inter.className}>{children}</body>
+      <body>
+        <div>{children}</div>
+      </body>
     </html>
   );
 }
