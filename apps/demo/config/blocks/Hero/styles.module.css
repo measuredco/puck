@@ -26,6 +26,7 @@
 .Hero h1 {
   line-height: 1.1;
   font-size: 48px;
+  margin: 0;
 }
 
 @media (min-width: 768px) {
