@@ -21,7 +21,7 @@
   max-width: 1024px;
   border-radius: 16px;
   overflow: hidden;
-  background: white;
+  background: var(--puck-color-white);
   display: flex;
   flex-direction: column;
   max-height: 90vh;

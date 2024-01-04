@@ -43,7 +43,7 @@
 }
 
 .Input-input {
-  background: white;
+  background: var(--puck-color-white);
   border-width: 1px;
   border-style: solid;
   border-color: var(--puck-color-grey-09);
@@ -62,7 +62,7 @@ select.Input-input {
   background-size: 12px;
   background-position: calc(100% - 12px) calc(50% + 3px);
   background-repeat: no-repeat;
-  background-color: white;
+  background-color: var(--puck-color-white);
 }
 
 .Input--readOnly > .Input-input,
@@ -101,7 +101,7 @@ select.Input-input {
 }
 
 .Input-radioInner {
-  background-color: white;
+  background-color: var(--puck-color-white);
   color: var(--puck-color-grey-05);
   font-size: var(--puck-font-size-xxxs);
   padding: 8px 12px;

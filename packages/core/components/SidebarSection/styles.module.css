@@ -2,7 +2,7 @@
   display: flex;
   position: relative;
   flex-direction: column;
-  color: black;
+  color: var(--puck-color-black);
 }
 
 .SidebarSection:last-of-type {
@@ -10,7 +10,7 @@
 }
 
 .SidebarSection-title {
-  background: white;
+  background: var(--puck-color-white);
   padding: 16px;
   border-bottom: 1px solid var(--puck-color-grey-09);
   border-top: 1px solid var(--puck-color-grey-09);
@@ -66,7 +66,7 @@
 }
 
 .SidebarSection-loadingOverlay {
-  background: white;
+  background: var(--puck-color-white);
   display: flex;
   justify-content: center;
   align-items: center;

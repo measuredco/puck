@@ -11,7 +11,7 @@
 }
 
 .DrawerItem-draggable {
-  background: white;
+  background: var(--puck-color-white);
   padding: 12px;
   display: flex;
   border: 1px var(--puck-color-grey-09) solid;

@@ -7,7 +7,7 @@
   gap: 8px;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  background-color: var(--puck-color-white);
   border: 1px solid var(--puck-color-grey-09);
   border-radius: 4px;
   color: var(--puck-color-azure-05);
@@ -50,7 +50,7 @@
 }
 
 .ExternalInputModal {
-  color: black;
+  color: var(--puck-color-black);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -58,7 +58,7 @@
 }
 
 .ExternalInputModal-masthead {
-  background-color: white;
+  background-color: var(--puck-color-white);
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
@@ -100,7 +100,7 @@
 }
 
 .ExternalInputModal-tr:nth-of-type(n) {
-  background-color: white;
+  background-color: var(--puck-color-white);
 }
 
 .ExternalInputModal-tr:nth-of-type(2n) {
@@ -172,7 +172,7 @@
 
 .ExternalInputModal-search {
   display: flex;
-  background: white;
+  background: var(--puck-color-white);
   border-width: 1px;
   border-style: solid;
   border-color: var(--puck-color-grey-09);
@@ -211,7 +211,7 @@
 .ExternalInputModal-searchInput {
   border: none;
   border-radius: 4px;
-  background: white;
+  background: var(--puck-color-white);
   font-family: inherit;
   font-size: 14px;
   padding: 12px 15px;

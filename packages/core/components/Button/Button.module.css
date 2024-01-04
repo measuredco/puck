@@ -3,7 +3,7 @@
   background: none;
   border: none;
   border-radius: 4px;
-  color: white;
+  color: var(--puck-color-white);
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -57,7 +57,7 @@
 
 .Button--secondary:hover {
   background-color: var(--puck-color-grey-11);
-  color: black;
+  color: var(--puck-color-black);
   opacity: 0.7;
 }
 
@@ -67,7 +67,7 @@
 
 .Button--disabled {
   background: var(--puck-color-grey-11);
-  color: black;
+  color: var(--puck-color-black);
   cursor: not-allowed;
 }
 
