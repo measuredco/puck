@@ -15,8 +15,8 @@ const NavItem = ({ label, href }: { label: string; href: string }) => {
       style={{
         textDecoration: "none",
         color: isActive
-          ? "var(--puck-color-grey-1)"
-          : "var(--puck-color-grey-5)",
+          ? "var(--puck-color-grey-02)"
+          : "var(--puck-color-grey-06)",
         fontWeight: isActive ? "600" : "400",
       }}
     >

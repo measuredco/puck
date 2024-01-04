@@ -61,7 +61,9 @@ export const MenuBar = ({
             <ChevronLeft
               size={21}
               stroke={
-                hasPast ? "var(--puck-color-black)" : "var(--puck-color-grey-7)"
+                hasPast
+                  ? "var(--puck-color-black)"
+                  : "var(--puck-color-grey-08)"
               }
             />
           </IconButton>
@@ -71,7 +73,7 @@ export const MenuBar = ({
               stroke={
                 hasFuture
                   ? "var(--puck-color-black)"
-                  : "var(--puck-color-grey-7)"
+                  : "var(--puck-color-grey-08)"
               }
             />
           </IconButton>

@@ -5,7 +5,7 @@
 
 .DraggableComponent--isDragging {
   background: #abc7e510;
-  outline: 2px var(--puck-color-azure-8) solid !important;
+  outline: 2px var(--puck-color-azure-09) solid !important;
   overflow: hidden;
 }
 
@@ -37,7 +37,7 @@
 
 .DraggableComponent-loadingOverlay {
   background: var(--puck-color-white);
-  color: var(--puck-color-grey-2);
+  color: var(--puck-color-grey-03);
   border-radius: 4px;
   display: flex;
   padding: 8px;
@@ -64,7 +64,7 @@
 
 .DraggableComponent:not(.DraggableComponent--isSelected)
   > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-8) solid !important;
+  outline: 2px var(--puck-color-azure-09) solid !important;
 }
 
 .DraggableComponent--indicativeHover > .DraggableComponent-overlay {
@@ -82,7 +82,7 @@
 }
 
 .DraggableComponent--isSelected {
-  outline: 2px var(--puck-color-azure-6) solid !important;
+  outline: 2px var(--puck-color-azure-07) solid !important;
 }
 
 .DraggableComponent--isSelected > .DraggableComponent-overlay {
@@ -102,7 +102,7 @@
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   border-radius: 8px;
-  background: var(--puck-color-grey-0);
+  background: var(--puck-color-grey-01);
   color: white;
   display: none;
   font-family: var(--puck-font-family);
@@ -118,7 +118,7 @@
 }
 
 .DraggableComponent-actionsLabel {
-  color: var(--puck-color-grey-7);
+  color: var(--puck-color-grey-08);
   display: flex;
   font-size: var(--puck-font-size-xxxs);
   font-weight: 500;
@@ -127,7 +127,7 @@
   padding-left: 8px;
   padding-right: 16px;
   margin-right: 8px;
-  border-right: 1px solid var(--puck-color-grey-4);
+  border-right: 1px solid var(--puck-color-grey-05);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -135,14 +135,14 @@
 .DraggableComponent-action {
   background: transparent;
   border: none;
-  color: var(--puck-color-grey-7);
+  color: var(--puck-color-grey-08);
   padding: 6px 8px;
   border-radius: 4px;
   overflow: hidden;
 }
 
 .DraggableComponent-action:hover {
-  background: var(--puck-color-grey-2);
-  color: var(--puck-color-azure-5);
+  background: var(--puck-color-grey-03);
+  color: var(--puck-color-azure-06);
   cursor: pointer;
 }

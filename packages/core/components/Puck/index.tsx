@@ -499,7 +499,7 @@ export function Puck<
                     {/* Fill empty space under root */}
                     <div
                       style={{
-                        background: "var(--puck-color-grey-10)",
+                        background: "var(--puck-color-grey-11)",
                         height: "100%",
                         flexGrow: 1,
                       }}

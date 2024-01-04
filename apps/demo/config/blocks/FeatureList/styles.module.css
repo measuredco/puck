@@ -42,8 +42,8 @@
 
 .FeatureList-icon {
   border-radius: 256px;
-  background: var(--puck-color-azure-8);
-  color: var(--puck-color-azure-5);
+  background: var(--puck-color-azure-09);
+  color: var(--puck-color-azure-06);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -63,7 +63,7 @@
 .FeatureList-description {
   font-size: 16px;
   line-height: 1.5;
-  color: var(--puck-color-grey-4);
+  color: var(--puck-color-grey-05);
   text-align: center;
   font-weight: 300;
 }

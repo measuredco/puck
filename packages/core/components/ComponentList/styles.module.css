@@ -15,7 +15,7 @@
 }
 
 .ComponentList-title {
-  color: var(--puck-color-grey-4);
+  color: var(--puck-color-grey-05);
   display: flex;
   font-size: var(--puck-font-size-xxxs);
   list-style: none;
@@ -30,8 +30,8 @@
 }
 
 .ComponentList-title:hover {
-  background-color: var(--puck-color-azure-9);
-  color: var(--puck-color-azure-4);
+  background-color: var(--puck-color-azure-11);
+  color: var(--puck-color-azure-05);
   cursor: pointer;
 }
 

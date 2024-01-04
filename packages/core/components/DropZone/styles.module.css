@@ -36,21 +36,21 @@
 .DropZone--hoveringOverArea:not(.DropZone--isDisabled):not(
     .DropZone--isRootZone
   ) {
-  background: var(--puck-color-azure-9);
-  outline: 2px dashed var(--puck-color-azure-7);
+  background: var(--puck-color-azure-11);
+  outline: 2px dashed var(--puck-color-azure-08);
 }
 
 .DropZone:not(.DropZone--hasChildren) {
-  background: var(--puck-color-azure-9);
-  outline: 2px dashed var(--puck-color-azure-7);
+  background: var(--puck-color-azure-11);
+  outline: 2px dashed var(--puck-color-azure-08);
 }
 
 .DropZone--isDestination {
-  outline: 2px dashed var(--puck-color-azure-3) !important;
+  outline: 2px dashed var(--puck-color-azure-04) !important;
 }
 
 .DropZone--isDestination:not(.DropZone--isRootZone) {
-  background: var(--puck-color-azure-85) !important;
+  background: var(--puck-color-azure-10) !important;
 }
 
 .DropZone-item {

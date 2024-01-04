@@ -5,13 +5,13 @@
 .ArrayField {
   display: flex;
   flex-direction: column;
-  background-color: var(--puck-color-grey-8);
-  border: 1px solid var(--puck-color-grey-8);
+  background-color: var(--puck-color-grey-09);
+  border: 1px solid var(--puck-color-grey-09);
   border-radius: 4px;
 }
 
 .ArrayField--isDraggingFrom {
-  background-color: var(--puck-color-azure-9);
+  background-color: var(--puck-color-azure-11);
 }
 
 .ArrayField-addButton {
@@ -19,7 +19,7 @@
   border: none;
   border-radius: 4px;
   display: flex;
-  color: var(--puck-color-azure-4);
+  color: var(--puck-color-azure-05);
   justify-content: center;
   cursor: pointer;
   width: 100%;
@@ -34,8 +34,8 @@
 }
 
 .ArrayField:not(.ArrayField--isDraggingFrom) > .ArrayField-addButton:hover {
-  background: var(--puck-color-azure-9);
-  color: var(--puck-color-azure-4);
+  background: var(--puck-color-azure-11);
+  color: var(--puck-color-azure-05);
 }
 
 /**
@@ -51,14 +51,14 @@
 }
 
 .ArrayField--isDraggingFrom > .ArrayFieldItem:not(.ArrayFieldItem--isDragging) {
-  border-bottom: 1px solid var(--puck-color-grey-8);
+  border-bottom: 1px solid var(--puck-color-grey-09);
   margin-bottom: 0;
 }
 
 .ArrayFieldItem--isExpanded {
   border-bottom: 0;
   outline-offset: 0px !important; /* Important helps to override Nextra docs */
-  outline: 1px solid var(--puck-color-azure-6) !important; /* Important helps to override Nextra docs */
+  outline: 1px solid var(--puck-color-azure-07) !important; /* Important helps to override Nextra docs */
 }
 
 .ArrayFieldItem--isDragging {
@@ -71,7 +71,7 @@
 }
 
 .ArrayFieldItem-summary {
-  color: var(--puck-color-grey-3);
+  color: var(--puck-color-grey-04);
   display: flex;
   align-items: center;
   gap: 2px;
@@ -84,8 +84,8 @@
 }
 
 .ArrayFieldItem--readOnly > .ArrayFieldItem-summary {
-  background-color: var(--puck-color-grey-11);
-  color: var(--puck-color-grey-5);
+  background-color: var(--puck-color-grey-12);
+  color: var(--puck-color-grey-06);
 }
 
 .ArrayFieldItem--isExpanded > .ArrayFieldItem-summary {
@@ -99,9 +99,9 @@
 
 .ArrayFieldItem-summary:hover,
 .ArrayFieldItem--isExpanded > .ArrayFieldItem-summary {
-  background: var(--puck-color-azure-9);
+  background: var(--puck-color-azure-11);
   cursor: pointer;
-  color: var(--puck-color-azure-4);
+  color: var(--puck-color-azure-05);
 }
 
 .ArrayFieldItem-body {
@@ -114,7 +114,7 @@
 
 .ArrayFieldItem-fieldset {
   border: none;
-  border-top: 1px solid var(--puck-color-grey-8);
+  border-top: 1px solid var(--puck-color-grey-09);
   margin: 0;
   padding: 16px 15px;
 }
@@ -126,7 +126,7 @@
 }
 
 .ArrayFieldItem-actions {
-  color: var(--puck-color-grey-3);
+  color: var(--puck-color-grey-04);
   display: flex;
   gap: 4px;
   opacity: 0;
@@ -137,7 +137,7 @@
 }
 
 .ArrayFieldItem-action:hover {
-  background: var(--puck-color-grey-9);
+  background: var(--puck-color-grey-10);
   border-radius: 4px;
   cursor: pointer;
 }
