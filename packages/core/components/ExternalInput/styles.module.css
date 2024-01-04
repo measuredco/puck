@@ -136,7 +136,7 @@
 
 .ExternalInputModal-loadingBanner {
   display: none;
-  background-color: #ffffff90;
+  background-color: color-mix(in srgb, var(--puck-color-white) 90%, transparent);
   padding: 64px;
   align-items: center;
   justify-content: center;

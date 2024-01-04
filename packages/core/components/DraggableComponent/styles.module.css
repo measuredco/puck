@@ -4,7 +4,7 @@
 }
 
 .DraggableComponent--isDragging {
-  background: #abc7e510;
+  background: color-mix(in srgb, var(--puck-color-azure-08) 10%, transparent);
   outline: 2px var(--puck-color-azure-09) solid !important;
   overflow: hidden;
 }
@@ -24,7 +24,7 @@
 
 .DraggableComponent-overlay {
   display: none;
-  background: #abc7e530;
+  background: color-mix(in srgb, var(--puck-color-azure-08) 30%, transparent);
   cursor: pointer;
   height: 100%;
   width: 100%;
