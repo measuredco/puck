@@ -11,7 +11,7 @@
 }
 
 .IconButton:hover {
-  background: var(--puck-color-grey-9);
+  background: var(--puck-color-grey-10);
   color: var(--puck-color-blue);
   cursor: pointer;
 }

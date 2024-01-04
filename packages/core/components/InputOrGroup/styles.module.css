@@ -1,5 +1,5 @@
 .Input {
-  color: var(--puck-color-grey-3);
+  color: var(--puck-color-grey-04);
   padding: 16px;
   padding-bottom: 12px;
   display: block;
@@ -14,7 +14,7 @@
 }
 
 .Input + .Input {
-  border-top: 1px solid var(--puck-color-grey-8);
+  border-top: 1px solid var(--puck-color-grey-09);
   margin-top: 8px;
 }
 
@@ -32,13 +32,13 @@
 }
 
 .Input-labelIcon {
-  color: var(--puck-color-grey-6);
+  color: var(--puck-color-grey-07);
   margin-right: 4px;
   padding-left: 4px;
 }
 
 .Input-disabledIcon {
-  color: var(--puck-color-grey-4);
+  color: var(--puck-color-grey-05);
   margin-left: auto;
 }
 
@@ -46,7 +46,7 @@
   background: white;
   border-width: 1px;
   border-style: solid;
-  border-color: var(--puck-color-grey-8);
+  border-color: var(--puck-color-grey-09);
   border-radius: 4px;
   font-family: inherit;
   font-size: 14px;
@@ -67,9 +67,9 @@ select.Input-input {
 
 .Input--readOnly > .Input-input,
 .Input--readOnly > select.Input-input {
-  background-color: var(--puck-color-grey-11);
-  border-color: var(--puck-color-grey-8);
-  color: var(--puck-color-grey-5);
+  background-color: var(--puck-color-grey-12);
+  border-color: var(--puck-color-grey-09);
+  color: var(--puck-color-grey-06);
   opacity: 1;
 }
 
@@ -78,21 +78,21 @@ select.Input-input {
 }
 
 .Input-input:focus {
-  border-color: var(--puck-color-azure-4);
-  outline: var(--puck-color-azure-8) 4px solid;
+  border-color: var(--puck-color-azure-05);
+  outline: var(--puck-color-azure-09) 4px solid;
   outline-offset: 0;
 }
 
 .Input-radioGroupItems {
   display: flex;
-  border: 1px solid var(--puck-color-grey-7);
+  border: 1px solid var(--puck-color-grey-08);
   border-radius: 4px;
   flex-wrap: wrap;
   overflow: hidden;
 }
 
 .Input-radio {
-  border-right: 1px solid var(--puck-color-grey-7);
+  border-right: 1px solid var(--puck-color-grey-08);
   flex-grow: 1;
 }
 
@@ -102,35 +102,35 @@ select.Input-input {
 
 .Input-radioInner {
   background-color: white;
-  color: var(--puck-color-grey-4);
+  color: var(--puck-color-grey-05);
   font-size: var(--puck-font-size-xxxs);
   padding: 8px 12px;
   text-align: center;
 }
 
 .Input-radioInner:hover {
-  background-color: var(--puck-color-azure-9);
+  background-color: var(--puck-color-azure-11);
   cursor: pointer;
 }
 
 .Input--readOnly .Input-radioGroupItems {
-  border-color: var(--puck-color-grey-8);
+  border-color: var(--puck-color-grey-09);
 }
 
 .Input--readOnly .Input-radioInner {
-  background-color: var(--puck-color-grey-11);
-  color: var(--puck-color-grey-5);
+  background-color: var(--puck-color-grey-12);
+  color: var(--puck-color-grey-06);
 }
 
 .Input-radio .Input-radioInput:checked ~ .Input-radioInner {
-  background-color: var(--puck-color-azure-9);
-  color: var(--puck-color-grey-1);
+  background-color: var(--puck-color-azure-11);
+  color: var(--puck-color-grey-02);
   font-weight: 500;
 }
 
 .Input--readOnly .Input-radioInput:checked ~ .Input-radioInner {
-  background-color: var(--puck-color-azure-9);
-  color: var(--puck-color-grey-4);
+  background-color: var(--puck-color-azure-11);
+  color: var(--puck-color-grey-05);
 }
 
 .Input-radio .Input-radioInput {

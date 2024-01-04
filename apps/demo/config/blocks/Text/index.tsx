@@ -52,7 +52,8 @@ export const Text: ComponentConfig<TextProps> = {
       <Section padding={padding} maxWidth={maxWidth}>
         <span
           style={{
-            color: color === "default" ? "inherit" : "var(--puck-color-grey-4)",
+            color:
+              color === "default" ? "inherit" : "var(--puck-color-grey-05)",
             display: "flex",
             textAlign: align,
             width: "100%",

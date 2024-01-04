@@ -14,7 +14,7 @@
   background: white;
   padding: 12px;
   display: flex;
-  border: 1px var(--puck-color-grey-8) solid;
+  border: 1px var(--puck-color-grey-09) solid;
   border-radius: 4px;
   font-size: var(--puck-font-size-xxs);
   justify-content: space-between;
@@ -23,8 +23,8 @@
 }
 
 .Drawer:not(.Drawer--isDraggingFrom) .DrawerItem-draggable:hover {
-  background-color: var(--puck-color-azure-9);
-  color: var(--puck-color-azure-4);
+  background-color: var(--puck-color-azure-11);
+  color: var(--puck-color-azure-05);
 }
 
 .DrawerItem-name {

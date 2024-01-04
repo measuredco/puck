@@ -1,5 +1,5 @@
 .LayerTree {
-  color: var(--puck-color-grey-2);
+  color: var(--puck-color-grey-03);
   font-family: var(--puck-font-family);
   font-size: var(--puck-font-size-xxs);
   margin: 0;
@@ -9,14 +9,14 @@
 }
 
 .LayerTree-zoneTitle {
-  color: var(--puck-color-grey-4);
+  color: var(--puck-color-grey-05);
   font-size: var(--puck-font-size-xxxs);
   text-transform: uppercase;
 }
 
 .LayerTree-helper {
   text-align: center;
-  color: var(--puck-color-grey-6);
+  color: var(--puck-color-grey-07);
   margin: 8px 4px;
 }
 
@@ -47,17 +47,17 @@
 .Layer:not(.Layer--isSelected) > .Layer-inner:hover,
 .Layer--isHovering > .Layer-inner {
   color: var(--puck-color-blue);
-  background: var(--puck-color-azure-85);
+  background: var(--puck-color-azure-10);
 }
 
 .Layer--isSelected {
-  background: var(--puck-color-azure-9);
-  border-color: var(--puck-color-azure-7);
+  background: var(--puck-color-azure-11);
+  border-color: var(--puck-color-azure-08);
   border-radius: 4px;
 }
 
 .Layer--isSelected > .Layer-inner {
-  background: var(--puck-color-azure-85);
+  background: var(--puck-color-azure-10);
   font-weight: 600;
 }
 
@@ -96,11 +96,11 @@
 }
 
 .Layer-icon {
-  color: var(--puck-color-rose-6);
+  color: var(--puck-color-rose-07);
   margin-top: 4px;
 }
 
 .Layer-zoneIcon {
-  color: var(--puck-color-grey-7);
+  color: var(--puck-color-grey-08);
   margin-top: 4px;
 }

@@ -36,7 +36,7 @@
 }
 
 .Hero-subtitle {
-  color: var(--puck-color-grey-4);
+  color: var(--puck-color-grey-05);
   font-size: var(--puck-font-size-m);
   line-height: 1.5;
   margin: 0;
@@ -45,7 +45,7 @@
 }
 
 .Hero--hasImageBackground .Hero-subtitle {
-  color: var(--puck-color-grey-2);
+  color: var(--puck-color-grey-03);
 }
 
 .Hero-image {

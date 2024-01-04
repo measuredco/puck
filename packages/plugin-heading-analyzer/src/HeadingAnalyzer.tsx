@@ -137,7 +137,7 @@ export const HeadingAnalyzer = () => {
                               scrollIntoView(el);
 
                               el.style.outline =
-                                "4px solid var(--puck-color-rose-5)";
+                                "4px solid var(--puck-color-rose-06)";
                               el.style.outlineOffset = "4px";
 
                               setTimeout(() => {
@@ -150,7 +150,7 @@ export const HeadingAnalyzer = () => {
                     }
                   >
                     {props.missing ? (
-                      <span style={{ color: "var(--puck-color-red)" }}>
+                      <span style={{ color: "var(--puck-color-red-04)" }}>
                         <b>H{props.rank}</b>: Missing
                       </span>
                     ) : (

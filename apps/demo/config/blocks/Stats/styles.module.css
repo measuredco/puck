@@ -1,8 +1,8 @@
 .Stats-items {
   background-image: linear-gradient(
     120deg,
-    var(--puck-color-azure-2) 0%,
-    var(--puck-color-azure-4) 100%
+    var(--puck-color-azure-03) 0%,
+    var(--puck-color-azure-05) 100%
   );
   border-radius: 24px;
   display: grid;
@@ -40,8 +40,8 @@
 
 .Stats-icon {
   border-radius: 256px;
-  background: var(--puck-color-azure-8);
-  color: var(--puck-color-azure-5);
+  background: var(--puck-color-azure-09);
+  color: var(--puck-color-azure-06);
   display: flex;
   justify-content: center;
   align-items: center;

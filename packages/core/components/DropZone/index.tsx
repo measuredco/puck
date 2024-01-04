@@ -348,7 +348,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                   data-puck-placeholder
                   style={{
                     ...placeholderStyle,
-                    background: "var(--puck-color-azure-5)",
+                    background: "var(--puck-color-azure-06)",
                     opacity: 0.3,
                     zIndex: 0,
                   }}
