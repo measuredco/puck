@@ -15,7 +15,7 @@
 }
 
 .ArrayField-addButton {
-  background-color: white;
+  background-color: var(--puck-color-white);
   border: none;
   border-radius: 4px;
   display: flex;
@@ -43,7 +43,7 @@
  */
 
 .ArrayFieldItem {
-  background: white;
+  background: var(--puck-color-white);
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   display: block;

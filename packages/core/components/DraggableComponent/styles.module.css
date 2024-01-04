@@ -103,7 +103,7 @@
   border-top-right-radius: 8px;
   border-radius: 8px;
   background: var(--puck-color-grey-01);
-  color: white;
+  color: var(--puck-color-white);
   display: none;
   font-family: var(--puck-font-family);
   gap: 4px;
