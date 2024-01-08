@@ -2,12 +2,13 @@
   font-family: var(--puck-font-family);
 }
 
-.DrawerItem:last-of-type .DrawerItem-default .DrawerItem-draggableWrapper {
-  padding-bottom: 0px;
+.DrawerItem-default .DrawerItem-draggableWrapper {
+  /* padding required here to prevent bug when cancelling a drag) */
+  padding-bottom: 12px;
 }
 
-.DrawerItem-default .DrawerItem-draggableWrapper {
-  padding-bottom: 12px;
+.DrawerItem:last-of-type .DrawerItem-default .DrawerItem-draggableWrapper {
+  padding-bottom: 0;
 }
 
 .DrawerItem-draggable {
@@ -20,11 +21,27 @@
   justify-content: space-between;
   align-items: center;
   cursor: grab;
+  transition: background-color 50ms ease-in, color 50ms ease-in;
 }
 
-.Drawer:not(.Drawer--isDraggingFrom) .DrawerItem-draggable:hover {
-  background-color: var(--puck-color-azure-11);
-  color: var(--puck-color-azure-05);
+.DrawerItem:focus-visible {
+  outline: 0;
+}
+
+.Drawer:not(.Drawer--isDraggingFrom)
+  .DrawerItem:focus-visible
+  .DrawerItem-draggable {
+  border-radius: 4px;
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .Drawer:not(.Drawer--isDraggingFrom) .DrawerItem-draggable:hover {
+    background-color: var(--puck-color-azure-12);
+    color: var(--puck-color-azure-04);
+    transition: none;
+  }
 }
 
 .DrawerItem-name {

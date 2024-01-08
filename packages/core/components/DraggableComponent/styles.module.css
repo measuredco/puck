@@ -3,6 +3,10 @@
   pointer-events: auto;
 }
 
+.DraggableComponent:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+}
+
 .DraggableComponent--isDragging {
   background: color-mix(in srgb, var(--puck-color-azure-08) 10%, transparent);
   outline: 2px var(--puck-color-azure-09) solid !important;
@@ -104,6 +108,7 @@
   border-radius: 8px;
   background: var(--puck-color-grey-01);
   color: var(--puck-color-white);
+  cursor: grab;
   display: none;
   font-family: var(--puck-font-family);
   gap: 4px;
@@ -136,13 +141,29 @@
   background: transparent;
   border: none;
   color: var(--puck-color-grey-08);
+  cursor: pointer;
   padding: 6px 8px;
   border-radius: 4px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 50ms ease-in;
 }
 
-.DraggableComponent-action:hover {
-  background: var(--puck-color-grey-03);
-  color: var(--puck-color-azure-06);
-  cursor: pointer;
+.DraggableComponent-action:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .DraggableComponent-action:hover {
+    color: var(--puck-color-azure-06);
+    transition: none;
+  }
+}
+
+.DraggableComponent-action:active {
+  color: var(--puck-color-azure-07);
+  transition: none;
 }

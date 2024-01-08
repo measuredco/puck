@@ -10,22 +10,16 @@
   background-color: var(--puck-color-white);
   border: 1px solid var(--puck-color-grey-09);
   border-radius: 4px;
-  color: var(--puck-color-azure-05);
+  color: var(--puck-color-azure-04);
+  cursor: pointer;
   padding: 12px 16px;
   font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
+  transition: background-color 50ms ease-in;
   position: relative;
   overflow: hidden;
   flex-grow: 1;
-}
-
-.ExternalInput-button:hover,
-.ExternalInput-detachButton:hover {
-  cursor: pointer;
-  background: var(--puck-color-azure-11);
-  color: var(--puck-color-azure-05);
-  z-index: 1;
 }
 
 .ExternalInput--dataSelected .ExternalInput-button {
@@ -41,12 +35,40 @@
   border-bottom-right-radius: 4px;
   background-color: var(--puck-color-grey-12);
   color: var(--puck-color-grey-05);
+  cursor: pointer;
   display: flex;
   gap: 8px;
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
+  position: relative;
+  transition: background-color 50ms ease-in, color 50ms ease-in;
   margin-left: -1px;
+}
+
+.ExternalInput-button:focus-visible,
+.ExternalInput-detachButton:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ExternalInput-button:hover,
+  .ExternalInput-detachButton:hover {
+    background: var(--puck-color-azure-12);
+    transition: none;
+  }
+
+  .ExternalInput-detachButton:hover {
+    color: var(--puck-color-azure-04);
+  }
+}
+
+.ExternalInput-button:active,
+.ExternalInput-detachButton:active {
+  background: var(--puck-color-azure-11);
+  transition: none;
 }
 
 .ExternalInputModal {
@@ -104,26 +126,28 @@
 }
 
 .ExternalInputModal-tr:nth-of-type(2n) {
-  background-color: var(--puck-color-grey-11);
+  background-color: var(--puck-color-grey-12);
 }
 
 .ExternalInputModal-tr .ExternalInputModal-td:first-of-type {
   font-weight: 500;
 }
 
-.ExternalInputModal-tbody .ExternalInputModal-tr:hover {
-  background: var(--puck-color-grey-12);
-  color: var(--puck-color-azure-05);
-  cursor: pointer;
-  position: relative;
-  margin-left: -5px;
-}
+@media (hover: hover) and (pointer: fine) {
+  .ExternalInputModal-tbody .ExternalInputModal-tr:hover {
+    background: var(--puck-color-grey-11);
+    color: var(--puck-color-azure-04);
+    cursor: pointer;
+    position: relative;
+    margin-left: -5px;
+  }
 
-.ExternalInputModal-tbody
-  .ExternalInputModal-tr:hover
-  .ExternalInputModal-td:first-of-type {
-  border-left: 4px solid var(--puck-color-azure-05);
-  padding-left: 20px;
+  .ExternalInputModal-tbody
+    .ExternalInputModal-tr:hover
+    .ExternalInputModal-td:first-of-type {
+    border-left: 4px solid var(--puck-color-azure-04);
+    padding-left: 20px;
+  }
 }
 
 .ExternalInputModal-tableWrapper {
@@ -177,13 +201,21 @@
   border-style: solid;
   border-color: var(--puck-color-grey-09);
   border-radius: 4px;
+  transition: border-color 50ms ease-in;
   width: 100%;
 }
 
 .ExternalInputModal-search:focus-within {
-  border-color: var(--puck-color-azure-05);
-  outline: var(--puck-color-azure-09) 4px solid;
-  outline-offset: 0;
+  border-color: var(--puck-color-grey-05);
+  outline: 2px solid var(--puck-color-azure-05);
+  transition: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ExternalInputModal-search:hover {
+    border-color: var(--puck-color-grey-05);
+    transition: none;
+  }
 }
 
 .ExternalInputModal-searchIcon {
@@ -196,6 +228,19 @@
   display: flex;
   justify-content: center;
   padding: 12px 15px;
+  transition: color 50ms ease-in;
+}
+
+.ExternalInputModal-search:focus-within .ExternalInputModal-searchIcon {
+  color: var(--puck-color-grey-04);
+  transition: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ExternalInputModal-search:hover .ExternalInputModal-searchIcon {
+    color: var(--puck-color-grey-04);
+    transition: none;
+  }
 }
 
 .ExternalInputModal-searchIconText {
@@ -219,7 +264,5 @@
 }
 
 .ExternalInputModal-searchInput:focus {
-  border: none;
-  outline: none;
-  box-shadow: none;
+  outline: 0;
 }

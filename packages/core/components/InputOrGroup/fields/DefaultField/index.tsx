@@ -39,6 +39,7 @@ export const DefaultField = ({
           }
         }}
         readOnly={readOnly}
+        tabIndex={readOnly ? -1 : undefined}
         id={id}
         min={field.type === "number" ? field.min : undefined}
         max={field.type === "number" ? field.max : undefined}

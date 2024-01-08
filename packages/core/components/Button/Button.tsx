@@ -36,7 +36,7 @@ export const Button = ({
 
   useEffect(() => setLoading(loadingProp), [loadingProp]);
 
-  const ElementType = href ? "a" : onClick ? "button" : "div";
+  const ElementType = href ? "a" : type ? "button" : "span";
 
   const el = (
     <ElementType

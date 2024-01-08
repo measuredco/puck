@@ -39,7 +39,7 @@ const ComponentList = ({
   return (
     <div className={getClassName({ isExpanded: expanded })}>
       {title && (
-        <div
+        <button
           className={getClassName("title")}
           onClick={() =>
             setUi({
@@ -62,7 +62,7 @@ const ComponentList = ({
           <div className={getClassName("titleIcon")}>
             {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
           </div>
-        </div>
+        </button>
       )}
       <div className={getClassName("content")}>
         <Drawer droppableId={`component-list${title ? `:${title}` : ""}`}>

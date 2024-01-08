@@ -27,6 +27,7 @@ export const TextareaField = ({
         value={typeof value === "undefined" ? "" : value}
         onChange={(e) => onChange(e.currentTarget.value)}
         readOnly={readOnly}
+        tabIndex={readOnly ? -1 : undefined}
         rows={5}
       />
     </FieldLabelInternal>
