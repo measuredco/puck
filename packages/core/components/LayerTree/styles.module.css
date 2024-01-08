@@ -23,12 +23,13 @@
 .Layer {
   position: relative;
   border: 1px solid transparent;
+  border-radius: 4px;
 }
 
 .Layer-inner {
-  padding-left: 12px;
-  padding-right: 4px;
+  border: 1px solid transparent;
   border-radius: 4px;
+  transition: color 50ms ease-in;
 }
 
 .Layer--containsZone > .Layer-inner {
@@ -37,28 +38,40 @@
 
 .Layer-clickable {
   align-items: center;
-  display: flex;
-}
-
-.Layer-inner:hover {
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  color: inherit;
   cursor: pointer;
+  display: flex;
+  font: inherit;
+  padding-left: 12px;
+  padding-right: 4px;
+  width: 100%;
 }
 
-.Layer:not(.Layer--isSelected) > .Layer-inner:hover,
-.Layer--isHovering > .Layer-inner {
-  color: var(--puck-color-blue);
-  background: var(--puck-color-azure-10);
+.Layer-clickable:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .Layer:not(.Layer--isSelected) > .Layer-inner:hover {
+    border-color: var(--puck-color-azure-10);
+    background: var(--puck-color-azure-11);
+    color: var(--puck-color-azure-04);
+    transition: none;
+  }
 }
 
 .Layer--isSelected {
-  background: var(--puck-color-azure-11);
   border-color: var(--puck-color-azure-08);
-  border-radius: 4px;
 }
 
 .Layer--isSelected > .Layer-inner {
   background: var(--puck-color-azure-10);
-  font-weight: 600;
 }
 
 .Layer--isSelected > .Layer-inner > .Layer-clickable > .Layer-chevron,

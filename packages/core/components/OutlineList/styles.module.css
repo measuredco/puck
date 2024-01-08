@@ -32,9 +32,26 @@
   content: "";
 }
 
-.OutlineListItem--clickable:hover {
-  color: var(--puck-color-blue);
+.OutlineListItem--clickable {
   cursor: pointer;
+  transition: color 50ms ease-in;
+}
+
+.OutlineListItem--clickable:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .OutlineListItem--clickable:hover {
+    color: var(--puck-color-azure-04);
+    transition: none;
+  }
+}
+
+.OutlineListItem--clickable:active {
+  color: var(--puck-color-azure-03);
+  transition: none;
 }
 
 .OutlineListItem > .OutlineList {

@@ -39,12 +39,12 @@ export const SidebarSection = ({
           {showBreadcrumbs
             ? breadcrumbs.map((breadcrumb, i) => (
                 <div key={i} className={getClassName("breadcrumb")}>
-                  <div
+                  <button
                     className={getClassName("breadcrumbLabel")}
                     onClick={() => setUi({ itemSelector: breadcrumb.selector })}
                   >
                     {breadcrumb.label}
-                  </div>
+                  </button>
                   <ChevronRight size={16} />
                 </div>
               ))

@@ -80,7 +80,7 @@ export const LayerTree = ({
               key={`${item.props.id}_${i}`}
             >
               <div className={getClassNameLayer("inner")}>
-                <div
+                <button
                   className={getClassNameLayer("clickable")}
                   onClick={() => {
                     if (isSelected) {
@@ -130,7 +130,7 @@ export const LayerTree = ({
                     </div>
                     <div className={getClassNameLayer("name")}>{item.type}</div>
                   </div>
-                </div>
+                </button>
               </div>
               {containsZone &&
                 Object.keys(zonesForItem).map((zoneKey, idx) => (

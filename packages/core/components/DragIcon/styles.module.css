@@ -1,10 +1,13 @@
 .DragIcon {
   color: var(--puck-color-grey-05);
+  cursor: grab;
   padding: 4px;
   border-radius: 4px;
 }
 
-.DragIcon:hover {
-  cursor: grab;
-  background: var(--puck-color-grey-10);
+@media (hover: hover) and (pointer: fine) {
+  .DragIcon:hover {
+    color: var(--puck-color-azure-05);
+    background-color: var(--puck-color-azure-12);
+  }
 }

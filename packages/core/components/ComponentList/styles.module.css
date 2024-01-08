@@ -15,24 +15,39 @@
 }
 
 .ComponentList-title {
+  background-color: transparent;
+  border: 0;
   color: var(--puck-color-grey-05);
+  cursor: pointer;
   display: flex;
+  font: inherit;
   font-size: var(--puck-font-size-xxxs);
   list-style: none;
+  margin-bottom: 6px;
   padding: 8px;
   text-transform: uppercase;
+  transition: background-color 50ms ease-in, color 50ms ease-in;
   gap: 4px;
   border-radius: 4px;
+  width: 100%;
 }
 
-.ComponentList--isExpanded .ComponentList-title {
-  margin-bottom: 4px;
+.ComponentList-title:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: 2px;
 }
 
-.ComponentList-title:hover {
-  background-color: var(--puck-color-azure-11);
-  color: var(--puck-color-azure-05);
-  cursor: pointer;
+@media (hover: hover) and (pointer: fine) {
+  .ComponentList-title:hover {
+    background-color: var(--puck-color-azure-11);
+    color: var(--puck-color-azure-04);
+    transition: none;
+  }
+}
+
+.ComponentList-title:active {
+  background-color: var(--puck-color-azure-10);
+  transition: none;
 }
 
 .ComponentList-titleIcon {

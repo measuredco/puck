@@ -39,14 +39,32 @@
 }
 
 .SidebarSection-breadcrumbLabel {
+  background: none;
+  border: 0;
+  border-radius: 2px;
   color: var(--puck-color-azure-04);
+  cursor: pointer;
+  font: inherit;
   flex-shrink: 0;
+  padding: 0;
+  transition: color 50ms ease-in;
 }
 
-.SidebarSection-breadcrumbLabel:hover {
-  color: var(--puck-color-azure-05);
-  cursor: pointer;
-  text-decoration: underline;
+.SidebarSection-breadcrumbLabel:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .SidebarSection-breadcrumbLabel:hover {
+    color: var(--puck-color-azure-03);
+    transition: none;
+  }
+}
+
+.SidebarSection-breadcrumbLabel:active {
+  color: var(--puck-color-azure-02);
+  transition: none;
 }
 
 .SidebarSection-breadcrumbs {
