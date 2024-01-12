@@ -60,6 +60,8 @@ const config = {
 | [`placeholder`](#placeholder)             | `placeholder: "Select content"`              | String     | -        |
 | [`showSearch`](#showsearch)               | `showSearch: true`                           | Boolean    | -        |
 | [`initialQuery`](#initialquery)           | `initialQuery: "Hello, world"`               | String     | -        |
+| [`filterFields`](#filterfields)           | `{ "rating": { type: "number" } }`           | Object     | -        |
+| [`initialFilters`](#initialfilters)       | `"{ "rating": 1 }"`                          | Object     | -        |
 
 ## Required params
 
@@ -88,7 +90,7 @@ const config = {
 };
 ```
 
-### `fetchList()`
+### `fetchList(queryParams)`
 
 Return a promise with a list of objects to be rendered in a tabular format via the external input modal.
 
@@ -116,6 +118,23 @@ const config = {
   },
 };
 ```
+
+#### `queryParams`
+
+The parameters passed to the `fetchList` method based on your field configuration.
+
+| Param                 | Example             | Type   |
+| --------------------- | ------------------- | ------ |
+| [`query`](#query)     | `"My Query"`        | String |
+| [`filters`](#filters) | `"{ "rating": 1 }"` | Object |
+
+##### `query`
+
+The search query when using [`showSearch`](#showsearch).
+
+##### `filters`
+
+An object describing the filters configured by [`filterFields`](#filterfields).
 
 ## Optional params
 
@@ -169,7 +188,6 @@ const config = {
     render: ({ data }) => {
       return <p>{data?.title || "No data selected"}</p>;
     },
-    // ...
   }}
 />
 
@@ -220,7 +238,6 @@ const config = {
     render: ({ data }) => {
       return <p>{data || "No data selected"}</p>;
     },
-    // ...
   }}
 />
 
@@ -276,7 +293,6 @@ const config = {
     render: ({ data }) => {
       return <p>{data?.title || "No data selected"}</p>;
     },
-    // ...
   }}
 />
 
@@ -291,7 +307,7 @@ const config = {
       fields: {
         data: {
           type: "external",
-          fetchList: async ({ params }) => {
+          fetchList: async ({ query }) => {
             return [
               { title: "Apple", description: "Lorem ipsum 1" },
               { title: "Orange", description: "Lorem ipsum 2" },
@@ -346,7 +362,6 @@ const config = {
     render: ({ data }) => {
       return <p>{data?.title || "No data selected"}</p>;
     },
-    // ...
 
 }}
 />
@@ -362,7 +377,7 @@ const config = {
       fields: {
         data: {
           type: "external",
-          fetchList: async ({ params }) => {
+          fetchList: async ({ query }) => {
             return [
               { title: "Apple", description: "Lorem ipsum 1" },
               { title: "Orange", description: "Lorem ipsum 2" },
@@ -419,7 +434,128 @@ const config = {
     render: ({ data }) => {
       return <p>{data?.title || "No data selected"}</p>;
     },
-    // ...
+
+}}
+/>
+
+### `filterFields`
+
+An object describing filters for your query using the [Fields API](/docs/api-reference/configuration/fields)
+
+```tsx {13-17} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async ({ filters }) => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+              { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+            ].filter((item) => item.rating >= (filters.rating || 0));
+          },
+          filterFields: {
+            rating: {
+              type: "number",
+            },
+          },
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async ({ filters }) => {
+          return [
+            { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+            { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+          ].filter((item) =>
+            item.rating >= (filters.rating || 0)
+          )
+        },
+        filterFields: {
+          rating: {
+            type: "number",
+          },
+        },
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+
+}}
+/>
+
+### `initialFilters`
+
+The initial filter values when using [`filterFields`](#filterfields).
+
+```tsx {18-20} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async ({ filters }) => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+              { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+            ].filter((item) => item.rating >= (filters.rating || 0));
+          },
+          filterFields: {
+            rating: {
+              type: "number",
+            },
+          },
+          initialFilters: {
+            rating: 1,
+          },
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async ({ filters }) => {
+          return [
+            { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+            { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+          ].filter((item) =>
+            item.rating >= (filters.rating || 0)
+          )
+        },
+        filterFields: {
+          rating: {
+            type: "number",
+          },
+        },
+        initialFilters: {
+          rating: 1,
+        },
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
 
 }}
 />

@@ -73,11 +73,47 @@
 
 .ExternalInputModal {
   color: var(--puck-color-black);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: min-content minmax(128px, 100%) min-content;
+  grid-template-columns: 100%;
   position: relative;
   min-height: 50vh;
   max-height: 90vh;
+}
+
+.ExternalInputModal-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 458px) {
+  .ExternalInputModal-grid {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+
+  .ExternalInputModal--filtersToggled .ExternalInputModal-grid {
+    grid-template-columns: 25% 75%;
+  }
+}
+
+.ExternalInputModal-filters {
+  border-bottom: 1px solid var(--puck-color-grey-09);
+}
+
+.ExternalInputModal--filtersToggled .ExternalInputModal-filters {
+  display: none; /* Hide filters by default on smaller viewports */
+}
+
+@media (min-width: 458px) {
+  .ExternalInputModal-filters {
+    border-right: 1px solid var(--puck-color-grey-09);
+    display: none;
+  }
+
+  .ExternalInputModal--filtersToggled .ExternalInputModal-filters {
+    display: block; /* Show filters by default on larger viewports */
+  }
 }
 
 .ExternalInputModal-masthead {
@@ -106,6 +142,7 @@
 }
 
 .ExternalInputModal-thead {
+  background-color: var(--puck-color-white);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -184,9 +221,15 @@
 
 .ExternalInputModal-searchForm {
   display: flex;
-  height: 43px;
+  flex-wrap: wrap;
   gap: 12px;
   flex-grow: 1;
+}
+
+@media (min-width: 458px) {
+  .ExternalInputModal-searchForm {
+    flex-wrap: nowrap;
+  }
 }
 
 .ExternalInputModal-search {
@@ -196,8 +239,8 @@
   border-style: solid;
   border-color: var(--puck-color-grey-09);
   border-radius: 4px;
+  flex-grow: 1;
   transition: border-color 50ms ease-in;
-  width: 100%;
 }
 
 .ExternalInputModal-search:focus-within {
@@ -260,6 +303,23 @@
 
 .ExternalInputModal-searchInput:focus {
   outline: 0;
+}
+
+.ExternalInputModal-searchActions {
+  display: flex;
+  gap: 8px;
+  height: 44px;
+  width: 100%;
+}
+
+@media (min-width: 458px) {
+  .ExternalInputModal-searchActions {
+    width: auto;
+  }
+}
+
+.ExternalInputModal-searchActionIcon {
+  align-self: center;
 }
 
 .ExternalInputModal-footer {

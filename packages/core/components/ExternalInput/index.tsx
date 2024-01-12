@@ -2,11 +2,13 @@ import { useMemo, useEffect, useState, useCallback } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ExternalField } from "../../types/Config";
-import { Link, Search, Unlock } from "lucide-react";
+import { Link, Search, SlidersHorizontal, Unlock } from "lucide-react";
 import { Modal } from "../Modal";
 import { Heading } from "../Heading";
 import { ClipLoader } from "react-spinners";
 import { Button } from "../Button";
+import { InputOrGroup } from "../InputOrGroup";
+import { IconButton } from "../IconButton";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
 const getClassNameModal = getClassNameFactory("ExternalInputModal", styles);
@@ -26,11 +28,20 @@ export const ExternalInput = ({
   name: string;
   id: string;
 }) => {
-  const { mapProp = (val) => val, mapRow = (val) => val } = field || {};
+  const {
+    mapProp = (val) => val,
+    mapRow = (val) => val,
+    filterFields,
+  } = field || {};
 
   const [data, setData] = useState<Record<string, any>[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const hasFilterFields = !!filterFields;
+
+  const [filters, setFilters] = useState(field.initialFilters || {});
+  const [filtersToggled, setFiltersToggled] = useState(hasFilterFields);
 
   const mappedData = useMemo(() => {
     return data.map(mapRow);
@@ -53,13 +64,13 @@ export const ExternalInput = ({
   const [searchQuery, setSearchQuery] = useState(field.initialQuery || "");
 
   const search = useCallback(
-    async (query) => {
+    async (query, filters) => {
       setIsLoading(true);
 
-      const cacheKey = `${id}-${name}-${query}`;
+      const cacheKey = `${id}-${name}-${query}-${JSON.stringify(filters)}`;
 
       const listData =
-        dataCache[cacheKey] || (await field.fetchList({ query }));
+        dataCache[cacheKey] || (await field.fetchList({ query, filters }));
 
       if (listData) {
         setData(listData);
@@ -72,7 +83,7 @@ export const ExternalInput = ({
   );
 
   useEffect(() => {
-    search(searchQuery);
+    search(searchQuery, filters);
   }, []);
 
   return (
@@ -114,23 +125,22 @@ export const ExternalInput = ({
         )}
       </div>
       <Modal onClose={() => setOpen(false)} isOpen={isOpen}>
-        <div
+        <form
           className={getClassNameModal({
             isLoading,
             loaded: !isLoading,
             hasData: mappedData.length > 0,
+            filtersToggled,
           })}
+          onSubmit={(e) => {
+            e.preventDefault();
+
+            search(searchQuery, filters);
+          }}
         >
           <div className={getClassNameModal("masthead")}>
             {field.showSearch ? (
-              <form
-                className={getClassNameModal("searchForm")}
-                onSubmit={(e) => {
-                  e.preventDefault();
-
-                  search(searchQuery);
-                }}
-              >
+              <div className={getClassNameModal("searchForm")}>
                 <label className={getClassNameModal("search")}>
                   <span className={getClassNameModal("searchIconText")}>
                     Search
@@ -150,10 +160,26 @@ export const ExternalInput = ({
                     value={searchQuery}
                   ></input>
                 </label>
-                <Button type="submit" loading={isLoading} disabled={isLoading}>
-                  Search
-                </Button>
-              </form>
+                <div className={getClassNameModal("searchActions")}>
+                  <Button type="submit" loading={isLoading} fullWidth>
+                    Search
+                  </Button>
+                  {hasFilterFields && (
+                    <div className={getClassNameModal("searchActionIcon")}>
+                      <IconButton
+                        title="Toggle filters"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setFiltersToggled(!filtersToggled);
+                        }}
+                      >
+                        <SlidersHorizontal size={20} />
+                      </IconButton>
+                    </div>
+                  )}
+                </div>
+              </div>
             ) : (
               <Heading rank={2} size="xs">
                 {field.placeholder || "Select data"}
@@ -161,54 +187,82 @@ export const ExternalInput = ({
             )}
           </div>
 
-          <div className={getClassNameModal("tableWrapper")}>
-            <table className={getClassNameModal("table")}>
-              <thead className={getClassNameModal("thead")}>
-                <tr className={getClassNameModal("tr")}>
-                  {keys.map((key) => (
-                    <th
-                      key={key}
-                      className={getClassNameModal("th")}
-                      style={{ textAlign: "left" }}
-                    >
-                      {key}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className={getClassNameModal("tbody")}>
-                {mappedData.map((item, i) => {
-                  return (
-                    <tr
-                      key={i}
-                      style={{ whiteSpace: "nowrap" }}
-                      className={getClassNameModal("tr")}
-                      onClick={() => {
-                        onChange(mapProp(data[i]));
+          <div className={getClassNameModal("grid")}>
+            {hasFilterFields && (
+              <div className={getClassNameModal("filters")}>
+                {hasFilterFields &&
+                  Object.keys(filterFields).map((fieldName) => {
+                    const filterField = filterFields[fieldName];
+                    return (
+                      <InputOrGroup
+                        key={fieldName}
+                        field={filterField}
+                        name={fieldName}
+                        id={`external_field_${fieldName}_filter`}
+                        label={filterField.label || fieldName}
+                        value={filters[fieldName]}
+                        onChange={(value) => {
+                          const newFilters = { ...filters, [fieldName]: value };
 
-                        setOpen(false);
-                      }}
-                    >
-                      {keys.map((key) => (
-                        <td key={key} className={getClassNameModal("td")}>
-                          {item[key]}
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                          setFilters(newFilters);
 
-            <div className={getClassNameModal("loadingBanner")}>
-              <ClipLoader size={24} aria-label="Loading" />
+                          search(searchQuery, newFilters);
+                        }}
+                      />
+                    );
+                  })}
+              </div>
+            )}
+
+            <div className={getClassNameModal("tableWrapper")}>
+              <table className={getClassNameModal("table")}>
+                <thead className={getClassNameModal("thead")}>
+                  <tr className={getClassNameModal("tr")}>
+                    {keys.map((key) => (
+                      <th
+                        key={key}
+                        className={getClassNameModal("th")}
+                        style={{ textAlign: "left" }}
+                      >
+                        {key}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className={getClassNameModal("tbody")}>
+                  {mappedData.map((item, i) => {
+                    return (
+                      <tr
+                        key={i}
+                        style={{ whiteSpace: "nowrap" }}
+                        className={getClassNameModal("tr")}
+                        onClick={() => {
+                          onChange(mapProp(data[i]));
+
+                          setOpen(false);
+                        }}
+                      >
+                        {keys.map((key) => (
+                          <td key={key} className={getClassNameModal("td")}>
+                            {item[key]}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+
+              <div className={getClassNameModal("loadingBanner")}>
+                <ClipLoader size={24} aria-label="Loading" />
+              </div>
             </div>
           </div>
 
           <div className={getClassNameModal("footer")}>
             {mappedData.length} result{mappedData.length === 1 ? "" : "s"}
           </div>
-        </div>
+        </form>
       </Modal>
     </div>
   );

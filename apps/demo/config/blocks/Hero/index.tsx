@@ -33,7 +33,23 @@ export const Hero: ComponentConfig<HeroProps> = {
       type: "external",
       placeholder: "Select a quote",
       showSearch: true,
-      fetchList: async ({ query }) => {
+      filterFields: {
+        author: {
+          type: "select",
+          options: [
+            { value: "", label: "Select an author" },
+            { value: "Mark Twain", label: "Mark Twain" },
+            { value: "Henry Ford", label: "Henry Ford" },
+            { value: "Kurt Vonnegut", label: "Kurt Vonnegut" },
+            { value: "Andrew Carnegie", label: "Andrew Carnegie" },
+            { value: "C. S. Lewis", label: "C. S. Lewis" },
+            { value: "Confucius", label: "Confucius" },
+            { value: "Eleanor Roosevelt", label: "Eleanor Roosevelt" },
+            { value: "Samuel Ullman", label: "Samuel Ullman" },
+          ],
+        },
+      },
+      fetchList: async ({ query, filters }) => {
         // Simulate delay
         await new Promise((res) => setTimeout(res, 500));
 
@@ -44,16 +60,20 @@ export const Hero: ComponentConfig<HeroProps> = {
             description: quote.content,
           }))
           .filter((item) => {
-            if (!query) return item;
+            if (filters?.author && item.title !== filters?.author) {
+              return false;
+            }
+
+            if (!query) return true;
 
             const queryLowercase = query.toLowerCase();
 
             if (item.title.toLowerCase().indexOf(queryLowercase) > -1) {
-              return item;
+              return true;
             }
 
             if (item.description.toLowerCase().indexOf(queryLowercase) > -1) {
-              return item;
+              return true;
             }
           });
       },
