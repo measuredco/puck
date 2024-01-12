@@ -33,6 +33,7 @@
 
 .Input-labelIcon {
   color: var(--puck-color-grey-07);
+  display: flex;
   margin-right: 4px;
   padding-left: 4px;
 }
