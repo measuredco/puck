@@ -88,12 +88,17 @@ export type ExternalField<
 > = BaseField & {
   type: "external";
   placeholder?: string;
-  fetchList: (params: { query: string }) => Promise<any[] | null>;
+  fetchList: (params: {
+    query: string;
+    filters: Record<string, any>;
+  }) => Promise<any[] | null>;
   mapProp?: (value: any) => Props;
   mapRow?: (value: any) => Record<string, string | number>;
   getItemSummary: (item: Props, index?: number) => string;
   showSearch?: boolean;
   initialQuery?: string;
+  filterFields?: Record<string, Field>;
+  initialFilters?: Record<string, any>;
 };
 
 export type CustomField<
