@@ -18,4 +18,4 @@ yarn create puck-app my-app
 
 ## License
 
-MIT © [Measured Co.](https://github.com/measuredco)
+MIT © [Measured Corporation Ltd](https://measured.co)
