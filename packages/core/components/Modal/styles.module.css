@@ -1,5 +1,5 @@
 .Modal {
-  background: color-mix(in srgb, var(--puck-color-black) 99%, transparent);
+  background: color-mix(in srgb, var(--puck-color-black) 75%, transparent);
   display: none;
   justify-content: center;
   align-items: center;
