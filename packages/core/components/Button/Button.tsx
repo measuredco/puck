@@ -65,10 +65,10 @@ export const Button = ({
       {icon && <div className={getClassName("icon")}>{icon}</div>}
       {children}
       {loading && (
-        <>
+        <div className={getClassName("spinner")}>
           &nbsp;&nbsp;
           <ClipLoader aria-label="loading" color="inherit" size="14px" />
-        </>
+        </div>
       )}
     </ElementType>
   );
