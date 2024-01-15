@@ -55,13 +55,13 @@ const config = {
 | ----------------------------------------- | -------------------------------------------- | ---------- | -------- |
 | [`type`](#type)                           | `type: "external"`                           | "external" | Required |
 | [`fetchList()`](#fetchlist)               | `fetchList: async () => []`                  | Function   | Required |
+| [`filterFields`](#filterfields)           | `{ "rating": { type: "number" } }`           | Object     | -        |
 | [`getItemSummary()`](#getitemsummaryitem) | `getItemSummary: async ({ title }) => title` | Function   | -        |
+| [`initialFilters`](#initialfilters)       | `"{ "rating": 1 }"`                          | Object     | -        |
+| [`initialQuery`](#initialquery)           | `initialQuery: "Hello, world"`               | String     | -        |
 | [`mapProp()`](#mappropitem)               | `mapProp: async ({ title }) => title`        | Function   | -        |
 | [`placeholder`](#placeholder)             | `placeholder: "Select content"`              | String     | -        |
 | [`showSearch`](#showsearch)               | `showSearch: true`                           | Boolean    | -        |
-| [`initialQuery`](#initialquery)           | `initialQuery: "Hello, world"`               | String     | -        |
-| [`filterFields`](#filterfields)           | `{ "rating": { type: "number" } }`           | Object     | -        |
-| [`initialFilters`](#initialfilters)       | `"{ "rating": 1 }"`                          | Object     | -        |
 
 ## Required params
 
@@ -138,6 +138,64 @@ An object describing the filters configured by [`filterFields`](#filterfields).
 
 ## Optional params
 
+### `filterFields`
+
+An object describing filters for your query using the [Fields API](/docs/api-reference/configuration/fields)
+
+```tsx {13-17} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async ({ filters }) => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+              { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+            ].filter((item) => item.rating >= (filters.rating || 0));
+          },
+          filterFields: {
+            rating: {
+              type: "number",
+            },
+          },
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async ({ filters }) => {
+          return [
+            { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+            { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+          ].filter((item) =>
+            item.rating >= (filters.rating || 0)
+          )
+        },
+        filterFields: {
+          rating: {
+            type: "number",
+          },
+        },
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+
+}}
+/>
+
 ### `getItemSummary(item)`
 
 Get the label to show once the item is selected.
@@ -189,6 +247,142 @@ const config = {
       return <p>{data?.title || "No data selected"}</p>;
     },
   }}
+/>
+
+### `initialFilters`
+
+The initial filter values when using [`filterFields`](#filterfields).
+
+```tsx {18-20} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async ({ filters }) => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+              { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+            ].filter((item) => item.rating >= (filters.rating || 0));
+          },
+          filterFields: {
+            rating: {
+              type: "number",
+            },
+          },
+          initialFilters: {
+            rating: 1,
+          },
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async ({ filters }) => {
+          return [
+            { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+            { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+          ].filter((item) =>
+            item.rating >= (filters.rating || 0)
+          )
+        },
+        filterFields: {
+          rating: {
+            type: "number",
+          },
+        },
+        initialFilters: {
+          rating: 1,
+        },
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+
+}}
+/>
+
+### `initialQuery`
+
+Set an initial query when using showing a search input with [`showSearch`](#showsearch).
+
+```tsx {16} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async ({ query }) => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1" },
+              { title: "Orange", description: "Lorem ipsum 2" },
+            ].filter((item) => {
+              // ...
+            });
+          },
+          showSearch: true,
+          initialQuery: "Apple",
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async ({ query }) => {
+          return [
+            {
+              title: "Apple",
+              description:
+                "An apple is a round, edible fruit produced by an apple tree.",
+            },
+            {
+              title: "Orange",
+              description:
+                "An orange is a fruit of various citrus species in the family Rutaceae.",
+            },
+          ].filter((item) => {
+            if (!query) return item;
+
+            const queryLowercase = query.toLowerCase();
+
+            if (item.title.toLowerCase().indexOf(queryLowercase) > -1) {
+              return item;
+            }
+
+            if (item.description.toLowerCase().indexOf(queryLowercase) > -1) {
+              return item;
+            }
+          })
+        },
+        showSearch: true,
+        initialQuery: 'apple'
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+
+}}
 />
 
 ### `mapProp(item)`
@@ -357,200 +551,6 @@ const config = {
           })
         },
         showSearch: true,
-      },
-    },
-    render: ({ data }) => {
-      return <p>{data?.title || "No data selected"}</p>;
-    },
-
-}}
-/>
-
-### `initialQuery`
-
-Set an initial query when using showing a search input with [`showSearch`](#showsearch).
-
-```tsx {16} copy
-const config = {
-  components: {
-    Example: {
-      fields: {
-        data: {
-          type: "external",
-          fetchList: async ({ query }) => {
-            return [
-              { title: "Apple", description: "Lorem ipsum 1" },
-              { title: "Orange", description: "Lorem ipsum 2" },
-            ].filter((item) => {
-              // ...
-            });
-          },
-          showSearch: true,
-          initialQuery: "Apple",
-        },
-      },
-      // ...
-    },
-  },
-};
-```
-
-<ConfigPreview
-  label="Example"
-  componentConfig={{
-    fields: {
-      data: {
-        type: "external",
-        fetchList: async ({ query }) => {
-          return [
-            {
-              title: "Apple",
-              description:
-                "An apple is a round, edible fruit produced by an apple tree.",
-            },
-            {
-              title: "Orange",
-              description:
-                "An orange is a fruit of various citrus species in the family Rutaceae.",
-            },
-          ].filter((item) => {
-            if (!query) return item;
-
-            const queryLowercase = query.toLowerCase();
-
-            if (item.title.toLowerCase().indexOf(queryLowercase) > -1) {
-              return item;
-            }
-
-            if (item.description.toLowerCase().indexOf(queryLowercase) > -1) {
-              return item;
-            }
-          })
-        },
-        showSearch: true,
-        initialQuery: 'apple'
-      },
-    },
-    render: ({ data }) => {
-      return <p>{data?.title || "No data selected"}</p>;
-    },
-
-}}
-/>
-
-### `filterFields`
-
-An object describing filters for your query using the [Fields API](/docs/api-reference/configuration/fields)
-
-```tsx {13-17} copy
-const config = {
-  components: {
-    Example: {
-      fields: {
-        data: {
-          type: "external",
-          fetchList: async ({ filters }) => {
-            return [
-              { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
-              { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
-            ].filter((item) => item.rating >= (filters.rating || 0));
-          },
-          filterFields: {
-            rating: {
-              type: "number",
-            },
-          },
-        },
-      },
-      // ...
-    },
-  },
-};
-```
-
-<ConfigPreview
-  label="Example"
-  componentConfig={{
-    fields: {
-      data: {
-        type: "external",
-        fetchList: async ({ filters }) => {
-          return [
-            { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
-            { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
-          ].filter((item) =>
-            item.rating >= (filters.rating || 0)
-          )
-        },
-        filterFields: {
-          rating: {
-            type: "number",
-          },
-        },
-      },
-    },
-    render: ({ data }) => {
-      return <p>{data?.title || "No data selected"}</p>;
-    },
-
-}}
-/>
-
-### `initialFilters`
-
-The initial filter values when using [`filterFields`](#filterfields).
-
-```tsx {18-20} copy
-const config = {
-  components: {
-    Example: {
-      fields: {
-        data: {
-          type: "external",
-          fetchList: async ({ filters }) => {
-            return [
-              { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
-              { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
-            ].filter((item) => item.rating >= (filters.rating || 0));
-          },
-          filterFields: {
-            rating: {
-              type: "number",
-            },
-          },
-          initialFilters: {
-            rating: 1,
-          },
-        },
-      },
-      // ...
-    },
-  },
-};
-```
-
-<ConfigPreview
-  label="Example"
-  componentConfig={{
-    fields: {
-      data: {
-        type: "external",
-        fetchList: async ({ filters }) => {
-          return [
-            { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
-            { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
-          ].filter((item) =>
-            item.rating >= (filters.rating || 0)
-          )
-        },
-        filterFields: {
-          rating: {
-            type: "number",
-          },
-        },
-        initialFilters: {
-          rating: 1,
-        },
       },
     },
     render: ({ data }) => {
