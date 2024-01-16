@@ -169,8 +169,8 @@
 
 @media (hover: hover) and (pointer: fine) {
   .ExternalInputModal-tbody .ExternalInputModal-tr:hover {
-    background: var(--puck-color-azure-11);
-    color: var(--puck-color-azure-05);
+    background: var(--puck-color-azure-12);
+    color: var(--puck-color-azure-04);
     cursor: pointer;
     position: relative;
     margin-left: -5px;
@@ -179,7 +179,7 @@
   .ExternalInputModal-tbody
     .ExternalInputModal-tr:hover
     .ExternalInputModal-td:first-of-type {
-    border-left: 4px solid var(--puck-color-azure-05);
+    border-left: 4px solid var(--puck-color-azure-04);
     padding-left: 20px;
   }
 }
