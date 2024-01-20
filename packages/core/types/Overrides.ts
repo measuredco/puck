@@ -44,7 +44,7 @@ export type Overrides = OverridesGeneric<{
     className?: string;
   }>;
   components: RenderFunc;
-  componentItem: RenderFunc;
+  componentItem: RenderFunc<{ children: ReactNode; name: string }>;
   outline: RenderFunc;
   puck: RenderFunc;
 }>;

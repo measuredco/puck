@@ -46,7 +46,7 @@ const DrawerItem = ({
   index,
 }: {
   name: string;
-  children?: (props: { children: ReactNode }) => ReactElement;
+  children?: (props: { children: ReactNode; name: string }) => ReactElement;
   id?: string;
   index: number;
 }) => {
@@ -57,7 +57,7 @@ const DrawerItem = ({
   const CustomInner = useMemo(
     () =>
       children ||
-      (({ children }: { children: ReactNode }) => (
+      (({ children, name }: { children: ReactNode; name: string }) => (
         <div className={getClassNameItem("default")}>{children}</div>
       )),
     [children]
@@ -65,7 +65,7 @@ const DrawerItem = ({
 
   return (
     <DrawerDraggable id={resolvedId} index={index}>
-      <CustomInner>
+      <CustomInner name={name}>
         <div className={getClassNameItem("draggableWrapper")}>
           <div className={getClassNameItem("draggable")}>
             <div className={getClassNameItem("name")}>{name}</div>
