@@ -1,6 +1,6 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
-import { List, Plus, Trash, AlertCircle } from "lucide-react";
+import { List, Plus, Trash } from "lucide-react";
 import { FieldLabelInternal, InputOrGroup, type InputProps } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
@@ -205,7 +205,11 @@ export const ArrayField = ({
                                 <div className={getClassNameItem("actions")}>
                                   <div className={getClassNameItem("action")}>
                                     <IconButton
-                                      disabled={field.min !== undefined && field.min >= localState.arrayState.items.length}
+                                      disabled={
+                                        field.min !== undefined &&
+                                        field.min >=
+                                          localState.arrayState.items.length
+                                      }
                                       onClick={(e) => {
                                         e.stopPropagation();
 
@@ -229,7 +233,7 @@ export const ArrayField = ({
                                       }}
                                       title="Delete"
                                     >
-                                      {field.min !== undefined && field.min >= localState.arrayState.items.length ? <AlertCircle size={16} />  : <Trash size={16} />}
+                                      <Trash size={16} />
                                     </IconButton>
                                   </div>
                                 </div>
@@ -286,10 +290,13 @@ export const ArrayField = ({
                 })}
 
                 {provided.placeholder}
-                
+
                 <button
                   className={getClassName("addButton")}
-                  disabled={field.max !== undefined && localState.arrayState.items.length >= field.max}
+                  disabled={
+                    field.max !== undefined &&
+                    localState.arrayState.items.length >= field.max
+                  }
                   onClick={() => {
                     const existingValue = value || [];
 
@@ -303,7 +310,7 @@ export const ArrayField = ({
                     onChange(newValue, mapArrayStateToUi(newArrayState));
                   }}
                 >
-                  {field.max !== undefined && localState.arrayState.items.length >= field.max ? <AlertCircle size={21} />  : <Plus size={21} />}
+                  <Plus size={21} />
                 </button>
               </div>
             );
