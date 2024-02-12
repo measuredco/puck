@@ -87,6 +87,8 @@ export const Hero: ComponentConfig<HeroProps> = {
     description: { type: "textarea" },
     buttons: {
       type: "array",
+      min: 1,
+      max: 4,
       getItemSummary: (item) => item.label || "Button",
       arrayFields: {
         label: { type: "text" },
