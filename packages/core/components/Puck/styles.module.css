@@ -178,6 +178,7 @@
   box-shadow: 0 0 0 calc(var(--puck-space-px) * 1.5) var(--puck-color-grey-11);
   margin: var(--puck-space-px);
   min-width: 321px;
+  flex-grow: 1;
 }
 
 @media (min-width: 1198px) {

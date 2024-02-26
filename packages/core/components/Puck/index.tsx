@@ -7,7 +7,7 @@ import {
   useReducer,
   useState,
 } from "react";
-import { DragDropContext, DragStart, DragUpdate } from "@hello-pangea/dnd";
+import { DragDropContext, DragStart, DragUpdate } from "@measured/dnd";
 
 import type { AppState, Config, Data, UiState } from "../../types/Config";
 import { Button } from "../Button";
@@ -496,14 +496,6 @@ export function Puck<
                         <Preview />
                       </CustomPreview>
                     </div>
-                    {/* Fill empty space under root */}
-                    <div
-                      style={{
-                        background: "var(--puck-color-grey-11)",
-                        height: "100%",
-                        flexGrow: 1,
-                      }}
-                    ></div>
                   </div>
                   <div className={getClassName("rightSideBar")}>
                     <SidebarSection

@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { Config, Data } from "../../types/Config";
-import { DragStart, DragUpdate } from "@hello-pangea/dnd";
+import { DragStart, DragUpdate } from "@measured/dnd";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { PuckAction } from "../../reducer";
 import { rootDroppableId } from "../../lib/root-droppable-id";

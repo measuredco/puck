@@ -1,0 +1,9 @@
+.PuckPreview {
+  height: 100%;
+}
+
+.PuckPreview-iframe {
+  border: none;
+  height: 100%;
+  width: 100%;
+}

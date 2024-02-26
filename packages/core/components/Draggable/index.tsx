@@ -3,7 +3,7 @@ import {
   Draggable as DndDraggable,
   DraggableProvided,
   DraggableStateSnapshot,
-} from "@hello-pangea/dnd";
+} from "@measured/dnd";
 
 export const Draggable = ({
   className,

@@ -1,4 +1,4 @@
-import { Droppable } from "@hello-pangea/dnd";
+import { Droppable } from "@measured/dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Draggable } from "../Draggable";

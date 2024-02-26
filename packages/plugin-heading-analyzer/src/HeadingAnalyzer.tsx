@@ -14,9 +14,15 @@ const dataAttr = "data-puck-heading-analyzer-id";
 const getOutline = ({
   addDataAttr = false,
 }: { addDataAttr?: boolean } = {}) => {
-  const headings = window.document
-    .querySelector("#puck-preview")!
-    .querySelectorAll("h1,h2,h3,h4,h5,h6");
+  const iframe = document.querySelector("#preview-iframe") as HTMLIFrameElement;
+
+  if (!iframe.contentDocument) {
+    throw new Error(
+      `Preview iframe could not be found when trying to analyze headings`
+    );
+  }
+
+  const headings = iframe.contentDocument.querySelectorAll("h1,h2,h3,h4,h5,h6");
 
   const _outline: { rank: number; text: string; analyzeId: string }[] = [];
 
@@ -127,7 +133,17 @@ export const HeadingAnalyzer = () => {
                         : (e) => {
                             e.stopPropagation();
 
-                            const el = document.querySelector(
+                            const iframe = document.querySelector(
+                              "#preview-iframe"
+                            ) as HTMLIFrameElement;
+
+                            if (!iframe.contentDocument) {
+                              throw new Error(
+                                `plugin-heading-outline-analyzer: Preview iframe could not be found when trying to scroll to item`
+                              );
+                            }
+
+                            const el = iframe.contentDocument.querySelector(
                               `[${dataAttr}="${props.analyzeId}"]`
                             ) as HTMLElement;
 

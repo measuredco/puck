@@ -1,5 +1,5 @@
 .DraggableComponent {
-  outline-offset: 0px !important;
+  outline-offset: -1px;
   pointer-events: auto;
 }
 
@@ -69,6 +69,7 @@
 .DraggableComponent:not(.DraggableComponent--isSelected)
   > .DraggableComponent-overlay {
   outline: 2px var(--puck-color-azure-09) solid !important;
+  outline-offset: -2px;
 }
 
 .DraggableComponent--indicativeHover > .DraggableComponent-overlay {
@@ -132,7 +133,7 @@
   padding-left: 8px;
   padding-right: 16px;
   margin-right: 8px;
-  border-right: 1px solid var(--puck-color-grey-05);
+  border-right: 2px solid var(--puck-color-grey-05);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
