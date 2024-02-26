@@ -205,6 +205,11 @@ export const ArrayField = ({
                                 <div className={getClassNameItem("actions")}>
                                   <div className={getClassNameItem("action")}>
                                     <IconButton
+                                      disabled={
+                                        field.min !== undefined &&
+                                        field.min >=
+                                          localState.arrayState.items.length
+                                      }
                                       onClick={(e) => {
                                         e.stopPropagation();
 
@@ -288,6 +293,10 @@ export const ArrayField = ({
 
                 <button
                   className={getClassName("addButton")}
+                  disabled={
+                    field.max !== undefined &&
+                    localState.arrayState.items.length >= field.max
+                  }
                   onClick={() => {
                     const existingValue = value || [];
 
@@ -301,7 +310,7 @@ export const ArrayField = ({
                     onChange(newValue, mapArrayStateToUi(newArrayState));
                   }}
                 >
-                  <Plus size="21" />
+                  <Plus size={21} />
                 </button>
               </div>
             );

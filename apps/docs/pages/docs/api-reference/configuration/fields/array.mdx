@@ -10,6 +10,8 @@ Render a list of items with a subset of fields. Extends [Base](base).
     fields: {
       items: {
         type: "array",
+        min: 1,
+        max: 3,
         arrayFields: {
           title: { type: "text" },
         },
@@ -35,6 +37,8 @@ const config = {
       fields: {
         items: {
           type: "array",
+          min: 1,
+          max: 3,
           arrayFields: {
             title: { type: "text" },
           },
@@ -60,6 +64,8 @@ const config = {
 | ----------------------------------------------- | --------------------------------------------- | -------- | -------- |
 | [`type`](#type)                                 | `type: "array"`                               | "array"  | Required |
 | [`arrayFields`](#arrayfields)                   | `arrayFields: { title: { type: "text" } }`    | Object   | Required |
+| [`min`](#min)                                   | `min: 1`                                      | Number   | -        |
+| [`max`](#max)                                   | `max: 3`                                      | Number   | -        |
 | [`defaultItemProps`](#defaultitemprops)         | `defaultItemProps: { title: "Hello, world" }` | String   | -        |
 | [`getItemSummary()`](#getitemsummaryitem-index) | `getItemSummary: (item) => item.title`        | Function | -        |
 
@@ -112,6 +118,102 @@ const config = {
 ```
 
 ## Optional params
+
+### `min`
+
+Set the minimum amount of items allowed in the array
+
+```tsx {10-10} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+          },
+          min: 1,
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      items: {
+        type: "array",
+        min: 1,
+        arrayFields: {
+          title: { type: "text" },
+        },
+      },
+    },
+    defaultProps: { items: [{ title: "Apple" }, { title: "Banana" }] },
+    render: ({ items }) => {
+      return (
+        <ul>
+          {items.map((item, i) => (
+            <li key={i}>{item.title}</li>
+          ))}
+        </ul>
+      );
+    },
+  }}
+/>
+
+### `max`
+
+Set the maximum amount of items allowed in the array
+
+```tsx {10-10} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+          },
+          max: 3,
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      items: {
+        type: "array",
+        max: 3,
+        arrayFields: {
+          title: { type: "text" },
+        },
+      },
+    },
+    defaultProps: { items: [{ title: "Apple" }, { title: "Banana" }] },
+    render: ({ items }) => {
+      return (
+        <ul>
+          {items.map((item, i) => (
+            <li key={i}>{item.title}</li>
+          ))}
+        </ul>
+      );
+    },
+  }}
+/>
 
 ### `defaultItemProps`
 

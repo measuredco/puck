@@ -50,6 +50,8 @@ export type ArrayField<
   };
   defaultItemProps?: Props[0];
   getItemSummary?: (item: Props[0], index?: number) => string;
+  max?: number;
+  min?: number;
 };
 
 export type ObjectField<
