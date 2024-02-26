@@ -1,5 +1,5 @@
 import { CSSProperties, ReactNode, SyntheticEvent, useEffect } from "react";
-import { Draggable } from "@hello-pangea/dnd";
+import { Draggable } from "@measured/dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, Trash } from "lucide-react";
