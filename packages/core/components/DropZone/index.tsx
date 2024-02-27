@@ -60,21 +60,16 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   let zoneCompound = rootDroppableId;
 
   useEffect(() => {
-    if (areaId && registerZoneArea) {
+    if (areaId) {
       registerZoneArea(areaId);
     }
   }, [areaId]);
 
   // Register and unregister zone on mount
   useEffect(() => {
-    if (registerZone) {
-      registerZone(zoneCompound);
-    }
-
+    registerZone(zoneCompound);
     return () => {
-      if (unregisterZone) {
-        unregisterZone(zoneCompound);
-      }
+      unregisterZone(zoneCompound);
     };
   }, []);
 

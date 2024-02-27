@@ -44,10 +44,10 @@ export type DropZoneEditContext<
   setHoveringZone: (zone: string | null) => void;
   hoveringComponent?: string | null;
   setHoveringComponent: (id: string | null) => void;
-  registerZoneArea?: (areaId: string) => void;
+  registerZoneArea: (areaId: string) => void;
   areasWithZones?: Record<string, boolean>;
-  registerZone?: (zoneCompound: string) => void;
-  unregisterZone?: (zoneCompound: string) => void;
+  registerZone: (zoneCompound: string) => void;
+  unregisterZone: (zoneCompound: string) => void;
   activeZones?: Record<string, boolean>;
   pathData?: PathData;
   registerPath: (selector: ItemSelector) => void;
