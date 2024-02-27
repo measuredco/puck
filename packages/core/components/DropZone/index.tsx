@@ -1,4 +1,4 @@
-import { CSSProperties, useContext, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { DraggableComponent } from "../DraggableComponent";
 import { Droppable } from "@hello-pangea/dnd";
 import { getItem } from "../../lib/get-item";
@@ -6,13 +6,19 @@ import { setupZone } from "../../lib/setup-zone";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { getClassNameFactory } from "../../lib";
 import styles from "./styles.module.css";
-import { DropZoneProvider, dropZoneContext } from "./context";
+import {
+  useDropZoneContext,
+  useDropZoneEditContext,
+  useDropZoneRenderContext,
+  DropZoneEditProvider,
+  DropZoneRenderProvider,
+} from "./context";
 import { getZoneId } from "../../lib/get-zone-id";
 import { useAppContext } from "../Puck/context";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
-export { DropZoneProvider, dropZoneContext } from "./context";
+export { DropZoneRenderProvider, DropZoneEditProvider } from "./context";
 
 type DropZoneProps = {
   zone: string;
@@ -23,23 +29,31 @@ type DropZoneProps = {
 
 function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   const appContext = useAppContext();
-  const ctx = useContext(dropZoneContext);
+  const ctx = useDropZoneEditContext();
 
   const {
     // These all need setting via context
     data,
-    dispatch = () => null,
+    dispatch,
     config,
     itemSelector,
-    setItemSelector = () => null,
+    setItemSelector,
     areaId,
     draggedItem,
     placeholderStyle,
+    hoveringZone,
+    setHoveringZone,
+    setHoveringComponent,
+    hoveringArea,
+    setHoveringArea,
+    registerPath,
+    registerZone,
     registerZoneArea,
+    unregisterZone,
     areasWithZones,
     hoveringComponent,
     disableZoom = false,
-  } = ctx! || {};
+  } = ctx;
 
   let content = data.content || [];
   let zoneCompound = rootDroppableId;
@@ -52,13 +66,13 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
 
   // Register and unregister zone on mount
   useEffect(() => {
-    if (ctx?.registerZone) {
-      ctx?.registerZone(zoneCompound);
+    if (registerZone) {
+      registerZone(zoneCompound);
     }
 
     return () => {
-      if (ctx?.unregisterZone) {
-        ctx?.unregisterZone(zoneCompound);
+      if (unregisterZone) {
+        unregisterZone(zoneCompound);
       }
     };
   }, []);
@@ -88,26 +102,6 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   const userIsDragging = !!draggedItem;
   const draggingOverArea = userIsDragging && zoneArea === draggedSourceArea;
   const draggingNewComponent = draggedSourceId?.startsWith("component-list");
-
-  if (
-    !ctx?.config ||
-    !ctx.setHoveringArea ||
-    !ctx.setHoveringZone ||
-    !ctx.setHoveringComponent ||
-    !ctx.setItemSelector ||
-    !ctx.registerPath ||
-    !ctx.dispatch
-  ) {
-    return <div>DropZone requires context to work.</div>;
-  }
-
-  const {
-    hoveringArea = "root",
-    setHoveringArea,
-    hoveringZone,
-    setHoveringZone,
-    setHoveringComponent,
-  } = ctx;
 
   const hoveringOverArea = hoveringArea
     ? hoveringArea === zoneArea
@@ -226,11 +220,11 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
 
                 return (
                   <div
-                    key={item.props.id}
+                    key={componentId}
                     className={getClassName("item")}
                     style={{ zIndex: isDragging ? 1 : undefined }}
                   >
-                    <DropZoneProvider
+                    <DropZoneEditProvider
                       value={{
                         ...ctx,
                         areaId: componentId,
@@ -254,7 +248,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                           appContext.componentState[componentId]?.loading
                         }
                         onMount={() => {
-                          ctx.registerPath!({
+                          registerPath({
                             index: i,
                             zone: zoneCompound,
                           });
@@ -328,7 +322,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                           <Render {...defaultedProps} />
                         </div>
                       </DraggableComponent>
-                    </DropZoneProvider>
+                    </DropZoneEditProvider>
                     {userIsDragging && (
                       <div
                         className={getClassName("hitbox")}
@@ -363,7 +357,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
 }
 
 function DropZoneRender({ zone }: DropZoneProps) {
-  const ctx = useContext(dropZoneContext);
+  const ctx = useDropZoneRenderContext();
 
   const { data, areaId = "root", config } = ctx || {};
 
@@ -386,15 +380,15 @@ function DropZoneRender({ zone }: DropZoneProps) {
 
         if (Component) {
           return (
-            <DropZoneProvider
+            <DropZoneRenderProvider
               key={item.props.id}
-              value={{ data, config, areaId: item.props.id }}
+              value={{ data, config, areaId: item.props.id, mode: "render" }}
             >
               <Component.render
                 {...item.props}
                 puck={{ renderDropZone: DropZone }}
               />
-            </DropZoneProvider>
+            </DropZoneRenderProvider>
           );
         }
 
@@ -405,9 +399,9 @@ function DropZoneRender({ zone }: DropZoneProps) {
 }
 
 export function DropZone(props: DropZoneProps) {
-  const ctx = useContext(dropZoneContext);
+  const ctx = useDropZoneContext();
 
-  if (ctx?.mode === "edit") {
+  if (ctx.mode === "edit") {
     return <DropZoneEdit {...props} />;
   }
 

@@ -1,5 +1,5 @@
-import { useContext, useMemo } from "react";
-import { dropZoneContext, PathData } from "../components/DropZone/context";
+import { useMemo } from "react";
+import { useDropZoneEditContext, PathData } from "../components/DropZone/context";
 import { useAppContext } from "../components/Puck/context";
 import { getZoneId } from "./get-zone-id";
 import { rootDroppableId } from "./root-droppable-id";
@@ -82,12 +82,12 @@ export const useBreadcrumbs = (renderCount?: number) => {
     state: { data },
     selectedItem,
   } = useAppContext();
-  const dzContext = useContext(dropZoneContext);
+  const dzContext = useDropZoneEditContext();
 
   return useMemo<Breadcrumb[]>(() => {
     const breadcrumbs = convertPathDataToBreadcrumbs(
       selectedItem,
-      dzContext?.pathData,
+      dzContext.pathData,
       data
     );
 
@@ -96,5 +96,5 @@ export const useBreadcrumbs = (renderCount?: number) => {
     }
 
     return breadcrumbs;
-  }, [selectedItem, dzContext?.pathData, renderCount]);
+  }, [selectedItem, dzContext.pathData, renderCount]);
 };

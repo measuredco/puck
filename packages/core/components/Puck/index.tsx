@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
-import { DropZoneProvider } from "../DropZone";
+import { DropZoneEditProvider } from "../DropZone";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { PuckAction, StateReducer, createReducer } from "../../reducer";
 import { flushZones } from "../../lib/flush-zones";
@@ -375,7 +375,7 @@ export function Puck<
             }
           }}
         >
-          <DropZoneProvider
+          <DropZoneEditProvider
             value={{
               data,
               itemSelector,
@@ -518,7 +518,7 @@ export function Puck<
                 </div>
               )}
             </CustomPuck>
-          </DropZoneProvider>
+          </DropZoneEditProvider>
         </DragDropContext>
       </AppProvider>
       <div id="puck-portal-root" />

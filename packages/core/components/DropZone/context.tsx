@@ -3,6 +3,7 @@ import {
   ReactNode,
   createContext,
   useCallback,
+  useContext,
   useState,
 } from "react";
 import { Config, Data } from "../../types/Config";
@@ -15,43 +16,106 @@ import { getZoneId } from "../../lib/get-zone-id";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
-export type DropZoneContext<
+export type DropZoneRenderContext<
   UserConfig extends Config<any, any, any> = Config<any, any, any>
 > = {
   data: Data;
   config: UserConfig;
+  mode: "render";
+  areaId?: string;
+};
+
+export type DropZoneEditContext<
+  UserConfig extends Config<any, any, any> = Config<any, any, any>
+> = {
+  mode: "edit";
+  data: Data;
+  config: UserConfig;
   componentState?: Record<string, any>;
   itemSelector?: ItemSelector | null;
-  setItemSelector?: (newIndex: ItemSelector | null) => void;
-  dispatch?: (action: PuckAction) => void;
+  setItemSelector: (newIndex: ItemSelector | null) => void;
+  dispatch: (action: PuckAction) => void;
   areaId?: string;
   draggedItem?: DragStart & Partial<DragUpdate>;
   placeholderStyle?: CSSProperties;
   hoveringArea?: string | null;
-  setHoveringArea?: (area: string | null) => void;
+  setHoveringArea: (area: string | null) => void;
   hoveringZone?: string | null;
-  setHoveringZone?: (zone: string | null) => void;
+  setHoveringZone: (zone: string | null) => void;
   hoveringComponent?: string | null;
-  setHoveringComponent?: (id: string | null) => void;
+  setHoveringComponent: (id: string | null) => void;
   registerZoneArea?: (areaId: string) => void;
   areasWithZones?: Record<string, boolean>;
   registerZone?: (zoneCompound: string) => void;
   unregisterZone?: (zoneCompound: string) => void;
   activeZones?: Record<string, boolean>;
   pathData?: PathData;
-  registerPath?: (selector: ItemSelector) => void;
-  mode?: "edit" | "render";
+  registerPath: (selector: ItemSelector) => void;
   disableZoom?: boolean;
-} | null;
+};
 
-export const dropZoneContext = createContext<DropZoneContext>(null);
+export type DropZoneContext<
+  UserConfig extends Config<any, any, any> = Config<any, any, any>
+> = DropZoneRenderContext<UserConfig> | DropZoneEditContext<UserConfig> | null;
 
-export const DropZoneProvider = ({
+const dropZoneContext = createContext<DropZoneContext>(null);
+
+export const useDropZoneContext = () => {
+  const ctx = useContext(dropZoneContext);
+  if (!ctx) {
+    throw Error("No dropzone context provided");
+  }
+  return ctx;
+};
+
+export const useDropZoneEditContext = () => {
+  const ctx = useDropZoneContext();
+  if (ctx.mode !== "edit") {
+    throw Error("No dropzone edit context provided");
+  }
+  return ctx;
+};
+
+export const useDropZoneRenderContext = () => {
+  const ctx = useDropZoneContext();
+  if (ctx.mode !== "render") {
+    throw Error("No dropzone render context provided");
+  }
+  return ctx;
+};
+
+export const DropZoneRenderProvider = ({
   children,
   value,
 }: {
   children: ReactNode;
-  value: DropZoneContext;
+  value: DropZoneRenderContext;
+}) => {
+  return (
+    <dropZoneContext.Provider value={value}>
+      {children}
+    </dropZoneContext.Provider>
+  );
+};
+
+export const DropZoneEditProvider = ({
+  children,
+  value,
+}: {
+  children: ReactNode;
+  value: Pick<
+    DropZoneEditContext,
+    | "data"
+    | "itemSelector"
+    | "setItemSelector"
+    | "config"
+    | "dispatch"
+    | "draggedItem"
+    | "placeholderStyle"
+    | "mode"
+    | "areaId"
+    | "disableZoom"
+  >;
 }) => {
   const [hoveringArea, setHoveringArea] = useState<string | null>(null);
   const [hoveringZone, setHoveringZone] = useState<string | null>(
@@ -69,7 +133,7 @@ export const DropZoneProvider = ({
 
   const [activeZones, setActiveZones] = useState<Record<string, boolean>>({});
 
-  const { dispatch = null } = value ? value : {};
+  const dispatch = value.dispatch;
 
   const registerZoneArea = useCallback(
     (area: string) => {
@@ -80,10 +144,6 @@ export const DropZoneProvider = ({
 
   const registerZone = useCallback(
     (zoneCompound: string) => {
-      if (!dispatch) {
-        return;
-      }
-
       dispatch({
         type: "registerZone",
         zone: zoneCompound,
@@ -96,10 +156,6 @@ export const DropZoneProvider = ({
 
   const unregisterZone = useCallback(
     (zoneCompound: string) => {
-      if (!dispatch) {
-        return;
-      }
-
       dispatch({
         type: "unregisterZone",
         zone: zoneCompound,
@@ -117,7 +173,7 @@ export const DropZoneProvider = ({
 
   const registerPath = useCallback(
     (selector: ItemSelector) => {
-      if (!value?.data) {
+      if (!value.data) {
         return;
       }
 
@@ -144,33 +200,29 @@ export const DropZoneProvider = ({
         };
       });
     },
-    [value, setPathData]
+    [value.data, setPathData]
   );
 
   return (
-    <>
-      {value && (
-        <dropZoneContext.Provider
-          value={{
-            hoveringArea: value.draggedItem ? hoveringAreaDb : hoveringArea,
-            setHoveringArea,
-            hoveringZone,
-            setHoveringZone,
-            hoveringComponent,
-            setHoveringComponent,
-            registerZoneArea,
-            areasWithZones,
-            registerZone,
-            unregisterZone,
-            activeZones,
-            registerPath,
-            pathData,
-            ...value,
-          }}
-        >
-          {children}
-        </dropZoneContext.Provider>
-      )}
-    </>
+    <dropZoneContext.Provider
+      value={{
+        hoveringArea: value.draggedItem ? hoveringAreaDb : hoveringArea,
+        setHoveringArea,
+        hoveringZone,
+        setHoveringZone,
+        hoveringComponent,
+        setHoveringComponent,
+        registerZoneArea,
+        areasWithZones,
+        registerZone,
+        unregisterZone,
+        activeZones,
+        registerPath,
+        pathData,
+        ...value,
+      }}
+    >
+      {children}
+    </dropZoneContext.Provider>
   );
 };

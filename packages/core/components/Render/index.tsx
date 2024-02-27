@@ -2,7 +2,7 @@
 
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { Config, Data } from "../../types/Config";
-import { DropZone, DropZoneProvider } from "../DropZone";
+import { DropZone, DropZoneRenderProvider } from "../DropZone";
 
 export function Render<
   UserConfig extends Config<any, any, any> = Config<any, any, any>
@@ -13,7 +13,7 @@ export function Render<
 
   if (config.root?.render) {
     return (
-      <DropZoneProvider value={{ data, config, mode: "render" }}>
+      <DropZoneRenderProvider value={{ data, config, mode: "render" }}>
         <config.root.render
           {...rootProps}
           puck={{
@@ -25,13 +25,13 @@ export function Render<
         >
           <DropZone zone={rootDroppableId} />
         </config.root.render>
-      </DropZoneProvider>
+      </DropZoneRenderProvider>
     );
   }
 
   return (
-    <DropZoneProvider value={{ data, config, mode: "render" }}>
+    <DropZoneRenderProvider value={{ data, config, mode: "render" }}>
       <DropZone zone={rootDroppableId} />
-    </DropZoneProvider>
+    </DropZoneRenderProvider>
   );
 }
