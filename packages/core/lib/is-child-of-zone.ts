@@ -5,7 +5,7 @@ import { getZoneId } from "./get-zone-id";
 export const isChildOfZone = (
   item: Content[0],
   maybeChild: Content[0] | null | undefined,
-  ctx: Pick<DropZoneEditContext, 'data' | 'pathData'>
+  ctx: Pick<DropZoneEditContext, "data" | "pathData">
 ) => {
   const { data, pathData = {} } = ctx;
 
