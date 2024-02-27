@@ -1,7 +1,8 @@
-import { DropZone, dropZoneContext } from "../../../DropZone";
+import { DropZone } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { useAppContext } from "../../context";
+import { useDropZoneEditContext } from "../../../DropZone/context";
 
 export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   const { config, dispatch, state } = useAppContext();
@@ -17,7 +18,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   // DEPRECATED
   const rootProps = state.data.root.props || state.data.root;
 
-  const { disableZoom = false } = useContext(dropZoneContext) || {};
+  const { disableZoom = false } = useDropZoneEditContext();
 
   return (
     <div
