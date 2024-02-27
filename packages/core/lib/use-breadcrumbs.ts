@@ -82,6 +82,7 @@ export const useBreadcrumbs = (renderCount?: number) => {
     state: { data },
     selectedItem,
   } = useAppContext();
+
   const dzContext = useDropZoneEditContext();
 
   return useMemo<Breadcrumb[]>(() => {

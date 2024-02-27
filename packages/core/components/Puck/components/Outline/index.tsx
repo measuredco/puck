@@ -3,7 +3,6 @@ import { findZonesForArea } from "../../../../lib/find-zones-for-area";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { LayerTree } from "../../../LayerTree";
 import { useAppContext } from "../../context";
-
 import { useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 import { useDropZoneEditContext } from "../../../DropZone/context";

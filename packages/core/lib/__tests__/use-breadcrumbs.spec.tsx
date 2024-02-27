@@ -24,7 +24,7 @@ const config: Config = {
   },
 };
 
-const dropzoneContext: DropZoneContext = {
+const dropzoneContext = {
   data,
   config,
   pathData: {

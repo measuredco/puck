@@ -1,14 +1,13 @@
-import { DropZoneContext } from "../components/DropZone/context";
+import { DropZoneEditContext } from "../components/DropZone/context";
 import { Content } from "../types/Config";
-import { getItem } from "./get-item";
 import { getZoneId } from "./get-zone-id";
 
 export const isChildOfZone = (
   item: Content[0],
   maybeChild: Content[0] | null | undefined,
-  ctx: DropZoneContext
+  ctx: Pick<DropZoneEditContext, 'data' | 'pathData'>
 ) => {
-  const { data, pathData = {} } = ctx || {};
+  const { data, pathData = {} } = ctx;
 
   return maybeChild && data
     ? !!pathData[maybeChild.props.id]?.path.find((zoneCompound) => {

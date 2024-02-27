@@ -29,6 +29,7 @@ type DropZoneProps = {
 
 function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   const appContext = useAppContext();
+
   const ctx = useDropZoneEditContext();
 
   const {

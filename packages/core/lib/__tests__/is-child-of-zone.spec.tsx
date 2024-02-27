@@ -1,4 +1,3 @@
-import { DropZoneContext } from "../../components/DropZone/context";
 import { Config, Data } from "../../types/Config";
 import { isChildOfZone } from "../is-child-of-zone";
 
@@ -24,7 +23,7 @@ const config: Config = {
   },
 };
 
-const dropzoneContext: DropZoneContext = {
+const dropzoneContext = {
   data,
   config,
   pathData: {
