@@ -397,6 +397,10 @@ function DropZoneRender({ zone }: DropZoneProps) {
 export function DropZone(props: DropZoneProps) {
   const ctx = useDropZoneContext();
 
+  if (!ctx) {
+    return <div>DropZone requires context to work.</div>;
+  }
+
   if (ctx.mode === "edit") {
     return <DropZoneEdit {...props} />;
   }

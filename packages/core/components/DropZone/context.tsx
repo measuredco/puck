@@ -62,15 +62,12 @@ const dropZoneContext = createContext<DropZoneContext>(null);
 
 export const useDropZoneContext = () => {
   const ctx = useContext(dropZoneContext);
-  if (!ctx) {
-    throw Error("No dropzone context provided");
-  }
   return ctx;
 };
 
 export const useDropZoneEditContext = () => {
   const ctx = useDropZoneContext();
-  if (ctx.mode !== "edit") {
+  if (ctx?.mode !== "edit") {
     throw Error("No dropzone edit context provided");
   }
   return ctx;
@@ -78,7 +75,7 @@ export const useDropZoneEditContext = () => {
 
 export const useDropZoneRenderContext = () => {
   const ctx = useDropZoneContext();
-  if (ctx.mode !== "render") {
+  if (ctx?.mode !== "render") {
     throw Error("No dropzone render context provided");
   }
   return ctx;
