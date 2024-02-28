@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { PropsWithChildren, ReactElement } from "react";
 import { ReactNode } from "react";
 import { ItemSelector } from "../lib/get-item";
 import { DropZone } from "../components/DropZone";
@@ -152,7 +152,7 @@ export type Content<
 
 export type PuckComponent<
   Props extends DefaultComponentProps = DefaultComponentProps
-> = (props: WithPuckProps<Props & { puck: PuckContext }>) => JSX.Element;
+> = (props: WithPuckProps<Props> & { puck: PuckContext }) => JSX.Element;
 
 export type PuckContext = {
   renderDropZone: typeof DropZone;
@@ -197,8 +197,8 @@ export type Config<
   };
   root?: Partial<
     ComponentConfig<
-      RootProps & { children: ReactNode },
-      Partial<RootProps & { children: ReactNode }>,
+      PropsWithChildren<RootProps>,
+      Partial<PropsWithChildren<RootProps>>,
       RootDataWithProps<RootProps>
     >
   >;

@@ -2,15 +2,25 @@ import { DropZone, dropZoneContext } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { useCallback, useContext } from "react";
 import { useAppContext } from "../../context";
+import {
+  DefaultComponentProps,
+  DefaultRootProps,
+} from "../../../../types/Config";
 
 export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   const { config, dispatch, state } = useAppContext();
 
   const Page = useCallback(
-    (pageProps) =>
-      config.root?.render
-        ? config.root?.render({ ...pageProps, editMode: true })
-        : pageProps.children,
+    (pageProps: DefaultRootProps) => {
+      return config.root?.render
+        ? config.root?.render({
+            ...pageProps,
+            id: "puck-root",
+            editMode: true,
+            puck: { renderDropZone: DropZone },
+          })
+        : pageProps.children;
+    },
     [config.root]
   );
 
@@ -27,7 +37,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
       }}
       style={{ zoom: disableZoom ? 1 : 0.75 }}
     >
-      <Page dispatch={dispatch} state={state} {...rootProps}>
+      <Page {...rootProps}>
         <DropZone zone={rootDroppableId} />
       </Page>
     </div>

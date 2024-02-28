@@ -44,9 +44,7 @@ export const appContext = createContext<AppContext>({
 
 export const AppProvider = appContext.Provider;
 
-export function useAppContext<
-  UserConfig extends Config<any, any, any> = Config<any, any, any>
->() {
+export function useAppContext<UserConfig extends Config = Config>() {
   const mainContext = useContext(appContext) as AppContext<UserConfig>;
 
   const selectedItem = mainContext.state.ui.itemSelector
