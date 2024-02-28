@@ -35,7 +35,7 @@
 .DropZone--draggingOverArea:not(:has(.DropZone--hoveringOverArea)),
 .DropZone--hoveringOverArea:not(.DropZone--isDisabled):not(
     .DropZone--isRootZone
-  ) {
+  ):not(.DropZone--hasChildren) {
   background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
   outline: 2px dashed var(--puck-color-azure-08);
 }
