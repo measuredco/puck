@@ -26,7 +26,6 @@ export function useHistoryStore<D = any>(): HistoryStore<D> {
   const [histories, setHistories] = useState<History<D>[]>([]);
 
   const [index, setIndex] = useState(EMPTY_HISTORY_INDEX);
-  // const index = useRef(EMPTY_HISTORY_INDEX);
 
   const hasPast = index > EMPTY_HISTORY_INDEX;
   const hasFuture = index < histories.length - 1;

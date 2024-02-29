@@ -5,6 +5,7 @@ import { getItem } from "../../lib/get-item";
 import { Plugin } from "../../types/Plugin";
 import { Overrides } from "../../types/Overrides";
 import { PuckHistory } from "../../lib/use-puck-history";
+import { Viewports, defaultViewports } from "../ViewportControls";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: { props: { title: "" } } },
@@ -15,6 +16,15 @@ export const defaultAppState: AppState = {
     itemSelector: null,
     componentList: {},
     isDragging: false,
+    viewports: {
+      current: {
+        width: defaultViewports[0].width,
+        height: defaultViewports[0].height || "auto",
+        zoom: 1,
+      },
+      options: [],
+      controlsVisible: true,
+    },
   },
 };
 
@@ -29,6 +39,7 @@ type AppContext<
   plugins: Plugin[];
   overrides: Partial<Overrides>;
   history: Partial<PuckHistory>;
+  viewports: Viewports;
 };
 
 export const appContext = createContext<AppContext>({
@@ -40,6 +51,7 @@ export const appContext = createContext<AppContext>({
   plugins: [],
   overrides: {},
   history: {},
+  viewports: defaultViewports,
 });
 
 export const AppProvider = appContext.Provider;

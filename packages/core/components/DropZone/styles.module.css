@@ -7,14 +7,6 @@
   width: 100%;
 }
 
-.DropZone--zoomEnabled {
-  zoom: 1.33;
-}
-
-.DropZone--zoomEnabled .DropZone-renderWrapper {
-  zoom: 0.75;
-}
-
 .DropZone-content {
   min-height: 128px;
   height: 100%;

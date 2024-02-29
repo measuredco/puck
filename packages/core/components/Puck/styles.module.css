@@ -166,24 +166,38 @@
 }
 
 .Puck-frame {
+  box-sizing: border-box;
   display: flex;
-  flex-direction: column;
-  grid-area: editor;
-  overflow: auto;
+  height: 100%;
+  justify-content: center;
+  min-width: 392px;
+  overflow: hidden;
+  padding: var(--puck-space-px);
+  padding-top: 0;
   position: relative;
+  width: 100%;
+}
+
+@media (min-width: 1198px) {
+  .Puck-frame {
+    padding: calc(var(--puck-space-px) * 1.5);
+    padding-top: 0;
+  }
 }
 
 .Puck-root {
+  background: white;
   border: 1px solid var(--puck-color-grey-09);
-  box-shadow: 0 0 0 calc(var(--puck-space-px) * 1.5) var(--puck-color-grey-11);
-  margin: var(--puck-space-px);
   min-width: 321px;
-  flex-grow: 1;
+  position: absolute;
+  transform-origin: top;
+  top: 0;
+  bottom: 0;
 }
 
 @media (min-width: 1198px) {
   .Puck-root {
-    margin: calc(var(--puck-space-px) * 1.5);
+    min-width: unset;
   }
 }
 
@@ -194,4 +208,20 @@
   flex-direction: column;
   grid-area: right;
   overflow-y: auto;
+}
+
+.Puck-canvas {
+  background: var(--puck-color-grey-11);
+  display: flex;
+  grid-area: editor;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 16px;
+  overflow: auto;
+}
+
+@media (min-width: 1198px) {
+  .Puck-canvas:not(.Puck-canvas:has(.Puck-canvasControls)) {
+    padding-top: calc(var(--puck-space-px) * 1.5);
+  }
 }

@@ -5,6 +5,7 @@ import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, Trash } from "lucide-react";
 import { useModifierHeld } from "../../lib/use-modifier-held";
 import { ClipLoader } from "react-spinners";
+import { useAppContext } from "../Puck/context";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -51,6 +52,7 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
+  const { state } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
 
   useEffect(onMount, []);
@@ -92,7 +94,10 @@ export const DraggableComponent = ({
               <ClipLoader aria-label="loading" size={16} color="inherit" />
             </div>
           )}
-          <div className={getClassName("overlay")}>
+          <div
+            className={getClassName("overlay")}
+            style={{ zoom: 1 / state.ui.viewports.current.zoom }}
+          >
             <div className={getClassName("actions")}>
               {label && (
                 <div className={getClassName("actionsLabel")}>{label}</div>
