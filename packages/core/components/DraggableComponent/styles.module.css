@@ -133,7 +133,7 @@
   padding-left: 8px;
   padding-right: 16px;
   margin-right: 8px;
-  border-right: 2px solid var(--puck-color-grey-05);
+  border-right: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
   text-overflow: ellipsis;
   white-space: nowrap;
 }

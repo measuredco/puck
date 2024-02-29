@@ -1,6 +1,6 @@
-import { DropZone, dropZoneContext } from "../../../DropZone";
+import { DropZone } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
-import { useCallback, useContext, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useAppContext } from "../../context";
 import AutoFrame from "@measured/auto-frame-component";
 import styles from "./styles.module.css";
@@ -22,8 +22,6 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   // DEPRECATED
   const rootProps = state.data.root.props || state.data.root;
 
-  const { disableZoom = false } = useContext(dropZoneContext) || {};
-
   const ref = useRef<HTMLIFrameElement>(null);
 
   return (
@@ -40,11 +38,9 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         data-rfd-iframe
         ref={ref}
       >
-        <div style={{ zoom: disableZoom ? 1 : 0.75 }}>
-          <Page dispatch={dispatch} state={state} {...rootProps}>
-            <DropZone zone={rootDroppableId} />
-          </Page>
-        </div>
+        <Page dispatch={dispatch} state={state} {...rootProps}>
+          <DropZone zone={rootDroppableId} />
+        </Page>
       </AutoFrame>
     </div>
   );

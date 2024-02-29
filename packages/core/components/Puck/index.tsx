@@ -42,6 +42,8 @@ import { Overrides } from "../../types/Overrides";
 import { loadOverrides } from "../../lib/load-overrides";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { useHistoryStore } from "../../lib/use-history-store";
+import { Canvas } from "./components/Canvas";
+import { Viewports, defaultViewports } from "../ViewportControls";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -51,7 +53,7 @@ export function Puck<
   children,
   config,
   data: initialData = { content: [], root: { props: { title: "" } } },
-  ui: initialUi = defaultAppState.ui,
+  ui: initialUi,
   onChange,
   onPublish,
   plugins = [],
@@ -60,6 +62,7 @@ export function Puck<
   renderHeaderActions,
   headerTitle,
   headerPath,
+  viewports = defaultViewports,
 }: {
   children?: ReactNode;
   config: UserConfig;
@@ -80,6 +83,7 @@ export function Puck<
   }) => ReactElement;
   headerTitle?: string;
   headerPath?: string;
+  viewports?: Viewports;
 }) {
   const historyStore = useHistoryStore();
 
@@ -88,12 +92,24 @@ export function Puck<
   );
 
   const [initialAppState] = useState<AppState>(() => {
+    const initial = { ...defaultAppState.ui, ...initialUi };
+
+    const viewportWidth = window.innerWidth;
+
+    const viewportDifferences = Object.entries(viewports)
+      .map(([key, value]) => ({
+        key,
+        diff: Math.abs(viewportWidth - value.width),
+      }))
+      .sort((a, b) => (a.diff > b.diff ? 1 : -1));
+
+    const closestViewport = viewportDifferences[0].key;
+
     return {
       ...defaultAppState,
       data: initialData,
       ui: {
-        ...defaultAppState.ui,
-        ...initialUi,
+        ...initial,
         // Store categories under componentList on state to allow render functions and plugins to modify
         componentList: config.categories
           ? Object.entries(config.categories).reduce(
@@ -118,6 +134,20 @@ export function Puck<
               leftSideBarVisible: false,
               rightSideBarVisible: false,
             }),
+        viewports: {
+          ...initial.viewports,
+
+          current: {
+            ...initial.viewports.current,
+            height:
+              initialUi?.viewports?.current?.height ||
+              viewports[closestViewport].height ||
+              "auto",
+            width:
+              initialUi?.viewports?.current?.width ||
+              viewports[closestViewport].width,
+          },
+        },
       },
     };
   });
@@ -289,10 +319,6 @@ export function Puck<
     [loadedOverrides]
   );
 
-  const CustomPreview = useMemo(
-    () => loadedOverrides.preview || defaultRender,
-    [loadedOverrides]
-  );
   const CustomHeader = useMemo(
     () => loadedOverrides.header || defaultHeaderRender,
     [loadedOverrides]
@@ -301,8 +327,6 @@ export function Puck<
     () => loadedOverrides.headerActions || defaultHeaderActionsRender,
     [loadedOverrides]
   );
-
-  const disableZoom = children || loadedOverrides.puck ? true : false;
 
   return (
     <div className="Puck">
@@ -316,6 +340,7 @@ export function Puck<
           plugins,
           overrides: loadedOverrides,
           history,
+          viewports,
         }}
       >
         <DragDropContext
@@ -395,7 +420,6 @@ export function Puck<
               placeholderStyle,
               mode: "edit",
               areaId: "root",
-              disableZoom,
             }}
           >
             <CustomPuck>
@@ -405,7 +429,6 @@ export function Puck<
                     leftSideBarVisible,
                     menuOpen,
                     rightSideBarVisible,
-                    disableZoom,
                   })}
                 >
                   <CustomHeader
@@ -496,16 +519,7 @@ export function Puck<
                       <Outline />
                     </SidebarSection>
                   </div>
-                  <div
-                    className={getClassName("frame")}
-                    onClick={() => setItemSelector(null)}
-                  >
-                    <div className={getClassName("root")}>
-                      <CustomPreview>
-                        <Preview />
-                      </CustomPreview>
-                    </div>
-                  </div>
+                  <Canvas />
                   <div className={getClassName("rightSideBar")}>
                     <SidebarSection
                       noPadding

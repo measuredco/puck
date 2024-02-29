@@ -12,14 +12,15 @@ The current [`Data`](/docs/api-reference/data) payload being managed by Puck.
 
 The current state of the Puck editor interface.
 
-| Param                                           | Example                                              | Type    |
-| ----------------------------------------------- | ---------------------------------------------------- | ------- |
-| [`leftSideBarVisible`](#uileftsidebarvisible)   | `false`                                              | Boolean |
-| [`rightSideBarVisible`](#uirightsidebarvisible) | `false`                                              | Boolean |
-| [`itemSelector`](#uiitemselector)               | `{ index: 0, zone: "my-content" }`                   | Object  |
-| [`isDragging`](#isdragging)                     | `false`                                              | Boolean |
-| [`arrayState`](#uiarraystate)                   | `{}`                                                 | Object  |
-| [`componentList`](#uicomponentlist)             | `{ typography: { components: [ "HeadingBlock" ] } }` | Object  |
+| Param                                           | Example                                               | Type    |
+| ----------------------------------------------- | ----------------------------------------------------- | ------- |
+| [`leftSideBarVisible`](#uileftsidebarvisible)   | `false`                                               | Boolean |
+| [`rightSideBarVisible`](#uirightsidebarvisible) | `false`                                               | Boolean |
+| [`itemSelector`](#uiitemselector)               | `{ index: 0, zone: "my-content" }`                    | Object  |
+| [`isDragging`](#isdragging)                     | `false`                                               | Boolean |
+| [`arrayState`](#uiarraystate)                   | `{}`                                                  | Object  |
+| [`componentList`](#uicomponentlist)             | `{ typography: { components: [ "HeadingBlock" ] } }`  | Object  |
+| [`viewports`](#uiviewports)                     | `{ controlsVisible: true, current: {}, options: [] }` | Object  |
 
 ---
 
@@ -80,3 +81,43 @@ Whether or not the category is visible in the side bar
 #### `ui.componentList[key].expanded`
 
 Whether or not the category is expanded in the side bar
+
+---
+
+### `ui.viewports`
+
+| Param                                            | Example                                    | Type                                                                 |
+| ------------------------------------------------ | ------------------------------------------ | -------------------------------------------------------------------- |
+| [`controlsVisible`](#uiviewportscontrolsvisible) | `false`                                    | Boolean                                                              |
+| [`current`](#uiviewportscurrent)                 | `{ width: 1440, height: "auto", zoom: 1 }` | Object                                                               |
+| [`options`](#uiviewportsoptions)                 | `[]`                                       | [Viewports\[\]](/docs/api-reference/components/puck#viewport-params) |
+
+#### `ui.viewports.controlsVisible`
+
+Whether or not to the viewport controls are visible.
+
+#### `ui.viewports.current`
+
+The currently selected viewport.
+
+| Param                                 | Example  | Type               |
+| ------------------------------------- | -------- | ------------------ |
+| [`width`](#uiviewportscurrentwidth)   | `1440`   | Number             |
+| [`height`](#uiviewportscurrentheight) | `"auto"` | Number \| `"auto"` |
+| [`zoom`](#uiviewportscurrentzoom)     | `1`      | Number             |
+
+##### `ui.viewports.current.width`
+
+The width of the current viewport.
+
+##### `ui.viewports.current.height`
+
+The height of the current viewport.
+
+##### `ui.viewports.current.zoom`
+
+The zoom level of the current viewport.
+
+#### `ui.viewports.options`
+
+The available viewport options, as provided via the [`viewports` API](/docs/api-reference/components/puck#viewports).

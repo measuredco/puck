@@ -2,6 +2,7 @@ import { ReactElement } from "react";
 import { ReactNode } from "react";
 import { ItemSelector } from "../lib/get-item";
 import { DropZone } from "../components/DropZone";
+import { Viewport } from "../components/ViewportControls";
 
 type WithPuckProps<Props> = Props & {
   id: string;
@@ -274,6 +275,15 @@ export type UiState = {
     }
   >;
   isDragging: boolean;
+  viewports: {
+    current: {
+      width: number;
+      height: number | "auto";
+      zoom: number;
+    };
+    controlsVisible: boolean;
+    options: Viewport[];
+  };
 };
 
 export type AppState = { data: Data; ui: UiState };

@@ -37,6 +37,7 @@ export function Editor() {
 | [`overrides`](#overrides)       | `overrides: { header: () => <div /> }` | [Overrides](/docs/api-reference/overrides)         | Experimental |
 | [`plugins`](#plugins)           | `plugins: [myPlugin]`                  | [Plugin\[\]](/docs/api-reference/plugin)           | Experimental |
 | [`ui`](#ui)                     | `ui: {leftSideBarVisible: false}`      | [AppState.ui](/docs/api-reference/app-state#ui)    | -            |
+| [`viewports`](#viewports)       | `viewports: [{ width: 1440 }]`         | [Viewport\[\]](#viewport-params)                   | -            |
 
 ## Required props
 
@@ -226,4 +227,82 @@ export function Editor() {
     />
   );
 }
+```
+
+### `viewports`
+
+Configure the viewports available to the user, rendered as an iframe. Puck will select most appropriate initial viewport based on the user's window size, unless otherwise specified via the [`ui`](#ui) prop.
+
+```tsx {4-8} copy
+export function Editor() {
+  return (
+    <Puck
+      viewports={[
+        {
+          width: 1440,
+        },
+      ]}
+      // ...
+    />
+  );
+}
+```
+
+#### Viewport params
+
+| Param               | Example           | Type                                                     | Status   |
+| ------------------- | ----------------- | -------------------------------------------------------- | -------- |
+| [`width`](#width)   | `width: 1440`     | number                                                   | Required |
+| [`height`](#height) | `height: 968`     | number \| `"auto"`                                       | -        |
+| [`icon`](#icon)     | `icon: "Monitor"` | `"Smartphone"` \| `"Tablet"` \| `"Monitor"` \| ReactNode | -        |
+| [`label`](#label)   | `label: "iPhone"` | string                                                   | -        |
+
+##### `width`
+
+The width of the viewport.
+
+##### `height`
+
+An optional height for the viewport. Defaults to `auto`, which will fit to the window.
+
+##### `label`
+
+An optional label for the viewport. This is used for browser tooltip.
+
+##### `icon`
+
+The icon to show in the viewport switcher. Can be:
+
+- `"Smartphone"`
+- `"Tablet"`
+- `"Monitor"`
+- ReactNode
+
+Puck uses [Lucide icons](https://lucide.dev/icons/). You can use [lucide-react](https://lucide.dev/guide/packages/lucide-react) to choose a similar icon, if desired.
+
+#### Default viewports
+
+By default, Puck exposes small, medium and large viewports based on common viewport sizes.
+
+```json
+[
+  {
+    "width": 360,
+    "height": "auto",
+    "icon": "Smartphone",
+    "label": "Small"
+  },
+  {
+    "width": 768,
+    "height": "auto",
+    "icon": "Tablet",
+    "label": "Medium"
+  },
+  {
+    "width": 1280,
+    "height": "auto",
+    "icon": "Monitor",
+    "label": "Large"
+  }
+]
 ```

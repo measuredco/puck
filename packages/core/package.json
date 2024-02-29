@@ -46,6 +46,7 @@
     "@types/jest": "^29.5.4",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "css-box-model": "^1.2.1",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "jest": "^29.6.4",
@@ -59,7 +60,7 @@
   },
   "dependencies": {
     "@measured/auto-frame-component": "0.1.0-canary.4686711",
-    "@measured/dnd": "16.6.0-canary.d4e2c53",
+    "@measured/dnd": "16.6.0-canary.6943d1e",
     "deep-diff": "^1.0.2",
     "react-hotkeys-hook": "^4.4.1",
     "react-spinners": "^0.13.8",
