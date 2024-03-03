@@ -87,31 +87,40 @@ export function Puck<
     createReducer<UserConfig>({ config, record: historyStore.record })
   );
 
-  const [initialAppState] = useState<AppState>(() => ({
-    ...defaultAppState,
-    data: initialData,
-    ui: {
-      ...defaultAppState.ui,
-      ...initialUi,
-      // Store categories under componentList on state to allow render functions and plugins to modify
-      componentList: config.categories
-        ? Object.entries(config.categories).reduce(
-            (acc, [categoryName, category]) => {
-              return {
-                ...acc,
-                [categoryName]: {
-                  title: category.title,
-                  components: category.components,
-                  expanded: category.defaultExpanded,
-                  visible: category.visible,
-                },
-              };
-            },
-            {}
-          )
-        : {},
-    },
-  }));
+  const [initialAppState] = useState<AppState>(() => {
+    return {
+      ...defaultAppState,
+      data: initialData,
+      ui: {
+        ...defaultAppState.ui,
+        ...initialUi,
+        // Store categories under componentList on state to allow render functions and plugins to modify
+        componentList: config.categories
+          ? Object.entries(config.categories).reduce(
+              (acc, [categoryName, category]) => {
+                return {
+                  ...acc,
+                  [categoryName]: {
+                    title: category.title,
+                    components: category.components,
+                    expanded: category.defaultExpanded,
+                    visible: category.visible,
+                  },
+                };
+              },
+              {}
+            )
+          : {},
+        // Hide side bars on mobile
+        ...(window.matchMedia("(min-width: 638px)").matches
+          ? {}
+          : {
+              leftSideBarVisible: false,
+              rightSideBarVisible: false,
+            }),
+      },
+    };
+  });
 
   const [appState, dispatch] = useReducer<StateReducer>(
     reducer,
