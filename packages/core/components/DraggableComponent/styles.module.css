@@ -99,13 +99,12 @@
 
 .DraggableComponent-actions {
   position: absolute;
-  right: 6.5px;
+  right: -1px;
   width: auto;
-  top: -48px;
+  top: -37px;
   padding: 4px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  border-radius: 8px;
   background: var(--puck-color-grey-01);
   color: var(--puck-color-white);
   cursor: grab;

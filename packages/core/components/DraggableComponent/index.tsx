@@ -97,6 +97,7 @@ export const DraggableComponent = ({
               {label && (
                 <div className={getClassName("actionsLabel")}>{label}</div>
               )}
+              <div id={`DraggableComponentToolbarPortal-${id}`} />
               <button className={getClassName("action")} onClick={onDuplicate}>
                 <Copy size={16} />
               </button>
