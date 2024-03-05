@@ -28,7 +28,7 @@
 
 .DraggableComponent-overlay {
   display: none;
-  background: green; /*color-mix(in srgb, var(--puck-color-azure-08) 30%, transparent);*/
+  background: color-mix(in srgb, var(--puck-color-azure-08) 30%, transparent);
   cursor: pointer;
   height: 100%;
   width: 100%;
