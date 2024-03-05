@@ -104,6 +104,7 @@ export const DraggableComponent = ({
               <button className={getClassName("action")} onClick={onDelete}>
                 <Trash size={16} />
               </button>
+              <div className={getClassName("actionsMask")} />
             </div>
           </div>
           <div className={getClassName("contents")}>{children}</div>

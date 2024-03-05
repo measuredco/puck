@@ -28,7 +28,7 @@
 
 .DraggableComponent-overlay {
   display: none;
-  background: color-mix(in srgb, var(--puck-color-azure-08) 30%, transparent);
+  background: green; /*color-mix(in srgb, var(--puck-color-azure-08) 30%, transparent);*/
   cursor: pointer;
   height: 100%;
   width: 100%;
@@ -99,12 +99,13 @@
 
 .DraggableComponent-actions {
   position: absolute;
-  right: -1px;
+  right: 6.5px;
   width: auto;
-  top: -37px;
+  top: -48px;
   padding: 4px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+  border-radius: 8px;
   background: var(--puck-color-grey-01);
   color: var(--puck-color-white);
   cursor: grab;
@@ -113,6 +114,15 @@
   gap: 4px;
   pointer-events: auto;
   box-sizing: border-box;
+}
+
+.DraggableComponent-actionsMask {
+  position: absolute;
+  right: 0px;
+  top: 36px;
+  height: 11px;
+  width: 100%;
+  background: transparent;
 }
 
 .DraggableComponent--isSelected
