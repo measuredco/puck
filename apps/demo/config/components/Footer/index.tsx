@@ -55,7 +55,7 @@ const FooterList = ({
 const Footer = ({ children }: { children: ReactNode }) => {
   return (
     <footer style={{ background: "var(--puck-color-grey-12)" }}>
-      <h2 style={{ visibility: "hidden", height: 0 }}>Footer</h2>
+      <h2 style={{ visibility: "hidden", height: 0, margin: 0 }}>Footer</h2>
       <Section padding="32px">
         <div
           style={{
