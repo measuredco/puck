@@ -14,9 +14,11 @@ const dataAttr = "data-puck-heading-analyzer-id";
 const getOutline = ({
   addDataAttr = false,
 }: { addDataAttr?: boolean } = {}) => {
-  const iframe = document.querySelector("#preview-iframe") as HTMLIFrameElement;
+  const iframe = document.querySelector("#preview-iframe") as
+    | HTMLIFrameElement
+    | undefined;
 
-  if (!iframe.contentDocument) {
+  if (!iframe?.contentDocument) {
     throw new Error(
       `Preview iframe could not be found when trying to analyze headings`
     );

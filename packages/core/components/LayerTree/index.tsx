@@ -95,18 +95,18 @@ export const LayerTree = ({
 
                     const id = zoneContent[i].props.id;
 
-                    const iframe = document.querySelector(
-                      "#preview-iframe"
-                    ) as HTMLIFrameElement;
+                    const iframe = document.querySelector("#preview-iframe") as
+                      | HTMLIFrameElement
+                      | undefined;
 
-                    if (!iframe.contentDocument) {
+                    if (!iframe?.contentDocument) {
                       throw new Error(
                         `Preview iframe could not be found when trying to scroll to item ${id}`
                       );
                     }
 
                     scrollIntoView(
-                      iframe.contentDocument!.querySelector(
+                      iframe.contentDocument.querySelector(
                         `[data-rfd-drag-handle-draggable-id="draggable-${id}"]`
                       ) as HTMLElement
                     );
