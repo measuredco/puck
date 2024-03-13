@@ -17,19 +17,19 @@ export const usePlaceholderStyle = () => {
 
     const domQuery = `[${queryAttr}='${draggableId}']`;
 
-    const iframe = document.querySelector(
-      `#preview-iframe`
-    ) as HTMLIFrameElement;
+    const iframe = document.querySelector(`#preview-iframe`) as
+      | HTMLIFrameElement
+      | undefined;
 
     const draggedDOM =
       document.querySelector(domQuery) ||
-      iframe.contentWindow?.document.querySelector(domQuery);
+      iframe?.contentWindow?.document.querySelector(domQuery);
 
     if (!draggedDOM) {
       return;
     }
 
-    const targetListElement = iframe.contentWindow?.document.querySelector(
+    const targetListElement = iframe?.contentWindow?.document.querySelector(
       `[data-rfd-droppable-id='${droppableId}']`
     );
 
