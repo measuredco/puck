@@ -4,7 +4,6 @@
   border: none;
   border-radius: 4px;
   color: currentColor;
-  cursor: pointer;
   display: flex;
   font-family: var(--puck-font-family);
   justify-content: center;
@@ -18,9 +17,10 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .IconButton:hover {
+  .IconButton:hover:not(.IconButton--disabled) {
     background: var(--puck-color-azure-12);
     color: var(--puck-color-azure-04);
+    cursor: pointer;
     transition: none;
   }
 }
@@ -38,4 +38,8 @@
   position: absolute;
   white-space: nowrap;
   width: 1px;
+}
+
+.IconButton--disabled {
+  color: var(--puck-color-grey-07);
 }
