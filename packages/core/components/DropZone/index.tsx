@@ -1,4 +1,4 @@
-import { CSSProperties, useContext, useEffect, useState } from "react";
+import { CSSProperties, useContext, useEffect } from "react";
 import { DraggableComponent } from "../DraggableComponent";
 import { Droppable } from "@measured/dnd";
 import { getItem } from "../../lib/get-item";
@@ -38,6 +38,8 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
     registerZoneArea,
     areasWithZones,
     hoveringComponent,
+    zoneWillDrag,
+    setZoneWillDrag = () => null,
   } = ctx! || {};
 
   let content = data.content || [];
@@ -82,7 +84,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   // we use the index rather than spread to prevent down-level iteration warnings: https://stackoverflow.com/questions/53441292/why-downleveliteration-is-not-on-by-default
   const [draggedSourceArea] = getZoneId(draggedSourceId);
 
-  const [userWillDrag, setUserWillDrag] = useState(false);
+  const userWillDrag = zoneWillDrag === zone;
 
   const userIsDragging = !!draggedItem;
   const draggingOverArea = userIsDragging && zoneArea === draggedSourceArea;
@@ -172,6 +174,9 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
         isAreaSelected,
         hasChildren: content.length > 0,
       })}
+      onMouseUp={() => {
+        setZoneWillDrag("");
+      }}
     >
       <Droppable
         droppableId={zoneCompound}
@@ -269,11 +274,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                         }}
                         onMouseDown={(e) => {
                           e.stopPropagation();
-                          setUserWillDrag(true);
-                        }}
-                        onMouseUp={(e) => {
-                          e.stopPropagation();
-                          setUserWillDrag(false);
+                          setZoneWillDrag(zone);
                         }}
                         onMouseOver={(e) => {
                           e.stopPropagation();

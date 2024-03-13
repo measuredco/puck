@@ -41,6 +41,8 @@ export type DropZoneContext<
   pathData?: PathData;
   registerPath?: (selector: ItemSelector) => void;
   mode?: "edit" | "render";
+  zoneWillDrag?: string;
+  setZoneWillDrag?: (zone: string) => void;
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
@@ -146,6 +148,8 @@ export const DropZoneProvider = ({
     [value, setPathData]
   );
 
+  const [zoneWillDrag, setZoneWillDrag] = useState("");
+
   return (
     <>
       {value && (
@@ -164,6 +168,8 @@ export const DropZoneProvider = ({
             activeZones,
             registerPath,
             pathData,
+            zoneWillDrag,
+            setZoneWillDrag,
             ...value,
           }}
         >
