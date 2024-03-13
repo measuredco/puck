@@ -90,19 +90,15 @@
   outline: 2px var(--puck-color-azure-07) solid !important;
 }
 
-.DraggableComponent--isSelected > .DraggableComponent-overlay {
-  background: none;
+.DraggableComponent--isSelected > .DraggableComponent-actionsOverlay {
   display: block;
   position: sticky;
-  top: 56px;
   z-index: 1;
 }
 
 .DraggableComponent-actions {
   position: absolute;
-  right: 6.5px;
   width: auto;
-  top: -48px;
   padding: 4px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -115,10 +111,11 @@
   gap: 4px;
   pointer-events: auto;
   box-sizing: border-box;
+  transform-origin: right top;
 }
 
 .DraggableComponent--isSelected
-  > .DraggableComponent-overlay
+  > .DraggableComponent-actionsOverlay
   > .DraggableComponent-actions {
   display: flex;
 }

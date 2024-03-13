@@ -94,11 +94,21 @@ export const DraggableComponent = ({
               <ClipLoader aria-label="loading" size={16} color="inherit" />
             </div>
           )}
+
           <div
-            className={getClassName("overlay")}
-            style={{ zoom: 1 / state.ui.viewports.current.zoom }}
+            className={getClassName("actionsOverlay")}
+            style={{
+              top: 56 / state.ui.viewports.current.zoom,
+            }}
           >
-            <div className={getClassName("actions")}>
+            <div
+              className={getClassName("actions")}
+              style={{
+                transform: `scale(${1 / state.ui.viewports.current.zoom}`,
+                top: -48 / state.ui.viewports.current.zoom,
+                right: 6.5 / state.ui.viewports.current.zoom,
+              }}
+            >
               {label && (
                 <div className={getClassName("actionsLabel")}>{label}</div>
               )}
@@ -110,6 +120,7 @@ export const DraggableComponent = ({
               </button>
             </div>
           </div>
+          <div className={getClassName("overlay")} />
           <div className={getClassName("contents")}>{children}</div>
         </div>
       )}
