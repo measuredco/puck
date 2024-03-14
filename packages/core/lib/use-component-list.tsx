@@ -25,10 +25,10 @@ export const useComponentList = (config: Config, ui: UiState) => {
             >
               {category.components.map((componentName, i) => {
                 matchedComponents.push(componentName as string);
-
                 return (
                   <ComponentList.Item
                     key={componentName}
+                    label={(config.components[componentName]["label"] ?? componentName) as string}
                     name={componentName as string}
                     index={i}
                   />
@@ -59,6 +59,7 @@ export const useComponentList = (config: Config, ui: UiState) => {
                 <ComponentList.Item
                   key={componentName}
                   name={componentName as string}
+                  label={(config.components[componentName]["label"] ?? componentName) as string}
                   index={i}
                 />
               );
@@ -69,7 +70,7 @@ export const useComponentList = (config: Config, ui: UiState) => {
 
       setComponentList(_componentList);
     }
-  }, [config.categories, ui.componentList]);
+  }, [config.categories, config.components, ui.componentList]);
 
   return componentList;
 };

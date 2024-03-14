@@ -1,6 +1,6 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Data } from "../../types/Config";
+import {Config, Data} from "../../types/Config";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { scrollIntoView } from "../../lib/scroll-into-view";
 import { ChevronDown, LayoutGrid, Layers, Type } from "lucide-react";
@@ -16,6 +16,7 @@ const getClassNameLayer = getClassNameFactory("Layer", styles);
 
 export const LayerTree = ({
   data,
+  config,
   zoneContent,
   itemSelector,
   setItemSelector,
@@ -23,6 +24,7 @@ export const LayerTree = ({
   label,
 }: {
   data: Data;
+  config: Config;
   zoneContent: Data["content"];
   itemSelector?: ItemSelector | null;
   setItemSelector: (item: ItemSelector | null) => void;
@@ -30,9 +32,7 @@ export const LayerTree = ({
   label?: string;
 }) => {
   const zones = data.zones || {};
-
   const ctx = useContext(dropZoneContext);
-
   return (
     <>
       {label && (
@@ -48,6 +48,7 @@ export const LayerTree = ({
           <div className={getClassName("helper")}>No items</div>
         )}
         {zoneContent.map((item, i) => {
+
           const isSelected =
             itemSelector?.index === i &&
             (itemSelector.zone === zone ||
@@ -128,7 +129,7 @@ export const LayerTree = ({
                         <LayoutGrid size="16" />
                       )}
                     </div>
-                    <div className={getClassNameLayer("name")}>{item.type}</div>
+                    <div className={getClassNameLayer("name")}>{config.components[item.type]['label'] ?? item.type}</div>
                   </div>
                 </button>
               </div>
@@ -136,6 +137,7 @@ export const LayerTree = ({
                 Object.keys(zonesForItem).map((zoneKey, idx) => (
                   <div key={idx} className={getClassNameLayer("zones")}>
                     <LayerTree
+                      config={config}
                       data={data}
                       zoneContent={zones[zoneKey]}
                       setItemSelector={setItemSelector}
