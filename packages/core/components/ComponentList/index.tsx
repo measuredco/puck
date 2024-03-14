@@ -13,7 +13,7 @@ const ComponentListItem = ({
   index,
 }: {
   name: string;
-  label?:string;
+  label?: string;
   index: number;
 }) => {
   const { overrides } = useAppContext();
@@ -72,7 +72,9 @@ const ComponentList = ({
               return (
                 <ComponentListItem
                   key={componentKey}
-                  label={config.components[componentKey]["label"] ?? componentKey}
+                  label={
+                    config.components[componentKey]["label"] ?? componentKey
+                  }
                   name={componentKey}
                   index={i}
                 />

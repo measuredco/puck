@@ -28,7 +28,10 @@ export const useComponentList = (config: Config, ui: UiState) => {
                 return (
                   <ComponentList.Item
                     key={componentName}
-                    label={(config.components[componentName]["label"] ?? componentName) as string}
+                    label={
+                      (config.components[componentName]["label"] ??
+                        componentName) as string
+                    }
                     name={componentName as string}
                     index={i}
                   />
@@ -59,7 +62,10 @@ export const useComponentList = (config: Config, ui: UiState) => {
                 <ComponentList.Item
                   key={componentName}
                   name={componentName as string}
-                  label={(config.components[componentName]["label"] ?? componentName) as string}
+                  label={
+                    (config.components[componentName]["label"] ??
+                      componentName) as string
+                  }
                   index={i}
                 />
               );

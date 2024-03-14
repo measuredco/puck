@@ -164,7 +164,7 @@ export type ComponentConfig<
   DataShape = ComponentData<ComponentProps>
 > = {
   render: PuckComponent<ComponentProps>;
-  label?:string,
+  label?: string;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
   resolveData?: (

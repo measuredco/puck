@@ -8,7 +8,7 @@ export type VerticalSpaceProps = {
 };
 
 export const VerticalSpace: ComponentConfig<VerticalSpaceProps> = {
-  label:"Vertical Space",
+  label: "Vertical Space",
   fields: {
     size: {
       type: "select",

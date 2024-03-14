@@ -1,6 +1,6 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import {Config, Data} from "../../types/Config";
+import { Config, Data } from "../../types/Config";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { scrollIntoView } from "../../lib/scroll-into-view";
 import { ChevronDown, LayoutGrid, Layers, Type } from "lucide-react";
@@ -48,7 +48,6 @@ export const LayerTree = ({
           <div className={getClassName("helper")}>No items</div>
         )}
         {zoneContent.map((item, i) => {
-
           const isSelected =
             itemSelector?.index === i &&
             (itemSelector.zone === zone ||
@@ -129,7 +128,9 @@ export const LayerTree = ({
                         <LayoutGrid size="16" />
                       )}
                     </div>
-                    <div className={getClassNameLayer("name")}>{config.components[item.type]['label'] ?? item.type}</div>
+                    <div className={getClassNameLayer("name")}>
+                      {config.components[item.type]["label"] ?? item.type}
+                    </div>
                   </div>
                 </button>
               </div>

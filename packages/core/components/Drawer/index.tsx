@@ -49,7 +49,7 @@ const DrawerItem = ({
   name: string;
   children?: (props: { children: ReactNode; name: string }) => ReactElement;
   id?: string;
-  label?:string,
+  label?: string;
   index: number;
 }) => {
   const ctx = useContext(drawerContext);
