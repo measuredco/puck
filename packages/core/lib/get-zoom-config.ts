@@ -4,8 +4,9 @@ import { AppState } from "../types/Config";
 const RESET_ZOOM_SMALLER_THAN_FRAME = true;
 
 export const getZoomConfig = (
-  uiViewport: AppState["ui"]["viewport"],
-  frame: HTMLElement
+  uiViewport: AppState["ui"]["viewports"]["current"],
+  frame: HTMLElement,
+  zoom: number
 ) => {
   const box = getBox(frame);
 
@@ -16,7 +17,6 @@ export const getZoomConfig = (
 
   let rootHeight = 0;
   let autoZoom = 1;
-  let zoom = uiViewport.zoom;
 
   if (uiViewport.width > frameWidth || viewportHeight > frameHeight) {
     const widthZoom = Math.min(frameWidth / uiViewport.width, 1);

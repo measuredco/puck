@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 import { AppState, Config, UiState } from "../../types/Config";
 import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
@@ -20,12 +20,17 @@ export const defaultAppState: AppState = {
       current: {
         width: defaultViewports[0].width,
         height: defaultViewports[0].height || "auto",
-        zoom: 1,
       },
       options: [],
       controlsVisible: true,
     },
   },
+};
+
+type ZoomConfig = {
+  autoZoom: number;
+  rootHeight: number;
+  zoom: number;
 };
 
 type AppContext<
@@ -40,9 +45,11 @@ type AppContext<
   overrides: Partial<Overrides>;
   history: Partial<PuckHistory>;
   viewports: Viewports;
+  zoomConfig: ZoomConfig;
+  setZoomConfig: (zoomConfig: ZoomConfig) => void;
 };
 
-export const appContext = createContext<AppContext>({
+const defaultContext: AppContext = {
   state: defaultAppState,
   dispatch: () => null,
   config: { components: {} },
@@ -52,9 +59,31 @@ export const appContext = createContext<AppContext>({
   overrides: {},
   history: {},
   viewports: defaultViewports,
-});
+  zoomConfig: {
+    autoZoom: 0,
+    rootHeight: 0,
+    zoom: 1,
+  },
+  setZoomConfig: () => null,
+};
 
-export const AppProvider = appContext.Provider;
+export const appContext = createContext<AppContext>(defaultContext);
+
+export const AppProvider = ({
+  children,
+  value,
+}: {
+  children: ReactNode;
+  value: Omit<AppContext, "zoomConfig" | "setZoomConfig">;
+}) => {
+  const [zoomConfig, setZoomConfig] = useState(defaultContext.zoomConfig);
+
+  return (
+    <appContext.Provider value={{ ...value, zoomConfig, setZoomConfig }}>
+      {children}
+    </appContext.Provider>
+  );
+};
 
 export function useAppContext<
   UserConfig extends Config<any, any, any> = Config<any, any, any>

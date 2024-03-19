@@ -78,10 +78,12 @@ const defaultZoomOptions = [
 
 export const ViewportControls = ({
   autoZoom,
+  zoom,
   onViewportChange,
   onZoom,
 }: {
   autoZoom: number;
+  zoom: number;
   onViewportChange: (viewport: Viewport) => void;
   onZoom: (zoom: number) => void;
 }) => {
@@ -132,15 +134,13 @@ export const ViewportControls = ({
       <div className={getClassName("divider")} />
       <IconButton
         title="Zoom viewport out"
-        disabled={viewport.zoom <= zoomOptions[0].value}
+        disabled={zoom <= zoomOptions[0].value}
         onClick={(e) => {
           e.stopPropagation();
           onZoom(
             zoomOptions[
               Math.max(
-                zoomOptions.findIndex(
-                  (option) => option.value === viewport.zoom
-                ) - 1,
+                zoomOptions.findIndex((option) => option.value === zoom) - 1,
                 0
               )
             ].value
@@ -151,16 +151,14 @@ export const ViewportControls = ({
       </IconButton>
       <IconButton
         title="Zoom viewport in"
-        disabled={viewport.zoom >= zoomOptions[zoomOptions.length - 1].value}
+        disabled={zoom >= zoomOptions[zoomOptions.length - 1].value}
         onClick={(e) => {
           e.stopPropagation();
 
           onZoom(
             zoomOptions[
               Math.min(
-                zoomOptions.findIndex(
-                  (option) => option.value === viewport.zoom
-                ) + 1,
+                zoomOptions.findIndex((option) => option.value === zoom) + 1,
                 zoomOptions.length - 1
               )
             ].value
@@ -172,7 +170,7 @@ export const ViewportControls = ({
       <div className={getClassName("divider")} />
       <select
         className={getClassName("zoomSelect")}
-        value={viewport.zoom.toString()}
+        value={zoom.toString()}
         onChange={(e) => {
           onZoom(parseFloat(e.currentTarget.value));
         }}

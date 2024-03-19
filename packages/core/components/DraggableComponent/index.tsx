@@ -52,7 +52,7 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
-  const { state } = useAppContext();
+  const { zoomConfig } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
 
   useEffect(onMount, []);
@@ -98,15 +98,15 @@ export const DraggableComponent = ({
           <div
             className={getClassName("actionsOverlay")}
             style={{
-              top: 56 / state.ui.viewports.current.zoom,
+              top: 56 / zoomConfig.zoom,
             }}
           >
             <div
               className={getClassName("actions")}
               style={{
-                transform: `scale(${1 / state.ui.viewports.current.zoom}`,
-                top: -48 / state.ui.viewports.current.zoom,
-                right: 6.5 / state.ui.viewports.current.zoom,
+                transform: `scale(${1 / zoomConfig.zoom}`,
+                top: -48 / zoomConfig.zoom,
+                right: 6.5 / zoomConfig.zoom,
               }}
             >
               {label && (
