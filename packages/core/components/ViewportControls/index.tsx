@@ -5,23 +5,7 @@ import { ReactNode, useMemo } from "react";
 import { getClassNameFactory } from "../../lib";
 
 import styles from "./styles.module.css";
-
-type iconTypes = "Smartphone" | "Monitor" | "Tablet";
-
-export type Viewport = {
-  width: number;
-  height?: number | "auto";
-  label?: string;
-  icon?: iconTypes | ReactNode;
-};
-
-export type Viewports = Viewport[];
-
-export const defaultViewports: Required<Viewports> = [
-  { width: 360, height: "auto", icon: "Smartphone", label: "Small" },
-  { width: 768, height: "auto", icon: "Tablet", label: "Medium" },
-  { width: 1280, height: "auto", icon: "Monitor", label: "Large" },
-];
+import { Viewport } from "../../types/Viewports";
 
 const icons = {
   Smartphone: <Smartphone size={16} />,

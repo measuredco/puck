@@ -5,7 +5,8 @@ import { getItem } from "../../lib/get-item";
 import { Plugin } from "../../types/Plugin";
 import { Overrides } from "../../types/Overrides";
 import { PuckHistory } from "../../lib/use-puck-history";
-import { Viewports, defaultViewports } from "../ViewportControls";
+import { defaultViewports } from "../ViewportControls/default-viewports";
+import { Viewports } from "../../types/Viewports";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: { props: { title: "" } } },

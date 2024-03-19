@@ -43,7 +43,8 @@ import { loadOverrides } from "../../lib/load-overrides";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { useHistoryStore } from "../../lib/use-history-store";
 import { Canvas } from "./components/Canvas";
-import { Viewports, defaultViewports } from "../ViewportControls";
+import { defaultViewports } from "../ViewportControls/default-viewports";
+import { Viewports } from "../../types/Viewports";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
