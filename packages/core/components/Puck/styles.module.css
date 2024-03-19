@@ -172,22 +172,14 @@
   justify-content: center;
   min-width: 392px;
   overflow: hidden;
-  padding: var(--puck-space-px);
-  padding-top: 0;
   position: relative;
   width: 100%;
-}
-
-@media (min-width: 1198px) {
-  .Puck-frame {
-    padding: calc(var(--puck-space-px) * 1.5);
-    padding-top: 0;
-  }
 }
 
 .Puck-root {
   background: white;
   border: 1px solid var(--puck-color-grey-09);
+  box-sizing: border-box;
   min-width: 321px;
   position: absolute;
   transform-origin: top;
@@ -215,12 +207,16 @@
   display: flex;
   grid-area: editor;
   flex-direction: column;
-  height: 100%;
-  padding-top: 16px;
+  padding: var(--puck-space-px);
   overflow: auto;
 }
 
 @media (min-width: 1198px) {
+  .Puck-canvas {
+    padding: calc(var(--puck-space-px) * 1.5);
+    padding-top: var(--puck-space-px);
+  }
+
   .Puck-canvas:not(.Puck-canvas:has(.Puck-canvasControls)) {
     padding-top: calc(var(--puck-space-px) * 1.5);
   }
