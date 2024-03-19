@@ -20,12 +20,11 @@ const getClassName = getClassNameFactory("Puck", styles);
 const ZOOM_ON_CHANGE = true;
 
 export const Canvas = () => {
-  const { dispatch, state, overrides, setUi } = useAppContext();
+  const { dispatch, state, overrides, setUi, zoomConfig, setZoomConfig } =
+    useAppContext();
   const { ui } = state;
   const frameRef = useRef<HTMLDivElement>(null);
 
-  const [rootHeight, setRootHeight] = useState(0);
-  const [autoZoom, setAutoZoom] = useState(0);
   const [showTransition, setShowTransition] = useState(false);
 
   const defaultRender = useMemo<
@@ -58,30 +57,12 @@ export const Canvas = () => {
   const resetAutoZoom = useCallback(
     (ui: AppState["ui"] = state.ui) => {
       if (frameRef.current) {
-        const zoomConfig = getZoomConfig(
-          ui.viewports.current,
-          frameRef.current!
+        setZoomConfig(
+          getZoomConfig(ui.viewports.current, frameRef.current, zoomConfig.zoom)
         );
-
-        setRootHeight(zoomConfig.rootHeight);
-        setAutoZoom(zoomConfig.autoZoom);
-
-        dispatch({
-          type: "setUi",
-          ui: {
-            ...ui,
-            viewports: {
-              ...ui.viewports,
-              current: {
-                ...ui.viewports.current,
-                zoom: zoomConfig.zoom,
-              },
-            },
-          },
-        });
       }
     },
-    [frameRef, autoZoom, state.ui]
+    [frameRef, zoomConfig, state.ui]
   );
 
   // Auto zoom
@@ -95,9 +76,12 @@ export const Canvas = () => {
     const { height: frameHeight } = getFrameDimensions();
 
     if (ui.viewports.current.height === "auto") {
-      setRootHeight(frameHeight / ui.viewports.current.zoom);
+      setZoomConfig({
+        ...zoomConfig,
+        rootHeight: frameHeight / zoomConfig.zoom,
+      });
     }
-  }, [ui.viewports.current.zoom]);
+  }, [zoomConfig.zoom]);
 
   // Resize based on window size
   useEffect(() => {
@@ -129,14 +113,15 @@ export const Canvas = () => {
       {ui.viewports.controlsVisible && (
         <div className={getClassName("canvasControls")}>
           <ViewportControls
-            autoZoom={autoZoom}
+            autoZoom={zoomConfig.autoZoom}
+            zoom={zoomConfig.zoom}
             onViewportChange={(viewport) => {
               setShowTransition(true);
 
               const uiViewport = {
                 ...viewport,
                 height: viewport.height || "auto",
-                zoom: ui.viewports.current.zoom,
+                zoom: zoomConfig.zoom,
               };
 
               const newUi = {
@@ -153,15 +138,7 @@ export const Canvas = () => {
             onZoom={(zoom) => {
               setShowTransition(true);
 
-              setUi({
-                viewports: {
-                  ...ui.viewports,
-                  current: {
-                    ...ui.viewports.current,
-                    zoom,
-                  },
-                },
-              });
+              setZoomConfig({ ...zoomConfig, zoom });
             }}
           />
         </div>
@@ -171,8 +148,8 @@ export const Canvas = () => {
           className={getClassName("root")}
           style={{
             width: ui.viewports.current.width,
-            height: rootHeight,
-            transform: `scale(${ui.viewports.current.zoom})`,
+            height: zoomConfig.rootHeight,
+            transform: `scale(${zoomConfig.zoom})`,
             transition: showTransition
               ? "width 150ms ease-out, height 150ms ease-out, transform 150ms ease-out"
               : "",

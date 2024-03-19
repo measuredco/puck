@@ -86,11 +86,11 @@ Whether or not the category is expanded in the side bar
 
 ### `ui.viewports`
 
-| Param                                            | Example                                    | Type                                                                 |
-| ------------------------------------------------ | ------------------------------------------ | -------------------------------------------------------------------- |
-| [`controlsVisible`](#uiviewportscontrolsvisible) | `false`                                    | Boolean                                                              |
-| [`current`](#uiviewportscurrent)                 | `{ width: 1440, height: "auto", zoom: 1 }` | Object                                                               |
-| [`options`](#uiviewportsoptions)                 | `[]`                                       | [Viewports\[\]](/docs/api-reference/components/puck#viewport-params) |
+| Param                                            | Example                           | Type                                                                 |
+| ------------------------------------------------ | --------------------------------- | -------------------------------------------------------------------- |
+| [`controlsVisible`](#uiviewportscontrolsvisible) | `false`                           | Boolean                                                              |
+| [`current`](#uiviewportscurrent)                 | `{ width: 1440, height: "auto" }` | Object                                                               |
+| [`options`](#uiviewportsoptions)                 | `[]`                              | [Viewports\[\]](/docs/api-reference/components/puck#viewport-params) |
 
 #### `ui.viewports.controlsVisible`
 
@@ -104,7 +104,6 @@ The currently selected viewport.
 | ------------------------------------- | -------- | ------------------ |
 | [`width`](#uiviewportscurrentwidth)   | `1440`   | Number             |
 | [`height`](#uiviewportscurrentheight) | `"auto"` | Number \| `"auto"` |
-| [`zoom`](#uiviewportscurrentzoom)     | `1`      | Number             |
 
 ##### `ui.viewports.current.width`
 
@@ -113,10 +112,6 @@ The width of the current viewport.
 ##### `ui.viewports.current.height`
 
 The height of the current viewport.
-
-##### `ui.viewports.current.zoom`
-
-The zoom level of the current viewport.
 
 #### `ui.viewports.options`
 
