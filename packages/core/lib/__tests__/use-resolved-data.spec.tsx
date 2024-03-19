@@ -139,6 +139,14 @@ describe("use-resolved-data", () => {
             "itemSelector": null,
             "leftSideBarVisible": true,
             "rightSideBarVisible": true,
+            "viewports": {
+              "controlsVisible": true,
+              "current": {
+                "height": "auto",
+                "width": 360,
+              },
+              "options": [],
+            },
           },
         }
       `);
