@@ -94,39 +94,21 @@ export function Puck<
   const [initialAppState] = useState<AppState>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
 
-    const viewportWidth = window.innerWidth;
+    let clientUiState: Partial<AppState["ui"]> = {};
 
-    const viewportDifferences = Object.entries(viewports)
-      .map(([key, value]) => ({
-        key,
-        diff: Math.abs(viewportWidth - value.width),
-      }))
-      .sort((a, b) => (a.diff > b.diff ? 1 : -1));
+    if (typeof window !== "undefined") {
+      const viewportWidth = window.innerWidth;
 
-    const closestViewport = viewportDifferences[0].key;
+      const viewportDifferences = Object.entries(viewports)
+        .map(([key, value]) => ({
+          key,
+          diff: Math.abs(viewportWidth - value.width),
+        }))
+        .sort((a, b) => (a.diff > b.diff ? 1 : -1));
 
-    return {
-      ...defaultAppState,
-      data: initialData,
-      ui: {
-        ...initial,
-        // Store categories under componentList on state to allow render functions and plugins to modify
-        componentList: config.categories
-          ? Object.entries(config.categories).reduce(
-              (acc, [categoryName, category]) => {
-                return {
-                  ...acc,
-                  [categoryName]: {
-                    title: category.title,
-                    components: category.components,
-                    expanded: category.defaultExpanded,
-                    visible: category.visible,
-                  },
-                };
-              },
-              {}
-            )
-          : {},
+      const closestViewport = viewportDifferences[0].key;
+
+      clientUiState = {
         // Hide side bars on mobile
         ...(window.matchMedia("(min-width: 638px)").matches
           ? {}
@@ -148,6 +130,32 @@ export function Puck<
               viewports[closestViewport].width,
           },
         },
+      };
+    }
+
+    return {
+      ...defaultAppState,
+      data: initialData,
+      ui: {
+        ...initial,
+        ...clientUiState,
+        // Store categories under componentList on state to allow render functions and plugins to modify
+        componentList: config.categories
+          ? Object.entries(config.categories).reduce(
+              (acc, [categoryName, category]) => {
+                return {
+                  ...acc,
+                  [categoryName]: {
+                    title: category.title,
+                    components: category.components,
+                    expanded: category.defaultExpanded,
+                    visible: category.visible,
+                  },
+                };
+              },
+              {}
+            )
+          : {},
       },
     };
   });
