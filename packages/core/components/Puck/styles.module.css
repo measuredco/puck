@@ -26,7 +26,7 @@
   grid-template-areas: "header header header" "left editor right";
   grid-template-columns: 0 var(--puck-frame-width) 0;
   grid-template-rows: min-content auto;
-  height: 100vh;
+  height: 100dvh;
   left: 0;
   position: fixed;
   right: 0;
