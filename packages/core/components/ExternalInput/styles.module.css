@@ -77,8 +77,8 @@
   grid-template-rows: min-content minmax(128px, 100%) min-content;
   grid-template-columns: 100%;
   position: relative;
-  min-height: 50vh;
-  max-height: 90vh;
+  min-height: 50dvh;
+  max-height: 90dvh;
 }
 
 .ExternalInputModal-grid {
