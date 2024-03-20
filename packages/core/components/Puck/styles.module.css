@@ -193,6 +193,12 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .Puck-root {
+    transition: none !important;
+  }
+}
+
 .Puck-rightSideBar {
   background: var(--puck-color-white);
   border-left: 1px solid var(--puck-color-grey-09);
