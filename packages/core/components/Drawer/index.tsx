@@ -43,11 +43,13 @@ const DrawerItem = ({
   name,
   children,
   id,
+  label,
   index,
 }: {
   name: string;
   children?: (props: { children: ReactNode; name: string }) => ReactElement;
   id?: string;
+  label?: string;
   index: number;
 }) => {
   const ctx = useContext(drawerContext);
@@ -68,7 +70,7 @@ const DrawerItem = ({
       <CustomInner name={name}>
         <div className={getClassNameItem("draggableWrapper")}>
           <div className={getClassNameItem("draggable")}>
-            <div className={getClassNameItem("name")}>{name}</div>
+            <div className={getClassNameItem("name")}>{label ?? name}</div>
             <div className={getClassNameItem("icon")}>
               <DragIcon />
             </div>

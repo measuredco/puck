@@ -510,7 +510,12 @@ export function Puck<
                       noPadding
                       noBorderTop
                       showBreadcrumbs
-                      title={selectedItem ? selectedItem.type : "Page"}
+                      title={
+                        selectedItem
+                          ? config.components[selectedItem.type]["label"] ??
+                            selectedItem.type
+                          : "Page"
+                      }
                     >
                       <Fields />
                     </SidebarSection>

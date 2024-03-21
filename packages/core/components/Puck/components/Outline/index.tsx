@@ -8,7 +8,7 @@ import { useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 
 export const Outline = () => {
-  const { dispatch, state, overrides } = useAppContext();
+  const { dispatch, state, overrides, config } = useAppContext();
   const { data, ui } = state;
   const { itemSelector } = ui;
 
@@ -23,7 +23,6 @@ export const Outline = () => {
   );
 
   const Wrapper = useMemo(() => overrides.outline || "div", [overrides]);
-
   return (
     <Wrapper>
       <dropZoneContext.Consumer>
@@ -31,6 +30,7 @@ export const Outline = () => {
           <>
             {ctx?.activeZones && ctx?.activeZones[rootDroppableId] && (
               <LayerTree
+                config={config}
                 data={data}
                 label={areaContainsZones(data, "root") ? rootDroppableId : ""}
                 zoneContent={data.content}
@@ -42,6 +42,7 @@ export const Outline = () => {
               ([zoneKey, zone]) => {
                 return (
                   <LayerTree
+                    config={config}
                     key={zoneKey}
                     data={data}
                     label={zoneKey}
