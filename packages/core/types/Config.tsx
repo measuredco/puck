@@ -59,7 +59,7 @@ export type ObjectField<
 > = BaseField & {
   type: "object";
   objectFields: {
-    [SubPropName in keyof Props[0]]: Field<Props[0][SubPropName]>;
+    [SubPropName in keyof Props]: Field<Props[SubPropName]>;
   };
 };
 
