@@ -9,6 +9,12 @@ import { useAppContext } from "../Puck/context";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
+// Magic numbers are used to position actions overlay 8px from top of component, bottom of component (when sticky scrolling) and side of preview
+const space = 8;
+const actionsOverlayTop = space * 6.5;
+const actionsTop = -(actionsOverlayTop - 8);
+const actionsRight = space;
+
 export const DraggableComponent = ({
   children,
   id,
@@ -98,15 +104,15 @@ export const DraggableComponent = ({
           <div
             className={getClassName("actionsOverlay")}
             style={{
-              top: 56 / zoomConfig.zoom,
+              top: actionsOverlayTop / zoomConfig.zoom,
             }}
           >
             <div
               className={getClassName("actions")}
               style={{
                 transform: `scale(${1 / zoomConfig.zoom}`,
-                top: -48 / zoomConfig.zoom,
-                right: 6.5 / zoomConfig.zoom,
+                top: actionsTop / zoomConfig.zoom,
+                right: actionsRight / zoomConfig.zoom,
               }}
             >
               {label && (
