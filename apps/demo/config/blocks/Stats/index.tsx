@@ -48,8 +48,8 @@ export const Stats: ComponentConfig<StatsProps> = {
   defaultProps: {
     items: [
       {
-        title: "Feature",
-        description: "Description",
+        title: "Stat",
+        description: "1,000",
       },
     ],
   },
