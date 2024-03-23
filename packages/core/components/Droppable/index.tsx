@@ -29,7 +29,7 @@ const DefaultDroppable = ({ children }: DroppableProps) => (
 export const Droppable = (props: DroppableProps) => {
   const { status } = useAppContext();
 
-  const El = status === "READY" ? DndDroppable : DefaultDroppable;
+  const El = status !== "LOADING" ? DndDroppable : DefaultDroppable;
 
   return <El {...props} />;
 };

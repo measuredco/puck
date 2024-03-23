@@ -9,17 +9,18 @@ import {
 } from "react";
 import { useAppContext } from "../../context";
 import { ViewportControls } from "../../../ViewportControls";
-import styles from "../../styles.module.css";
+import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { Preview } from "../Preview";
 import { getZoomConfig } from "../../../../lib/get-zoom-config";
 import { AppState } from "../../../../types/Config";
 
-const getClassName = getClassNameFactory("Puck", styles);
+const getClassName = getClassNameFactory("PuckCanvas", styles);
 
 const ZOOM_ON_CHANGE = true;
 
 export const Canvas = () => {
+  const { status } = useAppContext();
   const { dispatch, state, overrides, setUi, zoomConfig, setZoomConfig } =
     useAppContext();
   const { ui } = state;
@@ -101,7 +102,7 @@ export const Canvas = () => {
 
   return (
     <div
-      className={getClassName("canvas")}
+      className={getClassName({ ready: status === "READY" })}
       onClick={() =>
         dispatch({
           type: "setUi",
@@ -111,7 +112,7 @@ export const Canvas = () => {
       }
     >
       {ui.viewports.controlsVisible && (
-        <div className={getClassName("canvasControls")}>
+        <div className={getClassName("controls")}>
           <ViewportControls
             autoZoom={zoomConfig.autoZoom}
             zoom={zoomConfig.zoom}

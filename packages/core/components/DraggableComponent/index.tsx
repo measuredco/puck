@@ -64,7 +64,7 @@ export const DraggableComponent = ({
 
   const { status } = useAppContext();
 
-  const El = status === "READY" ? Draggable : DefaultDraggable;
+  const El = status !== "LOADING" ? Draggable : DefaultDraggable;
 
   useEffect(onMount, []);
 
