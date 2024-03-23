@@ -38,11 +38,11 @@
   z-index: 1;
 }
 
-.DraggableComponent:focus-visible .DraggableComponent-overlay {
+.DraggableComponent:focus-visible > .DraggableComponent-overlay {
   outline: 1px solid var(--puck-color-azure-05);
 }
 
-.DraggableComponent--isDragging .DraggableComponent-overlay {
+.DraggableComponent--isDragging > .DraggableComponent-overlay {
   outline: 1px var(--puck-color-azure-09) solid !important;
 }
 
