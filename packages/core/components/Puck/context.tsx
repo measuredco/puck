@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { AppState, Config, UiState } from "../../types/Config";
 import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
@@ -28,6 +34,8 @@ export const defaultAppState: AppState = {
   },
 };
 
+export type Status = "LOADING" | "READY";
+
 type ZoomConfig = {
   autoZoom: number;
   rootHeight: number;
@@ -48,6 +56,7 @@ type AppContext<
   viewports: Viewports;
   zoomConfig: ZoomConfig;
   setZoomConfig: (zoomConfig: ZoomConfig) => void;
+  status: Status;
 };
 
 const defaultContext: AppContext = {
@@ -66,6 +75,7 @@ const defaultContext: AppContext = {
     zoom: 1,
   },
   setZoomConfig: () => null,
+  status: "LOADING",
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
@@ -75,12 +85,22 @@ export const AppProvider = ({
   value,
 }: {
   children: ReactNode;
-  value: Omit<AppContext, "zoomConfig" | "setZoomConfig">;
+  value: Omit<AppContext, "zoomConfig" | "setZoomConfig" | "status">;
 }) => {
   const [zoomConfig, setZoomConfig] = useState(defaultContext.zoomConfig);
 
+  const [status, setStatus] = useState<Status>("LOADING");
+
+  // App is ready when client has loaded, after initial render
+  // This triggers DropZones to activate
+  useEffect(() => {
+    setStatus("READY");
+  }, []);
+
   return (
-    <appContext.Provider value={{ ...value, zoomConfig, setZoomConfig }}>
+    <appContext.Provider
+      value={{ ...value, zoomConfig, setZoomConfig, status }}
+    >
       {children}
     </appContext.Provider>
   );

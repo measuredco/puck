@@ -7,7 +7,7 @@ import {
   useReducer,
   useState,
 } from "react";
-import { DragDropContext, DragStart, DragUpdate } from "@measured/dnd";
+import { DragStart, DragUpdate } from "@measured/dnd";
 
 import type { AppState, Config, Data, UiState } from "../../types/Config";
 import { Button } from "../Button";
@@ -45,6 +45,7 @@ import { useHistoryStore } from "../../lib/use-history-store";
 import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types/Viewports";
+import { DragDropContext } from "../DragDropContext";
 
 const getClassName = getClassNameFactory("Puck", styles);
 

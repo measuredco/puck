@@ -1,6 +1,6 @@
 import { CSSProperties, useContext, useEffect } from "react";
 import { DraggableComponent } from "../DraggableComponent";
-import { Droppable } from "@measured/dnd";
+import { Droppable } from "../Droppable";
 import { getItem } from "../../lib/get-item";
 import { setupZone } from "../../lib/setup-zone";
 import { rootDroppableId } from "../../lib/root-droppable-id";
