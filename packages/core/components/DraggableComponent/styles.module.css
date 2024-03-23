@@ -90,7 +90,7 @@
   display: none;
 }
 
-.DraggableComponent--isSelected .DraggableComponent-overlay {
+.DraggableComponent--isSelected > .DraggableComponent-overlay {
   outline: 2px var(--puck-color-azure-07) solid !important;
 }
 
