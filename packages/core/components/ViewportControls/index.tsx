@@ -1,7 +1,7 @@
 import { Monitor, Smartphone, Tablet, ZoomIn, ZoomOut } from "lucide-react";
 import { IconButton } from "../IconButton";
 import { useAppContext } from "../Puck/context";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { getClassNameFactory } from "../../lib";
 
 import styles from "./styles.module.css";
@@ -31,7 +31,12 @@ const ViewportButton = ({
 }) => {
   const { state } = useAppContext();
 
-  const isActive = width === state.ui.viewports.current.width;
+  const [isActive, setIsActive] = useState(false);
+
+  // We use an effect so this doesn't cause hydration warnings with SSR
+  useEffect(() => {
+    setIsActive(width === state.ui.viewports.current.width);
+  }, [width, state.ui.viewports.current.width]);
 
   return (
     <span className={getClassNameButton({ isActive })}>
@@ -71,8 +76,7 @@ export const ViewportControls = ({
   onViewportChange: (viewport: Viewport) => void;
   onZoom: (zoom: number) => void;
 }) => {
-  const { state, viewports } = useAppContext();
-  const viewport = state.ui.viewports.current;
+  const { viewports } = useAppContext();
 
   const defaultsContainAutoZoom = defaultZoomOptions.find(
     (option) => option.value === autoZoom
