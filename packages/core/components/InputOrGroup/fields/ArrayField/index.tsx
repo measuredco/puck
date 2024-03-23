@@ -205,6 +205,7 @@ export const ArrayField = ({
                                 <div className={getClassNameItem("actions")}>
                                   <div className={getClassNameItem("action")}>
                                     <IconButton
+                                      type="button"
                                       disabled={
                                         field.min !== undefined &&
                                         field.min >=
@@ -292,6 +293,7 @@ export const ArrayField = ({
                 {provided.placeholder}
 
                 <button
+                  type="button"
                   className={getClassName("addButton")}
                   disabled={
                     field.max !== undefined &&

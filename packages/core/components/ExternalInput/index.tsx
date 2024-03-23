@@ -96,6 +96,7 @@ export const ExternalInput = ({
     >
       <div className={getClassName("actions")}>
         <button
+          type="button"
           onClick={() => setOpen(true)}
           className={getClassName("button")}
         >
