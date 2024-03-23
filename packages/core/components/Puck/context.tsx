@@ -71,7 +71,7 @@ const defaultContext: AppContext = {
   history: {},
   viewports: defaultViewports,
   zoomConfig: {
-    autoZoom: 0,
+    autoZoom: 1,
     rootHeight: 0,
     zoom: 1,
   },
