@@ -40,9 +40,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           className={getClassName("iframe")}
           data-rfd-iframe
           ref={ref}
-          debug
           onStylesLoaded={() => {
-            console.log("callback");
             setStylesLoaded(true);
           }}
         >
