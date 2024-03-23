@@ -9,7 +9,7 @@ import { getClassNameFactory } from "../../../../lib";
 const getClassName = getClassNameFactory("PuckPreview", styles);
 
 export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
-  const { config, dispatch, state } = useAppContext();
+  const { config, dispatch, state, setStatus } = useAppContext();
 
   const Page = useCallback(
     (pageProps) =>
@@ -24,31 +24,27 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
 
   const ref = useRef<HTMLIFrameElement>(null);
 
-  const [stylesLoaded, setStylesLoaded] = useState(false);
-
   return (
     <div
-      className={getClassName({ stylesLoaded })}
+      className={getClassName()}
       id={id}
       onClick={() => {
         dispatch({ type: "setUi", ui: { ...state.ui, itemSelector: null } });
       }}
     >
-      <div className={getClassName("content")}>
-        <AutoFrame
-          id="preview-iframe"
-          className={getClassName("iframe")}
-          data-rfd-iframe
-          ref={ref}
-          onStylesLoaded={() => {
-            setStylesLoaded(true);
-          }}
-        >
-          <Page dispatch={dispatch} state={state} {...rootProps}>
-            <DropZone zone={rootDroppableId} />
-          </Page>
-        </AutoFrame>
-      </div>
+      <AutoFrame
+        id="preview-iframe"
+        className={getClassName("iframe")}
+        data-rfd-iframe
+        ref={ref}
+        onStylesLoaded={() => {
+          setStatus("READY");
+        }}
+      >
+        <Page dispatch={dispatch} state={state} {...rootProps}>
+          <DropZone zone={rootDroppableId} />
+        </Page>
+      </AutoFrame>
     </div>
   );
 };

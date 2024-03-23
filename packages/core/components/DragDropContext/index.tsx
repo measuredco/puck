@@ -11,7 +11,7 @@ const DefaultDragDropContext = ({ children }: DragDropContextProps) => (
 export const DragDropContext = (props: DragDropContextProps) => {
   const { status } = useAppContext();
 
-  const El = status === "READY" ? DndDragDropContext : DefaultDragDropContext;
+  const El = status !== "LOADING" ? DndDragDropContext : DefaultDragDropContext;
 
   return <El {...props} />;
 };

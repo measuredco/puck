@@ -63,7 +63,7 @@ export const Draggable = ({
 }) => {
   const { status } = useAppContext();
 
-  const El = status === "READY" ? DndDraggable : DefaultDraggable;
+  const El = status !== "LOADING" ? DndDraggable : DefaultDraggable;
 
   return (
     <El draggableId={id} index={index} isDragDisabled={isDragDisabled}>

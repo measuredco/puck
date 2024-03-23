@@ -34,7 +34,7 @@ export const defaultAppState: AppState = {
   },
 };
 
-export type Status = "LOADING" | "READY";
+export type Status = "LOADING" | "MOUNTED" | "READY";
 
 type ZoomConfig = {
   autoZoom: number;
@@ -57,6 +57,7 @@ type AppContext<
   zoomConfig: ZoomConfig;
   setZoomConfig: (zoomConfig: ZoomConfig) => void;
   status: Status;
+  setStatus: (status: Status) => void;
 };
 
 const defaultContext: AppContext = {
@@ -76,6 +77,7 @@ const defaultContext: AppContext = {
   },
   setZoomConfig: () => null,
   status: "LOADING",
+  setStatus: () => null,
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
@@ -85,7 +87,10 @@ export const AppProvider = ({
   value,
 }: {
   children: ReactNode;
-  value: Omit<AppContext, "zoomConfig" | "setZoomConfig" | "status">;
+  value: Omit<
+    AppContext,
+    "zoomConfig" | "setZoomConfig" | "status" | "setStatus"
+  >;
 }) => {
   const [zoomConfig, setZoomConfig] = useState(defaultContext.zoomConfig);
 
@@ -94,12 +99,12 @@ export const AppProvider = ({
   // App is ready when client has loaded, after initial render
   // This triggers DropZones to activate
   useEffect(() => {
-    setStatus("READY");
+    setStatus("MOUNTED");
   }, []);
 
   return (
     <appContext.Provider
-      value={{ ...value, zoomConfig, setZoomConfig, status }}
+      value={{ ...value, zoomConfig, setZoomConfig, status, setStatus }}
     >
       {children}
     </appContext.Provider>

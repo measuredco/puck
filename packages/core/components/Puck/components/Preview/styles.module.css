@@ -7,14 +7,3 @@
   height: 100%;
   width: 100%;
 }
-
-.PuckPreview-content {
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-  transition: opacity 150ms ease-out;
-}
-
-.PuckPreview--stylesLoaded .PuckPreview-content {
-  opacity: 1;
-}
