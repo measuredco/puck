@@ -1,6 +1,6 @@
 import { DropZone } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useAppContext } from "../../context";
 import AutoFrame from "@measured/auto-frame-component";
 import styles from "./styles.module.css";
@@ -24,24 +24,33 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
 
   const ref = useRef<HTMLIFrameElement>(null);
 
+  const [stylesLoaded, setStylesLoaded] = useState(false);
+
   return (
     <div
-      className={getClassName()}
+      className={getClassName({ stylesLoaded })}
       id={id}
       onClick={() => {
         dispatch({ type: "setUi", ui: { ...state.ui, itemSelector: null } });
       }}
     >
-      <AutoFrame
-        id="preview-iframe"
-        className={getClassName("iframe")}
-        data-rfd-iframe
-        ref={ref}
-      >
-        <Page dispatch={dispatch} state={state} {...rootProps}>
-          <DropZone zone={rootDroppableId} />
-        </Page>
-      </AutoFrame>
+      <div className={getClassName("content")}>
+        <AutoFrame
+          id="preview-iframe"
+          className={getClassName("iframe")}
+          data-rfd-iframe
+          ref={ref}
+          debug
+          onStylesLoaded={() => {
+            console.log("callback");
+            setStylesLoaded(true);
+          }}
+        >
+          <Page dispatch={dispatch} state={state} {...rootProps}>
+            <DropZone zone={rootDroppableId} />
+          </Page>
+        </AutoFrame>
+      </div>
     </div>
   );
 };

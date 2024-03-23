@@ -1440,10 +1440,10 @@
     "@types/mdx" "^2.0.0"
     "@types/react" ">=16"
 
-"@measured/auto-frame-component@0.1.0-canary.4686711":
-  version "0.1.0-canary.4686711"
-  resolved "https://registry.yarnpkg.com/@measured/auto-frame-component/-/auto-frame-component-0.1.0-canary.4686711.tgz#7ed8892507da83a1d5fb6d59ded7a3e15f9cd286"
-  integrity sha512-B3Q38ECW7xc4900PBLvHdEiws+rjx1BdHS+EEIBsw9kadT+4NMjdoTFB6wQKxtGEumI2A6tBa9IoX6UkecBkzQ==
+"@measured/auto-frame-component@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@measured/auto-frame-component/-/auto-frame-component-0.1.0.tgz#83c9186f21b837d95185ef8336b269450f8f816a"
+  integrity sha512-5pZnmTxI9a4MXE7WTneGEXpU/6FKiyw8BI+93NVQRfEudmZNUldiSihp0TlP1ga8lf9V3wh2v7Pv7LOyyo1ZxA==
   dependencies:
     object-hash "^3.0.0"
     react-frame-component "5.2.6"
