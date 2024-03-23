@@ -22,8 +22,9 @@ const defaultSnapshot: DroppableStateSnapshot = {
   isUsingPlaceholder: false,
 };
 
-const DefaultDroppable = ({ children }: DroppableProps) =>
-  children(defaultProvided, defaultSnapshot);
+const DefaultDroppable = ({ children }: DroppableProps) => (
+  <>{children(defaultProvided, defaultSnapshot)}</>
+);
 
 export const Droppable = (props: DroppableProps) => {
   const { status } = useAppContext();

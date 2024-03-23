@@ -34,8 +34,9 @@ const defaultRubric: DraggableRubric = {
   source: { droppableId: "", index: 0 },
 };
 
-export const DefaultDraggable = ({ children }: DraggableProps) =>
-  children(defaultProvided, defaultSnapshot, defaultRubric);
+export const DefaultDraggable = ({ children }: DraggableProps) => (
+  <>{children(defaultProvided, defaultSnapshot, defaultRubric)}</>
+);
 
 export const Draggable = ({
   className,
