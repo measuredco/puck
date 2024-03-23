@@ -1,4 +1,4 @@
-import { Droppable } from "@measured/dnd";
+import { Droppable } from "../Droppable";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Draggable } from "../Draggable";

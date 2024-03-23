@@ -6,6 +6,7 @@ import { Copy, Trash } from "lucide-react";
 import { useModifierHeld } from "../../lib/use-modifier-held";
 import { ClipLoader } from "react-spinners";
 import { useAppContext } from "../Puck/context";
+import { DefaultDraggable } from "../Draggable";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -61,15 +62,14 @@ export const DraggableComponent = ({
   const { zoomConfig } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
 
+  const { status } = useAppContext();
+
+  const El = status === "READY" ? Draggable : DefaultDraggable;
+
   useEffect(onMount, []);
 
   return (
-    <Draggable
-      key={id}
-      draggableId={id}
-      index={index}
-      isDragDisabled={isDragDisabled}
-    >
+    <El key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
@@ -130,6 +130,6 @@ export const DraggableComponent = ({
           <div className={getClassName("contents")}>{children}</div>
         </div>
       )}
-    </Draggable>
+    </El>
   );
 };
