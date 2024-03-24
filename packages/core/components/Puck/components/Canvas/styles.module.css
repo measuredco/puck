@@ -18,7 +18,7 @@
   }
 }
 
-.PuckCanvas-frame {
+.PuckCanvas-inner {
   box-sizing: border-box;
   display: flex;
   height: 100%;

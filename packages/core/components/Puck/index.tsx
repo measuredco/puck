@@ -46,6 +46,7 @@ import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types/Viewports";
 import { DragDropContext } from "../DragDropContext";
+import { IframeConfig } from "../../types/IframeConfig";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -65,6 +66,9 @@ export function Puck<
   headerTitle,
   headerPath,
   viewports = defaultViewports,
+  iframe = {
+    enabled: true,
+  },
 }: {
   children?: ReactNode;
   config: UserConfig;
@@ -86,6 +90,7 @@ export function Puck<
   headerTitle?: string;
   headerPath?: string;
   viewports?: Viewports;
+  iframe?: IframeConfig;
 }) {
   const historyStore = useHistoryStore();
 
@@ -110,29 +115,31 @@ export function Puck<
 
       const closestViewport = viewportDifferences[0].key;
 
-      clientUiState = {
-        // Hide side bars on mobile
-        ...(window.matchMedia("(min-width: 638px)").matches
-          ? {}
-          : {
-              leftSideBarVisible: false,
-              rightSideBarVisible: false,
-            }),
-        viewports: {
-          ...initial.viewports,
+      if (iframe.enabled) {
+        clientUiState = {
+          // Hide side bars on mobile
+          ...(window.matchMedia("(min-width: 638px)").matches
+            ? {}
+            : {
+                leftSideBarVisible: false,
+                rightSideBarVisible: false,
+              }),
+          viewports: {
+            ...initial.viewports,
 
-          current: {
-            ...initial.viewports.current,
-            height:
-              initialUi?.viewports?.current?.height ||
-              viewports[closestViewport].height ||
-              "auto",
-            width:
-              initialUi?.viewports?.current?.width ||
-              viewports[closestViewport].width,
+            current: {
+              ...initial.viewports.current,
+              height:
+                initialUi?.viewports?.current?.height ||
+                viewports[closestViewport].height ||
+                "auto",
+              width:
+                initialUi?.viewports?.current?.width ||
+                viewports[closestViewport].width,
+            },
           },
-        },
-      };
+        };
+      }
     }
 
     return {
@@ -351,6 +358,7 @@ export function Puck<
           overrides: loadedOverrides,
           history,
           viewports,
+          iframe,
         }}
       >
         <DragDropContext

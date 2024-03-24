@@ -32,6 +32,7 @@ export function Editor() {
 | [`children`](#children)         | `children: <Puck.Preview />`           | ReactNode                                          | -            |
 | [`headerPath`](#headerpath)     | `headerPath: "/my-page"`               | String                                             | -            |
 | [`headerTitle`](#headertitle)   | `headerTitle: "My Page"`               | String                                             | -            |
+| [`iframe`](#iframe)             | `iframe: {}`                           | [IframeConfig](#iframe-params)                     | -            |
 | [`onChange()`](#onchangedata)   | `onChange: (data) => {}`               | Function                                           | -            |
 | [`onPublish()`](#onpublishdata) | `onPublish: async (data) => {}`        | Function                                           | -            |
 | [`overrides`](#overrides)       | `overrides: { header: () => <div /> }` | [Overrides](/docs/api-reference/overrides)         | Experimental |
@@ -137,6 +138,33 @@ export function Editor() {
   );
 }
 ```
+
+### `iframe`
+
+Configure the iframe behaviour.
+
+```tsx {4} copy
+export function Editor() {
+  return (
+    <Puck
+      iframe={{ enabled: false }}
+      // ...
+    />
+  );
+}
+```
+
+#### iframe params
+
+| Param                 | Example          | Type    | Status |
+| --------------------- | ---------------- | ------- | ------ |
+| [`enabled`](#enabled) | `enabled: false` | boolean | -      |
+
+##### `enabled`
+
+Render the Puck preview within iframe. Defaults to `true`.
+
+Disabling iframes will also disable [viewports](#viewports).
 
 ### `onChange(data)`
 

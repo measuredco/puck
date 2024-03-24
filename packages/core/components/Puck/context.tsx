@@ -13,6 +13,7 @@ import { Overrides } from "../../types/Overrides";
 import { PuckHistory } from "../../lib/use-puck-history";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types/Viewports";
+import { IframeConfig } from "../../types/IframeConfig";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: { props: { title: "" } } },
@@ -58,6 +59,7 @@ type AppContext<
   setZoomConfig: (zoomConfig: ZoomConfig) => void;
   status: Status;
   setStatus: (status: Status) => void;
+  iframe: IframeConfig;
 };
 
 const defaultContext: AppContext = {
@@ -78,6 +80,7 @@ const defaultContext: AppContext = {
   setZoomConfig: () => null,
   status: "LOADING",
   setStatus: () => null,
+  iframe: {},
 };
 
 export const appContext = createContext<AppContext>(defaultContext);

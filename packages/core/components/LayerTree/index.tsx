@@ -10,6 +10,7 @@ import { dropZoneContext } from "../DropZone/context";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { getZoneId } from "../../lib/get-zone-id";
 import { isChildOfZone } from "../../lib/is-child-of-zone";
+import { useFrame } from "../../lib/use-frame";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -33,6 +34,8 @@ export const LayerTree = ({
 }) => {
   const zones = data.zones || {};
   const ctx = useContext(dropZoneContext);
+  const frame = useFrame();
+
   return (
     <>
       {label && (
@@ -95,18 +98,8 @@ export const LayerTree = ({
 
                     const id = zoneContent[i].props.id;
 
-                    const iframe = document.querySelector("#preview-iframe") as
-                      | HTMLIFrameElement
-                      | undefined;
-
-                    if (!iframe?.contentDocument) {
-                      throw new Error(
-                        `Preview iframe could not be found when trying to scroll to item ${id}`
-                      );
-                    }
-
                     scrollIntoView(
-                      iframe.contentDocument.querySelector(
+                      frame?.querySelector(
                         `[data-rfd-drag-handle-draggable-id="draggable-${id}"]`
                       ) as HTMLElement
                     );
