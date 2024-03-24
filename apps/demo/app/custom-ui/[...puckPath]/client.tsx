@@ -291,6 +291,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
       <Puck<UserConfig>
         config={config}
         data={data}
+        iframe={{ enabled: false }}
         headerPath={path}
         overrides={{
           outline: ({ children }) => (

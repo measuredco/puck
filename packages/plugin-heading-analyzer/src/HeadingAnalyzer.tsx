@@ -6,6 +6,7 @@ import { SidebarSection } from "@/core/components/SidebarSection";
 import { OutlineList } from "@/core/components/OutlineList";
 
 import { scrollIntoView } from "@/core/lib/scroll-into-view";
+import { useFrame } from "@/core/lib/use-frame";
 
 import ReactFromJSON from "react-from-json";
 
@@ -13,18 +14,9 @@ const dataAttr = "data-puck-heading-analyzer-id";
 
 const getOutline = ({
   addDataAttr = false,
-}: { addDataAttr?: boolean } = {}) => {
-  const iframe = document.querySelector("#preview-iframe") as
-    | HTMLIFrameElement
-    | undefined;
-
-  if (!iframe?.contentDocument) {
-    throw new Error(
-      `Preview iframe could not be found when trying to analyze headings`
-    );
-  }
-
-  const headings = iframe.contentDocument.querySelectorAll("h1,h2,h3,h4,h5,h6");
+  frame,
+}: { addDataAttr?: boolean; frame?: Element } = {}) => {
+  const headings = frame?.querySelectorAll("h1,h2,h3,h4,h5,h6") || [];
 
   const _outline: { rank: number; text: string; analyzeId: string }[] = [];
 
@@ -51,8 +43,8 @@ type Block = {
   analyzeId?: string;
 };
 
-function buildHierarchy(): Block[] {
-  const headings = getOutline({ addDataAttr: true });
+function buildHierarchy(frame: Element): Block[] {
+  const headings = getOutline({ addDataAttr: true, frame });
 
   const root = { rank: 0, children: [], text: "" }; // Placeholder root node
   let path: Block[] = [root];
@@ -100,19 +92,22 @@ export const HeadingAnalyzer = () => {
   const [hierarchy, setHierarchy] = useState<Block[]>([]);
   const [firstRender, setFirstRender] = useState(true);
 
+  const frame = useFrame();
+
   // Re-render when content changes
   useEffect(() => {
-    // We need to delay to allow remainder of page to render first
+    if (!frame) return;
 
+    // We need to delay to allow remainder of page to render first
     if (firstRender) {
       setTimeout(() => {
-        setHierarchy(buildHierarchy());
+        setHierarchy(buildHierarchy(frame));
         setFirstRender(false);
       }, 100);
     } else {
-      setHierarchy(buildHierarchy());
+      setHierarchy(buildHierarchy(frame));
     }
-  }, [appState.data.content]);
+  }, [appState.data.content, frame]);
 
   return (
     <>
@@ -135,17 +130,7 @@ export const HeadingAnalyzer = () => {
                         : (e) => {
                             e.stopPropagation();
 
-                            const iframe = document.querySelector(
-                              "#preview-iframe"
-                            ) as HTMLIFrameElement;
-
-                            if (!iframe.contentDocument) {
-                              throw new Error(
-                                `plugin-heading-outline-analyzer: Preview iframe could not be found when trying to scroll to item`
-                              );
-                            }
-
-                            const el = iframe.contentDocument.querySelector(
+                            const el = frame?.querySelector(
                               `[${dataAttr}="${props.analyzeId}"]`
                             ) as HTMLElement;
 

@@ -20,7 +20,7 @@ const getClassName = getClassNameFactory("PuckCanvas", styles);
 const ZOOM_ON_CHANGE = true;
 
 export const Canvas = () => {
-  const { status } = useAppContext();
+  const { status, iframe } = useAppContext();
   const { dispatch, state, overrides, setUi, zoomConfig, setZoomConfig } =
     useAppContext();
   const { ui } = state;
@@ -102,7 +102,9 @@ export const Canvas = () => {
 
   return (
     <div
-      className={getClassName({ ready: status === "READY" })}
+      className={getClassName({
+        ready: status === "READY" || !iframe.enabled,
+      })}
       onClick={() =>
         dispatch({
           type: "setUi",
@@ -111,7 +113,7 @@ export const Canvas = () => {
         })
       }
     >
-      {ui.viewports.controlsVisible && (
+      {ui.viewports.controlsVisible && iframe.enabled && (
         <div className={getClassName("controls")}>
           <ViewportControls
             autoZoom={zoomConfig.autoZoom}
@@ -144,16 +146,17 @@ export const Canvas = () => {
           />
         </div>
       )}
-      <div className={getClassName("frame")} ref={frameRef}>
+      <div className={getClassName("inner")} ref={frameRef}>
         <div
           className={getClassName("root")}
           style={{
-            width: ui.viewports.current.width,
+            width: iframe.enabled ? ui.viewports.current.width : undefined,
             height: zoomConfig.rootHeight,
-            transform: `scale(${zoomConfig.zoom})`,
+            transform: iframe.enabled ? `scale(${zoomConfig.zoom})` : undefined,
             transition: showTransition
               ? "width 150ms ease-out, height 150ms ease-out, transform 150ms ease-out"
               : "",
+            overflow: iframe.enabled ? undefined : "auto",
           }}
         >
           <CustomPreview>

@@ -1,10 +1,12 @@
 import { CSSProperties, useState } from "react";
 import { DragStart, DragUpdate } from "@measured/dnd";
+import { useFrame } from "./use-frame";
 
 export const usePlaceholderStyle = () => {
   const queryAttr = "data-rfd-drag-handle-draggable-id";
 
   const [placeholderStyle, setPlaceholderStyle] = useState<CSSProperties>();
+  const frame = useFrame();
 
   const onDragStartOrUpdate = (
     draggedItem: DragStart & Partial<DragUpdate>
@@ -17,19 +19,13 @@ export const usePlaceholderStyle = () => {
 
     const domQuery = `[${queryAttr}='${draggableId}']`;
 
-    const iframe = document.querySelector(`#preview-iframe`) as
-      | HTMLIFrameElement
-      | undefined;
-
-    const draggedDOM =
-      document.querySelector(domQuery) ||
-      iframe?.contentWindow?.document.querySelector(domQuery);
+    const draggedDOM = frame?.ownerDocument.querySelector(domQuery);
 
     if (!draggedDOM) {
       return;
     }
 
-    const targetListElement = iframe?.contentWindow?.document.querySelector(
+    const targetListElement = frame?.ownerDocument.querySelector(
       `[data-rfd-droppable-id='${droppableId}']`
     );
 
