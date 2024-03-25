@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 
-import { usePuck } from "@/core";
+import { usePuck } from "@/core/lib/use-puck";
 import { Plugin } from "@/core/types/Plugin";
 import { SidebarSection } from "@/core/components/SidebarSection";
 import { OutlineList } from "@/core/components/OutlineList";
