@@ -19,7 +19,8 @@ export const usePlaceholderStyle = () => {
     const domQuery = `[${queryAttr}='${draggableId}']`;
 
     const frame = getFrame();
-    const draggedDOM = frame?.querySelector(domQuery);
+    const draggedDOM =
+      document.querySelector(domQuery) || frame?.querySelector(domQuery);
 
     if (!draggedDOM) {
       return;
