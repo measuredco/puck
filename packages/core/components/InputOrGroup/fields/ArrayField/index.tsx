@@ -95,7 +95,9 @@ export const ArrayField = ({
 
   // Create a mirror of value with IDs added for drag and drop
   useEffect(() => {
-    setUi(mapArrayStateToUi(arrayState));
+    if (arrayState.items.length > 0) {
+      setUi(mapArrayStateToUi(arrayState));
+    }
   }, []);
 
   const [hovering, setHovering] = useState(false);
