@@ -104,6 +104,11 @@ export const ArrayField = ({
     return null;
   }
 
+  const addDisabled =
+    (field.max !== undefined &&
+      localState.arrayState.items.length >= field.max) ||
+    readOnly;
+
   return (
     <FieldLabelInternal
       label={label || name}
@@ -149,6 +154,7 @@ export const ArrayField = ({
                 className={getClassName({
                   isDraggingFrom: !!snapshot.draggingFromThisWith,
                   hasItems: Array.isArray(value) && value.length > 0,
+                  addDisabled,
                 })}
                 onMouseOver={(e) => {
                   e.stopPropagation();
@@ -292,28 +298,26 @@ export const ArrayField = ({
 
                 {provided.placeholder}
 
-                <button
-                  type="button"
-                  className={getClassName("addButton")}
-                  disabled={
-                    field.max !== undefined &&
-                    localState.arrayState.items.length >= field.max
-                  }
-                  onClick={() => {
-                    const existingValue = value || [];
+                {!addDisabled && (
+                  <button
+                    type="button"
+                    className={getClassName("addButton")}
+                    onClick={() => {
+                      const existingValue = value || [];
 
-                    const newValue = [
-                      ...existingValue,
-                      field.defaultItemProps || {},
-                    ];
+                      const newValue = [
+                        ...existingValue,
+                        field.defaultItemProps || {},
+                      ];
 
-                    const newArrayState = regenerateArrayState(newValue);
+                      const newArrayState = regenerateArrayState(newValue);
 
-                    onChange(newValue, mapArrayStateToUi(newArrayState));
-                  }}
-                >
-                  <Plus size={21} />
-                </button>
+                      onChange(newValue, mapArrayStateToUi(newArrayState));
+                    }}
+                  >
+                    <Plus size={21} />
+                  </button>
+                )}
               </div>
             );
           }}
