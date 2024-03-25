@@ -28,10 +28,11 @@ export function Editor() {
 
 ## Returns
 
-| Param                   | Example                        | Type                                      |
-| ----------------------- | ------------------------------ | ----------------------------------------- |
-| [`appState`](#appstate) | `{ data: {}, ui: {} }`         | [AppState](/docs/api-reference/app-state) |
-| [`dispatch`](#dispatch) | `(action: PuckAction) => void` | Function                                  |
+| Param                           | Example                                          | Type                                                |
+| ------------------------------- | ------------------------------------------------ | --------------------------------------------------- |
+| [`appState`](#appstate)         | `{ data: {}, ui: {} }`                           | [AppState](/docs/api-reference/app-state)           |
+| [`dispatch`](#dispatch)         | `(action: PuckAction) => void`                   | Function                                            |
+| [`selectedItem`](#selecteditem) | `{ type: "Heading", props: {id: "my-heading"} }` | [ComponentData](/docs/api-reference/data#content-1) |
 
 ### `appState`
 
@@ -53,4 +54,13 @@ dispatch({
     leftSideBarVisible: false,
   },
 });
+```
+
+### `selectedItem`
+
+The currently selected item, as defined by `appState.ui.itemSelector`.
+
+```tsx
+console.log(selectedItem);
+// { type: "Heading", props: {id: "my-heading"} }
 ```
