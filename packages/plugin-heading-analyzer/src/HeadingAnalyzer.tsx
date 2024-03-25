@@ -6,7 +6,7 @@ import { SidebarSection } from "@/core/components/SidebarSection";
 import { OutlineList } from "@/core/components/OutlineList";
 
 import { scrollIntoView } from "@/core/lib/scroll-into-view";
-import { useFrame } from "@/core/lib/use-frame";
+import { getFrame } from "@/core/lib/get-frame";
 
 import ReactFromJSON from "react-from-json";
 
@@ -15,7 +15,7 @@ const dataAttr = "data-puck-heading-analyzer-id";
 const getOutline = ({
   addDataAttr = false,
   frame,
-}: { addDataAttr?: boolean; frame?: Element } = {}) => {
+}: { addDataAttr?: boolean; frame?: Element | Document } = {}) => {
   const headings = frame?.querySelectorAll("h1,h2,h3,h4,h5,h6") || [];
 
   const _outline: { rank: number; text: string; analyzeId: string }[] = [];
@@ -43,7 +43,7 @@ type Block = {
   analyzeId?: string;
 };
 
-function buildHierarchy(frame: Element): Block[] {
+function buildHierarchy(frame: Element | Document): Block[] {
   const headings = getOutline({ addDataAttr: true, frame });
 
   const root = { rank: 0, children: [], text: "" }; // Placeholder root node
@@ -92,10 +92,10 @@ export const HeadingAnalyzer = () => {
   const [hierarchy, setHierarchy] = useState<Block[]>([]);
   const [firstRender, setFirstRender] = useState(true);
 
-  const frame = useFrame();
-
   // Re-render when content changes
   useEffect(() => {
+    const frame = getFrame();
+
     if (!frame) return;
 
     // We need to delay to allow remainder of page to render first
@@ -107,7 +107,7 @@ export const HeadingAnalyzer = () => {
     } else {
       setHierarchy(buildHierarchy(frame));
     }
-  }, [appState.data.content, frame]);
+  }, [appState.data.content]);
 
   return (
     <>
@@ -129,6 +129,8 @@ export const HeadingAnalyzer = () => {
                         ? undefined
                         : (e) => {
                             e.stopPropagation();
+
+                            const frame = getFrame();
 
                             const el = frame?.querySelector(
                               `[${dataAttr}="${props.analyzeId}"]`

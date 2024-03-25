@@ -10,7 +10,7 @@ import { dropZoneContext } from "../DropZone/context";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { getZoneId } from "../../lib/get-zone-id";
 import { isChildOfZone } from "../../lib/is-child-of-zone";
-import { useFrame } from "../../lib/use-frame";
+import { getFrame } from "../../lib/get-frame";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -34,7 +34,6 @@ export const LayerTree = ({
 }) => {
   const zones = data.zones || {};
   const ctx = useContext(dropZoneContext);
-  const frame = useFrame();
 
   return (
     <>
@@ -97,6 +96,8 @@ export const LayerTree = ({
                     });
 
                     const id = zoneContent[i].props.id;
+
+                    const frame = getFrame();
 
                     scrollIntoView(
                       frame?.querySelector(
