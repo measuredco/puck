@@ -65,18 +65,20 @@
 }
 
 .Button--secondary {
-  border: 1px solid var(--puck-color-grey-01);
-  color: var(--puck-color-black);
+  border: 1px solid currentColor;
+  color: currentColor;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .Button--secondary:hover {
     background-color: var(--puck-color-azure-12);
+    color: var(--puck-color-black);
   }
 }
 
 .Button--secondary:active {
   background-color: var(--puck-color-azure-11);
+  color: var(--puck-color-black);
 }
 
 .Button--flush {
