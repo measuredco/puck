@@ -101,6 +101,10 @@ export const Hero: ComponentConfig<HeroProps> = {
           ],
         },
       },
+      defaultItemProps: {
+        label: "Button",
+        href: "#",
+      },
     },
     align: {
       type: "radio",
