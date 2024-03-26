@@ -43,9 +43,7 @@ type ZoomConfig = {
   zoom: number;
 };
 
-type AppContext<
-  UserConfig extends Config<any, any, any> = Config<any, any, any>
-> = {
+type AppContext<UserConfig extends Config = Config> = {
   state: AppState;
   dispatch: (action: PuckAction) => void;
   config: UserConfig;
@@ -114,9 +112,7 @@ export const AppProvider = ({
   );
 };
 
-export function useAppContext<
-  UserConfig extends Config<any, any, any> = Config<any, any, any>
->() {
+export function useAppContext<UserConfig extends Config = Config>() {
   const mainContext = useContext(appContext) as AppContext<UserConfig>;
 
   const selectedItem = mainContext.state.ui.itemSelector

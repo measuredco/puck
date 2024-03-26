@@ -15,9 +15,7 @@ import { getZoneId } from "../../lib/get-zone-id";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
-export type DropZoneContext<
-  UserConfig extends Config<any, any, any> = Config<any, any, any>
-> = {
+export type DropZoneContext<UserConfig extends Config = Config> = {
   data: Data;
   config: UserConfig;
   componentState?: Record<string, any>;

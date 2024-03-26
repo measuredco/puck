@@ -50,9 +50,7 @@ import { IframeConfig } from "../../types/IframeConfig";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
-export function Puck<
-  UserConfig extends Config<any, any, any> = Config<any, any, any>
->({
+export function Puck<UserConfig extends Config = Config>({
   children,
   config,
   data: initialData = { content: [], root: { props: { title: "" } } },

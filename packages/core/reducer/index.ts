@@ -49,9 +49,7 @@ export const setAction = (state: AppState, action: SetAction) => {
   return { ...state, ...action.state(state) };
 };
 
-export function createReducer<
-  UserConfig extends Config<any, any, any> = Config<any, any, any>
->({
+export function createReducer<UserConfig extends Config = Config>({
   config,
   record,
 }: {
