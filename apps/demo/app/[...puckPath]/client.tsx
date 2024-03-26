@@ -1,9 +1,6 @@
 "use client";
 
-import { Data } from "@/core/types/Config";
-import { Puck } from "@/core/components/Puck";
-import { Render } from "@/core/components/Render";
-import { Button } from "@/core/components/Button";
+import { Button, Data, Puck, Render } from "@/core";
 import headingAnalyzer from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config, { UserConfig } from "../../config";
 import { useDemoData } from "../../lib/use-demo-data";

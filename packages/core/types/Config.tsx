@@ -151,9 +151,9 @@ export type Content<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = ComponentData<Props>[];
 
-export type PuckComponent<
-  Props extends DefaultComponentProps = DefaultComponentProps
-> = (props: WithPuckProps<Props & { puck: PuckContext }>) => JSX.Element;
+export type PuckComponent<Props> = (
+  props: WithPuckProps<Props & { puck: PuckContext }>
+) => JSX.Element;
 
 export type PuckContext = {
   renderDropZone: React.FC<DropZoneProps>;
@@ -162,7 +162,7 @@ export type PuckContext = {
 export type ComponentConfig<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps,
   DefaultProps = ComponentProps,
-  DataShape = ComponentData<ComponentProps>
+  DataShape = Omit<ComponentData<ComponentProps>, "type">
 > = {
   render: PuckComponent<ComponentProps>;
   label?: string;
@@ -171,10 +171,15 @@ export type ComponentConfig<
   resolveData?: (
     data: DataShape,
     params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
-  ) => Promise<{
-    props?: Partial<ComponentProps>;
-    readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
-  }>;
+  ) =>
+    | Promise<{
+        props?: Partial<ComponentProps>;
+        readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
+      }>
+    | {
+        props?: Partial<ComponentProps>;
+        readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
+      };
 };
 
 type Category<ComponentName> = {
@@ -185,12 +190,12 @@ type Category<ComponentName> = {
 };
 
 export type Config<
-  Props extends { [key: string]: any } = { [key: string]: any },
+  Props extends Record<string, any> = Record<string, any>,
   RootProps extends DefaultRootProps = DefaultRootProps,
-  CategoryName extends string = any
+  CategoryName extends string = string
 > = {
   categories?: Record<CategoryName, Category<keyof Props>> & {
-    other?: Category<Props>;
+    other?: Category<keyof Props>;
   };
   components: {
     [ComponentName in keyof Props]: Omit<
@@ -200,9 +205,9 @@ export type Config<
   };
   root?: Partial<
     ComponentConfig<
-      RootProps & { children: ReactNode },
-      Partial<RootProps & { children: ReactNode }>,
-      RootDataWithProps<RootProps>
+      RootProps & { children?: ReactNode },
+      Partial<RootProps & { children?: ReactNode }>,
+      RootDataWithProps
     >
   >;
 };
