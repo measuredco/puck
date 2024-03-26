@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { generateId } from "./generate-id";
 import { useDebouncedCallback } from "use-debounce";
+import deepDiff, { Diff } from "deep-diff";
 
 export type History<D = any> = {
   id: string;
   data: D;
 };
+
+export type DiffedHistory<D> = History<Array<Diff<D>>>;
 
 export type HistoryStore<D = any> = {
   index: number;
@@ -15,15 +18,16 @@ export type HistoryStore<D = any> = {
   record: (data: D) => void;
   back: VoidFunction;
   forward: VoidFunction;
-  nextHistory: History<D> | null;
-  prevHistory: History<D> | null;
-  histories: History<D>[];
+  nextHistory: DiffedHistory<D> | null;
+  prevHistory: DiffedHistory<D> | null;
+  histories: DiffedHistory<D>[];
 };
 
 const EMPTY_HISTORY_INDEX = -1;
 
 export function useHistoryStore<D = any>(): HistoryStore<D> {
-  const [histories, setHistories] = useState<History<D>[]>([]);
+  const [histories, setHistories] = useState<DiffedHistory<D>[]>([]);
+  const [lastData, setLastData] = useState<D>({} as D);
 
   const [index, setIndex] = useState(EMPTY_HISTORY_INDEX);
 
@@ -34,9 +38,13 @@ export function useHistoryStore<D = any>(): HistoryStore<D> {
   const nextHistory = hasFuture ? histories[index + 1] : null;
   const prevHistory = hasPast ? histories[index - 1] : null;
 
-  const record = useDebouncedCallback((data: D) => {
-    const history: History = {
-      data,
+  const record = useDebouncedCallback((newData: D) => {
+    const diffedData = deepDiff(lastData, newData);
+
+    if (!diffedData) return;
+
+    const history: DiffedHistory<D> = {
+      data: diffedData,
       id: generateId("history"),
     };
 
@@ -44,6 +52,8 @@ export function useHistoryStore<D = any>(): HistoryStore<D> {
       const newVal = [...prev.slice(0, index + 1), history];
 
       setIndex(newVal.length - 1);
+
+      setLastData(newData);
 
       return newVal;
     });

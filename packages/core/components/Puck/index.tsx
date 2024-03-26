@@ -176,7 +176,12 @@ export function Puck<
 
   const { data, ui } = appState;
 
-  const history = usePuckHistory({ dispatch, initialAppState, historyStore });
+  const history = usePuckHistory({
+    dispatch,
+    initialAppState,
+    appState,
+    historyStore,
+  });
 
   const { resolveData, componentState } = useResolvedData(
     appState,
