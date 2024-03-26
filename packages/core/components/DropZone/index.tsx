@@ -1,4 +1,4 @@
-import { CSSProperties, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { DraggableComponent } from "../DraggableComponent";
 import { Droppable } from "../Droppable";
 import { getItem } from "../../lib/get-item";
@@ -9,17 +9,11 @@ import styles from "./styles.module.css";
 import { DropZoneProvider, dropZoneContext } from "./context";
 import { getZoneId } from "../../lib/get-zone-id";
 import { useAppContext } from "../Puck/context";
+import { DropZoneProps } from "./types";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
 export { DropZoneProvider, dropZoneContext } from "./context";
-
-type DropZoneProps = {
-  zone: string;
-  allow?: string[];
-  disallow?: string[];
-  style?: CSSProperties;
-};
 
 function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   const appContext = useAppContext();

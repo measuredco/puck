@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { ReactNode } from "react";
 import { ItemSelector } from "../lib/get-item";
-import { DropZone } from "../components/DropZone";
+import { DropZoneProps } from "../components/DropZone/types";
 import { Viewport } from "./Viewports";
 
 type WithPuckProps<Props> = Props & {
@@ -156,7 +156,7 @@ export type PuckComponent<
 > = (props: WithPuckProps<Props & { puck: PuckContext }>) => JSX.Element;
 
 export type PuckContext = {
-  renderDropZone: typeof DropZone;
+  renderDropZone: React.FC<DropZoneProps>;
 };
 
 export type ComponentConfig<

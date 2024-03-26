@@ -21,16 +21,16 @@
     "@measured/puck": "^0.13.1",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "contentful": "^10.8.6",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",
     "tsup-config": "*",
     "typescript": "^4.5.2"
   },
-  "dependencies": {
-    "react-from-json": "^0.8.0"
-  },
+  "dependencies": {},
   "peerDependencies": {
+    "@measured/puck": "^0.13.0",
     "react": "^17.0.0 || ^18.0.0",
     "contentful": "^10.0.0"
   }
