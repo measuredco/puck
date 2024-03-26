@@ -6,11 +6,11 @@ There are several different approaches for loading external data into a Puck com
 
 It's possible for Puck components to load their own data internally on the client, or on the server using [React server components](/docs/integrating-puck/server-components). This doesn't require any Puck configuration.
 
-If you want to provide the user a way to select the data, you can use the [`external` field type](/docs/api-reference/configuration/fields/external).
+If you want to provide the user a way to select the data, you can use the [`external` field type](/docs/api-reference/fields/external).
 
 ## Selecting external data
 
-The [`external` field type](/docs/api-reference/configuration/fields/external) allows users to select tabular data from a third-party data source, like a headless CMS. This will load the data once and save it into the [data payload](/docs/api-reference/data).
+The [`external` field type](/docs/api-reference/fields/external) allows users to select tabular data from a third-party data source, like a headless CMS. This will load the data once and save it into the [data payload](/docs/api-reference/data).
 
 <ConfigPreview
   label="Example"
@@ -79,7 +79,7 @@ const config = {
 };
 ```
 
-You can also use the [`showSearch` parameter](/docs/api-reference/configuration/fields/external#showsearch) to show a search input to the user.
+You can also use the [`showSearch` parameter](/docs/api-reference/fields/external#showsearch) to show a search input to the user.
 
 ## Data syncing
 
@@ -214,7 +214,7 @@ We provide helper packages to load data from common data sources.
 
 ## Further reading
 
-- [`external` field API reference](/docs/api-reference/configuration/fields/external)
+- [`external` field API reference](/docs/api-reference/fields/external)
 - [`resolveData` API reference](/docs/api-reference/configuration/component-config#resolvedatadata-params)
 - [`resolveAllData` API reference](/docs/api-reference/functions/resolve-all-data)
 

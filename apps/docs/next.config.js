@@ -12,6 +12,11 @@ module.exports = withNextra({
   async redirects() {
     return [
       {
+        source: "/docs/api-reference/configuration/fields/:path*",
+        destination: "/docs/api-reference/fields/:path*",
+        permanent: true,
+      },
+      {
         source: "/docs/api-reference/plugins",
         destination: "/docs/api-reference/plugin",
         permanent: true,
