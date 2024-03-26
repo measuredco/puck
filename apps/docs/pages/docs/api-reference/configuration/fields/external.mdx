@@ -60,6 +60,7 @@ const config = {
 | [`initialFilters`](#initialfilters)       | `{ "rating": 1 }`                            | Object     | -        |
 | [`initialQuery`](#initialquery)           | `initialQuery: "Hello, world"`               | String     | -        |
 | [`mapProp()`](#mappropitem)               | `mapProp: async ({ title }) => title`        | Function   | -        |
+| [`mapRow()`](#mappropitem)                | `mapRow: async ({ title }) => title`         | Function   | -        |
 | [`placeholder`](#placeholder)             | `placeholder: "Select content"`              | String     | -        |
 | [`showSearch`](#showsearch)               | `showSearch: true`                           | Boolean    | -        |
 
@@ -431,6 +432,56 @@ const config = {
     },
     render: ({ data }) => {
       return <p>{data || "No data selected"}</p>;
+    },
+  }}
+/>
+
+### `mapRow(item)`
+
+Modify the shape of the item before rendering it in the table. This will not affect the selected data.
+
+```tsx {13} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+          mapRow: (item) => ({ ...item, title: item.title.toUpperCase() }),
+        },
+      },
+      render: ({ data }) => {
+        return <p>{data || "No data selected"}</p>;
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async () => {
+          return [
+            { title: "Hello, world", description: "Lorem ipsum 1" },
+            { title: "Goodbye, world", description: "Lorem ipsum 2" },
+          ];
+        },
+        mapRow: (item) => ({ ...item, title: item.title.toUpperCase() }),
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
     },
   }}
 />
