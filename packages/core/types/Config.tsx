@@ -171,9 +171,10 @@ export type ComponentConfig<
   resolveData?: (
     data: DataShape,
     params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
-  ) =>
-    | Promise<Partial<ComponentDataWithOptionalProps<ComponentProps>>>
-    | Partial<ComponentDataWithOptionalProps<ComponentProps>>;
+  ) => Promise<{
+    props?: Partial<ComponentProps>;
+    readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
+  }>;
 };
 
 type Category<ComponentName> = {
