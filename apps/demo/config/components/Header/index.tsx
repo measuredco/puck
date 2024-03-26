@@ -9,8 +9,10 @@ const NavItem = ({ label, href }: { label: string; href: string }) => {
 
   const isActive = navPath === (href.replace("/edit", "") || "/");
 
+  const El = href ? "a" : "span";
+
   return (
-    <a
+    <El
       href={href || "/"}
       style={{
         textDecoration: "none",
@@ -21,7 +23,7 @@ const NavItem = ({ label, href }: { label: string; href: string }) => {
       }}
     >
       {label}
-    </a>
+    </El>
   );
 };
 
@@ -29,9 +31,9 @@ const Header = ({ editMode }) => (
   <header className={getClassName()}>
     <div className={getClassName("logo")}>LOGO</div>
     <nav className={getClassName("items")}>
-      <NavItem label="Home" href={`${editMode ? "/edit" : ""}`} />
-      <NavItem label="Pricing" href={`/pricing${editMode ? "/edit" : ""}`} />
-      <NavItem label="About" href={`/about${editMode ? "/edit" : ""}`} />
+      <NavItem label="Home" href={`${editMode ? "" : "/"}`} />
+      <NavItem label="Pricing" href={editMode ? "" : "/pricing"} />
+      <NavItem label="About" href={editMode ? "" : "/about"} />
     </nav>
   </header>
 );

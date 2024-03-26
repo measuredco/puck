@@ -2,9 +2,11 @@ import { ReactNode } from "react";
 import { Section } from "../Section";
 
 const FooterLink = ({ children, href }: { children: string; href: string }) => {
+  const El = href ? "a" : "span";
+
   return (
     <li style={{ paddingBottom: 8 }}>
-      <a
+      <El
         href={href}
         style={{
           textDecoration: "none",
@@ -13,7 +15,7 @@ const FooterLink = ({ children, href }: { children: string; href: string }) => {
         }}
       >
         {children}
-      </a>
+      </El>
     </li>
   );
 };
