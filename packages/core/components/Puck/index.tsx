@@ -551,13 +551,17 @@ export function Puck<UserConfig extends Config = Config>({
                       <Fields />
                     </SidebarSection>
                   </div>
+
+                  <div
+                    id="puck-portal-root"
+                    className={getClassName("portal")}
+                  />
                 </div>
               )}
             </CustomPuck>
           </DropZoneProvider>
         </DragDropContext>
       </AppProvider>
-      <div id="puck-portal-root" />
     </div>
   );
 }
