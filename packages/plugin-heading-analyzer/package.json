@@ -18,7 +18,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@measured/puck": "^0.13.1",
+    "@measured/puck": "*",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "eslint": "^7.32.0",
@@ -32,6 +32,7 @@
     "react-from-json": "^0.8.0"
   },
   "peerDependencies": {
+    "@measured/puck": "^0.13.1",
     "react": "^17.0.0 || ^18.0.0"
   }
 }

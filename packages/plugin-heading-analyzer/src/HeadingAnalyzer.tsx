@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 
-import { usePuck } from "@/core/lib/use-puck";
+import { usePuck } from "@measured/puck";
 import { Plugin } from "@/core/types/Plugin";
 import { SidebarSection } from "@/core/components/SidebarSection";
 import { OutlineList } from "@/core/components/OutlineList";
@@ -107,7 +107,7 @@ export const HeadingAnalyzer = () => {
     } else {
       setHierarchy(buildHierarchy(frame));
     }
-  }, [appState.data.content]);
+  }, [appState.data]);
 
   return (
     <>
