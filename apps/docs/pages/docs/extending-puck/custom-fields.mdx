@@ -7,7 +7,7 @@ Puck can be extended with completely custom fields for different use-cases.
 
 ## Creating a custom field
 
-Creating a custom field is possible using the [`custom` field type](/docs/api-reference/configuration/fields/custom):
+Creating a custom field is possible using the [`custom` field type](/docs/api-reference/fields/custom):
 
 ```tsx copy showLineNumbers {5-15}
 const config = {
@@ -34,7 +34,7 @@ const config = {
 };
 ```
 
-The [`onChange` function](/docs/api-reference/configuration/fields/custom#onchangevalue-ui) updates the Puck data payload for the field name, in this case "title".
+The [`onChange` function](/docs/api-reference/fields/custom#onchangevalue-ui) updates the Puck data payload for the field name, in this case "title".
 
 <ConfigPreview
   label="Example"
@@ -130,7 +130,7 @@ const config = {
 
 ## Updating the UI state
 
-The [`onChange` function](/docs/api-reference/configuration/fields/custom#onchangevalue-ui) can also be used to modify the [Puck UI state](/docs/api-reference/app-state#ui) at the same time as updating the field value:
+The [`onChange` function](/docs/api-reference/fields/custom#onchangevalue-ui) can also be used to modify the [Puck UI state](/docs/api-reference/app-state#ui) at the same time as updating the field value:
 
 ```tsx copy showLineNumbers {14,15}
 const config = {
@@ -165,4 +165,4 @@ const config = {
 
 ## Further reading
 
-- [The `custom` field API reference](/docs/api-reference/configuration/fields/custom)
+- [The `custom` field API reference](/docs/api-reference/fields/custom)

@@ -66,7 +66,7 @@ A Contentful client as created by the [`contentful` Node.js package](https://www
 
 ##### `options.filterFields`
 
-An object describing which [`filterFields`](https://puckeditor.com/docs/api-reference/configuration/fields/external#filterfields) to render and pass the result directly to Contentful as [search parameters](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters).
+An object describing which [`filterFields`](https://puckeditor.com/docs/api-reference/fields/external#filterfields) to render and pass the result directly to Contentful as [search parameters](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters).
 
 ```jsx
 createFieldContentful("movies", {
@@ -107,7 +107,7 @@ createFieldContentful("movies", {
 
 ## Returns
 
-An [External field](https://puckeditor.com/docs/api-reference/configuration/fields/external) type that loads Contentful [entries](https://contentful.github.io/contentful.js/contentful/10.6.16/types/Entry.html).
+An [External field](https://puckeditor.com/docs/api-reference/fields/external) type that loads Contentful [entries](https://contentful.github.io/contentful.js/contentful/10.6.16/types/Entry.html).
 
 ## TypeScript
 

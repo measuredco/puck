@@ -4,7 +4,7 @@ title: fieldTypes
 
 # fieldTypes
 
-Override each [field type](/docs/api-reference/configuration/fields).
+Override each [field type](/docs/api-reference/fields).
 
 ```tsx copy
 const overrides = {
@@ -16,21 +16,21 @@ const overrides = {
 };
 ```
 
-You can specify a custom render method for each known [field type](/docs/api-reference/configuration/fields), or introduce completely new ones.
+You can specify a custom render method for each known [field type](/docs/api-reference/fields), or introduce completely new ones.
 
 ## Render Props
 
-| Prop                                | Example                      | Type                                              |
-| ----------------------------------- | ---------------------------- | ------------------------------------------------- |
-| [`children`](#children)             | `<input />`                  | ReactNode                                         |
-| [`field`](#field)                   | `{ type: "text" }`           | [Field](/docs/api-reference/configuration/fields) |
-| [`id`](#id)                         | `"my-input"`                 | String                                            |
-| [`label`](#label)                   | `"Title"`                    | String                                            |
-| [`name`](#name)                     | `"title"`                    | String                                            |
-| [`onChange`](#onchange)             | `onChange("Goodbye, world")` | Function                                          |
-| [`readOnly`](#readonly)             | `false`                      | Boolean                                           |
-| [`readOnlyFields`](#readonlyfields) | `{ title: true }`            | Object                                            |
-| [`value`](#value)                   | `"Hello, world"`             | Any                                               |
+| Prop                                | Example                      | Type                                |
+| ----------------------------------- | ---------------------------- | ----------------------------------- |
+| [`children`](#children)             | `<input />`                  | ReactNode                           |
+| [`field`](#field)                   | `{ type: "text" }`           | [Field](/docs/api-reference/fields) |
+| [`id`](#id)                         | `"my-input"`                 | String                              |
+| [`label`](#label)                   | `"Title"`                    | String                              |
+| [`name`](#name)                     | `"title"`                    | String                              |
+| [`onChange`](#onchange)             | `onChange("Goodbye, world")` | Function                            |
+| [`readOnly`](#readonly)             | `false`                      | Boolean                             |
+| [`readOnlyFields`](#readonlyfields) | `{ title: true }`            | Object                              |
+| [`value`](#value)                   | `"Hello, world"`             | Any                                 |
 
 ### `children`
 
@@ -38,7 +38,7 @@ The default node for this field type.
 
 ### `field`
 
-An object containing the user defined [Field](/docs/api-reference/configuration/fields) configuration.
+An object containing the user defined [Field](/docs/api-reference/fields) configuration.
 
 ### `id`
 
