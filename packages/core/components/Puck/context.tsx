@@ -1,10 +1,19 @@
-import { createContext, useContext } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { AppState, Config, UiState } from "../../types/Config";
 import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
 import { Plugin } from "../../types/Plugin";
 import { Overrides } from "../../types/Overrides";
 import { PuckHistory } from "../../lib/use-puck-history";
+import { defaultViewports } from "../ViewportControls/default-viewports";
+import { Viewports } from "../../types/Viewports";
+import { IframeConfig } from "../../types/IframeConfig";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: { props: { title: "" } } },
@@ -15,12 +24,26 @@ export const defaultAppState: AppState = {
     itemSelector: null,
     componentList: {},
     isDragging: false,
+    viewports: {
+      current: {
+        width: defaultViewports[0].width,
+        height: defaultViewports[0].height || "auto",
+      },
+      options: [],
+      controlsVisible: true,
+    },
   },
 };
 
-type AppContext<
-  UserConfig extends Config<any, any, any> = Config<any, any, any>
-> = {
+export type Status = "LOADING" | "MOUNTED" | "READY";
+
+type ZoomConfig = {
+  autoZoom: number;
+  rootHeight: number;
+  zoom: number;
+};
+
+type AppContext<UserConfig extends Config = Config> = {
   state: AppState;
   dispatch: (action: PuckAction) => void;
   config: UserConfig;
@@ -29,9 +52,15 @@ type AppContext<
   plugins: Plugin[];
   overrides: Partial<Overrides>;
   history: Partial<PuckHistory>;
+  viewports: Viewports;
+  zoomConfig: ZoomConfig;
+  setZoomConfig: (zoomConfig: ZoomConfig) => void;
+  status: Status;
+  setStatus: (status: Status) => void;
+  iframe: IframeConfig;
 };
 
-export const appContext = createContext<AppContext>({
+const defaultContext: AppContext = {
   state: defaultAppState,
   dispatch: () => null,
   config: { components: {} },
@@ -40,13 +69,50 @@ export const appContext = createContext<AppContext>({
   plugins: [],
   overrides: {},
   history: {},
-});
+  viewports: defaultViewports,
+  zoomConfig: {
+    autoZoom: 1,
+    rootHeight: 0,
+    zoom: 1,
+  },
+  setZoomConfig: () => null,
+  status: "LOADING",
+  setStatus: () => null,
+  iframe: {},
+};
 
-export const AppProvider = appContext.Provider;
+export const appContext = createContext<AppContext>(defaultContext);
 
-export function useAppContext<
-  UserConfig extends Config<any, any, any> = Config<any, any, any>
->() {
+export const AppProvider = ({
+  children,
+  value,
+}: {
+  children: ReactNode;
+  value: Omit<
+    AppContext,
+    "zoomConfig" | "setZoomConfig" | "status" | "setStatus"
+  >;
+}) => {
+  const [zoomConfig, setZoomConfig] = useState(defaultContext.zoomConfig);
+
+  const [status, setStatus] = useState<Status>("LOADING");
+
+  // App is ready when client has loaded, after initial render
+  // This triggers DropZones to activate
+  useEffect(() => {
+    setStatus("MOUNTED");
+  }, []);
+
+  return (
+    <appContext.Provider
+      value={{ ...value, zoomConfig, setZoomConfig, status, setStatus }}
+    >
+      {children}
+    </appContext.Provider>
+  );
+};
+
+export function useAppContext<UserConfig extends Config = Config>() {
   const mainContext = useContext(appContext) as AppContext<UserConfig>;
 
   const selectedItem = mainContext.state.ui.itemSelector

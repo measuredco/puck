@@ -36,7 +36,7 @@ export const Button = ({
 
   useEffect(() => setLoading(loadingProp), [loadingProp]);
 
-  const ElementType = href ? "a" : onClick ? "button" : "div";
+  const ElementType = href ? "a" : type ? "button" : "span";
 
   const el = (
     <ElementType
@@ -65,10 +65,9 @@ export const Button = ({
       {icon && <div className={getClassName("icon")}>{icon}</div>}
       {children}
       {loading && (
-        <>
-          &nbsp;&nbsp;
+        <div className={getClassName("spinner")}>
           <ClipLoader aria-label="loading" color="inherit" size="14px" />
-        </>
+        </div>
       )}
     </ElementType>
   );

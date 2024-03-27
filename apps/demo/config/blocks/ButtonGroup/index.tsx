@@ -14,6 +14,7 @@ export type ButtonGroupProps = {
 };
 
 export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
+  label: "Button Group",
   fields: {
     buttons: {
       type: "array",

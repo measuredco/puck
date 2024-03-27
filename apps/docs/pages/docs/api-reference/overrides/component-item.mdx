@@ -8,16 +8,21 @@ Override an individual item within the component list.
 
 ```tsx copy
 const overrides = {
-  componentList: ({ children }) => <div>{children}</div>,
+  componentList: ({ name }) => <div>{name}</div>,
 };
 ```
 
 ## Props
 
-| Prop                    | Example     | Type      |
-| ----------------------- | ----------- | --------- |
-| [`children`](#children) | `<input />` | ReactNode |
+| Prop                    | Example    | Type      |
+| ----------------------- | ---------- | --------- |
+| [`children`](#children) | `<div />`  | ReactNode |
+| [`name`](#name)         | `"Button"` | ReactNode |
 
 ### `children`
 
 The default node for the component item.
+
+### `name`
+
+THe name of the component item.

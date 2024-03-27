@@ -4,13 +4,13 @@ import { List, Plus, Trash } from "lucide-react";
 import { FieldLabelInternal, InputOrGroup, type InputProps } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
-import { Droppable } from "@hello-pangea/dnd";
-import { DragDropContext } from "@hello-pangea/dnd";
+import { Droppable } from "../../../Droppable";
 import { Draggable } from "../../../Draggable";
 import { useCallback, useEffect, useState } from "react";
 import { DragIcon } from "../../../DragIcon";
 import { ArrayState, ItemWithId } from "../../../../types/Config";
 import { useAppContext } from "../../../Puck/context";
+import { DragDropContext } from "../../../DragDropContext";
 
 const getClassName = getClassNameFactory("ArrayField", styles);
 const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);
@@ -95,7 +95,9 @@ export const ArrayField = ({
 
   // Create a mirror of value with IDs added for drag and drop
   useEffect(() => {
-    setUi(mapArrayStateToUi(arrayState));
+    if (arrayState.items.length > 0) {
+      setUi(mapArrayStateToUi(arrayState));
+    }
   }, []);
 
   const [hovering, setHovering] = useState(false);
@@ -103,6 +105,11 @@ export const ArrayField = ({
   if (field.type !== "array" || !field.arrayFields) {
     return null;
   }
+
+  const addDisabled =
+    (field.max !== undefined &&
+      localState.arrayState.items.length >= field.max) ||
+    readOnly;
 
   return (
     <FieldLabelInternal
@@ -149,6 +156,7 @@ export const ArrayField = ({
                 className={getClassName({
                   isDraggingFrom: !!snapshot.draggingFromThisWith,
                   hasItems: Array.isArray(value) && value.length > 0,
+                  addDisabled,
                 })}
                 onMouseOver={(e) => {
                   e.stopPropagation();
@@ -205,6 +213,12 @@ export const ArrayField = ({
                                 <div className={getClassNameItem("actions")}>
                                   <div className={getClassNameItem("action")}>
                                     <IconButton
+                                      type="button"
+                                      disabled={
+                                        field.min !== undefined &&
+                                        field.min >=
+                                          localState.arrayState.items.length
+                                      }
                                       onClick={(e) => {
                                         e.stopPropagation();
 
@@ -286,23 +300,26 @@ export const ArrayField = ({
 
                 {provided.placeholder}
 
-                <button
-                  className={getClassName("addButton")}
-                  onClick={() => {
-                    const existingValue = value || [];
+                {!addDisabled && (
+                  <button
+                    type="button"
+                    className={getClassName("addButton")}
+                    onClick={() => {
+                      const existingValue = value || [];
 
-                    const newValue = [
-                      ...existingValue,
-                      field.defaultItemProps || {},
-                    ];
+                      const newValue = [
+                        ...existingValue,
+                        field.defaultItemProps || {},
+                      ];
 
-                    const newArrayState = regenerateArrayState(newValue);
+                      const newArrayState = regenerateArrayState(newValue);
 
-                    onChange(newValue, mapArrayStateToUi(newArrayState));
-                  }}
-                >
-                  <Plus size="21" />
-                </button>
+                      onChange(newValue, mapArrayStateToUi(newArrayState));
+                    }}
+                  >
+                    <Plus size={21} />
+                  </button>
+                )}
               </div>
             );
           }}

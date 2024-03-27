@@ -5,14 +5,29 @@
   border-radius: 4px;
   color: currentColor;
   display: flex;
+  font-family: var(--puck-font-family);
   justify-content: center;
   padding: 4px;
+  transition: background-color 50ms ease-in, color 50ms ease-in;
 }
 
-.IconButton:hover {
-  background: var(--puck-color-grey-9);
-  color: var(--puck-color-blue);
-  cursor: pointer;
+.IconButton:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .IconButton:hover:not(.IconButton--disabled) {
+    background: var(--puck-color-azure-12);
+    color: var(--puck-color-azure-04);
+    cursor: pointer;
+    transition: none;
+  }
+}
+
+.IconButton:active {
+  background: var(--puck-color-azure-11);
+  transition: none;
 }
 
 .IconButton-title {
@@ -23,4 +38,8 @@
   position: absolute;
   white-space: nowrap;
   width: 1px;
+}
+
+.IconButton--disabled {
+  color: var(--puck-color-grey-07);
 }

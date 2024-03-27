@@ -2,7 +2,7 @@
   display: flex;
   position: relative;
   flex-direction: column;
-  color: black;
+  color: var(--puck-color-black);
 }
 
 .SidebarSection:last-of-type {
@@ -10,10 +10,10 @@
 }
 
 .SidebarSection-title {
-  background: white;
+  background: var(--puck-color-white);
   padding: 16px;
-  border-bottom: 1px solid var(--puck-color-grey-8);
-  border-top: 1px solid var(--puck-color-grey-8);
+  border-bottom: 1px solid var(--puck-color-grey-09);
+  border-top: 1px solid var(--puck-color-grey-09);
   overflow-x: auto;
 }
 
@@ -39,14 +39,32 @@
 }
 
 .SidebarSection-breadcrumbLabel {
-  color: var(--puck-color-azure-3);
+  background: none;
+  border: 0;
+  border-radius: 2px;
+  color: var(--puck-color-azure-04);
+  cursor: pointer;
+  font: inherit;
   flex-shrink: 0;
+  padding: 0;
+  transition: color 50ms ease-in;
 }
 
-.SidebarSection-breadcrumbLabel:hover {
-  color: var(--puck-color-azure-4);
-  cursor: pointer;
-  text-decoration: underline;
+.SidebarSection-breadcrumbLabel:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .SidebarSection-breadcrumbLabel:hover {
+    color: var(--puck-color-azure-03);
+    transition: none;
+  }
+}
+
+.SidebarSection-breadcrumbLabel:active {
+  color: var(--puck-color-azure-02);
+  transition: none;
 }
 
 .SidebarSection-breadcrumbs {
@@ -66,7 +84,7 @@
 }
 
 .SidebarSection-loadingOverlay {
-  background: white;
+  background: var(--puck-color-white);
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,0 +1,59 @@
+.PuckCanvas {
+  background: var(--puck-color-grey-11);
+  display: flex;
+  grid-area: editor;
+  flex-direction: column;
+  padding: var(--puck-space-px);
+  overflow: auto;
+}
+
+@media (min-width: 1198px) {
+  .PuckCanvas {
+    padding: calc(var(--puck-space-px) * 1.5);
+    padding-top: var(--puck-space-px);
+  }
+
+  .PuckCanvas:not(.PuckCanvas:has(.PuckCanvas-controls)) {
+    padding-top: calc(var(--puck-space-px) * 1.5);
+  }
+}
+
+.PuckCanvas-inner {
+  box-sizing: border-box;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  min-width: 358px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.PuckCanvas-root {
+  background: white;
+  border: 1px solid var(--puck-color-grey-09);
+  box-sizing: border-box;
+  min-width: 321px;
+  position: absolute;
+  transform-origin: top;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+}
+
+@media (min-width: 1198px) {
+  .PuckCanvas-root {
+    min-width: unset;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .PuckCanvas-root {
+    transition: none !important;
+  }
+}
+
+.PuckCanvas--ready .PuckCanvas-root {
+  opacity: 1;
+  transition: opacity 150ms ease-out;
+}

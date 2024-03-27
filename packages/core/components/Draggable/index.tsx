@@ -3,7 +3,40 @@ import {
   Draggable as DndDraggable,
   DraggableProvided,
   DraggableStateSnapshot,
-} from "@hello-pangea/dnd";
+  DraggableProps,
+  DraggableRubric,
+} from "@measured/dnd";
+import { useAppContext } from "../Puck/context";
+
+const defaultProvided: DraggableProvided = {
+  draggableProps: {
+    "data-rfd-draggable-context-id": "",
+    "data-rfd-draggable-id": "",
+  },
+  dragHandleProps: null,
+  innerRef: () => null,
+};
+
+const defaultSnapshot: DraggableStateSnapshot = {
+  isDragging: false,
+  isDropAnimating: false,
+  isClone: false,
+  dropAnimation: null,
+  draggingOver: null,
+  combineWith: null,
+  combineTargetFor: null,
+  mode: null,
+};
+
+const defaultRubric: DraggableRubric = {
+  draggableId: "",
+  type: "",
+  source: { droppableId: "", index: 0 },
+};
+
+export const DefaultDraggable = ({ children }: DraggableProps) => (
+  <>{children(defaultProvided, defaultSnapshot, defaultRubric)}</>
+);
 
 export const Draggable = ({
   className,
@@ -28,12 +61,12 @@ export const Draggable = ({
   disableAnimations?: boolean;
   isDragDisabled?: boolean;
 }) => {
+  const { status } = useAppContext();
+
+  const El = status !== "LOADING" ? DndDraggable : DefaultDraggable;
+
   return (
-    <DndDraggable
-      draggableId={id}
-      index={index}
-      isDragDisabled={isDragDisabled}
-    >
+    <El draggableId={id} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snapshot) => (
         <>
           <div
@@ -62,6 +95,6 @@ export const Draggable = ({
           )}
         </>
       )}
-    </DndDraggable>
+    </El>
   );
 };

@@ -1,6 +1,6 @@
 .LayerTree {
-  color: var(--puck-color-grey-2);
-  font-family: var(--puck-font-stack);
+  color: var(--puck-color-grey-03);
+  font-family: var(--puck-font-family);
   font-size: var(--puck-font-size-xxs);
   margin: 0;
   position: relative;
@@ -9,27 +9,27 @@
 }
 
 .LayerTree-zoneTitle {
-  color: var(--puck-color-grey-4);
+  color: var(--puck-color-grey-05);
   font-size: var(--puck-font-size-xxxs);
   text-transform: uppercase;
 }
 
 .LayerTree-helper {
   text-align: center;
-  color: var(--puck-color-grey-6);
-  font-family: var(--puck-font-stack);
+  color: var(--puck-color-grey-07);
   margin: 8px 4px;
 }
 
 .Layer {
   position: relative;
   border: 1px solid transparent;
+  border-radius: 4px;
 }
 
 .Layer-inner {
-  padding-left: 12px;
-  padding-right: 4px;
+  border: 1px solid transparent;
   border-radius: 4px;
+  transition: color 50ms ease-in;
 }
 
 .Layer--containsZone > .Layer-inner {
@@ -38,28 +38,40 @@
 
 .Layer-clickable {
   align-items: center;
-  display: flex;
-}
-
-.Layer-inner:hover {
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  color: inherit;
   cursor: pointer;
+  display: flex;
+  font: inherit;
+  padding-left: 12px;
+  padding-right: 4px;
+  width: 100%;
 }
 
-.Layer:not(.Layer--isSelected) > .Layer-inner:hover,
-.Layer--isHovering > .Layer-inner {
-  color: var(--puck-color-blue);
-  background: var(--puck-color-azure-85);
+.Layer-clickable:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .Layer:not(.Layer--isSelected) > .Layer-inner:hover {
+    border-color: var(--puck-color-azure-10);
+    background: var(--puck-color-azure-11);
+    color: var(--puck-color-azure-04);
+    transition: none;
+  }
 }
 
 .Layer--isSelected {
-  background: var(--puck-color-azure-9);
-  border-color: var(--puck-color-azure-7);
-  border-radius: 4px;
+  border-color: var(--puck-color-azure-08);
 }
 
 .Layer--isSelected > .Layer-inner {
-  background: var(--puck-color-azure-85);
-  font-weight: 600;
+  background: var(--puck-color-azure-10);
 }
 
 .Layer--isSelected > .Layer-inner > .Layer-clickable > .Layer-chevron,
@@ -97,11 +109,11 @@
 }
 
 .Layer-icon {
-  color: var(--puck-color-rose-6);
+  color: var(--puck-color-rose-07);
   margin-top: 4px;
 }
 
 .Layer-zoneIcon {
-  color: var(--puck-color-grey-7);
+  color: var(--puck-color-grey-08);
   margin-top: 4px;
 }

@@ -9,6 +9,15 @@ const BRANCH_NAME = process.env.VERCEL_GIT_COMMIT_REF || "";
 const IS_RELEASE_BRANCH = BRANCH_NAME.startsWith("releases/");
 
 module.exports = withNextra({
+  async redirects() {
+    return [
+      {
+        source: "/docs/api-reference/plugins",
+        destination: "/docs/api-reference/plugin",
+        permanent: true,
+      },
+    ];
+  },
   transpilePackages: ["@measured/puck"],
   basePath: IS_RELEASE_BRANCH
     ? `/v/${packageJson.version}`

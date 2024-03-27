@@ -1,9 +1,6 @@
 "use client";
 
-import { Data } from "@/core/types/Config";
-import { Puck } from "@/core/components/Puck";
-import { Render } from "@/core/components/Render";
-import { Button } from "@/core/components/Button";
+import { Button, Data, Puck, Render } from "@/core";
 import { HeadingAnalyzer } from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config, { UserConfig } from "../../../config";
 import { useDemoData } from "../../../lib/use-demo-data";
@@ -120,13 +117,14 @@ const Tabs = ({
                 }
               }}
               style={{
+                fontFamily: "inherit",
                 fontSize: 16,
                 padding: "16px 16px",
                 paddingTop: 19,
-                color: isCurrentTab ? "var(--puck-color-azure-3)" : "black",
+                color: isCurrentTab ? "var(--puck-color-azure-04)" : "black",
                 border: "none",
                 borderBottom: isCurrentTab
-                  ? "3px solid var(--puck-color-azure-3)"
+                  ? "3px solid var(--puck-color-azure-04)"
                   : "3px solid transparent",
                 background: "white",
                 cursor: "pointer",
@@ -290,6 +288,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
       <Puck<UserConfig>
         config={config}
         data={data}
+        iframe={{ enabled: false }}
         headerPath={path}
         overrides={{
           outline: ({ children }) => (
@@ -303,7 +302,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                     display: "flex",
                     pointerEvents: "all",
                     padding: "16px",
-                    background: "var(--puck-color-grey-11)",
+                    background: "var(--puck-color-grey-12)",
                   }}
                 >
                   {Object.keys(config.components).map(

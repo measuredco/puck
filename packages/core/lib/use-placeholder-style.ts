@@ -1,5 +1,6 @@
 import { CSSProperties, useState } from "react";
-import { DragStart, DragUpdate } from "@hello-pangea/dnd";
+import { DragStart, DragUpdate } from "@measured/dnd";
+import { getFrame } from "./get-frame";
 
 export const usePlaceholderStyle = () => {
   const queryAttr = "data-rfd-drag-handle-draggable-id";
@@ -16,13 +17,16 @@ export const usePlaceholderStyle = () => {
       .droppableId;
 
     const domQuery = `[${queryAttr}='${draggableId}']`;
-    const draggedDOM = document.querySelector(domQuery);
+
+    const frame = getFrame();
+    const draggedDOM =
+      document.querySelector(domQuery) || frame?.querySelector(domQuery);
 
     if (!draggedDOM) {
       return;
     }
 
-    const targetListElement = document.querySelector(
+    const targetListElement = frame?.querySelector(
       `[data-rfd-droppable-id='${droppableId}']`
     );
 

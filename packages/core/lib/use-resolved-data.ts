@@ -47,7 +47,7 @@ export const useResolvedData = (
 
     const flatContent = Object.keys(newData.zones || {})
       .reduce((acc, zone) => [...acc, ...newData.zones![zone]], newData.content)
-      .filter((item) => !!config.components[item.type].resolveData);
+      .filter((item) => !!config.components[item.type]?.resolveData);
 
     const applyIfChange = (
       dynamicDataMap: Record<string, ComponentData>,

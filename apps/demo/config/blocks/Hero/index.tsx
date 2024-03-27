@@ -33,7 +33,23 @@ export const Hero: ComponentConfig<HeroProps> = {
       type: "external",
       placeholder: "Select a quote",
       showSearch: true,
-      fetchList: async ({ query }) => {
+      filterFields: {
+        author: {
+          type: "select",
+          options: [
+            { value: "", label: "Select an author" },
+            { value: "Mark Twain", label: "Mark Twain" },
+            { value: "Henry Ford", label: "Henry Ford" },
+            { value: "Kurt Vonnegut", label: "Kurt Vonnegut" },
+            { value: "Andrew Carnegie", label: "Andrew Carnegie" },
+            { value: "C. S. Lewis", label: "C. S. Lewis" },
+            { value: "Confucius", label: "Confucius" },
+            { value: "Eleanor Roosevelt", label: "Eleanor Roosevelt" },
+            { value: "Samuel Ullman", label: "Samuel Ullman" },
+          ],
+        },
+      },
+      fetchList: async ({ query, filters }) => {
         // Simulate delay
         await new Promise((res) => setTimeout(res, 500));
 
@@ -44,19 +60,24 @@ export const Hero: ComponentConfig<HeroProps> = {
             description: quote.content,
           }))
           .filter((item) => {
-            if (!query) return item;
+            if (filters?.author && item.title !== filters?.author) {
+              return false;
+            }
+
+            if (!query) return true;
 
             const queryLowercase = query.toLowerCase();
 
             if (item.title.toLowerCase().indexOf(queryLowercase) > -1) {
-              return item;
+              return true;
             }
 
             if (item.description.toLowerCase().indexOf(queryLowercase) > -1) {
-              return item;
+              return true;
             }
           });
       },
+      mapRow: (item) => ({ title: item.title, description: item.description }),
       mapProp: (result) => {
         return { index: result.index, label: result.description };
       },
@@ -66,6 +87,8 @@ export const Hero: ComponentConfig<HeroProps> = {
     description: { type: "textarea" },
     buttons: {
       type: "array",
+      min: 1,
+      max: 4,
       getItemSummary: (item) => item.label || "Button",
       arrayFields: {
         label: { type: "text" },
@@ -77,6 +100,10 @@ export const Hero: ComponentConfig<HeroProps> = {
             { label: "secondary", value: "secondary" },
           ],
         },
+      },
+      defaultItemProps: {
+        label: "Button",
+        href: "#",
       },
     },
     align: {

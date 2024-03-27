@@ -1,9 +1,10 @@
 .PuckFields {
   position: relative;
+  font-family: var(--puck-font-family);
 }
 
 .PuckFields-loadingOverlay {
-  background: white;
+  background: var(--puck-color-white);
   display: flex;
   justify-content: center;
   align-items: center;

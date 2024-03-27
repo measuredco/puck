@@ -5,7 +5,7 @@
   background-size: 12px;
   background-position: calc(100% - 12px) calc(50% + 3px);
   background-repeat: no-repeat;
-  background-color: var(--puck-color-grey-10);
+  background-color: var(--puck-color-grey-11);
   border-radius: 100px;
   color: black;
   padding-left: 16px;
@@ -16,5 +16,5 @@
 
 .ReleaseSwitcher--light {
   background-color: white;
-  border: 1px solid var(--puck-color-grey-9);
+  border: 1px solid var(--puck-color-grey-10);
 }

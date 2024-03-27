@@ -7,7 +7,7 @@ import {
   useReducer,
   useState,
 } from "react";
-import { DragDropContext, DragStart, DragUpdate } from "@hello-pangea/dnd";
+import { DragStart, DragUpdate } from "@measured/dnd";
 
 import type { AppState, Config, Data, UiState } from "../../types/Config";
 import { Button } from "../Button";
@@ -42,16 +42,19 @@ import { Overrides } from "../../types/Overrides";
 import { loadOverrides } from "../../lib/load-overrides";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { useHistoryStore } from "../../lib/use-history-store";
+import { Canvas } from "./components/Canvas";
+import { defaultViewports } from "../ViewportControls/default-viewports";
+import { Viewports } from "../../types/Viewports";
+import { DragDropContext } from "../DragDropContext";
+import { IframeConfig } from "../../types/IframeConfig";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
-export function Puck<
-  UserConfig extends Config<any, any, any> = Config<any, any, any>
->({
+export function Puck<UserConfig extends Config = Config>({
   children,
   config,
   data: initialData = { content: [], root: { props: { title: "" } } },
-  ui: initialUi = defaultAppState.ui,
+  ui: initialUi,
   onChange,
   onPublish,
   plugins = [],
@@ -60,6 +63,10 @@ export function Puck<
   renderHeaderActions,
   headerTitle,
   headerPath,
+  viewports = defaultViewports,
+  iframe = {
+    enabled: true,
+  },
 }: {
   children?: ReactNode;
   config: UserConfig;
@@ -80,6 +87,8 @@ export function Puck<
   }) => ReactElement;
   headerTitle?: string;
   headerPath?: string;
+  viewports?: Viewports;
+  iframe?: IframeConfig;
 }) {
   const historyStore = useHistoryStore();
 
@@ -87,31 +96,76 @@ export function Puck<
     createReducer<UserConfig>({ config, record: historyStore.record })
   );
 
-  const [initialAppState] = useState<AppState>(() => ({
-    ...defaultAppState,
-    data: initialData,
-    ui: {
-      ...defaultAppState.ui,
-      ...initialUi,
-      // Store categories under componentList on state to allow render functions and plugins to modify
-      componentList: config.categories
-        ? Object.entries(config.categories).reduce(
-            (acc, [categoryName, category]) => {
-              return {
-                ...acc,
-                [categoryName]: {
-                  title: category.title,
-                  components: category.components,
-                  expanded: category.defaultExpanded,
-                  visible: category.visible,
-                },
-              };
+  const [initialAppState] = useState<AppState>(() => {
+    const initial = { ...defaultAppState.ui, ...initialUi };
+
+    let clientUiState: Partial<AppState["ui"]> = {};
+
+    if (typeof window !== "undefined") {
+      const viewportWidth = window.innerWidth;
+
+      const viewportDifferences = Object.entries(viewports)
+        .map(([key, value]) => ({
+          key,
+          diff: Math.abs(viewportWidth - value.width),
+        }))
+        .sort((a, b) => (a.diff > b.diff ? 1 : -1));
+
+      const closestViewport = viewportDifferences[0].key;
+
+      if (iframe.enabled) {
+        clientUiState = {
+          // Hide side bars on mobile
+          ...(window.matchMedia("(min-width: 638px)").matches
+            ? {}
+            : {
+                leftSideBarVisible: false,
+                rightSideBarVisible: false,
+              }),
+          viewports: {
+            ...initial.viewports,
+
+            current: {
+              ...initial.viewports.current,
+              height:
+                initialUi?.viewports?.current?.height ||
+                viewports[closestViewport].height ||
+                "auto",
+              width:
+                initialUi?.viewports?.current?.width ||
+                viewports[closestViewport].width,
             },
-            {}
-          )
-        : {},
-    },
-  }));
+          },
+        };
+      }
+    }
+
+    return {
+      ...defaultAppState,
+      data: initialData,
+      ui: {
+        ...initial,
+        ...clientUiState,
+        // Store categories under componentList on state to allow render functions and plugins to modify
+        componentList: config.categories
+          ? Object.entries(config.categories).reduce(
+              (acc, [categoryName, category]) => {
+                return {
+                  ...acc,
+                  [categoryName]: {
+                    title: category.title,
+                    components: category.components,
+                    expanded: category.defaultExpanded,
+                    visible: category.visible,
+                  },
+                };
+              },
+              {}
+            )
+          : {},
+      },
+    };
+  });
 
   const [appState, dispatch] = useReducer<StateReducer>(
     reducer,
@@ -280,10 +334,6 @@ export function Puck<
     [loadedOverrides]
   );
 
-  const CustomPreview = useMemo(
-    () => loadedOverrides.preview || defaultRender,
-    [loadedOverrides]
-  );
   const CustomHeader = useMemo(
     () => loadedOverrides.header || defaultHeaderRender,
     [loadedOverrides]
@@ -292,8 +342,6 @@ export function Puck<
     () => loadedOverrides.headerActions || defaultHeaderActionsRender,
     [loadedOverrides]
   );
-
-  const disableZoom = children || loadedOverrides.puck ? true : false;
 
   return (
     <div className="Puck">
@@ -307,6 +355,8 @@ export function Puck<
           plugins,
           overrides: loadedOverrides,
           history,
+          viewports,
+          iframe,
         }}
       >
         <DragDropContext
@@ -386,7 +436,6 @@ export function Puck<
               placeholderStyle,
               mode: "edit",
               areaId: "root",
-              disableZoom,
             }}
           >
             <CustomPuck>
@@ -396,7 +445,6 @@ export function Puck<
                     leftSideBarVisible,
                     menuOpen,
                     rightSideBarVisible,
-                    disableZoom,
                   })}
                 >
                   <CustomHeader
@@ -487,30 +535,18 @@ export function Puck<
                       <Outline />
                     </SidebarSection>
                   </div>
-                  <div
-                    className={getClassName("frame")}
-                    onClick={() => setItemSelector(null)}
-                  >
-                    <div className={getClassName("root")}>
-                      <CustomPreview>
-                        <Preview />
-                      </CustomPreview>
-                    </div>
-                    {/* Fill empty space under root */}
-                    <div
-                      style={{
-                        background: "var(--puck-color-grey-10)",
-                        height: "100%",
-                        flexGrow: 1,
-                      }}
-                    ></div>
-                  </div>
+                  <Canvas />
                   <div className={getClassName("rightSideBar")}>
                     <SidebarSection
                       noPadding
                       noBorderTop
                       showBreadcrumbs
-                      title={selectedItem ? selectedItem.type : "Page"}
+                      title={
+                        selectedItem
+                          ? config.components[selectedItem.type]["label"] ??
+                            selectedItem.type
+                          : "Page"
+                      }
                     >
                       <Fields />
                     </SidebarSection>

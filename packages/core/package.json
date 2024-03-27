@@ -46,6 +46,7 @@
     "@types/jest": "^29.5.4",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "css-box-model": "^1.2.1",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "jest": "^29.6.4",
@@ -53,12 +54,13 @@
     "lucide-react": "^0.298.0",
     "ts-jest": "^29.1.1",
     "tsconfig": "*",
-    "tsup": "^6.7.0",
+    "tsup": "^8.0.2",
     "tsup-config": "*",
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "@hello-pangea/dnd": "^16.3.0",
+    "@measured/auto-frame-component": "0.1.1",
+    "@measured/dnd": "16.6.0-canary.dcf051d",
     "deep-diff": "^1.0.2",
     "react-hotkeys-hook": "^4.4.1",
     "react-spinners": "^0.13.8",

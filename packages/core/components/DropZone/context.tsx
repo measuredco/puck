@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { Config, Data } from "../../types/Config";
-import { DragStart, DragUpdate } from "@hello-pangea/dnd";
+import { DragStart, DragUpdate } from "@measured/dnd";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { PuckAction } from "../../reducer";
 import { rootDroppableId } from "../../lib/root-droppable-id";
@@ -15,9 +15,7 @@ import { getZoneId } from "../../lib/get-zone-id";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
-export type DropZoneContext<
-  UserConfig extends Config<any, any, any> = Config<any, any, any>
-> = {
+export type DropZoneContext<UserConfig extends Config = Config> = {
   data: Data;
   config: UserConfig;
   componentState?: Record<string, any>;
@@ -41,7 +39,8 @@ export type DropZoneContext<
   pathData?: PathData;
   registerPath?: (selector: ItemSelector) => void;
   mode?: "edit" | "render";
-  disableZoom?: boolean;
+  zoneWillDrag?: string;
+  setZoneWillDrag?: (zone: string) => void;
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
@@ -147,6 +146,8 @@ export const DropZoneProvider = ({
     [value, setPathData]
   );
 
+  const [zoneWillDrag, setZoneWillDrag] = useState("");
+
   return (
     <>
       {value && (
@@ -165,6 +166,8 @@ export const DropZoneProvider = ({
             activeZones,
             registerPath,
             pathData,
+            zoneWillDrag,
+            setZoneWillDrag,
             ...value,
           }}
         >

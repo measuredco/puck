@@ -5,8 +5,8 @@
 .ObjectField {
   display: flex;
   flex-direction: column;
-  background-color: white;
-  border: 1px solid var(--puck-color-grey-8);
+  background-color: var(--puck-color-white);
+  border: 1px solid var(--puck-color-grey-09);
   border-radius: 4px;
 }
 

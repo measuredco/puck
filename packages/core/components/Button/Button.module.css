@@ -1,80 +1,102 @@
 .Button {
   appearance: none;
   background: none;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 4px;
-  color: white;
+  color: var(--puck-color-white);
   display: inline-flex;
   align-items: center;
   gap: 8px;
   letter-spacing: 0.05ch;
-  font-family: var(--puck-font-family-proportional);
+  font-family: var(--puck-font-family);
   font-size: 14px;
   font-weight: 400;
+  box-sizing: border-box;
   line-height: 1;
   text-align: center;
   text-decoration: none;
+  transition: background-color 50ms ease-in;
   cursor: pointer;
   white-space: nowrap;
   margin: 0;
 }
 
+.Button:hover,
+.Button:active {
+  transition: none;
+}
+
 .Button--medium {
-  padding-bottom: 8px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 8px;
+  min-height: 34px;
+  padding-bottom: 7px;
+  padding-left: 19px;
+  padding-right: 19px;
+  padding-top: 7px;
 }
 
 .Button--large {
-  padding-bottom: 12px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 12px;
+  padding-bottom: 11px;
+  padding-left: 19px;
+  padding-right: 19px;
+  padding-top: 11px;
 }
 
 .Button-icon {
   margin-top: 2px;
 }
 
-.Button:hover {
-  text-decoration: none;
-}
-
 .Button--primary {
-  background: var(--puck-color-blue);
+  background: var(--puck-color-azure-04);
 }
 
-.Button--primary:hover {
-  opacity: 0.7;
-  transition: opacity 50ms ease-in;
+.Button:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .Button--primary:hover {
+    background-color: var(--puck-color-azure-03);
+  }
+}
+
+.Button--primary:active {
+  background-color: var(--puck-color-azure-02);
 }
 
 .Button--secondary {
-  color: currentColor;
   border: 1px solid currentColor;
+  color: currentColor;
 }
 
-.Button--secondary:hover {
-  background-color: var(--puck-color-grey-10);
-  color: black;
-  opacity: 0.7;
+@media (hover: hover) and (pointer: fine) {
+  .Button--secondary:hover {
+    background-color: var(--puck-color-azure-12);
+    color: var(--puck-color-black);
+  }
+}
+
+.Button--secondary:active {
+  background-color: var(--puck-color-azure-11);
+  color: var(--puck-color-black);
 }
 
 .Button--flush {
   border-radius: 0;
 }
 
-.Button--disabled {
-  background: var(--puck-color-grey-10);
-  color: black;
+.Button--disabled,
+.Button--disabled:hover {
+  background-color: var(--puck-color-grey-07);
+  color: var(--puck-color-grey-03);
   cursor: not-allowed;
 }
 
-.Button--disabled:hover {
-  opacity: 1;
+.Button--fullWidth {
+  justify-content: center;
+  width: 100%;
 }
 
-.Button--fullWidth {
-  width: 100%;
+.Button-spinner {
+  padding-left: 8px;
 }

@@ -7,14 +7,6 @@
   width: 100%;
 }
 
-.DropZone--zoomEnabled {
-  zoom: 1.33;
-}
-
-.DropZone--zoomEnabled .DropZone-renderWrapper {
-  zoom: 0.75;
-}
-
 .DropZone-content {
   min-height: 128px;
   height: 100%;
@@ -35,22 +27,22 @@
 .DropZone--draggingOverArea:not(:has(.DropZone--hoveringOverArea)),
 .DropZone--hoveringOverArea:not(.DropZone--isDisabled):not(
     .DropZone--isRootZone
-  ) {
-  background: var(--puck-color-azure-9);
-  outline: 2px dashed var(--puck-color-azure-7);
+  ):not(.DropZone--hasChildren) {
+  background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
+  outline: 2px dashed var(--puck-color-azure-08);
 }
 
 .DropZone:not(.DropZone--hasChildren) {
-  background: var(--puck-color-azure-9);
-  outline: 2px dashed var(--puck-color-azure-7);
+  background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
+  outline: 2px dashed var(--puck-color-azure-08);
 }
 
 .DropZone--isDestination {
-  outline: 2px dashed var(--puck-color-azure-3) !important;
+  outline: 2px dashed var(--puck-color-azure-04) !important;
 }
 
 .DropZone--isDestination:not(.DropZone--isRootZone) {
-  background: var(--puck-color-azure-85) !important;
+  background: var(--puck-color-azure-10) !important;
 }
 
 .DropZone-item {

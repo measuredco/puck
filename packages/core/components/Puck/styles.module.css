@@ -22,10 +22,11 @@
   --puck-space-px: 16px;
   bottom: 0;
   display: grid;
+  font-family: var(--puck-font-family);
   grid-template-areas: "header header header" "left editor right";
   grid-template-columns: 0 var(--puck-frame-width) 0;
   grid-template-rows: min-content auto;
-  height: 100vh;
+  height: 100dvh;
   left: 0;
   position: fixed;
   right: 0;
@@ -94,7 +95,7 @@
 
 .Puck-header {
   background: var(--puck-color-white);
-  border-bottom: 1px solid var(--puck-color-grey-8);
+  border-bottom: 1px solid var(--puck-color-grey-09);
   color: var(--puck-color-black);
   grid-area: header;
   position: relative;
@@ -112,7 +113,7 @@
 }
 
 .Puck-headerToggle {
-  color: var(--puck-color-grey-4);
+  color: var(--puck-color-grey-05);
   display: flex;
   margin-left: -4px;
   padding-top: 2px;
@@ -141,7 +142,7 @@
 }
 
 .Puck-menuButton {
-  color: var(--puck-color-grey-4);
+  color: var(--puck-color-grey-05);
   margin-left: -4px;
 }
 
@@ -156,41 +157,19 @@
 }
 
 .Puck-leftSideBar {
-  background: var(--puck-color-grey-11);
-  border-right: 1px solid var(--puck-color-grey-8);
+  background: var(--puck-color-grey-12);
+  border-right: 1px solid var(--puck-color-grey-09);
   display: flex;
   flex-direction: column;
   grid-area: left;
   overflow-y: auto;
 }
 
-.Puck-frame {
-  display: flex;
-  flex-direction: column;
-  grid-area: editor;
-  overflow: auto;
-  position: relative;
-}
-
-.Puck-root {
-  border: 1px solid var(--puck-color-grey-8);
-  box-shadow: 0 0 0 calc(var(--puck-space-px) * 1.5) var(--puck-color-grey-10);
-  margin: var(--puck-space-px);
-  min-width: 321px;
-}
-
-@media (min-width: 1198px) {
-  .Puck-root {
-    margin: calc(var(--puck-space-px) * 1.5);
-  }
-}
-
 .Puck-rightSideBar {
   background: var(--puck-color-white);
-  border-left: 1px solid var(--puck-color-grey-8);
+  border-left: 1px solid var(--puck-color-grey-09);
   display: flex;
   flex-direction: column;
-  font-family: var(--puck-font-stack);
   grid-area: right;
   overflow-y: auto;
 }

@@ -215,7 +215,7 @@ This can be combined with [categories](/docs/integrating-puck/categories) to res
 import { DropZone } from "@measured/puck";
 
 const config = {
-  config: {
+  categories: {
     typography: {
       components: ["HeadingBlock"],
     },
@@ -225,7 +225,10 @@ const config = {
       render: () => {
         return (
           <div>
-            <DropZone zone="my-content" allow={config.typography.components} />
+            <DropZone
+              zone="my-content"
+              allow={categories.typography.components}
+            />
           </div>
         );
       },

@@ -54,12 +54,15 @@ const config = {
 | Param                                     | Example                                      | Type       | Status   |
 | ----------------------------------------- | -------------------------------------------- | ---------- | -------- |
 | [`type`](#type)                           | `type: "external"`                           | "external" | Required |
-| [`fetchList()`](#fetchlist)               | `fetchList: async () => []`                  | Function   | Required |
+| [`fetchList()`](#fetchlistqueryparams)    | `fetchList: async () => []`                  | Function   | Required |
+| [`filterFields`](#filterfields)           | `{ "rating": { type: "number" } }`           | Object     | -        |
 | [`getItemSummary()`](#getitemsummaryitem) | `getItemSummary: async ({ title }) => title` | Function   | -        |
+| [`initialFilters`](#initialfilters)       | `{ "rating": 1 }`                            | Object     | -        |
+| [`initialQuery`](#initialquery)           | `initialQuery: "Hello, world"`               | String     | -        |
 | [`mapProp()`](#mappropitem)               | `mapProp: async ({ title }) => title`        | Function   | -        |
+| [`mapRow()`](#mappropitem)                | `mapRow: async ({ title }) => title`         | Function   | -        |
 | [`placeholder`](#placeholder)             | `placeholder: "Select content"`              | String     | -        |
 | [`showSearch`](#showsearch)               | `showSearch: true`                           | Boolean    | -        |
-| [`initialQuery`](#initialquery)           | `initialQuery: "Hello, world"`               | String     | -        |
 
 ## Required params
 
@@ -88,7 +91,7 @@ const config = {
 };
 ```
 
-### `fetchList()`
+### `fetchList(queryParams)`
 
 Return a promise with a list of objects to be rendered in a tabular format via the external input modal.
 
@@ -117,7 +120,82 @@ const config = {
 };
 ```
 
+#### `queryParams`
+
+The parameters passed to the `fetchList` method based on your field configuration.
+
+| Param                 | Example             | Type   |
+| --------------------- | ------------------- | ------ |
+| [`query`](#query)     | `"My Query"`        | String |
+| [`filters`](#filters) | `"{ "rating": 1 }"` | Object |
+
+##### `query`
+
+The search query when using [`showSearch`](#showsearch).
+
+##### `filters`
+
+An object describing the filters configured by [`filterFields`](#filterfields).
+
 ## Optional params
+
+### `filterFields`
+
+An object describing filters for your query using the [Fields API](/docs/api-reference/configuration/fields)
+
+```tsx {13-17} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async ({ filters }) => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+              { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+            ].filter((item) => item.rating >= (filters.rating || 0));
+          },
+          filterFields: {
+            rating: {
+              type: "number",
+            },
+          },
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async ({ filters }) => {
+          return [
+            { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+            { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+          ].filter((item) =>
+            item.rating >= (filters.rating || 0)
+          )
+        },
+        filterFields: {
+          rating: {
+            type: "number",
+          },
+        },
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+
+}}
+/>
 
 ### `getItemSummary(item)`
 
@@ -169,79 +247,34 @@ const config = {
     render: ({ data }) => {
       return <p>{data?.title || "No data selected"}</p>;
     },
-    // ...
   }}
 />
 
-### `mapProp(item)`
+### `initialFilters`
 
-Modify the shape of the item selected by the user in the table before writing to the page data.
+The initial filter values when using [`filterFields`](#filterfields).
 
-```tsx {13} copy
+```tsx {18-20} copy
 const config = {
   components: {
     Example: {
       fields: {
         data: {
           type: "external",
-          fetchList: async () => {
+          fetchList: async ({ filters }) => {
             return [
-              { title: "Hello, world", description: "Lorem ipsum 1" },
-              { title: "Goodbye, world", description: "Lorem ipsum 2" },
-            ];
+              { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+              { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+            ].filter((item) => item.rating >= (filters.rating || 0));
           },
-          mapProp: (item) => item.description,
-        },
-      },
-      render: ({ data }) => {
-        return <p>{data || "No data selected"}</p>;
-      },
-      // ...
-    },
-  },
-};
-```
-
-<ConfigPreview
-  label="Example"
-  componentConfig={{
-    fields: {
-      data: {
-        type: "external",
-        fetchList: async () => {
-          return [
-            { title: "Hello, world", description: "Lorem ipsum 1" },
-            { title: "Goodbye, world", description: "Lorem ipsum 2" },
-          ];
-        },
-        mapProp: (item) => item.description,
-      },
-    },
-    render: ({ data }) => {
-      return <p>{data || "No data selected"}</p>;
-    },
-    // ...
-  }}
-/>
-
-### `placeholder`
-
-Set the placeholder text when no item is selected.
-
-```tsx {13} copy
-const config = {
-  components: {
-    Example: {
-      fields: {
-        data: {
-          type: "external",
-          fetchList: async () => {
-            return [
-              { title: "Apple", description: "Lorem ipsum 1" },
-              { title: "Orange", description: "Lorem ipsum 2" },
-            ];
+          filterFields: {
+            rating: {
+              type: "number",
+            },
           },
-          placeholder: "Pick your favorite fruit",
+          initialFilters: {
+            rating: 1,
+          },
         },
       },
       // ...
@@ -256,97 +289,27 @@ const config = {
     fields: {
       data: {
         type: "external",
-        fetchList: async () => {
+        fetchList: async ({ filters }) => {
           return [
-            {
-              title: "Apple",
-              description:
-                "An apple is a round, edible fruit produced by an apple tree.",
-            },
-            {
-              title: "Orange",
-              description:
-                "An orange is a fruit of various citrus species in the family Rutaceae.",
-            },
-          ];
+            { title: "Apple", description: "Lorem ipsum 1", rating: 5 },
+            { title: "Orange", description: "Lorem ipsum 2", rating: 3 },
+          ].filter((item) =>
+            item.rating >= (filters.rating || 0)
+          )
         },
-        placeholder: "Pick your favorite fruit",
+        filterFields: {
+          rating: {
+            type: "number",
+          },
+        },
+        initialFilters: {
+          rating: 1,
+        },
       },
     },
     render: ({ data }) => {
       return <p>{data?.title || "No data selected"}</p>;
     },
-    // ...
-  }}
-/>
-
-### `showSearch`
-
-Show a search input, the value of which will be passed to `fetchList` as the `query` param.
-
-```tsx {15} copy
-const config = {
-  components: {
-    Example: {
-      fields: {
-        data: {
-          type: "external",
-          fetchList: async ({ params }) => {
-            return [
-              { title: "Apple", description: "Lorem ipsum 1" },
-              { title: "Orange", description: "Lorem ipsum 2" },
-            ].filter((item) => {
-              // ...
-            });
-          },
-          showSearch: true,
-        },
-      },
-      // ...
-    },
-  },
-};
-```
-
-<ConfigPreview
-  label="Example"
-  componentConfig={{
-    fields: {
-      data: {
-        type: "external",
-        fetchList: async ({ query }) => {
-          return [
-            {
-              title: "Apple",
-              description:
-                "An apple is a round, edible fruit produced by an apple tree.",
-            },
-            {
-              title: "Orange",
-              description:
-                "An orange is a fruit of various citrus species in the family Rutaceae.",
-            },
-          ].filter((item) => {
-            if (!query) return item;
-
-            const queryLowercase = query.toLowerCase();
-
-            if (item.title.toLowerCase().indexOf(queryLowercase) > -1) {
-              return item;
-            }
-
-            if (item.description.toLowerCase().indexOf(queryLowercase) > -1) {
-              return item;
-            }
-          })
-        },
-        showSearch: true,
-      },
-    },
-    render: ({ data }) => {
-      return <p>{data?.title || "No data selected"}</p>;
-    },
-    // ...
 
 }}
 />
@@ -362,7 +325,7 @@ const config = {
       fields: {
         data: {
           type: "external",
-          fetchList: async ({ params }) => {
+          fetchList: async ({ query }) => {
             return [
               { title: "Apple", description: "Lorem ipsum 1" },
               { title: "Orange", description: "Lorem ipsum 2" },
@@ -419,7 +382,231 @@ const config = {
     render: ({ data }) => {
       return <p>{data?.title || "No data selected"}</p>;
     },
-    // ...
+
+}}
+/>
+
+### `mapProp(item)`
+
+Modify the shape of the item selected by the user in the table before writing to the page data.
+
+```tsx {13} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+          mapProp: (item) => item.description,
+        },
+      },
+      render: ({ data }) => {
+        return <p>{data || "No data selected"}</p>;
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async () => {
+          return [
+            { title: "Hello, world", description: "Lorem ipsum 1" },
+            { title: "Goodbye, world", description: "Lorem ipsum 2" },
+          ];
+        },
+        mapProp: (item) => item.description,
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data || "No data selected"}</p>;
+    },
+  }}
+/>
+
+### `mapRow(item)`
+
+Modify the shape of the item before rendering it in the table. This will not affect the selected data.
+
+```tsx {13} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+          mapRow: (item) => ({ ...item, title: item.title.toUpperCase() }),
+        },
+      },
+      render: ({ data }) => {
+        return <p>{data || "No data selected"}</p>;
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async () => {
+          return [
+            { title: "Hello, world", description: "Lorem ipsum 1" },
+            { title: "Goodbye, world", description: "Lorem ipsum 2" },
+          ];
+        },
+        mapRow: (item) => ({ ...item, title: item.title.toUpperCase() }),
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+  }}
+/>
+
+### `placeholder`
+
+Set the placeholder text when no item is selected.
+
+```tsx {13} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1" },
+              { title: "Orange", description: "Lorem ipsum 2" },
+            ];
+          },
+          placeholder: "Pick your favorite fruit",
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async () => {
+          return [
+            {
+              title: "Apple",
+              description:
+                "An apple is a round, edible fruit produced by an apple tree.",
+            },
+            {
+              title: "Orange",
+              description:
+                "An orange is a fruit of various citrus species in the family Rutaceae.",
+            },
+          ];
+        },
+        placeholder: "Pick your favorite fruit",
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+  }}
+/>
+
+### `showSearch`
+
+Show a search input, the value of which will be passed to `fetchList` as the `query` param.
+
+```tsx {15} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async ({ query }) => {
+            return [
+              { title: "Apple", description: "Lorem ipsum 1" },
+              { title: "Orange", description: "Lorem ipsum 2" },
+            ].filter((item) => {
+              // ...
+            });
+          },
+          showSearch: true,
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async ({ query }) => {
+          return [
+            {
+              title: "Apple",
+              description:
+                "An apple is a round, edible fruit produced by an apple tree.",
+            },
+            {
+              title: "Orange",
+              description:
+                "An orange is a fruit of various citrus species in the family Rutaceae.",
+            },
+          ].filter((item) => {
+            if (!query) return item;
+
+            const queryLowercase = query.toLowerCase();
+
+            if (item.title.toLowerCase().indexOf(queryLowercase) > -1) {
+              return item;
+            }
+
+            if (item.description.toLowerCase().indexOf(queryLowercase) > -1) {
+              return item;
+            }
+          })
+        },
+        showSearch: true,
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
 
 }}
 />
