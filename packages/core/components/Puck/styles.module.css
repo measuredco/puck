@@ -18,7 +18,7 @@
 
 .Puck {
   --puck-frame-width: auto;
-  --puck-side-bar-width: 186px;
+  --puck-side-bar-width: 0px;
   --puck-space-px: 16px;
   bottom: 0;
   display: grid;
@@ -31,6 +31,10 @@
   position: fixed;
   right: 0;
   top: 0;
+}
+
+.Puck--mounted {
+  --puck-side-bar-width: 186px;
 }
 
 .Puck--leftSideBarVisible {
@@ -52,7 +56,7 @@
 }
 
 @media (min-width: 458px) {
-  .Puck {
+  .Puck-mounted {
     --puck-frame-width: minmax(266px, auto);
   }
 }
