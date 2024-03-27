@@ -97,7 +97,7 @@ export type ExternalField<
   }) => Promise<any[] | null>;
   mapProp?: (value: any) => Props;
   mapRow?: (value: any) => Record<string, string | number>;
-  getItemSummary: (item: Props, index?: number) => string;
+  getItemSummary?: (item: Props, index?: number) => string;
   showSearch?: boolean;
   initialQuery?: string;
   filterFields?: Record<string, Field>;
