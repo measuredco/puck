@@ -1,9 +1,16 @@
-import { CSSProperties, ReactNode, SyntheticEvent, useEffect } from "react";
+import {
+  CSSProperties,
+  ReactNode,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from "react";
 import { Draggable } from "@measured/dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, Trash } from "lucide-react";
 import { useModifierHeld } from "../../lib/use-modifier-held";
+import { isIos } from "../../lib/is-ios";
 import { ClipLoader } from "react-spinners";
 import { useAppContext } from "../Puck/context";
 import { DefaultDraggable } from "../Draggable";
@@ -68,8 +75,24 @@ export const DraggableComponent = ({
 
   useEffect(onMount, []);
 
+  const [disableSecondaryAnimation, setDisableSecondaryAnimation] =
+    useState(false);
+
+  useEffect(() => {
+    // Disable animations on iOS to prevent GPU memory crashes
+    if (isIos()) {
+      setDisableSecondaryAnimation(true);
+    }
+  }, []);
+
   return (
-    <El key={id} draggableId={id} index={index} isDragDisabled={isDragDisabled}>
+    <El
+      key={id}
+      draggableId={id}
+      index={index}
+      isDragDisabled={isDragDisabled}
+      disableSecondaryAnimation={disableSecondaryAnimation}
+    >
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
