@@ -99,11 +99,55 @@ export function Puck<UserConfig extends Config = Config>({
   const [initialAppState] = useState<AppState>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
 
+    let clientUiState: Partial<AppState["ui"]> = {};
+
+    if (typeof window !== "undefined") {
+      // Hide side bars on mobile
+      if (window.matchMedia("(max-width: 638px)").matches) {
+        clientUiState = {
+          ...clientUiState,
+          leftSideBarVisible: false,
+          rightSideBarVisible: false,
+        };
+      }
+
+      const viewportWidth = window.innerWidth;
+
+      const viewportDifferences = Object.entries(viewports)
+        .map(([key, value]) => ({
+          key,
+          diff: Math.abs(viewportWidth - value.width),
+        }))
+        .sort((a, b) => (a.diff > b.diff ? 1 : -1));
+
+      const closestViewport = viewportDifferences[0].key;
+
+      if (iframe.enabled) {
+        clientUiState = {
+          viewports: {
+            ...initial.viewports,
+
+            current: {
+              ...initial.viewports.current,
+              height:
+                initialUi?.viewports?.current?.height ||
+                viewports[closestViewport].height ||
+                "auto",
+              width:
+                initialUi?.viewports?.current?.width ||
+                viewports[closestViewport].width,
+            },
+          },
+        };
+      }
+    }
+
     return {
       ...defaultAppState,
       data: initialData,
       ui: {
         ...initial,
+        ...clientUiState,
         // Store categories under componentList on state to allow render functions and plugins to modify
         componentList: config.categories
           ? Object.entries(config.categories).reduce(
@@ -124,57 +168,6 @@ export function Puck<UserConfig extends Config = Config>({
       },
     };
   });
-
-  useEffect(() => {
-    const initial = { ...defaultAppState.ui, ...initialUi };
-
-    let clientUiState: Partial<AppState["ui"]> = {};
-
-    // Hide side bars on mobile
-    if (window.matchMedia("(max-width: 638px)").matches) {
-      clientUiState = {
-        ...clientUiState,
-        leftSideBarVisible: false,
-        rightSideBarVisible: false,
-      };
-    }
-
-    const viewportWidth = window.innerWidth;
-
-    const viewportDifferences = Object.entries(viewports)
-      .map(([key, value]) => ({
-        key,
-        diff: Math.abs(viewportWidth - value.width),
-      }))
-      .sort((a, b) => (a.diff > b.diff ? 1 : -1));
-
-    const closestViewport = viewportDifferences[0].key;
-
-    if (iframe.enabled) {
-      clientUiState = {
-        ...clientUiState,
-        viewports: {
-          ...initial.viewports,
-
-          current: {
-            ...initial.viewports.current,
-            height:
-              initialUi?.viewports?.current?.height ||
-              viewports[closestViewport].height ||
-              "auto",
-            width:
-              initialUi?.viewports?.current?.width ||
-              viewports[closestViewport].width,
-          },
-        },
-      };
-    }
-
-    dispatch({
-      type: "setUi",
-      ui: clientUiState,
-    });
-  }, []);
 
   const [appState, dispatch] = useReducer<StateReducer>(
     reducer,
