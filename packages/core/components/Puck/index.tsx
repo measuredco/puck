@@ -345,6 +345,12 @@ export function Puck<UserConfig extends Config = Config>({
     [loadedOverrides]
   );
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="Puck">
       <AppProvider
@@ -446,6 +452,7 @@ export function Puck<UserConfig extends Config = Config>({
                   className={getClassName({
                     leftSideBarVisible,
                     menuOpen,
+                    mounted,
                     rightSideBarVisible,
                   })}
                 >
