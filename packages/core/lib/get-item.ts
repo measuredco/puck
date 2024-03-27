@@ -15,12 +15,12 @@ export const getItem = (
   if (!selector.zone || selector.zone === rootDroppableId) {
     const item = data.content[selector.index];
 
-    return { ...item, props: dynamicProps[item.props.id] || item.props };
+    return item?.props ?  { ...item, props: dynamicProps[item.props.id] || item.props } : undefined;
   }
 
   const item = setupZone(data, selector.zone).zones[selector.zone][
     selector.index
   ];
 
-  return { ...item, props: dynamicProps[item.props.id] || item.props };
+  return item?.props ? { ...item, props: dynamicProps[item.props.id] || item.props } : undefined;
 };
