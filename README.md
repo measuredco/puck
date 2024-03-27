@@ -15,6 +15,9 @@ The visual editor for React.
   <a aria-label="Join the community on Discord" href="https://discord.gg/D9e4E3MQVZ">
     <img alt="" src="https://img.shields.io/badge/Join%20the%20Discord-blueviolet.svg?style=for-the-badge&logo=Discord&labelColor=000000&logoWidth=20">
   </a>
+ <a aria-label="Join the community on Discord" href="https://discord.gg/D9e4E3MQVZ">
+    <img alt="" src="https://img.shields.io/badge/repo-awesome--puck-fc60a8.svg?style=for-the-badge&labelColor=000000&logoWidth=20">
+  </a>
 </p>
 
 ## Demo
@@ -95,6 +98,13 @@ Available recipes include:
 
 - [**next**](https://github.com/measuredco/puck/tree/main/recipes/next): Next.js 13 app example, using App Router and static page generation
 - [**remix**](https://github.com/measuredco/puck/tree/main/recipes/remix): Remix Run v2 app example, using dynamic routes at root-level
+
+
+## Community
+
+* [Discord server](https://discord.gg/D9e4E3MQVZ) for discussions
+* [awesome-puck](https://github.com/measuredco/awesome-puck) community repo for plugins, custom fields & more
+
 
 ## Hire the Puck team
 
