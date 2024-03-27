@@ -173,3 +173,7 @@
   grid-area: right;
   overflow-y: auto;
 }
+
+.Puck-portal {
+  z-index: 2;
+}
