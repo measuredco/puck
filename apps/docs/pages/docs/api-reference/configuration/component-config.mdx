@@ -2,7 +2,8 @@
 title: ComponentConfig
 ---
 
-import { ConfigPreview } from "@/docs/components/Preview";
+import { ConfigPreview, PuckPreview } from "@/docs/components/Preview";
+import { Drawer } from "@/core/components/Drawer";
 
 # ComponentConfig
 
@@ -30,6 +31,7 @@ const config = {
 | [`render()`](#renderprops)                 | `render: () => <div />`                         | Function | Required |
 | [`fields`](#fields)                        | `fields: { title: { type: "text"} }`            | Object   | -        |
 | [`defaultProps`](#defaultprops)            | `defaultProps: { title: "Hello, world" }`       | Object   | -        |
+| [`label`](#label)                          | `label: "Heading Block"`                        | String   | -        |
 | [`resolveData()`](#resolvedatadata-params) | `resolveData: async ({ props }) => ({ props })` | Object   | -        |
 
 ## Required params
@@ -156,6 +158,27 @@ const config = {
     },
   }}
 />
+
+### `label`
+
+A label to show when referring to your component within the Puck editor. Defaults to the key of your component.
+
+```tsx {4} copy showLineNumbers
+const config = {
+  components: {
+    HeadingBlock: {
+      label: "Heading Block",
+      render: () => <h1>Hello, World</h1>,
+    },
+  },
+};
+```
+
+<PuckPreview config={{}} data={{ root: { props: {} }, content: [] }}>
+  <Drawer>
+    <Drawer.Item name="Heading Block" index={0} />
+  </Drawer>
+</PuckPreview>
 
 ### `resolveData(data, params)`
 
