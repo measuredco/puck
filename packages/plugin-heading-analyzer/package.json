@@ -32,7 +32,6 @@
     "react-from-json": "^0.8.0"
   },
   "peerDependencies": {
-    "@measured/puck": "^0.13.1",
     "react": "^17.0.0 || ^18.0.0"
   }
 }
