@@ -1,6 +1,6 @@
 {
   "name": "@measured/puck-field-contentful",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "author": "Measured Corporation Ltd <hello@measured.co>",
   "repository": "measuredco/puck",
   "bugs": "https://github.com/measuredco/puck/issues",
@@ -18,7 +18,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@measured/puck": "^0.13.1",
+    "@measured/puck": "^0.14.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "contentful": "^10.8.6",
@@ -28,10 +28,9 @@
     "tsup-config": "*",
     "typescript": "^4.5.2"
   },
-  "dependencies": {},
   "peerDependencies": {
     "@measured/puck": "^0.13.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "contentful": "^10.0.0"
+    "contentful": "^10.0.0",
+    "react": "^17.0.0 || ^18.0.0"
   }
 }

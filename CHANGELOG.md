@@ -2,6 +2,51 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.14.0](https://github.com/measuredco/puck/compare/v0.13.0...v0.14.0) (2024-03-28)
+
+
+### Features
+
+* add "name" prop to componentItem override ([45bbceb](https://github.com/measuredco/puck/commit/45bbceb1d2805455fa38f5bce91d892f6acacfbf))
+* add `min` and `max` APIs to array fields ([53b7937](https://github.com/measuredco/puck/commit/53b7937675303bc3cf282bbd005309c8c276d1b2))
+* add API to opt-out of iframes ([03dd90b](https://github.com/measuredco/puck/commit/03dd90b98c8a72e2af3baa8fc436ff7d4f4c7449))
+* add Contentful field package ([d944288](https://github.com/measuredco/puck/commit/d94428819a958b4f566e5d0e8cd29b3bf1107881))
+* add filter fields to ExternalFields ([7a55053](https://github.com/measuredco/puck/commit/7a5505374953ab8004720a9c91d8975ad3df94e5))
+* add iframe support ([1d0bf57](https://github.com/measuredco/puck/commit/1d0bf57894200edc6b9a883a41937f7a3141074f))
+* add `min` and `max` APIs to number fields ([4932a6e](https://github.com/measuredco/puck/commit/4932a6ef1b640410b3291cc67fb1f3153c04eac4))
+* add `selectedItem` convenience param to usePuck ([c1224d0](https://github.com/measuredco/puck/commit/c1224d026d37bbbcf1366804947771902e29d9bb))
+* add viewport switching ([ccf9149](https://github.com/measuredco/puck/commit/ccf91495f3a9f20a37051ba407abd992095a7b4d))
+* enable mapping of table rows in external fields ([d50c56e](https://github.com/measuredco/puck/commit/d50c56e829b482f13c5ec08acc76eed70494d3cf))
+* expose history via usePuck hook ([1b907cb](https://github.com/measuredco/puck/commit/1b907cba506dda7a2b1fe201a426e1c4bcfffecc))
+* hide array Add button when array is readOnly ([4e27c3f](https://github.com/measuredco/puck/commit/4e27c3f18a0fa9a97dcd5fd240b01a133d7cb153))
+* improve touch, contrast & keyboard a11y ([f975d87](https://github.com/measuredco/puck/commit/f975d87c5c2823e1f27161e6b6aa76a0d3fafad2))
+* refine UI for external field modal ([6a2afa1](https://github.com/measuredco/puck/commit/6a2afa1abbd33a062bca6962b547b5534ed93036))
+* support custom component labels via the new label param ([712fb8e](https://github.com/measuredco/puck/commit/712fb8eeac0502b2baea4c86a4494eb8f924ed82))
+* update to 12-tint color palette ([d43da58](https://github.com/measuredco/puck/commit/d43da581da3bd79324ed846ca5c5cd0c86469b23))
+* use InterVariable font ([88532fb](https://github.com/measuredco/puck/commit/88532fbc248a3a171dc2e26906dcd68ba5979570))
+
+
+### Bug Fixes
+
+* avoid FOUC of side bars on mobile ([83be956](https://github.com/measuredco/puck/commit/83be95643e4dcb96e30d0e6a9dbfe03c60f83002))
+* correctly infer objectFields type from props ([e8991cc](https://github.com/measuredco/puck/commit/e8991cc90d5fd899a3357f6d1f50b382d90aad23))
+* don't attempt to resolve data if component missing from config ([cc7d391](https://github.com/measuredco/puck/commit/cc7d391503cce3cbdbad9b769b5fb0fca6610cb0))
+* don't flash nested DropZones on first drag ([38c3dc4](https://github.com/measuredco/puck/commit/38c3dc418e047b7f1218c8c50cf3ba3f2e6b74d8))
+* don't unexpectedly show DropZone background ([2001fa2](https://github.com/measuredco/puck/commit/2001fa2bb6e69451f68cd94a3f872a0f83ff2b4b))
+* ensure font loads for ExternalFields ([e9bca75](https://github.com/measuredco/puck/commit/e9bca751926db8a88f4f6ad2bc135a10705987d9))
+* ensure heading-analyzer updates when content changes ([d75df7a](https://github.com/measuredco/puck/commit/d75df7a5c8ab365a4ef0de6c81c707e706433383))
+* ensure select and radio fields support read only arrays ([cbdf66d](https://github.com/measuredco/puck/commit/cbdf66d348acc3461f321956c80dbc87a896069e))
+* fix array field when used on root ([95280e6](https://github.com/measuredco/puck/commit/95280e686409342d3be3d68ec2acb90f7cfc570e))
+* fix renderDropZone method in editor ([2c738dd](https://github.com/measuredco/puck/commit/2c738dd3761596925caecfee2bfdcb2960a10b83))
+* lower opacity of DropZone background to support dark backgrounds ([9a5c0b8](https://github.com/measuredco/puck/commit/9a5c0b8ec57e41eeda3592d9a45ab00907a7a313))
+* make getItemSummary optional on ExternalFields, as expected ([26bc4ff](https://github.com/measuredco/puck/commit/26bc4ff320cc93bf4376edd190b3779774f2f87c))
+* only import Puck CSS on editor pages ([22a4182](https://github.com/measuredco/puck/commit/22a41823559d36fd06842496d59788004b316797))
+* prevent unexpected field behaviour when pressing "Enter" key ([bf4f527](https://github.com/measuredco/puck/commit/bf4f5277f5d5cbf7a7ccf473130055575a5e983a))
+* use strict return type for resolveData ([777cd3c](https://github.com/measuredco/puck/commit/777cd3c02a0b0ec8df1b81e19654b1179b56cb53))
+* vertically align field icons ([fa92436](https://github.com/measuredco/puck/commit/fa924363c8f2e5ad3d866793ba34a1b488250ce5))
+
+
+
 ## [0.13.1](https://github.com/measuredco/puck/compare/v0.13.0...v0.13.1) (2023-12-23)
 
 
