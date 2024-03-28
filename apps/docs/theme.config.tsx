@@ -141,8 +141,8 @@ const theme: DocsThemeConfig = {
               href="https://github.com/measuredco/puck/releases"
               target="_blank"
             >
-              <b>🍱 Puck 0.13.0 released</b>: Create custom Puck UIs, object
-              fields and more →
+              <b>🐰 Puck 0.14.0 released</b>: Introducing viewport switching
+              using real iframes →
             </a>
           ),
         }
