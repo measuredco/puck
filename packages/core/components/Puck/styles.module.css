@@ -17,82 +17,87 @@
  */
 
 .Puck {
-  --puck-frame-width: auto;
-  --puck-side-bar-width: 0px;
   --puck-space-px: 16px;
   bottom: 0;
-  display: grid;
   font-family: var(--puck-font-family);
-  grid-template-areas: "header header header" "left editor right";
-  grid-template-columns: 0 var(--puck-frame-width) 0;
-  grid-template-rows: min-content auto;
-  height: 100dvh;
   left: 0;
   position: fixed;
   right: 0;
   top: 0;
 }
 
-.Puck--mounted {
+.Puck-layout {
+  --puck-frame-width: auto;
+  --puck-side-bar-width: 0px;
+  display: grid;
+  grid-template-areas: "header header header" "left editor right";
+  grid-template-columns: 0 var(--puck-frame-width) 0;
+  grid-template-rows: min-content auto;
+  height: 100dvh;
+  position: relative;
+  z-index: 0;
+}
+
+.Puck--mounted .Puck-layout {
   --puck-side-bar-width: 186px;
 }
 
-.Puck--leftSideBarVisible {
+.Puck--leftSideBarVisible .Puck-layout {
   grid-template-columns:
     var(--puck-side-bar-width) var(--puck-frame-width)
     0;
 }
 
-.Puck--rightSideBarVisible {
+.Puck--rightSideBarVisible .Puck-layout {
   grid-template-columns:
     0 var(--puck-frame-width)
     var(--puck-side-bar-width);
 }
 
-.Puck--leftSideBarVisible.Puck--rightSideBarVisible {
+.Puck--leftSideBarVisible.Puck--rightSideBarVisible .Puck-layout {
   grid-template-columns:
     var(--puck-side-bar-width) var(--puck-frame-width)
     var(--puck-side-bar-width);
 }
 
 @media (min-width: 458px) {
-  .Puck-mounted {
+  .Puck-mounted .Puck-layout {
     --puck-frame-width: minmax(266px, auto);
   }
 }
 
 @media (min-width: 638px) {
-  .Puck {
+  .Puck .Puck-layout {
     --puck-side-bar-width: minmax(186px, 250px);
   }
 }
 
 @media (min-width: 766px) {
-  .Puck {
+  .Puck .Puck-layout {
     --puck-frame-width: auto;
   }
 }
 
 @media (min-width: 990px) {
-  .Puck {
+  .Puck .Puck-layout {
     --puck-side-bar-width: 256px;
   }
 }
 
 @media (min-width: 1198px) {
-  .Puck {
+  .Puck .Puck-layout {
     --puck-side-bar-width: 274px;
   }
 }
 
 @media (min-width: 1398px) {
-  .Puck {
+  .Puck .Puck-layout {
     --puck-side-bar-width: 290px;
   }
 }
 
 @media (min-width: 1598px) {
-  .Puck {
+  .Puck .Puck-layout {
     --puck-side-bar-width: 320px;
   }
 }
