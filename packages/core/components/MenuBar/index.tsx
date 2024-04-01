@@ -85,16 +85,6 @@ export const MenuBar = ({
               dispatch,
             })}
         </>
-        <div>
-          <Button
-            onClick={() => {
-              onPublish && onPublish(data);
-            }}
-            icon={<Globe size="14px" />}
-          >
-            Publish
-          </Button>
-        </div>
       </div>
     </div>
   );

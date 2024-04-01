@@ -126,11 +126,49 @@ export function Editor() {
 
 There are many different overrides available. See the [`overrides` API reference](/docs/api-reference/overrides) for the full list.
 
-### Field type override example
+### Custom publish button example
 
-Field type overrides deserve a special mention as they showcase the power of this API.
+A common use case is to override the Puck header. You can either use the [`header` override](/docs/api-reference/overrides/header) to change the entire header, or use the [`headerActions` override](/docs/api-reference/overrides/header-actions) to inject new controls into the header and change the publish button.
 
-Using [`overrides`](/docs/api-reference/components/puck#overrides), it's possible to provide a custom implementation of all fields of a certain type by specifying the [`fieldTypes`](/docs/api-reference/overrides/field-types).
+Here's an example that replaces the default publish button with a custom one:
+
+```tsx showLineNumbers copy {10-26}
+import { Puck, usePuck } from "@measured/puck";
+
+const save = () => {};
+
+export function Editor() {
+  return (
+    <Puck
+      // ...
+      overrides={{
+        headerActions: ({ children }) => {
+          const { appState } = usePuck();
+
+          return (
+            <>
+              <button
+                onClick={() => {
+                  save(appState.data);
+                }}
+              >
+                Save
+              </button>
+
+              {/* Render default header actions, such as the default Button */}
+              {/*{children}*/}
+            </>
+          );
+        },
+      }}
+    />
+  );
+}
+```
+
+### Custom field type example
+
+An advanced use case is overriding all fields of a certain type by specifying the [`fieldTypes` override](/docs/api-reference/overrides/field-types).
 
 ```tsx showLineNumbers copy {8-18}
 import { Puck } from "@measured/puck";

@@ -23,13 +23,15 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           plugins={[headingAnalyzer]}
           headerPath={path}
           overrides={{
-            headerActions: () => (
+            headerActions: ({ children }) => (
               <>
                 <div>
                   <Button href={path} newTab variant="secondary">
                     View page
                   </Button>
                 </div>
+
+                {children}
               </>
             ),
           }}
