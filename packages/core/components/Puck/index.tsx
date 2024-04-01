@@ -460,15 +460,16 @@ export function Puck<UserConfig extends Config = Config>({
                     <CustomHeader
                       actions={
                         <>
-                          <CustomHeaderActions />
-                          <Button
-                            onClick={() => {
-                              onPublish && onPublish(data);
-                            }}
-                            icon={<Globe size="14px" />}
-                          >
-                            Publish
-                          </Button>
+                          <CustomHeaderActions>
+                            <Button
+                              onClick={() => {
+                                onPublish && onPublish(data);
+                              }}
+                              icon={<Globe size="14px" />}
+                            >
+                              Publish
+                            </Button>
+                          </CustomHeaderActions>
                         </>
                       }
                     >
@@ -531,7 +532,16 @@ export function Puck<UserConfig extends Config = Config>({
                               onPublish={onPublish}
                               menuOpen={menuOpen}
                               renderHeaderActions={() => (
-                                <CustomHeaderActions />
+                                <CustomHeaderActions>
+                                  <Button
+                                    onClick={() => {
+                                      onPublish && onPublish(data);
+                                    }}
+                                    icon={<Globe size="14px" />}
+                                  >
+                                    Publish
+                                  </Button>
+                                </CustomHeaderActions>
                               )}
                               setMenuOpen={setMenuOpen}
                             />
