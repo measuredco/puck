@@ -122,7 +122,7 @@ export const ViewportControls = ({
       <div className={getClassName("divider")} />
       <IconButton
         title="Zoom viewport out"
-        disabled={zoom <= zoomOptions[0].value}
+        disabled={zoom <= zoomOptions[0]?.value}
         onClick={(e) => {
           e.stopPropagation();
           onZoom(
@@ -139,7 +139,7 @@ export const ViewportControls = ({
       </IconButton>
       <IconButton
         title="Zoom viewport in"
-        disabled={zoom >= zoomOptions[zoomOptions.length - 1].value}
+        disabled={zoom >= zoomOptions[zoomOptions.length - 1]?.value}
         onClick={(e) => {
           e.stopPropagation();
 
