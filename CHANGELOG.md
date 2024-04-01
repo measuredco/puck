@@ -2,6 +2,18 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.14.1](https://github.com/measuredco/puck/compare/v0.14.0...v0.14.1) (2024-04-01)
+
+
+### Bug Fixes
+
+* don't throw undefined error if rapidly zooming browser in some environments ([282a8b0](https://github.com/measuredco/puck/commit/282a8b0d9f170ea95f5717c8b2ad08ec487d7d8f))
+* prevent grid layout issues in generated apps ([5c05f94](https://github.com/measuredco/puck/commit/5c05f945679f7f2c0edd5d99c652989c00920ac6))
+* remove peer dependencies causing warnings ([041ca64](https://github.com/measuredco/puck/commit/041ca64a6fe96539681d88e9cd0e66a6ac27a6ce))
+
+
+
+
 ## [0.14.0](https://github.com/measuredco/puck/compare/v0.13.0...v0.14.0) (2024-03-28)
 
 
