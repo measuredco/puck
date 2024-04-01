@@ -60,10 +60,7 @@ const config = {
 };
 
 // Describe the initial data
-const initialData = {
-  content: [],
-  root: {},
-};
+const initialData = {};
 
 // Save the data to your database
 const save = (data) => {};

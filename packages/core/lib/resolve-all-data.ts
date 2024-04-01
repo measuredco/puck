@@ -1,14 +1,17 @@
 import { Config, Data, MappedItem } from "../types/Config";
 import { resolveAllComponentData } from "./resolve-component-data";
 import { resolveRootData } from "./resolve-root-data";
+import { defaultData } from "./default-data";
 
 export async function resolveAllData(
-  data: Data,
+  data: Partial<Data>,
   config: Config,
   onResolveStart?: (item: MappedItem) => void,
   onResolveEnd?: (item: MappedItem) => void
 ) {
-  const dynamicRoot = await resolveRootData(data, config);
+  const defaultedData = defaultData(data);
+
+  const dynamicRoot = await resolveRootData(defaultedData, config);
 
   const { zones = {} } = data;
 
@@ -26,10 +29,10 @@ export async function resolveAllData(
   }
 
   return {
-    ...data,
+    ...defaultedData,
     root: dynamicRoot,
     content: await resolveAllComponentData(
-      data.content,
+      defaultedData.content,
       config,
       onResolveStart,
       onResolveEnd
