@@ -1,6 +1,6 @@
 {
   "name": "@measured/puck-field-contentful",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "author": "Measured Corporation Ltd <hello@measured.co>",
   "repository": "measuredco/puck",
   "bugs": "https://github.com/measuredco/puck/issues",
@@ -18,7 +18,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@measured/puck": "^0.14.0",
+    "@measured/puck": "^0.14.1",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "contentful": "^10.8.6",
