@@ -71,7 +71,7 @@ export function Puck<UserConfig extends Config = Config>({
 }: {
   children?: ReactNode;
   config: UserConfig;
-  data: Data;
+  data: Partial<Data>;
   ui?: Partial<UiState>;
   onChange?: (data: Data) => void;
   onPublish?: (data: Data) => void;
@@ -147,7 +147,7 @@ export function Puck<UserConfig extends Config = Config>({
     }
 
     // DEPRECATED
-    const rootProps = initialData.root.props || initialData.root;
+    const rootProps = initialData?.root?.props || initialData.root || {};
 
     const defaultedRootProps = {
       ...config.root?.defaultProps,
@@ -159,6 +159,7 @@ export function Puck<UserConfig extends Config = Config>({
       data: {
         ...initialData,
         root: defaultedRootProps,
+        content: initialData.content || [],
       },
       ui: {
         ...initial,

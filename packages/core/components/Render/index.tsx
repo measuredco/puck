@@ -9,15 +9,21 @@ export function Render<UserConfig extends Config = Config>({
   data,
 }: {
   config: UserConfig;
-  data: Data;
+  data: Partial<Data>;
 }) {
+  const defaultedData = {
+    ...data,
+    root: data.root || {},
+    content: data.content || [],
+  };
+
   // DEPRECATED
-  const rootProps = data.root.props || data.root;
+  const rootProps = defaultedData.root.props || defaultedData.root;
   const title = rootProps?.title || "";
 
   if (config.root?.render) {
     return (
-      <DropZoneProvider value={{ data, config, mode: "render" }}>
+      <DropZoneProvider value={{ data: defaultedData, config, mode: "render" }}>
         <config.root.render
           {...rootProps}
           puck={{
@@ -34,7 +40,7 @@ export function Render<UserConfig extends Config = Config>({
   }
 
   return (
-    <DropZoneProvider value={{ data, config, mode: "render" }}>
+    <DropZoneProvider value={{ data: defaultedData, config, mode: "render" }}>
       <DropZone zone={rootDroppableId} />
     </DropZoneProvider>
   );
