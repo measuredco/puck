@@ -456,111 +456,114 @@ export function Puck<UserConfig extends Config = Config>({
                     rightSideBarVisible,
                   })}
                 >
-                  <CustomHeader
-                    actions={
-                      <>
-                        <CustomHeaderActions />
-                        <Button
-                          onClick={() => {
-                            onPublish && onPublish(data);
-                          }}
-                          icon={<Globe size="14px" />}
-                        >
-                          Publish
-                        </Button>
-                      </>
-                    }
-                  >
-                    <header className={getClassName("header")}>
-                      <div className={getClassName("headerInner")}>
-                        <div className={getClassName("headerToggle")}>
-                          <div className={getClassName("leftSideBarToggle")}>
-                            <IconButton
-                              onClick={() => {
-                                toggleSidebars("left");
-                              }}
-                              title="Toggle left sidebar"
-                            >
-                              <PanelLeft focusable="false" />
-                            </IconButton>
-                          </div>
-                          <div className={getClassName("rightSideBarToggle")}>
-                            <IconButton
-                              onClick={() => {
-                                toggleSidebars("right");
-                              }}
-                              title="Toggle right sidebar"
-                            >
-                              <PanelRight focusable="false" />
-                            </IconButton>
-                          </div>
-                        </div>
-                        <div className={getClassName("headerTitle")}>
-                          <Heading rank={2} size="xs">
-                            {headerTitle || rootProps.title || "Page"}
-                            {headerPath && (
-                              <>
-                                {" "}
-                                <code className={getClassName("headerPath")}>
-                                  {headerPath}
-                                </code>
-                              </>
-                            )}
-                          </Heading>
-                        </div>
-                        <div className={getClassName("headerTools")}>
-                          <div className={getClassName("menuButton")}>
-                            <IconButton
-                              onClick={() => {
-                                return setMenuOpen(!menuOpen);
-                              }}
-                              title="Toggle menu bar"
-                            >
-                              {menuOpen ? (
-                                <ChevronUp focusable="false" />
-                              ) : (
-                                <ChevronDown focusable="false" />
-                              )}
-                            </IconButton>
-                          </div>
-                          <MenuBar
-                            appState={appState}
-                            data={data}
-                            dispatch={dispatch}
-                            onPublish={onPublish}
-                            menuOpen={menuOpen}
-                            renderHeaderActions={() => <CustomHeaderActions />}
-                            setMenuOpen={setMenuOpen}
-                          />
-                        </div>
-                      </div>
-                    </header>
-                  </CustomHeader>
-                  <div className={getClassName("leftSideBar")}>
-                    <SidebarSection title="Components" noBorderTop>
-                      <Components />
-                    </SidebarSection>
-                    <SidebarSection title="Outline">
-                      <Outline />
-                    </SidebarSection>
-                  </div>
-                  <Canvas />
-                  <div className={getClassName("rightSideBar")}>
-                    <SidebarSection
-                      noPadding
-                      noBorderTop
-                      showBreadcrumbs
-                      title={
-                        selectedItem
-                          ? config.components[selectedItem.type]["label"] ??
-                            selectedItem.type
-                          : "Page"
+                  <div className={getClassName("layout")}>
+                    <CustomHeader
+                      actions={
+                        <>
+                          <CustomHeaderActions />
+                          <Button
+                            onClick={() => {
+                              onPublish && onPublish(data);
+                            }}
+                            icon={<Globe size="14px" />}
+                          >
+                            Publish
+                          </Button>
+                        </>
                       }
                     >
-                      <Fields />
-                    </SidebarSection>
+                      <header className={getClassName("header")}>
+                        <div className={getClassName("headerInner")}>
+                          <div className={getClassName("headerToggle")}>
+                            <div className={getClassName("leftSideBarToggle")}>
+                              <IconButton
+                                onClick={() => {
+                                  toggleSidebars("left");
+                                }}
+                                title="Toggle left sidebar"
+                              >
+                                <PanelLeft focusable="false" />
+                              </IconButton>
+                            </div>
+                            <div className={getClassName("rightSideBarToggle")}>
+                              <IconButton
+                                onClick={() => {
+                                  toggleSidebars("right");
+                                }}
+                                title="Toggle right sidebar"
+                              >
+                                <PanelRight focusable="false" />
+                              </IconButton>
+                            </div>
+                          </div>
+                          <div className={getClassName("headerTitle")}>
+                            <Heading rank={2} size="xs">
+                              {headerTitle || rootProps.title || "Page"}
+                              {headerPath && (
+                                <>
+                                  {" "}
+                                  <code className={getClassName("headerPath")}>
+                                    {headerPath}
+                                  </code>
+                                </>
+                              )}
+                            </Heading>
+                          </div>
+                          <div className={getClassName("headerTools")}>
+                            <div className={getClassName("menuButton")}>
+                              <IconButton
+                                onClick={() => {
+                                  return setMenuOpen(!menuOpen);
+                                }}
+                                title="Toggle menu bar"
+                              >
+                                {menuOpen ? (
+                                  <ChevronUp focusable="false" />
+                                ) : (
+                                  <ChevronDown focusable="false" />
+                                )}
+                              </IconButton>
+                            </div>
+                            <MenuBar
+                              appState={appState}
+                              data={data}
+                              dispatch={dispatch}
+                              onPublish={onPublish}
+                              menuOpen={menuOpen}
+                              renderHeaderActions={() => (
+                                <CustomHeaderActions />
+                              )}
+                              setMenuOpen={setMenuOpen}
+                            />
+                          </div>
+                        </div>
+                      </header>
+                    </CustomHeader>
+                    <div className={getClassName("leftSideBar")}>
+                      <SidebarSection title="Components" noBorderTop>
+                        <Components />
+                      </SidebarSection>
+                      <SidebarSection title="Outline">
+                        <Outline />
+                      </SidebarSection>
+                    </div>
+                    <Canvas />
+                    <div className={getClassName("rightSideBar")}>
+                      <SidebarSection
+                        noPadding
+                        noBorderTop
+                        showBreadcrumbs
+                        title={
+                          selectedItem
+                            ? config.components[selectedItem.type]["label"] ??
+                              selectedItem.type
+                            : "Page"
+                        }
+                      >
+                        <Fields />
+                      </SidebarSection>
+                    </div>
                   </div>
-
                   <div
                     id="puck-portal-root"
                     className={getClassName("portal")}
