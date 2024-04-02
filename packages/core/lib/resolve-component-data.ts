@@ -43,7 +43,7 @@ export const resolveComponentData = async (
     }
 
     const { props: resolvedProps, readOnly = {} } =
-      await configForItem.resolveData(item, { changed });
+      await configForItem.resolveData(item, { changed, lastData: oldItem });
 
     const { readOnly: existingReadOnly = {} } = item || {};
 
