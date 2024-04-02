@@ -164,6 +164,16 @@ export const Hero: ComponentConfig<HeroProps> = {
       readOnly: { title: true, description: true },
     };
   },
+  resolveFields: async (data, { fields }) => {
+    if (data.props.align === "center") {
+      return {
+        ...fields,
+        image: undefined,
+      };
+    }
+
+    return fields;
+  },
   render: ({ align, title, description, buttons, padding, image }) => {
     // Empty state allows us to test that components support hooks
     // eslint-disable-next-line react-hooks/rules-of-hooks

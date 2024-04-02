@@ -166,9 +166,21 @@ export type ComponentConfig<
   label?: string;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
+  resolveFields?: (
+    data: DataShape,
+    params: {
+      changed: Partial<Record<keyof ComponentProps, boolean>>;
+      fields: Fields<ComponentProps>;
+      lastFields: Fields<ComponentProps>;
+      lastData: DataShape;
+      appState: AppState;
+    }
+  ) => Promise<Fields<ComponentProps>> | Fields<ComponentProps>;
   resolveData?: (
     data: DataShape,
-    params: { changed: Partial<Record<keyof ComponentProps, boolean>> }
+    params: {
+      changed: Partial<Record<keyof ComponentProps, boolean>>;
+    }
   ) =>
     | Promise<{
         props?: Partial<ComponentProps>;
@@ -205,7 +217,7 @@ export type Config<
     ComponentConfig<
       RootProps & { children?: ReactNode },
       Partial<RootProps & { children?: ReactNode }>,
-      RootDataWithProps
+      RootData
     >
   >;
 };
@@ -225,7 +237,7 @@ export type ComponentData<
 
 export type RootDataWithProps<
   Props extends DefaultRootProps = DefaultRootProps
-> = {
+> = BaseData<Props> & {
   props: Props;
 };
 
@@ -235,9 +247,7 @@ export type RootDataWithoutProps<
 > = Props;
 
 export type RootData<Props extends DefaultRootProps = DefaultRootProps> =
-  BaseData<Props> &
-    Partial<RootDataWithProps<Props>> &
-    Partial<RootDataWithoutProps<Props>>; // DEPRECATED
+  Partial<RootDataWithProps<Props>> & Partial<RootDataWithoutProps<Props>>; // DEPRECATED
 
 type ComponentDataWithOptionalProps<
   Props extends { [key: string]: any } = { [key: string]: any }

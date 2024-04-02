@@ -1,0 +1,141 @@
+import { ConfigPreview } from "@/docs/components/Preview";
+
+# Dynamic Fields
+
+Dynamic field resolution allows you to change the [field configuration](/docs/api-reference/configuration/component-config#fields) for a component based on the current component props.
+
+## Dynamic component fields
+
+The [`resolveFields` function](/docs/api-reference/configuration/component-config#resolvefieldsdata-params) allows you to make synchronous and asynchronous changes to the field configuration.
+
+For example, we can set the configuration of one field based on the prop value of another:
+
+```tsx {4-15} showLineNumbers copy
+const config = {
+  components: {
+    MyComponent: {
+      resolveFields: (data) => ({
+        fieldType: {
+          type: "radio",
+          options: [
+            { label: "Number", value: "number" },
+            { label: "Text", value: "text" },
+          ],
+        },
+        value: {
+          type: data.props.fieldType,
+        },
+      }),
+      render: ({ value }) => <h1>{value}</h1>,
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label='Try changing the "title" field'
+  componentConfig={{
+    resolveFields: (data) => ({
+      fieldType: {
+        type: "radio",
+        options: [
+          { label: "Text", value: "text" },
+          { label: "Textarea", value: "textarea" },
+        ],
+      },
+      title: {
+        type: data.props.fieldType,
+      },
+    }),
+    defaultProps: {
+      fieldType: "text",
+      title: "Hello, world",
+    },
+    render: ({ title }) => <p>{title}</p>,
+  }}
+/>
+
+### Making asynchronous calls
+
+The [`resolveFields` function](/docs/api-reference/configuration/component-config#resolvefieldsdata-params) also enables asynchronous calls.
+
+Here's an example populating the options for a [`select` field](/docs/api-reference/fields/select) based on a [`radio` field](/docs/api-reference/fields/radio)
+
+```tsx {4-24} showLineNumbers copy
+const config = {
+  components: {
+    MyComponent: {
+      resolveFields: async (data, { changed, lastFields }) => {
+        // Don't call the API unless `category` has changed
+        if (!changed.category) return lastFields;
+
+        // Make an asynchronous API call to get the options
+        const options = await getOptions(data.category);
+
+        return {
+          category: {
+            type: "radio",
+            options: [
+              { label: "Fruit", value: "fruit" },
+              { label: "Vegetables", value: "vegetables" },
+            ],
+          },
+          item: {
+            type: "select",
+            options,
+          },
+        };
+      },
+      render: ({ value }) => <h1>{value}</h1>,
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label='Try changing the "category" field'
+  componentConfig={{
+    resolveFields: async (data, { changed, lastFields }) => {
+      if (!changed.category) return lastFields;
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      return {
+        category: {
+          type: "radio",
+          options: [
+            { label: "Fruit", value: "fruit" },
+            { label: "Vegetables", value: "vegetables" },
+          ],
+        },
+        item: {
+          type: "select",
+          options:
+            data.props.category === "fruit"
+              ? [
+                { label: "Select a fruit", value: "" },
+                { label: "Apple", value: "apple" },
+                { label: "Orange", value: "orange" },
+                { label: "Tomato", value: "tomato" }
+              ] : [
+                { label: "Select a vegetable", value: "" },
+                { label: "Broccoli", value: "broccoli" },
+                { label: "Cauliflower", value: "cauliflower" },
+                { label: "Mushroom", value: "mushroom" },
+              ],
+        },
+      };
+    },
+
+    defaultProps: {
+      category: "fruit",
+      item: "",
+    },
+    render: ({ item }) => <p>{item}</p>,
+
+}}
+/>
+
+## Further reading
+
+- [`resolveFields` API reference](/docs/api-reference/configuration/component-config#resolvefieldsdata-params)

@@ -1,4 +1,5 @@
 import { Config, Data, RootDataWithProps } from "../types/Config";
+import { getChanged } from "./get-changed";
 
 export const cache: {
   lastChange?: { original: RootDataWithProps; resolved: RootDataWithProps };
@@ -6,24 +7,11 @@ export const cache: {
 
 export const resolveRootData = async (data: Data, config: Config) => {
   if (config.root?.resolveData && data.root.props) {
-    let changed = Object.keys(data.root.props).reduce(
-      (acc, item) => ({ ...acc, [item]: true }),
-      {}
-    );
-
-    if (cache.lastChange) {
-      const { original, resolved } = cache.lastChange;
-
-      if (original === data.root) {
-        return resolved;
-      }
-
-      Object.keys(data.root.props).forEach((propName) => {
-        if (original.props[propName] === data.root.props![propName]) {
-          changed[propName] = false;
-        }
-      });
+    if (cache.lastChange?.original === data.root) {
+      return cache.lastChange.resolved;
     }
+
+    const changed = getChanged(data.root, cache.lastChange?.original);
 
     const rootWithProps = data.root as RootDataWithProps;
 
