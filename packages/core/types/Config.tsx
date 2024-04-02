@@ -180,6 +180,7 @@ export type ComponentConfig<
     data: DataShape,
     params: {
       changed: Partial<Record<keyof ComponentProps, boolean>>;
+      lastData: DataShape;
     }
   ) =>
     | Promise<{

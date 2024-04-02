@@ -17,6 +17,7 @@ export const resolveRootData = async (data: Data, config: Config) => {
 
     const resolvedRoot = await config.root?.resolveData(rootWithProps, {
       changed,
+      lastData: cache.lastChange?.original || {},
     });
 
     cache.lastChange = {
