@@ -6,14 +6,21 @@ import {
   replaceAction,
   setAction,
 } from "../../../../reducer";
-import { Field, UiState } from "../../../../types/Config";
+import {
+  ComponentData,
+  Field,
+  Fields as FieldsType,
+  RootData,
+  UiState,
+} from "../../../../types/Config";
 import { InputOrGroup } from "../../../InputOrGroup";
 import { useAppContext } from "../../context";
 
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
+import { getChanged } from "../../../../lib/get-changed";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -30,7 +37,7 @@ const DefaultFields = ({
   itemSelector?: ItemSelector | null;
 }) => {
   return (
-    <div className={getClassName()}>
+    <div className={getClassName({ isLoading })}>
       {children}
       {isLoading && (
         <div className={getClassName("loadingOverlay")}>
@@ -39,6 +46,103 @@ const DefaultFields = ({
       )}
     </div>
   );
+};
+
+type ComponentOrRootData = Omit<Partial<ComponentData<any>>, "type">;
+
+const useResolvedFields = (): [FieldsType, boolean] => {
+  const { selectedItem, state, config } = useAppContext();
+
+  const { data } = state;
+
+  const rootFields = config.root?.fields || defaultPageFields;
+
+  const componentConfig = selectedItem
+    ? config.components[selectedItem.type]
+    : null;
+
+  const defaultFields = selectedItem
+    ? (componentConfig?.fields as Record<string, Field<any>>)
+    : rootFields;
+
+  // DEPRECATED
+  const rootProps = data.root.props || data.root;
+
+  const [lastSelectedData, setLastSelectedData] = useState<ComponentOrRootData>(
+    {}
+  );
+  const [resolvedFields, setResolvedFields] = useState(defaultFields || {});
+  const [fieldsLoading, setFieldsLoading] = useState(false);
+
+  const defaultResolveFields = (
+    _componentData: ComponentOrRootData,
+    _params: {
+      fields: FieldsType;
+      lastData: ComponentOrRootData;
+      lastFields: FieldsType;
+      changed: Record<string, boolean>;
+    }
+  ) => defaultFields;
+
+  const componentData: ComponentOrRootData = selectedItem
+    ? selectedItem
+    : { props: rootProps, readOnly: data.root.readOnly };
+
+  const resolveFields = useCallback(
+    async (fields: FieldsType = {}) => {
+      const lastData =
+        lastSelectedData.props?.id === componentData.props.id
+          ? lastSelectedData
+          : {};
+
+      const changed = getChanged(componentData, lastData);
+
+      setLastSelectedData(componentData);
+
+      if (selectedItem && componentConfig?.resolveFields) {
+        return await componentConfig?.resolveFields(
+          componentData as ComponentData,
+          {
+            changed,
+            fields,
+            lastFields: resolvedFields,
+            lastData: lastData as ComponentData,
+            appState: state,
+          }
+        );
+      }
+
+      if (!selectedItem && config.root?.resolveFields) {
+        return await config.root?.resolveFields(componentData, {
+          changed,
+          fields,
+          lastFields: resolvedFields,
+          lastData: lastData as RootData,
+          appState: state,
+        });
+      }
+
+      return defaultResolveFields(componentData, {
+        changed,
+        fields,
+        lastFields: resolvedFields,
+        lastData,
+      });
+    },
+    [data, config, componentData, selectedItem, resolvedFields, state]
+  );
+
+  useEffect(() => {
+    setFieldsLoading(true);
+
+    resolveFields(defaultFields).then((fields) => {
+      setResolvedFields(fields || {});
+
+      setFieldsLoading(false);
+    });
+  }, [data, defaultFields]);
+
+  return [resolvedFields, fieldsLoading];
 };
 
 export const Fields = () => {
@@ -54,18 +158,13 @@ export const Fields = () => {
   const { data, ui } = state;
   const { itemSelector } = ui;
 
-  const rootFields = config.root?.fields || defaultPageFields;
+  const [fields, fieldsResolving] = useResolvedFields();
 
-  const fields = selectedItem
-    ? (config.components[selectedItem.type]?.fields as Record<
-        string,
-        Field<any>
-      >) || {}
-    : rootFields;
-
-  const isLoading = selectedItem
+  const componentResolving = selectedItem
     ? componentState[selectedItem?.props.id]?.loading
     : componentState["puck-root"]?.loading;
+
+  const isLoading = fieldsResolving || componentResolving;
 
   // DEPRECATED
   const rootProps = data.root.props || data.root;
@@ -82,6 +181,8 @@ export const Fields = () => {
       <Wrapper isLoading={isLoading} itemSelector={itemSelector}>
         {Object.keys(fields).map((fieldName) => {
           const field = fields[fieldName];
+
+          if (!field?.type) return null;
 
           const onChange = (value: any, updatedUi?: Partial<UiState>) => {
             let currentProps;

@@ -26,13 +26,14 @@ const config = {
 
 ## Params
 
-| Param                                      | Example                                         | Type     | Status   |
-| ------------------------------------------ | ----------------------------------------------- | -------- | -------- |
-| [`render()`](#renderprops)                 | `render: () => <div />`                         | Function | Required |
-| [`fields`](#fields)                        | `fields: { title: { type: "text"} }`            | Object   | -        |
-| [`defaultProps`](#defaultprops)            | `defaultProps: { title: "Hello, world" }`       | Object   | -        |
-| [`label`](#label)                          | `label: "Heading Block"`                        | String   | -        |
-| [`resolveData()`](#resolvedatadata-params) | `resolveData: async ({ props }) => ({ props })` | Object   | -        |
+| Param                                          | Example                                         | Type     | Status   |
+| ---------------------------------------------- | ----------------------------------------------- | -------- | -------- |
+| [`render()`](#renderprops)                     | `render: () => <div />`                         | Function | Required |
+| [`fields`](#fields)                            | `fields: { title: { type: "text"} }`            | Object   | -        |
+| [`defaultProps`](#defaultprops)                | `defaultProps: { title: "Hello, world" }`       | Object   | -        |
+| [`label`](#label)                              | `label: "Heading Block"`                        | String   | -        |
+| [`resolveData()`](#resolvedatadata-params)     | `resolveData: async ({ props }) => ({ props })` | Object   | -        |
+| [`resolveFields()`](#resolvefieldsdata-params) | `resolveFields: async ({ props }) => ({})}`     | Object   | -        |
 
 ## Required params
 
@@ -259,7 +260,7 @@ The fields currently set to read-only for this component.
 
 ##### `params.changed`
 
-An object describing which fields have changed on this component since the last time `resolveData` was called.
+An object describing which props have changed on this component since the last time `resolveData` was called.
 
 ```tsx copy {2-4} /changed/1 filename="Example only updating 'resolvedTitle' when 'title' changes"
 const resolveData = async ({ props }, { changed }) => {
@@ -303,3 +304,107 @@ const resolveData = async ({ props }) => {
   };
 };
 ```
+
+### `resolveFields(data, params)`
+
+Dynamically set the fields for this component. Can be used to make asynchronous calls.
+
+This function is triggered when the component data changes.
+
+```tsx {4-15} copy filename="Example changing one field based on another"
+const config = {
+  components: {
+    MyComponent: {
+      resolveFields: (data) => ({
+        fieldType: {
+          type: "radio",
+          options: [
+            { label: "Text", value: "text" },
+            { label: "Textarea", value: "textarea" },
+          ],
+        },
+        title: {
+          type: data.props.fieldType,
+        },
+      }),
+      render: ({ title }) => <h1>{title}</h1>,
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label='Try changing the "title" field'
+  componentConfig={{
+    resolveFields: (data) => ({
+      fieldType: {
+        type: "radio",
+        options: [
+          { label: "Text", value: "text" },
+          { label: "Textarea", value: "textarea" },
+        ],
+      },
+      title: {
+        type: data.props.fieldType,
+      },
+    }),
+    defaultProps: {
+      fieldType: "text",
+      title: "Hello, world",
+    },
+    render: ({ title }) => <p>{title}</p>,
+  }}
+/>
+
+#### Args
+
+| Prop     | Example                                                                   | Type   |
+| -------- | ------------------------------------------------------------------------- | ------ |
+| `data`   | `{ props: { title: "Hello, world" }, readOnly: {} }`                      | Object |
+| `params` | `{ appState: {}, changed: {}, fields: {}, lastData: {}, lastFields: {} }` | Object |
+
+##### `data.props`
+
+The current props for the selected component.
+
+##### `data.readOnly`
+
+The fields currently set to read-only for this component.
+
+##### `params.appState`
+
+An object describing the [AppState](/docs/api-reference/app-state).
+
+##### `params.changed`
+
+An object describing which props have changed on this component since the last time this function was called.
+
+```tsx copy {2-4} /changed/1 filename="Example only updating the fields when 'fieldType' changes"
+const resolveFields = async ({ props }, { changed, lastFields }) => {
+  if (!changed.fieldType) {
+    return lastFields;
+  }
+
+  return {
+    title: {
+      type: fieldType,
+    },
+  };
+};
+```
+
+##### `params.fields`
+
+The static fields for this component as defined by [`fields`](#fields).
+
+##### `params.lastData`
+
+The data object from the previous run of this function.
+
+##### `params.lastFields`
+
+The last fields object created by the previous run of this function.
+
+#### Returns
+
+A [`fields`](#fields) object.

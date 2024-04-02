@@ -1,4 +1,5 @@
 import { ComponentData, Config, MappedItem } from "../types/Config";
+import { getChanged } from "./get-changed";
 
 export const cache = { lastChange: {} };
 
@@ -28,24 +29,14 @@ export const resolveComponentData = async (
 ) => {
   const configForItem = config.components[item.type];
   if (configForItem.resolveData) {
-    let changed = Object.keys(item.props).reduce(
-      (acc, item) => ({ ...acc, [item]: true }),
-      {}
-    );
+    const { item: oldItem = {}, resolved = {} } =
+      cache.lastChange[item.props.id] || {};
 
-    if (cache.lastChange[item.props.id]) {
-      const { item: oldItem, resolved } = cache.lastChange[item.props.id];
-
-      if (oldItem === item) {
-        return resolved;
-      }
-
-      Object.keys(item.props).forEach((propName) => {
-        if (oldItem.props[propName] === item.props[propName]) {
-          changed[propName] = false;
-        }
-      });
+    if (item && item === oldItem) {
+      return resolved;
     }
+
+    const changed = getChanged(item, oldItem);
 
     if (onResolveStart) {
       onResolveStart(item);

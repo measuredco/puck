@@ -3,6 +3,10 @@
   font-family: var(--puck-font-family);
 }
 
+.PuckFields--isLoading {
+  min-height: 48px; /* Ensure there is sufficient room for loader if no fields */
+}
+
 .PuckFields-loadingOverlay {
   background: var(--puck-color-white);
   display: flex;
