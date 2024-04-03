@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@measured/auto-frame-component": "0.1.1",
-    "@measured/dnd": "16.6.0-canary.27e9f8e",
+    "@measured/dnd": "16.6.0-canary.f472135",
     "deep-diff": "^1.0.2",
     "react-hotkeys-hook": "^4.4.1",
     "react-spinners": "^0.13.8",
