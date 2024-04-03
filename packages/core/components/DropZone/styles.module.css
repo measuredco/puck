@@ -2,7 +2,7 @@
   margin-left: auto;
   margin-right: auto;
   position: relative;
-  height: 100%;
+  min-height: 100%;
   outline-offset: -2px;
   width: 100%;
 }
