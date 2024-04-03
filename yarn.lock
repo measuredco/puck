@@ -1453,13 +1453,14 @@
     object-hash "^3.0.0"
     react-frame-component "5.2.6"
 
-"@measured/dnd@16.6.0-canary.c7c88e8":
-  version "16.6.0-canary.c7c88e8"
-  resolved "https://registry.yarnpkg.com/@measured/dnd/-/dnd-16.6.0-canary.c7c88e8.tgz#8587e1ba86a55d6e720bbf98c04d3f17b3865553"
-  integrity sha512-RZGmVyBaB6kaUblBAMptwOKiWSSwfiLuN/Ai0er0oiWjgL/p5/LWwcHRsR2TGuyNL2od4EY+eAeG+9kc+F50NA==
+"@measured/dnd@16.6.0-canary.a2766de":
+  version "16.6.0-canary.a2766de"
+  resolved "https://registry.yarnpkg.com/@measured/dnd/-/dnd-16.6.0-canary.a2766de.tgz#2335c89d3d9c6e5b3c882f3ce69e8730acd4e483"
+  integrity sha512-iQ/YbhfDROgO/lDsM2o/85QxqC5muvvtghajlzwDQY97UxmVb7Qqyva/RW74KrxqvGKqgzA5deEBfvrmaPF+9A==
   dependencies:
     "@babel/runtime" "^7.23.2"
     css-box-model "^1.2.1"
+    lru-cache "^10.2.0"
     memoize-one "^6.0.0"
     raf-schd "^4.0.3"
     react-redux "^8.1.3"
@@ -8613,6 +8614,11 @@ lower-case@^1.1.0, lower-case@^1.1.1, lower-case@^1.1.2:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-1.1.4.tgz#9a2cabd1b9e8e0ae993a4bf7d5875c39c42e8eac"
   integrity sha512-2Fgx1Ycm599x+WGpIYwJOvsjmXFzTSc34IwDWALRA/8AopUKAVPwfJ+h5+f85BCp0PWmmJcWzEpxOpoXycMpdA==
+
+lru-cache@^10.2.0:
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.2.0.tgz#0bd445ca57363465900f4d1f9bd8db343a4d95c3"
+  integrity sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==
 
 lru-cache@^4.0.1:
   version "4.1.5"
