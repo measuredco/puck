@@ -150,7 +150,7 @@ export const Canvas = () => {
         <div
           className={getClassName("root")}
           style={{
-            width: iframe.enabled ? ui.viewports.current.width : undefined,
+            width: iframe.enabled ? ui.viewports.current.width : "100%",
             height: zoomConfig.rootHeight,
             transform: iframe.enabled ? `scale(${zoomConfig.zoom})` : undefined,
             transition: showTransition
