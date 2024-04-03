@@ -1453,10 +1453,10 @@
     object-hash "^3.0.0"
     react-frame-component "5.2.6"
 
-"@measured/dnd@16.6.0-canary.a2766de":
-  version "16.6.0-canary.a2766de"
-  resolved "https://registry.yarnpkg.com/@measured/dnd/-/dnd-16.6.0-canary.a2766de.tgz#2335c89d3d9c6e5b3c882f3ce69e8730acd4e483"
-  integrity sha512-iQ/YbhfDROgO/lDsM2o/85QxqC5muvvtghajlzwDQY97UxmVb7Qqyva/RW74KrxqvGKqgzA5deEBfvrmaPF+9A==
+"@measured/dnd@16.6.0-canary.27e9f8e":
+  version "16.6.0-canary.27e9f8e"
+  resolved "https://registry.yarnpkg.com/@measured/dnd/-/dnd-16.6.0-canary.27e9f8e.tgz#806d77b5637d86312edc14a200e46871828a95f3"
+  integrity sha512-NbJW1JcbIHk0v/0MovrF8GurVbtcrDmce2600ThTNWA741a/PYrL6N6/y0KxMlwslpZMMoWk2hHwEHopXMwFPQ==
   dependencies:
     "@babel/runtime" "^7.23.2"
     css-box-model "^1.2.1"
