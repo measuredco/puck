@@ -1453,10 +1453,10 @@
     object-hash "^3.0.0"
     react-frame-component "5.2.6"
 
-"@measured/dnd@16.6.0-canary.f472135":
-  version "16.6.0-canary.f472135"
-  resolved "https://registry.yarnpkg.com/@measured/dnd/-/dnd-16.6.0-canary.f472135.tgz#c416112271d9c0f3c21ee57aff44b927ce0347e8"
-  integrity sha512-EvFj+RCpZvdZHSiReo565g6c6zMp7PxmMYMwtA1MCSnBqn4Ll4ozgddnQWYVcyfbv99zOAmMx7CNeo/XC1oiwA==
+"@measured/dnd@16.6.0-canary.fb068c0":
+  version "16.6.0-canary.fb068c0"
+  resolved "https://registry.yarnpkg.com/@measured/dnd/-/dnd-16.6.0-canary.fb068c0.tgz#5aaa3d107c717432e55500063bdd5ae169c56ec3"
+  integrity sha512-r9F0kJi48VKbZRnSiJL/Xx6Y1S1K5VQeLzC1ZN4Nu03p5Gt4kos5/04YE7BODq/keq/b70QYi4/owboEIe30/A==
   dependencies:
     "@babel/runtime" "^7.23.2"
     css-box-model "^1.2.1"
@@ -2624,6 +2624,11 @@
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-4.0.3.tgz#3d06b6769518450871fbc40770b7586334bdfd90"
   integrity sha512-THo502dA5PzG/sfQH+42Lw3fvmYkceefOspdCwpHRul8ik2Jv1K8I5OZz1AT3/rs46kwgMCe9bSBmDLYkkOMGg==
+
+"@types/ua-parser-js@^0.7.39":
+  version "0.7.39"
+  resolved "https://registry.yarnpkg.com/@types/ua-parser-js/-/ua-parser-js-0.7.39.tgz#832c58e460c9435e4e34bb866e85e9146e12cdbb"
+  integrity sha512-P/oDfpofrdtF5xw433SPALpdSchtJmY7nsJItf8h3KXqOslkbySh8zq4dSWXH2oTjRvJ5PczVEoCZPow6GicLg==
 
 "@types/unist@*", "@types/unist@^3.0.0":
   version "3.0.0"
@@ -12928,6 +12933,11 @@ typescript@^5.1.6:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.2.tgz#00d1c7c1c46928c5845c1ee8d0cc2791031d4c43"
   integrity sha512-6l+RyNy7oAHDfxC4FzSJcz9vnjTKxrLpDG5M2Vu4SHRVNg6xzqZp6LYSR9zjqQTu8DU/f5xwxUdADOkbrIX2gQ==
+
+ua-parser-js@^1.0.37:
+  version "1.0.37"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.37.tgz#b5dc7b163a5c1f0c510b08446aed4da92c46373f"
+  integrity sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ==
 
 ufo@^1.3.0:
   version "1.3.2"

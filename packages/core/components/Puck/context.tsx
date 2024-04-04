@@ -14,6 +14,7 @@ import { PuckHistory } from "../../lib/use-puck-history";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types/Viewports";
 import { IframeConfig } from "../../types/IframeConfig";
+import { UAParser } from "ua-parser-js";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: { props: { title: "" } } },
@@ -58,6 +59,7 @@ type AppContext<UserConfig extends Config = Config> = {
   status: Status;
   setStatus: (status: Status) => void;
   iframe: IframeConfig;
+  safariFallbackMode?: boolean;
 };
 
 const defaultContext: AppContext = {
@@ -79,6 +81,7 @@ const defaultContext: AppContext = {
   status: "LOADING",
   setStatus: () => null,
   iframe: {},
+  safariFallbackMode: false,
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
@@ -103,9 +106,39 @@ export const AppProvider = ({
     setStatus("MOUNTED");
   }, []);
 
+  const [safariFallbackMode, setSafariFallbackMode] = useState(false);
+
+  useEffect(() => {
+    const ua = new UAParser(navigator.userAgent);
+
+    const { browser } = ua.getResult();
+
+    if (
+      browser.name === "Safari" &&
+      (browser.version?.indexOf("17.2.") ||
+        browser.version?.indexOf("17.3.") ||
+        browser.version?.indexOf("17.4."))
+    ) {
+      if (process.env.NODE_ENV !== "production" && value.iframe.enabled) {
+        console.warn(
+          `Detected Safari ${browser.version}, which contains a bug that prevents Puck DropZones from detecting a mouseover event within an iframe. This affects Safari versions 17.2, 17.3 and 17.4.\n\nRunning in compatibility mode, which may have some DropZone side-effects. Alternatively, consider disabling iframes: https://puckeditor.com/docs/integrating-puck/viewports#opting-out-of-iframes.\n\nSee https://github.com/measuredco/puck/issues/411 for more information. This message will not show in production.`
+        );
+      }
+
+      setSafariFallbackMode(true);
+    }
+  }, []);
+
   return (
     <appContext.Provider
-      value={{ ...value, zoomConfig, setZoomConfig, status, setStatus }}
+      value={{
+        ...value,
+        zoomConfig,
+        setZoomConfig,
+        status,
+        setStatus,
+        safariFallbackMode,
+      }}
     >
       {children}
     </appContext.Provider>
