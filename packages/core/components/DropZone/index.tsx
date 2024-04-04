@@ -125,7 +125,11 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
    */
   if (userIsDragging) {
     if (draggingNewComponent) {
-      isEnabled = hoveringOverArea;
+      if (appContext.safariFallbackMode) {
+        isEnabled = true;
+      } else {
+        isEnabled = hoveringOverArea;
+      }
     } else {
       isEnabled = draggingOverArea && hoveringOverZone;
     }
