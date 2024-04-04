@@ -33,7 +33,7 @@ export const SelectField = ({
             e.currentTarget.value === "true" ||
             e.currentTarget.value === "false"
           ) {
-            onChange(Boolean(e.currentTarget.value));
+            onChange(JSON.parse(e.currentTarget.value));
             return;
           }
 
