@@ -108,7 +108,7 @@ Available recipes include:
 
 Puck is developed and maintained by **Measured**, a small group of industry veterans with decades of experience helping companies solve hard UI problems. We offer consultancy and development services for scale-ups, SMEs and enterprises.
 
-If you need support integrating Puck or creating a beautiful component library, please reach out via [our website](https://measured.co).
+If you need support integrating Puck or creating a beautiful component library, please reach out via the [Measured](https://measured.co) website.
 
 ## License
 
