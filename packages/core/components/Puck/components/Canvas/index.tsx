@@ -14,6 +14,7 @@ import { getClassNameFactory } from "../../../../lib";
 import { Preview } from "../Preview";
 import { getZoomConfig } from "../../../../lib/get-zoom-config";
 import { AppState } from "../../../../types";
+import { Loader } from "../../../Loader";
 
 const getClassName = getClassNameFactory("PuckCanvas", styles);
 
@@ -100,10 +101,19 @@ export const Canvas = () => {
     };
   }, []);
 
+  const [showLoader, setShowLoader] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowLoader(true);
+    }, 500);
+  }, []);
+
   return (
     <div
       className={getClassName({
         ready: status === "READY" || !iframe.enabled,
+        showLoader,
       })}
       onClick={() =>
         dispatch({
@@ -163,6 +173,9 @@ export const Canvas = () => {
           <CustomPreview>
             <Preview />
           </CustomPreview>
+        </div>
+        <div className={getClassName("loader")}>
+          <Loader size={24} />
         </div>
       </div>
     </div>
