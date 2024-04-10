@@ -1445,18 +1445,18 @@
     "@types/mdx" "^2.0.0"
     "@types/react" ">=16"
 
-"@measured/auto-frame-component@0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@measured/auto-frame-component/-/auto-frame-component-0.1.1.tgz#d96e74e686933590361e8b5aa99d3447d624f16d"
-  integrity sha512-w/Ge4yxmODZm86fBnYkRlSKiVWqG8lIrE3COOY3PsjeEfXMloAei99wBgtM53gRgnqFWzd6PL/jJN9GGcA906w==
+"@measured/auto-frame-component@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@measured/auto-frame-component/-/auto-frame-component-0.1.2.tgz#843452f23640c85e0664f90d7138dde6b7f15254"
+  integrity sha512-EWSGEbZMbsN2msHK0QMEoHZo9SgmD61/RSGQ/Wxo4TZoz5Fkqz8/k9+u4mbL8EpyL3o3tqouWp1bkNAiAkxf5g==
   dependencies:
     object-hash "^3.0.0"
     react-frame-component "5.2.6"
 
-"@measured/dnd@16.6.0-canary.fb068c0":
-  version "16.6.0-canary.fb068c0"
-  resolved "https://registry.yarnpkg.com/@measured/dnd/-/dnd-16.6.0-canary.fb068c0.tgz#5aaa3d107c717432e55500063bdd5ae169c56ec3"
-  integrity sha512-r9F0kJi48VKbZRnSiJL/Xx6Y1S1K5VQeLzC1ZN4Nu03p5Gt4kos5/04YE7BODq/keq/b70QYi4/owboEIe30/A==
+"@measured/dnd@16.6.0-canary.eda7e8b":
+  version "16.6.0-canary.eda7e8b"
+  resolved "https://registry.yarnpkg.com/@measured/dnd/-/dnd-16.6.0-canary.eda7e8b.tgz#43786a28185c31eee84cfc7c04c4840c9e1a1d89"
+  integrity sha512-AXB10+927fl/R01gzae2+u9ZpL+3ES+YxpwZS+qkXyUJPSsU1fa3l1hrP9Lh+2JxXdRfsPwMt07Rpeco8j7GWA==
   dependencies:
     "@babel/runtime" "^7.23.2"
     css-box-model "^1.2.1"
