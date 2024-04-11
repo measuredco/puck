@@ -205,7 +205,6 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
         style={{
           position: "relative",
           overflowY: hoveringTabs ? "hidden" : "auto",
-          height: "100vh",
           zIndex: 0,
         }}
       >
