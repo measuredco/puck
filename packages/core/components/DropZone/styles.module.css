@@ -49,6 +49,15 @@
   ) !important;
 }
 
+.DropZone--hasChildren {
+  margin-left: initial;
+  margin-right: initial;
+  height: initial;
+  outline-offset: initial;
+  width: initial;
+  min-height: 128px;
+}
+
 .DropZone-item {
   position: relative;
 }
