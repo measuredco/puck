@@ -27,6 +27,7 @@ export const DraggableComponent = ({
   children,
   id,
   index,
+  isEnabled = false,
   isLoading = false,
   isSelected = false,
   onClick = () => null,
@@ -48,6 +49,7 @@ export const DraggableComponent = ({
   children: ReactNode;
   id: string;
   index: number;
+  isEnabled?: boolean;
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
   onMount?: () => void;
@@ -86,73 +88,133 @@ export const DraggableComponent = ({
   }, []);
 
   return (
-    <El
-      key={id}
-      draggableId={id}
-      index={index}
-      isDragDisabled={isDragDisabled}
-      disableSecondaryAnimation={disableSecondaryAnimation}
-    >
-      {(provided, snapshot) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className={getClassName({
-            isSelected,
-            isModifierHeld,
-            isDragging: snapshot.isDragging,
-            isLocked,
-            forceHover,
-            indicativeHover,
-          })}
-          style={{
-            ...style,
-            ...provided.draggableProps.style,
-            cursor: isModifierHeld ? "initial" : "grab",
-          }}
-          onMouseOver={onMouseOver}
-          onMouseOut={onMouseOut}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
-          onClick={onClick}
-        >
-          {debug}
-          {isLoading && (
-            <div className={getClassName("loadingOverlay")}>
-              <ClipLoader aria-label="loading" size={16} color="inherit" />
-            </div>
-          )}
+    <div {...(isEnabled ? { "data-drag-item": "" } : {})}>
+      <div
+        className={getClassName({
+          isSelected,
+          isModifierHeld,
+          // isDragging: snapshot.isDragging,
+          isLocked,
+          forceHover,
+          indicativeHover,
+        })}
+        style={{
+          ...style,
+          // ...provided.draggableProps.style,
+          cursor: isModifierHeld ? "initial" : "grab",
+        }}
+        onMouseOver={onMouseOver}
+        onMouseOut={onMouseOut}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onClick={onClick}
+      >
+        {debug}
+        {isLoading && (
+          <div className={getClassName("loadingOverlay")}>
+            <ClipLoader aria-label="loading" size={16} color="inherit" />
+          </div>
+        )}
 
+        <div
+          className={getClassName("actionsOverlay")}
+          style={{
+            top: actionsOverlayTop / zoomConfig.zoom,
+          }}
+        >
           <div
-            className={getClassName("actionsOverlay")}
+            className={getClassName("actions")}
             style={{
-              top: actionsOverlayTop / zoomConfig.zoom,
+              transform: `scale(${1 / zoomConfig.zoom}`,
+              top: actionsTop / zoomConfig.zoom,
+              right: actionsRight / zoomConfig.zoom,
             }}
           >
-            <div
-              className={getClassName("actions")}
-              style={{
-                transform: `scale(${1 / zoomConfig.zoom}`,
-                top: actionsTop / zoomConfig.zoom,
-                right: actionsRight / zoomConfig.zoom,
-              }}
-            >
-              {label && (
-                <div className={getClassName("actionsLabel")}>{label}</div>
-              )}
-              <button className={getClassName("action")} onClick={onDuplicate}>
-                <Copy size={16} />
-              </button>
-              <button className={getClassName("action")} onClick={onDelete}>
-                <Trash size={16} />
-              </button>
-            </div>
+            {label && (
+              <div className={getClassName("actionsLabel")}>{label}</div>
+            )}
+            <button className={getClassName("action")} onClick={onDuplicate}>
+              <Copy size={16} />
+            </button>
+            <button className={getClassName("action")} onClick={onDelete}>
+              <Trash size={16} />
+            </button>
           </div>
-          <div className={getClassName("overlay")} />
-          <div className={getClassName("contents")}>{children}</div>
         </div>
-      )}
-    </El>
+        <div className={getClassName("overlay")} />
+        <div className={getClassName("contents")}>{children}</div>
+      </div>
+    </div>
   );
+
+  // return (
+  //   <El
+  //     key={id}
+  //     draggableId={id}
+  //     index={index}
+  //     isDragDisabled={isDragDisabled}
+  //     disableSecondaryAnimation={disableSecondaryAnimation}
+  //   >
+  //     {(provided, snapshot) => (
+  //       <div
+  //         ref={provided.innerRef}
+  //         {...provided.draggableProps}
+  //         {...provided.dragHandleProps}
+  //         className={getClassName({
+  //           isSelected,
+  //           isModifierHeld,
+  //           isDragging: snapshot.isDragging,
+  //           isLocked,
+  //           forceHover,
+  //           indicativeHover,
+  //         })}
+  //         style={{
+  //           ...style,
+  //           ...provided.draggableProps.style,
+  //           cursor: isModifierHeld ? "initial" : "grab",
+  //         }}
+  //         onMouseOver={onMouseOver}
+  //         onMouseOut={onMouseOut}
+  //         onMouseDown={onMouseDown}
+  //         onMouseUp={onMouseUp}
+  //         onClick={onClick}
+  //       >
+  //         {debug}
+  //         {isLoading && (
+  //           <div className={getClassName("loadingOverlay")}>
+  //             <ClipLoader aria-label="loading" size={16} color="inherit" />
+  //           </div>
+  //         )}
+
+  //         <div
+  //           className={getClassName("actionsOverlay")}
+  //           style={{
+  //             top: actionsOverlayTop / zoomConfig.zoom,
+  //           }}
+  //         >
+  //           <div
+  //             className={getClassName("actions")}
+  //             style={{
+  //               transform: `scale(${1 / zoomConfig.zoom}`,
+  //               top: actionsTop / zoomConfig.zoom,
+  //               right: actionsRight / zoomConfig.zoom,
+  //             }}
+  //           >
+  //             {label && (
+  //               <div className={getClassName("actionsLabel")}>{label}</div>
+  //             )}
+  //             <button className={getClassName("action")} onClick={onDuplicate}>
+  //               <Copy size={16} />
+  //             </button>
+  //             <button className={getClassName("action")} onClick={onDelete}>
+  //               <Trash size={16} />
+  //             </button>
+  //           </div>
+  //         </div>
+  //         <div className={getClassName("overlay")} />
+  //         <div className={getClassName("contents")}>{children}</div>
+  //       </div>
+  //     )}
+  //   </El>
+  // );
 };
