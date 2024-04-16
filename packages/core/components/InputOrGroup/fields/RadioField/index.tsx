@@ -48,7 +48,7 @@ export const RadioField = ({
                 onChange(e.currentTarget.value);
               }}
               disabled={readOnly}
-              defaultChecked={value === option.value}
+              checked={value === option.value}
             />
             <div className={getClassName("radioInner")}>
               {option.label || option.value}
