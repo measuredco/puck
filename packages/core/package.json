@@ -60,7 +60,7 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "@measured/auto-frame-component": "0.1.5",
+    "@measured/auto-frame-component": "0.1.6-canary.ad6452f",
     "@measured/dnd": "16.6.0-canary.4cba1d1",
     "deep-diff": "^1.0.2",
     "react-hotkeys-hook": "^4.4.1",
