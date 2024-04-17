@@ -2,6 +2,39 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.14.2](https://github.com/measuredco/puck/compare/v0.14.0...v0.14.2) (2024-04-17)
+
+
+### Bug Fixes
+
+* add DropZone iframe compatablity mode for bug in Safari 17.2, 17.3 and 17.4 ([47496c2](https://github.com/measuredco/puck/commit/47496c25407b1a5fdb88333e1fbf5416efc51c50))
+* check for optionality to handle race condition when dragging ([4dbd487](https://github.com/measuredco/puck/commit/4dbd487f6055ea3d38ab7de54e29bd6e4ffe84ce))
+* defer iframe event binding until contentWindow is ready ([268ea53](https://github.com/measuredco/puck/commit/268ea53f969a892843c026e5ba9ced15edb9f801))
+* don't crash if component is missing after referenced in category ([dc93789](https://github.com/measuredco/puck/commit/dc93789c4311e386b022b5c3d7c8595c00a8a212))
+* don't force height of DropZones in custom interfaces ([046c255](https://github.com/measuredco/puck/commit/046c2557b6baa62994380c547ad006759b02cc92))
+* don't query iframe document if not ready ([2b2ef32](https://github.com/measuredco/puck/commit/2b2ef32555387d4656872674289740b73dcd406b))
+* don't throw undefined error if rapidly zooming browser in some environments ([282a8b0](https://github.com/measuredco/puck/commit/282a8b0d9f170ea95f5717c8b2ad08ec487d7d8f))
+* fix drag-and-drop when entire Puck component used inside an iframe ([23db292](https://github.com/measuredco/puck/commit/23db292b9a2caa8e65117c08706843d3ed343454))
+* fix support for boolean values in select fields ([c4a66ad](https://github.com/measuredco/puck/commit/c4a66addacd9acdc1f042ac54831b7dac38f2757))
+* make draggable outlines consistent ([9008b70](https://github.com/measuredco/puck/commit/9008b70ed63155140a5241914c86456a2d4c9388))
+* prevent grid layout issues in generated apps ([5c05f94](https://github.com/measuredco/puck/commit/5c05f945679f7f2c0edd5d99c652989c00920ac6))
+* reflect value changes made via resolveData in radio fields ([9a7066f](https://github.com/measuredco/puck/commit/9a7066f4e837575aecbde0de4dd2bc96328a2a15))
+* remove peer dependencies causing warnings ([041ca64](https://github.com/measuredco/puck/commit/041ca64a6fe96539681d88e9cd0e66a6ac27a6ce))
+* resolve security warning when additional iframes present ([03ab0bd](https://github.com/measuredco/puck/commit/03ab0bd3314a4d6dfc863bdcf5f23246331b959b))
+* use 100% width for Puck preview when iframe disabled ([#414](https://github.com/measuredco/puck/issues/414)) ([64303c8](https://github.com/measuredco/puck/commit/64303c8510df15b6ca94bc7be0294d9746193b35))
+* use more custom interface friendly styles for iframes ([e6e01c6](https://github.com/measuredco/puck/commit/e6e01c6ec5b2bee9ab3a4a9425276ad4f1840c20))
+
+
+### Performance Improvements
+
+* add API for disabling auto-scroll due to performance issues ([3e5599e](https://github.com/measuredco/puck/commit/3e5599e687643094f7c80d0ce99a7c6a0c947e28))
+* batch load initial iframe styles ([e585f20](https://github.com/measuredco/puck/commit/e585f2090c0457d124006bd6349a69c9883d3c03))
+* don't lock main thread when iframe styles changed ([e529e85](https://github.com/measuredco/puck/commit/e529e8525eb758025261577c424d8601c1ed8daf))
+* reuse host window styles in iframes ([e7fe7e0](https://github.com/measuredco/puck/commit/e7fe7e0d7577bae1ab90650e5d7986d6745fbaf9))
+
+
+
+
 ## [0.14.1](https://github.com/measuredco/puck/compare/v0.14.0...v0.14.1) (2024-04-01)
 
 
