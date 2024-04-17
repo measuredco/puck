@@ -67,6 +67,7 @@ export function Puck<UserConfig extends Config = Config>({
   iframe = {
     enabled: true,
   },
+  dnd,
 }: {
   children?: ReactNode;
   config: UserConfig;
@@ -89,6 +90,9 @@ export function Puck<UserConfig extends Config = Config>({
   headerPath?: string;
   viewports?: Viewports;
   iframe?: IframeConfig;
+  dnd?: {
+    disableAutoScroll?: boolean;
+  };
 }) {
   const historyStore = useHistoryStore();
 
@@ -368,7 +372,7 @@ export function Puck<UserConfig extends Config = Config>({
         }}
       >
         <DragDropContext
-          autoScrollerOptions={{ disabled: iframe.disableAutoScroll }}
+          autoScrollerOptions={{ disabled: dnd?.disableAutoScroll }}
           onDragUpdate={(update) => {
             setDraggedItem({ ...draggedItem, ...update });
             onDragStartOrUpdate(update);
