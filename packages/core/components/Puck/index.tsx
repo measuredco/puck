@@ -368,6 +368,7 @@ export function Puck<UserConfig extends Config = Config>({
         }}
       >
         <DragDropContext
+          autoScrollerOptions={{ disabled: iframe.disableAutoScroll }}
           onDragUpdate={(update) => {
             setDraggedItem({ ...draggedItem, ...update });
             onDragStartOrUpdate(update);
