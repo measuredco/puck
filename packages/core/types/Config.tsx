@@ -104,14 +104,12 @@ export type ExternalField<
   initialFilters?: Record<string, any>;
 };
 
-export type CustomField<
-  Props extends { [key: string]: any } = { [key: string]: any }
-> = BaseField & {
+export type CustomField<Props extends any = {}> = BaseField & {
   type: "custom";
   render: (props: {
     field: CustomField;
     name: string;
-    value: any;
+    value: Props;
     onChange: (value: Props) => void;
     readOnly?: boolean;
   }) => ReactElement;
