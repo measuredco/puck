@@ -14,7 +14,7 @@ const getClassName = getClassNameFactory("MenuBar", styles);
 
 export const MenuBar = ({
   appState,
-  data = { content: [], root: { props: { title: "" } } },
+  data = { content: [], root: {} },
   dispatch,
   menuOpen = false,
   onPublish,

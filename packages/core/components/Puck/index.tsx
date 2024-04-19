@@ -53,7 +53,7 @@ const getClassName = getClassNameFactory("Puck", styles);
 export function Puck<UserConfig extends Config = Config>({
   children,
   config,
-  data: initialData = { content: [], root: { props: { title: "" } } },
+  data: initialData = { content: [], root: {} },
   ui: initialUi,
   onChange,
   onPublish,
@@ -146,9 +146,20 @@ export function Puck<UserConfig extends Config = Config>({
       }
     }
 
+    // DEPRECATED
+    const rootProps = initialData.root.props || initialData.root;
+
+    const defaultedRootProps = {
+      ...config.root?.defaultProps,
+      ...rootProps,
+    };
+
     return {
       ...defaultAppState,
-      data: initialData,
+      data: {
+        ...initialData,
+        root: defaultedRootProps,
+      },
       ui: {
         ...initial,
         ...clientUiState,
