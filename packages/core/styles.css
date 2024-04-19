@@ -1,7 +1,3 @@
 @import url("https://rsms.me/inter/inter.css");
 @import "./styles/color.css";
 @import "./styles/typography.css";
-
-.Puck {
-  min-height: 100%;
-}
