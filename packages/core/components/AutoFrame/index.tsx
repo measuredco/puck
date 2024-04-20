@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect } from "react";
 import Frame, { FrameComponentProps, useFrame } from "react-frame-component";
 import hash from "object-hash";
 
-const styleSelector = 'style, link[as="style"], link[rel="stylesheet"]';
+const styleSelector = 'style, link[rel="stylesheet"]';
 
 const collectStyles = (doc: Document) => {
   const collected: HTMLElement[] = [];
@@ -61,10 +61,10 @@ const CopyHostStyles = ({
     const lookupEl = (el: HTMLElement) =>
       elements.findIndex((elementMap) => elementMap.original === el);
 
-    const mirrorEl = async (el: HTMLElement, onLoad: () => void = () => {}) => {
+    const mirrorEl = async (el: HTMLElement, inlineStyles = false) => {
       let mirror: HTMLStyleElement;
 
-      if (el.nodeName === "LINK") {
+      if (el.nodeName === "LINK" && inlineStyles) {
         mirror = document.createElement("style") as HTMLStyleElement;
         mirror.type = "text/css";
 
@@ -101,12 +101,10 @@ const CopyHostStyles = ({
         mirror = el.cloneNode(true) as HTMLStyleElement;
       }
 
-      mirror.onload = onLoad;
-
       return mirror;
     };
 
-    const addEl = async (el: HTMLElement, onLoad: () => void = () => {}) => {
+    const addEl = async (el: HTMLElement) => {
       const index = lookupEl(el);
       if (index > -1) {
         if (debug)
@@ -116,16 +114,12 @@ const CopyHostStyles = ({
 
         elements[index].mirror.innerText = el.innerText;
 
-        onLoad();
-
         return;
       }
 
-      const mirror = await mirrorEl(el, onLoad);
+      const mirror = await mirrorEl(el);
 
       if (!mirror) {
-        onLoad();
-
         return;
       }
 
@@ -137,14 +131,10 @@ const CopyHostStyles = ({
             `iframe already contains element that is being mirrored. Skipping...`
           );
 
-        onLoad();
-
         return;
       }
 
       hashes[elHash] = true;
-
-      mirror.onload = onLoad;
 
       doc.head.append(mirror as HTMLElement);
       elements.push({ original: el, mirror: mirror });
@@ -213,6 +203,7 @@ const CopyHostStyles = ({
 
     const collectedStyles = collectStyles(parentDocument);
     const hrefs: string[] = [];
+    let stylesLoaded = 0;
 
     Promise.all(
       collectedStyles.map(async (styleNode, i) => {
@@ -240,6 +231,16 @@ const CopyHostStyles = ({
         (el) => typeof el !== "undefined"
       ) as HTMLStyleElement[];
 
+      filtered.forEach((mirror) => {
+        mirror.onload = () => {
+          stylesLoaded = stylesLoaded + 1;
+
+          if (stylesLoaded >= elements.length) {
+            onStylesLoaded();
+          }
+        };
+      });
+
       // Reset HTML (inside the promise) so in case running twice (i.e. for React Strict mode)
       doc.head.innerHTML = "";
 
@@ -253,8 +254,6 @@ const CopyHostStyles = ({
 
         hashes[elHash] = true;
       });
-
-      onStylesLoaded();
     });
 
     return () => {
