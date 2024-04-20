@@ -1445,14 +1445,6 @@
     "@types/mdx" "^2.0.0"
     "@types/react" ">=16"
 
-"@measured/auto-frame-component@0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@measured/auto-frame-component/-/auto-frame-component-0.1.7.tgz#9d863feb11e3c36d67bf8bf83f66a107573957f2"
-  integrity sha512-bVaIvGFtA4kuuBxaOgtPD7S5a91aBiTPZ+VYm+URLdhKUEuhIUtATPm74NnO7M14IGteJGSGzNf28O/blXSU4g==
-  dependencies:
-    object-hash "^3.0.0"
-    react-frame-component "5.2.6"
-
 "@measured/dnd@16.6.0-canary.4cba1d1":
   version "16.6.0-canary.4cba1d1"
   resolved "https://registry.yarnpkg.com/@measured/dnd/-/dnd-16.6.0-canary.4cba1d1.tgz#47096fc962a9f69411e66e30d1c49b1ab4eb4e44"
@@ -11108,7 +11100,7 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
-react-frame-component@5.2.6:
+react-frame-component@^5.2.6:
   version "5.2.6"
   resolved "https://registry.yarnpkg.com/react-frame-component/-/react-frame-component-5.2.6.tgz#0d9991d251ff1f7177479d8f370deea06b824b79"
   integrity sha512-CwkEM5VSt6nFwZ1Op8hi3JB5rPseZlmnp5CGiismVTauE6S4Jsc4TNMlT0O7Cts4WgIC3ZBAQ2p1Mm9XgLbj+w==
