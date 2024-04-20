@@ -2,7 +2,7 @@ import { DropZone } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { ReactNode, useCallback, useRef } from "react";
 import { useAppContext } from "../../context";
-import AutoFrame from "@measured/auto-frame-component";
+import AutoFrame from "../../../AutoFrame";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { DefaultRootProps } from "../../../../types/Config";
