@@ -8,15 +8,15 @@ Render a `checkbox` input with a list of options. Extends [Base](base).
   label="Example"
   componentConfig={{
     fields: {
-      textAlign: {
+      textAlignLeft: {
         type: "checkbox",
       },
     },
     defaultProps: {
-      textAlign: "left",
+      textAlignLeft: true,
     },
-    render: ({ textAlign }) => {
-      return <p style={{ textAlign, margin: 0 }}>Hello, world</p>;
+    render: ({ textAlignLeft }) => {
+      return <p style={{ textAlign: textAlignLeft ? 'left' : 'right', margin: 0 }}>Hello, world</p>;
     },
   }}
 />
@@ -26,16 +26,15 @@ const config = {
   components: {
     Example: {
       fields: {
-        hasBackground: {
+        textAlignLeft: {
           type: "checkbox",
-          label: "Apply background color",
         },
       },
       defaultProps: {
-        hasBackground: "left",
+        textAlignLeft: true,
       },
-      render: ({ hasBackground }) => {
-        return <p style={{ backgroundColor: hasBackground ? 'red' : 'transparent' }}>Hello, world</p>;
+      render: ({ textAlignLeft }) => {
+        return <p style={{ textAlign: textAlignLeft ? 'left' : 'right', margin: 0 }}>Hello, world</p>;
       },
     },
   },
@@ -47,6 +46,7 @@ const config = {
 | Param                 | Example                                               | Type       | Status   |
 | --------------------- | ----------------------------------------------------- | ---------- | -------- |
 | [`type`](#type)       | `type: "checkbox"`                                    | "checkbox" | Required |
+| [`checkboxLabel`](#checkboxLabel)   | `checkboxLabel: "Apply Background color"`        | string   | -        |
 
 ## Required params
 
@@ -62,6 +62,27 @@ const config = {
         hasBackground: {
           type: "checkbox",
           label: "Apply background color",
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `checkboxLabel`
+
+The label to sit alongside the checkbox field.
+
+```tsx {6} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        textAlign: {
+          type: "checkbox",
+          label: "Text Align",
+          checkboxLabel: "Align text left",
         },
       },
       // ...

@@ -21,7 +21,7 @@ export const CheckboxField = ({
   return (
     <FieldLabelInternal
       icon={<CheckSquare size={16} />}
-      label={label || value || name}
+      label={label || name}
       readOnly={readOnly}
       el="div"
     >
@@ -40,7 +40,7 @@ export const CheckboxField = ({
             checked={value}
           />
           <div className={getClassName("checkboxInner")}>
-            {value === true ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}<span>{field.checkboxLabel || label}</span>
+            {value === true ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}<span>{field.checkboxLabel || label || name}</span>
           </div>
         </label>
       </div>
