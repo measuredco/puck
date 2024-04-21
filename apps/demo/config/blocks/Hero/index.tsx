@@ -10,6 +10,7 @@ import { quotes } from "./quotes";
 const getClassName = getClassNameFactory("Hero", styles);
 
 export type HeroProps = {
+  hasBackgroundColor?: boolean;
   quote?: { index: number; label: string };
   title: string;
   description: string;
@@ -113,6 +114,11 @@ export const Hero: ComponentConfig<HeroProps> = {
         { label: "center", value: "center" },
       ],
     },
+    hasBackgroundColor: {
+      type: "checkbox",
+      checkboxLabel: 'Apply background color to the section',
+      label: 'Background color'
+    },
     image: {
       type: "object",
       objectFields: {
@@ -164,18 +170,22 @@ export const Hero: ComponentConfig<HeroProps> = {
       readOnly: { title: true, description: true },
     };
   },
-  render: ({ align, title, description, buttons, padding, image }) => {
+  render: ({ align, title, description, buttons, padding, image, hasBackgroundColor }) => {
     // Empty state allows us to test that components support hooks
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [_] = useState(0);
 
     return (
       <Section
+        style={{
+          backgroundColor: hasBackgroundColor ? "var(--puck-color-azure-09)" : "",
+        }}
         padding={padding}
         className={getClassName({
           left: align === "left",
           center: align === "center",
           hasImageBackground: image?.mode === "background",
+          hasBackgroundColor
         })}
       >
         {image?.mode === "background" && (

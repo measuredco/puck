@@ -42,6 +42,11 @@ export type RadioField = BaseField & {
   options: FieldOptions;
 };
 
+export type CheckboxField = BaseField & {
+  type: "checkbox";
+  checkboxLabel?: string;
+};
+
 export type ArrayField<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = BaseField & {
@@ -125,6 +130,7 @@ export type Field<
   | TextareaField
   | SelectField
   | RadioField
+  | CheckboxField
   | ArrayField<Props>
   | ObjectField<Props>
   | ExternalField<Props>

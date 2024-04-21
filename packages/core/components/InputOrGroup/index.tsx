@@ -12,6 +12,7 @@ import {
 } from "react";
 import {
   RadioField,
+  CheckboxField,
   SelectField,
   ExternalField,
   ArrayField,
@@ -155,6 +156,7 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
     select: SelectField,
     textarea: TextareaField,
     radio: RadioField,
+    checkbox: CheckboxField,
     text: DefaultField,
     number: DefaultField,
   };
@@ -167,6 +169,7 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
     select: overrides.fieldTypes?.select || defaultFields.select,
     textarea: overrides.fieldTypes?.textarea || defaultFields.textarea,
     radio: overrides.fieldTypes?.radio || defaultFields.radio,
+    checkbox: overrides.fieldTypes?.checkbox || defaultFields.checkbox,
     text: overrides.fieldTypes?.text || defaultFields.text,
     number: overrides.fieldTypes?.number || defaultFields.number,
   };

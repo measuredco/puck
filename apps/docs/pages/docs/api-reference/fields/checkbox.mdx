@@ -1,0 +1,71 @@
+import { ConfigPreview } from "@/docs/components/Preview";
+
+# Checkbox
+
+Render a `checkbox` input with a list of options. Extends [Base](base).
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      textAlign: {
+        type: "checkbox",
+      },
+    },
+    defaultProps: {
+      textAlign: "left",
+    },
+    render: ({ textAlign }) => {
+      return <p style={{ textAlign, margin: 0 }}>Hello, world</p>;
+    },
+  }}
+/>
+
+```tsx {5-11} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        hasBackground: {
+          type: "checkbox",
+          label: "Apply background color",
+        },
+      },
+      defaultProps: {
+        hasBackground: "left",
+      },
+      render: ({ hasBackground }) => {
+        return <p style={{ backgroundColor: hasBackground ? 'red' : 'transparent' }}>Hello, world</p>;
+      },
+    },
+  },
+};
+```
+
+## Params
+
+| Param                 | Example                                               | Type       | Status   |
+| --------------------- | ----------------------------------------------------- | ---------- | -------- |
+| [`type`](#type)       | `type: "checkbox"`                                    | "checkbox" | Required |
+
+## Required params
+
+### `type`
+
+The type of the field. Must be `"checkbox"` for Checkbox fields.
+
+```tsx {6} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        hasBackground: {
+          type: "checkbox",
+          label: "Apply background color",
+        },
+      },
+      // ...
+    },
+  },
+};
+```

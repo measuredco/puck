@@ -72,6 +72,24 @@
   left: 0;
 }
 
+.Hero--hasBackgroundColor .Hero-imageOverlay {
+  background-image: linear-gradient(
+    -90deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--puck-color-azure-09) 80%
+  );
+}
+
+@media (min-width: 768px) {
+  .Hero--hasBackgroundColor.Hero--left .Hero-imageOverlay {
+    background-image: linear-gradient(
+      -90deg,
+      rgba(255, 255, 255, 0) 0%,
+      var(--puck-color-azure-09) 70%
+    );
+  }
+}
+
 @media (min-width: 768px) {
   .Hero--left .Hero-imageOverlay {
     background-image: linear-gradient(
