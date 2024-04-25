@@ -92,13 +92,13 @@ export const FieldLabelInternal = ({
   );
 };
 
-export function AutoField<FieldType extends Field>({
-  onChange,
-  ...props
-}: FieldProps<FieldType>) {
+export function AutoField<
+  ValueType = any,
+  FieldType extends Field<ValueType> = Field<ValueType>
+>({ onChange, ...props }: FieldProps<ValueType, FieldType>) {
   const { overrides } = useAppContext();
 
-  const { name, field, value, readOnly } = props;
+  const { name, field, value, readOnly, label = field.label, id } = props;
 
   const [localValue, setLocalValue] = useState(value);
 
@@ -135,6 +135,7 @@ export function AutoField<FieldType extends Field>({
           field,
           name,
           readOnly,
+          id,
           ...localProps,
         })}
       </div>
@@ -164,7 +165,7 @@ export function AutoField<FieldType extends Field>({
     number: overrides.fieldTypes?.number || defaultFields.number,
   };
 
-  const mergedProps = { ...props, ...localProps, field };
+  const mergedProps = { ...props, ...localProps, field, label };
 
   const children = defaultFields[field.type](mergedProps);
 
