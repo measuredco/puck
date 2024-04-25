@@ -1,7 +1,8 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
 import { List, Plus, Trash } from "lucide-react";
-import { FieldLabelInternal, AutoField, type InputProps } from "../..";
+import { FieldLabelInternal, AutoField } from "../..";
+import type { FieldProps } from "../../../../types/Fields";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
 import { Droppable } from "../../../Droppable";
@@ -23,7 +24,7 @@ export const ArrayField = ({
   label,
   readOnly,
   id,
-}: InputProps) => {
+}: FieldProps) => {
   const { state, setUi, selectedItem } = useAppContext();
 
   const readOnlyFields = selectedItem?.readOnly || {};
