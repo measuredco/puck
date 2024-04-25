@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import { FieldLabelInternal, type InputProps } from "../..";
-import {
+import { useEffect } from "react";
+import { FieldLabelInternal } from "../..";
+import type {
+  FieldProps,
   ExternalField as ExternalFieldType,
   ExternalFieldWithAdaptor,
-} from "../../../../types/Config";
+} from "../../../../types/Fields";
+
 import { ExternalInput } from "../../../ExternalInput";
 import { Link } from "lucide-react";
 
@@ -14,7 +16,7 @@ export const ExternalField = ({
   name,
   label,
   id,
-}: InputProps) => {
+}: FieldProps) => {
   // DEPRECATED
   const validField = field as ExternalFieldType;
   const deprecatedField = field as ExternalFieldWithAdaptor;

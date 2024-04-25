@@ -1,0 +1,142 @@
+import { ReactElement } from "react";
+import { DefaultComponentProps, UiState } from "./Config";
+
+type FieldOption = {
+  label: string;
+  value: string | number | boolean;
+};
+
+type FieldOptions = Array<FieldOption> | ReadonlyArray<FieldOption>;
+
+export type BaseField = {
+  label?: string;
+};
+
+export type TextField = BaseField & {
+  type: "text";
+};
+export type NumberField = BaseField & {
+  type: "number";
+  min?: number;
+  max?: number;
+};
+
+export type TextareaField = BaseField & {
+  type: "textarea";
+};
+
+export type SelectField = BaseField & {
+  type: "select";
+  options: FieldOptions;
+};
+
+export type RadioField = BaseField & {
+  type: "radio";
+  options: FieldOptions;
+};
+
+export type ArrayField<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = BaseField & {
+  type: "array";
+  arrayFields: {
+    [SubPropName in keyof Props[0]]: Field<Props[0][SubPropName]>;
+  };
+  defaultItemProps?: Props[0];
+  getItemSummary?: (item: Props[0], index?: number) => string;
+  max?: number;
+  min?: number;
+};
+
+export type ObjectField<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = BaseField & {
+  type: "object";
+  objectFields: {
+    [SubPropName in keyof Props]: Field<Props[SubPropName]>;
+  };
+};
+
+// DEPRECATED
+export type Adaptor<
+  AdaptorParams = {},
+  TableShape extends Record<string, any> = {},
+  PropShape = TableShape
+> = {
+  name: string;
+  fetchList: (adaptorParams?: AdaptorParams) => Promise<TableShape[] | null>;
+  mapProp?: (value: TableShape) => PropShape;
+};
+
+// DEPRECATED
+export type ExternalFieldWithAdaptor<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = BaseField & {
+  type: "external";
+  placeholder?: string;
+  adaptor: Adaptor<any, any, Props>;
+  adaptorParams?: object;
+  getItemSummary: (item: Props, index?: number) => string;
+};
+
+export type ExternalField<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> = BaseField & {
+  type: "external";
+  placeholder?: string;
+  fetchList: (params: {
+    query: string;
+    filters: Record<string, any>;
+  }) => Promise<any[] | null>;
+  mapProp?: (value: any) => Props;
+  mapRow?: (value: any) => Record<string, string | number>;
+  getItemSummary?: (item: Props, index?: number) => string;
+  showSearch?: boolean;
+  initialQuery?: string;
+  filterFields?: Record<string, Field>;
+  initialFilters?: Record<string, any>;
+};
+
+export type CustomField<Props extends any = {}> = BaseField & {
+  type: "custom";
+  render: (props: {
+    field: CustomField<Props>;
+    name: string;
+    value: Props;
+    onChange: (value: Props) => void;
+    readOnly?: boolean;
+  }) => ReactElement;
+};
+
+export type Field<
+  Props extends { [key: string]: any } = { [key: string]: any }
+> =
+  | TextField
+  | NumberField
+  | TextareaField
+  | SelectField
+  | RadioField
+  | ArrayField<Props>
+  | ObjectField<Props>
+  | ExternalField<Props>
+  | ExternalFieldWithAdaptor<Props>
+  | CustomField<Props>;
+
+export type Fields<
+  ComponentProps extends DefaultComponentProps = DefaultComponentProps
+> = {
+  [PropName in keyof Omit<
+    Required<ComponentProps>,
+    "children" | "editMode"
+  >]: Field<ComponentProps[PropName]>;
+};
+
+export type FieldProps<F = Field<any>> = {
+  name: string;
+  field: F;
+  value: any;
+  id: string;
+  label?: string;
+  onChange: (value: any, uiState?: Partial<UiState>) => void;
+  readOnly?: boolean;
+};

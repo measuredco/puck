@@ -6,13 +6,8 @@ import {
   replaceAction,
   setAction,
 } from "../../../../reducer";
-import {
-  ComponentData,
-  Field,
-  Fields as FieldsType,
-  RootData,
-  UiState,
-} from "../../../../types/Config";
+import { ComponentData, RootData, UiState } from "../../../../types/Config";
+import type { Field, Fields as FieldsType } from "../../../../types/Fields";
 import { AutoField } from "../../../AutoField";
 import { useAppContext } from "../../context";
 

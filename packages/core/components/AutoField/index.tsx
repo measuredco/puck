@@ -1,5 +1,6 @@
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Field, UiState } from "../../types/Config";
+import { Field, FieldProps } from "../../types/Fields";
+import { UiState } from "../../types/Config";
 
 import styles from "./styles.module.css";
 import {
@@ -91,20 +92,10 @@ export const FieldLabelInternal = ({
   );
 };
 
-export type InputProps<F = Field<any>> = {
-  name: string;
-  field: F;
-  value: any;
-  id: string;
-  label?: string;
-  onChange: (value: any, uiState?: Partial<UiState>) => void;
-  readOnly?: boolean;
-};
-
 export function AutoField<FieldType extends Field>({
   onChange,
   ...props
-}: InputProps<FieldType>) {
+}: FieldProps<FieldType>) {
   const { overrides } = useAppContext();
 
   const { name, field, value, readOnly } = props;
@@ -177,7 +168,7 @@ export function AutoField<FieldType extends Field>({
 
   const children = defaultFields[field.type](mergedProps);
 
-  const Render = render[field.type] as (props: InputProps) => ReactElement;
+  const Render = render[field.type] as (props: FieldProps) => ReactElement;
 
   return <Render {...mergedProps}>{children}</Render>;
 }

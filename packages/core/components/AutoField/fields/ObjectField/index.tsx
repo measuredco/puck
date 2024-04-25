@@ -1,7 +1,8 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
 import { MoreVertical } from "lucide-react";
-import { FieldLabelInternal, AutoField, type InputProps } from "../..";
+import type { FieldProps } from "../../../../types/Fields";
+import { FieldLabelInternal, AutoField } from "../..";
 import { useAppContext } from "../../../Puck/context";
 
 const getClassName = getClassNameFactory("ObjectField", styles);
@@ -14,7 +15,7 @@ export const ObjectField = ({
   label,
   readOnly,
   id,
-}: InputProps) => {
+}: FieldProps) => {
   const { selectedItem } = useAppContext();
 
   if (field.type !== "object" || !field.objectFields) {
