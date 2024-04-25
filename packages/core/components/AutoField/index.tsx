@@ -102,7 +102,10 @@ export type InputProps<F = Field<any>> = {
   readOnlyFields?: Record<string, boolean | undefined>;
 };
 
-export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
+export function AutoField<FieldType extends Field>({
+  onChange,
+  ...props
+}: InputProps<FieldType>) {
   const { overrides } = useAppContext();
 
   const { name, field, value, readOnly } = props;
@@ -178,4 +181,4 @@ export const InputOrGroup = ({ onChange, ...props }: InputProps) => {
   const Render = render[field.type] as (props: InputProps) => ReactElement;
 
   return <Render {...mergedProps}>{children}</Render>;
-};
+}
