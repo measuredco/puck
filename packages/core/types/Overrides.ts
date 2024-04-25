@@ -1,5 +1,5 @@
 import { ReactElement, ReactNode } from "react";
-import { InputProps } from "../components/InputOrGroup";
+import { InputProps } from "../components/AutoField";
 import { Field } from "./Config";
 import { ItemSelector } from "../lib/get-item";
 

@@ -1,7 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
 import { List, Plus, Trash } from "lucide-react";
-import { FieldLabelInternal, InputOrGroup, type InputProps } from "../..";
+import { FieldLabelInternal, AutoField, type InputProps } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
 import { Droppable } from "../../../Droppable";
@@ -263,7 +263,7 @@ export const ArrayField = ({
                                   const wildcardFieldName = `${name}[*].${fieldName}`;
 
                                   return (
-                                    <InputOrGroup
+                                    <AutoField
                                       key={subFieldName}
                                       name={subFieldName}
                                       label={subField.label || fieldName}

@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 
-export { InputOrGroup } from "@/core/components/InputOrGroup";
+export { AutoField } from "@/core/components/AutoField";
 
 import { ReactNode } from "react";
 import "@/core/styles.css";

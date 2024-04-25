@@ -13,7 +13,7 @@ import {
   RootData,
   UiState,
 } from "../../../../types/Config";
-import { InputOrGroup } from "../../../InputOrGroup";
+import { AutoField } from "../../../AutoField";
 import { useAppContext } from "../../context";
 
 import styles from "./styles.module.css";
@@ -264,7 +264,7 @@ export const Fields = () => {
             const { readOnly = {} } = selectedItem;
 
             return (
-              <InputOrGroup
+              <AutoField
                 key={`${selectedItem.props.id}_${fieldName}`}
                 field={field}
                 name={fieldName}
@@ -280,7 +280,7 @@ export const Fields = () => {
             const { readOnly = {} } = data.root;
 
             return (
-              <InputOrGroup
+              <AutoField
                 key={`page_${fieldName}`}
                 field={field}
                 name={fieldName}
