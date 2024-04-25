@@ -102,24 +102,23 @@ export type CustomField<Props extends any = {}> = BaseField & {
   render: (props: {
     field: CustomField<Props>;
     name: string;
+    id: string;
     value: Props;
     onChange: (value: Props) => void;
     readOnly?: boolean;
   }) => ReactElement;
 };
 
-export type Field<
-  Props extends { [key: string]: any } = { [key: string]: any }
-> =
+export type Field<Props extends any = any> =
   | TextField
   | NumberField
   | TextareaField
   | SelectField
   | RadioField
-  | ArrayField<Props>
-  | ObjectField<Props>
-  | ExternalField<Props>
-  | ExternalFieldWithAdaptor<Props>
+  | ArrayField<Props extends { [key: string]: any } ? Props : any>
+  | ObjectField<Props extends { [key: string]: any } ? Props : any>
+  | ExternalField<Props extends { [key: string]: any } ? Props : any>
+  | ExternalFieldWithAdaptor<Props extends { [key: string]: any } ? Props : any>
   | CustomField<Props>;
 
 export type Fields<
@@ -131,12 +130,12 @@ export type Fields<
   >]: Field<ComponentProps[PropName]>;
 };
 
-export type FieldProps<F = Field<any>> = {
+export type FieldProps<ValueType = any, F = Field<any>> = {
   name: string;
   field: F;
-  value: any;
+  value: ValueType;
   id: string;
   label?: string;
-  onChange: (value: any, uiState?: Partial<UiState>) => void;
+  onChange: (value: ValueType, uiState?: Partial<UiState>) => void;
   readOnly?: boolean;
 };
