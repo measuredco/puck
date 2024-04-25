@@ -99,7 +99,6 @@ export type InputProps<F = Field<any>> = {
   label?: string;
   onChange: (value: any, uiState?: Partial<UiState>) => void;
   readOnly?: boolean;
-  readOnlyFields?: Record<string, boolean | undefined>;
 };
 
 export function AutoField<FieldType extends Field>({

@@ -22,10 +22,11 @@ export const ArrayField = ({
   name,
   label,
   readOnly,
-  readOnlyFields = {},
   id,
 }: InputProps) => {
-  const { state, setUi } = useAppContext();
+  const { state, setUi, selectedItem } = useAppContext();
+
+  const readOnlyFields = selectedItem?.readOnly || {};
 
   const value: object[] = _value;
 
@@ -274,7 +275,6 @@ export const ArrayField = ({
                                           ? readOnlyFields[subFieldName]
                                           : readOnlyFields[wildcardFieldName]
                                       }
-                                      readOnlyFields={readOnlyFields}
                                       field={subField}
                                       value={data[fieldName]}
                                       onChange={(val, ui) => {
