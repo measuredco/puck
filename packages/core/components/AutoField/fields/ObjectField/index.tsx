@@ -2,6 +2,7 @@ import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
 import { MoreVertical } from "lucide-react";
 import { FieldLabelInternal, AutoField, type InputProps } from "../..";
+import { useAppContext } from "../../../Puck/context";
 
 const getClassName = getClassNameFactory("ObjectField", styles);
 
@@ -12,12 +13,15 @@ export const ObjectField = ({
   name,
   label,
   readOnly,
-  readOnlyFields = {},
   id,
 }: InputProps) => {
+  const { selectedItem } = useAppContext();
+
   if (field.type !== "object" || !field.objectFields) {
     return null;
   }
+
+  const readOnlyFields = selectedItem?.readOnly || {};
 
   const data = value || {};
 
@@ -47,7 +51,6 @@ export const ObjectField = ({
                     ? readOnlyFields[subFieldName]
                     : readOnlyFields[wildcardFieldName]
                 }
-                readOnlyFields={readOnlyFields}
                 field={subField}
                 value={data[fieldName]}
                 onChange={(val, ui) => {

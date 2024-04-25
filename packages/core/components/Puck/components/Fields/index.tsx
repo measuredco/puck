@@ -271,7 +271,6 @@ export const Fields = () => {
                 id={`${selectedItem.props.id}_${fieldName}`}
                 label={field.label}
                 readOnly={readOnly[fieldName]}
-                readOnlyFields={readOnly}
                 value={selectedItem.props[fieldName]}
                 onChange={onChange}
               />
@@ -287,7 +286,6 @@ export const Fields = () => {
                 id={`root_${fieldName}`}
                 label={field.label}
                 readOnly={readOnly[fieldName]}
-                readOnlyFields={readOnly}
                 value={rootProps[fieldName]}
                 onChange={onChange}
               />
