@@ -17,6 +17,7 @@ type FieldOptions = Array<FieldOption> | ReadonlyArray<FieldOption>;
 
 export type BaseField = {
   label?: string;
+  condition?: (props: any) => boolean;
 };
 
 export type TextField = BaseField & {

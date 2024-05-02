@@ -184,6 +184,8 @@ export const Fields = () => {
 
           if (!field?.type) return null;
 
+          if (field.condition && selectedItem && !field.condition(selectedItem?.props)) return null;
+
           const onChange = (value: any, updatedUi?: Partial<UiState>) => {
             let currentProps;
 
