@@ -131,11 +131,9 @@ export type Fields<
 };
 
 export type FieldProps<ValueType = any, F = Field<any>> = {
-  name: string;
   field: F;
   value: ValueType;
-  id: string;
-  label?: string;
+  id?: string;
   onChange: (value: ValueType, uiState?: Partial<UiState>) => void;
   readOnly?: boolean;
 };
