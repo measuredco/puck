@@ -239,6 +239,14 @@ const CopyHostStyles = ({
             onStylesLoaded();
           }
         };
+        mirror.onerror = () => {
+          console.warn(`AutoFrame couldn't load a stylesheet`);
+          stylesLoaded = stylesLoaded + 1;
+
+          if (stylesLoaded >= elements.length) {
+            onStylesLoaded();
+          }
+        };
       });
 
       // Reset HTML (inside the promise) so in case running twice (i.e. for React Strict mode)
