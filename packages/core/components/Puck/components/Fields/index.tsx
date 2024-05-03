@@ -8,7 +8,7 @@ import {
 } from "../../../../reducer";
 import { ComponentData, RootData, UiState } from "../../../../types/Config";
 import type { Field, Fields as FieldsType } from "../../../../types/Fields";
-import { AutoField } from "../../../AutoField";
+import { AutoFieldInternal } from "../../../AutoField";
 import { useAppContext } from "../../context";
 
 import styles from "./styles.module.css";
@@ -259,7 +259,7 @@ export const Fields = () => {
             const { readOnly = {} } = selectedItem;
 
             return (
-              <AutoField
+              <AutoFieldInternal
                 key={`${selectedItem.props.id}_${fieldName}`}
                 field={field}
                 name={fieldName}
@@ -273,7 +273,7 @@ export const Fields = () => {
             const { readOnly = {} } = data.root;
 
             return (
-              <AutoField
+              <AutoFieldInternal
                 key={`page_${fieldName}`}
                 field={field}
                 name={fieldName}

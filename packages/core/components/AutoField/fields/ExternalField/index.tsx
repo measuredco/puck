@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { FieldLabelInternal } from "../..";
+import { FieldPropsInternal } from "../..";
 import type {
-  FieldProps,
   ExternalField as ExternalFieldType,
   ExternalFieldWithAdaptor,
 } from "../../../../types/Fields";
@@ -15,8 +14,9 @@ export const ExternalField = ({
   value,
   name,
   label,
+  Label,
   id,
-}: FieldProps) => {
+}: FieldPropsInternal) => {
   // DEPRECATED
   const validField = field as ExternalFieldType;
   const deprecatedField = field as ExternalFieldWithAdaptor;
@@ -34,11 +34,7 @@ export const ExternalField = ({
   }
 
   return (
-    <FieldLabelInternal
-      label={label || name}
-      icon={<Link size={16} />}
-      el="div"
-    >
+    <Label label={label || name} icon={<Link size={16} />} el="div">
       <ExternalInput
         name={name}
         field={{
@@ -61,6 +57,6 @@ export const ExternalField = ({
         value={value}
         id={id}
       />
-    </FieldLabelInternal>
+    </Label>
   );
 };

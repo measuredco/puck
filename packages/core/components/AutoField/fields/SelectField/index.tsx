@@ -1,8 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { ChevronDown } from "lucide-react";
-import { FieldLabelInternal } from "../..";
-import type { FieldProps } from "../../../../types/Fields";
+import { FieldPropsInternal } from "../..";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -10,17 +9,18 @@ export const SelectField = ({
   field,
   onChange,
   label,
+  Label,
   value,
   name,
   readOnly,
   id,
-}: FieldProps) => {
+}: FieldPropsInternal) => {
   if (field.type !== "select" || !field.options) {
     return null;
   }
 
   return (
-    <FieldLabelInternal
+    <Label
       label={label || name}
       icon={<ChevronDown size={16} />}
       readOnly={readOnly}
@@ -50,6 +50,6 @@ export const SelectField = ({
           />
         ))}
       </select>
-    </FieldLabelInternal>
+    </Label>
   );
 };

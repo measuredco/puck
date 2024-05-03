@@ -1,8 +1,11 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
 import { MoreVertical } from "lucide-react";
-import type { FieldProps } from "../../../../types/Fields";
-import { FieldLabelInternal, AutoField } from "../..";
+import {
+  AutoFieldInternal,
+  FieldLabelInternal,
+  FieldPropsInternal,
+} from "../..";
 import { useAppContext } from "../../../Puck/context";
 
 const getClassName = getClassNameFactory("ObjectField", styles);
@@ -13,9 +16,10 @@ export const ObjectField = ({
   value,
   name,
   label,
+  Label,
   readOnly,
   id,
-}: FieldProps) => {
+}: FieldPropsInternal) => {
   const { selectedItem } = useAppContext();
 
   if (field.type !== "object" || !field.objectFields) {
@@ -27,7 +31,7 @@ export const ObjectField = ({
   const data = value || {};
 
   return (
-    <FieldLabelInternal
+    <Label
       label={label || name}
       icon={<MoreVertical size={16} />}
       el="div"
@@ -42,7 +46,7 @@ export const ObjectField = ({
             const wildcardFieldName = `${name}.${fieldName}`;
 
             return (
-              <AutoField
+              <AutoFieldInternal
                 key={subFieldName}
                 name={subFieldName}
                 label={subField.label || fieldName}
@@ -68,6 +72,6 @@ export const ObjectField = ({
           })}
         </fieldset>
       </div>
-    </FieldLabelInternal>
+    </Label>
   );
 };

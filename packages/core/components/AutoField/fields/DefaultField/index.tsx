@@ -1,8 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { Hash, Type } from "lucide-react";
-import { FieldLabelInternal } from "../..";
-import type { FieldProps } from "../../../../types/Fields";
+import { FieldPropsInternal } from "../..";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -13,10 +12,11 @@ export const DefaultField = ({
   value,
   name,
   label,
+  Label,
   id,
-}: FieldProps) => {
+}: FieldPropsInternal) => {
   return (
-    <FieldLabelInternal
+    <Label
       label={label || name}
       icon={
         <>
@@ -45,6 +45,6 @@ export const DefaultField = ({
         min={field.type === "number" ? field.min : undefined}
         max={field.type === "number" ? field.max : undefined}
       />
-    </FieldLabelInternal>
+    </Label>
   );
 };
