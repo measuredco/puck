@@ -23,6 +23,7 @@ import { Lock } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { ObjectField } from "./fields/ObjectField";
 import { useAppContext } from "../Puck/context";
+import { generateId } from "../../lib/generate-id";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -62,7 +63,7 @@ export const FieldLabel = ({
 type FieldLabelPropsInternal = {
   children?: ReactNode;
   icon?: ReactNode;
-  label: string;
+  label?: string;
   el?: "label" | "div";
   readOnly?: boolean;
 };
@@ -81,6 +82,10 @@ export const FieldLabelInternal = ({
     [overrides]
   );
 
+  if (!label) {
+    return <>{children}</>;
+  }
+
   return (
     <Wrapper
       label={label}
@@ -97,12 +102,21 @@ export const FieldLabelInternal = ({
 type FieldPropsInternalOptional<ValueType = any, F = Field<any>> = FieldProps<
   ValueType,
   F
-> & { Label?: React.FC<FieldLabelPropsInternal> };
+> & {
+  Label?: React.FC<FieldLabelPropsInternal>;
+  label?: string;
+  name?: string;
+};
 
 export type FieldPropsInternal<ValueType = any, F = Field<any>> = FieldProps<
   ValueType,
   F
-> & { Label: React.FC<FieldLabelPropsInternal> };
+> & {
+  Label: React.FC<FieldLabelPropsInternal>;
+  label?: string;
+  id: string;
+  name?: string;
+};
 
 export function AutoFieldInternal<
   ValueType = any,
@@ -124,6 +138,9 @@ export function AutoFieldInternal<
     id,
     Label = FieldLabelInternal,
   } = props;
+
+  const [defaultId] = useState(generateId(field.type));
+  const resolvedId = id || defaultId;
 
   const [localValue, setLocalValue] = useState(value);
 
@@ -160,7 +177,7 @@ export function AutoFieldInternal<
           field,
           name,
           readOnly,
-          id,
+          id: resolvedId,
           ...localProps,
         })}
       </div>
@@ -190,7 +207,14 @@ export function AutoFieldInternal<
     number: overrides.fieldTypes?.number || defaultFields.number,
   };
 
-  const mergedProps = { ...props, ...localProps, field, label, Label };
+  const mergedProps = {
+    ...props,
+    ...localProps,
+    field,
+    label,
+    Label,
+    id: resolvedId,
+  };
 
   const children = defaultFields[field.type](mergedProps);
 

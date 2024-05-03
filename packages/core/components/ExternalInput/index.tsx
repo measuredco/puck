@@ -25,7 +25,7 @@ export const ExternalInput = ({
   field: ExternalField;
   onChange: (value: any) => void;
   value: any;
-  name: string;
+  name?: string;
   id: string;
 }) => {
   const {
@@ -79,7 +79,7 @@ export const ExternalInput = ({
         dataCache[cacheKey] = listData;
       }
     },
-    [name, field]
+    [id, field]
   );
 
   useEffect(() => {
