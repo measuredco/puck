@@ -4,6 +4,8 @@ export type { PuckAction } from "./reducer/actions";
 
 export * from "./types/Config";
 export * from "./types/Fields";
+
+export * from "./components/AutoField";
 export * from "./components/Button";
 export { Drawer } from "./components/Drawer";
 

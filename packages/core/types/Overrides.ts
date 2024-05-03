@@ -53,6 +53,7 @@ export type FieldRenderFunctions = Omit<
     [Type in Field["type"]]: React.FunctionComponent<
       FieldProps<Extract<Field, { type: Type }>> & {
         children: ReactNode;
+        name: string;
       }
     >;
   },
@@ -61,6 +62,7 @@ export type FieldRenderFunctions = Omit<
   [key: string]: React.FunctionComponent<
     FieldProps<any> & {
       children: ReactNode;
+      name: string;
     }
   >;
 };
