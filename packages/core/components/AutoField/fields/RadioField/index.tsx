@@ -1,8 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { CheckCircle } from "lucide-react";
-import { FieldLabelInternal } from "../..";
-import type { FieldProps } from "../../../../types/Fields";
+import { FieldPropsInternal } from "../..";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -14,13 +13,14 @@ export const RadioField = ({
   name,
   id,
   label,
-}: FieldProps) => {
+  Label,
+}: FieldPropsInternal) => {
   if (field.type !== "radio" || !field.options) {
     return null;
   }
 
   return (
-    <FieldLabelInternal
+    <Label
       icon={<CheckCircle size={16} />}
       label={label || name}
       readOnly={readOnly}
@@ -57,6 +57,6 @@ export const RadioField = ({
           </label>
         ))}
       </div>
-    </FieldLabelInternal>
+    </Label>
   );
 };

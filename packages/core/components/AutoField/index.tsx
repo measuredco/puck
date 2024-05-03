@@ -59,19 +59,21 @@ export const FieldLabel = ({
   );
 };
 
+type FieldLabelPropsInternal = {
+  children?: ReactNode;
+  icon?: ReactNode;
+  label: string;
+  el?: "label" | "div";
+  readOnly?: boolean;
+};
+
 export const FieldLabelInternal = ({
   children,
   icon,
   label,
   el = "label",
   readOnly,
-}: {
-  children?: ReactNode;
-  icon?: ReactNode;
-  label: string;
-  el?: "label" | "div";
-  readOnly?: boolean;
-}) => {
+}: FieldLabelPropsInternal) => {
   const { overrides } = useAppContext();
 
   const Wrapper = useMemo(
@@ -92,13 +94,36 @@ export const FieldLabelInternal = ({
   );
 };
 
-export function AutoField<
+type FieldPropsInternalOptional<ValueType = any, F = Field<any>> = FieldProps<
+  ValueType,
+  F
+> & { Label?: React.FC<FieldLabelPropsInternal> };
+
+export type FieldPropsInternal<ValueType = any, F = Field<any>> = FieldProps<
+  ValueType,
+  F
+> & { Label: React.FC<FieldLabelPropsInternal> };
+
+export function AutoFieldInternal<
   ValueType = any,
   FieldType extends Field<ValueType> = Field<ValueType>
->({ onChange, ...props }: FieldProps<ValueType, FieldType>) {
+>({
+  onChange,
+  ...props
+}: FieldPropsInternalOptional<ValueType, FieldType> & {
+  Label?: React.FC<FieldLabelPropsInternal>;
+}) {
   const { overrides } = useAppContext();
 
-  const { name, field, value, readOnly, label = field.label, id } = props;
+  const {
+    name,
+    field,
+    value,
+    readOnly,
+    label = field.label,
+    id,
+    Label = FieldLabelInternal,
+  } = props;
 
   const [localValue, setLocalValue] = useState(value);
 
@@ -165,11 +190,23 @@ export function AutoField<
     number: overrides.fieldTypes?.number || defaultFields.number,
   };
 
-  const mergedProps = { ...props, ...localProps, field, label };
+  const mergedProps = { ...props, ...localProps, field, label, Label };
 
   const children = defaultFields[field.type](mergedProps);
 
   const Render = render[field.type] as (props: FieldProps) => ReactElement;
 
   return <Render {...mergedProps}>{children}</Render>;
+}
+
+export function AutoField<
+  ValueType = any,
+  FieldType extends Field<ValueType> = Field<ValueType>
+>(props: FieldProps<ValueType, FieldType>) {
+  return (
+    <AutoFieldInternal<ValueType, FieldType>
+      {...props}
+      Label={(props) => <div {...props} />}
+    />
+  );
 }

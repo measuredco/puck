@@ -7,7 +7,7 @@ import { Modal } from "../Modal";
 import { Heading } from "../Heading";
 import { ClipLoader } from "react-spinners";
 import { Button } from "../Button";
-import { AutoField } from "../AutoField";
+import { AutoFieldInternal, FieldLabelInternal } from "../AutoField";
 import { IconButton } from "../IconButton";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
@@ -195,7 +195,7 @@ export const ExternalInput = ({
                   Object.keys(filterFields).map((fieldName) => {
                     const filterField = filterFields[fieldName];
                     return (
-                      <AutoField
+                      <AutoFieldInternal
                         key={fieldName}
                         field={filterField}
                         name={fieldName}

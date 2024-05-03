@@ -1,8 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { Type } from "lucide-react";
-import { FieldLabelInternal } from "../..";
-import type { FieldProps } from "../../../../types/Fields";
+import { FieldPropsInternal } from "../..";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -12,14 +11,11 @@ export const TextareaField = ({
   value,
   name,
   label,
+  Label,
   id,
-}: FieldProps) => {
+}: FieldPropsInternal) => {
   return (
-    <FieldLabelInternal
-      label={label || name}
-      icon={<Type size={16} />}
-      readOnly={readOnly}
-    >
+    <Label label={label || name} icon={<Type size={16} />} readOnly={readOnly}>
       <textarea
         id={id}
         className={getClassName("input")}
@@ -31,6 +27,6 @@ export const TextareaField = ({
         tabIndex={readOnly ? -1 : undefined}
         rows={5}
       />
-    </FieldLabelInternal>
+    </Label>
   );
 };

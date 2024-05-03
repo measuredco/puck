@@ -1,8 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
 import { List, Plus, Trash } from "lucide-react";
-import { FieldLabelInternal, AutoField } from "../..";
-import type { FieldProps } from "../../../../types/Fields";
+import { AutoFieldInternal, FieldPropsInternal } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
 import { Droppable } from "../../../Droppable";
@@ -24,7 +23,8 @@ export const ArrayField = ({
   label,
   readOnly,
   id,
-}: FieldProps) => {
+  Label = (props) => <div {...props} />,
+}: FieldPropsInternal) => {
   const { state, setUi, selectedItem } = useAppContext();
 
   const readOnlyFields = selectedItem?.readOnly || {};
@@ -114,7 +114,7 @@ export const ArrayField = ({
     readOnly;
 
   return (
-    <FieldLabelInternal
+    <Label
       label={label || name}
       icon={<List size={16} />}
       el="div"
@@ -265,7 +265,7 @@ export const ArrayField = ({
                                   const wildcardFieldName = `${name}[*].${fieldName}`;
 
                                   return (
-                                    <AutoField
+                                    <AutoFieldInternal
                                       key={subFieldName}
                                       name={subFieldName}
                                       label={subField.label || fieldName}
@@ -326,6 +326,6 @@ export const ArrayField = ({
           }}
         </Droppable>
       </DragDropContext>
-    </FieldLabelInternal>
+    </Label>
   );
 };
