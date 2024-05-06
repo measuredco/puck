@@ -1,5 +1,7 @@
 import { curves, timings } from "./animation";
 import { calculateDistance } from "./calculate-distance";
+import { findNearestList } from "./find-nearest-list";
+import { getRelativeClientRect } from "./get-relative-client-rect";
 
 let looping = false;
 
@@ -26,12 +28,18 @@ const startGlobalDnd = (
   global.mousePosition = { x: 0, y: 0 };
 
   const drag: {
-    el: HTMLElement | null;
-    rect: DOMRect | null;
+    item: {
+      el: HTMLElement | null;
+      rect: DOMRect | null;
+    };
+    list: {
+      el: HTMLElement | null;
+      rect: DOMRect | null;
+    };
     origin: { x: number; y: number };
   } = {
-    el: null,
-    rect: null,
+    item: { el: null, rect: null },
+    list: { el: null, rect: null },
     origin: { x: 0, y: 0 },
   };
 
@@ -70,15 +78,19 @@ const startGlobalDnd = (
         }
 
         // Clicked on currently dragged element
-        if (drag.el === el) {
+        if (drag.item.el === el) {
           dragEnd();
           return;
         }
 
         rect = el.getBoundingClientRect();
-        drag.el = el;
-        drag.rect = rect;
+        drag.item.el = el;
+        drag.item.rect = rect;
         drag.origin = structuredClone(global.mousePosition);
+
+        drag.list.el = findNearestList(el);
+        drag.list.rect = drag.list.el?.getBoundingClientRect() || null;
+
         globalDragEnd = dragEnd;
 
         state = "START_DRAGGING";
@@ -88,7 +100,7 @@ const startGlobalDnd = (
         if (state !== "DRAGGING") {
           console.log("drag aborted");
 
-          drag.el = null;
+          drag.item.el = null;
           placeholder?.remove();
 
           return;
@@ -98,6 +110,11 @@ const startGlobalDnd = (
 
         if (rect && placeholder && lastImpact) {
           const targetRect = placeholder!.getBoundingClientRect();
+
+          const listOffset = {
+            top: drag.list.rect?.top || 0,
+            left: drag.list.rect?.left || 0,
+          };
 
           const deltaX = axis === "x" ? targetRect.left - rect.left : 0;
           const deltaY = axis === "y" ? targetRect.top - rect.top : 0;
@@ -147,7 +164,7 @@ const startGlobalDnd = (
         }
 
         lastImpact = null;
-        drag.el = null;
+        drag.item.el = null;
         state = "IDLE";
       };
 
@@ -200,7 +217,12 @@ const startGlobalDnd = (
   };
 
   const getTransformedRect = () => {
-    if (drag.rect) {
+    if (drag.item.rect) {
+      const listOffset = {
+        top: drag.list.rect?.top || 0,
+        left: drag.list.rect?.left || 0,
+      };
+
       const deltaX =
         !lockAnimationAxis || lockAnimationAxis !== "x"
           ? global.mousePosition.x - drag.origin.x
@@ -214,17 +236,15 @@ const startGlobalDnd = (
         deltaX,
         deltaY,
         rect: {
-          ...drag.rect,
-          bottom: drag.rect.bottom + deltaY,
-          top: drag.rect.top + deltaY,
-          left: drag.rect.left + deltaX,
-          right: drag.rect.right + deltaX,
+          ...drag.item.rect,
+          bottom: drag.item.rect.bottom + deltaY,
+          top: drag.item.rect.top + deltaY,
+          left: drag.item.rect.left + deltaX,
+          right: drag.item.rect.right + deltaX,
         },
       };
     }
   };
-
-  const paint = () => {};
 
   const loop = () => {
     requestAnimationFrame(() => {
@@ -235,13 +255,13 @@ const startGlobalDnd = (
       if (state === "IDLE") {
         // TODO replace with manual rebind() calls for performance
         rebind();
-      } else if (state === "START_DRAGGING" && drag.el && drag.rect) {
+      } else if (state === "START_DRAGGING" && drag.item.el && drag.item.rect) {
         const distance = calculateDistance(drag.origin, global.mousePosition);
 
         if (distance >= DRAGGING_THRESHOLD) {
           state = "DRAGGING";
         }
-      } else if (state === "DRAGGING" && drag.el && drag.rect) {
+      } else if (state === "DRAGGING" && drag.item.el && drag.item.rect) {
         const {
           deltaX,
           deltaY,
@@ -258,11 +278,12 @@ const startGlobalDnd = (
         for (let i = 0; i < draggables.length; i++) {
           const el = draggables[i];
 
-          if (el === drag.el) {
+          if (el === drag.item.el) {
             continue;
           }
 
           // TODO mutate by transforms and iframes
+          getRelativeClientRect(drag.item.el, drag.list.el!);
           let rect = el.getBoundingClientRect();
 
           const elData = {
@@ -344,14 +365,14 @@ const startGlobalDnd = (
             transform: translateX(${deltaX}px) translateY(${deltaY}px);
             z-index: 1;
             position: fixed;
-            top: ${drag.rect.top}px;
-            left: ${drag.rect.left}px;
-            width: ${drag.rect.width}px;
-            height: ${drag.rect.height}px;
+            top: ${drag.item.rect.top}px;
+            left: ${drag.item.rect.left}px;
+            width: ${drag.item.rect.width}px;
+            height: ${drag.item.rect.height}px;
             user-select; none;
           `;
 
-        drag.el.setAttribute("style", transformStyle);
+        drag.item.el.setAttribute("style", transformStyle);
 
         if (
           //   true
@@ -367,13 +388,13 @@ const startGlobalDnd = (
             "style",
             `
                background: hotpink;
-               top: ${drag.rect.top}px;
-               left: ${drag.rect.left}px;
-               width: ${axis === "x" ? `${drag.rect.width}px` : "100%"};
-               height: ${axis === "y" ? `${drag.rect.height}px` : "100%"};`
+               top: ${drag.item.rect.top}px;
+               left: ${drag.item.rect.left}px;
+               width: ${axis === "x" ? `${drag.item.rect.width}px` : "100%"};
+               height: ${axis === "y" ? `${drag.item.rect.height}px` : "100%"};`
           );
 
-          const placeholderTarget = impact?.el || drag.el;
+          const placeholderTarget = impact?.el || drag.item.el;
           placeholderTarget.insertAdjacentElement(
             impact?.position || "afterend",
             placeholder
@@ -383,7 +404,7 @@ const startGlobalDnd = (
           //     "style",
           //     `
           //           transform: translateX(${0}px) translateY(${
-          //       drag.rect.height
+          //       drag.item.rect.height
           //     }px);
           //           transition: transform 200ms ease-in;
           //           `

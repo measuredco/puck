@@ -191,7 +191,15 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
         setZoneWillDrag("");
       }}
     >
-      <div data-drop-list>
+      <div
+        data-drop-list
+        style={
+          {
+            // Reset containing block to prevent breaking out of document flow during drag, which would break scroll
+            // transform: "scale(1)",
+          }
+        }
+      >
         <div
           className={getClassName("content")}
           style={style}
