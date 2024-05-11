@@ -2,7 +2,7 @@ import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
 import { MoreVertical } from "lucide-react";
 import {
-  AutoFieldInternal,
+  AutoFieldPrivate,
   FieldLabelInternal,
   FieldPropsInternal,
 } from "../..";
@@ -46,7 +46,7 @@ export const ObjectField = ({
             const wildcardFieldName = `${name}.${fieldName}`;
 
             return (
-              <AutoFieldInternal
+              <AutoFieldPrivate
                 key={subFieldName}
                 name={subFieldName}
                 label={subField.label || fieldName}
