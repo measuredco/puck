@@ -23,7 +23,7 @@ import { Lock } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { ObjectField } from "./fields/ObjectField";
 import { useAppContext } from "../Puck/context";
-import { generateId } from "../../lib/generate-id";
+import { useSafeId } from "../../lib/use-safe-id";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -118,71 +118,20 @@ export type FieldPropsInternal<ValueType = any, F = Field<any>> = FieldProps<
   name?: string;
 };
 
-export function AutoFieldInternal<
+function AutoFieldInternal<
   ValueType = any,
   FieldType extends Field<ValueType> = Field<ValueType>
->({
-  onChange,
-  ...props
-}: FieldPropsInternalOptional<ValueType, FieldType> & {
-  Label?: React.FC<FieldLabelPropsInternal>;
-}) {
+>(
+  props: FieldPropsInternalOptional<ValueType, FieldType> & {
+    Label?: React.FC<FieldLabelPropsInternal>;
+  }
+) {
   const { overrides } = useAppContext();
 
-  const {
-    name,
-    field,
-    value,
-    readOnly,
-    label = field.label,
-    id,
-    Label = FieldLabelInternal,
-  } = props;
+  const { field, label = field.label, id, Label = FieldLabelInternal } = props;
 
-  const [defaultId] = useState(generateId(field.type));
+  const defaultId = useSafeId();
   const resolvedId = id || defaultId;
-
-  const [localValue, setLocalValue] = useState(value);
-
-  const onChangeDb = useDebouncedCallback(
-    (val, ui) => {
-      onChange(val, ui);
-    },
-    50,
-    { leading: true }
-  );
-
-  const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
-    setLocalValue(val);
-    onChangeDb(val, ui);
-  }, []);
-
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
-
-  const localProps = {
-    value: localValue,
-    onChange: onChangeLocal,
-  };
-
-  if (field.type === "custom") {
-    if (!field.render) {
-      return null;
-    }
-
-    return (
-      <div className={getClassName()}>
-        {field.render({
-          field,
-          name,
-          readOnly,
-          id: resolvedId,
-          ...localProps,
-        })}
-      </div>
-    );
-  }
 
   const defaultFields = {
     array: ArrayField,
@@ -209,12 +158,25 @@ export function AutoFieldInternal<
 
   const mergedProps = {
     ...props,
-    ...localProps,
     field,
     label,
     Label,
     id: resolvedId,
   };
+
+  if (field.type === "custom") {
+    if (!field.render) {
+      return null;
+    }
+
+    const CustomField = field.render as any;
+
+    return (
+      <div className={getClassName()}>
+        <CustomField {...mergedProps} />
+      </div>
+    );
+  }
 
   const children = defaultFields[field.type](mergedProps);
 
@@ -223,14 +185,50 @@ export function AutoFieldInternal<
   return <Render {...mergedProps}>{children}</Render>;
 }
 
+export function AutoFieldPrivate<
+  ValueType = any,
+  FieldType extends Field<ValueType> = Field<ValueType>
+>(
+  props: FieldPropsInternalOptional<ValueType, FieldType> & {
+    Label?: React.FC<FieldLabelPropsInternal>;
+  }
+) {
+  const { value, onChange } = props;
+
+  const [localValue, setLocalValue] = useState(value);
+
+  const onChangeDb = useDebouncedCallback(
+    (val, ui) => {
+      onChange(val, ui);
+    },
+    50,
+    { leading: true }
+  );
+
+  const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
+    setLocalValue(val);
+    onChangeDb(val, ui);
+  }, []);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  const localProps = {
+    value: localValue,
+    onChange: onChangeLocal,
+  };
+
+  return <AutoFieldInternal<ValueType, FieldType> {...props} {...localProps} />;
+}
+
+const DefaultLabel = (props) => <div {...props} />;
+
 export function AutoField<
   ValueType = any,
   FieldType extends Field<ValueType> = Field<ValueType>
 >(props: FieldProps<ValueType, FieldType>) {
   return (
-    <AutoFieldInternal<ValueType, FieldType>
-      {...props}
-      Label={(props) => <div {...props} />}
-    />
+    <AutoFieldInternal<ValueType, FieldType> {...props} Label={DefaultLabel} />
   );
 }
