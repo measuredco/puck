@@ -14,6 +14,7 @@ export const DefaultField = ({
   label,
   Label,
   id,
+  status,
 }: FieldPropsInternal) => {
   return (
     <Label
@@ -25,6 +26,7 @@ export const DefaultField = ({
         </>
       }
       readOnly={readOnly}
+      status={status}
     >
       <input
         className={getClassName("input")}

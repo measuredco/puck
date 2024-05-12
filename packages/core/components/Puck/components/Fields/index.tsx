@@ -7,7 +7,11 @@ import {
   setAction,
 } from "../../../../reducer";
 import { ComponentData, RootData, UiState } from "../../../../types/Config";
-import type { Field, Fields as FieldsType } from "../../../../types/Fields";
+import type {
+  Field,
+  FieldStatus,
+  Fields as FieldsType,
+} from "../../../../types/Fields";
 import { AutoFieldPrivate } from "../../../AutoField";
 import { useAppContext } from "../../context";
 
@@ -258,6 +262,8 @@ export const Fields = () => {
           if (selectedItem && itemSelector) {
             const { readOnly = {} } = selectedItem;
 
+            const value = selectedItem.props[fieldName] as any;
+
             return (
               <AutoFieldPrivate
                 key={`${selectedItem.props.id}_${fieldName}`}
@@ -265,7 +271,7 @@ export const Fields = () => {
                 name={fieldName}
                 id={`${selectedItem.props.id}_${fieldName}`}
                 readOnly={readOnly[fieldName]}
-                value={selectedItem.props[fieldName]}
+                value={value}
                 onChange={onChange}
               />
             );

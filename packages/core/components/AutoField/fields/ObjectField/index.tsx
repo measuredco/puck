@@ -1,11 +1,7 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
 import { MoreVertical } from "lucide-react";
-import {
-  AutoFieldPrivate,
-  FieldLabelInternal,
-  FieldPropsInternal,
-} from "../..";
+import { AutoFieldPrivate, FieldPropsInternal } from "../..";
 import { useAppContext } from "../../../Puck/context";
 
 const getClassName = getClassNameFactory("ObjectField", styles);
@@ -19,6 +15,7 @@ export const ObjectField = ({
   Label,
   readOnly,
   id,
+  status,
 }: FieldPropsInternal) => {
   const { selectedItem } = useAppContext();
 
@@ -36,6 +33,7 @@ export const ObjectField = ({
       icon={<MoreVertical size={16} />}
       el="div"
       readOnly={readOnly}
+      status={status}
     >
       <div className={getClassName()}>
         <fieldset className={getClassName("fieldset")}>
