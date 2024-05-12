@@ -147,7 +147,17 @@ export function Puck<UserConfig extends Config = Config>({
     }
 
     // DEPRECATED
-    const rootProps = initialData?.root?.props || initialData.root || {};
+    if (
+      Object.keys(initialData?.root || {}).length > 0 &&
+      !initialData?.root?.props
+    ) {
+      console.error(
+        "Warning: Defining props on `root` is deprecated. Please use `root.props`, or republish this page to migrate automatically."
+      );
+    }
+
+    // Deprecated
+    const rootProps = initialData?.root?.props || initialData?.root || {};
 
     const defaultedRootProps = {
       ...config.root?.defaultProps,
@@ -158,7 +168,7 @@ export function Puck<UserConfig extends Config = Config>({
       ...defaultAppState,
       data: {
         ...initialData,
-        root: defaultedRootProps,
+        root: { ...initialData?.root, props: defaultedRootProps },
         content: initialData.content || [],
       },
       ui: {
@@ -231,15 +241,6 @@ export function Puck<UserConfig extends Config = Config>({
 
   // DEPRECATED
   const rootProps = data.root.props || data.root;
-
-  // DEPRECATED
-  useEffect(() => {
-    if (Object.keys(data.root).length > 0 && !data.root.props) {
-      console.error(
-        "Warning: Defining props on `root` is deprecated. Please use `root.props`. This will be a breaking change in a future release."
-      );
-    }
-  }, []);
 
   const toggleSidebars = useCallback(
     (sidebar: "left" | "right") => {
