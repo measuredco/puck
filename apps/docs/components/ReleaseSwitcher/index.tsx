@@ -37,18 +37,22 @@ export const ReleaseSwitcher = ({
   ]);
 
   useEffect(() => {
-    fetch(`${BASE_URL}/api/releases`).then(async (res) => {
-      const { releases } = await res.json();
-      const releaseOptions = Object.keys(releases).map((key) => ({
-        label: key,
-        value: key,
-      }));
+    fetch(`${BASE_URL}/api/releases`)
+      .then(async (res) => {
+        const { releases } = await res.json();
+        const releaseOptions = Object.keys(releases).map((key) => ({
+          label: key,
+          value: key,
+        }));
 
-      releaseOptions[1].label = `${releaseOptions[1].label} (latest)`;
-      releaseOptions[1].value = ""; // Okay to set to "" because isLatest will be true for this release option
+        releaseOptions[1].label = `${releaseOptions[1].label} (latest)`;
+        releaseOptions[1].value = ""; // Okay to set to "" because isLatest will be true for this release option
 
-      setOptions(releaseOptions);
-    });
+        setOptions(releaseOptions);
+      })
+      .catch((e) => {
+        console.error(`Could not load releases: ${e}`);
+      });
   }, []);
 
   return (
