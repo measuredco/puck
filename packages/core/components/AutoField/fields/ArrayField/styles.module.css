@@ -10,6 +10,10 @@
   border-radius: 4px;
 }
 
+.ArrayField--error {
+  border-color: var(--puck-color-interactive-error);
+}
+
 .ArrayField--isDraggingFrom {
   background-color: var(--puck-color-azure-11);
   overflow: hidden;

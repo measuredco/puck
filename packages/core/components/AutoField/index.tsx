@@ -1,5 +1,5 @@
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Field, FieldProps } from "../../types/Fields";
+import { Field, FieldProps, FieldStatus } from "../../types/Fields";
 import { UiState } from "../../types/Config";
 
 import styles from "./styles.module.css";
@@ -66,6 +66,7 @@ type FieldLabelPropsInternal = {
   label?: string;
   el?: "label" | "div";
   readOnly?: boolean;
+  status?: FieldStatus;
 };
 
 export const FieldLabelInternal = ({
@@ -74,6 +75,7 @@ export const FieldLabelInternal = ({
   label,
   el = "label",
   readOnly,
+  status = { type: "default" },
 }: FieldLabelPropsInternal) => {
   const { overrides } = useAppContext();
 
@@ -90,11 +92,14 @@ export const FieldLabelInternal = ({
     <Wrapper
       label={label}
       icon={icon}
-      className={getClassName({ readOnly })}
+      className={getClassName({ readOnly, [status.type]: true })}
       readOnly={readOnly}
       el={el}
     >
       {children}
+      {status.message && (
+        <div className={getClassName("statusMessage")}>{status.message}</div>
+      )}
     </Wrapper>
   );
 };
@@ -106,6 +111,7 @@ type FieldPropsInternalOptional<ValueType = any, F = Field<any>> = FieldProps<
   Label?: React.FC<FieldLabelPropsInternal>;
   label?: string;
   name?: string;
+  status?: FieldStatus;
 };
 
 export type FieldPropsInternal<ValueType = any, F = Field<any>> = FieldProps<
@@ -116,6 +122,7 @@ export type FieldPropsInternal<ValueType = any, F = Field<any>> = FieldProps<
   label?: string;
   id: string;
   name?: string;
+  status?: FieldStatus;
 };
 
 function AutoFieldInternal<
@@ -162,7 +169,7 @@ function AutoFieldInternal<
     label,
     Label,
     id: resolvedId,
-  };
+  } as FieldPropsInternal;
 
   if (field.type === "custom") {
     if (!field.render) {
@@ -193,22 +200,52 @@ export function AutoFieldPrivate<
     Label?: React.FC<FieldLabelPropsInternal>;
   }
 ) {
+  const { state } = useAppContext();
+
   const { value, onChange } = props;
+
+  const [status, setStatus] = useState<FieldStatus>();
 
   const [localValue, setLocalValue] = useState(value);
 
   const onChangeDb = useDebouncedCallback(
-    (val, ui) => {
-      onChange(val, ui);
+    (val, ui, field) => {
+      if (props.field.validate) {
+        const validate = field.validate as any;
+        const status: FieldStatus | undefined = validate(val, field, state);
+
+        setStatus(status);
+
+        if (status?.type !== "error") {
+          onChange(val, ui);
+        }
+      } else {
+        setStatus(undefined);
+
+        onChange(val, ui);
+      }
     },
     50,
     { leading: true }
   );
 
-  const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
-    setLocalValue(val);
-    onChangeDb(val, ui);
-  }, []);
+  // TODO this is the wrong time to check. See https://design-system.service.gov.uk/patterns/validation/#when-to-tell-the-user-about-validation-errors
+  // useEffect(() => {
+  //   if (props.field.validate) {
+  //     const validate = props.field.validate as any;
+  //     setStatus(validate(props.value, props.field, state));
+  //   } else {
+  //     setStatus(undefined);
+  //   }
+  // }, [props.field, props.value]);
+
+  const onChangeLocal = useCallback(
+    (val: any, ui?: Partial<UiState>) => {
+      setLocalValue(val);
+      onChangeDb(val, ui, props.field);
+    },
+    [props.field]
+  );
 
   useEffect(() => {
     setLocalValue(value);
@@ -217,7 +254,10 @@ export function AutoFieldPrivate<
   const localProps = {
     value: localValue,
     onChange: onChangeLocal,
+    status,
   };
+
+  console.log("status", status);
 
   return <AutoFieldInternal<ValueType, FieldType> {...props} {...localProps} />;
 }

@@ -1,5 +1,5 @@
 :root {
- /*
+  /*
    * Color palette
    */
 
@@ -83,4 +83,6 @@
 
   --puck-color-black: #000000;
   --puck-color-white: #ffffff;
+
+  --puck-color-interactive-error: var(--puck-color-red-04);
 }

@@ -24,6 +24,7 @@ export const ArrayField = ({
   readOnly,
   id,
   Label = (props) => <div {...props} />,
+  status,
 }: FieldPropsInternal) => {
   const { state, setUi, selectedItem } = useAppContext();
 
@@ -119,6 +120,7 @@ export const ArrayField = ({
       icon={<List size={16} />}
       el="div"
       readOnly={readOnly}
+      status={status}
     >
       <DragDropContext
         onDragEnd={(event) => {
@@ -159,6 +161,7 @@ export const ArrayField = ({
                   isDraggingFrom: !!snapshot.draggingFromThisWith,
                   hasItems: Array.isArray(value) && value.length > 0,
                   addDisabled,
+                  [status?.type || "default"]: true,
                 })}
                 onMouseOver={(e) => {
                   e.stopPropagation();

@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { DefaultComponentProps, UiState } from "./Config";
+import { AppState, DefaultComponentProps, UiState } from "./Config";
 
 type FieldOption = {
   label: string;
@@ -8,31 +8,44 @@ type FieldOption = {
 
 type FieldOptions = Array<FieldOption> | ReadonlyArray<FieldOption>;
 
+type ValidateFn<ValueType, FieldType> = (
+  value: ValueType,
+  field: FieldType,
+  appState: AppState
+) => FieldStatus | undefined;
+
 export type BaseField = {
   label?: string;
 };
 
 export type TextField = BaseField & {
   type: "text";
+  // TODO change with inferred types
+  validate?: ValidateFn<string, TextField>;
 };
+
 export type NumberField = BaseField & {
   type: "number";
   min?: number;
   max?: number;
+  validate?: ValidateFn<number, NumberField>;
 };
 
 export type TextareaField = BaseField & {
   type: "textarea";
+  validate?: ValidateFn<string, TextareaField>;
 };
 
 export type SelectField = BaseField & {
   type: "select";
   options: FieldOptions;
+  validate?: ValidateFn<string | number | boolean, SelectField>;
 };
 
 export type RadioField = BaseField & {
   type: "radio";
   options: FieldOptions;
+  validate?: ValidateFn<string | number | boolean, RadioField>;
 };
 
 export type ArrayField<
@@ -46,6 +59,7 @@ export type ArrayField<
   getItemSummary?: (item: Props[0], index?: number) => string;
   max?: number;
   min?: number;
+  validate?: ValidateFn<Props[0], ArrayField<Props>>;
 };
 
 export type ObjectField<
@@ -55,6 +69,7 @@ export type ObjectField<
   objectFields: {
     [SubPropName in keyof Props]: Field<Props[SubPropName]>;
   };
+  validate?: ValidateFn<Props, ObjectField<Props>>;
 };
 
 // DEPRECATED
@@ -77,6 +92,7 @@ export type ExternalFieldWithAdaptor<
   adaptor: Adaptor<any, any, Props>;
   adaptorParams?: object;
   getItemSummary: (item: Props, index?: number) => string;
+  validate?: ValidateFn<Props, ExternalFieldWithAdaptor<Props>>;
 };
 
 export type ExternalField<
@@ -95,6 +111,7 @@ export type ExternalField<
   initialQuery?: string;
   filterFields?: Record<string, Field>;
   initialFilters?: Record<string, any>;
+  validate?: ValidateFn<Props, ExternalField<Props>>;
 };
 
 export type CustomField<Props extends any = {}> = BaseField & {
@@ -107,6 +124,7 @@ export type CustomField<Props extends any = {}> = BaseField & {
     onChange: (value: Props) => void;
     readOnly?: boolean;
   }) => ReactElement;
+  validate?: ValidateFn<Props, CustomField>;
 };
 
 export type Field<Props extends any = any> =
@@ -130,10 +148,16 @@ export type Fields<
   >]: Field<ComponentProps[PropName]>;
 };
 
+export type FieldStatus = {
+  type: "default" | "error" | "warning" | "success";
+  message?: string;
+};
+
 export type FieldProps<ValueType = any, F = Field<any>> = {
   field: F;
   value: ValueType;
   id?: string;
   onChange: (value: ValueType, uiState?: Partial<UiState>) => void;
   readOnly?: boolean;
+  status?: FieldStatus;
 };

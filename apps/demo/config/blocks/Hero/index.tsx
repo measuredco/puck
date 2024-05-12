@@ -83,7 +83,31 @@ export const Hero: ComponentConfig<HeroProps> = {
       },
       getItemSummary: (item) => item.label,
     },
-    title: { type: "text" },
+    title: {
+      type: "text",
+      validate: (val) => {
+        const validateEmail = (email) => {
+          return String(email)
+            .toLowerCase()
+            .match(
+              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+        };
+
+        if (!validateEmail(val)) {
+          return {
+            type: "error",
+            message: "Invalid email",
+          };
+        }
+        // if (val.length > 10) {
+        //   return {
+        //     type: "error",
+        //     message: "Title must be 10 characters or less",
+        //   };
+        // }
+      },
+    },
     description: { type: "textarea" },
     buttons: {
       type: "array",
