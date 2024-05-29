@@ -1,5 +1,5 @@
 import { Dispatch, ReactElement, SetStateAction } from "react";
-import { Globe, ChevronLeft, ChevronRight } from "lucide-react";
+import { Globe, Undo2Icon, Redo2Icon } from "lucide-react";
 
 import { Button } from "../Button";
 import { IconButton } from "../IconButton/IconButton";
@@ -58,7 +58,7 @@ export const MenuBar = ({
       <div className={getClassName("inner")}>
         <div className={getClassName("history")}>
           <IconButton title="undo" disabled={!hasPast} onClick={back}>
-            <ChevronLeft
+            <Undo2Icon
               size={21}
               stroke={
                 hasPast
@@ -68,7 +68,7 @@ export const MenuBar = ({
             />
           </IconButton>
           <IconButton title="redo" disabled={!hasFuture} onClick={forward}>
-            <ChevronRight
+            <Redo2Icon
               size={21}
               stroke={
                 hasFuture
