@@ -18,15 +18,25 @@
 
 .Puck {
   --puck-space-px: 16px;
-  bottom: 0;
   font-family: var(--puck-font-family);
+}
+
+.Puck-portal {
+  position: relative;
+  z-index: 2;
+}
+
+/* Puck Layout */
+
+.PuckLayout {
+  bottom: 0;
   left: 0;
   position: fixed;
   right: 0;
   top: 0;
 }
 
-.Puck-layout {
+.PuckLayout-inner {
   --puck-frame-width: auto;
   --puck-side-bar-width: 0px;
   display: grid;
@@ -38,71 +48,72 @@
   z-index: 0;
 }
 
-.Puck--mounted .Puck-layout {
+.PuckLayout--mounted .PuckLayout-inner {
   --puck-side-bar-width: 186px;
 }
 
-.Puck--leftSideBarVisible .Puck-layout {
+.PuckLayout--leftSideBarVisible .PuckLayout-inner {
   grid-template-columns:
     var(--puck-side-bar-width) var(--puck-frame-width)
     0;
 }
 
-.Puck--rightSideBarVisible .Puck-layout {
+.PuckLayout--rightSideBarVisible .PuckLayout-inner {
   grid-template-columns:
     0 var(--puck-frame-width)
     var(--puck-side-bar-width);
 }
 
-.Puck--leftSideBarVisible.Puck--rightSideBarVisible .Puck-layout {
+.PuckLayout--leftSideBarVisible.PuckLayout--rightSideBarVisible
+  .PuckLayout-inner {
   grid-template-columns:
     var(--puck-side-bar-width) var(--puck-frame-width)
     var(--puck-side-bar-width);
 }
 
 @media (min-width: 458px) {
-  .Puck-mounted .Puck-layout {
+  .PuckLayout-mounted .PuckLayout-inner {
     --puck-frame-width: minmax(266px, auto);
   }
 }
 
 @media (min-width: 638px) {
-  .Puck .Puck-layout {
+  .PuckLayout .PuckLayout-inner {
     --puck-side-bar-width: minmax(186px, 250px);
   }
 }
 
 @media (min-width: 766px) {
-  .Puck .Puck-layout {
+  .PuckLayout .PuckLayout-inner {
     --puck-frame-width: auto;
   }
 }
 
 @media (min-width: 990px) {
-  .Puck .Puck-layout {
+  .PuckLayout .PuckLayout-inner {
     --puck-side-bar-width: 256px;
   }
 }
 
 @media (min-width: 1198px) {
-  .Puck .Puck-layout {
+  .PuckLayout .PuckLayout-inner {
     --puck-side-bar-width: 274px;
   }
 }
 
 @media (min-width: 1398px) {
-  .Puck .Puck-layout {
+  .PuckLayout .PuckLayout-inner {
     --puck-side-bar-width: 290px;
   }
 }
 
 @media (min-width: 1598px) {
-  .Puck .Puck-layout {
+  .PuckLayout .PuckLayout-inner {
     --puck-side-bar-width: 320px;
   }
 }
 
-.Puck-header {
+.PuckLayout-header {
   background: var(--puck-color-white);
   border-bottom: 1px solid var(--puck-color-grey-09);
   color: var(--puck-color-black);
@@ -111,7 +122,7 @@
   max-width: 100vw;
 }
 
-.Puck-headerInner {
+.PuckLayout-headerInner {
   align-items: end;
   display: grid;
   gap: var(--puck-space-px);
@@ -121,51 +132,51 @@
   padding: var(--puck-space-px);
 }
 
-.Puck-headerToggle {
+.PuckLayout-headerToggle {
   color: var(--puck-color-grey-05);
   display: flex;
   margin-left: -4px;
   padding-top: 2px;
 }
 
-.Puck--rightSideBarVisible .Puck-rightSideBarToggle,
-.Puck--leftSideBarVisible .Puck-leftSideBarToggle {
+.PuckLayout--rightSideBarVisible .PuckLayout-rightSideBarToggle,
+.PuckLayout--leftSideBarVisible .PuckLayout-leftSideBarToggle {
   color: var(--puck-color-black);
 }
 
-.Puck-headerTitle {
+.PuckLayout-headerTitle {
   align-self: center;
 }
 
-.Puck-headerPath {
+.PuckLayout-headerPath {
   font-family: var(--puck-font-family-monospaced);
   font-size: var(--puck-font-size-xxs);
   font-weight: normal;
   word-break: break-all;
 }
 
-.Puck-headerTools {
+.PuckLayout-headerTools {
   display: flex;
   gap: 16px;
   justify-content: flex-end;
 }
 
-.Puck-menuButton {
+.PuckLayout-menuButton {
   color: var(--puck-color-grey-05);
   margin-left: -4px;
 }
 
-.Puck--menuOpen .Puck-menuButton {
+.PuckLayout--menuOpen .PuckLayout-menuButton {
   color: var(--puck-color-black);
 }
 
 @media (min-width: 638px) {
-  .Puck-menuButton {
+  .PuckLayout-menuButton {
     display: none;
   }
 }
 
-.Puck-leftSideBar {
+.PuckLayout-leftSideBar {
   background: var(--puck-color-grey-12);
   border-right: 1px solid var(--puck-color-grey-09);
   display: flex;
@@ -174,15 +185,11 @@
   overflow-y: auto;
 }
 
-.Puck-rightSideBar {
+.PuckLayout-rightSideBar {
   background: var(--puck-color-white);
   border-left: 1px solid var(--puck-color-grey-09);
   display: flex;
   flex-direction: column;
   grid-area: right;
   overflow-y: auto;
-}
-
-.Puck-portal {
-  z-index: 2;
 }
