@@ -88,8 +88,7 @@ select.Input-input {
 }
 
 .Input--readOnly > .Input-input,
-.Input--readOnly > select.Input-input,
-.Input-input:read-only {
+.Input--readOnly > select.Input-input {
   background-color: var(--puck-color-grey-11);
   border-color: var(--puck-color-grey-09);
   color: var(--puck-color-grey-04);
