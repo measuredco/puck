@@ -278,7 +278,9 @@ export const Fields = () => {
       </Wrapper>
       {isLoading && (
         <div className={getClassName("loadingOverlay")}>
-          <Loader size={32} />
+          <div className={getClassName("loadingOverlayInner")}>
+            <Loader size={16} />
+          </div>
         </div>
       )}
     </form>

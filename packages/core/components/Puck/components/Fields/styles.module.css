@@ -1,5 +1,4 @@
 .PuckFields {
-  position: relative;
   font-family: var(--puck-font-family);
 }
 
@@ -10,14 +9,21 @@
 .PuckFields-loadingOverlay {
   background: var(--puck-color-white);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-start;
   height: 100%;
   width: 100%;
-  top: 0;
+  top: 0px;
   position: absolute;
   z-index: 1;
   pointer-events: all;
   box-sizing: border-box;
   opacity: 0.8;
+}
+
+.PuckFields-loadingOverlayInner {
+  display: flex;
+  padding: 16px;
+  position: sticky;
+  top: 0;
 }
