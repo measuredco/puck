@@ -21,6 +21,11 @@ module.exports = withNextra({
         destination: "/docs/api-reference/plugin",
         permanent: true,
       },
+      {
+        source: "/docs/api-reference/overrides/component-list",
+        destination: "/docs/api-reference/overrides/components",
+        permanent: true,
+      },
     ];
   },
   transpilePackages: ["@measured/puck"],
