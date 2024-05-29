@@ -49,6 +49,7 @@ import { DragDropContext } from "../DragDropContext";
 import { IframeConfig } from "../../types/IframeConfig";
 
 const getClassName = getClassNameFactory("Puck", styles);
+const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
 
 export function Puck<UserConfig extends Config = Config>({
   children,
@@ -369,7 +370,7 @@ export function Puck<UserConfig extends Config = Config>({
   }, []);
 
   return (
-    <div className="Puck">
+    <div className={`Puck ${getClassName()}`}>
       <AppProvider
         value={{
           state: appState,
@@ -467,14 +468,14 @@ export function Puck<UserConfig extends Config = Config>({
             <CustomPuck>
               {children || (
                 <div
-                  className={getClassName({
+                  className={getLayoutClassName({
                     leftSideBarVisible,
                     menuOpen,
                     mounted,
                     rightSideBarVisible,
                   })}
                 >
-                  <div className={getClassName("layout")}>
+                  <div className={getLayoutClassName("inner")}>
                     <CustomHeader
                       actions={
                         <>
@@ -491,10 +492,14 @@ export function Puck<UserConfig extends Config = Config>({
                         </>
                       }
                     >
-                      <header className={getClassName("header")}>
-                        <div className={getClassName("headerInner")}>
-                          <div className={getClassName("headerToggle")}>
-                            <div className={getClassName("leftSideBarToggle")}>
+                      <header className={getLayoutClassName("header")}>
+                        <div className={getLayoutClassName("headerInner")}>
+                          <div className={getLayoutClassName("headerToggle")}>
+                            <div
+                              className={getLayoutClassName(
+                                "leftSideBarToggle"
+                              )}
+                            >
                               <IconButton
                                 onClick={() => {
                                   toggleSidebars("left");
@@ -504,7 +509,11 @@ export function Puck<UserConfig extends Config = Config>({
                                 <PanelLeft focusable="false" />
                               </IconButton>
                             </div>
-                            <div className={getClassName("rightSideBarToggle")}>
+                            <div
+                              className={getLayoutClassName(
+                                "rightSideBarToggle"
+                              )}
+                            >
                               <IconButton
                                 onClick={() => {
                                   toggleSidebars("right");
@@ -515,21 +524,23 @@ export function Puck<UserConfig extends Config = Config>({
                               </IconButton>
                             </div>
                           </div>
-                          <div className={getClassName("headerTitle")}>
+                          <div className={getLayoutClassName("headerTitle")}>
                             <Heading rank={2} size="xs">
                               {headerTitle || rootProps.title || "Page"}
                               {headerPath && (
                                 <>
                                   {" "}
-                                  <code className={getClassName("headerPath")}>
+                                  <code
+                                    className={getLayoutClassName("headerPath")}
+                                  >
                                     {headerPath}
                                   </code>
                                 </>
                               )}
                             </Heading>
                           </div>
-                          <div className={getClassName("headerTools")}>
-                            <div className={getClassName("menuButton")}>
+                          <div className={getLayoutClassName("headerTools")}>
+                            <div className={getLayoutClassName("menuButton")}>
                               <IconButton
                                 onClick={() => {
                                   return setMenuOpen(!menuOpen);
@@ -567,7 +578,7 @@ export function Puck<UserConfig extends Config = Config>({
                         </div>
                       </header>
                     </CustomHeader>
-                    <div className={getClassName("leftSideBar")}>
+                    <div className={getLayoutClassName("leftSideBar")}>
                       <SidebarSection title="Components" noBorderTop>
                         <Components />
                       </SidebarSection>
@@ -576,7 +587,7 @@ export function Puck<UserConfig extends Config = Config>({
                       </SidebarSection>
                     </div>
                     <Canvas />
-                    <div className={getClassName("rightSideBar")}>
+                    <div className={getLayoutClassName("rightSideBar")}>
                       <SidebarSection
                         noPadding
                         noBorderTop
@@ -592,16 +603,13 @@ export function Puck<UserConfig extends Config = Config>({
                       </SidebarSection>
                     </div>
                   </div>
-                  <div
-                    id="puck-portal-root"
-                    className={getClassName("portal")}
-                  />
                 </div>
               )}
             </CustomPuck>
           </DropZoneProvider>
         </DragDropContext>
       </AppProvider>
+      <div id="puck-portal-root" className={getClassName("portal")} />
     </div>
   );
 }
