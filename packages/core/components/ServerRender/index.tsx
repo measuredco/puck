@@ -79,6 +79,7 @@ export function Render<UserConfig extends Config = Config>({
           renderDropZone: ({ zone }: { zone: string }) => (
             <DropZoneRender zone={zone} data={data} config={config} />
           ),
+          isEditing: false,
         }}
         title={title}
         editMode={false}

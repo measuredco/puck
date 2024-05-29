@@ -20,8 +20,8 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         config.root?.render({
           id: "puck-root",
           ...pageProps,
-          editMode: true,
-          puck: { renderDropZone: DropZone },
+          editMode: true, // DEPRECATED
+          puck: { renderDropZone: DropZone, isEditing: true },
         })
       ) : (
         <>{pageProps.children}</>
