@@ -25,22 +25,12 @@ const defaultPageFields: Record<string, Field> = {
 
 const DefaultFields = ({
   children,
-  isLoading,
 }: {
   children: ReactNode;
   isLoading: boolean;
   itemSelector?: ItemSelector | null;
 }) => {
-  return (
-    <div className={getClassName({ isLoading })}>
-      {children}
-      {isLoading && (
-        <div className={getClassName("loadingOverlay")}>
-          <Loader size="32" />
-        </div>
-      )}
-    </div>
-  );
+  return <>{children}</>;
 };
 
 type ComponentOrRootData = Omit<Partial<ComponentData<any>>, "type">;
@@ -286,6 +276,11 @@ export const Fields = () => {
           }
         })}
       </Wrapper>
+      {isLoading && (
+        <div className={getClassName("loadingOverlay")}>
+          <Loader size={32} />
+        </div>
+      )}
     </form>
   );
 };
