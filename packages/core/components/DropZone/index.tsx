@@ -10,6 +10,7 @@ import { DropZoneProvider, dropZoneContext } from "./context";
 import { getZoneId } from "../../lib/get-zone-id";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
+import { PuckContext } from "../../types/Config";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -198,11 +199,16 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
               {content.map((item, i) => {
                 const componentId = item.props.id;
 
+                const puckProps: PuckContext = {
+                  renderDropZone: DropZone,
+                  isEditing: true,
+                };
+
                 const defaultedProps = {
                   ...config.components[item.type]?.defaultProps,
                   ...item.props,
-                  puck: { renderDropZone: DropZone },
-                  editMode: true,
+                  puck: puckProps,
+                  editMode: true, // DEPRECATED
                 };
 
                 const isSelected =

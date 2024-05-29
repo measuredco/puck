@@ -9,10 +9,10 @@ export type RootProps = {
   title: string;
 } & DefaultRootProps;
 
-function Root({ children, editMode }: RootProps) {
+function Root({ children, puck }: RootProps) {
   return (
     <>
-      <Header editMode={editMode} />
+      <Header editMode={puck.isEditing} />
       {children}
       <Footer>
         <Footer.List title="Section">

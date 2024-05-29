@@ -25,6 +25,7 @@ export type PuckComponent<Props> = (
 
 export type PuckContext = {
   renderDropZone: React.FC<DropZoneProps>;
+  isEditing: boolean;
 };
 
 export type ComponentConfig<

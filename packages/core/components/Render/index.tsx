@@ -28,6 +28,7 @@ export function Render<UserConfig extends Config = Config>({
           {...rootProps}
           puck={{
             renderDropZone: DropZone,
+            isEditing: false,
           }}
           title={title}
           editMode={false}
