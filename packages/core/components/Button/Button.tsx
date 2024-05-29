@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import styles from "./Button.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { ClipLoader } from "react-spinners";
+import { Loader } from "../Loader";
 
 const getClassName = getClassNameFactory("Button", styles);
 
@@ -66,7 +66,7 @@ export const Button = ({
       {children}
       {loading && (
         <div className={getClassName("spinner")}>
-          <ClipLoader aria-label="loading" color="inherit" size="14px" />
+          <Loader size={14} />
         </div>
       )}
     </ElementType>

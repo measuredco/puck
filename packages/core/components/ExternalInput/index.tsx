@@ -5,9 +5,9 @@ import { ExternalField } from "../../types/Fields";
 import { Link, Search, SlidersHorizontal, Unlock } from "lucide-react";
 import { Modal } from "../Modal";
 import { Heading } from "../Heading";
-import { ClipLoader } from "react-spinners";
+import { Loader } from "../Loader";
 import { Button } from "../Button";
-import { AutoFieldPrivate, FieldLabelInternal } from "../AutoField";
+import { AutoFieldPrivate } from "../AutoField";
 import { IconButton } from "../IconButton";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
@@ -255,7 +255,7 @@ export const ExternalInput = ({
               </table>
 
               <div className={getClassNameModal("loadingBanner")}>
-                <ClipLoader size={24} aria-label="Loading" />
+                <Loader size={24} />
               </div>
             </div>
           </div>

@@ -11,9 +11,9 @@ import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, Trash } from "lucide-react";
 import { useModifierHeld } from "../../lib/use-modifier-held";
 import { isIos } from "../../lib/is-ios";
-import { ClipLoader } from "react-spinners";
 import { useAppContext } from "../Puck/context";
 import { DefaultDraggable } from "../Draggable";
+import { Loader } from "../Loader";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -120,7 +120,7 @@ export const DraggableComponent = ({
           {debug}
           {isLoading && (
             <div className={getClassName("loadingOverlay")}>
-              <ClipLoader aria-label="loading" size={16} color="inherit" />
+              <Loader />
             </div>
           )}
 
