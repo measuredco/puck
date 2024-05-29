@@ -47,7 +47,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
   defaultProps: {
     buttons: [{ label: "Learn more", href: "#", variant: "primary" }],
   },
-  render: ({ align, buttons }) => {
+  render: ({ align, buttons, puck }) => {
     return (
       <Section className={getClassName({ center: align === "center" })}>
         <div className={getClassName("actions")}>
@@ -57,6 +57,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
               href={button.href}
               variant={button.variant}
               size="large"
+              tabIndex={puck.isEditing ? -1 : undefined}
             >
               {button.label}
             </Button>

@@ -174,7 +174,7 @@ export const Hero: ComponentConfig<HeroProps> = {
 
     return fields;
   },
-  render: ({ align, title, description, buttons, padding, image }) => {
+  render: ({ align, title, description, buttons, padding, image, puck }) => {
     // Empty state allows us to test that components support hooks
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [_] = useState(0);
@@ -212,6 +212,7 @@ export const Hero: ComponentConfig<HeroProps> = {
                   href={button.href}
                   variant={button.variant}
                   size="large"
+                  tabIndex={puck.isEditing ? -1 : undefined}
                 >
                   {button.label}
                 </Button>
