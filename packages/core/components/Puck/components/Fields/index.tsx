@@ -1,4 +1,4 @@
-import { ClipLoader } from "react-spinners";
+import { Loader } from "../../../Loader";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import {
   ReplaceAction,
@@ -36,7 +36,7 @@ const DefaultFields = ({
       {children}
       {isLoading && (
         <div className={getClassName("loadingOverlay")}>
-          <ClipLoader aria-label="loading" />
+          <Loader size="32" />
         </div>
       )}
     </div>

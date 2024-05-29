@@ -65,7 +65,6 @@
     "object-hash": "^3.0.0",
     "react-frame-component": "^5.2.6",
     "react-hotkeys-hook": "^4.4.1",
-    "react-spinners": "^0.13.8",
     "ua-parser-js": "^1.0.37",
     "use-debounce": "^9.0.4",
     "uuid": "^9.0.1"

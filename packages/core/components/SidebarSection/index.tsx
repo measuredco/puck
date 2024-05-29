@@ -5,7 +5,7 @@ import { Heading } from "../Heading";
 import { ChevronRight } from "lucide-react";
 import { useBreadcrumbs } from "../../lib/use-breadcrumbs";
 import { useAppContext } from "../Puck/context";
-import { ClipLoader } from "react-spinners";
+import { Loader } from "../Loader";
 
 const getClassName = getClassNameFactory("SidebarSection", styles);
 
@@ -59,7 +59,7 @@ export const SidebarSection = ({
       <div className={getClassName("content")}>{children}</div>
       {isLoading && (
         <div className={getClassName("loadingOverlay")}>
-          <ClipLoader aria-label="loading" />
+          <Loader size={32} />
         </div>
       )}
     </div>
