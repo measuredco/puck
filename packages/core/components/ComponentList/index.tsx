@@ -66,7 +66,7 @@ const ComponentList = ({
         </button>
       )}
       <div className={getClassName("content")}>
-        <Drawer droppableId={`component-list${title ? `:${title}` : ""}`}>
+        <Drawer droppableId={title}>
           {children ||
             Object.keys(config.components).map((componentKey, i) => {
               return (

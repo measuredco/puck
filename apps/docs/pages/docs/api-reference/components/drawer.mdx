@@ -4,13 +4,17 @@ title: <Drawer>
 
 import { PuckPreview } from "@/docs/components/Preview";
 import { Drawer } from "@/core/components/Drawer";
+import { Puck } from "@/core/components/Puck";
 
 # \<Drawer\>
 
-A reference list of items that can be dragged into a droppable area, normally [`<Puck.Preview>`](puck-preview). Used for composing custom Puck UIs.
+A reference list of items that can be dragged into a [`<Puck.Preview>`](puck-preview). Used for composing custom Puck UIs.
 
-<PuckPreview config={{}} data={{ root: { props: {} }, content: [] }}>
-  <Drawer>
+<PuckPreview
+  config={{ components: { Orange: { render: () => <div>Orange</div> } } }}
+  data={{ root: { props: {} }, content: [] }}
+>
+  <Drawer droppableId="example">
     <Drawer.Item name="Orange" index={0} />
   </Drawer>
 </PuckPreview>
@@ -45,11 +49,11 @@ A React node representing the contents of the `<Drawer>`. Will likely contain [`
 
 ## Optional props
 
-### `id`
+### `droppableId`
 
 Set a custom ID for the underlying [Droppable](https://github.com/hello-pangea/dnd/blob/main/docs/api/droppable.md).
 
 - Must be unique.
-- When this id starts with `component-list`, its children can be dragged into a [`<Puck.Preview>`](puck-preview).
+- Will be prefixed with `component-list:`.
 
-Defaults to `component-list`.
+Defaults to `drawer`.
