@@ -83,13 +83,15 @@ const DrawerItem = ({
 
 export const Drawer = ({
   children,
-  droppableId = "component-list",
+  droppableId: _droppableId = "default",
   direction = "vertical",
 }: {
   children: ReactNode;
   droppableId?: string;
   direction?: "vertical" | "horizontal";
 }) => {
+  const droppableId = `component-list:${_droppableId}`;
+
   return (
     <drawerContext.Provider value={{ droppableId }}>
       <Droppable droppableId={droppableId} isDropDisabled direction={direction}>
