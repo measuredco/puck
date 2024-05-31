@@ -1,5 +1,5 @@
 export const findNearestList = (el: HTMLElement): HTMLElement | null => {
-  if (el.getAttribute("data-drop-list")) {
+  if (el.getAttribute("data-gdnd-drop")) {
     return el;
   }
 

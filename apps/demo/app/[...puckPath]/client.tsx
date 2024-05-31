@@ -15,7 +15,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     return (
       <div>
         <Puck<UserConfig>
-          iframe={{ enabled: false }}
+          iframe={{ enabled: true }}
           config={config}
           data={data}
           onPublish={async (data: Data) => {

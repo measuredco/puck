@@ -1,7 +1,6 @@
 import { curves, timings } from "./animation";
 import { calculateDistance } from "./calculate-distance";
 import { findNearestList } from "./find-nearest-list";
-import { getRelativeClientRect } from "./get-relative-client-rect";
 
 let looping = false;
 
@@ -15,6 +14,58 @@ type Impact = ElData & {
   position: "beforebegin" | "afterend";
 };
 
+function querySelectorAll<T extends Element = Element>(
+  parentNode: ParentNode,
+  selector: string
+): T[] {
+  return Array.from(parentNode.querySelectorAll<T>(selector));
+}
+
+/**
+ * querySelectorAllIframe
+ *
+ * An proxy of querySelectorAll that also queries all iframes
+ */
+function querySelectorAllIframe(selector: string) {
+  const iframes = (
+    querySelectorAll(document, "iframe") as HTMLIFrameElement[]
+  ).filter((iframe) => iframe.hasAttribute("data-rfd-iframe"));
+
+  return [
+    ...querySelectorAll(document, selector),
+    ...iframes.reduce<Element[]>(
+      (acc, iframe) => [
+        ...acc,
+        ...(iframe.contentWindow?.document
+          ? querySelectorAll(iframe.contentWindow.document, selector)
+          : []),
+      ],
+      []
+    ),
+  ];
+}
+
+const getAllDocs = () => [
+  document,
+  ...(querySelectorAll<HTMLIFrameElement>(document, "[data-gdnd-frame]")
+    .map((iframe) => iframe.contentDocument)
+    .filter(Boolean) as Document[]),
+];
+
+const monitorMousePosition = () => {
+  global.mousePosition = { x: 0, y: 0 };
+
+  const documents = getAllDocs();
+
+  documents.forEach((doc) => {
+    doc.onmousemove = (e) => {
+      console.log("global mouse move", e);
+      global.mousePosition.x = e.clientX;
+      global.mousePosition.y = e.clientY;
+    };
+  });
+};
+
 // Testing custom dnd
 const startGlobalDnd = (
   axis: "x" | "y" = "y",
@@ -24,8 +75,6 @@ const startGlobalDnd = (
   }) => void
 ) => {
   let state: "IDLE" | "START_DRAGGING" | "DRAGGING" | "DROPPING" = "IDLE";
-
-  global.mousePosition = { x: 0, y: 0 };
 
   const drag: {
     item: {
@@ -45,17 +94,13 @@ const startGlobalDnd = (
 
   const placeholder: HTMLDivElement = document.createElement("div");
 
-  document.onmousemove = (e) => {
-    global.mousePosition.x = e.clientX;
-    global.mousePosition.y = e.clientY;
-  };
+  monitorMousePosition();
 
   const lockAnimationAxis: "x" | "y" | null = null;
   type Direction = "up" | "down" | "steady";
   let lastImpact: Impact | null = null;
   let lastMousePositions: number[] = [];
   let lastDirection: Direction = "steady";
-  let globalDragEnd = () => {};
 
   // TODO call bind dynamically to catch new items, or expose "rebind" function
   const rebind = () => {
@@ -63,9 +108,9 @@ const startGlobalDnd = (
       return;
     }
 
-    const draggables = Array.from(
-      document.querySelectorAll("[data-drag-item]")
-    );
+    const draggables = querySelectorAllIframe("[data-gdnd-drag]");
+
+    // console.log("draggables", draggables);
 
     for (let i = 0; i < draggables.length; i++) {
       const el = draggables[i] as HTMLElement;
@@ -91,12 +136,15 @@ const startGlobalDnd = (
         drag.list.el = findNearestList(el);
         drag.list.rect = drag.list.el?.getBoundingClientRect() || null;
 
-        globalDragEnd = dragEnd;
+        // We perform drag end inside the window listener so we can capture mouseup outside of the window
+        el.ownerDocument.defaultView?.addEventListener("mouseup", dragEnd);
 
         state = "START_DRAGGING";
       };
 
       const dragEnd = () => {
+        el.ownerDocument.defaultView?.removeEventListener("mouseup", dragEnd);
+
         if (state !== "DRAGGING") {
           console.log("drag aborted");
 
@@ -172,11 +220,6 @@ const startGlobalDnd = (
     }
   };
 
-  // We perform drag end inside the window listener so we can capture mouseup outside of the window
-  window.addEventListener("mouseup", () => {
-    globalDragEnd();
-  });
-
   const DIRECTION_SMOOTHING_WINDOW = 20;
   const DRAGGING_THRESHOLD = 5; // Must move this amount to start a drag
 
@@ -248,7 +291,7 @@ const startGlobalDnd = (
 
   const loop = () => {
     requestAnimationFrame(() => {
-      const draggables = document.querySelectorAll("[data-drag-item]");
+      const draggables = querySelectorAllIframe("[data-gdnd-drag]");
 
       const direction = getDirection();
 
@@ -283,7 +326,7 @@ const startGlobalDnd = (
           }
 
           // TODO mutate by transforms and iframes
-          getRelativeClientRect(drag.item.el, drag.list.el!);
+          // getRelativeClientRect(drag.item.el, drag.list.el!);
           let rect = el.getBoundingClientRect();
 
           const elData = {

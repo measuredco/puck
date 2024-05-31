@@ -192,7 +192,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
       }}
     >
       <div
-        data-drop-list
+        data-gdnd-drop
         style={
           {
             // Reset containing block to prevent breaking out of document flow during drag, which would break scroll

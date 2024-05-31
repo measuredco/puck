@@ -47,6 +47,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           id="preview-frame"
           className={getClassName("frame")}
           data-rfd-iframe
+          data-gdnd-frame
           ref={ref}
           onStylesLoaded={() => {
             setStatus("READY");

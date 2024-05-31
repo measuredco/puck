@@ -88,7 +88,7 @@ export const DraggableComponent = ({
   }, []);
 
   return (
-    <div {...(isEnabled ? { "data-drag-item": "" } : {})}>
+    <div {...(isEnabled ? { "data-gdnd-drag": "" } : {})}>
       <div
         className={getClassName({
           isSelected,
