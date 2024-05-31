@@ -101,7 +101,7 @@ export type CustomField<Props extends any = {}> = BaseField & {
   type: "custom";
   render: (props: {
     field: CustomField<Props>;
-    name?: string;
+    name: string;
     id: string;
     value: Props;
     onChange: (value: Props) => void;
