@@ -39,17 +39,9 @@ jobs:
             exit 1
           fi
 
-      - name: Build Puck
+      - name: Build everything
         run: |
-          yarn build --scope @measured/puck --no-deps
-
-      - name: Build recipe/next
-        run: |
-          yarn build --scope next-recipe --no-deps
-
-      - name: Build recipe/remix
-        run: |
-          yarn build --scope remix-recipe --no-deps
+          yarn build
 
       - name: Check for build failures
         run: |
