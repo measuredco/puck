@@ -1,5 +1,6 @@
 {
   "canary": "https://puck-docs-git-main-measured.vercel.app",
+  "0.15.0": "https://puck-docs-git-releases-v0150-measured.vercel.app",
   "0.14.2": "https://puck-docs-git-releases-v0142-measured.vercel.app",
   "0.14.1": "https://puck-docs-git-releases-v0141-measured.vercel.app",
   "0.14.0": "https://puck-docs-git-releases-v0140-measured.vercel.app",
