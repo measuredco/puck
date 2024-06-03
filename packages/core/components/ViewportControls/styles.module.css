@@ -27,6 +27,7 @@
   background-repeat: no-repeat;
   border: 0;
   font-size: var(--puck-font-size-xxxs);
+  padding: 0;
   width: 96px;
 }
 
