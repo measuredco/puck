@@ -318,49 +318,79 @@ Dynamically set the fields for this component. Can be used to make asynchronous 
 
 This function is triggered when the component data changes.
 
-```tsx {4-15} copy filename="Example changing one field based on another"
+```tsx {4-25} copy filename="Example changing one field based on another"
 const config = {
   components: {
     MyComponent: {
-      resolveFields: (data) => ({
-        fieldType: {
-          type: "radio",
-          options: [
-            { label: "Text", value: "text" },
-            { label: "Textarea", value: "textarea" },
-          ],
-        },
-        title: {
-          type: data.props.fieldType,
-        },
-      }),
-      render: ({ title }) => <h1>{title}</h1>,
+      resolveFields: (data) => {
+        const fields = {
+          drink: {
+            type: "radio",
+            options: [
+              { label: "Water", value: "water" },
+              { label: "Orange juice", value: "orange-juice" },
+            ],
+          },
+        };
+
+        if (data.props.drink === "water") {
+          return {
+            ...fields,
+            waterType: {
+              // ... Define field
+            },
+          };
+        }
+
+        return fields;
+      },
+      // ...
     },
   },
 };
 ```
 
 <ConfigPreview
-  label='Try changing the "title" field'
+  label='Try changing the "drink" field'
   componentConfig={{
-    resolveFields: (data) => ({
-      fieldType: {
-        type: "radio",
-        options: [
-          { label: "Text", value: "text" },
-          { label: "Textarea", value: "textarea" },
-        ],
-      },
-      title: {
-        type: data.props.fieldType,
-      },
-    }),
-    defaultProps: {
-      fieldType: "text",
-      title: "Hello, world",
+    resolveFields: (data) => {
+      const fields = {
+        drink: {
+          type: "radio",
+          options: [
+            { label: "Water", value: "water" },
+            { label: "Orange juice", value: "orange-juice" },
+          ],
+        },
+      };
+
+      if (data.props.drink === "water") {
+        return {
+          ...fields,
+          waterType: {
+            type: "radio",
+            options: [
+              { label: "Still", value: "still" },
+              { label: "Sparkling", value: "sparkling" },
+            ],
+          },
+        };
+      }
+
+      return fields;
     },
-    render: ({ title }) => <p>{title}</p>,
-  }}
+    defaultProps: {
+      drink: "water",
+      waterType: "still",
+    },
+    render: ({ drink, waterType }) => (
+      <p>
+        {drink}
+        {drink === "water" ? ` (${waterType})` : ""}
+      </p>
+    ),
+
+}}
 />
 
 #### Args
