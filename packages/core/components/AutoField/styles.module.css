@@ -25,6 +25,7 @@
 
 .Input-label {
   align-items: center;
+  color: var(--puck-color-grey-04);
   display: flex;
   padding-bottom: 12px;
   font-size: var(--puck-font-size-xxs);
