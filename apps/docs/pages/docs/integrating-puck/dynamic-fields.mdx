@@ -10,49 +10,79 @@ The [`resolveFields` function](/docs/api-reference/configuration/component-confi
 
 For example, we can set the configuration of one field based on the prop value of another:
 
-```tsx {4-15} showLineNumbers copy
+```tsx {4-25} showLineNumbers copy
 const config = {
   components: {
     MyComponent: {
-      resolveFields: (data) => ({
-        fieldType: {
-          type: "radio",
-          options: [
-            { label: "Text", value: "text" },
-            { label: "Textarea", value: "textarea" },
-          ],
-        },
-        value: {
-          type: data.props.fieldType,
-        },
-      }),
-      render: ({ value }) => <h1>{value}</h1>,
+      resolveFields: (data) => {
+        const fields = {
+          drink: {
+            type: "radio",
+            options: [
+              { label: "Water", value: "water" },
+              { label: "Orange juice", value: "orange-juice" },
+            ],
+          },
+        };
+
+        if (data.props.drink === "water") {
+          return {
+            ...fields,
+            waterType: {
+              // ... Define field
+            },
+          };
+        }
+
+        return fields;
+      },
+      // ...
     },
   },
 };
 ```
 
 <ConfigPreview
-  label='Try changing the "title" field'
+  label='Try changing the "drink" field'
   componentConfig={{
-    resolveFields: (data) => ({
-      fieldType: {
-        type: "radio",
-        options: [
-          { label: "Text", value: "text" },
-          { label: "Textarea", value: "textarea" },
-        ],
-      },
-      title: {
-        type: data.props.fieldType,
-      },
-    }),
-    defaultProps: {
-      fieldType: "text",
-      title: "Hello, world",
+    resolveFields: (data) => {
+      const fields = {
+        drink: {
+          type: "radio",
+          options: [
+            { label: "Water", value: "water" },
+            { label: "Orange juice", value: "orange-juice" },
+          ],
+        },
+      };
+
+      if (data.props.drink === "water") {
+        return {
+          ...fields,
+          waterType: {
+            type: "radio",
+            options: [
+              { label: "Still", value: "still" },
+              { label: "Sparkling", value: "sparkling" },
+            ],
+          },
+        };
+      }
+
+      return fields;
     },
-    render: ({ title }) => <p>{title}</p>,
-  }}
+    defaultProps: {
+      drink: "water",
+      waterType: "still",
+    },
+    render: ({ drink, waterType }) => (
+      <p>
+        {drink}
+        {drink === "water" ? ` (${waterType})` : ""}
+      </p>
+    ),
+
+}}
 />
 
 ### Making asynchronous calls
@@ -86,7 +116,7 @@ const config = {
           },
         };
       },
-      render: ({ value }) => <h1>{value}</h1>,
+      render: ({ item }) => <h1>{item}</h1>,
     },
   },
 };
