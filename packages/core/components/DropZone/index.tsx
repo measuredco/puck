@@ -45,10 +45,11 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
       globalDnd("y", ({ source, destination }) => {
         console.log("moved", source, "to", destination);
         dispatch({
-          type: "reorder",
+          type: "move",
           sourceIndex: source.index,
+          sourceZone: source.list,
           destinationIndex: destination.index,
-          destinationZone: "default-zone",
+          destinationZone: destination.list,
         });
       });
     }
@@ -124,7 +125,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
     : isRootZone;
   const hoveringOverZone = hoveringZone === zoneCompound;
 
-  let isEnabled = userWillDrag;
+  let isEnabled = hoveringOverArea; //userWillDrag;
 
   /**
    * We enable zones when:
@@ -146,30 +147,31 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
         isEnabled = hoveringOverArea;
       }
     } else {
-      isEnabled = draggingOverArea && hoveringOverZone;
+      isEnabled = hoveringOverArea;
+      // isEnabled = draggingOverArea && hoveringOverZone;
     }
   }
 
-  if (isEnabled && userIsDragging && (allow || disallow)) {
-    const [_, componentType] = draggedItem.draggableId.split("::");
+  // if (isEnabled && userIsDragging && (allow || disallow)) {
+  //   const [_, componentType] = draggedItem.draggableId.split("::");
 
-    if (disallow) {
-      const defaultedAllow = allow || [];
+  //   if (disallow) {
+  //     const defaultedAllow = allow || [];
 
-      // remove any explicitly allowed items from disallow
-      const filteredDisallow = (disallow || []).filter(
-        (item) => defaultedAllow.indexOf(item) === -1
-      );
+  //     // remove any explicitly allowed items from disallow
+  //     const filteredDisallow = (disallow || []).filter(
+  //       (item) => defaultedAllow.indexOf(item) === -1
+  //     );
 
-      if (filteredDisallow.indexOf(componentType) !== -1) {
-        isEnabled = false;
-      }
-    } else if (allow) {
-      if (allow.indexOf(componentType) === -1) {
-        isEnabled = false;
-      }
-    }
-  }
+  //     if (filteredDisallow.indexOf(componentType) !== -1) {
+  //       isEnabled = false;
+  //     }
+  //   } else if (allow) {
+  //     if (allow.indexOf(componentType) === -1) {
+  //       isEnabled = false;
+  //     }
+  //   }
+  // }
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
   const isAreaSelected = selectedItem && zoneArea === selectedItem.props.id;
@@ -192,7 +194,8 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
       }}
     >
       <div
-        data-gdnd-drop
+        // {...(isEnabled ? { "data-gdnd-drop": zoneCompound } : {})}
+        data-gdnd-drop={zoneCompound}
         style={
           {
             // Reset containing block to prevent breaking out of document flow during drag, which would break scroll
@@ -200,6 +203,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
           }
         }
       >
+        {/* {JSON.stringify(isEnabled)} */}
         <div
           className={getClassName("content")}
           style={style}
@@ -258,7 +262,8 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                     }
                     id={`draggable-${componentId}`}
                     index={i}
-                    isEnabled={areaId === "root"}
+                    isEnabled
+                    // isEnabled={areaId === "root"}
                     // isEnabled={areaId === "root"}
                     isSelected={isSelected}
                     isLocked={userIsDragging}

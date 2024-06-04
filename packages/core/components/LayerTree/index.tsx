@@ -35,6 +35,8 @@ export const LayerTree = ({
   const zones = data.zones || {};
   const ctx = useContext(dropZoneContext);
 
+  // console.log("zoneContent", zoneContent);
+
   return (
     <>
       {label && (

@@ -147,10 +147,38 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   }
 
   if (action.type === "move") {
+    if (
+      action.sourceZone === rootDroppableId &&
+      action.destinationZone === rootDroppableId
+    ) {
+      return {
+        ...data,
+        content: reorder(
+          data.content,
+          action.sourceIndex,
+          action.destinationIndex
+        ),
+      };
+    }
+
     const newData = setupZone(
       setupZone(data, action.sourceZone),
       action.destinationZone
     );
+
+    if (action.sourceZone === action.destinationZone) {
+      return {
+        ...newData,
+        zones: {
+          ...newData.zones,
+          [action.destinationZone]: reorder(
+            newData.zones[action.destinationZone],
+            action.sourceIndex,
+            action.destinationIndex
+          ),
+        },
+      };
+    }
 
     const item = getItem(
       { zone: action.sourceZone, index: action.sourceIndex },

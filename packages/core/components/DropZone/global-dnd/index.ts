@@ -44,6 +44,28 @@ function querySelectorAllIframe(selector: string) {
     ),
   ];
 }
+function getDraggables() {
+  const draggables = querySelectorAllIframe("[data-gdnd-drag]");
+  const draggablesByList = new Map<Element, Element[]>();
+
+  draggables.forEach((candidate) => {
+    const list = candidate.closest("[data-gdnd-drop]");
+
+    if (!list) {
+      console.warn(
+        `Draggable item ${candidate} did not have a parent drop list.`
+      );
+
+      return;
+    }
+
+    const val = draggablesByList.get(list) || [];
+
+    draggablesByList.set(list, [...val, candidate]);
+  });
+
+  return { draggables, draggablesByList };
+}
 
 const getAllDocs = () => [
   document,
@@ -59,7 +81,6 @@ const monitorMousePosition = () => {
 
   documents.forEach((doc) => {
     doc.onmousemove = (e) => {
-      console.log("global mouse move", e);
       global.mousePosition.x = e.clientX;
       global.mousePosition.y = e.clientY;
     };
@@ -70,8 +91,8 @@ const monitorMousePosition = () => {
 const startGlobalDnd = (
   axis: "x" | "y" = "y",
   onDragEnd?: (params: {
-    source: { index: number };
-    destination: { index: number };
+    source: { index: number; list: string };
+    destination: { index: number; list: string };
   }) => void
 ) => {
   let state: "IDLE" | "START_DRAGGING" | "DRAGGING" | "DROPPING" = "IDLE";
@@ -108,15 +129,18 @@ const startGlobalDnd = (
       return;
     }
 
-    const draggables = querySelectorAllIframe("[data-gdnd-drag]");
+    // const draggables = querySelectorAllIframe("[data-gdnd-drag]");
 
-    // console.log("draggables", draggables);
+    const { draggables } = getDraggables();
 
     for (let i = 0; i < draggables.length; i++) {
       const el = draggables[i] as HTMLElement;
       let rect: DOMRect;
 
       const dragStart = (event: MouseEvent) => {
+        // Prevent nested draggables from triggering drag on parents
+        event.stopPropagation();
+
         // Only continue if left button pressed
         if (event.button !== 0) {
           return;
@@ -133,7 +157,7 @@ const startGlobalDnd = (
         drag.item.rect = rect;
         drag.origin = structuredClone(global.mousePosition);
 
-        drag.list.el = findNearestList(el);
+        drag.list.el = el.closest("data-gdnd-drop");
         drag.list.rect = drag.list.el?.getBoundingClientRect() || null;
 
         // We perform drag end inside the window listener so we can capture mouseup outside of the window
@@ -146,23 +170,21 @@ const startGlobalDnd = (
         el.ownerDocument.defaultView?.removeEventListener("mouseup", dragEnd);
 
         if (state !== "DRAGGING") {
-          console.log("drag aborted");
-
           drag.item.el = null;
           placeholder?.remove();
+
+          state = "IDLE";
 
           return;
         }
 
-        console.log("drag end", placeholder);
-
-        if (rect && placeholder && lastImpact) {
+        if (rect && placeholder) {
           const targetRect = placeholder!.getBoundingClientRect();
 
-          const listOffset = {
-            top: drag.list.rect?.top || 0,
-            left: drag.list.rect?.left || 0,
-          };
+          // const listOffset = {
+          //   top: drag.list.rect?.top || 0,
+          //   left: drag.list.rect?.left || 0,
+          // };
 
           const deltaX = axis === "x" ? targetRect.left - rect.left : 0;
           const deltaY = axis === "y" ? targetRect.top - rect.top : 0;
@@ -187,27 +209,49 @@ const startGlobalDnd = (
             el.removeAttribute("style");
           }, timings.minDropTime);
 
-          let targetIndex = draggables.indexOf(lastImpact.el);
+          if (lastImpact) {
+            const { draggablesByList } = getDraggables();
 
-          if (targetIndex >= i) {
-            targetIndex = targetIndex - 1;
-          }
+            const sourceList = el.closest("[data-gdnd-drop]");
+            const targetList = lastImpact.el.closest("[data-gdnd-drop]");
+            const sourceListId =
+              sourceList?.getAttribute("data-gdnd-drop") || "";
+            const targetListId =
+              targetList?.getAttribute("data-gdnd-drop") || "";
 
-          if (lastImpact.position === "afterend") {
-            targetIndex = targetIndex + 1;
-          }
+            const draggablesForSourceList =
+              (sourceList && draggablesByList.get(sourceList)) || [];
+            const draggablesForTargetList =
+              (targetList && draggablesByList.get(targetList)) || [];
 
-          if (targetIndex !== i && onDragEnd) {
-            setTimeout(() => {
-              onDragEnd({
-                source: {
-                  index: i,
-                },
-                destination: {
-                  index: targetIndex,
-                },
-              });
-            }, timings.minDropTime - 10); // Run callback slightly before animation finished to prevent flicker.
+            let sourceIndex = draggablesForSourceList.indexOf(el);
+
+            console.log("draggablesForSourceList", draggablesForSourceList);
+
+            let targetIndex = draggablesForTargetList.indexOf(lastImpact.el);
+
+            if (targetIndex >= i) {
+              targetIndex = targetIndex - 1;
+            }
+
+            if (lastImpact.position === "afterend") {
+              targetIndex = targetIndex + 1;
+            }
+
+            if (onDragEnd) {
+              setTimeout(() => {
+                onDragEnd({
+                  source: {
+                    index: sourceIndex,
+                    list: sourceListId,
+                  },
+                  destination: {
+                    index: targetIndex,
+                    list: targetListId,
+                  },
+                });
+              }, timings.minDropTime - 10); // Run callback slightly before animation finished to prevent flicker.
+            }
           }
         }
 
@@ -291,8 +335,6 @@ const startGlobalDnd = (
 
   const loop = () => {
     requestAnimationFrame(() => {
-      const draggables = querySelectorAllIframe("[data-gdnd-drag]");
-
       const direction = getDirection();
 
       if (state === "IDLE") {
@@ -305,6 +347,16 @@ const startGlobalDnd = (
           state = "DRAGGING";
         }
       } else if (state === "DRAGGING" && drag.item.el && drag.item.rect) {
+        const { draggables, draggablesByList } = getDraggables();
+
+        const list = drag.item.el.closest("[data-gdnd-drop]");
+
+        const listElements = Array.from(draggablesByList.keys());
+
+        // TODO currently limits to same list
+        // const collidableDraggables = (list && draggablesByList.get(list)) || [];
+        const collidableDraggables = draggables; //(list && draggablesByList.get(list)) || [];
+
         const {
           deltaX,
           deltaY,
@@ -315,93 +367,175 @@ const startGlobalDnd = (
           return loop();
         }
 
-        const dimensions: ElData[] = [];
+        const buildCollisionIndex = (candidates: Element[]) => {
+          const dimensions: ElData[] = [];
 
-        // BUILD COLLISION INDEX
-        for (let i = 0; i < draggables.length; i++) {
-          const el = draggables[i];
+          // BUILD COLLISION INDEX
+          for (let i = 0; i < candidates.length; i++) {
+            const el = candidates[i];
 
-          if (el === drag.item.el) {
-            continue;
+            if (el === drag.item.el) {
+              continue;
+            }
+
+            // TODO mutate by transforms and iframes
+            // getRelativeClientRect(drag.item.el, drag.list.el!);
+            let rect = el.getBoundingClientRect();
+
+            const elData = {
+              el,
+              rect,
+            };
+
+            dimensions.push(elData);
           }
 
-          // TODO mutate by transforms and iframes
-          // getRelativeClientRect(drag.item.el, drag.list.el!);
-          let rect = el.getBoundingClientRect();
+          const sortedByX = dimensions.sort((a, b) =>
+            a.rect.left > b.rect.left ? 1 : -1
+          );
 
-          const elData = {
-            el,
-            rect,
-          };
+          const sortedByY = dimensions.sort((a, b) =>
+            a.rect.top > b.rect.top ? 1 : -1
+          );
 
-          dimensions.push(elData);
-        }
+          const sorted = axis === "x" ? sortedByX : sortedByY;
 
-        const sortedByX = dimensions.sort((a, b) =>
-          a.rect.left > b.rect.left ? 1 : -1
-        );
-
-        const sortedByY = dimensions.sort((a, b) =>
-          a.rect.top > b.rect.top ? 1 : -1
-        );
-
-        const sorted = axis === "x" ? sortedByX : sortedByY;
-
-        // FIND COLLISION
-        let impact: Impact | null = null;
-
-        let dragEdge = {
-          x: transformedRect.left,
-          y: transformedRect.top,
+          return sorted;
         };
 
-        if (axis === "x") {
-          if (direction === "down") {
-            dragEdge.x = transformedRect.right; // moving left
-          } else if (direction === "up") {
-            dragEdge.x = transformedRect.left; // moving right
-          }
-        } else {
-          if (direction === "down") {
-            dragEdge.y = transformedRect.top; // moving up the axis
-          } else if (direction === "up") {
-            dragEdge.y = transformedRect.bottom; // moving down the axis
-          }
-        }
+        const getDeepestMouseImpact = (index: ElData[]) => {
+          // FIND COLLISION
+          let impact: Impact | null = null;
 
-        for (let i = 0; i < sorted.length; i++) {
-          const candidate = sorted[i];
+          for (let i = 0; i < index.length; i++) {
+            const candidate = index[i];
 
-          // TODO calculate ahead of time
-          const candidateCenter = {
-            x: candidate.rect.left + candidate.rect.width / 2,
-            y: candidate.rect.top + candidate.rect.height / 2,
+            // TODO calculate ahead of time
+            const candidateCenter = {
+              x: candidate.rect.left + candidate.rect.width / 2,
+              y: candidate.rect.top + candidate.rect.height / 2,
+            };
+
+            let position = lastImpact?.position;
+
+            if (axis === "x") {
+              position =
+                global.mousePosition.x > candidateCenter.x
+                  ? "afterend"
+                  : "beforebegin";
+            } else {
+              position =
+                global.mousePosition.y > candidateCenter.y
+                  ? "afterend"
+                  : "beforebegin";
+            }
+
+            if (
+              global.mousePosition.x > candidate.rect.left &&
+              global.mousePosition.x < candidate.rect.right &&
+              global.mousePosition.y > candidate.rect.top &&
+              global.mousePosition.y < candidate.rect.bottom
+            ) {
+              if (impact) {
+                if (!impact.el.contains(candidate.el)) {
+                  continue;
+                }
+              }
+
+              impact = {
+                ...candidate,
+                center: candidateCenter,
+                position: position || "afterend",
+              };
+            }
+          }
+
+          return impact;
+        };
+
+        const getEdgeOverMidpointImpact = (index: ElData[]) => {
+          // FIND COLLISION
+          let impact: Impact | null = null;
+
+          let dragEdge = {
+            x: transformedRect.left,
+            y: transformedRect.top,
           };
 
-          const distance = calculateDistance(candidateCenter, dragEdge);
-
-          const existingDistance = impact
-            ? calculateDistance(dragEdge, impact.center)
-            : 0;
-
-          let position = lastImpact?.position;
-
           if (axis === "x") {
-            position =
-              dragEdge.x > candidateCenter.x ? "afterend" : "beforebegin";
+            if (direction === "down") {
+              dragEdge.x = transformedRect.right; // moving left
+            } else if (direction === "up") {
+              dragEdge.x = transformedRect.left; // moving right
+            }
           } else {
-            position =
-              dragEdge.y > candidateCenter.y ? "afterend" : "beforebegin";
+            if (direction === "down") {
+              dragEdge.y = transformedRect.top; // moving up the axis
+            } else if (direction === "up") {
+              dragEdge.y = transformedRect.bottom; // moving down the axis
+            }
           }
 
-          if (!impact || distance < existingDistance) {
-            impact = {
-              ...candidate,
-              center: candidateCenter,
-              position: position || "afterend",
+          for (let i = 0; i < index.length; i++) {
+            const candidate = index[i];
+
+            // TODO calculate ahead of time
+            const candidateCenter = {
+              x: candidate.rect.left + candidate.rect.width / 2,
+              y: candidate.rect.top + candidate.rect.height / 2,
             };
+
+            const distance = calculateDistance(candidateCenter, dragEdge);
+
+            const existingDistance = impact
+              ? calculateDistance(dragEdge, impact.center)
+              : 0;
+
+            let position = lastImpact?.position;
+
+            if (axis === "x") {
+              position =
+                dragEdge.x > candidateCenter.x ? "afterend" : "beforebegin";
+            } else {
+              position =
+                dragEdge.y > candidateCenter.y ? "afterend" : "beforebegin";
+            }
+
+            if (!impact || distance < existingDistance) {
+              impact = {
+                ...candidate,
+                center: candidateCenter,
+                position: position || "afterend",
+              };
+            }
           }
+
+          return impact;
+        };
+
+        const listCollisionIndex = buildCollisionIndex(listElements);
+
+        const listImpact = getDeepestMouseImpact(listCollisionIndex);
+
+        console.log("list impact", listImpact?.el, listElements);
+
+        if (!listImpact) {
+          console.warn("Not dragging over list");
+
+          return loop();
         }
+
+        const candidates = draggablesByList.get(listImpact.el);
+
+        if (!candidates) {
+          console.warn("No candidates for list");
+
+          return loop();
+        }
+
+        const itemCollisionIndex = buildCollisionIndex(candidates);
+
+        const impact = getEdgeOverMidpointImpact(itemCollisionIndex);
 
         // PAINT
         const transformStyle = `
