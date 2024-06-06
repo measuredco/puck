@@ -1,5 +1,13 @@
+.HeadingAnalyzer {
+  display: block;
+}
+
 .HeadingAnalyzer-cssWarning {
   display: none !important;
+}
+
+.HeadingAnalyzerItem {
+  display: inline;
 }
 
 .HeadingAnalyzerItem--missing {
