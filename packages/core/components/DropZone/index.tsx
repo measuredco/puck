@@ -10,7 +10,7 @@ import { DropZoneProvider, dropZoneContext } from "./context";
 import { getZoneId } from "../../lib/get-zone-id";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
-import { PuckContext } from "../../types/Config";
+import { ComponentConfig, PuckContext } from "../../types/Config";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -231,6 +231,12 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                       </div>
                     );
 
+                const componentConfig: ComponentConfig | undefined =
+                  config.components[item.type];
+
+                const label =
+                  componentConfig?.["label"] ?? item.type.toString();
+
                 return (
                   <div
                     key={item.props.id}
@@ -244,10 +250,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                       }}
                     >
                       <DraggableComponent
-                        label={
-                          config.components[item.type]["label"] ??
-                          item.type.toString()
-                        }
+                        label={label}
                         id={`draggable-${componentId}`}
                         index={i}
                         isSelected={isSelected}
