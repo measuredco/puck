@@ -1,3 +1,7 @@
+.HeadingAnalyzer-cssWarning {
+  display: none !important;
+}
+
 .HeadingAnalyzerItem--missing {
   color: var(--puck-color-red-04);
 }
