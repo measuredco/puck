@@ -49,7 +49,7 @@
   ) !important;
 }
 
-.DropZone-item {
+.DropZone-item:hover {
   position: relative;
 }
 

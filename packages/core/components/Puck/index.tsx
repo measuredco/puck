@@ -47,6 +47,7 @@ import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types/Viewports";
 import { DragDropContext } from "../DragDropContext";
 import { IframeConfig } from "../../types/IframeConfig";
+import startGlobalDnd from "../DropZone/global-dnd";
 
 const getClassName = getClassNameFactory("Puck", styles);
 
@@ -226,7 +227,7 @@ export function Puck<UserConfig extends Config = Config>({
   const { onDragStartOrUpdate, placeholderStyle } = usePlaceholderStyle();
 
   const [draggedItem, setDraggedItem] = useState<
-    DragStart & Partial<DragUpdate>
+    (DragStart & Partial<DragUpdate>) | any
   >();
 
   // DEPRECATED
@@ -362,6 +363,26 @@ export function Puck<UserConfig extends Config = Config>({
   );
 
   const [mounted, setMounted] = useState(false);
+
+  // useEffect(() => {
+  //   startGlobalDnd({
+  //     axis: "y",
+  //     onDragStart: () => {
+  //       // setDraggedItem(true);
+  //     },
+  //     onDragEnd: ({ source, destination }) => {
+  //       console.log("moved", source, "to", destination);
+
+  //       dispatch({
+  //         type: "move",
+  //         sourceIndex: source.index,
+  //         sourceZone: source.list,
+  //         destinationIndex: destination.index,
+  //         destinationZone: destination.list,
+  //       });
+  //     },
+  //   });
+  // }, []);
 
   useEffect(() => {
     setMounted(true);

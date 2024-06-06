@@ -1,6 +1,7 @@
 .DraggableComponent {
   pointer-events: auto;
   user-select: none;
+  position: relative;
 
   --overlay-background: color-mix(
     in srgb,
