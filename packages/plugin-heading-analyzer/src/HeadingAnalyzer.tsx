@@ -1,5 +1,7 @@
 import { ReactElement, useEffect, useState } from "react";
 
+import styles from "./HeadingAnalyzer.module.css";
+
 import { usePuck } from "@measured/puck";
 import { Plugin } from "@/core/types/Plugin";
 import { SidebarSection } from "@/core/components/SidebarSection";
@@ -7,6 +9,10 @@ import { OutlineList } from "@/core/components/OutlineList";
 
 import { scrollIntoView } from "@/core/lib/scroll-into-view";
 import { getFrame } from "@/core/lib/get-frame";
+
+import { getClassNameFactory } from "@/core/lib";
+
+const getClassNameItem = getClassNameFactory("HeadingAnalyzerItem", styles);
 
 import ReactFromJSON from "react-from-json";
 
@@ -124,6 +130,7 @@ export const HeadingAnalyzer = () => {
               <OutlineList.Item>
                 <OutlineList.Clickable>
                   <small
+                    className={getClassNameItem({ missing: props.missing })}
                     onClick={
                       typeof props.analyzeId == "undefined"
                         ? undefined
@@ -155,13 +162,13 @@ export const HeadingAnalyzer = () => {
                     }
                   >
                     {props.missing ? (
-                      <span style={{ color: "var(--puck-color-red-04)" }}>
+                      <>
                         <b>H{props.rank}</b>: Missing
-                      </span>
+                      </>
                     ) : (
-                      <span>
+                      <>
                         <b>H{props.rank}</b>: {props.text}
-                      </span>
+                      </>
                     )}
                   </small>
                 </OutlineList.Clickable>
