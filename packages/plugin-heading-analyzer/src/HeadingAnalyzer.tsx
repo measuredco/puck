@@ -12,6 +12,7 @@ import { getFrame } from "@/core/lib/get-frame";
 
 import { getClassNameFactory } from "@/core/lib";
 
+const getClassName = getClassNameFactory("HeadingAnalyzer", styles);
 const getClassNameItem = getClassNameFactory("HeadingAnalyzerItem", styles);
 
 import ReactFromJSON from "react-from-json";
@@ -116,7 +117,22 @@ export const HeadingAnalyzer = () => {
   }, [appState.data]);
 
   return (
-    <>
+    <div className={getClassName()}>
+      <small
+        className={getClassName("cssWarning")}
+        style={{
+          color: "var(--puck-color-red-04)",
+          display: "block",
+          marginBottom: 16,
+        }}
+      >
+        Heading analyzer styles not loaded. Please review the{" "}
+        <a href="https://github.com/measuredco/puck/blob/main/packages/plugin-heading-analyzer/README.md">
+          README
+        </a>
+        .
+      </small>
+
       {hierarchy.length === 0 && <div>No headings.</div>}
 
       <OutlineList>
@@ -192,7 +208,7 @@ export const HeadingAnalyzer = () => {
           }}
         />
       </OutlineList>
-    </>
+    </div>
   );
 };
 
