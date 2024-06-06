@@ -1,6 +1,6 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Config, Data } from "../../types/Config";
+import { ComponentConfig, Config, Data } from "../../types/Config";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { scrollIntoView } from "../../lib/scroll-into-view";
 import { ChevronDown, LayoutGrid, Layers, Type } from "lucide-react";
@@ -71,6 +71,10 @@ export const LayerTree = ({
 
           const childIsSelected = isChildOfZone(item, selectedItem, ctx);
 
+          const componentConfig: ComponentConfig | undefined =
+            config.components[item.type];
+          const label = componentConfig?.["label"] ?? item.type.toString();
+
           return (
             <li
               className={getClassNameLayer({
@@ -132,9 +136,7 @@ export const LayerTree = ({
                         <LayoutGrid size="16" />
                       )}
                     </div>
-                    <div className={getClassNameLayer("name")}>
-                      {config.components[item.type]["label"] ?? item.type}
-                    </div>
+                    <div className={getClassNameLayer("name")}>{label}</div>
                   </div>
                 </button>
               </div>

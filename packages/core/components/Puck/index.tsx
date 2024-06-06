@@ -369,6 +369,12 @@ export function Puck<UserConfig extends Config = Config>({
     setMounted(true);
   }, []);
 
+  const selectedComponentConfig =
+    selectedItem && config.components[selectedItem.type];
+  const selectedComponentLabel = selectedItem
+    ? selectedComponentConfig?.["label"] ?? selectedItem.type.toString()
+    : "";
+
   return (
     <div className={`Puck ${getClassName()}`}>
       <AppProvider
@@ -592,12 +598,7 @@ export function Puck<UserConfig extends Config = Config>({
                         noPadding
                         noBorderTop
                         showBreadcrumbs
-                        title={
-                          selectedItem
-                            ? config.components[selectedItem.type]["label"] ??
-                              selectedItem.type
-                            : "Page"
-                        }
+                        title={selectedItem ? selectedComponentLabel : "Page"}
                       >
                         <Fields />
                       </SidebarSection>
