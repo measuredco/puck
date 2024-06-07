@@ -25,21 +25,22 @@ export function Editor() {
 
 ## Props
 
-| Param                           | Example                                | Type                                               | Status       |
-| ------------------------------- | -------------------------------------- | -------------------------------------------------- | ------------ |
-| [`config`](#config)             | `config: { components: {} }`           | [Config](/docs/api-reference/configuration/config) | Required     |
-| [`data`](#data)                 | `data: {}`                             | [Data](/docs/api-reference/data)                   | Required     |
-| [`dnd`](#dnd)                   | `dnd: {}`                              | [DndConfig](#dnd-params)                           | -            |
-| [`children`](#children)         | `children: <Puck.Preview />`           | ReactNode                                          | -            |
-| [`headerPath`](#headerpath)     | `headerPath: "/my-page"`               | String                                             | -            |
-| [`headerTitle`](#headertitle)   | `headerTitle: "My Page"`               | String                                             | -            |
-| [`iframe`](#iframe)             | `iframe: {}`                           | [IframeConfig](#iframe-params)                     | -            |
-| [`onChange()`](#onchangedata)   | `onChange: (data) => {}`               | Function                                           | -            |
-| [`onPublish()`](#onpublishdata) | `onPublish: async (data) => {}`        | Function                                           | -            |
-| [`overrides`](#overrides)       | `overrides: { header: () => <div /> }` | [Overrides](/docs/api-reference/overrides)         | Experimental |
-| [`plugins`](#plugins)           | `plugins: [myPlugin]`                  | [Plugin\[\]](/docs/api-reference/plugin)           | Experimental |
-| [`ui`](#ui)                     | `ui: {leftSideBarVisible: false}`      | [AppState.ui](/docs/api-reference/app-state#ui)    | -            |
-| [`viewports`](#viewports)       | `viewports: [{ width: 1440 }]`         | [Viewport\[\]](#viewport-params)                   | -            |
+| Param                                   | Example                                           | Type                                               | Status       |
+| --------------------------------------- | ------------------------------------------------- | -------------------------------------------------- | ------------ |
+| [`config`](#config)                     | `config: { components: {} }`                      | [Config](/docs/api-reference/configuration/config) | Required     |
+| [`data`](#data)                         | `data: {}`                                        | [Data](/docs/api-reference/data)                   | Required     |
+| [`dnd`](#dnd)                           | `dnd: {}`                                         | [DndConfig](#dnd-params)                           | -            |
+| [`children`](#children)                 | `children: <Puck.Preview />`                      | ReactNode                                          | -            |
+| [`headerPath`](#headerpath)             | `headerPath: "/my-page"`                          | String                                             | -            |
+| [`headerTitle`](#headertitle)           | `headerTitle: "My Page"`                          | String                                             | -            |
+| [`iframe`](#iframe)                     | `iframe: {}`                                      | [IframeConfig](#iframe-params)                     | -            |
+| [`onChange()`](#onchangedata)           | `onChange: (data) => {}`                          | Function                                           | -            |
+| [`onPublish()`](#onpublishdata)         | `onPublish: async (data) => {}`                   | Function                                           | -            |
+| [`overrides`](#overrides)               | `overrides: { header: () => <div /> }`            | [Overrides](/docs/api-reference/overrides)         | Experimental |
+| [`plugins`](#plugins)                   | `plugins: [myPlugin]`                             | [Plugin\[\]](/docs/api-reference/plugin)           | Experimental |
+| [`ui`](#ui)                             | `ui: {leftSideBarVisible: false}`                 | [AppState.ui](/docs/api-reference/app-state#ui)    | -            |
+| [`viewports`](#viewports)               | `viewports: [{ width: 1440 }]`                    | [Viewport\[\]](#viewport-params)                   | -            |
+| [`initialHistories`](#initialHistories) | `initialHistories: [{ histories: [], index: 0 }]` | [Viewport\[\]](#initialHistories-params)           | -            |
 
 ## Required props
 
@@ -349,3 +350,22 @@ By default, Puck exposes small, medium and large viewports based on common viewp
   }
 ]
 ```
+
+### `initialHistories`
+
+Sets the undo/redo Puck history state.
+
+#### InitialHistories params
+
+| Param                     | Example         | Type    | Status   |
+| ------------------------- | --------------- | ------- | -------- |
+| [`histories`](#histories) | `histories: []` | History | Required |
+| [`index`](#index)         | `index: 2`      | number  | Required |
+
+##### `histories`
+
+An array of histories to reset the Puck state history state to.
+
+##### `index`
+
+The index of the histories to set the user to.

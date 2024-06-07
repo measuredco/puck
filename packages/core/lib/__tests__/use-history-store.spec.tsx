@@ -90,3 +90,26 @@ describe("use-history-store", () => {
     expect(renderedHook.result.current.currentHistory.data).toBe("Banana");
   });
 });
+
+describe("use-history-store-prefilled", () => {
+  let renderedHook: RenderHookResult<ReturnType<typeof useHistoryStore>, any>;
+
+  beforeEach(() => {
+    renderedHook = renderHook(() =>
+      useHistoryStore({
+        histories: [
+          { id: "0", data: {} },
+          { id: "1", data: {} },
+          { id: "2", data: {} },
+        ],
+        index: 2,
+      })
+    );
+  });
+
+  test("should have the correct initial state", () => {
+    expect(renderedHook.result.current.hasPast).toBe(true);
+    expect(renderedHook.result.current.hasFuture).toBe(false);
+    expect(renderedHook.result.current.histories.length).toBe(3);
+  });
+});

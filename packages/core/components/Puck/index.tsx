@@ -41,7 +41,7 @@ import { Outline } from "./components/Outline";
 import { Overrides } from "../../types/Overrides";
 import { loadOverrides } from "../../lib/load-overrides";
 import { usePuckHistory } from "../../lib/use-puck-history";
-import { useHistoryStore } from "../../lib/use-history-store";
+import { useHistoryStore, type History } from "../../lib/use-history-store";
 import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types/Viewports";
@@ -69,6 +69,7 @@ export function Puck<UserConfig extends Config = Config>({
     enabled: true,
   },
   dnd,
+  initialHistories,
 }: {
   children?: ReactNode;
   config: UserConfig;
@@ -94,8 +95,12 @@ export function Puck<UserConfig extends Config = Config>({
   dnd?: {
     disableAutoScroll?: boolean;
   };
+  initialHistories?: {
+    histories: History<any>[];
+    index: number;
+  };
 }) {
-  const historyStore = useHistoryStore();
+  const historyStore = useHistoryStore(initialHistories);
 
   const [reducer] = useState(() =>
     createReducer<UserConfig>({ config, record: historyStore.record })
