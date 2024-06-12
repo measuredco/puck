@@ -182,25 +182,6 @@ Render the Puck preview within iframe. Defaults to `true`.
 
 Disabling iframes will also disable [viewports](#viewports).
 
-### `onChange(data)`
-
-Callback that triggers when the user makes a change.
-
-Receives a single [`Data`](/docs/api-reference/data) arg.
-
-```tsx {4-6} copy
-export function Editor() {
-  return (
-    <Puck
-      onChange={(data) => {
-        console.log("Puck data was updated", data);
-      }}
-      // ...
-    />
-  );
-}
-```
-
 ### `initialHistories`
 
 Sets the undo/redo Puck history state.
@@ -219,6 +200,25 @@ An array of histories to reset the Puck state history state to.
 ##### `index`
 
 The index of the histories to set the user to.
+
+### `onChange(data)`
+
+Callback that triggers when the user makes a change.
+
+Receives a single [`Data`](/docs/api-reference/data) arg.
+
+```tsx {4-6} copy
+export function Editor() {
+  return (
+    <Puck
+      onChange={(data) => {
+        console.log("Puck data was updated", data);
+      }}
+      // ...
+    />
+  );
+}
+```
 
 ### `onPublish(data)`
 
