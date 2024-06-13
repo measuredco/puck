@@ -22,10 +22,17 @@ export type HistoryStore<D = any> = {
 
 const EMPTY_HISTORY_INDEX = -1;
 
-export function useHistoryStore<D = any>(): HistoryStore<D> {
-  const [histories, setHistories] = useState<History<D>[]>([]);
+export function useHistoryStore<D = any>(initialHistories?: {
+  histories: History<any>[];
+  index: number;
+}): HistoryStore<D> {
+  const [histories, setHistories] = useState<History<D>[]>(
+    initialHistories?.histories ?? []
+  );
 
-  const [index, setIndex] = useState(EMPTY_HISTORY_INDEX);
+  const [index, setIndex] = useState(
+    initialHistories?.index ?? EMPTY_HISTORY_INDEX
+  );
 
   const hasPast = index > EMPTY_HISTORY_INDEX;
   const hasFuture = index < histories.length - 1;
