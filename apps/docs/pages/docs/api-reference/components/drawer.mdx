@@ -8,7 +8,7 @@ import { Puck } from "@/core/components/Puck";
 
 # \<Drawer\>
 
-A reference list of items that can be dragged into a [`<Puck.Preview>`](puck-preview). Used for composing custom Puck UIs.
+A vertical or horizontal list of items that can be dragged into a [`<Puck.Preview>`](puck-preview). Used for composing custom Puck UIs.
 
 <PuckPreview
   config={{ components: { Orange: { render: () => <div>Orange</div> } } }}
@@ -38,8 +38,8 @@ export function Editor() {
 | Param                         | Example                     | Type                     | Status   |
 | ----------------------------- | --------------------------- | ------------------------ | -------- |
 | [`children`](#children)       | `children: <Drawer.Item />` | ReactNode                | Required |
-| [`droppableId`](#droppableId) | `droppableId: "my-drawer"`  | String                   | -        |
 | [`direction`](#direction)     | `direction: "horizontal"`   | `horizontal`, `vertical` | -        |
+| [`droppableId`](#droppableId) | `droppableId: "my-drawer"`  | String                   | -        |
 
 ## Required props
 
@@ -48,6 +48,12 @@ export function Editor() {
 A React node representing the contents of the `<Drawer>`. Will likely contain [`<Drawer.Item>`](drawer-item) nodes.
 
 ## Optional props
+
+### `direction`
+
+Set the direction of the drawer.
+
+Defaults to `vertical`.
 
 ### `droppableId`
 
