@@ -14,45 +14,13 @@ The current state of the Puck editor interface.
 
 | Param                                           | Example                                               | Type    |
 | ----------------------------------------------- | ----------------------------------------------------- | ------- |
-| [`leftSideBarVisible`](#uileftsidebarvisible)   | `false`                                               | Boolean |
-| [`rightSideBarVisible`](#uirightsidebarvisible) | `false`                                               | Boolean |
-| [`itemSelector`](#uiitemselector)               | `{ index: 0, zone: "my-content" }`                    | Object  |
-| [`isDragging`](#isdragging)                     | `false`                                               | Boolean |
 | [`arrayState`](#uiarraystate)                   | `{}`                                                  | Object  |
 | [`componentList`](#uicomponentlist)             | `{ typography: { components: [ "HeadingBlock" ] } }`  | Object  |
+| [`isDragging`](#isdragging)                     | `false`                                               | Boolean |
+| [`itemSelector`](#uiitemselector)               | `{ index: 0, zone: "my-content" }`                    | Object  |
+| [`leftSideBarVisible`](#uileftsidebarvisible)   | `false`                                               | Boolean |
+| [`rightSideBarVisible`](#uirightsidebarvisible) | `false`                                               | Boolean |
 | [`viewports`](#uiviewports)                     | `{ controlsVisible: true, current: {}, options: [] }` | Object  |
-
----
-
-### `ui.leftSideBarVisible`
-
-Whether or not the left side bar is visible.
-
----
-
-### `ui.rightSideBarVisible`
-
-Whether or not the right side bar is visible.
-
----
-
-### `ui.itemSelector`
-
-An object describing which item is selected.
-
-#### `ui.itemSelector.index`
-
-The index of the item within the zone.
-
-#### `ui.itemSelector.zone`
-
-The zone that the item is defined within. **Defaults to [main content zone](/docs/api-reference/data#content).**
-
----
-
-### `ui.isDragging`
-
-A boolean stating whether or not the user is currently dragging a component.
 
 ---
 
@@ -81,6 +49,38 @@ Whether or not the category is visible in the side bar
 #### `ui.componentList[key].expanded`
 
 Whether or not the category is expanded in the side bar
+
+---
+
+### `ui.isDragging`
+
+A boolean stating whether or not the user is currently dragging a component.
+
+---
+
+### `ui.itemSelector`
+
+An object describing which item is selected.
+
+#### `ui.itemSelector.index`
+
+The index of the item within the zone.
+
+#### `ui.itemSelector.zone`
+
+The zone that the item is defined within. **Defaults to [main content zone](/docs/api-reference/data#content).**
+
+---
+
+### `ui.leftSideBarVisible`
+
+Whether or not the left side bar is visible.
+
+---
+
+### `ui.rightSideBarVisible`
+
+Whether or not the right side bar is visible.
 
 ---
 
