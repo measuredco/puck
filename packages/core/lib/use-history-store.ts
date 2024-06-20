@@ -8,16 +8,19 @@ export type History<D = any> = {
 };
 
 export type HistoryStore<D = any> = {
+  // Exposed via usePuck
   index: number;
-  currentHistory: History;
   hasPast: boolean;
   hasFuture: boolean;
+  histories: History<D>[];
+
+  // Internal
   record: (data: D) => void;
   back: VoidFunction;
   forward: VoidFunction;
+  currentHistory: History;
   nextHistory: History<D> | null;
   prevHistory: History<D> | null;
-  histories: History<D>[];
 };
 
 const EMPTY_HISTORY_INDEX = -1;

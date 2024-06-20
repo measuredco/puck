@@ -32,6 +32,7 @@ export function Editor() {
 | ------------------------------- | ------------------------------------------------ | --------------------------------------------------- |
 | [`appState`](#appstate)         | `{ data: {}, ui: {} }`                           | [AppState](/docs/api-reference/app-state)           |
 | [`dispatch`](#dispatch)         | `(action: PuckAction) => void`                   | Function                                            |
+| [`history`](#history)           | `{}`                                             | Object                                              |
 | [`selectedItem`](#selecteditem) | `{ type: "Heading", props: {id: "my-heading"} }` | [ComponentData](/docs/api-reference/data#content-1) |
 
 ### `appState`
@@ -55,6 +56,58 @@ dispatch({
   },
 });
 ```
+
+### `history`
+
+The `history` API provides programmatic access to the undo/redo [AppState](/docs/api-reference/app-state) history.
+
+| Param                            | Example                        | Type                           |
+| -------------------------------- | ------------------------------ | ------------------------------ |
+| [`back`](#historyback)           | `() => void`                   | Function                       |
+| [`forward`](#historyforward)     | `() => void`                   | Function                       |
+| [`hasPast`](#historyhaspast)     | `true`                         | Boolean                        |
+| [`hasFuture`](#historyhasfuture) | `false`                        | Boolean                        |
+| [`histories`](#historyhistories) | `[{ id: 'abc123', data: {} }]` | [History](#history-params)\[\] |
+| [`index`](#historyindex)         | `5`                            | Number                         |
+
+#### `history.back`
+
+A function to move the app state back through the [histories](#historyhistories).
+
+#### `history.forward`
+
+A function to move the app state forward through the [histories](#historyhistories).
+
+#### `history.hasPast`
+
+A boolean describing whether or not the present app state has past history items.
+
+#### `history.hasFuture`
+
+A boolean describing whether or not the present app state has future history items.
+
+#### `history.histories`
+
+An array describing the recorded history as `History` objects.
+
+##### `History` params
+
+| Param  | Example  | Type                                      |
+| ------ | -------- | ----------------------------------------- |
+| `data` | `{}`     | [AppState](/docs/api-reference/app-state) |
+| `id`   | `abc123` | String                                    |
+
+###### `data`
+
+The [app state](/docs/api-reference/app-state) payload for this history entry.
+
+###### `id`
+
+A unique ID for this history entry.
+
+#### `history.index`
+
+The index of the currently selected history in [`history.histories`](#historyhistories)
 
 ### `selectedItem`
 
