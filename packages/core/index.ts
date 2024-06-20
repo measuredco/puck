@@ -3,6 +3,7 @@ import "./styles.css";
 export type { PuckAction } from "./reducer/actions";
 
 export * from "./types/Config";
+export * from "./types/Plugin";
 export * from "./types/Fields";
 
 export * from "./components/AutoField";
