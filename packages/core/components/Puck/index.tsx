@@ -69,7 +69,7 @@ export function Puck<UserConfig extends Config = Config>({
     enabled: true,
   },
   dnd,
-  initialHistories,
+  initialHistory,
 }: {
   children?: ReactNode;
   config: UserConfig;
@@ -95,12 +95,12 @@ export function Puck<UserConfig extends Config = Config>({
   dnd?: {
     disableAutoScroll?: boolean;
   };
-  initialHistories?: {
+  initialHistory?: {
     histories: History<any>[];
     index: number;
   };
 }) {
-  const historyStore = useHistoryStore(initialHistories);
+  const historyStore = useHistoryStore(initialHistory);
 
   const [reducer] = useState(() =>
     createReducer<UserConfig>({ config, record: historyStore.record })
