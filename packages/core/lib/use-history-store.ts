@@ -21,6 +21,8 @@ export type HistoryStore<D = any> = {
   currentHistory: History;
   nextHistory: History<D> | null;
   prevHistory: History<D> | null;
+  setHistories: (histories: History[]) => void;
+  setHistoryIndex: (index: number) => void;
 };
 
 const EMPTY_HISTORY_INDEX = -1;
@@ -78,5 +80,7 @@ export function useHistoryStore<D = any>(initialHistory?: {
     nextHistory,
     prevHistory,
     histories,
+    setHistories,
+    setHistoryIndex: setIndex,
   };
 }
