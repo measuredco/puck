@@ -28,12 +28,14 @@ export function Editor() {
 
 ## Returns
 
-| Param                           | Example                                          | Type                                                |
-| ------------------------------- | ------------------------------------------------ | --------------------------------------------------- |
-| [`appState`](#appstate)         | `{ data: {}, ui: {} }`                           | [AppState](/docs/api-reference/app-state)           |
-| [`dispatch`](#dispatch)         | `(action: PuckAction) => void`                   | Function                                            |
-| [`history`](#history)           | `{}`                                             | Object                                              |
-| [`selectedItem`](#selecteditem) | `{ type: "Heading", props: {id: "my-heading"} }` | [ComponentData](/docs/api-reference/data#content-1) |
+| Param                                 | Example                                          | Type                                                |
+| ------------------------------------- | ------------------------------------------------ | --------------------------------------------------- |
+| [`appState`](#appstate)               | `{ data: {}, ui: {} }`                           | [AppState](/docs/api-reference/app-state)           |
+| [`dispatch`](#dispatch)               | `(action: PuckAction) => void`                   | Function                                            |
+| [`history`](#history)                 | `{}`                                             | Object                                              |
+| [`selectedItem`](#selecteditem)       | `{ type: "Heading", props: {id: "my-heading"} }` | [ComponentData](/docs/api-reference/data#content-1) |
+| [`setHistories`](#sethistories)       | `setHistories: (histories) => {}`                | Function                                            |
+| [`setHistoryIndex`](#sethistoryindex) | `setHistoryIndex: (index) => {}`                 | Function                                            |
 
 ### `appState`
 
@@ -116,4 +118,22 @@ The currently selected item, as defined by `appState.ui.itemSelector`.
 ```tsx
 console.log(selectedItem);
 // { type: "Heading", props: {id: "my-heading"} }
+```
+
+### `sethistories`
+
+A function to set the history state.
+
+```tsx
+const { setHistories } = usePuck();
+setHistories([]); // clears the current history
+```
+
+### `sethistoryindex`
+
+A function to set current history index.
+
+```tsx
+const { setHistoryIndex } = usePuck();
+setHistoryIndex(2);
 ```
