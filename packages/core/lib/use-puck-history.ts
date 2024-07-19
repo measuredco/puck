@@ -55,9 +55,9 @@ export function usePuckHistory({
         type: "set",
         state: historyStore.histories[index]?.data || initialAppState,
       });
-    }
 
-    historyStore.setHistoryIndex(index);
+      historyStore.setHistoryIndex(index);
+    }
   };
 
   useHotkeys("meta+z", back, { preventDefault: true });
