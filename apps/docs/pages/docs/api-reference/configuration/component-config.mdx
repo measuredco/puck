@@ -26,14 +26,15 @@ const config = {
 
 ## Params
 
-| Param                                          | Example                                         | Type     | Status   |
-| ---------------------------------------------- | ----------------------------------------------- | -------- | -------- |
-| [`render()`](#renderprops)                     | `render: () => <div />`                         | Function | Required |
-| [`fields`](#fields)                            | `fields: { title: { type: "text"} }`            | Object   | -        |
-| [`defaultProps`](#defaultprops)                | `defaultProps: { title: "Hello, world" }`       | Object   | -        |
-| [`label`](#label)                              | `label: "Heading Block"`                        | String   | -        |
-| [`resolveData()`](#resolvedatadata-params)     | `resolveData: async ({ props }) => ({ props })` | Object   | -        |
-| [`resolveFields()`](#resolvefieldsdata-params) | `resolveFields: async ({ props }) => ({})}`     | Object   | -        |
+| Param                                                       | Example                                          | Type     | Status   |
+| ----------------------------------------------------------- | ------------------------------------------------ | -------- | -------- |
+| [`render()`](#renderprops)                                  | `render: () => <div />`                          | Function | Required |
+| [`fields`](#fields)                                         | `fields: { title: { type: "text"} }`             | Object   | -        |
+| [`defaultProps`](#defaultprops)                             | `defaultProps: { title: "Hello, world" }`        | Object   | -        |
+| [`label`](#label)                                           | `label: "Heading Block"`                         | String   | -        |
+| [`resolveData()`](#resolvedatadata-params)                  | `resolveData: async ({ props }) => ({ props })`  | Object   | -        |
+| [`resolveFields()`](#resolvefieldsdata-params)              | `resolveFields: async ({ props }) => ({})`       | Object   | -        |
+| [`resolveDefaultProps()`](#resolvedefaultpropsprops)        | `resolveDefaultProps: async (props) => ({})`     | Object   | -        |
 
 ## Required params
 
@@ -445,3 +446,62 @@ The last fields object created by the previous run of this function.
 #### Returns
 
 A [`fields`](#fields) object.
+
+
+### `resolveDefaultProps(props)`
+
+Dynamically set the defaultProps for this component. Can be used to make asynchronous calls.
+
+This function is triggered when a new component is added.
+
+```tsx {10-13} copy filename="Example setting default props asynchronously"
+const config = {
+  components: {
+    MyComponent: {
+      fields: {
+        title: {type: "text", label: "Title"}
+      },
+      defaultProps: {
+        title: "Unchanged Title"
+      },
+      resolveDefaultProps: async (props) => {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        return {...props, title: "Changed Title"};;
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label='Default props changed'
+  componentConfig={{
+    fields: {
+      title: {type: "text", label: "Title"}
+    },
+    defaultProps: {
+      title: "Unchanged Title"
+    },
+    resolveDefaultProps: async (props) => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return {...props, title: "Changed Title"};
+    },
+    render: ({ title }) => <h1>{title}</h1>,
+    
+}}
+/>
+
+#### Args
+
+| Prop     | Example                                                                   | Type   |
+| -------- | ------------------------------------------------------------------------- | ------ |
+| `props`  | `{ title: "Hello, world" }`                                               | Object |
+
+##### `props`
+
+The default static props for the component.
+
+#### Returns
+
+A [`defaultProps`](#defaultprops) object.
