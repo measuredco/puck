@@ -136,6 +136,20 @@ export const Hero: ComponentConfig<HeroProps> = {
     padding: "64px",
   },
   /**
+   * The resolveDefaultProps method allows the user to set component data asynchronously.
+   *
+   * It is called when a new component is dragged down.
+   *
+   * For example, requesting a third-party API for the default content.
+  */
+  resolveDefaultProps: async (defaultProps) => {
+    // Simulate a delay
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    defaultProps.align = "center";
+    return defaultProps
+  },
+  /**
    * The resolveData method allows us to modify component data after being
    * set by the user.
    *
