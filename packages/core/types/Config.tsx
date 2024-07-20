@@ -36,6 +36,9 @@ export type ComponentConfig<
   render: PuckComponent<ComponentProps>;
   label?: string;
   defaultProps?: DefaultProps;
+  resolveDefaultProps?: (
+    defaultProps: DefaultProps
+  ) => Promise<DefaultProps> | DefaultProps
   fields?: Fields<ComponentProps>;
   resolveFields?: (
     data: DataShape,
@@ -55,13 +58,13 @@ export type ComponentConfig<
     }
   ) =>
     | Promise<{
-        props?: Partial<ComponentProps>;
-        readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
-      }>
+      props?: Partial<ComponentProps>;
+      readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
+    }>
     | {
-        props?: Partial<ComponentProps>;
-        readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
-      };
+      props?: Partial<ComponentProps>;
+      readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
+    };
 };
 
 type Category<ComponentName> = {

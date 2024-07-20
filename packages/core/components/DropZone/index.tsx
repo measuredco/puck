@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { DraggableComponent } from "../DraggableComponent";
 import { Droppable } from "../Droppable";
 import { getItem } from "../../lib/get-item";
@@ -10,11 +10,45 @@ import { DropZoneProvider, dropZoneContext } from "./context";
 import { getZoneId } from "../../lib/get-zone-id";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
-import { ComponentConfig, PuckContext } from "../../types/Config";
+import { ComponentConfig, PuckContext, ComponentData } from "../../types/Config";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
 export { DropZoneProvider, dropZoneContext } from "./context";
+
+// resolve default props for each component
+const useResolvedDefaultProps = (components: { [key: string]: Omit<ComponentConfig<any, any, Omit<ComponentData<any>, "type">>, "type"> }) => {
+  const [resolvedDefaultPropsMapper, setResolvedDefaultPropsMapper] = useState({});
+
+  const resolveAllDefaultProps = useCallback(async () => {
+    try {
+      let newDefaultPropsMapper = {};
+      await Promise.all(
+        Object.entries(components).map(async (entry) => {
+          const [type, component] = entry;
+
+          let defaultProps = component?.defaultProps;
+          if (component?.resolveDefaultProps) {
+            defaultProps = await component.resolveDefaultProps(component.defaultProps);
+          }
+
+          newDefaultPropsMapper[type] = defaultProps;
+        })
+      );
+      return newDefaultPropsMapper;
+    } catch (error) {
+      console.error('Error resolving default props:', error);
+    }
+  }, [components]);
+
+  useEffect(() => {
+    resolveAllDefaultProps().then((newDefaultPropsMapper) => {
+      setResolvedDefaultPropsMapper(newDefaultPropsMapper || {});
+    });
+  }, []);
+
+  return { resolvedDefaultPropsMapper };
+};
 
 function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   const appContext = useAppContext();
@@ -160,6 +194,8 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
   const isAreaSelected = selectedItem && zoneArea === selectedItem.props.id;
 
+  const { resolvedDefaultPropsMapper } = useResolvedDefaultProps(config.components);
+
   return (
     <div
       className={getClassName({
@@ -205,7 +241,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                 };
 
                 const defaultedProps = {
-                  ...config.components[item.type]?.defaultProps,
+                  ...resolvedDefaultPropsMapper[item.type] || {},
                   ...item.props,
                   puck: puckProps,
                   editMode: true, // DEPRECATED
@@ -226,10 +262,10 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                 const Render = config.components[item.type]
                   ? config.components[item.type].render
                   : () => (
-                      <div style={{ padding: 48, textAlign: "center" }}>
-                        No configuration for {item.type}
-                      </div>
-                    );
+                    <div style={{ padding: 48, textAlign: "center" }}>
+                      No configuration for {item.type}
+                    </div>
+                  );
 
                 const componentConfig: ComponentConfig | undefined =
                   config.components[item.type];
