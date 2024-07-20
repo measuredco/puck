@@ -241,7 +241,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                 };
 
                 const defaultedProps = {
-                  ...resolvedDefaultPropsMapper[item.type] || {},
+                  ...(resolvedDefaultPropsMapper[item.type] || {}),
                   ...item.props,
                   puck: puckProps,
                   editMode: true, // DEPRECATED
