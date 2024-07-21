@@ -136,7 +136,7 @@ export const Hero: ComponentConfig<HeroProps> = {
     padding: "64px",
   },
   /**
-   * The resolveDefault method allows us to asynchronously set default props.
+   * The resolveDefaultProps method allows us to asynchronously set default props.
    *
    * It is called when a new component is inserted.
    *
