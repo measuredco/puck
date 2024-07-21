@@ -463,13 +463,13 @@ const config = {
         },
       },
       defaultProps: {
-        title: "Title"
+        title: "Hello, world"
       },
       resolveDefaultProps: async (props) => {
         await new Promise((resolve) => setTimeout(resolve, 200));
-        return {...props, title: "Changed Title"};;
+        return {...props, title: "Hello, world again!"};;
       },
-      render: ({ resolvedTitle }) => <h1>{resolvedTitle}</h1>,
+      render: ({ title }) => <h1>{title}</h1>,
       // ...
     },
   },
