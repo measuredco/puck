@@ -407,7 +407,7 @@ export function Puck<UserConfig extends Config = Config>({
             setItemSelector(null);
             dispatch({ type: "setUi", ui: { isDragging: true } });
           }}
-          onDragEnd={(droppedItem) => {
+          onDragEnd={async (droppedItem) => {
             setDraggedItem(undefined);
             dispatch({ type: "setUi", ui: { isDragging: false } });
 
@@ -423,11 +423,19 @@ export function Puck<UserConfig extends Config = Config>({
             ) {
               const [_, componentType] = droppedItem.draggableId.split("::");
 
+              const componentToCreate = config.components[componentType];
+              let resolvedProps = {};
+              if (componentToCreate?.resolveDefaultProps) {
+                const defaultProps = componentToCreate?.defaultProps || {};
+                resolvedProps = await componentToCreate.resolveDefaultProps(defaultProps);
+              }
+
               dispatch({
                 type: "insert",
                 componentType: componentType || droppedItem.draggableId,
                 destinationIndex: droppedItem.destination!.index,
                 destinationZone: droppedItem.destination.droppableId,
+                ...(resolvedProps ? { resolvedDefaultProps: resolvedProps } : {})
               });
 
               setItemSelector({

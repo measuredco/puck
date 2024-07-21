@@ -36,6 +36,9 @@ export type ComponentConfig<
   render: PuckComponent<ComponentProps>;
   label?: string;
   defaultProps?: DefaultProps;
+  resolveDefaultProps?: (
+    defaultProps?: DefaultProps
+  ) => Promise<Partial<ComponentProps>> | Partial<ComponentProps>;
   fields?: Fields<ComponentProps>;
   resolveFields?: (
     data: DataShape,
