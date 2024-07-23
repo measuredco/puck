@@ -89,6 +89,38 @@ describe("use-history-store", () => {
     expect(renderedHook.result.current.histories[1].data).toBe("Banana");
     expect(renderedHook.result.current.currentHistory.data).toBe("Banana");
   });
+
+  test("should reset histories and index on setHistories", () => {
+    act(() => renderedHook.result.current.record("Apples"));
+    act(() => renderedHook.result.current.record("Oranges"));
+    act(() =>
+      renderedHook.result.current.setHistories([
+        {
+          id: "1",
+          data: "Oreo",
+        },
+      ])
+    );
+
+    expect(renderedHook.result.current.hasPast).toBe(true);
+    expect(renderedHook.result.current.hasFuture).toBe(false);
+    expect(renderedHook.result.current.histories.length).toBe(1);
+    expect(renderedHook.result.current.histories[0].data).toBe("Oreo");
+    expect(renderedHook.result.current.currentHistory.data).toBe("Oreo");
+    expect(renderedHook.result.current.index).toBe(0);
+  });
+
+  test("should update index on setHistoryIndex", () => {
+    act(() => renderedHook.result.current.record("Apples"));
+    act(() => renderedHook.result.current.record("Oranges"));
+    act(() => renderedHook.result.current.setHistoryIndex(0));
+
+    expect(renderedHook.result.current.hasPast).toBe(true);
+    expect(renderedHook.result.current.hasFuture).toBe(true);
+    expect(renderedHook.result.current.histories.length).toBe(2);
+    expect(renderedHook.result.current.currentHistory.data).toBe("Apples");
+    expect(renderedHook.result.current.index).toBe(0);
+  });
 });
 
 describe("use-history-store-prefilled", () => {
