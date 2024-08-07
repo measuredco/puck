@@ -26,13 +26,13 @@ const storeInterceptor = (
       "set",
     ].includes(action.type);
 
-    if (
-      typeof action.recordHistory !== "undefined"
-        ? action.recordHistory
-        : isValidType
-    ) {
-      if (record) record(newAppState);
-    }
+    // if (
+    //   typeof action.recordHistory !== "undefined"
+    //     ? action.recordHistory
+    //     : isValidType
+    // ) {
+    //   if (record) record(newAppState);
+    // }
 
     return newAppState;
   };
