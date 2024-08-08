@@ -37,6 +37,16 @@ const getStyles = (styleSheet?: CSSStyleSheet) => {
   return "";
 };
 
+// Sync attributes from parent window to iFrame
+const syncAttributes = (sourceElement: Element, targetElement: Element) => {
+  const attributes = sourceElement.attributes;
+  if (attributes?.length > 0) {
+    Array.from(attributes).forEach((attribute: Attr) => {
+      targetElement.setAttribute(attribute.name, attribute.value);
+    });
+  }
+};
+
 const defer = (fn: () => void) => setTimeout(fn, 0);
 
 const CopyHostStyles = ({
@@ -204,6 +214,14 @@ const CopyHostStyles = ({
     const collectedStyles = collectStyles(parentDocument);
     const hrefs: string[] = [];
     let stylesLoaded = 0;
+
+    // Sync attributes for the HTML tag
+    const parentHtml = parentDocument.getElementsByTagName("html")[0];
+    syncAttributes(parentHtml, doc.documentElement);
+
+    // Sync attributes for the Body tag
+    const parentBody = parentDocument.getElementsByTagName("body")[0];
+    syncAttributes(parentBody, doc.body);
 
     Promise.all(
       collectedStyles.map(async (styleNode, i) => {
