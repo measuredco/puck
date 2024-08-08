@@ -7,7 +7,7 @@ const styleSelector = 'style, link[rel="stylesheet"]';
 const collectStyles = (doc: Document) => {
   const collected: HTMLElement[] = [];
 
-  doc.head.querySelectorAll(styleSelector).forEach((style) => {
+  doc.querySelectorAll(styleSelector).forEach((style) => {
     collected.push(style as HTMLElement);
   });
 
