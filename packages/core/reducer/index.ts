@@ -62,15 +62,18 @@ export function createReducer<UserConfig extends Config = Config>({
   record?: (appState: AppState) => void;
   onAction?: OnAction;
 }): StateReducer {
-  return storeInterceptor((state, action) => {
-    const data = reduceData(state.data, action, config);
-    const ui = reduceUi(state.ui, action);
+  return storeInterceptor(
+    (state, action) => {
+      const data = reduceData(state.data, action, config);
+      const ui = reduceUi(state.ui, action);
 
-    if (action.type === "set") {
-      return setAction(state, action);
-    }
+      if (action.type === "set") {
+        return setAction(state, action);
+      }
 
-    return { data, ui };
-
-  }, record, onAction);
+      return { data, ui };
+    },
+    record,
+    onAction
+  );
 }
