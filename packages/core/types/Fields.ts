@@ -52,9 +52,11 @@ export type ObjectField<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = BaseField & {
   type: "object";
-  objectFields: {
-    [SubPropName in keyof Props]: Field<Props[SubPropName]>;
-  };
+  objectFields: Props extends any[]
+    ? never
+    : {
+        [SubPropName in keyof Props]: Field<Props[SubPropName]>;
+      };
 };
 
 // DEPRECATED
