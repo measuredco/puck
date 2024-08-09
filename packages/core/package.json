@@ -57,7 +57,7 @@
     "tsconfig": "*",
     "tsup": "^6.7.0",
     "tsup-config": "*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "@measured/dnd": "16.6.0-canary.4cba1d1",

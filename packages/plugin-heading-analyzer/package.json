@@ -26,7 +26,7 @@
     "tsconfig": "*",
     "tsup": "^6.7.0",
     "tsup-config": "*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "react-from-json": "^0.8.0"

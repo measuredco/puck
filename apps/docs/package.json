@@ -14,7 +14,7 @@
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "eslint-config-custom": "*",
-    "typescript": "^4.5.3"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "next": "^14.1.1",
