@@ -49,6 +49,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
       type: action.componentType,
       props: {
         ...(config.components[action.componentType].defaultProps || {}),
+        ...(action?.resolvedDefaultProps || {}),
         id: generateId(action.componentType),
       },
     };

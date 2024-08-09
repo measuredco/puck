@@ -211,3 +211,31 @@ Unlike [default parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScr
     },
   }}
 />
+
+## Setting default props asynchronously
+
+The [`resolveDefaultProps` function](/docs/api-reference/configuration/component-config#resolvedefaultpropsprops) allows you to set default props asynchronously.
+
+For example we can set the value of default props by making an asynchronous call.
+
+```tsx {10-13} copy filename="Example setting default props asynchronously"
+const config = {
+  components: {
+    MyComponent: {
+      fields: {
+        title: {type: "text", label: "Title"}
+      },
+      defaultProps: {
+        title: "Hello, world"
+      },
+      resolveDefaultProps: async (props) => {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        return {...props, title: "Hello, world again!"};;
+      },
+      render: ({ title }) => <h1>{title}</h1>,
+    },
+  },
+};
+```
+
+The `resolved defaultProps` are stored in the data payload and will populate the Puck fields.

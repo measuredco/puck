@@ -1,10 +1,11 @@
-import { AppState, Data, UiState } from "../types/Config";
+import { AppState, Data, UiState, DefaultComponentProps } from "../types/Config";
 
 export type InsertAction = {
   type: "insert";
   componentType: string;
   destinationIndex: number;
   destinationZone: string;
+  resolvedDefaultProps?: DefaultComponentProps
 };
 
 export type DuplicateAction = {
