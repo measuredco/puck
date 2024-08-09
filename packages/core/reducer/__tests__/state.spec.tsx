@@ -8,8 +8,10 @@ type Props = {
   };
 };
 
+type UserConfig = Config<Props>;
+
 describe("State reducer", () => {
-  const config: Config<Props> = {
+  const config: UserConfig = {
     components: {
       Comp: {
         defaultProps: { prop: "example" },
@@ -18,7 +20,7 @@ describe("State reducer", () => {
     },
   };
 
-  const reducer = createReducer({ config });
+  const reducer = createReducer<any>({ config });
 
   describe("setUi action", () => {
     it("should insert data into the state", () => {

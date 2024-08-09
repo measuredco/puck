@@ -24,9 +24,9 @@
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",
-    "tsup": "^6.7.0",
+    "tsup": "^8.2.4",
     "tsup-config": "*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "react-from-json": "^0.8.0"
