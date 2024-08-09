@@ -33,7 +33,7 @@ export type ComponentConfig<
   DefaultProps = ComponentProps,
   DataShape = Omit<ComponentData<ComponentProps>, "type">
 > = {
-  render: PuckComponent<ComponentProps>;
+  render: PuckComponent<Partial<ComponentProps>>;
   label?: string;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
