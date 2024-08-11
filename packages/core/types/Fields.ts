@@ -127,7 +127,7 @@ export type Fields<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps
 > = {
   [PropName in keyof Omit<
-    Partial<ComponentProps>,
+    ComponentProps,
     "children" | "editMode"
   >]: Field<ComponentProps[PropName]>;
 };
