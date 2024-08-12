@@ -58,15 +58,10 @@ export const MenuBar = ({
       <div className={getClassName("inner")}>
         <div className={getClassName("history")}>
           <IconButton title="undo" disabled={!hasPast} onClick={back}>
-            <Undo2Icon
-              size={21}
-              
-            />
+            <Undo2Icon size={21} />
           </IconButton>
           <IconButton title="redo" disabled={!hasFuture} onClick={forward}>
-            <Redo2Icon
-              size={21}
-            />
+            <Redo2Icon size={21} />
           </IconButton>
         </div>
         <>
