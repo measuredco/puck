@@ -35,6 +35,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
     hoveringComponent,
     zoneWillDrag,
     setZoneWillDrag = () => null,
+    isDragDisabled,
   } = ctx! || {};
 
   let content = data.content || [];
@@ -255,6 +256,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                         index={i}
                         isSelected={isSelected}
                         isLocked={userIsDragging}
+                        isDragDisabled={isDragDisabled}
                         forceHover={
                           hoveringComponent === componentId && !userIsDragging
                         }

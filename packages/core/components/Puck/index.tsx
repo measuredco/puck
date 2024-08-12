@@ -97,6 +97,7 @@ export function Puck<UserConfig extends Config = Config>({
   iframe?: IframeConfig;
   dnd?: {
     disableAutoScroll?: boolean;
+    isDisabled?: boolean;
   };
   initialHistory?: {
     histories: History<any>[];
@@ -469,6 +470,7 @@ export function Puck<UserConfig extends Config = Config>({
           <DropZoneProvider
             value={{
               data,
+              isDragDisabled: dnd?.isDisabled,
               itemSelector,
               setItemSelector,
               config,

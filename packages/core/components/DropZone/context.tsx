@@ -41,6 +41,7 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   mode?: "edit" | "render";
   zoneWillDrag?: string;
   setZoneWillDrag?: (zone: string) => void;
+  isDragDisabled?: boolean;
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
