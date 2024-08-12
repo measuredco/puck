@@ -58,24 +58,10 @@ export const MenuBar = ({
       <div className={getClassName("inner")}>
         <div className={getClassName("history")}>
           <IconButton title="undo" disabled={!hasPast} onClick={back}>
-            <Undo2Icon
-              size={21}
-              stroke={
-                hasPast
-                  ? "var(--puck-color-black)"
-                  : "var(--puck-color-grey-08)"
-              }
-            />
+            <Undo2Icon size={21} />
           </IconButton>
           <IconButton title="redo" disabled={!hasFuture} onClick={forward}>
-            <Redo2Icon
-              size={21}
-              stroke={
-                hasFuture
-                  ? "var(--puck-color-black)"
-                  : "var(--puck-color-grey-08)"
-              }
-            />
+            <Redo2Icon size={21} />
           </IconButton>
         </div>
         <>
