@@ -25,22 +25,23 @@ export function Editor() {
 
 ## Props
 
-| Param                               | Example                                | Type                                               | Status       |
-| ----------------------------------- | -------------------------------------- | -------------------------------------------------- | ------------ |
-| [`config`](#config)                 | `config: { components: {} }`           | [Config](/docs/api-reference/configuration/config) | Required     |
-| [`data`](#data)                     | `data: {}`                             | [Data](/docs/api-reference/data)                   | Required     |
-| [`dnd`](#dnd)                       | `dnd: {}`                              | [DndConfig](#dnd-params)                           | -            |
-| [`children`](#children)             | `children: <Puck.Preview />`           | ReactNode                                          | -            |
-| [`headerPath`](#headerpath)         | `headerPath: "/my-page"`               | String                                             | -            |
-| [`headerTitle`](#headertitle)       | `headerTitle: "My Page"`               | String                                             | -            |
-| [`iframe`](#iframe)                 | `iframe: {}`                           | [IframeConfig](#iframe-params)                     | -            |
-| [`initialHistory`](#initialhistory) | `initialHistory: {}`                   | [InitialHistory](#initialhistory-params)           | -            |
-| [`onChange()`](#onchangedata)       | `onChange: (data) => {}`               | Function                                           | -            |
-| [`onPublish()`](#onpublishdata)     | `onPublish: async (data) => {}`        | Function                                           | -            |
-| [`overrides`](#overrides)           | `overrides: { header: () => <div /> }` | [Overrides](/docs/api-reference/overrides)         | Experimental |
-| [`plugins`](#plugins)               | `plugins: [myPlugin]`                  | [Plugin\[\]](/docs/api-reference/plugin)           | Experimental |
-| [`ui`](#ui)                         | `ui: {leftSideBarVisible: false}`      | [AppState.ui](/docs/api-reference/app-state#ui)    | -            |
-| [`viewports`](#viewports)           | `viewports: [{ width: 1440 }]`         | [Viewport\[\]](#viewport-params)                   | -            |
+| Param                                                 | Example                                            | Type                                               | Status       |
+| ----------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- | ------------ |
+| [`config`](#config)                                   | `config: { components: {} }`                       | [Config](/docs/api-reference/configuration/config) | Required     |
+| [`data`](#data)                                       | `data: {}`                                         | [Data](/docs/api-reference/data)                   | Required     |
+| [`dnd`](#dnd)                                         | `dnd: {}`                                          | [DndConfig](#dnd-params)                           | -            |
+| [`children`](#children)                               | `children: <Puck.Preview />`                       | ReactNode                                          | -            |
+| [`headerPath`](#headerpath)                           | `headerPath: "/my-page"`                           | String                                             | -            |
+| [`headerTitle`](#headertitle)                         | `headerTitle: "My Page"`                           | String                                             | -            |
+| [`iframe`](#iframe)                                   | `iframe: {}`                                       | [IframeConfig](#iframe-params)                     | -            |
+| [`initialHistory`](#initialhistory)                   | `initialHistory: {}`                               | [InitialHistory](#initialhistory-params)           | -            |
+| [`onAction()`](#onactionaction-appstate-prevappstate) | `onAction: (action, appState, prevAppState) => {}` | Function                                           | -            |
+| [`onChange()`](#onchangedata)                         | `onChange: (data) => {}`                           | Function                                           | -            |
+| [`onPublish()`](#onpublishdata)                       | `onPublish: async (data) => {}`                    | Function                                           | -            |
+| [`overrides`](#overrides)                             | `overrides: { header: () => <div /> }`             | [Overrides](/docs/api-reference/overrides)         | Experimental |
+| [`plugins`](#plugins)                                 | `plugins: [myPlugin]`                              | [Plugin\[\]](/docs/api-reference/plugin)           | Experimental |
+| [`ui`](#ui)                                           | `ui: {leftSideBarVisible: false}`                  | [AppState.ui](/docs/api-reference/app-state#ui)    | -            |
+| [`viewports`](#viewports)                             | `viewports: [{ width: 1440 }]`                     | [Viewport\[\]](#viewport-params)                   | -            |
 
 ## Required props
 
@@ -200,6 +201,31 @@ An array of histories to reset the Puck state history state to.
 ##### `index`
 
 The index of the histories to set the user to.
+
+### `onAction(action, appState, prevAppState)`
+
+Callback that triggers when Puck dispatches an [action](https://puckeditor.com/docs/api-reference/actions), like `insert` or `set`. Use this to track changes, perform side effects, or sync with external systems.
+
+Receives three arguments:
+
+1. `action`: The action that was dispatched
+2. `appState`: The new [`AppState`](/docs/api-reference/app-state) after the action was applied
+3. `prevAppState`: The previous [`AppState`](/docs/api-reference/app-state) before the action was applied
+
+```tsx {4-8} copy
+export function Editor() {
+  return (
+    <Puck
+      onAction={(action, appState, prevAppState) => {
+        if (action.type === "insert") {
+          console.log("New component was inserted", appState);
+        }
+      }}
+      // ...
+    />
+  );
+}
+```
 
 ### `onChange(data)`
 

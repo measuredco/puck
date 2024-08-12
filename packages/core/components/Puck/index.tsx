@@ -10,6 +10,7 @@ import {
 import { DragStart, DragUpdate } from "@measured/dnd";
 
 import type { AppState, Config, Data, UiState } from "../../types/Config";
+import type { OnAction } from "../../types/OnAction";
 import { Button } from "../Button";
 
 import { Plugin } from "../../types/Plugin";
@@ -59,6 +60,7 @@ export function Puck<UserConfig extends Config = Config>({
   onChange,
   onPublish,
   onSelectionChange,
+  onAction,
   plugins = [],
   overrides = {},
   renderHeader,
@@ -81,6 +83,7 @@ export function Puck<UserConfig extends Config = Config>({
   onSelectionChange?: (
     selectedItem: { id: string; type: string } | null
   ) => void;
+  onAction?: OnAction;
   plugins?: Plugin[];
   overrides?: Partial<Overrides>;
   renderHeader?: (props: {
@@ -107,7 +110,7 @@ export function Puck<UserConfig extends Config = Config>({
   const historyStore = useHistoryStore(initialHistory);
 
   const [reducer] = useState(() =>
-    createReducer<UserConfig>({ config, record: historyStore.record })
+    createReducer<UserConfig>({ config, record: historyStore.record, onAction })
   );
 
   const [initialAppState] = useState<AppState>(() => {
