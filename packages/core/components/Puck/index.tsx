@@ -58,6 +58,7 @@ export function Puck<UserConfig extends Config = Config>({
   ui: initialUi,
   onChange,
   onPublish,
+  onSelectionChange,
   plugins = [],
   overrides = {},
   renderHeader,
@@ -77,6 +78,7 @@ export function Puck<UserConfig extends Config = Config>({
   ui?: Partial<UiState>;
   onChange?: (data: Data) => void;
   onPublish?: (data: Data) => void;
+  onSelectionChange?: (itemSelector: { id: string, type: string } | null) => void;
   plugins?: Plugin[];
   overrides?: Partial<Overrides>;
   renderHeader?: (props: {
@@ -234,6 +236,12 @@ export function Puck<UserConfig extends Config = Config>({
   );
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
+
+  useEffect(() => {
+    if (onSelectionChange) {
+      onSelectionChange(selectedItem ? { id: selectedItem.props.id, type: selectedItem.type.toString() } : null);
+    }
+  }, [selectedItem?.props?.id]);
 
   useEffect(() => {
     if (onChange) onChange(data);
