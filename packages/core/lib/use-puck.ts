@@ -16,6 +16,8 @@ export const usePuck = () => {
     history: {
       back: history.back!,
       forward: history.forward!,
+      setHistories: history.setHistories!,
+      setHistoryIndex: history.setHistoryIndex!,
       hasPast: history.historyStore!.hasPast,
       hasFuture: history.historyStore!.hasFuture,
       histories: history.historyStore!.histories,

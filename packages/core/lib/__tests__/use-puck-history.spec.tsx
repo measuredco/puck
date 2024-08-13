@@ -12,6 +12,8 @@ const historyStore = {
   nextHistory: { data: null },
   back: jest.fn(),
   forward: jest.fn(),
+  setHistories: jest.fn(),
+  setHistoryIndex: jest.fn(),
 } as unknown as HistoryStore;
 
 const initialAppState = defaultAppState;
@@ -98,5 +100,85 @@ describe("use-puck-history", () => {
       type: "set",
       state: historyStore.nextHistory?.data,
     });
+  });
+
+  test("setHistories calls dispatch to last history item", () => {
+    const { result } = renderHook(() =>
+      usePuckHistory({ dispatch, initialAppState, historyStore })
+    );
+
+    const updatedHistories = [
+      {
+        id: "1",
+        data: {
+          one: "foo 1",
+          two: "bar 1",
+        },
+      },
+      {
+        id: "2",
+        data: {
+          one: "foo 2",
+          two: "bar 2",
+        },
+      },
+    ];
+
+    act(() => {
+      result.current.setHistories(updatedHistories);
+    });
+
+    expect(historyStore.setHistories).toHaveBeenCalled();
+    expect(dispatch).toHaveBeenCalledWith({
+      type: "set",
+      state: updatedHistories[1].data,
+    });
+  });
+
+  test("setHistoryIndex calls dispatch on the history at that index", () => {
+    const updatedHistories = [
+      {
+        id: "1",
+        data: {
+          one: "foo 1",
+          two: "bar 1",
+        },
+      },
+      {
+        id: "2",
+        data: {
+          one: "foo 2",
+          two: "bar 2",
+        },
+      },
+    ];
+    historyStore.histories = updatedHistories;
+
+    const { result } = renderHook(() =>
+      usePuckHistory({ dispatch, initialAppState, historyStore })
+    );
+
+    act(() => {
+      result.current.setHistoryIndex(0);
+    });
+
+    expect(historyStore.setHistoryIndex).toHaveBeenCalled();
+    expect(dispatch).toHaveBeenCalledWith({
+      type: "set",
+      state: updatedHistories[0].data,
+    });
+  });
+
+  test("setHistoryIndex does not call dispatch when index out of bounds", () => {
+    const { result } = renderHook(() =>
+      usePuckHistory({ dispatch, initialAppState, historyStore })
+    );
+
+    act(() => {
+      result.current.setHistoryIndex(5);
+    });
+
+    expect(historyStore.setHistoryIndex).not.toHaveBeenCalled();
+    expect(dispatch).not.toHaveBeenCalled();
   });
 });

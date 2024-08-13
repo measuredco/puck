@@ -21,6 +21,8 @@ export type HistoryStore<D = any> = {
   currentHistory: History;
   nextHistory: History<D> | null;
   prevHistory: History<D> | null;
+  setHistories: (histories: History[]) => void;
+  setHistoryIndex: (index: number) => void;
 };
 
 const EMPTY_HISTORY_INDEX = -1;
@@ -32,6 +34,12 @@ export function useHistoryStore<D = any>(initialHistory?: {
   const [histories, setHistories] = useState<History<D>[]>(
     initialHistory?.histories ?? []
   );
+
+  // Exported as setHistories so that the index gets automatically updated.
+  const updateHistories = (histories: History<D>[]) => {
+    setHistories(histories);
+    setIndex(histories.length - 1);
+  };
 
   const [index, setIndex] = useState(
     initialHistory?.index ?? EMPTY_HISTORY_INDEX
@@ -50,13 +58,7 @@ export function useHistoryStore<D = any>(initialHistory?: {
       id: generateId("history"),
     };
 
-    setHistories((prev) => {
-      const newVal = [...prev.slice(0, index + 1), history];
-
-      setIndex(newVal.length - 1);
-
-      return newVal;
-    });
+    updateHistories([...histories.slice(0, index + 1), history]);
   }, 250);
 
   const back = () => {
@@ -78,5 +80,7 @@ export function useHistoryStore<D = any>(initialHistory?: {
     nextHistory,
     prevHistory,
     histories,
+    setHistories: updateHistories,
+    setHistoryIndex: setIndex,
   };
 }
