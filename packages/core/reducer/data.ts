@@ -11,7 +11,7 @@ import {
   removeRelatedZones,
 } from "../lib/reduce-related-zones";
 import { generateId } from "../lib/generate-id";
-import { PuckAction, ReplaceAction } from "./actions";
+import { InsertAction, PuckAction, ReplaceAction } from "./actions";
 
 // Restore unregistered zones when re-registering in same session
 export const zoneCache = {};
@@ -43,40 +43,48 @@ export const replaceAction = (data: Data, action: ReplaceAction) => {
   };
 };
 
-export const reduceData = (data: Data, action: PuckAction, config: Config) => {
-  if (action.type === "insert") {
-    const emptyComponentData = {
-      type: action.componentType,
-      props: {
-        ...(config.components[action.componentType].defaultProps || {}),
-        id: generateId(action.componentType),
-      },
-    };
+export const insertAction = (
+  data: Data,
+  action: InsertAction,
+  config: Config
+) => {
+  const emptyComponentData = {
+    type: action.componentType,
+    props: {
+      ...(config.components[action.componentType].defaultProps || {}),
+      id: action.id || generateId(action.componentType),
+    },
+  };
 
-    if (action.destinationZone === rootDroppableId) {
-      return {
-        ...data,
-        content: insert(
-          data.content,
-          action.destinationIndex,
-          emptyComponentData
-        ),
-      };
-    }
-
-    const newData = setupZone(data, action.destinationZone);
-
+  if (action.destinationZone === rootDroppableId) {
     return {
       ...data,
-      zones: {
-        ...newData.zones,
-        [action.destinationZone]: insert(
-          newData.zones[action.destinationZone],
-          action.destinationIndex,
-          emptyComponentData
-        ),
-      },
+      content: insert(
+        data.content,
+        action.destinationIndex,
+        emptyComponentData
+      ),
     };
+  }
+
+  const newData = setupZone(data, action.destinationZone);
+
+  return {
+    ...data,
+    zones: {
+      ...newData.zones,
+      [action.destinationZone]: insert(
+        newData.zones[action.destinationZone],
+        action.destinationIndex,
+        emptyComponentData
+      ),
+    },
+  };
+};
+
+export const reduceData = (data: Data, action: PuckAction, config: Config) => {
+  if (action.type === "insert") {
+    return insertAction(data, action, config);
   }
 
   if (action.type === "duplicate") {

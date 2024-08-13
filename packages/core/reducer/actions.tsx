@@ -5,6 +5,7 @@ export type InsertAction = {
   componentType: string;
   destinationIndex: number;
   destinationZone: string;
+  id?: string;
 };
 
 export type DuplicateAction = {
