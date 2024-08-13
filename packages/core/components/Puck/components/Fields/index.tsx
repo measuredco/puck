@@ -16,6 +16,8 @@ import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 import { getChanged } from "../../../../lib/get-changed";
+import { overlayActions } from "../../../../lib/overlay-actions";
+import { Lock } from "lucide-react";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -154,135 +156,171 @@ export const Fields = () => {
   // DEPRECATED
   const rootProps = data.root.props || data.root;
 
+  const isEditable = selectedItem
+    ? overlayActions(config.components[selectedItem.type], selectedItem)
+        .isEditable
+    : overlayActions(config.root, data?.root).isEditable;
+
   const Wrapper = useMemo(() => overrides.fields || DefaultFields, [overrides]);
 
   return (
-    <form
-      className={getClassName()}
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-    >
-      <Wrapper isLoading={isLoading} itemSelector={itemSelector}>
-        {Object.keys(fields).map((fieldName) => {
-          const field = fields[fieldName];
+    <div {...{ inert: !isEditable ? "" : undefined }}>
+      {!isEditable && (
+        <>
+          <div
+            style={{
+              background: "rgba(255, 255,255, .9)",
+              display: "flex",
+              position: "absolute",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 90,
+              width: "100%",
+              height: "100%",
+            }}
+          />
+          <div
+            style={{
+              display: "flex",
+              position: "absolute",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 100,
+              width: "100%",
+              height: "70vh",
+            }}
+          >
+            <Lock />
+          </div>
+        </>
+      )}
+      <form
+        className={getClassName()}
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <Wrapper isLoading={isLoading} itemSelector={itemSelector}>
+          {Object.keys(fields).map((fieldName) => {
+            const field = fields[fieldName];
 
-          if (!field?.type) return null;
+            if (!field?.type) return null;
 
-          const onChange = (value: any, updatedUi?: Partial<UiState>) => {
-            let currentProps;
+            const onChange = (value: any, updatedUi?: Partial<UiState>) => {
+              let currentProps;
 
-            if (selectedItem) {
-              currentProps = selectedItem.props;
-            } else {
-              currentProps = rootProps;
-            }
-
-            const newProps = {
-              ...currentProps,
-              [fieldName]: value,
-            };
-
-            if (itemSelector) {
-              const replaceActionData: ReplaceAction = {
-                type: "replace",
-                destinationIndex: itemSelector.index,
-                destinationZone: itemSelector.zone || rootDroppableId,
-                data: { ...selectedItem, props: newProps },
-              };
-
-              // We use `replace` action, then feed into `set` action so we can also process any UI changes
-              const replacedData = replaceAction(data, replaceActionData);
-
-              const setActionData: SetAction = {
-                type: "set",
-                state: {
-                  data: { ...data, ...replacedData },
-                  ui: { ...ui, ...updatedUi },
-                },
-              };
-
-              // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-              if (config.components[selectedItem!.type]?.resolveData) {
-                resolveData(setAction(state, setActionData));
+              if (selectedItem) {
+                currentProps = selectedItem.props;
               } else {
-                dispatch({
-                  ...setActionData,
-                  recordHistory: true,
-                });
+                currentProps = rootProps;
               }
-            } else {
-              if (data.root.props) {
-                // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-                if (config.root?.resolveData) {
-                  resolveData({
+
+              const newProps = {
+                ...currentProps,
+                [fieldName]: value,
+              };
+
+              if (itemSelector) {
+                const replaceActionData: ReplaceAction = {
+                  type: "replace",
+                  destinationIndex: itemSelector.index,
+                  destinationZone: itemSelector.zone || rootDroppableId,
+                  data: { ...selectedItem, props: newProps },
+                };
+
+                // We use `replace` action, then feed into `set` action so we can also process any UI changes
+                const replacedData = replaceAction(data, replaceActionData);
+
+                const setActionData: SetAction = {
+                  type: "set",
+                  state: {
+                    data: { ...data, ...replacedData },
                     ui: { ...ui, ...updatedUi },
-                    data: {
-                      ...data,
-                      root: { props: newProps },
-                    },
-                  });
+                  },
+                };
+
+                // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
+                if (config.components[selectedItem!.type]?.resolveData) {
+                  resolveData(setAction(state, setActionData));
                 } else {
                   dispatch({
-                    type: "set",
-                    state: {
+                    ...setActionData,
+                    recordHistory: true,
+                  });
+                }
+              } else {
+                if (data.root.props) {
+                  // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
+                  if (config.root?.resolveData) {
+                    resolveData({
                       ui: { ...ui, ...updatedUi },
                       data: {
                         ...data,
                         root: { props: newProps },
                       },
-                    },
-                    recordHistory: true,
+                    });
+                  } else {
+                    dispatch({
+                      type: "set",
+                      state: {
+                        ui: { ...ui, ...updatedUi },
+                        data: {
+                          ...data,
+                          root: { props: newProps },
+                        },
+                      },
+                      recordHistory: true,
+                    });
+                  }
+                } else {
+                  // DEPRECATED
+                  dispatch({
+                    type: "setData",
+                    data: { root: newProps },
                   });
                 }
-              } else {
-                // DEPRECATED
-                dispatch({
-                  type: "setData",
-                  data: { root: newProps },
-                });
               }
+            };
+
+            if (selectedItem && itemSelector) {
+              const { readOnly = {} } = selectedItem;
+
+              return (
+                <AutoFieldPrivate
+                  key={`${selectedItem.props.id}_${fieldName}`}
+                  field={field}
+                  name={fieldName}
+                  id={`${selectedItem.props.id}_${fieldName}`}
+                  readOnly={readOnly[fieldName]}
+                  value={selectedItem.props[fieldName]}
+                  onChange={onChange}
+                />
+              );
+            } else {
+              const { readOnly = {} } = data.root;
+
+              return (
+                <AutoFieldPrivate
+                  key={`page_${fieldName}`}
+                  field={field}
+                  name={fieldName}
+                  id={`root_${fieldName}`}
+                  readOnly={readOnly[fieldName]}
+                  value={rootProps[fieldName]}
+                  onChange={onChange}
+                />
+              );
             }
-          };
-
-          if (selectedItem && itemSelector) {
-            const { readOnly = {} } = selectedItem;
-
-            return (
-              <AutoFieldPrivate
-                key={`${selectedItem.props.id}_${fieldName}`}
-                field={field}
-                name={fieldName}
-                id={`${selectedItem.props.id}_${fieldName}`}
-                readOnly={readOnly[fieldName]}
-                value={selectedItem.props[fieldName]}
-                onChange={onChange}
-              />
-            );
-          } else {
-            const { readOnly = {} } = data.root;
-
-            return (
-              <AutoFieldPrivate
-                key={`page_${fieldName}`}
-                field={field}
-                name={fieldName}
-                id={`root_${fieldName}`}
-                readOnly={readOnly[fieldName]}
-                value={rootProps[fieldName]}
-                onChange={onChange}
-              />
-            );
-          }
-        })}
-      </Wrapper>
-      {isLoading && (
-        <div className={getClassName("loadingOverlay")}>
-          <div className={getClassName("loadingOverlayInner")}>
-            <Loader size={16} />
+          })}
+        </Wrapper>
+        {isLoading && (
+          <div className={getClassName("loadingOverlay")}>
+            <div className={getClassName("loadingOverlayInner")}>
+              <Loader size={16} />
+            </div>
           </div>
-        </div>
-      )}
-    </form>
+        )}
+      </form>
+    </div>
   );
 };

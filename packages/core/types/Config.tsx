@@ -11,6 +11,7 @@ type WithPuckProps<Props> = Props & {
 export type DefaultRootProps = {
   title?: string;
   [key: string]: any;
+  overlayActions?: OverlayActions;
 };
 
 export type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
@@ -37,6 +38,7 @@ export type ComponentConfig<
   label?: string;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
+  overlayActions?: OverlayActions;
   resolveFields?: (
     data: DataShape,
     params: {
@@ -69,6 +71,13 @@ type Category<ComponentName> = {
   title?: string;
   visible?: boolean;
   defaultExpanded?: boolean;
+};
+
+export type OverlayActions = {
+  isEditable?: boolean;
+  isDuplicatable?: boolean;
+  isDeleteable?: boolean;
+  isDraggable?: boolean;
 };
 
 export type Config<
@@ -105,12 +114,14 @@ export type ComponentData<
 > = {
   type: keyof Props;
   props: WithPuckProps<Props>;
+  overlayActions?: OverlayActions;
 } & BaseData<Props>;
 
 export type RootDataWithProps<
   Props extends DefaultRootProps = DefaultRootProps
 > = BaseData<Props> & {
   props: Props;
+  overlayActions?: OverlayActions;
 };
 
 // DEPRECATED

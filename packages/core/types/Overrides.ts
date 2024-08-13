@@ -1,6 +1,8 @@
 import { ReactElement, ReactNode } from "react";
 import { Field, FieldProps } from "./Fields";
 import { ItemSelector } from "../lib/get-item";
+import { AppState } from "./Config";
+import { PuckAction } from "../reducer/actions";
 
 // Plugins can use `usePuck` instead of relying on props
 type RenderFunc<
@@ -28,6 +30,11 @@ export type Overrides = OverridesGeneric<{
   fieldTypes: Partial<FieldRenderFunctions>;
   header: RenderFunc<{ actions: ReactNode; children: ReactNode }>;
   headerActions: RenderFunc<{ children: ReactNode }>;
+  overlayActions: RenderFunc<{
+    children: ReactNode;
+    state: AppState;
+    dispatch: (action: PuckAction) => void;
+  }>;
   preview: RenderFunc;
   fields: RenderFunc<{
     children: ReactNode;

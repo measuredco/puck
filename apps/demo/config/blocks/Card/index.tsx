@@ -30,6 +30,9 @@ export type CardProps = {
 };
 
 export const Card: ComponentConfig<CardProps> = {
+  overlayActions: {
+    isDraggable: false,
+  },
   fields: {
     title: { type: "text" },
     description: { type: "textarea" },

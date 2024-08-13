@@ -11,6 +11,7 @@ import { getZoneId } from "../../lib/get-zone-id";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
 import { ComponentConfig, PuckContext } from "../../types/Config";
+import { overlayActions } from "../../lib/overlay-actions";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -255,6 +256,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                         index={i}
                         isSelected={isSelected}
                         isLocked={userIsDragging}
+                        overlayActions={overlayActions(componentConfig, item)}
                         forceHover={
                           hoveringComponent === componentId && !userIsDragging
                         }
@@ -266,6 +268,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                         isLoading={
                           appContext.componentState[componentId]?.loading
                         }
+                        dispatch={dispatch}
                         onMount={() => {
                           ctx.registerPath!({
                             index: i,

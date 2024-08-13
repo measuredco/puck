@@ -92,6 +92,12 @@ export const initialData: Record<string, Data> = {
           padding: "128px",
           align: "left",
         },
+        overlayActions: {
+          isDraggable: false,
+          isEditable: false,
+          isDeleteable: false,
+          isDuplicatable: false,
+        },
       },
       {
         type: "VerticalSpace",

@@ -5,6 +5,8 @@ import headingAnalyzer from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config, { UserConfig } from "../../config";
 import { useDemoData } from "../../lib/use-demo-data";
 
+import { Lock, Unlock } from "lucide-react";
+
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const { data, resolvedData, key } = useDemoData({
     path,
@@ -30,10 +32,54 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                     View page
                   </Button>
                 </div>
-
                 {children}
               </>
             ),
+            overlayActions: ({ children, state, dispatch }) => {
+              let newData = { ...state.data };
+
+              let isEditable = false;
+              if (state.ui.itemSelector) {
+                const index = state.ui.itemSelector.index;
+
+                const updatedContent = [...newData.content];
+                const updatedActions = {
+                  ...updatedContent[index].overlayActions,
+                };
+
+                isEditable = !updatedActions.isEditable;
+                updatedActions.isEditable = isEditable;
+                updatedContent[index] = {
+                  ...updatedContent[index],
+                  overlayActions: updatedActions,
+                };
+
+                newData.content = updatedContent;
+              }
+
+              return (
+                <>
+                  <div
+                    style={{
+                      display: "flex",
+                    }}
+                  >
+                    <button
+                      className={"styles_DraggableComponent-action__LbbWP"}
+                      onClick={() => {
+                        dispatch({
+                          type: "setData",
+                          data: newData,
+                        });
+                      }}
+                    >
+                      {isEditable ? <Unlock size={16} /> : <Lock size={16} />}
+                    </button>
+                  </div>
+                  {children}
+                </>
+              );
+            },
           }}
         />
       </div>

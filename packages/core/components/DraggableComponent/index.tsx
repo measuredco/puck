@@ -3,6 +3,7 @@ import {
   ReactNode,
   SyntheticEvent,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { Draggable } from "@measured/dnd";
@@ -14,6 +15,9 @@ import { isIos } from "../../lib/is-ios";
 import { useAppContext } from "../Puck/context";
 import { DefaultDraggable } from "../Draggable";
 import { Loader } from "../Loader";
+import { OverlayActions } from "../../types/Config";
+import { loadOverrides } from "../../lib/load-overrides";
+import { PuckAction } from "../../reducer";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -29,8 +33,10 @@ export const DraggableComponent = ({
   index,
   isLoading = false,
   isSelected = false,
+  overlayActions,
   onClick = () => null,
   onMount = () => null,
+  dispatch = () => null,
   onMouseDown = () => null,
   onMouseUp = () => null,
   onMouseOver = () => null,
@@ -49,7 +55,9 @@ export const DraggableComponent = ({
   id: string;
   index: number;
   isSelected?: boolean;
+  overlayActions?: OverlayActions;
   onClick?: (e: SyntheticEvent) => void;
+  dispatch: (action: PuckAction) => void;
   onMount?: () => void;
   onMouseDown?: (e: SyntheticEvent) => void;
   onMouseUp?: (e: SyntheticEvent) => void;
@@ -66,10 +74,8 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
-  const { zoomConfig } = useAppContext();
+  const { zoomConfig, status, overrides, plugins, state } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
-
-  const { status } = useAppContext();
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
 
@@ -85,12 +91,32 @@ export const DraggableComponent = ({
     }
   }, []);
 
+  const defaultRender = useMemo<
+    React.FunctionComponent<{ children?: ReactNode }>
+  >(() => {
+    const PuckDefault = ({ children }: { children?: ReactNode }) => (
+      <>{children}</>
+    );
+
+    return PuckDefault;
+  }, []);
+
+  // Load all plugins into the overrides
+  const loadedOverrides = useMemo(() => {
+    return loadOverrides({ overrides, plugins });
+  }, [plugins]);
+
+  const CustomActionsOverlay = useMemo(
+    () => loadedOverrides.overlayActions || defaultRender,
+    [loadedOverrides]
+  );
+
   return (
     <El
       key={id}
       draggableId={id}
       index={index}
-      isDragDisabled={isDragDisabled}
+      isDragDisabled={!overlayActions?.isDraggable || isDragDisabled}
       disableSecondaryAnimation={disableSecondaryAnimation}
     >
       {(provided, snapshot) => (
@@ -109,7 +135,7 @@ export const DraggableComponent = ({
           style={{
             ...style,
             ...provided.draggableProps.style,
-            cursor: isModifierHeld ? "initial" : "grab",
+            cursor: isDragDisabled || isModifierHeld ? "initial" : "grab",
           }}
           onMouseOver={onMouseOver}
           onMouseOut={onMouseOut}
@@ -141,12 +167,35 @@ export const DraggableComponent = ({
               {label && (
                 <div className={getClassName("actionsLabel")}>{label}</div>
               )}
-              <button className={getClassName("action")} onClick={onDuplicate}>
-                <Copy size={16} />
-              </button>
-              <button className={getClassName("action")} onClick={onDelete}>
-                <Trash size={16} />
-              </button>
+              {(loadedOverrides.overlayActions ||
+                overlayActions?.isDuplicatable ||
+                overlayActions?.isDeleteable) && (
+                <div className={getClassName("actionsWrapper")}>
+                  <CustomActionsOverlay state={state} dispatch={dispatch}>
+                    {
+                      <>
+                        {overlayActions?.isDuplicatable && (
+                          <button
+                            className={getClassName("action")}
+                            onClick={onDuplicate}
+                          >
+                            <Copy size={16} />
+                          </button>
+                        )}
+
+                        {overlayActions?.isDeleteable && (
+                          <button
+                            className={getClassName("action")}
+                            onClick={onDelete}
+                          >
+                            <Trash size={16} />
+                          </button>
+                        )}
+                      </>
+                    }
+                  </CustomActionsOverlay>
+                </div>
+              )}
             </div>
           </div>
           <div className={getClassName("overlay")} />

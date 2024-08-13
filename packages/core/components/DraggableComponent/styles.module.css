@@ -132,11 +132,19 @@
   justify-content: center;
   align-items: center;
   padding-left: 8px;
-  padding-right: 16px;
-  margin-right: 8px;
-  border-right: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
+  padding-right: 8px;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-height: 24px;
+}
+
+.DraggableComponent-actionsWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 8px;
+  margin-left: 8px;
+  border-left: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
 }
 
 .DraggableComponent-action {
