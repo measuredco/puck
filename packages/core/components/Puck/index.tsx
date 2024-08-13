@@ -48,6 +48,7 @@ import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types/Viewports";
 import { DragDropContext } from "../DragDropContext";
 import { IframeConfig } from "../../types/IframeConfig";
+import { insertComponent } from "../../lib/insert-component";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -426,17 +427,12 @@ export function Puck<UserConfig extends Config = Config>({
             ) {
               const [_, componentType] = droppedItem.draggableId.split("::");
 
-              dispatch({
-                type: "insert",
-                componentType: componentType || droppedItem.draggableId,
-                destinationIndex: droppedItem.destination!.index,
-                destinationZone: droppedItem.destination.droppableId,
-              });
-
-              setItemSelector({
-                index: droppedItem.destination!.index,
-                zone: droppedItem.destination.droppableId,
-              });
+              insertComponent(
+                componentType || droppedItem.draggableId,
+                droppedItem.destination.droppableId,
+                droppedItem.destination!.index,
+                { config, dispatch, resolveData, state: appState }
+              );
 
               return;
             } else {
