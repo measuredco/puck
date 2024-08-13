@@ -6,6 +6,7 @@ import config, { UserConfig } from "../../config";
 import { useDemoData } from "../../lib/use-demo-data";
 
 import { Lock, Unlock } from "lucide-react";
+import { overlayActions } from "@/core/lib/overlay-actions";
 
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const { data, resolvedData, key } = useDemoData({
@@ -36,25 +37,40 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
               </>
             ),
             overlayActions: ({ children, state, dispatch }) => {
-              let newData = { ...state.data };
+              // Deep copy state.data using JSON methods
+              let newData = JSON.parse(JSON.stringify(state.data));
 
-              let isEditable = false;
+              let isEditable = true;
               if (state.ui.itemSelector) {
+                let content = newData.content;
                 const index = state.ui.itemSelector.index;
 
-                const updatedContent = [...newData.content];
+                if (state.ui.itemSelector.zone !== "default-zone") {
+                  content = newData.zones[state.ui.itemSelector.zone];
+                }
+
+                isEditable =
+                  content[index].overlayActions?.isEditable !== undefined
+                    ? content[index].overlayActions.isEditable
+                    : true;
+
+                const updatedContent = JSON.parse(JSON.stringify(content));
+
                 const updatedActions = {
                   ...updatedContent[index].overlayActions,
                 };
 
-                isEditable = !updatedActions.isEditable;
-                updatedActions.isEditable = isEditable;
+                updatedActions.isEditable = !isEditable;
                 updatedContent[index] = {
                   ...updatedContent[index],
                   overlayActions: updatedActions,
                 };
 
-                newData.content = updatedContent;
+                if (state.ui.itemSelector.zone !== "default-zone") {
+                  newData.zones[state.ui.itemSelector.zone] = updatedContent;
+                } else {
+                  newData.content = updatedContent;
+                }
               }
 
               return (
@@ -73,7 +89,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                         });
                       }}
                     >
-                      {isEditable ? <Unlock size={16} /> : <Lock size={16} />}
+                      {!isEditable ? <Unlock size={16} /> : <Lock size={16} />}
                     </button>
                   </div>
                   {children}
