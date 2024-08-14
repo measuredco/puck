@@ -209,6 +209,12 @@ export function Puck<UserConfig extends Config = Config>({
     flushZones(initialAppState)
   );
 
+  // Incorporate the initialHistory into the appState
+  appState.data = {
+    ...appState.data,
+    ...historyStore.histories[historyStore.index]?.data?.data,
+  };
+
   const { data, ui } = appState;
 
   const history = usePuckHistory({ dispatch, initialAppState, historyStore });
