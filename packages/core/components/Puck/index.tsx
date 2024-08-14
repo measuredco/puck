@@ -209,12 +209,6 @@ export function Puck<UserConfig extends Config = Config>({
     flushZones(initialAppState)
   );
 
-  // Incorporate the initialHistory into the appState
-  appState.data = {
-    ...appState.data,
-    ...historyStore.histories[historyStore.index]?.data?.data,
-  };
-
   const { data, ui } = appState;
 
   const history = usePuckHistory({ dispatch, initialAppState, historyStore });
@@ -222,7 +216,8 @@ export function Puck<UserConfig extends Config = Config>({
   const { resolveData, componentState } = useResolvedData(
     appState,
     config,
-    dispatch
+    dispatch,
+    historyStore.histories[historyStore.index]?.data
   );
 
   const [menuOpen, setMenuOpen] = useState(false);

@@ -8,7 +8,8 @@ import { resolveRootData } from "./resolve-root-data";
 export const useResolvedData = (
   appState: AppState,
   config: Config,
-  dispatch: Dispatch<PuckAction>
+  dispatch: Dispatch<PuckAction>,
+  historyState?: AppState
 ) => {
   const [{ resolverKey, newAppState }, setResolverState] = useState({
     resolverKey: 0,
@@ -79,6 +80,22 @@ export const useResolvedData = (
     };
 
     const promises: Promise<void>[] = [];
+
+    // Resolve the initialHistory with the appState
+    if (historyState) {
+      promises.push(
+        (async () => {
+          dispatch({
+            type: "set",
+            state: (prev) => ({
+              ...prev,
+              ...historyState,
+            }),
+            recordHistory: resolverKey > 0,
+          });
+        })()
+      );
+    }
 
     promises.push(
       (async () => {
