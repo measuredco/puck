@@ -164,7 +164,9 @@ Configure the iframe behaviour.
 export function Editor() {
   return (
     <Puck
-      iframe={{ enabled: false }}
+      iframe={{
+        enabled: false,
+      }}
       // ...
     />
   );
@@ -173,15 +175,28 @@ export function Editor() {
 
 #### iframe params
 
-| Param                 | Example          | Type    | Status |
-| --------------------- | ---------------- | ------- | ------ |
-| [`enabled`](#enabled) | `enabled: false` | boolean | -      |
+| Param                               | Example                                                                                                                              | Type    | Status |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------- | ------ |
+| [`enabled`](#enabled)               | `enabled: false`                                                                                                                     | boolean | -      |
+| [`initialContent`](#initialContent) | `'<!DOCTYPE html><html><head><style>body { background: hotpink; }</style></head><body><div class="frame-root"></div></body></html>'` | string  | -      |
 
 ##### `enabled`
 
 Render the Puck preview within iframe. Defaults to `true`.
 
 Disabling iframes will also disable [viewports](#viewports).
+
+##### `initialContent`
+
+Allows injection and styling of the initial iframe component. Defaults to `undefined`
+
+In order for Puck to load as required, the `<body>` tag must contain the following `<div>`
+
+```html
+<div class="frame-root"></div>
+```
+
+iframes need to be enabled in order for this to load and `enabled: true` flag must be set.
 
 ### `initialHistory`
 

@@ -53,10 +53,12 @@ const CopyHostStyles = ({
   children,
   debug = false,
   onStylesLoaded = () => null,
+  initialContent,
 }: {
   children: ReactNode;
   debug?: boolean;
   onStylesLoaded?: () => void;
+  initialContent?: string;
 }) => {
   const { document: doc, window: win } = useFrame();
 
@@ -270,6 +272,14 @@ const CopyHostStyles = ({
       // Reset HTML (inside the promise) so in case running twice (i.e. for React Strict mode)
       doc.head.innerHTML = "";
 
+      if (initialContent) {
+        const initialContentDoc = new DOMParser().parseFromString(
+          initialContent,
+          "text/html"
+        );
+        doc.head.innerHTML = initialContentDoc.head.innerHTML;
+      }
+
       // Inject initial values in bulk
       doc.head.append(...filtered);
 
@@ -297,12 +307,22 @@ export type AutoFrameProps = FrameComponentProps & {
 
 const AutoFrameComponent = React.forwardRef<HTMLIFrameElement, AutoFrameProps>(
   function (
-    { children, debug, onStylesLoaded, ...props }: AutoFrameProps,
+    {
+      children,
+      debug,
+      onStylesLoaded,
+      initialContent,
+      ...props
+    }: AutoFrameProps,
     ref
   ) {
     return (
-      <Frame {...props} ref={ref}>
-        <CopyHostStyles debug={debug} onStylesLoaded={onStylesLoaded}>
+      <Frame {...props} ref={ref} initialContent={initialContent}>
+        <CopyHostStyles
+          debug={debug}
+          onStylesLoaded={onStylesLoaded}
+          initialContent={initialContent}
+        >
           {children}
         </CopyHostStyles>
       </Frame>
