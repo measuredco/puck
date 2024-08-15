@@ -330,7 +330,7 @@ function DropZoneEdit({
   );
 }
 
-function DropZoneRender({ zone }: DropZoneProps) {
+function DropZoneRender({ className, style, zone }: DropZoneProps) {
   const ctx = useContext(dropZoneContext);
 
   const { data, areaId = "root", config } = ctx || {};
@@ -348,7 +348,7 @@ function DropZoneRender({ zone }: DropZoneProps) {
   }
 
   return (
-    <>
+    <div className={className} style={style}>
       {content.map((item) => {
         const Component = config.components[item.type];
 
@@ -374,7 +374,7 @@ function DropZoneRender({ zone }: DropZoneProps) {
 
         return null;
       })}
-    </>
+    </div>
   );
 }
 
