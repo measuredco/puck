@@ -303,7 +303,7 @@ export function Puck<UserConfig extends Config = Config>({
     };
   }, []);
 
-  const defaultRender = useDefaultRender()
+  const defaultRender = useDefaultRender();
 
   // DEPRECATED
   const defaultHeaderRender = useMemo(() => {
@@ -348,7 +348,10 @@ export function Puck<UserConfig extends Config = Config>({
   }, [renderHeader]);
 
   // Load all plugins into the overrides
-  const loadedOverrides = useLoadedOverrides({ overrides: overrides, plugins: plugins})
+  const loadedOverrides = useLoadedOverrides({
+    overrides: overrides,
+    plugins: plugins,
+  });
 
   const CustomPuck = useMemo(
     () => loadedOverrides.puck || defaultRender,
