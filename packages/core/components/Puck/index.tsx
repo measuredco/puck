@@ -51,6 +51,7 @@ import { IframeConfig } from "../../types/IframeConfig";
 import { insertComponent } from "../../lib/insert-component";
 import { useDefaultRender } from "../../lib/use-default-render";
 import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
+import { DefaultOverride } from "../DefaultOverride";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -303,8 +304,6 @@ export function Puck<UserConfig extends Config = Config>({
     };
   }, []);
 
-  const defaultRender = useDefaultRender();
-
   // DEPRECATED
   const defaultHeaderRender = useMemo(() => {
     if (renderHeader) {
@@ -325,7 +324,7 @@ export function Puck<UserConfig extends Config = Config>({
       return RenderHeader;
     }
 
-    return defaultRender;
+    return DefaultOverride;
   }, [renderHeader]);
 
   // DEPRECATED
@@ -344,7 +343,7 @@ export function Puck<UserConfig extends Config = Config>({
       return RenderHeader;
     }
 
-    return defaultRender;
+    return DefaultOverride;
   }, [renderHeader]);
 
   // Load all plugins into the overrides
@@ -354,7 +353,7 @@ export function Puck<UserConfig extends Config = Config>({
   });
 
   const CustomPuck = useMemo(
-    () => loadedOverrides.puck || defaultRender,
+    () => loadedOverrides.puck || DefaultOverride,
     [loadedOverrides]
   );
 
