@@ -40,7 +40,6 @@ import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
 import { Overrides } from "../../types/Overrides";
-import { loadOverrides } from "../../lib/load-overrides";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { useHistoryStore, type History } from "../../lib/use-history-store";
 import { Canvas } from "./components/Canvas";
@@ -49,7 +48,6 @@ import { Viewports } from "../../types/Viewports";
 import { DragDropContext } from "../DragDropContext";
 import { IframeConfig } from "../../types/IframeConfig";
 import { insertComponent } from "../../lib/insert-component";
-import { useDefaultRender } from "../../lib/use-default-render";
 import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 import { DefaultOverride } from "../DefaultOverride";
 
