@@ -14,6 +14,7 @@ import { isIos } from "../../lib/is-ios";
 import { useAppContext } from "../Puck/context";
 import { DefaultDraggable } from "../Draggable";
 import { Loader } from "../Loader";
+import { ActionBar } from "../ActionBar";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -138,15 +139,14 @@ export const DraggableComponent = ({
                 right: actionsRight / zoomConfig.zoom,
               }}
             >
-              {label && (
-                <div className={getClassName("actionsLabel")}>{label}</div>
-              )}
-              <button className={getClassName("action")} onClick={onDuplicate}>
-                <Copy size={16} />
-              </button>
-              <button className={getClassName("action")} onClick={onDelete}>
-                <Trash size={16} />
-              </button>
+              <ActionBar label={label}>
+                <ActionBar.Action onClick={onDuplicate}>
+                  <Copy size={16} />
+                </ActionBar.Action>
+                <ActionBar.Action onClick={onDelete}>
+                  <Trash size={16} />
+                </ActionBar.Action>
+              </ActionBar>
             </div>
           </div>
           <div className={getClassName("overlay")} />
