@@ -27,7 +27,7 @@
 }
 
 @media (min-width: 1024px) {
-  .Header-items  {
+  .Header-items {
     gap: 32px;
   }
 }
