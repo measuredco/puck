@@ -1,3 +1,4 @@
+
 .ActionBarComponent {
   display: flex;
   width: auto;
@@ -10,6 +11,7 @@
   font-family: var(--puck-font-family);
   gap: 4px;
 }
+
 
 .ActionBarComponent-actionsLabel {
   color: var(--puck-color-grey-08);

@@ -3,7 +3,6 @@ import {
   ReactNode,
   SyntheticEvent,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 import { Draggable } from "@measured/dnd";
@@ -15,9 +14,7 @@ import { isIos } from "../../lib/is-ios";
 import { useAppContext } from "../Puck/context";
 import { DefaultDraggable } from "../Draggable";
 import { Loader } from "../Loader";
-import { ActionBar } from "../ActionBar";
-import { DefaultOverride } from "../DefaultOverride";
-import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
+import { ActionBar } from "../ActionBar/ActionBar";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -26,18 +23,6 @@ const space = 8;
 const actionsOverlayTop = space * 6.5;
 const actionsTop = -(actionsOverlayTop - 8);
 const actionsRight = space;
-
-const DefaultActionBar = ({
-  label,
-  children,
-}: {
-  label: string | undefined;
-  children: ReactNode;
-}) => (
-  <ActionBar label={label}>
-    <DefaultOverride>{children}</DefaultOverride>
-  </ActionBar>
-);
 
 export const DraggableComponent = ({
   children,
@@ -82,8 +67,10 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
-  const { zoomConfig, status, overrides, plugins } = useAppContext();
+  const { zoomConfig } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
+
+  const { status } = useAppContext();
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
 
@@ -98,16 +85,6 @@ export const DraggableComponent = ({
       setDisableSecondaryAnimation(true);
     }
   }, []);
-
-  const loadedOverrides = useLoadedOverrides({
-    overrides: overrides,
-    plugins: plugins,
-  });
-
-  const CustomActionBar = useMemo(
-    () => loadedOverrides.actionBar || DefaultActionBar,
-    [loadedOverrides]
-  );
 
   return (
     <El
@@ -147,33 +124,31 @@ export const DraggableComponent = ({
               <Loader />
             </div>
           )}
-          {isSelected && (
+
+          <div
+            className={getClassName("actionsOverlay")}
+            style={{
+              top: actionsOverlayTop / zoomConfig.zoom,
+            }}
+          >
             <div
-              className={getClassName("actionsOverlay")}
+              className={getClassName("actions")}
               style={{
-                top: actionsOverlayTop / zoomConfig.zoom,
+                transform: `scale(${1 / zoomConfig.zoom}`,
+                top: actionsTop / zoomConfig.zoom,
+                right: actionsRight / zoomConfig.zoom,
               }}
             >
-              <div
-                className={getClassName("actions")}
-                style={{
-                  transform: `scale(${1 / zoomConfig.zoom}`,
-                  top: actionsTop / zoomConfig.zoom,
-                  right: actionsRight / zoomConfig.zoom,
-                }}
-              >
-                <CustomActionBar label={label}>
-                  <ActionBar.Action onClick={onDuplicate} label="Duplicate">
-                    <Copy size={16} />
-                  </ActionBar.Action>
-                  <ActionBar.Action onClick={onDelete} label="Delete">
-                    <Trash size={16} />
-                  </ActionBar.Action>
-                </CustomActionBar>
-              </div>
+              <ActionBar label={label}>
+                <ActionBar.Action onClick={onDuplicate}>
+                  <Copy size={16} />
+                </ActionBar.Action>
+                <ActionBar.Action onClick={onDuplicate}>
+                  <Trash size={16} />
+                </ActionBar.Action>
+              </ActionBar>
             </div>
-          )}
-
+          </div>
           <div className={getClassName("overlay")} />
           <div className={getClassName("contents")}>{children}</div>
         </div>
