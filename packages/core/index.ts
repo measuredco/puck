@@ -6,6 +6,7 @@ export * from "./types/Config";
 export * from "./types/Plugin";
 export * from "./types/Fields";
 
+export * from "./components/ActionBar";
 export * from "./components/AutoField";
 export * from "./components/Button";
 export { Drawer } from "./components/Drawer";

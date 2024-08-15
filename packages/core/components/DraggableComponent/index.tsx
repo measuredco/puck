@@ -14,7 +14,7 @@ import { isIos } from "../../lib/is-ios";
 import { useAppContext } from "../Puck/context";
 import { DefaultDraggable } from "../Draggable";
 import { Loader } from "../Loader";
-import { ActionBar } from "../ActionBar/ActionBar";
+import { ActionBar } from "../ActionBar";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -143,7 +143,7 @@ export const DraggableComponent = ({
                 <ActionBar.Action onClick={onDuplicate}>
                   <Copy size={16} />
                 </ActionBar.Action>
-                <ActionBar.Action onClick={onDuplicate}>
+                <ActionBar.Action onClick={onDelete}>
                   <Trash size={16} />
                 </ActionBar.Action>
               </ActionBar>

@@ -5,11 +5,9 @@ const getClassName = getClassNameFactory("ActionBarComponent", styles);
 
 export const ActionBar = ({
   label,
-  renderActions,
   children,
 }: {
   label?: string;
-  renderActions?: () => null;
   children?: ReactNode;
 }) => (
   <div className={getClassName()}>
