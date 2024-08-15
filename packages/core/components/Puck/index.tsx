@@ -49,6 +49,8 @@ import { Viewports } from "../../types/Viewports";
 import { DragDropContext } from "../DragDropContext";
 import { IframeConfig } from "../../types/IframeConfig";
 import { insertComponent } from "../../lib/insert-component";
+import { useDefaultRender } from "../../lib/use-default-render";
+import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -301,15 +303,7 @@ export function Puck<UserConfig extends Config = Config>({
     };
   }, []);
 
-  const defaultRender = useMemo<
-    React.FunctionComponent<{ children?: ReactNode }>
-  >(() => {
-    const PuckDefault = ({ children }: { children?: ReactNode }) => (
-      <>{children}</>
-    );
-
-    return PuckDefault;
-  }, []);
+  const defaultRender = useDefaultRender();
 
   // DEPRECATED
   const defaultHeaderRender = useMemo(() => {
@@ -354,9 +348,10 @@ export function Puck<UserConfig extends Config = Config>({
   }, [renderHeader]);
 
   // Load all plugins into the overrides
-  const loadedOverrides = useMemo(() => {
-    return loadOverrides({ overrides, plugins });
-  }, [plugins]);
+  const loadedOverrides = useLoadedOverrides({
+    overrides: overrides,
+    plugins: plugins,
+  });
 
   const CustomPuck = useMemo(
     () => loadedOverrides.puck || defaultRender,
