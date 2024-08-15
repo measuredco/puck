@@ -40,7 +40,6 @@ import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
 import { Overrides } from "../../types/Overrides";
-import { loadOverrides } from "../../lib/load-overrides";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { useHistoryStore, type History } from "../../lib/use-history-store";
 import { Canvas } from "./components/Canvas";
@@ -49,6 +48,8 @@ import { Viewports } from "../../types/Viewports";
 import { DragDropContext } from "../DragDropContext";
 import { IframeConfig } from "../../types/IframeConfig";
 import { insertComponent } from "../../lib/insert-component";
+import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
+import { DefaultOverride } from "../DefaultOverride";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -301,16 +302,6 @@ export function Puck<UserConfig extends Config = Config>({
     };
   }, []);
 
-  const defaultRender = useMemo<
-    React.FunctionComponent<{ children?: ReactNode }>
-  >(() => {
-    const PuckDefault = ({ children }: { children?: ReactNode }) => (
-      <>{children}</>
-    );
-
-    return PuckDefault;
-  }, []);
-
   // DEPRECATED
   const defaultHeaderRender = useMemo(() => {
     if (renderHeader) {
@@ -331,7 +322,7 @@ export function Puck<UserConfig extends Config = Config>({
       return RenderHeader;
     }
 
-    return defaultRender;
+    return DefaultOverride;
   }, [renderHeader]);
 
   // DEPRECATED
@@ -350,16 +341,17 @@ export function Puck<UserConfig extends Config = Config>({
       return RenderHeader;
     }
 
-    return defaultRender;
+    return DefaultOverride;
   }, [renderHeader]);
 
   // Load all plugins into the overrides
-  const loadedOverrides = useMemo(() => {
-    return loadOverrides({ overrides, plugins });
-  }, [plugins]);
+  const loadedOverrides = useLoadedOverrides({
+    overrides: overrides,
+    plugins: plugins,
+  });
 
   const CustomPuck = useMemo(
-    () => loadedOverrides.puck || defaultRender,
+    () => loadedOverrides.puck || DefaultOverride,
     [loadedOverrides]
   );
 
