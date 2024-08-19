@@ -27,7 +27,7 @@ const actionsOverlayTop = space * 6.5;
 const actionsTop = -(actionsOverlayTop - 8);
 const actionsRight = space;
 
-const DefaultActionBar = ({ label }) => (
+const DefaultActionBar = ({ label }: { label?: string }) => (
   <ActionBar label={label}>
     <DefaultOverride />
   </ActionBar>
