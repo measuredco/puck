@@ -281,6 +281,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     path,
     isEdit,
   });
+  const { appState } = usePuck();
 
   if (isEdit) {
     return (
@@ -294,7 +295,6 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             <div style={{ padding: 16 }}>{children}</div>
           ),
           actionBar: ({ children, label }) => {
-            const { appState } = usePuck();
             let data = {};
             if (appState.ui.itemSelector.zone === "default-zone") {
               data = appState.data.content[appState.ui.itemSelector.index];
