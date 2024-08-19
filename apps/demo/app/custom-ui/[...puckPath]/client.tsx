@@ -1,13 +1,13 @@
 "use client";
 
-import { Button, Data, Puck, Render } from "@/core";
+import { ActionBar, Button, Data, Puck, Render } from "@/core";
 import { HeadingAnalyzer } from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config, { UserConfig } from "../../../config";
 import { useDemoData } from "../../../lib/use-demo-data";
 import { IconButton, usePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Drawer } from "@/core/components/Drawer";
-import { ChevronUp, ChevronDown, Globe } from "lucide-react";
+import { ChevronUp, ChevronDown, Globe, Bug } from "lucide-react";
 
 const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
   const { appState, dispatch } = usePuck();
@@ -293,6 +293,34 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
           ),
+          actionBar: ({ children, label }) => {
+            const { appState } = usePuck();
+            let data = {};
+            if (appState.ui.itemSelector.zone === "default-zone") {
+              data = appState.data.content[appState.ui.itemSelector.index];
+            } else {
+              data =
+                appState.data.zones[appState.ui.itemSelector.zone][
+                  appState.ui.itemSelector.index
+                ];
+            }
+
+            const onClick = () => {
+              alert(
+                `ID: ${appState.ui.itemSelector.index} \nZone: ${
+                  appState.ui.itemSelector.zone
+                } \nData: ${JSON.stringify(data)}`
+              );
+            };
+            return (
+              <ActionBar label={label}>
+                <ActionBar.Action onClick={onClick} label="Debug information">
+                  <Bug size={16} />
+                </ActionBar.Action>
+                {children}
+              </ActionBar>
+            );
+          },
           components: () => {
             return (
               <Drawer direction="horizontal">
