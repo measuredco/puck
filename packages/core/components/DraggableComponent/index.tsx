@@ -159,10 +159,10 @@ export const DraggableComponent = ({
                 }}
               >
                 <CustomActionBar label={label}>
-                  <ActionBar.Action onClick={onDuplicate}>
+                  <ActionBar.Action onClick={onDuplicate} label="Duplicate">
                     <Copy size={16} />
                   </ActionBar.Action>
-                  <ActionBar.Action onClick={onDelete}>
+                  <ActionBar.Action onClick={onDelete} label="Delete">
                     <Trash size={16} />
                   </ActionBar.Action>
                 </CustomActionBar>
