@@ -27,6 +27,12 @@ const actionsOverlayTop = space * 6.5;
 const actionsTop = -(actionsOverlayTop - 8);
 const actionsRight = space;
 
+const DefaultActionBar = ({ label }) => (
+  <ActionBar label={label}>
+    <DefaultOverride />
+  </ActionBar>
+);
+
 export const DraggableComponent = ({
   children,
   id,
@@ -72,7 +78,7 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
-  const { zoomConfig, status, overrides, plugins } = useAppContext();
+  const { zoomConfig, status, overrides, plugins, state } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
@@ -93,12 +99,6 @@ export const DraggableComponent = ({
     overrides: overrides,
     plugins: plugins,
   });
-
-  const DefaultActionBar = () => (
-    <ActionBar label={label}>
-      <DefaultOverride />
-    </ActionBar>
-  );
 
   const CustomActionBar = useMemo(
     () => loadedOverrides.actionBar || DefaultActionBar,
@@ -143,37 +143,33 @@ export const DraggableComponent = ({
               <Loader />
             </div>
           )}
-
-          <div
-            className={getClassName("actionsOverlay")}
-            style={{
-              top: actionsOverlayTop / zoomConfig.zoom,
-            }}
-          >
+          {isSelected && (
             <div
-              className={getClassName("actions")}
+              className={getClassName("actionsOverlay")}
               style={{
-                transform: `scale(${1 / zoomConfig.zoom}`,
-                top: actionsTop / zoomConfig.zoom,
-                right: actionsRight / zoomConfig.zoom,
+                top: actionsOverlayTop / zoomConfig.zoom,
               }}
             >
-              <CustomActionBar
-                itemSelector={{
-                  index: index,
-                  zone: zone,
+              <div
+                className={getClassName("actions")}
+                style={{
+                  transform: `scale(${1 / zoomConfig.zoom}`,
+                  top: actionsTop / zoomConfig.zoom,
+                  right: actionsRight / zoomConfig.zoom,
                 }}
-                label={label}
               >
-                <ActionBar.Action onClick={onDuplicate}>
-                  <Copy size={16} />
-                </ActionBar.Action>
-                <ActionBar.Action onClick={onDelete}>
-                  <Trash size={16} />
-                </ActionBar.Action>
-              </CustomActionBar>
+                <CustomActionBar label={label}>
+                  <ActionBar.Action onClick={onDuplicate}>
+                    <Copy size={16} />
+                  </ActionBar.Action>
+                  <ActionBar.Action onClick={onDelete}>
+                    <Trash size={16} />
+                  </ActionBar.Action>
+                </CustomActionBar>
+              </div>
             </div>
-          </div>
+          )}
+
           <div className={getClassName("overlay")} />
           <div className={getClassName("contents")}>{children}</div>
         </div>
