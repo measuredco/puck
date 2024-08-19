@@ -28,6 +28,7 @@ export type Overrides = OverridesGeneric<{
   fieldTypes: Partial<FieldRenderFunctions>;
   header: RenderFunc<{ actions: ReactNode; children: ReactNode }>;
   actionBar: RenderFunc<{
+    itemSelector: ItemSelector | null;
     label?: string;
     children: ReactNode;
   }>;
