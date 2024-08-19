@@ -3,6 +3,7 @@ import {
   ReactNode,
   SyntheticEvent,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { Draggable } from "@measured/dnd";
@@ -15,6 +16,8 @@ import { useAppContext } from "../Puck/context";
 import { DefaultDraggable } from "../Draggable";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
+import { DefaultOverride } from "../DefaultOverride";
+import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -27,6 +30,7 @@ const actionsRight = space;
 export const DraggableComponent = ({
   children,
   id,
+  zone,
   index,
   isLoading = false,
   isSelected = false,
@@ -49,6 +53,7 @@ export const DraggableComponent = ({
   children: ReactNode;
   id: string;
   index: number;
+  zone: string;
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
   onMount?: () => void;
@@ -67,10 +72,8 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
-  const { zoomConfig } = useAppContext();
+  const { zoomConfig, status, overrides, plugins } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
-
-  const { status } = useAppContext();
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
 
@@ -85,6 +88,22 @@ export const DraggableComponent = ({
       setDisableSecondaryAnimation(true);
     }
   }, []);
+
+  const loadedOverrides = useLoadedOverrides({
+    overrides: overrides,
+    plugins: plugins,
+  });
+
+  const DefaultActionBar = () => (
+    <ActionBar label={label}>
+      <DefaultOverride />
+    </ActionBar>
+  );
+
+  const CustomActionBar = useMemo(
+    () => loadedOverrides.actionBar || DefaultActionBar,
+    [loadedOverrides]
+  );
 
   return (
     <El
@@ -139,14 +158,20 @@ export const DraggableComponent = ({
                 right: actionsRight / zoomConfig.zoom,
               }}
             >
-              <ActionBar label={label}>
+              <CustomActionBar
+                itemSelector={{
+                  index: index,
+                  zone: zone,
+                }}
+                label={label}
+              >
                 <ActionBar.Action onClick={onDuplicate}>
                   <Copy size={16} />
                 </ActionBar.Action>
                 <ActionBar.Action onClick={onDelete}>
                   <Trash size={16} />
                 </ActionBar.Action>
-              </ActionBar>
+              </CustomActionBar>
             </div>
           </div>
           <div className={getClassName("overlay")} />

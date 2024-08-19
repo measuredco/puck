@@ -27,6 +27,11 @@ type OverridesGeneric<Shape extends { [key in OverrideKey]: any }> = Shape;
 export type Overrides = OverridesGeneric<{
   fieldTypes: Partial<FieldRenderFunctions>;
   header: RenderFunc<{ actions: ReactNode; children: ReactNode }>;
+  actionBar: RenderFunc<{
+    itemSelector: ItemSelector | null;
+    label?: string;
+    children: ReactNode;
+  }>;
   headerActions: RenderFunc<{ children: ReactNode }>;
   preview: RenderFunc;
   fields: RenderFunc<{
