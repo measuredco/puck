@@ -276,26 +276,6 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
   );
 };
 
-const CustomActionBar = ({ children, label }) => {
-  const { appState, selectedItem } = usePuck();
-
-  const onClick = () => {
-    alert(
-      `Index: ${appState.ui.itemSelector.index} \nZone: ${
-        appState.ui.itemSelector.zone
-      } \nData: ${JSON.stringify(selectedItem)}`
-    );
-  };
-  return (
-    <ActionBar label={label}>
-      <ActionBar.Action onClick={onClick} label="Debug information">
-        <Bug size={16} />
-      </ActionBar.Action>
-      {children}
-    </ActionBar>
-  );
-};
-
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const { data, resolvedData, key } = useDemoData({
     path,
@@ -313,9 +293,34 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
           ),
-          actionBar: ({ children, label }) => (
-            <CustomActionBar label={label}>{children}</CustomActionBar>
-          ),
+          actionBar: ({ children, label }) => {
+            const { appState } = usePuck();
+            let data = {};
+            if (appState.ui.itemSelector.zone === "default-zone") {
+              data = appState.data.content[appState.ui.itemSelector.index];
+            } else {
+              data =
+                appState.data.zones[appState.ui.itemSelector.zone][
+                  appState.ui.itemSelector.index
+                ];
+            }
+
+            const onClick = () => {
+              alert(
+                `ID: ${appState.ui.itemSelector.index} \nZone: ${
+                  appState.ui.itemSelector.zone
+                } \nData: ${JSON.stringify(data)}`
+              );
+            };
+            return (
+              <ActionBar label={label}>
+                <ActionBar.Action onClick={onClick} label="Debug information">
+                  <Bug size={16} />
+                </ActionBar.Action>
+                {children}
+              </ActionBar>
+            );
+          },
           components: () => {
             return (
               <Drawer direction="horizontal">
