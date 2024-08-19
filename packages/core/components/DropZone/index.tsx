@@ -253,7 +253,6 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                         label={label}
                         id={`draggable-${componentId}`}
                         index={i}
-                        zone={zone}
                         isSelected={isSelected}
                         isLocked={userIsDragging}
                         forceHover={

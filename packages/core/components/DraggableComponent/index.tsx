@@ -36,7 +36,6 @@ const DefaultActionBar = ({ label }) => (
 export const DraggableComponent = ({
   children,
   id,
-  zone,
   index,
   isLoading = false,
   isSelected = false,
@@ -59,7 +58,6 @@ export const DraggableComponent = ({
   children: ReactNode;
   id: string;
   index: number;
-  zone: string;
   isSelected?: boolean;
   onClick?: (e: SyntheticEvent) => void;
   onMount?: () => void;
@@ -78,7 +76,7 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
-  const { zoomConfig, status, overrides, plugins, state } = useAppContext();
+  const { zoomConfig, status, overrides, plugins } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
