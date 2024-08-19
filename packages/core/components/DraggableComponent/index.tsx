@@ -31,7 +31,7 @@ const DefaultActionBar = ({
   label,
   children,
 }: {
-  label: string;
+  label: string | undefined;
   children: ReactNode;
 }) => (
   <ActionBar label={label}>
