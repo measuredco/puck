@@ -277,12 +277,9 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
 };
 
 const CustomActionBar = ({ children, label }) => {
-  const { appState, getPermission, selectedItem } = usePuck();
+  const { appState, getPermissions, selectedItem } = usePuck();
 
-  const debug = getPermission({
-    permission: "debug",
-    selectedItem: selectedItem,
-  });
+  const { debug } = getPermissions(["debug"]);
 
   const onClick = () => {
     alert(
@@ -319,6 +316,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
         headerPath={path}
         permissions={{
           debug: true,
+          test: true,
         }}
         overrides={{
           outline: ({ children }) => (

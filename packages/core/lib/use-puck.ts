@@ -1,6 +1,6 @@
 import { useAppContext } from "../components/Puck/context";
 import { ComponentData } from "../types/Config";
-import { getPermission } from "./get-permission";
+import { getPermissions } from "./get-permissions";
 
 export const usePuck = () => {
   const {
@@ -15,9 +15,9 @@ export const usePuck = () => {
     appState,
     config,
     dispatch,
-    getPermission: (permission: string) => {
-      return getPermission({
-        permission,
+    getPermissions: (permissions: string[]) => {
+      return getPermissions({
+        permissions,
         selectedItem,
         state: appState,
         config,
