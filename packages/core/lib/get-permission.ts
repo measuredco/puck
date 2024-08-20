@@ -30,4 +30,6 @@ export const initialPermissions = ({
       ...config.components[selectedItem.type].permissions,
     };
   }
+
+  return componentPermissions;
 };
