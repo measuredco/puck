@@ -9,7 +9,13 @@ import {
 } from "react";
 import { DragStart, DragUpdate } from "@measured/dnd";
 
-import type { AppState, Config, Data, UiState } from "../../types/Config";
+import type {
+  AppState,
+  Config,
+  Data,
+  UiState,
+  Permissions,
+} from "../../types/Config";
 import type { OnAction } from "../../types/OnAction";
 import { Button } from "../Button";
 
@@ -62,6 +68,7 @@ export function Puck<UserConfig extends Config = Config>({
   onChange,
   onPublish,
   onAction,
+  permissions,
   plugins = [],
   overrides = {},
   renderHeader,
@@ -82,6 +89,7 @@ export function Puck<UserConfig extends Config = Config>({
   onChange?: (data: Data) => void;
   onPublish?: (data: Data) => void;
   onAction?: OnAction;
+  permissions?: Partial<Permissions>;
   plugins?: Plugin[];
   overrides?: Partial<Overrides>;
   renderHeader?: (props: {
@@ -369,6 +377,20 @@ export function Puck<UserConfig extends Config = Config>({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Add global permissions to component config
+  Object.keys(config.components).forEach((key) => {
+    if (config.components[key].hasOwnProperty("permissions")) {
+      config.components[key].permissions = {
+        ...permissions,
+        ...config.components[key].permissions,
+      };
+    } else {
+      config.components[key].permissions = {
+        ...permissions,
+      };
+    }
+  });
 
   const selectedComponentConfig =
     selectedItem && config.components[selectedItem.type];
