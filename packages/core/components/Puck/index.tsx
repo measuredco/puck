@@ -194,6 +194,7 @@ export function Puck<UserConfig extends Config = Config>({
         ...initial,
         ...clientUiState,
         // Store categories under componentList on state to allow render functions and plugins to modify
+        globalPermissions: permissions,
         componentList: config.categories
           ? Object.entries(config.categories).reduce(
               (acc, [categoryName, category]) => {
@@ -377,22 +378,6 @@ export function Puck<UserConfig extends Config = Config>({
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  // Add global permissions to component config
-  if (config.components) {
-    Object.keys(config.components).forEach((key) => {
-      if (config.components[key].hasOwnProperty("permissions")) {
-        config.components[key].permissions = {
-          ...permissions,
-          ...config.components[key].permissions,
-        };
-      } else {
-        config.components[key].permissions = {
-          ...permissions,
-        };
-      }
-    });
-  }
 
   const selectedComponentConfig =
     selectedItem && config.components[selectedItem.type];
