@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionBar, Button, Data, Puck, Render } from "@/core";
+import { ActionBar, Button, Data, Puck, Render } from "@/core"
 import { HeadingAnalyzer } from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config, { UserConfig } from "../../../config";
 import { useDemoData } from "../../../lib/use-demo-data";
@@ -277,7 +277,12 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
 };
 
 const CustomActionBar = ({ children, label }) => {
-  const { appState, selectedItem } = usePuck();
+  const { appState, getPermission, selectedItem } = usePuck();
+
+  const debug = getPermission({
+    permission: "debug",
+    selectedItem: selectedItem,
+  });
 
   const onClick = () => {
     alert(
@@ -288,9 +293,12 @@ const CustomActionBar = ({ children, label }) => {
   };
   return (
     <ActionBar label={label}>
-      <ActionBar.Action onClick={onClick} label="Debug information">
-        <Bug size={16} />
-      </ActionBar.Action>
+      {debug && (
+        <ActionBar.Action onClick={onClick} label="Debug information">
+          <Bug size={16} />
+        </ActionBar.Action>
+      )}
+
       {children}
     </ActionBar>
   );
@@ -309,6 +317,9 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
         data={data}
         iframe={{ enabled: false }}
         headerPath={path}
+        permissions={{
+          debug: true
+        }}
         overrides={{
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>

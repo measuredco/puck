@@ -1,4 +1,5 @@
 import { useAppContext } from "../components/Puck/context";
+import { ComponentData } from "../types/Config";
 
 export const usePuck = () => {
   const {
@@ -9,10 +10,24 @@ export const usePuck = () => {
     selectedItem,
   } = useAppContext();
 
+  const getPermission = ({
+    permission,
+    selectedItem,
+  }: {
+    permission: string;
+    selectedItem: ComponentData;
+  }) => {
+    return config.components[selectedItem.type].permissions?.[permission] !==
+      undefined
+      ? config.components[selectedItem.type].permissions?.[permission]
+      : null;
+  };
+
   return {
     appState,
     config,
     dispatch,
+    getPermission,
     history: {
       back: history.back!,
       forward: history.forward!,
