@@ -1,12 +1,12 @@
 import { AppState, ComponentData, Config } from "../types/Config";
 
-export const getPermission = ({
-  permission,
+export const getPermissions = ({
+  permissions,
   selectedItem,
   state,
   config,
 }: {
-  permission: string;
+  permissions: string[];
   selectedItem: ComponentData | undefined;
   state: AppState;
   config: Config;
@@ -14,9 +14,16 @@ export const getPermission = ({
   let componentPermissions =
     selectedItem && initialPermissions({ selectedItem, config, state });
 
-  return componentPermissions?.[permission] !== undefined
-    ? componentPermissions[permission]
+  const computedPermissions = componentPermissions
+    ? Object.keys(componentPermissions)
+        .filter((key) => permissions.includes(key))
+        .reduce((obj, key) => {
+          obj[key] = componentPermissions[key] ?? null;
+          return obj;
+        }, {} as { [key: string]: boolean | null })
     : null;
+
+  return computedPermissions;
 };
 
 export const initialPermissions = ({
