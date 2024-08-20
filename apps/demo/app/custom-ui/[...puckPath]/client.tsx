@@ -1,13 +1,13 @@
 "use client";
 
-import { Button, Data, Puck, Render } from "@/core";
+import { ActionBar, Button, Data, Puck, Render } from "@/core";
 import { HeadingAnalyzer } from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config, { UserConfig } from "../../../config";
 import { useDemoData } from "../../../lib/use-demo-data";
 import { IconButton, usePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Drawer } from "@/core/components/Drawer";
-import { ChevronUp, ChevronDown, Globe } from "lucide-react";
+import { ChevronUp, ChevronDown, Globe, Bug } from "lucide-react";
 
 const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
   const { appState, dispatch } = usePuck();
@@ -276,6 +276,26 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
   );
 };
 
+const CustomActionBar = ({ children, label }) => {
+  const { appState, selectedItem } = usePuck();
+
+  const onClick = () => {
+    alert(
+      `Index: ${appState.ui.itemSelector.index} \nZone: ${
+        appState.ui.itemSelector.zone
+      } \nData: ${JSON.stringify(selectedItem)}`
+    );
+  };
+  return (
+    <ActionBar label={label}>
+      <ActionBar.Action onClick={onClick} label="Debug information">
+        <Bug size={16} />
+      </ActionBar.Action>
+      {children}
+    </ActionBar>
+  );
+};
+
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const { data, resolvedData, key } = useDemoData({
     path,
@@ -292,6 +312,9 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
         overrides={{
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
+          ),
+          actionBar: ({ children, label }) => (
+            <CustomActionBar label={label}>{children}</CustomActionBar>
           ),
           components: () => {
             return (

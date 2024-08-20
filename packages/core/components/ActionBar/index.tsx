@@ -18,12 +18,14 @@ export const ActionBar = ({
 
 export const Action = ({
   children,
+  label,
   onClick,
 }: {
   children: ReactNode;
+  label?: string;
   onClick: (e: SyntheticEvent) => void;
 }) => (
-  <button className={getClassName("action")} onClick={onClick}>
+  <button className={getClassName("action")} onClick={onClick} title={label}>
     {children}
   </button>
 );
