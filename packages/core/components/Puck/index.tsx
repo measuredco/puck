@@ -68,7 +68,7 @@ export function Puck<UserConfig extends Config = Config>({
   onChange,
   onPublish,
   onAction,
-  permissions,
+  permissions = {},
   plugins = [],
   overrides = {},
   renderHeader,
@@ -379,18 +379,20 @@ export function Puck<UserConfig extends Config = Config>({
   }, []);
 
   // Add global permissions to component config
-  Object.keys(config.components).forEach((key) => {
-    if (config.components[key].hasOwnProperty("permissions")) {
-      config.components[key].permissions = {
-        ...permissions,
-        ...config.components[key].permissions,
-      };
-    } else {
-      config.components[key].permissions = {
-        ...permissions,
-      };
-    }
-  });
+  if (config.components) {
+    Object.keys(config.components).forEach((key) => {
+      if (config.components[key].hasOwnProperty("permissions")) {
+        config.components[key].permissions = {
+          ...permissions,
+          ...config.components[key].permissions,
+        };
+      } else {
+        config.components[key].permissions = {
+          ...permissions,
+        };
+      }
+    });
+  }
 
   const selectedComponentConfig =
     selectedItem && config.components[selectedItem.type];
