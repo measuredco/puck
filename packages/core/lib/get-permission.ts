@@ -1,14 +1,18 @@
-import { useAppContext } from "../components/Puck/context";
-import { ComponentData } from "../types/Config";
+import { AppState, ComponentData, Config } from "../types/Config";
 
 export const getPermission = ({
   permission,
   selectedItem,
+  state,
+  config,
 }: {
   permission: string;
-  selectedItem: ComponentData;
+  selectedItem: ComponentData | undefined;
+  state: AppState;
+  config: Config;
 }) => {
-  let componentPermissions = initialPermissions({ selectedItem: selectedItem });
+  let componentPermissions =
+    selectedItem && initialPermissions({ selectedItem, config, state });
 
   return componentPermissions?.[permission] !== undefined
     ? componentPermissions[permission]
@@ -17,11 +21,13 @@ export const getPermission = ({
 
 export const initialPermissions = ({
   selectedItem,
+  state,
+  config,
 }: {
   selectedItem: ComponentData;
+  state: AppState;
+  config: Config;
 }) => {
-  const { state, config } = useAppContext();
-
   let componentPermissions = { ...state.ui.globalPermissions };
 
   if (config.components[selectedItem.type] !== undefined) {

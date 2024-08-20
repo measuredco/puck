@@ -15,7 +15,14 @@ export const usePuck = () => {
     appState,
     config,
     dispatch,
-    getPermission,
+    getPermission: (permission: string) => {
+      return getPermission({
+        permission,
+        selectedItem,
+        state: appState,
+        config,
+      });
+    },
     history: {
       back: history.back!,
       forward: history.forward!,
