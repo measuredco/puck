@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionBar, Button, Data, Puck, Render } from "@/core"
+import { ActionBar, Button, Data, Puck, Render } from "@/core";
 import { HeadingAnalyzer } from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config, { UserConfig } from "../../../config";
 import { useDemoData } from "../../../lib/use-demo-data";
@@ -318,7 +318,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
         iframe={{ enabled: false }}
         headerPath={path}
         permissions={{
-          debug: true
+          debug: true,
         }}
         overrides={{
           outline: ({ children }) => (
