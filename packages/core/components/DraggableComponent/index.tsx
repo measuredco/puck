@@ -131,7 +131,7 @@ export const DraggableComponent = ({
       key={id}
       draggableId={id}
       index={index}
-      isDragDisabled={!permissions?.drag || isDragDisabled}
+      isDragDisabled={isDragDisabled}
       disableSecondaryAnimation={disableSecondaryAnimation}
     >
       {(provided, snapshot) => (
