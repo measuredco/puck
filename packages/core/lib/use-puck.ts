@@ -1,4 +1,6 @@
 import { useAppContext } from "../components/Puck/context";
+import { ComponentData } from "../types/Config";
+import { getPermissions } from "./get-permissions";
 
 export const usePuck = () => {
   const {
@@ -6,13 +8,21 @@ export const usePuck = () => {
     config,
     history,
     dispatch,
-    selectedItem,
+    selectedItem: currentItem,
+    globalPermissions,
   } = useAppContext();
 
   return {
     appState,
     config,
     dispatch,
+    getPermissions: (selectedItem?: ComponentData) => {
+      return getPermissions({
+        selectedItem: selectedItem || currentItem,
+        globalPermissions: globalPermissions || {},
+        config,
+      });
+    },
     history: {
       back: history.back!,
       forward: history.forward!,
@@ -24,6 +34,6 @@ export const usePuck = () => {
       index: history.historyStore!.index,
       historyStore: history.historyStore,
     },
-    selectedItem: selectedItem || null,
+    selectedItem: currentItem || null,
   };
 };

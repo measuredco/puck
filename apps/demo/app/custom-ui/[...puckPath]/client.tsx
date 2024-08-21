@@ -277,7 +277,9 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
 };
 
 const CustomActionBar = ({ children, label }) => {
-  const { appState, selectedItem } = usePuck();
+  const { appState, getPermissions, selectedItem } = usePuck();
+
+  const { debug } = getPermissions();
 
   const onClick = () => {
     alert(
@@ -288,9 +290,12 @@ const CustomActionBar = ({ children, label }) => {
   };
   return (
     <ActionBar label={label}>
-      <ActionBar.Action onClick={onClick} label="Debug information">
-        <Bug size={16} />
-      </ActionBar.Action>
+      {debug && (
+        <ActionBar.Action onClick={onClick} label="Debug information">
+          <Bug size={16} />
+        </ActionBar.Action>
+      )}
+
       {children}
     </ActionBar>
   );
@@ -301,14 +306,28 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     path,
     isEdit,
   });
-
+  const configOverride: UserConfig = {
+    ...config,
+    components: {
+      ...config.components,
+      Hero: {
+        ...config.components.Hero,
+        permissions: {
+          debug: false,
+        },
+      },
+    },
+  };
   if (isEdit) {
     return (
       <Puck<UserConfig>
-        config={config}
+        config={configOverride}
         data={data}
         iframe={{ enabled: false }}
         headerPath={path}
+        permissions={{
+          debug: true,
+        }}
         overrides={{
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>

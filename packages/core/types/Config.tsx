@@ -37,6 +37,7 @@ export type ComponentConfig<
   label?: string;
   defaultProps?: DefaultProps;
   fields?: Fields<ComponentProps>;
+  permissions?: Partial<Permissions>;
   resolveFields?: (
     data: DataShape,
     params: {
@@ -172,3 +173,9 @@ export type UiState = {
 };
 
 export type AppState = { data: Data; ui: UiState };
+
+export type Permissions = {
+  drag: boolean;
+  duplicate: boolean;
+  delete: boolean;
+} & Record<string, boolean>;
