@@ -148,7 +148,6 @@ export type ItemWithId = {
 export type ArrayState = { items: ItemWithId[]; openId: string };
 
 export type UiState = {
-  globalPermissions?: Partial<Permissions>;
   leftSideBarVisible: boolean;
   rightSideBarVisible: boolean;
   itemSelector: ItemSelector | null;
