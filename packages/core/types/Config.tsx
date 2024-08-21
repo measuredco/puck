@@ -148,7 +148,7 @@ export type ItemWithId = {
 export type ArrayState = { items: ItemWithId[]; openId: string };
 
 export type UiState = {
-  globalPermissions?: Partial<Permissions> | undefined;
+  globalPermissions?: Partial<Permissions>;
   leftSideBarVisible: boolean;
   rightSideBarVisible: boolean;
   itemSelector: ItemSelector | null;
@@ -175,4 +175,8 @@ export type UiState = {
 
 export type AppState = { data: Data; ui: UiState };
 
-export type Permissions = Record<string, boolean>;
+export type Permissions = {
+  drag: boolean;
+  duplicate: boolean;
+  delete: boolean;
+} & Record<string, boolean>;

@@ -1,48 +1,38 @@
-import { AppState, ComponentData, Config } from "../types/Config";
+import { Config, DefaultComponentProps, Permissions } from "../types/Config";
 
 export const getPermissions = ({
-  permissions,
-  selectedItem,
-  state,
+  componentType,
+  globalPermissions,
   config,
 }: {
-  permissions: string[];
-  selectedItem: ComponentData | undefined;
-  state: AppState;
+  componentType: keyof DefaultComponentProps;
+  globalPermissions: Partial<Permissions>;
   config: Config;
 }) => {
-  let componentPermissions =
-    selectedItem && initialPermissions({ selectedItem, config, state });
+  let componentPermissions = getInitialPermissions({
+    componentType,
+    config,
+    globalPermissions,
+  });
 
-  const computedPermissions = componentPermissions
-    ? Object.keys(componentPermissions)
-        .filter((key) => permissions.includes(key))
-        .reduce((obj, key) => {
-          obj[key] = componentPermissions[key] ?? null;
-          return obj;
-        }, {} as { [key: string]: boolean | null })
-    : null;
-
-  return computedPermissions;
+  return componentPermissions;
 };
 
-export const initialPermissions = ({
-  selectedItem,
-  state,
+export const getInitialPermissions = ({
+  componentType,
+  globalPermissions,
   config,
 }: {
-  selectedItem: ComponentData;
-  state: AppState;
+  componentType: keyof DefaultComponentProps;
+  globalPermissions: Partial<Permissions>;
   config: Config;
 }) => {
-  let componentPermissions = { ...state.ui.globalPermissions };
+  let componentPermissions: Partial<Permissions> = { ...globalPermissions };
 
-  if (config.components[selectedItem.type] !== undefined) {
-    componentPermissions = {
-      ...componentPermissions,
-      ...config.components[selectedItem.type].permissions,
-    };
-  }
+  componentPermissions = {
+    ...componentPermissions,
+    ...config.components[componentType].permissions,
+  };
 
   return componentPermissions;
 };

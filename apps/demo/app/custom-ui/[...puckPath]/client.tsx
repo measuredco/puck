@@ -279,7 +279,7 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
 const CustomActionBar = ({ children, label }) => {
   const { appState, getPermissions, selectedItem } = usePuck();
 
-  const { debug } = getPermissions(["debug"]);
+  const { debug } = getPermissions();
 
   const onClick = () => {
     alert(
@@ -306,17 +306,27 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     path,
     isEdit,
   });
-
+  const configOverride: UserConfig = {
+    ...config,
+    components: {
+      ...config.components,
+      Hero: {
+        ...config.components.Hero,
+        permissions: {
+          debug: false,
+        },
+      },
+    },
+  };
   if (isEdit) {
     return (
       <Puck<UserConfig>
-        config={config}
+        config={configOverride}
         data={data}
         iframe={{ enabled: false }}
         headerPath={path}
         permissions={{
           debug: true,
-          test: true,
         }}
         overrides={{
           outline: ({ children }) => (

@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { AppState, Config, UiState } from "../../types/Config";
+import { AppState, Config, UiState, Permissions } from "../../types/Config";
 import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
 import { Plugin } from "../../types/Plugin";
@@ -60,6 +60,7 @@ type AppContext<UserConfig extends Config = Config> = {
   setStatus: (status: Status) => void;
   iframe: IframeConfig;
   safariFallbackMode?: boolean;
+  globalPermissions?: Partial<Permissions>;
 };
 
 const defaultContext: AppContext = {
@@ -82,6 +83,7 @@ const defaultContext: AppContext = {
   setStatus: () => null,
   iframe: {},
   safariFallbackMode: false,
+  globalPermissions: {},
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
