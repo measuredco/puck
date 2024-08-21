@@ -402,7 +402,7 @@ export function Puck<UserConfig extends Config = Config>({
             delete: true,
             drag: true,
             duplicate: true,
-            ...permissions
+            ...permissions,
           },
         }}
       >
