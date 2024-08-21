@@ -193,6 +193,7 @@ export function Puck<UserConfig extends Config = Config>({
       ui: {
         ...initial,
         ...clientUiState,
+        // Store categories under componentList on state to allow render functions and plugins to modify
         componentList: config.categories
           ? Object.entries(config.categories).reduce(
               (acc, [categoryName, category]) => {
