@@ -314,6 +314,9 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
         ...config.components.Hero,
         permissions: {
           debug: false,
+          drag: false,
+          delete: false,
+          duplicate: false,
         },
       },
     },
