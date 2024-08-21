@@ -16,7 +16,7 @@ export const usePuck = () => {
     appState,
     config,
     dispatch,
-    getPermissions: (selectedItem: ComponentData) => {
+    getPermissions: (selectedItem?: ComponentData) => {
       return getPermissions({
         selectedItem: selectedItem || currentItem,
         globalPermissions: globalPermissions || {},
