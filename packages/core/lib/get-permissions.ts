@@ -1,14 +1,20 @@
-import { Config, DefaultComponentProps, Permissions } from "../types/Config";
+import {
+  ComponentData,
+  Config,
+  DefaultComponentProps,
+  Permissions,
+} from "../types/Config";
 
 export const getPermissions = ({
-  componentType,
+  selectedItem,
   globalPermissions,
   config,
 }: {
-  componentType: keyof DefaultComponentProps;
+  selectedItem: ComponentData | undefined;
   globalPermissions: Partial<Permissions>;
   config: Config;
 }) => {
+  const componentType = (selectedItem && selectedItem.type) || "";
   let componentPermissions = getInitialPermissions({
     componentType,
     config,
@@ -27,12 +33,8 @@ export const getInitialPermissions = ({
   globalPermissions: Partial<Permissions>;
   config: Config;
 }) => {
-  let componentPermissions: Partial<Permissions> = { ...globalPermissions };
-
-  componentPermissions = {
-    ...componentPermissions,
+  return {
+    ...globalPermissions,
     ...config.components[componentType].permissions,
   };
-
-  return componentPermissions;
 };
