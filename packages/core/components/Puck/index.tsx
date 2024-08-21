@@ -398,7 +398,12 @@ export function Puck<UserConfig extends Config = Config>({
           history,
           viewports,
           iframe,
-          globalPermissions: permissions,
+          globalPermissions: {
+            delete: true,
+            drag: true,
+            duplicate: true,
+            ...permissions
+          },
         }}
       >
         <DragDropContext
