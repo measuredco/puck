@@ -12,7 +12,6 @@ import {
 } from "react";
 
 import { getPermissions } from "../../lib/get-permissions";
-import { getItem } from "../../lib/get-item";
 
 import { useAppContext } from "../Puck/context";
 import { DefaultComponentProps } from "../../types/Config";
