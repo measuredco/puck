@@ -10,6 +10,7 @@ type FieldOptions = Array<FieldOption> | ReadonlyArray<FieldOption>;
 
 export type BaseField = {
   label?: string;
+  hidden?: boolean;
 };
 
 export type TextField = BaseField & {

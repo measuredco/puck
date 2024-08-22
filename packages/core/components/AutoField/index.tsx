@@ -164,6 +164,10 @@ function AutoFieldInternal<
     id: resolvedId,
   };
 
+  if (field.hidden) {
+    return null;
+  }
+
   if (field.type === "custom") {
     if (!field.render) {
       return null;
