@@ -9,6 +9,10 @@
   color: var(--puck-color-white);
   font-family: var(--puck-font-family);
   gap: 4px;
+  justify-content: center;
+  align-items: center;
+  min-height: 26px;
+  border-left: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
 }
 
 .ActionBarComponent-actionsLabel {
@@ -19,9 +23,7 @@
   justify-content: center;
   align-items: center;
   padding-left: 8px;
-  padding-right: 16px;
-  margin-right: 8px;
-  border-right: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
+  padding-right: 8px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

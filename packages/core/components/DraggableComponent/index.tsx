@@ -150,7 +150,7 @@ export const DraggableComponent = ({
           style={{
             ...style,
             ...provided.draggableProps.style,
-            cursor: isModifierHeld ? "initial" : "grab",
+            cursor: isModifierHeld || isDragDisabled ? "initial" : "grab",
           }}
           onMouseOver={onMouseOver}
           onMouseOut={onMouseOut}
@@ -185,7 +185,6 @@ export const DraggableComponent = ({
                       <Copy size={16} />
                     </ActionBar.Action>
                   )}
-
                   {permissions && permissions.delete && (
                     <ActionBar.Action onClick={onDelete} label="Delete">
                       <Trash size={16} />
