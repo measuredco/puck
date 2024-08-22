@@ -30,7 +30,7 @@ Change a value on Puck's [UI state](/docs/api-reference/app-state#ui).
 
 | Param  | Example                             | Type                                         | Status   |
 | ------ | ----------------------------------- | -------------------------------------------- | -------- |
-| `type` | `type: "setData"`                   | "setData"                                    | Required |
+| `type` | `type: "setUi"`                     | "setUi"                                      | Required |
 | `ui`   | `ui: { leftSideBarVisible: false }` | [UiState](/docs/api-reference/app-state/#ui) | Required |
 
 #### Example
@@ -50,7 +50,7 @@ Change the entire [AppState](/docs/api-reference/app-state) in a single action.
 
 | Param   | Example                       | Type                                      | Status   |
 | ------- | ----------------------------- | ----------------------------------------- | -------- |
-| `type`  | `type: "setData"`             | "setData"                                 | Required |
+| `type`  | `type: "set"`                 | "set"                                     | Required |
 | `state` | `state: { data: {}, ui: {} }` | [AppState](/docs/api-reference/app-state) | Required |
 
 #### Example
