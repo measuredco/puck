@@ -11,6 +11,12 @@ import {
   useMemo,
 } from "react";
 
+import { getPermissions } from "../../lib/get-permissions";
+import { getItem } from "../../lib/get-item";
+
+import { useAppContext } from "../Puck/context";
+import { DefaultComponentProps } from "../../types/Config";
+
 const getClassName = getClassNameFactory("Drawer", styles);
 const getClassNameItem = getClassNameFactory("DrawerItem", styles);
 
@@ -22,22 +28,35 @@ const DrawerDraggable = ({
   children,
   id,
   index,
+  type,
 }: {
   children: ReactNode;
   id: string;
   index: number;
-}) => (
-  <Draggable
-    key={id}
-    id={id}
-    index={index}
-    showShadow
-    disableAnimations
-    className={() => getClassNameItem()}
-  >
-    {() => children}
-  </Draggable>
-);
+  type: keyof DefaultComponentProps;
+}) => {
+  const appContext = useAppContext();
+
+  const canInsert = getPermissions({
+    type,
+    config: appContext.config,
+    globalPermissions: appContext.globalPermissions || {},
+  }).insert;
+
+  return (
+    <Draggable
+      key={id}
+      id={id}
+      index={index}
+      isDragDisabled={!canInsert}
+      showShadow
+      disableAnimations
+      className={() => getClassNameItem()}
+    >
+      {() => children}
+    </Draggable>
+  );
+};
 
 const DrawerItem = ({
   name,
@@ -66,7 +85,7 @@ const DrawerItem = ({
   );
 
   return (
-    <DrawerDraggable id={resolvedId} index={index}>
+    <DrawerDraggable id={resolvedId} index={index} type={name}>
       <CustomInner name={name}>
         <div className={getClassNameItem("draggableWrapper")}>
           <div className={getClassNameItem("draggable")}>

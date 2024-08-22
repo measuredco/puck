@@ -20,7 +20,6 @@
   font-size: var(--puck-font-size-xxs);
   justify-content: space-between;
   align-items: center;
-  cursor: grab;
   transition: background-color 50ms ease-in, color 50ms ease-in;
 }
 

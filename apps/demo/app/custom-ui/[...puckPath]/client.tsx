@@ -317,6 +317,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           drag: false,
           delete: false,
           duplicate: false,
+          insert: false,
         },
       },
     },
