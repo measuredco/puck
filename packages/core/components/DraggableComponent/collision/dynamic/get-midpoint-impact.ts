@@ -1,8 +1,6 @@
 import { Shape } from "@dnd-kit/geometry";
 import { Direction } from "./get-direction";
 
-type CollisionPosition = "before" | "after";
-
 /**
  * Determine whether or not the leading edge of the dragShape (the edge that is on
  * the side of the direction of travel) is over the midpoint of the dropShape.

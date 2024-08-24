@@ -148,3 +148,34 @@
   color: var(--puck-color-azure-07);
   transition: none;
 }
+
+.DraggableComponent-parentHitboxBottom,
+.DraggableComponent-parentHitboxLeft,
+.DraggableComponent-parentHitboxRight,
+.DraggableComponent-parentHitboxTop {
+  height: 8px;
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+  pointer-events: all;
+}
+
+.DraggableComponent-parentHitboxTop {
+  top: -8px;
+}
+
+.DraggableComponent-parentHitboxBottom {
+  bottom: -8px;
+}
+
+.DraggableComponent-parentHitboxLeft {
+  left: -8px;
+  width: 8px;
+  height: 100%;
+}
+
+.DraggableComponent-parentHitboxRight {
+  right: -8px;
+  width: 8px;
+  height: 100%;
+}

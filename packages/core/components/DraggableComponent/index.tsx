@@ -58,6 +58,7 @@ export const DraggableComponent = ({
   isEnabled?: boolean;
   indicativeHover?: boolean;
   dragAxis: DragAxis;
+  inDroppableZone: boolean;
 }) => {
   const { zoomConfig, dispatch, iframe, state } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
@@ -71,11 +72,12 @@ export const DraggableComponent = ({
     collisionPriority: isEnabled ? collisionPriority : 0,
     collisionDetector: createDynamicCollisionDetector(dragAxis),
     disabled: !isEnabled,
+    // handle: overlayRef,
   });
 
   const userIsDragging = !!ctx?.draggedItem;
 
-  const isDragging = status === "dragging";
+  const thisIsDragging = status === "dragging";
 
   const ref = useRef<Element>();
 
@@ -181,6 +183,18 @@ export const DraggableComponent = ({
 
   const [hover, setHover] = useState(false);
 
+  const activateParent = useCallback(() => {
+    if (inDroppableZone) {
+      if (ctx?.setHoveringArea) {
+        ctx.setHoveringArea(ctx.areaId || "");
+      }
+
+      if (ctx?.setHoveringZone) {
+        ctx.setHoveringZone(zoneCompound);
+      }
+    }
+  }, [inDroppableZone, ctx, zoneCompound]);
+
   useEffect(() => {
     if (!ref.current) {
       return;
@@ -191,7 +205,7 @@ export const DraggableComponent = ({
     const _onMouseOver = (e: Event) => {
       if (userIsDragging) {
         // User is dragging, and dragging this item
-        if (isDragging) {
+        if (thisIsDragging) {
           setHover(true);
         } else {
           setHover(false);
@@ -202,14 +216,8 @@ export const DraggableComponent = ({
 
       e.stopPropagation();
 
-      if (!containsActiveZone && inDroppableZone) {
-        if (ctx?.setHoveringArea) {
-          ctx.setHoveringArea(ctx.areaId || "");
-        }
-
-        if (ctx?.setHoveringZone) {
-          ctx.setHoveringZone(zoneCompound);
-        }
+      if (!containsActiveZone) {
+        activateParent();
       }
     };
 
@@ -238,14 +246,14 @@ export const DraggableComponent = ({
     zoneCompound,
     id,
     userIsDragging,
-    isDragging,
+    thisIsDragging,
     inDroppableZone,
   ]);
 
   useEffect(sync, [ref]);
   useEffect(sync, [state.data]);
 
-  const isVisible = isSelected || hover || indicativeHover || isDragging;
+  const isVisible = isSelected || hover || indicativeHover || userIsDragging;
 
   useEffect(() => {
     if (!ref.current || !overlayRef.current) {
@@ -320,7 +328,7 @@ export const DraggableComponent = ({
         createPortal(
           <div
             className={getClassName({
-              isDragging,
+              isDragging: thisIsDragging,
               isSelected,
               isModifierHeld,
               hover: hover || indicativeHover,
@@ -333,7 +341,6 @@ export const DraggableComponent = ({
                 <Loader />
               </div>
             )}
-
             <div
               className={getClassName("actionsOverlay")}
               style={{
@@ -363,6 +370,27 @@ export const DraggableComponent = ({
               </div>
             </div>
             <div className={getClassName("overlay")} />
+
+            {ctx?.hoveringArea === id && (
+              <>
+                <div
+                  className={getClassName("parentHitboxTop")}
+                  onMouseOver={activateParent}
+                ></div>
+                <div
+                  className={getClassName("parentHitboxBottom")}
+                  onMouseOver={activateParent}
+                ></div>
+                <div
+                  className={getClassName("parentHitboxLeft")}
+                  onMouseOver={activateParent}
+                ></div>
+                <div
+                  className={getClassName("parentHitboxRight")}
+                  onMouseOver={activateParent}
+                ></div>
+              </>
+            )}
           </div>,
           document.getElementById("puck-preview") || document.body
         )}
