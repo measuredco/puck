@@ -1,5 +1,7 @@
 .DropZone {
   position: relative;
+  min-height: 128px;
+  min-width: 128px;
   outline-offset: -2px;
   width: 100%;
 }
@@ -12,8 +14,6 @@
 
 .DropZone:not(.DropZone--hasChildren) {
   background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
-  min-height: 128px;
-  min-width: 128px;
   outline: 2px dashed var(--puck-color-azure-08);
 }
 
