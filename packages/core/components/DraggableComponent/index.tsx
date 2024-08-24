@@ -43,6 +43,7 @@ export const DraggableComponent = ({
   indicativeHover = false,
   isEnabled,
   dragAxis,
+  inDroppableZone = true,
 }: {
   children: (ref: Ref<any>) => ReactNode;
   componentType: string;
@@ -201,7 +202,7 @@ export const DraggableComponent = ({
 
       e.stopPropagation();
 
-      if (!containsActiveZone) {
+      if (!containsActiveZone && inDroppableZone) {
         if (ctx?.setHoveringArea) {
           ctx.setHoveringArea(ctx.areaId || "");
         }
@@ -238,6 +239,7 @@ export const DraggableComponent = ({
     id,
     userIsDragging,
     isDragging,
+    inDroppableZone,
   ]);
 
   useEffect(sync, [ref]);

@@ -342,6 +342,7 @@ function DropZoneEdit({
             label={label}
             isEnabled={isEnabled}
             dragAxis={dragAxis}
+            inDroppableZone={isDroppableTarget()}
           >
             {(dragRef) =>
               componentConfig?.inline ? (
