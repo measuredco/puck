@@ -64,6 +64,8 @@ export const DraggableComponent = ({
   const isModifierHeld = useModifierHeld("Alt");
   const ctx = useContext(dropZoneContext);
 
+  const overlayRef = useRef<HTMLDivElement>(null);
+
   const { ref: sortableRef, status } = useSortable({
     id,
     index,
@@ -114,27 +116,41 @@ export const DraggableComponent = ({
     [sortableRef]
   );
 
-  const overlayRef = useRef<HTMLDivElement>(null);
-
   const sync = useCallback(() => {
     if (!ref.current || !overlayRef.current) return;
 
     const rect = ref.current!.getBoundingClientRect();
 
-    // TODO change this logic when using iframes
+    let iframeLeft = 0;
+    let iframeTop = 0;
+
     if (iframe.enabled) {
-    } else {
-      const previewEl = document.getElementById("puck-preview");
+      const frameEl = document.getElementById("preview-frame");
 
-      if (!previewEl) return;
+      if (!frameEl) {
+        throw new Error("iframe enabled, but could not find element");
+      }
 
-      const previewRect = previewEl.getBoundingClientRect();
+      const frameRect = frameEl.getBoundingClientRect();
 
-      overlayRef.current!.style.left = `${rect.left - previewRect.left}px`;
-      overlayRef.current!.style.top = `${rect.top - previewRect.top}px`;
-      overlayRef.current!.style.height = `${rect.height}px`;
-      overlayRef.current!.style.width = `${rect.width}px`;
+      iframeLeft = frameRect.left;
+      iframeTop = frameRect.top;
     }
+
+    const previewEl = document.getElementById("puck-preview");
+
+    if (!previewEl) return;
+
+    const previewRect = previewEl.getBoundingClientRect();
+
+    overlayRef.current!.style.left = `${
+      rect.left - previewRect.left + iframeLeft
+    }px`;
+    overlayRef.current!.style.top = `${
+      rect.top - previewRect.top + iframeTop
+    }px`;
+    overlayRef.current!.style.height = `${rect.height}px`;
+    overlayRef.current!.style.width = `${rect.width}px`;
   }, [ref, overlayRef]);
 
   useEffect(() => {
@@ -265,17 +281,20 @@ export const DraggableComponent = ({
     const canvasRoot = document.getElementById("puck-canvas-root");
 
     const onCanvasScroll = () => {
-      requestAnimationFrame(() => {
-        if (!ref.current || !overlayRef.current) return;
+      if (!ref.current || !overlayRef.current) return;
 
-        sync();
-      });
+      sync();
     };
 
+    const scrollTarget = iframe.enabled
+      ? (document.getElementById("preview-frame") as HTMLIFrameElement)
+          .contentWindow
+      : canvasRoot;
+
     if (isVisible) {
-      canvasRoot?.addEventListener("scroll", onCanvasScroll);
+      scrollTarget?.addEventListener("scroll", onCanvasScroll);
     } else {
-      canvasRoot?.removeEventListener("scroll", onCanvasScroll);
+      scrollTarget?.removeEventListener("scroll", onCanvasScroll);
     }
 
     const observer = new ResizeObserver(() => {
@@ -304,9 +323,9 @@ export const DraggableComponent = ({
 
       isObserving = false;
       observer.disconnect();
-      canvasRoot?.removeEventListener("scroll", onCanvasScroll);
+      scrollTarget?.removeEventListener("scroll", onCanvasScroll);
     };
-  }, [ref, overlayRef, isVisible, userIsDragging, hover]);
+  }, [ref, overlayRef, isVisible, userIsDragging, hover, iframe]);
 
   return (
     <DropZoneProvider
