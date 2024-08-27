@@ -5,8 +5,12 @@
   border-radius: 4px;
 }
 
+.DragIcon--disabled {
+  cursor: no-drop;
+}
+
 @media (hover: hover) and (pointer: fine) {
-  .DragIcon:hover {
+  .DragIcon:not(.DragIcon--disabled):hover {
     color: var(--puck-color-azure-05);
     background-color: var(--puck-color-azure-12);
   }

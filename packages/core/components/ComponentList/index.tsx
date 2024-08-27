@@ -25,8 +25,14 @@ const ComponentListItem = ({
     config,
     globalPermissions: globalPermissions || {},
   }).insert;
+
   return (
-    <Drawer.Item label={label} name={name} index={index} canInsert={canInsert}>
+    <Drawer.Item
+      label={label}
+      name={name}
+      index={index}
+      isDragDisabled={!canInsert}
+    >
       {overrides.componentItem}
     </Drawer.Item>
   );

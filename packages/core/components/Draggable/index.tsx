@@ -80,7 +80,7 @@ export const Draggable = ({
                 snapshot.isDragging || !disableAnimations
                   ? provided.draggableProps.style?.transform
                   : "translate(0px, 0px)",
-              cursor: isDragDisabled ? "initial" : "grab",
+              cursor: isDragDisabled ? "no-drop" : "grab",
             }}
           >
             {children(provided, snapshot)}

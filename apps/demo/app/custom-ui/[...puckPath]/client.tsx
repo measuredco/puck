@@ -279,7 +279,7 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
 const CustomActionBar = ({ children, label }) => {
   const { appState, getPermissions, selectedItem } = usePuck();
 
-  const { debug } = getPermissions();
+  const { debug } = getPermissions({});
 
   const onClick = () => {
     alert(
@@ -340,6 +340,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             <CustomActionBar label={label}>{children}</CustomActionBar>
           ),
           components: () => {
+            const { getPermissions } = usePuck();
             return (
               <Drawer direction="horizontal">
                 <div
@@ -351,23 +352,29 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                   }}
                 >
                   {Object.keys(config.components).map(
-                    (componentKey, componentIndex) => (
-                      <Drawer.Item
-                        key={componentKey}
-                        name={componentKey}
-                        index={componentIndex}
-                      >
-                        {({ children }) => (
-                          <div
-                            style={{
-                              marginRight: 8,
-                            }}
-                          >
-                            {children}
-                          </div>
-                        )}
-                      </Drawer.Item>
-                    )
+                    (componentKey, componentIndex) => {
+                      const canInsert = getPermissions({
+                        type: componentKey,
+                      }).insert;
+                      return (
+                        <Drawer.Item
+                          key={componentKey}
+                          name={componentKey}
+                          index={componentIndex}
+                          isDragDisabled={!canInsert}
+                        >
+                          {({ children }) => (
+                            <div
+                              style={{
+                                marginRight: 8,
+                              }}
+                            >
+                              {children}
+                            </div>
+                          )}
+                        </Drawer.Item>
+                      );
+                    }
                   )}
                 </div>
               </Drawer>

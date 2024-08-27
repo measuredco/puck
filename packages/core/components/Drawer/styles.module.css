@@ -2,6 +2,12 @@
   font-family: var(--puck-font-family);
 }
 
+.DrawerItem--disabled {
+  background: var(--puck-color-grey-11);
+  color: var(--puck-color-grey-05);
+  cursor: not-allowed; /** Move this out of inline styles */
+}
+
 .DrawerItem-default .DrawerItem-draggableWrapper {
   /* padding required here to prevent bug when cancelling a drag) */
   padding-bottom: 12px;
@@ -36,7 +42,9 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .Drawer:not(.Drawer--isDraggingFrom) .DrawerItem-draggable:hover {
+  .Drawer:not(.Drawer--isDraggingFrom)
+    .DrawerItem:not(.DrawerItem--disabled)
+    .DrawerItem-draggable:hover {
     background-color: var(--puck-color-azure-12);
     color: var(--puck-color-azure-04);
     transition: none;

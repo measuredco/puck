@@ -16,12 +16,15 @@ export const usePuck = () => {
     appState,
     config,
     dispatch,
-    getPermissions: (
-      selectedItem?: ComponentData,
-      type?: keyof DefaultComponentProps
-    ) => {
+    getPermissions: ({
+      item,
+      type,
+    }: {
+      item?: ComponentData;
+      type?: keyof DefaultComponentProps;
+    }) => {
       return getPermissions({
-        selectedItem: selectedItem || currentItem,
+        selectedItem: item || currentItem,
         type,
         globalPermissions: globalPermissions || {},
         config,
