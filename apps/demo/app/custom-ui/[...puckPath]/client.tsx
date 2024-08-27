@@ -301,13 +301,52 @@ const CustomActionBar = ({ children, label }) => {
   );
 };
 
+const CustomDrawer = () => {
+  const { getPermissions } = usePuck();
+
+  return (
+    <Drawer direction="horizontal">
+      <div
+        style={{
+          display: "flex",
+          pointerEvents: "all",
+          padding: "16px",
+          background: "var(--puck-color-grey-12)",
+        }}
+      >
+        {Object.keys(config.components).map((componentKey, componentIndex) => {
+          const canInsert = getPermissions({
+            type: componentKey,
+          }).insert;
+          return (
+            <Drawer.Item
+              key={componentKey}
+              name={componentKey}
+              index={componentIndex}
+              isDragDisabled={!canInsert}
+            >
+              {({ children }) => (
+                <div
+                  style={{
+                    marginRight: 8,
+                  }}
+                >
+                  {children}
+                </div>
+              )}
+            </Drawer.Item>
+          );
+        })}
+      </div>
+    </Drawer>
+  );
+};
+
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const { data, resolvedData, key } = useDemoData({
     path,
     isEdit,
   });
-
-  const { getPermissions } = usePuck();
 
   const configOverride: UserConfig = {
     ...config,
@@ -342,46 +381,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           actionBar: ({ children, label }) => (
             <CustomActionBar label={label}>{children}</CustomActionBar>
           ),
-          components: () => {
-            return (
-              <Drawer direction="horizontal">
-                <div
-                  style={{
-                    display: "flex",
-                    pointerEvents: "all",
-                    padding: "16px",
-                    background: "var(--puck-color-grey-12)",
-                  }}
-                >
-                  {Object.keys(config.components).map(
-                    (componentKey, componentIndex) => {
-                      const canInsert = getPermissions({
-                        type: componentKey,
-                      }).insert;
-                      return (
-                        <Drawer.Item
-                          key={componentKey}
-                          name={componentKey}
-                          index={componentIndex}
-                          isDragDisabled={!canInsert}
-                        >
-                          {({ children }) => (
-                            <div
-                              style={{
-                                marginRight: 8,
-                              }}
-                            >
-                              {children}
-                            </div>
-                          )}
-                        </Drawer.Item>
-                      );
-                    }
-                  )}
-                </div>
-              </Drawer>
-            );
-          },
+          components: () => <CustomDrawer />,
           puck: () => <CustomPuck dataKey={key} />,
         }}
       />
