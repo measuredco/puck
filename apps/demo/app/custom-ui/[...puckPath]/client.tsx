@@ -306,6 +306,9 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     path,
     isEdit,
   });
+
+  const { getPermissions } = usePuck();
+
   const configOverride: UserConfig = {
     ...config,
     components: {
@@ -340,7 +343,6 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             <CustomActionBar label={label}>{children}</CustomActionBar>
           ),
           components: () => {
-            const { getPermissions } = usePuck();
             return (
               <Drawer direction="horizontal">
                 <div
