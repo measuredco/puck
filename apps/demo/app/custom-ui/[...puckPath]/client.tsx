@@ -279,7 +279,7 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
 const CustomActionBar = ({ children, label }) => {
   const { appState, getPermissions, selectedItem } = usePuck();
 
-  const { debug } = getPermissions({});
+  const { debug } = getPermissions();
 
   const onClick = () => {
     alert(

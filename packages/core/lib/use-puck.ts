@@ -22,7 +22,7 @@ export const usePuck = () => {
     }: {
       item?: ComponentData;
       type?: keyof DefaultComponentProps;
-    }) => {
+    } = {}) => {
       return getPermissions({
         selectedItem: item || currentItem,
         type,

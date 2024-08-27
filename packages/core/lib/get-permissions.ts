@@ -16,7 +16,7 @@ export const getPermissions = ({
   globalPermissions: Partial<Permissions>;
   config: Config;
 }) => {
-  const componentType = (selectedItem && selectedItem.type) || type || "";
+  const componentType = type || (selectedItem && selectedItem.type) || "";
   let componentPermissions = getInitialPermissions({
     componentType,
     config,
