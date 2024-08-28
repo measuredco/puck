@@ -22,22 +22,27 @@ const DrawerDraggable = ({
   children,
   id,
   index,
+  isDragDisabled,
 }: {
   children: ReactNode;
   id: string;
   index: number;
-}) => (
-  <Draggable
-    key={id}
-    id={id}
-    index={index}
-    showShadow
-    disableAnimations
-    className={() => getClassNameItem()}
-  >
-    {() => children}
-  </Draggable>
-);
+  isDragDisabled?: boolean;
+}) => {
+  return (
+    <Draggable
+      key={id}
+      id={id}
+      index={index}
+      isDragDisabled={isDragDisabled}
+      showShadow
+      disableAnimations
+      className={() => getClassNameItem({ disabled: isDragDisabled })}
+    >
+      {() => children}
+    </Draggable>
+  );
+};
 
 const DrawerItem = ({
   name,
@@ -45,12 +50,14 @@ const DrawerItem = ({
   id,
   label,
   index,
+  isDragDisabled,
 }: {
   name: string;
   children?: (props: { children: ReactNode; name: string }) => ReactElement;
   id?: string;
   label?: string;
   index: number;
+  isDragDisabled?: boolean;
 }) => {
   const ctx = useContext(drawerContext);
 
@@ -66,13 +73,17 @@ const DrawerItem = ({
   );
 
   return (
-    <DrawerDraggable id={resolvedId} index={index}>
+    <DrawerDraggable
+      id={resolvedId}
+      index={index}
+      isDragDisabled={isDragDisabled}
+    >
       <CustomInner name={name}>
         <div className={getClassNameItem("draggableWrapper")}>
           <div className={getClassNameItem("draggable")}>
             <div className={getClassNameItem("name")}>{label ?? name}</div>
             <div className={getClassNameItem("icon")}>
-              <DragIcon />
+              <DragIcon isDragDisabled={isDragDisabled} />
             </div>
           </div>
         </div>

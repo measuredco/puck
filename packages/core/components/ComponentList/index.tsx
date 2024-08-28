@@ -5,6 +5,8 @@ import { useAppContext } from "../Puck/context";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Drawer } from "../Drawer";
 
+import { getPermissions } from "../../lib/get-permissions";
+
 const getClassName = getClassNameFactory("ComponentList", styles);
 
 const ComponentListItem = ({
@@ -16,9 +18,21 @@ const ComponentListItem = ({
   label?: string;
   index: number;
 }) => {
-  const { overrides } = useAppContext();
+  const { overrides, config, globalPermissions } = useAppContext();
+
+  const canInsert = getPermissions({
+    type: name,
+    config,
+    globalPermissions: globalPermissions || {},
+  }).insert;
+
   return (
-    <Drawer.Item label={label} name={name} index={index}>
+    <Drawer.Item
+      label={label}
+      name={name}
+      index={index}
+      isDragDisabled={!canInsert}
+    >
       {overrides.componentItem}
     </Drawer.Item>
   );

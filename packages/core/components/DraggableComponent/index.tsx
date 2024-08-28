@@ -18,6 +18,7 @@ import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
 import { DefaultOverride } from "../DefaultOverride";
 import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
+import { getPermissions } from "../../lib/get-permissions";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -82,7 +83,15 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
-  const { zoomConfig, status, overrides, plugins } = useAppContext();
+  const {
+    zoomConfig,
+    status,
+    overrides,
+    plugins,
+    selectedItem,
+    config,
+    globalPermissions,
+  } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
@@ -109,6 +118,14 @@ export const DraggableComponent = ({
     [loadedOverrides]
   );
 
+  const permissions =
+    selectedItem &&
+    getPermissions({
+      selectedItem,
+      globalPermissions: globalPermissions || {},
+      config,
+    });
+
   return (
     <El
       key={id}
@@ -133,7 +150,7 @@ export const DraggableComponent = ({
           style={{
             ...style,
             ...provided.draggableProps.style,
-            cursor: isModifierHeld ? "initial" : "grab",
+            cursor: isModifierHeld || isDragDisabled ? "initial" : "grab",
           }}
           onMouseOver={onMouseOver}
           onMouseOut={onMouseOut}
@@ -163,12 +180,16 @@ export const DraggableComponent = ({
                 }}
               >
                 <CustomActionBar label={label}>
-                  <ActionBar.Action onClick={onDuplicate} label="Duplicate">
-                    <Copy size={16} />
-                  </ActionBar.Action>
-                  <ActionBar.Action onClick={onDelete} label="Delete">
-                    <Trash size={16} />
-                  </ActionBar.Action>
+                  {permissions && permissions.duplicate && (
+                    <ActionBar.Action onClick={onDuplicate} label="Duplicate">
+                      <Copy size={16} />
+                    </ActionBar.Action>
+                  )}
+                  {permissions && permissions.delete && (
+                    <ActionBar.Action onClick={onDelete} label="Delete">
+                      <Trash size={16} />
+                    </ActionBar.Action>
+                  )}
                 </CustomActionBar>
               </div>
             </div>
