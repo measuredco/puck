@@ -260,6 +260,7 @@ export const Fields = () => {
               selectedItem,
               config,
               globalPermissions: globalPermissions || {},
+              appState: state,
             });
 
             return (

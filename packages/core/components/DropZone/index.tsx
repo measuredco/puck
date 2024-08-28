@@ -245,6 +245,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                   ),
                   config: appContext.config,
                   globalPermissions: appContext.globalPermissions || {},
+                  appState: appContext.state,
                 }).drag;
 
                 return (

@@ -28,6 +28,7 @@ export const usePuck = () => {
         type,
         globalPermissions: globalPermissions || {},
         config,
+        appState,
       });
     },
     history: {
