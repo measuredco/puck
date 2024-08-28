@@ -1,13 +1,13 @@
 "use client";
 
-import { Button, Data, Puck, Render } from "@/core";
+import { ActionBar, Button, Data, Puck, Render } from "@/core";
 import { HeadingAnalyzer } from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config, { UserConfig } from "../../../config";
 import { useDemoData } from "../../../lib/use-demo-data";
 import { IconButton, usePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Drawer } from "@/core/components/Drawer";
-import { ChevronUp, ChevronDown, Globe } from "lucide-react";
+import { ChevronUp, ChevronDown, Globe, Bug } from "lucide-react";
 
 const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
   const { appState, dispatch } = usePuck();
@@ -276,57 +276,112 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
   );
 };
 
+const CustomActionBar = ({ children, label }) => {
+  const { appState, getPermissions, selectedItem } = usePuck();
+
+  const { debug } = getPermissions();
+
+  const onClick = () => {
+    alert(
+      `Index: ${appState.ui.itemSelector.index} \nZone: ${
+        appState.ui.itemSelector.zone
+      } \nData: ${JSON.stringify(selectedItem)}`
+    );
+  };
+  return (
+    <ActionBar label={label}>
+      {debug && (
+        <ActionBar.Action onClick={onClick} label="Debug information">
+          <Bug size={16} />
+        </ActionBar.Action>
+      )}
+
+      {children}
+    </ActionBar>
+  );
+};
+
+const CustomDrawer = () => {
+  const { getPermissions } = usePuck();
+
+  return (
+    <Drawer direction="horizontal">
+      <div
+        style={{
+          display: "flex",
+          pointerEvents: "all",
+          padding: "16px",
+          background: "var(--puck-color-grey-12)",
+        }}
+      >
+        {Object.keys(config.components).map((componentKey, componentIndex) => {
+          const canInsert = getPermissions({
+            type: componentKey,
+          }).insert;
+          return (
+            <Drawer.Item
+              key={componentKey}
+              name={componentKey}
+              index={componentIndex}
+              isDragDisabled={!canInsert}
+            >
+              {({ children }) => (
+                <div
+                  style={{
+                    marginRight: 8,
+                  }}
+                >
+                  {children}
+                </div>
+              )}
+            </Drawer.Item>
+          );
+        })}
+      </div>
+    </Drawer>
+  );
+};
+
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const { data, resolvedData, key } = useDemoData({
     path,
     isEdit,
   });
 
+  const configOverride: UserConfig = {
+    ...config,
+    components: {
+      ...config.components,
+      Hero: {
+        ...config.components.Hero,
+        permissions: {
+          debug: false,
+          drag: false,
+          delete: false,
+          duplicate: false,
+          insert: false,
+        },
+      },
+    },
+  };
   if (isEdit) {
     return (
       <Puck<UserConfig>
-        config={config}
+        config={configOverride}
         data={data}
         iframe={{ enabled: false }}
         headerPath={path}
+        permissions={{
+          debug: true,
+        }}
         overrides={{
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
           ),
-          components: () => {
-            return (
-              <Drawer direction="horizontal">
-                <div
-                  style={{
-                    display: "flex",
-                    pointerEvents: "all",
-                    padding: "16px",
-                    background: "var(--puck-color-grey-12)",
-                  }}
-                >
-                  {Object.keys(config.components).map(
-                    (componentKey, componentIndex) => (
-                      <Drawer.Item
-                        key={componentKey}
-                        name={componentKey}
-                        index={componentIndex}
-                      >
-                        {({ children }) => (
-                          <div
-                            style={{
-                              marginRight: 8,
-                            }}
-                          >
-                            {children}
-                          </div>
-                        )}
-                      </Drawer.Item>
-                    )
-                  )}
-                </div>
-              </Drawer>
-            );
-          },
+          actionBar: ({ children, label }) => (
+            <CustomActionBar label={label}>{children}</CustomActionBar>
+          ),
+          components: () => <CustomDrawer />,
           puck: () => <CustomPuck dataKey={key} />,
         }}
       />

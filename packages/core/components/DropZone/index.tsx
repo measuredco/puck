@@ -11,6 +11,7 @@ import { getZoneId } from "../../lib/get-zone-id";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
 import { ComponentConfig, PuckContext } from "../../types/Config";
+import { getPermissions } from "../../lib/get-permissions";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -237,6 +238,15 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                 const label =
                   componentConfig?.["label"] ?? item.type.toString();
 
+                const canDrag = getPermissions({
+                  selectedItem: getItem(
+                    { index: i, zone: zoneCompound },
+                    appContext.state.data
+                  ),
+                  config: appContext.config,
+                  globalPermissions: appContext.globalPermissions || {},
+                }).drag;
+
                 return (
                   <div
                     key={item.props.id}
@@ -258,6 +268,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                         forceHover={
                           hoveringComponent === componentId && !userIsDragging
                         }
+                        isDragDisabled={!canDrag}
                         indicativeHover={
                           userIsDragging &&
                           containsZone &&

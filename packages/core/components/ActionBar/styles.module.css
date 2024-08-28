@@ -1,0 +1,63 @@
+.ActionBarComponent {
+  display: flex;
+  width: auto;
+  padding: 4px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-radius: 8px;
+  background: var(--puck-color-grey-01);
+  color: var(--puck-color-white);
+  font-family: var(--puck-font-family);
+  gap: 4px;
+  min-height: 26px;
+}
+
+.ActionBarComponent-actionsLabel {
+  color: var(--puck-color-grey-08);
+  display: flex;
+  font-size: var(--puck-font-size-xxxs);
+  font-weight: 500;
+  justify-content: center;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ActionBarComponent-action:first-of-type {
+  border-left: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
+  border-radius: 0;
+  padding-left: 16px;
+}
+
+.ActionBarComponent-action {
+  background: transparent;
+  border: none;
+  color: var(--puck-color-grey-08);
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 50ms ease-in;
+}
+
+.ActionBarComponent-action:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ActionBarComponent-action:hover {
+    color: var(--puck-color-azure-06);
+    transition: none;
+  }
+}
+
+.ActionBarComponent-action:active {
+  color: var(--puck-color-azure-07);
+  transition: none;
+}

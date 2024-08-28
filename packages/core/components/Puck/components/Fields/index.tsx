@@ -6,7 +6,14 @@ import {
   replaceAction,
   setAction,
 } from "../../../../reducer";
-import { ComponentData, RootData, UiState } from "../../../../types/Config";
+import {
+  ComponentData,
+  DefaultComponentProps,
+  RootData,
+  UiState,
+  Permissions,
+  Config,
+} from "../../../../types/Config";
 import type { Field, Fields as FieldsType } from "../../../../types/Fields";
 import { AutoFieldPrivate } from "../../../AutoField";
 import { useAppContext } from "../../context";
@@ -16,6 +23,7 @@ import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 import { getChanged } from "../../../../lib/get-changed";
+import { getPermissions } from "../../../../lib/get-permissions";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -139,6 +147,7 @@ export const Fields = () => {
     resolveData,
     componentState,
     overrides,
+    globalPermissions,
   } = useAppContext();
   const { data, ui } = state;
   const { itemSelector } = ui;
@@ -247,6 +256,11 @@ export const Fields = () => {
 
           if (selectedItem && itemSelector) {
             const { readOnly = {} } = selectedItem;
+            const { edit } = getPermissions({
+              selectedItem,
+              config,
+              globalPermissions: globalPermissions || {},
+            });
 
             return (
               <AutoFieldPrivate
@@ -254,7 +268,7 @@ export const Fields = () => {
                 field={field}
                 name={fieldName}
                 id={`${selectedItem.props.id}_${fieldName}`}
-                readOnly={readOnly[fieldName]}
+                readOnly={!edit || readOnly[fieldName]}
                 value={selectedItem.props[fieldName]}
                 onChange={onChange}
               />
