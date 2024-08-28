@@ -1,6 +1,8 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useMemo } from "react";
 import Frame, { FrameComponentProps, useFrame } from "react-frame-component";
 import hash from "object-hash";
+import { DefaultOverride } from "../DefaultOverride";
+import { RenderFunc } from "../../types/Overrides";
 
 const styleSelector = 'style, link[rel="stylesheet"]';
 
@@ -303,6 +305,7 @@ const CopyHostStyles = ({
 export type AutoFrameProps = FrameComponentProps & {
   debug?: boolean;
   onStylesLoaded?: () => void;
+  wrapper?: RenderFunc<{ children: ReactNode }>;
 };
 
 const AutoFrameComponent = React.forwardRef<HTMLIFrameElement, AutoFrameProps>(
@@ -312,19 +315,23 @@ const AutoFrameComponent = React.forwardRef<HTMLIFrameElement, AutoFrameProps>(
       debug,
       onStylesLoaded,
       initialContent,
+      wrapper,
       ...props
     }: AutoFrameProps,
     ref
   ) {
+    const CustomWrapper = useMemo(() => wrapper || DefaultOverride, [wrapper]);
     return (
       <Frame {...props} ref={ref} initialContent={initialContent}>
-        <CopyHostStyles
-          debug={debug}
-          onStylesLoaded={onStylesLoaded}
-          initialContent={initialContent}
-        >
-          {children}
-        </CopyHostStyles>
+        <CustomWrapper>
+          <CopyHostStyles
+            debug={debug}
+            onStylesLoaded={onStylesLoaded}
+            initialContent={initialContent}
+          >
+            {children}
+          </CopyHostStyles>
+        </CustomWrapper>
       </Frame>
     );
   }

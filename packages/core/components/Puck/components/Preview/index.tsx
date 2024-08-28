@@ -52,6 +52,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
             setStatus("READY");
           }}
           initialContent={iframe.initialContent}
+          wrapper={iframe.wrapper}
         >
           <Page dispatch={dispatch} state={state} {...rootProps}>
             <DropZone zone={rootDroppableId} />

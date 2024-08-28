@@ -3,7 +3,7 @@ import { Field, FieldProps } from "./Fields";
 import { ItemSelector } from "../lib/get-item";
 
 // Plugins can use `usePuck` instead of relying on props
-type RenderFunc<
+export type RenderFunc<
   Props extends { [key: string]: any } = { children: ReactNode }
 > = (props: Props) => ReactElement;
 
