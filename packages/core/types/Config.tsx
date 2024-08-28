@@ -66,7 +66,7 @@ export type ComponentConfig<
   resolvePermissions?: (
     data: DataShape,
     params: {
-      changed: Record<string, boolean>;
+      changed: Partial<Record<keyof ComponentProps, boolean>>;
       lastPermissions: Partial<Permissions> | undefined;
       initialPermissions: Partial<Permissions>;
       appState: AppState;
