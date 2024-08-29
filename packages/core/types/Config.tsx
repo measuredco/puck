@@ -63,6 +63,15 @@ export type ComponentConfig<
         props?: Partial<ComponentProps>;
         readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
       };
+  resolvePermissions?: (
+    data: DataShape,
+    params: {
+      changed: Partial<Record<keyof ComponentProps, boolean>>;
+      lastPermissions: Partial<Permissions> | undefined;
+      initialPermissions: Partial<Permissions>;
+      appState: AppState;
+    }
+  ) => Partial<Permissions>;
 };
 
 type Category<ComponentName> = {

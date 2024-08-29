@@ -91,6 +91,7 @@ export const DraggableComponent = ({
     selectedItem,
     config,
     globalPermissions,
+    state,
   } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
 
@@ -124,6 +125,7 @@ export const DraggableComponent = ({
       selectedItem,
       globalPermissions: globalPermissions || {},
       config,
+      appState: state,
     });
 
   return (

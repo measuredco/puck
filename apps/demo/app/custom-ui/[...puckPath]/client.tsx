@@ -318,6 +318,7 @@ const CustomDrawer = () => {
           const canInsert = getPermissions({
             type: componentKey,
           }).insert;
+
           return (
             <Drawer.Item
               key={componentKey}
@@ -360,6 +361,13 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           delete: false,
           duplicate: false,
           insert: false,
+        },
+        resolvePermissions: (data) => {
+          if (data.props.title.includes("Puck")) {
+            return { duplicate: true };
+          } else {
+            return { duplicate: false };
+          }
         },
       },
     },

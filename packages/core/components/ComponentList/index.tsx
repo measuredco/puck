@@ -18,12 +18,13 @@ const ComponentListItem = ({
   label?: string;
   index: number;
 }) => {
-  const { overrides, config, globalPermissions } = useAppContext();
+  const { overrides, config, globalPermissions, state } = useAppContext();
 
   const canInsert = getPermissions({
     type: name,
     config,
     globalPermissions: globalPermissions || {},
+    appState: state,
   }).insert;
 
   return (
