@@ -48,6 +48,7 @@ export type Overrides = OverridesGeneric<{
   }>;
   components: RenderFunc;
   componentItem: RenderFunc<{ children: ReactNode; name: string }>;
+  iframe: RenderFunc<{ children: ReactNode; document?: Document }>;
   outline: RenderFunc;
   puck: RenderFunc;
 }>;
