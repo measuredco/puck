@@ -35,6 +35,7 @@ export const createDynamicCollisionDetector = (
   midpointOffset: number = 0.05
 ) =>
   ((input) => {
+    // console.log("checking collision", input);
     const { dragOperation, droppable } = input;
 
     const { position } = dragOperation;

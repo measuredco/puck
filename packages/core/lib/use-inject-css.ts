@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
+import { useAppContext } from "../components/Puck/context";
 
 const styles = `
 /* Prevent user from interacting with underlying component */
-#puck-preview [data-puck-component] * {
+[data-puck-component] * {
   user-select: none;
 }
 
-#puck-preview [data-puck-component] {
+[data-puck-component] {
   cursor: grab;
   pointer-events: auto !important;
 }
 
-#puck-preview [data-dnd-placeholder] {
+[data-dnd-placeholder] {
   background: var(--puck-color-azure-06) !important;
   border: none !important;
   color: #00000000 !important;
@@ -20,26 +21,36 @@ const styles = `
   transition: none !important;
 }
 
-#puck-preview [data-dnd-placeholder] *, #puck-preview [data-dnd-placeholder]::after, #puck-preview [data-dnd-placeholder]::before {
+[data-dnd-placeholder] *, [data-dnd-placeholder]::after, [data-dnd-placeholder]::before {
   opacity: 0 !important;
 }
 
-#puck-preview [data-dnd-dragging] {
+[data-dnd-dragging] {
   pointer-events: none !important;
 }
 `;
 
-export const useInjectStyleSheet = (initialStyles: string) => {
+export const useInjectStyleSheet = (
+  initialStyles: string,
+  iframeEnabled?: boolean
+) => {
   const [el] = useState<HTMLStyleElement>(document.createElement("style"));
 
   useEffect(() => {
     el.innerHTML = initialStyles;
+
+    if (iframeEnabled) {
+      (
+        document.getElementById("preview-frame") as HTMLIFrameElement
+      ).contentWindow?.document.head.appendChild(el);
+    }
+
     document.head.appendChild(el);
-  }, []);
+  }, [iframeEnabled]);
 
   return el;
 };
 
-export const useInjectGlobalCss = () => {
-  return useInjectStyleSheet(styles);
+export const useInjectGlobalCss = (iframeEnabled?: boolean) => {
+  return useInjectStyleSheet(styles, iframeEnabled);
 };

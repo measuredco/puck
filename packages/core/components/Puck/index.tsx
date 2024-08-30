@@ -110,7 +110,7 @@ export function Puck<UserConfig extends Config = Config>({
 }) {
   const historyStore = useHistoryStore(initialHistory);
 
-  useInjectGlobalCss();
+  useInjectGlobalCss(iframe.enabled);
 
   const [reducer] = useState(() =>
     createReducer<UserConfig>({ config, record: historyStore.record })
