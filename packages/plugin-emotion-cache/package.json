@@ -1,0 +1,37 @@
+{
+  "name": "@measured/puck-plugin-emotion-cache",
+  "version": "0.15.0",
+  "author": "Measured Corporation Ltd <hello@measured.co>",
+  "repository": "measuredco/puck",
+  "bugs": "https://github.com/measuredco/puck/issues",
+  "homepage": "https://puckeditor.com",
+  "private": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"**/*.ts*\"",
+    "build": "rm -rf dist && tsup index.tsx",
+    "prepare": "yarn build"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@emotion/react": "^11.13.3",
+    "@measured/puck": "^0.15.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "tsup": "^8.2.4",
+    "tsup-config": "*",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "@emotion/react": "^11.0.0"
+  }
+}
