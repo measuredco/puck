@@ -1,18 +1,20 @@
 import { DropZone } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
-import { ReactNode, useCallback, useRef } from "react";
+import { ReactNode, useCallback, useMemo, useRef } from "react";
 import { useAppContext } from "../../context";
 import AutoFrame from "../../../AutoFrame";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { DefaultRootProps } from "../../../../types/Config";
+import { FrameContextConsumer } from "react-frame-component";
 
 const getClassName = getClassNameFactory("PuckPreview", styles);
 
 type PageProps = DefaultRootProps & { children: ReactNode };
 
 export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
-  const { config, dispatch, state, setStatus, iframe } = useAppContext();
+  const { config, dispatch, state, setStatus, iframe, overrides } =
+    useAppContext();
 
   const Page = useCallback<React.FC<PageProps>>(
     (pageProps) =>
@@ -28,6 +30,8 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
       ),
     [config.root]
   );
+
+  const Frame = useMemo(() => overrides.iframe || "div", [overrides]);
 
   // DEPRECATED
   const rootProps = state.data.root.props || state.data.root;
@@ -52,9 +56,17 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
             setStatus("READY");
           }}
         >
-          <Page dispatch={dispatch} state={state} {...rootProps}>
-            <DropZone zone={rootDroppableId} />
-          </Page>
+          <FrameContextConsumer>
+            {({ document }) => {
+              return (
+                <Frame document={document}>
+                  <Page dispatch={dispatch} state={state} {...rootProps}>
+                    <DropZone zone={rootDroppableId} />
+                  </Page>
+                </Frame>
+              );
+            }}
+          </FrameContextConsumer>
         </AutoFrame>
       ) : (
         <div id="preview-frame" className={getClassName("frame")}>
