@@ -1,6 +1,6 @@
 import { DropZone } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
-import { ReactNode, useCallback, useMemo, useRef } from "react";
+import { ReactNode, useCallback, useMemo } from "react";
 import { useAppContext } from "../../context";
 import AutoFrame, { autoFrameContext } from "../../../AutoFrame";
 import styles from "./styles.module.css";
@@ -30,7 +30,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
     [config.root]
   );
 
-  const Frame = useMemo(() => overrides.iframe || "div", [overrides]);
+  const Frame = useMemo(() => overrides.iframe, [overrides]);
 
   // DEPRECATED
   const rootProps = state.data.root.props || state.data.root;
@@ -54,13 +54,17 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         >
           <autoFrameContext.Consumer>
             {({ document }) => {
-              return (
-                <Frame document={document}>
-                  <Page dispatch={dispatch} state={state} {...rootProps}>
-                    <DropZone zone={rootDroppableId} />
-                  </Page>
-                </Frame>
+              const inner = (
+                <Page dispatch={dispatch} state={state} {...rootProps}>
+                  <DropZone zone={rootDroppableId} />
+                </Page>
               );
+
+              if (Frame) {
+                return <Frame document={document}>{inner}</Frame>;
+              }
+
+              return inner;
             }}
           </autoFrameContext.Consumer>
         </AutoFrame>
