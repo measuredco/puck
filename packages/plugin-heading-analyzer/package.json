@@ -8,6 +8,13 @@
   "private": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./dist/index.css": "./dist/index.css"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts*\"",

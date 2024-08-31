@@ -10,12 +10,12 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
     "./rsc": {
-      "import": "./dist/rsc.js",
+      "import": "./dist/rsc.mjs",
       "require": "./dist/rsc.js",
       "types": "./dist/rsc.d.ts"
     },

@@ -2,11 +2,13 @@ import fs from "fs";
 import path from "path";
 import postcss from "postcss";
 import postcssModules from "postcss-modules";
+import type { Options } from "tsup";
 
-const config = {
+const config: Options = {
   dts: true,
-  format: "cjs",
+  format: ["cjs", "esm"],
   inject: ["../tsup-config/react-import.js"],
+  external: ["react", "react-dom", "@measured/puck"],
   esbuildPlugins: [
     {
       name: "css-module",
