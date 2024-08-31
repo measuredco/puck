@@ -17,7 +17,6 @@ import { DefaultDraggable } from "../Draggable";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
 import { DefaultOverride } from "../DefaultOverride";
-import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 import { getPermissions } from "../../lib/get-permissions";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
@@ -109,14 +108,9 @@ export const DraggableComponent = ({
     }
   }, []);
 
-  const loadedOverrides = useLoadedOverrides({
-    overrides: overrides,
-    plugins: plugins,
-  });
-
   const CustomActionBar = useMemo(
-    () => loadedOverrides.actionBar || DefaultActionBar,
-    [loadedOverrides]
+    () => overrides.actionBar || DefaultActionBar,
+    [overrides.actionBar]
   );
 
   const permissions =
