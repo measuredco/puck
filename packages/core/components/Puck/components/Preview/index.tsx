@@ -2,11 +2,10 @@ import { DropZone } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { ReactNode, useCallback, useMemo, useRef } from "react";
 import { useAppContext } from "../../context";
-import AutoFrame from "../../../AutoFrame";
+import AutoFrame, { autoFrameContext } from "../../../AutoFrame";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { DefaultRootProps } from "../../../../types/Config";
-import { FrameContextConsumer } from "react-frame-component";
 
 const getClassName = getClassNameFactory("PuckPreview", styles);
 
@@ -36,8 +35,6 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   // DEPRECATED
   const rootProps = state.data.root.props || state.data.root;
 
-  const ref = useRef<HTMLIFrameElement>(null);
-
   return (
     <div
       className={getClassName()}
@@ -51,12 +48,11 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           id="preview-frame"
           className={getClassName("frame")}
           data-rfd-iframe
-          ref={ref}
           onStylesLoaded={() => {
             setStatus("READY");
           }}
         >
-          <FrameContextConsumer>
+          <autoFrameContext.Consumer>
             {({ document }) => {
               return (
                 <Frame document={document}>
@@ -66,7 +62,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
                 </Frame>
               );
             }}
-          </FrameContextConsumer>
+          </autoFrameContext.Consumer>
         </AutoFrame>
       ) : (
         <div id="preview-frame" className={getClassName("frame")}>

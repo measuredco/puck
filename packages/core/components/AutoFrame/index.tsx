@@ -1,6 +1,13 @@
-import React, { ReactNode, useEffect } from "react";
-import Frame, { FrameComponentProps, useFrame } from "react-frame-component";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import hash from "object-hash";
+import { createPortal } from "react-dom";
 
 const styleSelector = 'style, link[rel="stylesheet"]';
 
@@ -290,26 +297,69 @@ const CopyHostStyles = ({
   return <>{children}</>;
 };
 
-export type AutoFrameProps = FrameComponentProps & {
+export type AutoFrameProps = {
+  children: ReactNode;
+  className: string;
   debug?: boolean;
+  id?: string;
   onStylesLoaded?: () => void;
 };
 
-const AutoFrameComponent = React.forwardRef<HTMLIFrameElement, AutoFrameProps>(
-  function (
-    { children, debug, onStylesLoaded, ...props }: AutoFrameProps,
-    ref
-  ) {
-    return (
-      <Frame {...props} ref={ref}>
-        <CopyHostStyles debug={debug} onStylesLoaded={onStylesLoaded}>
-          {children}
-        </CopyHostStyles>
-      </Frame>
-    );
-  }
-);
+type AutoFrameContext = {
+  document?: Document;
+  window?: Window;
+};
 
-AutoFrameComponent.displayName = "AutoFrameComponent";
+export const autoFrameContext = createContext<AutoFrameContext>({});
 
-export default AutoFrameComponent;
+export const useFrame = () => useContext(autoFrameContext);
+
+function AutoFrame({
+  children,
+  className,
+  debug,
+  id,
+  onStylesLoaded,
+  ...props
+}: AutoFrameProps) {
+  const [loaded, setLoaded] = useState(false);
+  const [ctx, setCtx] = useState<AutoFrameContext>({});
+  const ref = useRef<HTMLIFrameElement>(null);
+  const [mountTarget, setMountTarget] = useState<HTMLElement | null>();
+
+  useEffect(() => {
+    if (ref.current) {
+      setCtx({
+        document: ref.current.contentDocument || undefined,
+        window: ref.current.contentWindow || undefined,
+      });
+
+      setMountTarget(ref.current.contentDocument?.getElementById("frame-root"));
+    }
+  }, [ref, loaded]);
+
+  return (
+    <iframe
+      {...props}
+      className={className}
+      id={id}
+      srcDoc='<!DOCTYPE html><html><head></head><body><div id="frame-root"></div></body></html>'
+      ref={ref}
+      onLoad={() => {
+        setLoaded(true);
+      }}
+    >
+      <autoFrameContext.Provider value={ctx}>
+        {loaded && mountTarget && (
+          <CopyHostStyles debug={debug} onStylesLoaded={onStylesLoaded}>
+            {createPortal(children, mountTarget)}
+          </CopyHostStyles>
+        )}
+      </autoFrameContext.Provider>
+    </iframe>
+  );
+}
+
+AutoFrame.displayName = "AutoFrame";
+
+export default AutoFrame;

@@ -63,7 +63,6 @@
     "@measured/dnd": "16.6.0-canary.4cba1d1",
     "deep-diff": "^1.0.2",
     "object-hash": "^3.0.0",
-    "react-frame-component": "^5.2.6",
     "react-hotkeys-hook": "^4.4.1",
     "ua-parser-js": "^1.0.37",
     "use-debounce": "^9.0.4",
