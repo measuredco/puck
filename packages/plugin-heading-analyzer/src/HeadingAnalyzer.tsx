@@ -15,7 +15,12 @@ import { getClassNameFactory } from "@/core/lib";
 const getClassName = getClassNameFactory("HeadingAnalyzer", styles);
 const getClassNameItem = getClassNameFactory("HeadingAnalyzerItem", styles);
 
-import ReactFromJSON from "react-from-json";
+import ReactFromJSONModule from "react-from-json";
+
+// Synthetic import
+const ReactFromJSON =
+  (ReactFromJSONModule as unknown as { default: typeof ReactFromJSONModule })
+    .default || ReactFromJSONModule;
 
 const dataAttr = "data-puck-heading-analyzer-id";
 
