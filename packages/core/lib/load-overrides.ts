@@ -5,12 +5,12 @@ export const loadOverrides = ({
   overrides,
   plugins,
 }: {
-  overrides: Partial<Overrides>;
-  plugins: Plugin[];
+  overrides?: Partial<Overrides>;
+  plugins?: Plugin[];
 }) => {
   const collected = { ...overrides };
 
-  plugins.forEach((plugin) => {
+  plugins?.forEach((plugin) => {
     Object.keys(plugin.overrides).forEach((overridesType) => {
       if (overridesType === "fieldTypes") {
         const fieldTypes = plugin.overrides.fieldTypes!;

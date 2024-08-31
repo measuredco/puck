@@ -7,8 +7,8 @@ export const useLoadedOverrides = ({
   overrides,
   plugins,
 }: {
-  overrides: Partial<Overrides>;
-  plugins: Plugin[];
+  overrides?: Partial<Overrides>;
+  plugins?: Plugin[];
 }) => {
   return useMemo(() => {
     return loadOverrides({ overrides, plugins });
