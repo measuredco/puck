@@ -60,6 +60,10 @@ import { DefaultOverride } from "../DefaultOverride";
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
 
+type ValidateConfig<T> = T extends Config<infer P, infer R, infer C>
+  ? Config<P, R, C>
+  : never;
+
 export function Puck<UserConfig extends Config = Config>({
   children,
   config,

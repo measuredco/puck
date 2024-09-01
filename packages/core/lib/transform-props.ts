@@ -1,9 +1,13 @@
-import { Data, DefaultComponentProps, DefaultRootProps } from "../types/Config";
+import {
+  Data,
+  DefaultComponentProps,
+  DefaultRootFieldProps,
+} from "../types/Config";
 import { defaultData } from "./default-data";
 
 type PropTransform<
   Props extends DefaultComponentProps = DefaultComponentProps,
-  RootProps extends DefaultRootProps = DefaultRootProps
+  RootProps extends DefaultComponentProps = DefaultRootFieldProps
 > = Partial<
   {
     [ComponentName in keyof Props]: (
@@ -14,7 +18,7 @@ type PropTransform<
 
 export function transformProps<
   Props extends DefaultComponentProps = DefaultComponentProps,
-  RootProps extends DefaultComponentProps = DefaultComponentProps
+  RootProps extends DefaultComponentProps = DefaultRootFieldProps
 >(data: Partial<Data>, propTransforms: PropTransform<Props, RootProps>): Data {
   const mapItem = (item) => {
     if (propTransforms[item.type]) {

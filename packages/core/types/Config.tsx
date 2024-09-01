@@ -4,23 +4,42 @@ import { DropZoneProps } from "../components/DropZone/types";
 import { Viewport } from "./Viewports";
 import { Fields } from "./Fields";
 
-type WithPuckProps<Props> = Props & {
+type WithId<Props> = Props & {
   id: string;
 };
 
-export type DefaultRootProps = {
-  title?: string;
-  [key: string]: any;
+type WithPuckProps<Props> = WithId<Props> & { puck: PuckContext };
+type AsFieldProps<Props> = Partial<
+  Omit<Props, "children" | "puck" | "editMode">
+>;
+
+type WithChildren<Props> = Props & {
+  children: ReactNode;
 };
 
-export type DefaultComponentProps = { [key: string]: any; editMode?: boolean };
+export type DefaultRootFieldProps = {
+  title?: string;
+};
+
+export type DefaultRootRenderProps<
+  Props extends DefaultComponentProps = DefaultRootFieldProps
+> = WithPuckProps<WithChildren<Props>>;
+
+export type DefaultRootProps = DefaultRootRenderProps; // Deprecated
+
+export type DefaultComponentProps = { [key: string]: any };
 
 export type Content<
-  Props extends { [key: string]: any } = { [key: string]: any }
-> = ComponentData<Props>[];
+  PropsMap extends { [key: string]: any } = { [key: string]: any }
+> = ComponentDataMap<PropsMap>[];
 
 export type PuckComponent<Props> = (
-  props: WithPuckProps<Props & { puck: PuckContext }>
+  props: WithPuckProps<
+    Props & {
+      puck: PuckContext;
+      editMode?: boolean; // Deprecated
+    }
+  >
 ) => JSX.Element;
 
 export type PuckContext = {
@@ -29,44 +48,44 @@ export type PuckContext = {
 };
 
 export type ComponentConfig<
-  ComponentProps extends DefaultComponentProps = DefaultComponentProps,
-  DefaultProps = ComponentProps,
-  DataShape = Omit<ComponentData<ComponentProps>, "type">
+  RenderProps extends DefaultComponentProps = DefaultComponentProps,
+  FieldProps extends DefaultComponentProps = RenderProps,
+  DataShape = Omit<ComponentData<FieldProps>, "type">
 > = {
-  render: PuckComponent<ComponentProps>;
+  render: PuckComponent<RenderProps>;
   label?: string;
-  defaultProps?: DefaultProps;
-  fields?: Fields<ComponentProps>;
+  defaultProps?: FieldProps;
+  fields?: Fields<FieldProps>;
   permissions?: Partial<Permissions>;
   resolveFields?: (
     data: DataShape,
     params: {
-      changed: Partial<Record<keyof ComponentProps, boolean>>;
-      fields: Fields<ComponentProps>;
-      lastFields: Fields<ComponentProps>;
+      changed: Partial<Record<keyof FieldProps, boolean>>;
+      fields: Fields<FieldProps>;
+      lastFields: Fields<FieldProps>;
       lastData: DataShape;
       appState: AppState;
     }
-  ) => Promise<Fields<ComponentProps>> | Fields<ComponentProps>;
+  ) => Promise<Fields<FieldProps>> | Fields<FieldProps>;
   resolveData?: (
     data: DataShape,
     params: {
-      changed: Partial<Record<keyof ComponentProps, boolean>>;
+      changed: Partial<Record<keyof FieldProps, boolean>>;
       lastData: DataShape;
     }
   ) =>
     | Promise<{
-        props?: Partial<ComponentProps>;
-        readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
+        props?: Partial<FieldProps>;
+        readOnly?: Partial<Record<keyof FieldProps, boolean>>;
       }>
     | {
-        props?: Partial<ComponentProps>;
-        readOnly?: Partial<Record<keyof ComponentProps, boolean>>;
+        props?: Partial<FieldProps>;
+        readOnly?: Partial<Record<keyof FieldProps, boolean>>;
       };
   resolvePermissions?: (
     data: DataShape,
     params: {
-      changed: Partial<Record<keyof ComponentProps, boolean>>;
+      changed: Partial<Record<keyof FieldProps, boolean>>;
       lastPermissions: Partial<Permissions> | undefined;
       initialPermissions: Partial<Permissions>;
       appState: AppState;
@@ -83,7 +102,7 @@ type Category<ComponentName> = {
 
 export type Config<
   Props extends Record<string, any> = Record<string, any>,
-  RootProps extends DefaultRootProps = DefaultRootProps,
+  RootProps extends DefaultComponentProps = DefaultRootFieldProps,
   CategoryName extends string = string
 > = {
   categories?: Record<CategoryName, Category<keyof Props>> & {
@@ -97,8 +116,8 @@ export type Config<
   };
   root?: Partial<
     ComponentConfig<
-      RootProps & { children?: ReactNode },
-      Partial<RootProps & { children?: ReactNode }>,
+      DefaultRootRenderProps<RootProps>,
+      AsFieldProps<RootProps>,
       RootData
     >
   >;
@@ -111,42 +130,45 @@ export type BaseData<
 };
 
 export type ComponentData<
-  Props extends DefaultComponentProps = DefaultComponentProps
+  Props extends DefaultComponentProps = DefaultComponentProps,
+  Name = string
 > = {
-  type: keyof Props;
-  props: WithPuckProps<Props>;
+  type: Name;
+  props: WithId<Props>;
 } & BaseData<Props>;
 
+export type ComponentDataMap<
+  Props extends Record<string, DefaultComponentProps> = DefaultComponentProps
+> = {
+  [K in keyof Props]: ComponentData<Props[K], K>;
+}[keyof Props];
+
 export type RootDataWithProps<
-  Props extends DefaultRootProps = DefaultRootProps
+  Props extends DefaultComponentProps = DefaultRootFieldProps
 > = BaseData<Props> & {
   props: Props;
 };
 
 // DEPRECATED
 export type RootDataWithoutProps<
-  Props extends DefaultRootProps = DefaultRootProps
+  Props extends DefaultComponentProps = DefaultRootFieldProps
 > = Props;
 
-export type RootData<Props extends DefaultRootProps = DefaultRootProps> =
-  Partial<RootDataWithProps<Props>> & Partial<RootDataWithoutProps<Props>>; // DEPRECATED
+export type RootData<
+  Props extends DefaultComponentProps = DefaultRootFieldProps
+> = Partial<RootDataWithProps<AsFieldProps<Props>>> &
+  Partial<RootDataWithoutProps<Props>>; // DEPRECATED
 
-type ComponentDataWithOptionalProps<
-  Props extends { [key: string]: any } = { [key: string]: any }
-> = Omit<ComponentData, "props"> & {
-  props: Partial<WithPuckProps<Props>>;
-};
-
-// Backwards compatability
+// Backwards compatibility
 export type MappedItem = ComponentData;
 
 export type Data<
   Props extends DefaultComponentProps = DefaultComponentProps,
-  RootProps extends DefaultRootProps = DefaultRootProps
+  RootProps extends DefaultComponentProps = DefaultRootFieldProps
 > = {
   root: RootData<RootProps>;
-  content: Content<WithPuckProps<Props>>;
-  zones?: Record<string, Content<WithPuckProps<Props>>>;
+  content: Content<Props>;
+  zones?: Record<string, Content<Props>>;
 };
 
 export type ItemWithId = {
