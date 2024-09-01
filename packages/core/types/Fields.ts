@@ -126,10 +126,9 @@ export type Field<Props extends any = any> =
 export type Fields<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps
 > = {
-  [PropName in keyof Omit<
-    Required<ComponentProps>,
-    "children" | "editMode"
-  >]: Field<ComponentProps[PropName]>;
+  [PropName in keyof Omit<ComponentProps, "editMode">]: Field<
+    ComponentProps[PropName]
+  >;
 };
 
 export type FieldProps<ValueType = any, F = Field<any>> = {
