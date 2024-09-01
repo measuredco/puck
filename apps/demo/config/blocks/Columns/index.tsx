@@ -31,7 +31,7 @@ export const Columns: ComponentConfig<ColumnsProps> = {
     },
     columns: {
       type: "array",
-      getItemSummary: (col, id) =>
+      getItemSummary: (col, id = -1) =>
         `Column ${id + 1}, span ${
           col.span ? Math.max(Math.min(col.span, 12), 1) : "auto"
         }`,

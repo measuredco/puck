@@ -27,7 +27,7 @@ const NavItem = ({ label, href }: { label: string; href: string }) => {
   );
 };
 
-const Header = ({ editMode }) => (
+const Header = ({ editMode }: { editMode: boolean }) => (
   <header className={getClassName()}>
     <div className={getClassName("logo")}>LOGO</div>
     <nav className={getClassName("items")}>

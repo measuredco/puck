@@ -191,7 +191,7 @@ describe("use-resolved-data", () => {
       const hookArgs: any = [
         currentState,
         config,
-        (args) => {
+        (args: any) => {
           const action = args as SetAction;
           const newState = action.state as any;
 

@@ -29,36 +29,45 @@ export const reduceRelatedZones = (
   };
 };
 
-const findRelatedByZoneId = (zoneId: string, data: Data) => {
+const findRelatedByZoneId = (
+  zoneId: string,
+  data: Data
+): Record<string, any> => {
   const [zoneParentId] = getZoneId(zoneId);
 
-  return (data.zones![zoneId] || []).reduce((acc, zoneItem) => {
-    const related = findRelatedByItem(zoneItem, data);
+  return (data.zones![zoneId] || []).reduce<Record<string, any>>(
+    (acc, zoneItem) => {
+      const related = findRelatedByItem(zoneItem, data);
 
-    if (zoneItem.props.id === zoneParentId) {
-      return { ...acc, ...related, [zoneId]: zoneItem };
-    }
+      if (zoneItem.props.id === zoneParentId) {
+        return { ...acc, ...related, [zoneId]: zoneItem };
+      }
 
-    return { ...acc, ...related };
-  }, {});
+      return { ...acc, ...related };
+    },
+    {}
+  );
 };
 
 const findRelatedByItem = (item: Data["content"][0], data: Data) => {
-  return Object.keys(data.zones || {}).reduce((acc, zoneId) => {
-    const [zoneParentId] = getZoneId(zoneId);
+  return Object.keys(data.zones || {}).reduce<Record<string, any>>(
+    (acc, zoneId) => {
+      const [zoneParentId] = getZoneId(zoneId);
 
-    if (item.props.id === zoneParentId) {
-      const related = findRelatedByZoneId(zoneId, data);
+      if (item.props.id === zoneParentId) {
+        const related = findRelatedByZoneId(zoneId, data);
 
-      return {
-        ...acc,
-        ...related,
-        [zoneId]: data.zones![zoneId],
-      };
-    }
+        return {
+          ...acc,
+          ...related,
+          [zoneId]: data.zones![zoneId],
+        };
+      }
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {}
+  );
 };
 
 /**
@@ -88,7 +97,7 @@ export const duplicateRelatedZones = (
     }));
 
     // We need to dupe any related items in our dupes
-    const dupeOfDupes = dupedZone.reduce(
+    const dupeOfDupes = dupedZone.reduce<any>(
       (dupeOfDupes, item, index) => ({
         ...dupeOfDupes,
         ...duplicateRelatedZones(zone[index], data, item.props.id).zones,

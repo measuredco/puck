@@ -222,7 +222,7 @@ export function AutoFieldPrivate<
   return <AutoFieldInternal<ValueType, FieldType> {...props} {...localProps} />;
 }
 
-const DefaultLabel = (props) => <div {...props} />;
+const DefaultLabel = (props: any) => <div {...props} />;
 
 export function AutoField<
   ValueType = any,

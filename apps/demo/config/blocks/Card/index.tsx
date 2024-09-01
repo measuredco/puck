@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { ReactElement } from "react";
 import { ComponentConfig } from "@/core/types/Config";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
@@ -8,8 +8,10 @@ import dynamicIconImports from "lucide-react/dynamicIconImports";
 
 const getClassName = getClassNameFactory("Card", styles);
 
-const icons = Object.keys(dynamicIconImports).reduce((acc, iconName) => {
-  const El = dynamic(dynamicIconImports[iconName]);
+const icons = Object.keys(dynamicIconImports).reduce<
+  Record<string, ReactElement>
+>((acc, iconName) => {
+  const El = dynamic((dynamicIconImports as any)[iconName]);
 
   return {
     ...acc,
@@ -25,7 +27,7 @@ const iconOptions = Object.keys(dynamicIconImports).map((iconName) => ({
 export type CardProps = {
   title: string;
   description: string;
-  icon?: "Feather";
+  icon?: string;
   mode: "flat" | "card";
 };
 
@@ -54,7 +56,7 @@ export const Card: ComponentConfig<CardProps> = {
   render: ({ title, icon, description, mode }) => {
     return (
       <div className={getClassName({ [mode]: mode })}>
-        <div className={getClassName("icon")}>{icons[icon]}</div>
+        <div className={getClassName("icon")}>{icon && icons[icon]}</div>
         <div className={getClassName("title")}>{title}</div>
         <div className={getClassName("description")}>{description}</div>
       </div>

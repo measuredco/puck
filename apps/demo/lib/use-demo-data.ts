@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
-import config, { initialData } from "../config";
-import { Data, resolveAllData } from "@/core";
+import config, {
+  initialData,
+  Props,
+  RootProps,
+  UserConfig,
+  UserData,
+} from "../config";
+import { resolveAllData } from "@/core";
 
 const isBrowser = typeof window !== "undefined";
 
@@ -18,7 +24,7 @@ export const useDemoData = ({
 
   const key = `puck-demo:${componentKey}:${path}`;
 
-  const [data] = useState<Data>(() => {
+  const [data] = useState<UserData>(() => {
     if (isBrowser) {
       const dataStr = localStorage.getItem(key);
 
@@ -32,11 +38,11 @@ export const useDemoData = ({
 
   // Normally this would happen on the server, but we can't
   // do that because we're using local storage as a database
-  const [resolvedData, setResolvedData] = useState(data);
+  const [resolvedData, setResolvedData] = useState<UserData>(data);
 
   useEffect(() => {
     if (data && !isEdit) {
-      resolveAllData(data, config).then(setResolvedData);
+      resolveAllData<Props, RootProps>(data, config).then(setResolvedData);
     }
   }, [data, isEdit]);
 

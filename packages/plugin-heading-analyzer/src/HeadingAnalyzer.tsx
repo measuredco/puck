@@ -142,8 +142,8 @@ export const HeadingAnalyzer = () => {
 
       <OutlineList>
         <ReactFromJSON<{
-          Root: (any) => ReactElement;
-          OutlineListItem: (any) => ReactElement;
+          Root: (props: any) => ReactElement;
+          OutlineListItem: (props: any) => ReactElement;
         }>
           mapping={{
             Root: (props) => <>{props.children}</>,

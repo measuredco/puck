@@ -8,6 +8,7 @@ import { IconButton, usePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Drawer } from "@/core/components/Drawer";
 import { ChevronUp, ChevronDown, Globe, Bug } from "lucide-react";
+import { Overrides } from "@/core/types/Overrides";
 
 const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
   const { appState, dispatch } = usePuck();
@@ -111,7 +112,7 @@ const Tabs = ({
                     setTimeout(() => {
                       document
                         .querySelector("#action-bar")
-                        .scroll({ top: 128, behavior: "smooth" });
+                        ?.scroll({ top: 128, behavior: "smooth" });
                     }, 25);
                   }
                 }
@@ -153,7 +154,7 @@ const Tabs = ({
                   setTimeout(() => {
                     document
                       .querySelector("#action-bar")
-                      .scroll({ top: 128, behavior: "smooth" });
+                      ?.scroll({ top: 128, behavior: "smooth" });
                   }, 25);
                 }
               }}
@@ -276,15 +277,15 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
   );
 };
 
-const CustomActionBar = ({ children, label }) => {
+const CustomActionBar: Overrides["actionBar"] = ({ children, label }) => {
   const { appState, getPermissions, selectedItem } = usePuck();
 
   const { debug } = getPermissions();
 
   const onClick = () => {
     alert(
-      `Index: ${appState.ui.itemSelector.index} \nZone: ${
-        appState.ui.itemSelector.zone
+      `Index: ${appState.ui.itemSelector?.index} \nZone: ${
+        appState.ui.itemSelector?.zone
       } \nData: ${JSON.stringify(selectedItem)}`
     );
   };

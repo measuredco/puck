@@ -29,8 +29,8 @@ export const ExternalInput = ({
   id: string;
 }) => {
   const {
-    mapProp = (val) => val,
-    mapRow = (val) => val,
+    mapProp = (val: any) => val,
+    mapRow = (val: any) => val,
     filterFields,
   } = field || {};
 
@@ -64,7 +64,7 @@ export const ExternalInput = ({
   const [searchQuery, setSearchQuery] = useState(field.initialQuery || "");
 
   const search = useCallback(
-    async (query, filters) => {
+    async (query: string, filters: object) => {
       setIsLoading(true);
 
       const cacheKey = `${id}-${query}-${JSON.stringify(filters)}`;
@@ -182,7 +182,7 @@ export const ExternalInput = ({
                 </div>
               </div>
             ) : (
-              <Heading rank={2} size="xs">
+              <Heading rank="2" size="xs">
                 {field.placeholder || "Select data"}
               </Heading>
             )}

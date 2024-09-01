@@ -4,13 +4,13 @@ export const useModifierHeld = (modifier: "Shift" | "Alt" | "Control") => {
   const [modifierHeld, setModifierHeld] = useState(false);
 
   useEffect(() => {
-    function downHandler({ key }) {
+    function downHandler({ key }: KeyboardEvent) {
       if (key === modifier) {
         setModifierHeld(true);
       }
     }
 
-    function upHandler({ key }) {
+    function upHandler({ key }: KeyboardEvent) {
       if (key === modifier) {
         setModifierHeld(false);
       }

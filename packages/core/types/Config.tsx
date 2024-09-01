@@ -8,7 +8,7 @@ type WithId<Props> = Props & {
   id: string;
 };
 
-type WithPuckProps<Props> = WithId<Props> & { puck: PuckContext };
+type WithPuckProps<Props> = Props & { puck: PuckContext; editMode?: boolean };
 type AsFieldProps<Props> = Partial<
   Omit<Props, "children" | "puck" | "editMode">
 >;
@@ -34,12 +34,7 @@ export type Content<
 > = ComponentDataMap<PropsMap>[];
 
 export type PuckComponent<Props> = (
-  props: WithPuckProps<
-    Props & {
-      puck: PuckContext;
-      editMode?: boolean; // Deprecated
-    }
-  >
+  props: WithId<WithPuckProps<Props>>
 ) => JSX.Element;
 
 export type PuckContext = {

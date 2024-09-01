@@ -6,14 +6,7 @@ import {
   replaceAction,
   setAction,
 } from "../../../../reducer";
-import {
-  ComponentData,
-  DefaultComponentProps,
-  RootData,
-  UiState,
-  Permissions,
-  Config,
-} from "../../../../types/Config";
+import { ComponentData, RootData, UiState } from "../../../../types/Config";
 import type { Field, Fields as FieldsType } from "../../../../types/Fields";
 import { AutoFieldPrivate } from "../../../AutoField";
 import { useAppContext } from "../../context";
@@ -41,7 +34,7 @@ const DefaultFields = ({
   return <>{children}</>;
 };
 
-type ComponentOrRootData = Omit<Partial<ComponentData<any>>, "type">;
+type ComponentOrRootData = Omit<ComponentData<any>, "type">;
 
 const useResolvedFields = (): [FieldsType, boolean] => {
   const { selectedItem, state, config } = useAppContext();
@@ -61,9 +54,9 @@ const useResolvedFields = (): [FieldsType, boolean] => {
   // DEPRECATED
   const rootProps = data.root.props || data.root;
 
-  const [lastSelectedData, setLastSelectedData] = useState<ComponentOrRootData>(
-    {}
-  );
+  const [lastSelectedData, setLastSelectedData] = useState<
+    Partial<ComponentOrRootData>
+  >({});
   const [resolvedFields, setResolvedFields] = useState(defaultFields || {});
   const [fieldsLoading, setFieldsLoading] = useState(false);
 
@@ -71,7 +64,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
     _componentData: ComponentOrRootData,
     _params: {
       fields: FieldsType;
-      lastData: ComponentOrRootData;
+      lastData: Partial<ComponentOrRootData>;
       lastFields: FieldsType;
       changed: Record<string, boolean>;
     }
@@ -275,7 +268,10 @@ export const Fields = () => {
               />
             );
           } else {
-            const { readOnly = {} } = data.root;
+            const readOnly = (data.root.readOnly || {}) as Record<
+              string,
+              boolean
+            >;
 
             return (
               <AutoFieldPrivate
@@ -284,7 +280,7 @@ export const Fields = () => {
                 name={fieldName}
                 id={`root_${fieldName}`}
                 readOnly={readOnly[fieldName]}
-                value={rootProps[fieldName]}
+                value={(rootProps as Record<string, any>)[fieldName]}
                 onChange={onChange}
               />
             );
