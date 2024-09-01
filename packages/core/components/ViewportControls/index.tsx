@@ -115,7 +115,7 @@ export const ViewportControls = ({
           onClick={onViewportChange}
         >
           {typeof viewport.icon === "string"
-            ? icons[viewport.icon] || viewport.icon
+            ? icons[viewport.icon as keyof typeof icons] || viewport.icon
             : viewport.icon || icons.Smartphone}
         </ViewportButton>
       ))}

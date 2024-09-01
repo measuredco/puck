@@ -53,7 +53,8 @@ export function createFieldContentful<T extends Entry = Entry>(
       return entries.items;
     },
     mapRow: ({ fields }) => fields,
-    getItemSummary: (item) => item.fields[titleField],
+    getItemSummary: (item) =>
+      item.fields[titleField as keyof typeof item.fields],
     filterFields,
     initialFilters,
   };

@@ -33,6 +33,8 @@ export type UserConfig = Config<
   "layout" | "typography" | "interactive"
 >;
 
+export type UserData = Data<Props, RootProps>;
+
 // We avoid the name config as next gets confused
 export const conf: UserConfig = {
   root: {
@@ -67,7 +69,7 @@ export const conf: UserConfig = {
   },
 };
 
-export const initialData: Record<string, Data> = {
+export const initialData: Record<string, UserData> = {
   "/": {
     content: [
       {
@@ -84,7 +86,6 @@ export const initialData: Record<string, Data> = {
             { label: "Edit this page", href: "/edit", variant: "secondary" },
           ],
           id: "Hero-1687283596554",
-          height: "",
           image: {
             url: "https://images.unsplash.com/photo-1687204209659-3bded6aecd79?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80",
             mode: "inline",
@@ -147,7 +148,7 @@ export const initialData: Record<string, Data> = {
         type: "Heading",
         props: {
           align: "center",
-          level: 2,
+          level: "2",
           text: "The numbers",
           padding: "0px",
           size: "xxl",
@@ -178,12 +179,11 @@ export const initialData: Record<string, Data> = {
         type: "Stats",
         props: {
           items: [
-            { title: "Users reached", description: "20M+", icon: "feather" },
-            { title: "Cost savings", description: "$1.5M", icon: "feather" },
-            { title: "Another stat", description: "5M kg", icon: "feather" },
-            { title: "Final fake stat", description: "15K", icon: "feather" },
+            { title: "Users reached", description: "20M+" },
+            { title: "Cost savings", description: "$1.5M" },
+            { title: "Another stat", description: "5M kg" },
+            { title: "Final fake stat", description: "15K" },
           ],
-          mode: "flat",
           id: "Stats-1687297239724",
         },
       },
@@ -195,7 +195,7 @@ export const initialData: Record<string, Data> = {
         type: "Heading",
         props: {
           align: "center",
-          level: 2,
+          level: "2",
           text: "Extending Puck",
           padding: "0px",
           size: "xxl",
@@ -245,7 +245,7 @@ export const initialData: Record<string, Data> = {
         type: "Heading",
         props: {
           align: "center",
-          level: 2,
+          level: "2",
           text: "Get started",
           padding: "0px",
           size: "xxl",
@@ -278,6 +278,7 @@ export const initialData: Record<string, Data> = {
             {
               label: "Visit GitHub",
               href: "https://github.com/measuredco/puck",
+              variant: "primary",
             },
             { label: "Edit this page", href: "/edit", variant: "secondary" },
           ],

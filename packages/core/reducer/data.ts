@@ -14,7 +14,7 @@ import { generateId } from "../lib/generate-id";
 import { InsertAction, PuckAction, ReplaceAction } from "./actions";
 
 // Restore unregistered zones when re-registering in same session
-export const zoneCache = {};
+export const zoneCache: Record<string, Content> = {};
 
 export const addToZoneCache = (key: string, data: Content) => {
   zoneCache[key] = data;

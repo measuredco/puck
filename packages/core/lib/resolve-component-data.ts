@@ -1,7 +1,9 @@
 import { ComponentData, Config, MappedItem } from "../types/Config";
 import { getChanged } from "./get-changed";
 
-export const cache = { lastChange: {} };
+export const cache: {
+  lastChange: Record<string, any>;
+} = { lastChange: {} };
 
 export const resolveAllComponentData = async (
   content: MappedItem[],

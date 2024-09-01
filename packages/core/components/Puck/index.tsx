@@ -60,10 +60,6 @@ import { DefaultOverride } from "../DefaultOverride";
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
 
-type ValidateConfig<T> = T extends Config<infer P, infer R, infer C>
-  ? Config<P, R, C>
-  : never;
-
 export function Puck<UserConfig extends Config = Config>({
   children,
   config,
@@ -147,7 +143,7 @@ export function Puck<UserConfig extends Config = Config>({
         }))
         .sort((a, b) => (a.diff > b.diff ? 1 : -1));
 
-      const closestViewport = viewportDifferences[0].key;
+      const closestViewport = viewportDifferences[0].key as any;
 
       if (iframe.enabled) {
         clientUiState = {
@@ -158,11 +154,11 @@ export function Puck<UserConfig extends Config = Config>({
               ...initial.viewports.current,
               height:
                 initialUi?.viewports?.current?.height ||
-                viewports[closestViewport].height ||
+                viewports[closestViewport]?.height ||
                 "auto",
               width:
                 initialUi?.viewports?.current?.width ||
-                viewports[closestViewport].width,
+                viewports[closestViewport]?.width,
             },
           },
         };
@@ -315,13 +311,13 @@ export function Puck<UserConfig extends Config = Config>({
   }, []);
 
   // DEPRECATED
-  const defaultHeaderRender = useMemo(() => {
+  const defaultHeaderRender = useMemo((): Overrides["header"] => {
     if (renderHeader) {
       console.warn(
         "`renderHeader` is deprecated. Please use `overrides.header` and the `usePuck` hook instead"
       );
 
-      const RenderHeader = ({ actions, ...props }) => {
+      const RenderHeader = ({ actions, ...props }: any) => {
         const Comp = renderHeader!;
 
         return (
@@ -338,13 +334,13 @@ export function Puck<UserConfig extends Config = Config>({
   }, [renderHeader]);
 
   // DEPRECATED
-  const defaultHeaderActionsRender = useMemo(() => {
+  const defaultHeaderActionsRender = useMemo((): Overrides["headerActions"] => {
     if (renderHeaderActions) {
       console.warn(
         "`renderHeaderActions` is deprecated. Please use `overrides.headerActions` and the `usePuck` hook instead."
       );
 
-      const RenderHeader = (props) => {
+      const RenderHeader = (props: any) => {
         const Comp = renderHeaderActions!;
 
         return <Comp {...props} dispatch={dispatch} state={appState}></Comp>;
@@ -547,7 +543,7 @@ export function Puck<UserConfig extends Config = Config>({
                             </div>
                           </div>
                           <div className={getLayoutClassName("headerTitle")}>
-                            <Heading rank={2} size="xs">
+                            <Heading rank="2" size="xs">
                               {headerTitle || rootProps.title || "Page"}
                               {headerPath && (
                                 <>

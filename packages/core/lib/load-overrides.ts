@@ -8,10 +8,12 @@ export const loadOverrides = ({
   overrides?: Partial<Overrides>;
   plugins?: Plugin[];
 }) => {
-  const collected = { ...overrides };
+  const collected: Partial<Overrides> = { ...overrides };
 
   plugins?.forEach((plugin) => {
-    Object.keys(plugin.overrides).forEach((overridesType) => {
+    Object.keys(plugin.overrides).forEach((_overridesType) => {
+      const overridesType = _overridesType as keyof Plugin["overrides"];
+
       if (overridesType === "fieldTypes") {
         const fieldTypes = plugin.overrides.fieldTypes!;
         Object.keys(fieldTypes).forEach((fieldType) => {
@@ -19,7 +21,7 @@ export const loadOverrides = ({
 
           const childNode = collected.fieldTypes[fieldType];
 
-          const Comp = (props) =>
+          const Comp = (props: any) =>
             fieldTypes[fieldType]!({
               ...props,
               children: childNode ? childNode(props) : props.children,
@@ -33,8 +35,8 @@ export const loadOverrides = ({
 
       const childNode = collected[overridesType];
 
-      const Comp = (props) =>
-        plugin.overrides[overridesType]({
+      const Comp = (props: any) =>
+        plugin.overrides[overridesType]!({
           ...props,
           children: childNode ? childNode(props) : props.children,
         });

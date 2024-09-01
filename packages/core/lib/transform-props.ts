@@ -20,7 +20,7 @@ export function transformProps<
   Props extends DefaultComponentProps = DefaultComponentProps,
   RootProps extends DefaultComponentProps = DefaultRootFieldProps
 >(data: Partial<Data>, propTransforms: PropTransform<Props, RootProps>): Data {
-  const mapItem = (item) => {
+  const mapItem = (item: any) => {
     if (propTransforms[item.type]) {
       return {
         ...item,

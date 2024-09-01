@@ -4,10 +4,7 @@ import { DefaultRootProps } from "@/core";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 
-export type RootProps = {
-  children: ReactNode;
-  title: string;
-} & DefaultRootProps;
+export type RootProps = DefaultRootProps;
 
 function Root({ children, puck }: RootProps) {
   return (

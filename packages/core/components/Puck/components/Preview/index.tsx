@@ -5,11 +5,11 @@ import { useAppContext } from "../../context";
 import AutoFrame, { autoFrameContext } from "../../../AutoFrame";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
-import { DefaultRootProps } from "../../../../types/Config";
+import { DefaultRootRenderProps } from "../../../../types/Config";
 
 const getClassName = getClassNameFactory("PuckPreview", styles);
 
-type PageProps = DefaultRootProps & { children: ReactNode };
+type PageProps = DefaultRootRenderProps;
 
 export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   const { config, dispatch, state, setStatus, iframe, overrides } =
@@ -21,8 +21,6 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         config.root?.render({
           id: "puck-root",
           ...pageProps,
-          editMode: true, // DEPRECATED
-          puck: { renderDropZone: DropZone, isEditing: true },
         })
       ) : (
         <>{pageProps.children}</>
@@ -55,7 +53,11 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           <autoFrameContext.Consumer>
             {({ document }) => {
               const inner = (
-                <Page dispatch={dispatch} state={state} {...rootProps}>
+                <Page
+                  {...rootProps}
+                  puck={{ renderDropZone: DropZone, isEditing: true }}
+                  editMode={true} // DEPRECATED
+                >
                   <DropZone zone={rootDroppableId} />
                 </Page>
               );
@@ -70,7 +72,11 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         </AutoFrame>
       ) : (
         <div id="preview-frame" className={getClassName("frame")}>
-          <Page dispatch={dispatch} state={state} {...rootProps}>
+          <Page
+            {...rootProps}
+            puck={{ renderDropZone: DropZone, isEditing: true }}
+            editMode={true} // DEPRECATED
+          >
             <DropZone zone={rootDroppableId} />
           </Page>
         </div>

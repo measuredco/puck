@@ -67,7 +67,7 @@ export const ArrayField = ({
   }, [arrayState]);
 
   const regenerateArrayState = useCallback(
-    (value) => {
+    (value: object[]) => {
       let highestIndex = getHighestIndex();
 
       const newItems = Array.from(value || []).map((item, idx) => {
@@ -171,7 +171,7 @@ export const ArrayField = ({
               >
                 {localState.arrayState.items.map((item, i) => {
                   const { _arrayId = `${id}-${i}`, _originalIndex = i } = item;
-                  const data = Array.from(localState.value || [])[i] || {};
+                  const data: any = Array.from(localState.value || [])[i] || {};
 
                   return (
                     <Draggable
