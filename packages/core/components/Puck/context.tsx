@@ -17,7 +17,7 @@ import { IframeConfig } from "../../types/IframeConfig";
 import { UAParser } from "ua-parser-js";
 
 export const defaultAppState: AppState = {
-  data: { content: [], root: { props: {} } },
+  data: { content: [], root: {} },
   ui: {
     leftSideBarVisible: true,
     rightSideBarVisible: true,

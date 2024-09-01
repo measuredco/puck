@@ -1,11 +1,18 @@
-import { Config, Data, RootDataWithProps } from "../types/Config";
+import {
+  Config,
+  Data,
+  DefaultRootFieldProps,
+  RootDataWithProps,
+} from "../types/Config";
 import { getChanged } from "./get-changed";
 
 export const cache: {
   lastChange?: { original: RootDataWithProps; resolved: RootDataWithProps };
 } = {};
 
-export const resolveRootData = async (data: Data, config: Config) => {
+export async function resolveRootData<
+  RootProps extends Record<string, any> = DefaultRootFieldProps
+>(data: Data, config: Config) {
   if (config.root?.resolveData && data.root.props) {
     if (cache.lastChange?.original === data.root) {
       return cache.lastChange.resolved;
@@ -21,8 +28,8 @@ export const resolveRootData = async (data: Data, config: Config) => {
     });
 
     cache.lastChange = {
-      original: data.root as RootDataWithProps,
-      resolved: resolvedRoot as RootDataWithProps,
+      original: data.root as RootDataWithProps<RootProps>,
+      resolved: resolvedRoot as RootDataWithProps<RootProps>,
     };
 
     return {
@@ -36,4 +43,4 @@ export const resolveRootData = async (data: Data, config: Config) => {
   }
 
   return data.root;
-};
+}
