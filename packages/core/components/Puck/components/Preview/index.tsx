@@ -49,6 +49,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           onStylesLoaded={() => {
             setStatus("READY");
           }}
+          syncHostStyles={iframe.syncHostStyles}
         >
           <autoFrameContext.Consumer>
             {({ document }) => {

@@ -173,15 +173,22 @@ export function Editor() {
 
 #### iframe params
 
-| Param                 | Example          | Type    | Status |
-| --------------------- | ---------------- | ------- | ------ |
-| [`enabled`](#enabled) | `enabled: false` | boolean | -      |
+| Param                               | Example                 | Type    | Status |
+| ----------------------------------- | ----------------------- | ------- | ------ |
+| [`enabled`](#enabled)               | `enabled: false`        | boolean | -      |
+| [`syncHostStyles`](#syncHostStyles) | `syncHostStyles: false` | boolean | -      |
 
 ##### `enabled`
 
 Render the Puck preview within iframe. Defaults to `true`.
 
 Disabling iframes will also disable [viewports](#viewports).
+
+##### `syncHostStyles`
+
+Sync the host styles to the iframe. Defaults to `true`.
+
+If this isn't working, you may need to inject styles manually using the iframe [override API](/docs/api-reference/overrides/iframe), or make use of a [plugin](/docs/extending-puck/plugins).
 
 ### `initialHistory`
 
