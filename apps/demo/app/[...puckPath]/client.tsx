@@ -1,8 +1,8 @@
 "use client";
 
-import { Button, Data, Puck, Render } from "@/core";
+import { Button, Puck, Render } from "@/core";
 import headingAnalyzer from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
-import config, { UserConfig } from "../../config";
+import config from "../../config";
 import { useDemoData } from "../../lib/use-demo-data";
 
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
@@ -14,10 +14,10 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   if (isEdit) {
     return (
       <div>
-        <Puck<UserConfig>
+        <Puck
           config={config}
           data={data}
-          onPublish={async (data: Data) => {
+          onPublish={async (data) => {
             localStorage.setItem(key, JSON.stringify(data));
           }}
           plugins={[headingAnalyzer]}
@@ -41,7 +41,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   }
 
   if (data) {
-    return <Render<UserConfig> config={config} data={resolvedData} />;
+    return <Render config={config} data={resolvedData} />;
   }
 
   return (

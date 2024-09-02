@@ -20,7 +20,7 @@ describe("State reducer", () => {
     },
   };
 
-  const reducer = createReducer<any>({ config });
+  const reducer = createReducer({ config });
 
   describe("setUi action", () => {
     it("should insert data into the state", () => {

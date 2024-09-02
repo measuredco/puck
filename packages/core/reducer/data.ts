@@ -20,7 +20,10 @@ export const addToZoneCache = (key: string, data: Content) => {
   zoneCache[key] = data;
 };
 
-export const replaceAction = (data: Data, action: ReplaceAction) => {
+export const replaceAction = <UserData extends Data>(
+  data: UserData,
+  action: ReplaceAction
+) => {
   if (action.destinationZone === rootDroppableId) {
     return {
       ...data,
@@ -43,11 +46,11 @@ export const replaceAction = (data: Data, action: ReplaceAction) => {
   };
 };
 
-export const insertAction = (
-  data: Data,
+export function insertAction<UserData extends Data>(
+  data: UserData,
   action: InsertAction,
   config: Config
-) => {
+) {
   const emptyComponentData = {
     type: action.componentType,
     props: {
@@ -80,9 +83,13 @@ export const insertAction = (
       ),
     },
   };
-};
+}
 
-export const reduceData = (data: Data, action: PuckAction, config: Config) => {
+export function reduceData<UserData extends Data>(
+  data: UserData,
+  action: PuckAction,
+  config: Config
+): UserData {
   if (action.type === "insert") {
     return insertAction(data, action, config);
   }
@@ -101,7 +108,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
       },
     };
 
-    const dataWithRelatedDuplicated = duplicateRelatedZones(
+    const dataWithRelatedDuplicated = duplicateRelatedZones<UserData>(
       item,
       data,
       newItem.props.id
@@ -119,7 +126,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
       zones: {
         ...dataWithRelatedDuplicated.zones,
         [action.sourceZone]: insert(
-          dataWithRelatedDuplicated.zones[action.sourceZone],
+          dataWithRelatedDuplicated.zones![action.sourceZone],
           action.sourceIndex + 1,
           newItem
         ),
@@ -282,4 +289,4 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   }
 
   return data;
-};
+}

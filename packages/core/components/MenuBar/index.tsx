@@ -12,26 +12,24 @@ import styles from "./styles.module.css";
 
 const getClassName = getClassNameFactory("MenuBar", styles);
 
-export const MenuBar = ({
+export function MenuBar<UserData extends Data>({
   appState,
-  data = { content: [], root: {} },
   dispatch,
   menuOpen = false,
   onPublish,
   renderHeaderActions,
   setMenuOpen,
 }: {
-  appState: AppState;
-  data: Data;
+  appState: AppState<UserData>;
   dispatch: (action: PuckAction) => void;
-  onPublish?: (data: Data) => void;
+  onPublish?: (data: UserData) => void;
   menuOpen: boolean;
   renderHeaderActions?: (props: {
-    state: AppState;
+    state: AppState<UserData>;
     dispatch: (action: PuckAction) => void;
   }) => ReactElement;
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
-}) => {
+}) {
   const {
     history: { back, forward, historyStore },
   } = useAppContext();
@@ -74,4 +72,4 @@ export const MenuBar = ({
       </div>
     </div>
   );
-};
+}

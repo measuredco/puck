@@ -8,7 +8,7 @@ import { IconButton, usePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Drawer } from "@/core/components/Drawer";
 import { ChevronUp, ChevronDown, Globe, Bug } from "lucide-react";
-import { Overrides } from "@/core/types/Overrides";
+import { Overrides } from "@/core/types";
 
 const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
   const { appState, dispatch } = usePuck();

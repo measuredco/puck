@@ -48,5 +48,5 @@ export async function resolveAllData<
       onResolveEnd
     )) as Content<Props>,
     zones: resolvedZones,
-  };
+  } as Data<Props, RootProps>;
 }
