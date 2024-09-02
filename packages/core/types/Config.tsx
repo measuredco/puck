@@ -96,8 +96,8 @@ type Category<ComponentName> = {
 };
 
 export type Config<
-  Props extends Record<string, any> = Record<string, any>,
-  RootProps extends DefaultComponentProps = DefaultRootFieldProps,
+  Props extends DefaultComponentProps = DefaultComponentProps,
+  RootProps extends DefaultComponentProps = DefaultComponentProps,
   CategoryName extends string = string
 > = {
   categories?: Record<CategoryName, Category<keyof Props>> & {
@@ -118,6 +118,22 @@ export type Config<
   >;
 };
 
+export type ExtractPropsFromConfig<UserConfig> = UserConfig extends Config<
+  infer P,
+  any,
+  any
+>
+  ? P
+  : never;
+
+export type ExtractRootPropsFromConfig<UserConfig> = UserConfig extends Config<
+  any,
+  infer P,
+  any
+>
+  ? P
+  : never;
+
 export type BaseData<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = {
@@ -135,7 +151,7 @@ export type ComponentData<
 export type ComponentDataMap<
   Props extends Record<string, DefaultComponentProps> = DefaultComponentProps
 > = {
-  [K in keyof Props]: ComponentData<Props[K], K>;
+  [K in keyof Props]: ComponentData<Props[K], K extends string ? K : never>;
 }[keyof Props];
 
 export type RootDataWithProps<
@@ -198,7 +214,10 @@ export type UiState = {
   };
 };
 
-export type AppState = { data: Data; ui: UiState };
+export type AppState<UserData extends Data = Data> = {
+  data: UserData;
+  ui: UiState;
+};
 
 export type Permissions = {
   drag: boolean;

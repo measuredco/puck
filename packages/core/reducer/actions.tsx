@@ -52,9 +52,11 @@ export type SetDataAction = {
   data: Partial<Data> | ((previous: Data) => Partial<Data>);
 };
 
-export type SetAction = {
+export type SetAction<UserData extends Data = Data> = {
   type: "set";
-  state: Partial<AppState> | ((previous: AppState) => Partial<AppState>);
+  state:
+    | Partial<AppState<UserData>>
+    | ((previous: AppState<UserData>) => Partial<AppState<UserData>>);
 };
 
 export type RegisterZoneAction = {

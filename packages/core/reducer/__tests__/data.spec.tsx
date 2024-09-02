@@ -46,7 +46,7 @@ describe("Data reducer", () => {
     },
   };
 
-  const reducer = createReducer<any>({ config });
+  const reducer = createReducer({ config });
 
   describe("insert action", () => {
     it("should insert into rootDroppableId", () => {

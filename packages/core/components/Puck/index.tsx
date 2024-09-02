@@ -15,6 +15,8 @@ import type {
   Data,
   UiState,
   Permissions,
+  ExtractPropsFromConfig,
+  ExtractRootPropsFromConfig,
 } from "../../types/Config";
 import type { OnAction } from "../../types/OnAction";
 import { Button } from "../Button";
@@ -60,10 +62,18 @@ import { DefaultOverride } from "../DefaultOverride";
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
 
-export function Puck<UserConfig extends Config = Config>({
+export function Puck<
+  UserConfig extends Config = Config,
+  UserProps extends ExtractPropsFromConfig<UserConfig> = ExtractPropsFromConfig<UserConfig>,
+  UserRootProps extends ExtractRootPropsFromConfig<UserConfig> = ExtractRootPropsFromConfig<UserConfig>,
+  UserData extends Data<UserProps, UserRootProps> | Data = Data<
+    UserProps,
+    UserRootProps
+  >
+>({
   children,
   config,
-  data: initialData = { content: [], root: {} },
+  data: initialData,
   ui: initialUi,
   onChange,
   onPublish,
@@ -84,21 +94,21 @@ export function Puck<UserConfig extends Config = Config>({
 }: {
   children?: ReactNode;
   config: UserConfig;
-  data: Partial<Data>;
+  data: Partial<UserData>;
   ui?: Partial<UiState>;
-  onChange?: (data: Data) => void;
-  onPublish?: (data: Data) => void;
-  onAction?: OnAction;
+  onChange?: (data: UserData) => void;
+  onPublish?: (data: UserData) => void;
+  onAction?: OnAction<UserData>;
   permissions?: Partial<Permissions>;
   plugins?: Plugin[];
   overrides?: Partial<Overrides>;
   renderHeader?: (props: {
     children: ReactNode;
     dispatch: (action: PuckAction) => void;
-    state: AppState;
+    state: AppState<UserData>;
   }) => ReactElement;
   renderHeaderActions?: (props: {
-    state: AppState;
+    state: AppState<UserData>;
     dispatch: (action: PuckAction) => void;
   }) => ReactElement;
   headerTitle?: string;
@@ -116,13 +126,17 @@ export function Puck<UserConfig extends Config = Config>({
   const historyStore = useHistoryStore(initialHistory);
 
   const [reducer] = useState(() =>
-    createReducer<UserConfig>({ config, record: historyStore.record, onAction })
+    createReducer<UserConfig, UserData>({
+      config,
+      record: historyStore.record,
+      onAction,
+    })
   );
 
-  const [initialAppState] = useState<AppState>(() => {
+  const [initialAppState] = useState<AppState<UserData>>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
 
-    let clientUiState: Partial<AppState["ui"]> = {};
+    let clientUiState: Partial<AppState<UserData>["ui"]> = {};
 
     if (typeof window !== "undefined") {
       // Hide side bars on mobile
@@ -211,12 +225,12 @@ export function Puck<UserConfig extends Config = Config>({
             )
           : {},
       },
-    };
+    } as AppState<UserData>;
   });
 
-  const [appState, dispatch] = useReducer<StateReducer>(
+  const [appState, dispatch] = useReducer<StateReducer<UserData>>(
     reducer,
-    flushZones(initialAppState)
+    flushZones<UserData>(initialAppState)
   );
 
   const { data, ui } = appState;
@@ -249,7 +263,7 @@ export function Puck<UserConfig extends Config = Config>({
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
   useEffect(() => {
-    if (onChange) onChange(data);
+    if (onChange) onChange(data as UserData);
   }, [data]);
 
   const { onDragStartOrUpdate, placeholderStyle } = usePlaceholderStyle();
@@ -500,7 +514,7 @@ export function Puck<UserConfig extends Config = Config>({
                           <CustomHeaderActions>
                             <Button
                               onClick={() => {
-                                onPublish && onPublish(data);
+                                onPublish && onPublish(data as UserData);
                               }}
                               icon={<Globe size="14px" />}
                             >
@@ -572,9 +586,8 @@ export function Puck<UserConfig extends Config = Config>({
                                 )}
                               </IconButton>
                             </div>
-                            <MenuBar
+                            <MenuBar<UserData>
                               appState={appState}
-                              data={data}
                               dispatch={dispatch}
                               onPublish={onPublish}
                               menuOpen={menuOpen}

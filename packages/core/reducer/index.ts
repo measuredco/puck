@@ -1,5 +1,5 @@
 import { Reducer } from "react";
-import { AppState, Config } from "../types/Config";
+import { AppState, Config, Data } from "../types/Config";
 import { reduceData } from "./data";
 import { PuckAction, SetAction } from "./actions";
 import { reduceUi } from "./state";
@@ -10,14 +10,20 @@ export * from "./data";
 
 export type ActionType = "insert" | "reorder";
 
-export type StateReducer = Reducer<AppState, PuckAction>;
+export type StateReducer<UserData extends Data = Data> = Reducer<
+  AppState<UserData>,
+  PuckAction
+>;
 
-const storeInterceptor = (
-  reducer: StateReducer,
-  record?: (appState: AppState) => void,
-  onAction?: OnAction
-) => {
-  return (state: AppState, action: PuckAction) => {
+function storeInterceptor<UserData extends Data = Data>(
+  reducer: StateReducer<UserData>,
+  record?: (appState: AppState<UserData>) => void,
+  onAction?: OnAction<UserData>
+) {
+  return (
+    state: AppState<UserData>,
+    action: PuckAction
+  ): AppState<UserData> => {
     const newAppState = reducer(state, action);
 
     const isValidType = ![
@@ -40,9 +46,12 @@ const storeInterceptor = (
 
     return newAppState;
   };
-};
+}
 
-export const setAction = (state: AppState, action: SetAction) => {
+export const setAction = <UserData extends Data>(
+  state: AppState<UserData>,
+  action: SetAction<UserData>
+): AppState<UserData> => {
   if (typeof action.state === "object") {
     return {
       ...state,
@@ -53,22 +62,25 @@ export const setAction = (state: AppState, action: SetAction) => {
   return { ...state, ...action.state(state) };
 };
 
-export function createReducer<UserConfig extends Config = Config>({
+export function createReducer<
+  UserConfig extends Config,
+  UserData extends Data
+>({
   config,
   record,
   onAction,
 }: {
   config: UserConfig;
-  record?: (appState: AppState) => void;
-  onAction?: OnAction;
-}): StateReducer {
+  record?: (appState: AppState<UserData>) => void;
+  onAction?: OnAction<UserData>;
+}): StateReducer<UserData> {
   return storeInterceptor(
     (state, action) => {
       const data = reduceData(state.data, action, config);
       const ui = reduceUi(state.ui, action);
 
       if (action.type === "set") {
-        return setAction(state, action);
+        return setAction<UserData>(state, action as SetAction<UserData>);
       }
 
       return { data, ui };

@@ -7,11 +7,11 @@ export type ItemSelector = {
   zone?: string;
 };
 
-export const getItem = (
+export function getItem<UserData extends Data>(
   selector: ItemSelector,
-  data: Data,
+  data: UserData,
   dynamicProps: Record<string, any> = {}
-): Data["content"][0] | undefined => {
+): UserData["content"][0] | undefined {
   if (!selector.zone || selector.zone === rootDroppableId) {
     const item = data.content[selector.index];
 
@@ -27,4 +27,4 @@ export const getItem = (
   return item?.props
     ? { ...item, props: dynamicProps[item.props.id] || item.props }
     : undefined;
-};
+}
