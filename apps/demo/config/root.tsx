@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 import { DefaultRootProps } from "@/core";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
