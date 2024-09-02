@@ -9,9 +9,7 @@ type WithId<Props> = Props & {
 };
 
 type WithPuckProps<Props> = Props & { puck: PuckContext; editMode?: boolean };
-type AsFieldProps<Props> = Partial<
-  Omit<Props, "children" | "puck" | "editMode">
->;
+type AsFieldProps<Props> = Omit<Props, "children" | "puck" | "editMode">;
 
 type WithChildren<Props> = Props & {
   children: ReactNode;
@@ -97,7 +95,7 @@ type Category<ComponentName> = {
 
 export type Config<
   Props extends DefaultComponentProps = DefaultComponentProps,
-  RootProps extends DefaultComponentProps = DefaultComponentProps,
+  RootProps extends DefaultComponentProps = any,
   CategoryName extends string = string
 > = {
   categories?: Record<CategoryName, Category<keyof Props>> & {
