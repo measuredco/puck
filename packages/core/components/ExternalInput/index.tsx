@@ -1,13 +1,13 @@
-import { useMemo, useEffect, useState, useCallback } from "react";
-import styles from "./styles.module.css";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ExternalField } from "../../types/Fields";
-import { Link, Search, SlidersHorizontal, Unlock } from "lucide-react";
+import { AutoFieldPrivate } from "../AutoField";
 import { Modal } from "../Modal";
+import styles from "./styles.module.css";
+import { Link, Search, SlidersHorizontal, Unlock } from "lucide-react";
 import { Heading } from "../Heading";
 import { Loader } from "../Loader";
 import { Button } from "../Button";
-import { AutoFieldPrivate } from "../AutoField";
 import { IconButton } from "../IconButton";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
@@ -18,13 +18,13 @@ const dataCache: Record<string, any> = {};
 export const ExternalInput = ({
   field,
   onChange,
-  value = null,
+  value = field.multiSelect ? [] : null,
   name,
   id,
 }: {
   field: ExternalField;
-  onChange: (value: any) => void;
-  value: any;
+  onChange: (value: any | any[]) => void;
+  value: any | any[];
   name?: string;
   id: string;
 }) => {
@@ -86,6 +86,21 @@ export const ExternalInput = ({
     search(searchQuery, filters);
   }, []);
 
+  const handleSelect = (selectedItem: any) => {
+    if (field.multiSelect) {
+      let newValue;
+      if ((value as any[]).includes(selectedItem)) {
+        newValue = (value as any[]).filter((v) => v !== selectedItem);
+      } else {
+        newValue = [...(value as any[]), selectedItem];
+      }
+      onChange(newValue);
+    } else {
+      onChange(selectedItem);
+      setOpen(false); // Close modal for single-select
+    }
+  };
+
   return (
     <div
       className={getClassName({
@@ -100,8 +115,20 @@ export const ExternalInput = ({
           onClick={() => setOpen(true)}
           className={getClassName("button")}
         >
-          {/* NB this is hardcoded to strapi for now */}
-          {value ? (
+          {value && field.multiSelect ? (
+            (value as any[]).map((item, index) => (
+              <span key={index} className={getClassName("selectedItem")}>
+                {field.getItemSummary ? field.getItemSummary(item) : item}
+                <button
+                  onClick={() => {
+                    onChange((value as any[]).filter((v) => v !== item));
+                  }}
+                >
+                  <Unlock size={16} />
+                </button>
+              </span>
+            ))
+          ) : value ? (
             field.getItemSummary ? (
               field.getItemSummary(value)
             ) : (
@@ -114,7 +141,7 @@ export const ExternalInput = ({
             </>
           )}
         </button>
-        {value && (
+        {value && !field.multiSelect && (
           <button
             className={getClassName("detachButton")}
             onClick={() => {
@@ -135,7 +162,6 @@ export const ExternalInput = ({
           })}
           onSubmit={(e) => {
             e.preventDefault();
-
             search(searchQuery, filters);
           }}
         >
@@ -191,27 +217,24 @@ export const ExternalInput = ({
           <div className={getClassNameModal("grid")}>
             {hasFilterFields && (
               <div className={getClassNameModal("filters")}>
-                {hasFilterFields &&
-                  Object.keys(filterFields).map((fieldName) => {
-                    const filterField = filterFields[fieldName];
-                    return (
-                      <AutoFieldPrivate
-                        key={fieldName}
-                        field={filterField}
-                        name={fieldName}
-                        id={`external_field_${fieldName}_filter`}
-                        label={filterField.label || fieldName}
-                        value={filters[fieldName]}
-                        onChange={(value) => {
-                          const newFilters = { ...filters, [fieldName]: value };
-
-                          setFilters(newFilters);
-
-                          search(searchQuery, newFilters);
-                        }}
-                      />
-                    );
-                  })}
+                {Object.keys(filterFields).map((fieldName) => {
+                  const filterField = filterFields[fieldName];
+                  return (
+                    <AutoFieldPrivate
+                      key={fieldName}
+                      field={filterField}
+                      name={fieldName}
+                      id={`external_field_${fieldName}_filter`}
+                      label={filterField.label || fieldName}
+                      value={filters[fieldName]}
+                      onChange={(value) => {
+                        const newFilters = { ...filters, [fieldName]: value };
+                        setFilters(newFilters);
+                        search(searchQuery, newFilters);
+                      }}
+                    />
+                  );
+                })}
               </div>
             )}
 
@@ -235,13 +258,16 @@ export const ExternalInput = ({
                     return (
                       <tr
                         key={i}
-                        style={{ whiteSpace: "nowrap" }}
-                        className={getClassNameModal("tr")}
-                        onClick={() => {
-                          onChange(mapProp(data[i]));
-
-                          setOpen(false);
+                        style={{
+                          whiteSpace: "nowrap",
+                          backgroundColor:
+                            field.multiSelect &&
+                            (value as any[]).includes(mapProp(data[i]))
+                              ? "#e0f7fa"
+                              : "inherit",
                         }}
+                        className={getClassNameModal("tr")}
+                        onClick={() => handleSelect(mapProp(data[i]))}
                       >
                         {keys.map((key) => (
                           <td key={key} className={getClassNameModal("td")}>
@@ -253,13 +279,11 @@ export const ExternalInput = ({
                   })}
                 </tbody>
               </table>
-
               <div className={getClassNameModal("loadingBanner")}>
                 <Loader size={24} />
               </div>
             </div>
           </div>
-
           <div className={getClassNameModal("footer")}>
             {mappedData.length} result{mappedData.length === 1 ? "" : "s"}
           </div>
