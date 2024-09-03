@@ -97,6 +97,7 @@ export type ExternalField<
   initialQuery?: string;
   filterFields?: Record<string, Field>;
   initialFilters?: Record<string, any>;
+  multiSelect?: boolean;
 };
 
 export type CustomField<Props extends any = {}> = BaseField & {
