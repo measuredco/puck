@@ -1,44 +1,14 @@
-import { ReactNode } from "react";
-import { ItemSelector } from "../lib/get-item";
-import { DropZoneProps } from "../components/DropZone/types";
-import { Viewport } from "./Viewports";
 import { Fields } from "./Fields";
+import { ComponentData, RootData } from "./Data";
 
-type WithId<Props> = Props & {
-  id: string;
-};
-
-type WithPuckProps<Props> = Props & { puck: PuckContext; editMode?: boolean };
-type AsFieldProps<Props> = Omit<Props, "children" | "puck" | "editMode">;
-
-type WithChildren<Props> = Props & {
-  children: ReactNode;
-};
-
-export type DefaultRootFieldProps = {
-  title?: string;
-};
-
-export type DefaultRootRenderProps<
-  Props extends DefaultComponentProps = DefaultRootFieldProps
-> = WithPuckProps<WithChildren<Props>>;
-
-export type DefaultRootProps = DefaultRootRenderProps; // Deprecated
-
-export type DefaultComponentProps = { [key: string]: any };
-
-export type Content<
-  PropsMap extends { [key: string]: any } = { [key: string]: any }
-> = ComponentDataMap<PropsMap>[];
+import { AsFieldProps, WithId, WithPuckProps } from "./Utils";
+import { AppState } from "./AppState";
+import { DefaultComponentProps, DefaultRootRenderProps } from "./Props";
+import { Permissions } from "./API";
 
 export type PuckComponent<Props> = (
   props: WithId<WithPuckProps<Props>>
 ) => JSX.Element;
-
-export type PuckContext = {
-  renderDropZone: React.FC<DropZoneProps>;
-  isEditing: boolean;
-};
 
 export type ComponentConfig<
   RenderProps extends DefaultComponentProps = DefaultComponentProps,
@@ -115,112 +85,3 @@ export type Config<
     >
   >;
 };
-
-export type ExtractPropsFromConfig<UserConfig> = UserConfig extends Config<
-  infer P,
-  any,
-  any
->
-  ? P
-  : never;
-
-export type ExtractRootPropsFromConfig<UserConfig> = UserConfig extends Config<
-  any,
-  infer P,
-  any
->
-  ? P
-  : never;
-
-export type BaseData<
-  Props extends { [key: string]: any } = { [key: string]: any }
-> = {
-  readOnly?: Partial<Record<keyof Props, boolean>>;
-};
-
-export type ComponentData<
-  Props extends DefaultComponentProps = DefaultComponentProps,
-  Name = string
-> = {
-  type: Name;
-  props: WithId<Props>;
-} & BaseData<Props>;
-
-export type ComponentDataMap<
-  Props extends Record<string, DefaultComponentProps> = DefaultComponentProps
-> = {
-  [K in keyof Props]: ComponentData<Props[K], K extends string ? K : never>;
-}[keyof Props];
-
-export type RootDataWithProps<
-  Props extends DefaultComponentProps = DefaultRootFieldProps
-> = BaseData<Props> & {
-  props: Props;
-};
-
-// DEPRECATED
-export type RootDataWithoutProps<
-  Props extends DefaultComponentProps = DefaultRootFieldProps
-> = Props;
-
-export type RootData<
-  Props extends DefaultComponentProps = DefaultRootFieldProps
-> = Partial<RootDataWithProps<AsFieldProps<Props>>> &
-  Partial<RootDataWithoutProps<Props>>; // DEPRECATED
-
-// Backwards compatibility
-export type MappedItem = ComponentData;
-
-export type Data<
-  Props extends DefaultComponentProps = DefaultComponentProps,
-  RootProps extends DefaultComponentProps = DefaultRootFieldProps
-> = {
-  root: RootData<RootProps>;
-  content: Content<Props>;
-  zones?: Record<string, Content<Props>>;
-};
-
-export type ItemWithId = {
-  _arrayId: string;
-  _originalIndex: number;
-};
-
-export type ArrayState = { items: ItemWithId[]; openId: string };
-
-export type UiState = {
-  leftSideBarVisible: boolean;
-  rightSideBarVisible: boolean;
-  itemSelector: ItemSelector | null;
-  arrayState: Record<string, ArrayState | undefined>;
-  componentList: Record<
-    string,
-    {
-      components?: string[];
-      title?: string;
-      visible?: boolean;
-      expanded?: boolean;
-    }
-  >;
-  isDragging: boolean;
-  viewports: {
-    current: {
-      width: number;
-      height: number | "auto";
-    };
-    controlsVisible: boolean;
-    options: Viewport[];
-  };
-};
-
-export type AppState<UserData extends Data = Data> = {
-  data: UserData;
-  ui: UiState;
-};
-
-export type Permissions = {
-  drag: boolean;
-  duplicate: boolean;
-  delete: boolean;
-  edit: boolean;
-  insert: boolean;
-} & Record<string, boolean>;

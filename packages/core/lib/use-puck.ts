@@ -1,5 +1,5 @@
 import { useAppContext } from "../components/Puck/context";
-import { ComponentData, DefaultComponentProps } from "../types/Config";
+import { ComponentData, DefaultComponentProps } from "../types";
 import { getPermissions } from "./get-permissions";
 
 export const usePuck = () => {

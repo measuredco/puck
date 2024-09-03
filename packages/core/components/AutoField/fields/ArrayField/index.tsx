@@ -8,7 +8,7 @@ import { Droppable } from "../../../Droppable";
 import { Draggable } from "../../../Draggable";
 import { useCallback, useEffect, useState } from "react";
 import { DragIcon } from "../../../DragIcon";
-import { ArrayState, ItemWithId } from "../../../../types/Config";
+import { ArrayState, ItemWithId } from "../../../../types";
 import { useAppContext } from "../../../Puck/context";
 import { DragDropContext } from "../../../DragDropContext";
 

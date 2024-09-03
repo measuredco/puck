@@ -1,4 +1,4 @@
-import { Plugin } from "@/core/types/Plugin";
+import { Plugin } from "@/core/types";
 import { useEffect, useState } from "react";
 
 import createCache, { EmotionCache } from "@emotion/cache";

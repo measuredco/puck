@@ -1,4 +1,4 @@
-import { Config, Content, Data } from "../types/Config";
+import { Config, Content, Data } from "../types";
 import { reorder } from "../lib/reorder";
 import { rootDroppableId } from "../lib/root-droppable-id";
 import { insert } from "../lib/insert";

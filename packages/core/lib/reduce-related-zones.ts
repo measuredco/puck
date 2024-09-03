@@ -1,4 +1,4 @@
-import { Data } from "../types/Config";
+import { Data } from "../types";
 import { generateId } from "./generate-id";
 import { getZoneId } from "./get-zone-id";
 

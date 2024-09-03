@@ -1,4 +1,4 @@
-import { ExternalField } from "@/core/types/Fields";
+import { ExternalField } from "@/core/types";
 
 import { BaseEntry, ContentfulClientApi, createClient } from "contentful";
 

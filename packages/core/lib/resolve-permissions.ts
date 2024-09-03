@@ -1,4 +1,4 @@
-import { AppState, ComponentData, Config, Permissions } from "../types/Config";
+import { AppState, ComponentData, Config, Permissions } from "../types";
 
 export const resolvePermissions = ({
   selectedItem,

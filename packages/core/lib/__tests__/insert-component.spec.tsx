@@ -1,5 +1,5 @@
 import { cleanup } from "@testing-library/react";
-import { AppState, Config, Data } from "../../types/Config";
+import { AppState, Config, Data } from "../../types";
 import { PuckAction } from "../../reducer";
 import { defaultAppState } from "../../components/Puck/context";
 import { insertComponent } from "../insert-component";

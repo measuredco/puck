@@ -3,7 +3,7 @@ import { FieldPropsInternal } from "../..";
 import type {
   ExternalField as ExternalFieldType,
   ExternalFieldWithAdaptor,
-} from "../../../../types/Fields";
+} from "../../../../types";
 
 import { ExternalInput } from "../../../ExternalInput";
 import { Link } from "lucide-react";

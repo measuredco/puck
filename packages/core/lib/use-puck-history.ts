@@ -1,4 +1,4 @@
-import type { AppState } from "../types/Config";
+import type { AppState } from "../types";
 import { PuckAction } from "../reducer";
 import { useHotkeys } from "react-hotkeys-hook";
 import { History, HistoryStore } from "./use-history-store";

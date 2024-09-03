@@ -5,15 +5,20 @@ import {
   useEffect,
   useState,
 } from "react";
-import { AppState, Config, UiState, Permissions } from "../../types/Config";
+import {
+  Config,
+  IframeConfig,
+  Overrides,
+  Permissions,
+  AppState,
+  UiState,
+  Plugin,
+} from "../../types";
 import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
-import { Plugin } from "../../types/Plugin";
-import { Overrides } from "../../types/Overrides";
 import { PuckHistory } from "../../lib/use-puck-history";
 import { defaultViewports } from "../ViewportControls/default-viewports";
-import { Viewports } from "../../types/Viewports";
-import { IframeConfig } from "../../types/IframeConfig";
+import { Viewports } from "../../types";
 import { UAParser } from "ua-parser-js";
 
 export const defaultAppState: AppState = {

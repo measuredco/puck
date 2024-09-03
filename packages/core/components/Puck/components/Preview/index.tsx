@@ -1,11 +1,11 @@
 import { DropZone } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
-import { ReactNode, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useAppContext } from "../../context";
 import AutoFrame, { autoFrameContext } from "../../../AutoFrame";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
-import { DefaultRootRenderProps } from "../../../../types/Config";
+import { DefaultRootRenderProps } from "../../../../types";
 
 const getClassName = getClassNameFactory("PuckPreview", styles);
 

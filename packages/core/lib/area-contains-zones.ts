@@ -1,4 +1,4 @@
-import { Data } from "../types/Config";
+import { Data } from "../types";
 import { findZonesForArea } from "./find-zones-for-area";
 
 export const areaContainsZones = (data: Data, area: string) => {

@@ -1,4 +1,4 @@
-import { ComponentData, Data, RootData } from "../types/Config";
+import { ComponentData, Data, RootData } from "../types";
 
 export const applyDynamicProps = (
   data: Data,

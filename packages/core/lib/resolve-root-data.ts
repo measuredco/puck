@@ -3,7 +3,7 @@ import {
   Data,
   DefaultRootFieldProps,
   RootDataWithProps,
-} from "../types/Config";
+} from "../types";
 import { getChanged } from "./get-changed";
 
 export const cache: {

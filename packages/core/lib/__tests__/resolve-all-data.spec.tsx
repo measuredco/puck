@@ -1,4 +1,4 @@
-import { Config, Data } from "../../types/Config";
+import { Config, Data } from "../../types";
 import { resolveAllData } from "../resolve-all-data";
 
 const item1 = {

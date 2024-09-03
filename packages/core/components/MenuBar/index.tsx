@@ -6,7 +6,7 @@ import { IconButton } from "../IconButton/IconButton";
 import { useAppContext } from "../Puck/context";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { PuckAction } from "../../reducer";
-import type { AppState, Data } from "../../types/Config";
+import type { AppState, Data } from "../../types";
 
 import styles from "./styles.module.css";
 

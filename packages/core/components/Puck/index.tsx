@@ -10,18 +10,20 @@ import {
 import { DragStart, DragUpdate } from "@measured/dnd";
 
 import type {
-  AppState,
   Config,
   Data,
+  AppState,
   UiState,
+  IframeConfig,
+  OnAction,
+  Overrides,
   Permissions,
   ExtractPropsFromConfig,
   ExtractRootPropsFromConfig,
-} from "../../types/Config";
-import type { OnAction } from "../../types/OnAction";
+  Plugin,
+} from "../../types";
 import { Button } from "../Button";
 
-import { Plugin } from "../../types/Plugin";
 import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
@@ -47,14 +49,12 @@ import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
-import { Overrides } from "../../types/Overrides";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { useHistoryStore, type History } from "../../lib/use-history-store";
 import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
-import { Viewports } from "../../types/Viewports";
+import { Viewports } from "../../types";
 import { DragDropContext } from "../DragDropContext";
-import { IframeConfig } from "../../types/IframeConfig";
 import { insertComponent } from "../../lib/insert-component";
 import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 import { DefaultOverride } from "../DefaultOverride";
@@ -309,7 +309,7 @@ export function Puck<
       if (!window.matchMedia("(min-width: 638px)").matches) {
         dispatch({
           type: "setUi",
-          ui: (ui) => ({
+          ui: (ui: UiState) => ({
             ...ui,
             ...(ui.rightSideBarVisible ? { leftSideBarVisible: false } : {}),
           }),
