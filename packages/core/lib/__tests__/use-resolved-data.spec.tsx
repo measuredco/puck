@@ -1,5 +1,5 @@
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
-import { AppState, Config, Data } from "../../types/Config";
+import { AppState, Config, Data } from "../../types";
 import { useResolvedData } from "../use-resolved-data";
 import { SetAction, SetDataAction } from "../../reducer";
 import { cache } from "../resolve-component-data";

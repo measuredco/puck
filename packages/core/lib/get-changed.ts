@@ -1,4 +1,4 @@
-import { ComponentData } from "../types/Config";
+import { ComponentData } from "../types";
 
 export const getChanged = (
   newItem: Omit<Partial<ComponentData<any>>, "type"> | undefined,

@@ -1,5 +1,5 @@
 import { insertAction, InsertAction, PuckAction } from "../reducer";
-import { AppState, Config } from "../types/Config";
+import { AppState, Config } from "../types";
 import { generateId } from "./generate-id";
 
 // Makes testing easier without mocks

@@ -1,4 +1,4 @@
-import type { AppState, Data } from "../types/Config";
+import type { AppState, Data } from "../types";
 import { addToZoneCache } from "../reducer/data";
 
 /**

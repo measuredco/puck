@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import { ComponentConfig } from "@/core/types/Config";
+import { ComponentConfig } from "@/core/types";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { Button } from "@/core/components/Button";

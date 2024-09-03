@@ -1,4 +1,4 @@
-import { Data } from "../types/Config";
+import { Data } from "../types";
 import { rootDroppableId } from "./root-droppable-id";
 import { setupZone } from "./setup-zone";
 

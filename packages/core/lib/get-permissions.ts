@@ -4,7 +4,7 @@ import {
   Config,
   DefaultComponentProps,
   Permissions,
-} from "../types/Config";
+} from "../types";
 import { getChanged } from "./get-changed";
 
 import { resolvePermissions } from "./resolve-permissions";

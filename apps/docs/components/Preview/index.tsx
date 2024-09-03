@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 import "@/core/styles.css";
 import { Puck } from "@/core/components/Puck";
 
-import { ComponentConfig } from "@/core/types/Config";
+import { ComponentConfig } from "@/core/types";
 import { getClassNameFactory } from "@/core/lib";
 
 import styles from "./styles.module.css";

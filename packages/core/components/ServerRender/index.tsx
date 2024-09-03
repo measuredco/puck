@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
-import { Config, Data } from "../../types/Config";
+import { Config, Data } from "../../types";
 import { setupZone } from "../../lib/setup-zone";
 
 type DropZoneRenderProps = {

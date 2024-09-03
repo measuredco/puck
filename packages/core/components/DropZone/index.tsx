@@ -10,7 +10,7 @@ import { DropZoneProvider, dropZoneContext } from "./context";
 import { getZoneId } from "../../lib/get-zone-id";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
-import { ComponentConfig, PuckContext } from "../../types/Config";
+import { ComponentConfig, PuckContext } from "../../types";
 import { getPermissions } from "../../lib/get-permissions";
 
 const getClassName = getClassNameFactory("DropZone", styles);

@@ -1,4 +1,4 @@
-import { AppState, ComponentData, Config, RootData } from "../types/Config";
+import { AppState, ComponentData, Config, RootData } from "../types";
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { PuckAction } from "../reducer";
 import { resolveComponentData } from "./resolve-component-data";

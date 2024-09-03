@@ -1,4 +1,4 @@
-import { ComponentData, Config, MappedItem } from "../types/Config";
+import { ComponentData, Config, MappedItem } from "../types";
 import { getChanged } from "./get-changed";
 
 export const cache: {

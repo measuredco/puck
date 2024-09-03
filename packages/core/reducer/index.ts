@@ -1,9 +1,9 @@
 import { Reducer } from "react";
-import { AppState, Config, Data } from "../types/Config";
+import { AppState, Config, Data } from "../types";
 import { reduceData } from "./data";
 import { PuckAction, SetAction } from "./actions";
 import { reduceUi } from "./state";
-import type { OnAction } from "../types/OnAction";
+import type { OnAction } from "../types";
 
 export * from "./actions";
 export * from "./data";

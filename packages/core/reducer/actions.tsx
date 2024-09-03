@@ -1,4 +1,4 @@
-import { AppState, Data, UiState } from "../types/Config";
+import { AppState, Data, UiState } from "../types";
 
 export type InsertAction = {
   type: "insert";

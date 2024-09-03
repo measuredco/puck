@@ -1,7 +1,7 @@
 import { useMemo, useEffect, useState, useCallback } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { ExternalField } from "../../types/Fields";
+import { ExternalField } from "../../types";
 import { Link, Search, SlidersHorizontal, Unlock } from "lucide-react";
 import { Modal } from "../Modal";
 import { Heading } from "../Heading";

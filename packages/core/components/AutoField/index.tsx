@@ -1,6 +1,6 @@
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Field, FieldProps } from "../../types/Fields";
-import { UiState } from "../../types/Config";
+import { Field, FieldProps } from "../../types";
+import { UiState } from "../../types";
 
 import styles from "./styles.module.css";
 import {

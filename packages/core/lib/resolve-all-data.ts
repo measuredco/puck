@@ -5,7 +5,7 @@ import {
   Data,
   DefaultComponentProps,
   DefaultRootFieldProps,
-} from "../types/Config";
+} from "../types";
 import { resolveAllComponentData } from "./resolve-component-data";
 import { resolveRootData } from "./resolve-root-data";
 import { defaultData } from "./default-data";

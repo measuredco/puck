@@ -1,6 +1,6 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { ComponentConfig, Config, Data } from "../../types/Config";
+import { ComponentConfig, Config, Data } from "../../types";
 import { ItemSelector, getItem } from "../../lib/get-item";
 import { scrollIntoView } from "../../lib/scroll-into-view";
 import { ChevronDown, LayoutGrid, Layers, Type } from "lucide-react";

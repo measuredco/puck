@@ -10,7 +10,7 @@ import {
   UnregisterZoneAction,
   createReducer,
 } from "../../reducer";
-import { AppState, Config, Data, UiState } from "../../types/Config";
+import { AppState, Config, Data, UiState } from "../../types";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 
 import { generateId } from "../../lib/generate-id";

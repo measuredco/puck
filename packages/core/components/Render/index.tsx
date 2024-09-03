@@ -6,7 +6,7 @@ import {
   Data,
   ExtractPropsFromConfig,
   ExtractRootPropsFromConfig,
-} from "../../types/Config";
+} from "../../types";
 import { DropZone, DropZoneProvider } from "../DropZone";
 
 export function Render<

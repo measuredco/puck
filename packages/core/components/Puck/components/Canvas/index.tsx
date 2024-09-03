@@ -13,7 +13,7 @@ import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { Preview } from "../Preview";
 import { getZoomConfig } from "../../../../lib/get-zoom-config";
-import { AppState } from "../../../../types/Config";
+import { AppState } from "../../../../types";
 
 const getClassName = getClassNameFactory("PuckCanvas", styles);
 
