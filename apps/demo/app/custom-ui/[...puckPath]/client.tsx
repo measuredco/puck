@@ -103,6 +103,7 @@ const Tabs = ({
           return (
             <button
               key={idx}
+              type="button"
               onClick={() => {
                 if (currentTab === idx) {
                   setCurrentTab(-1);

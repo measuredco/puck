@@ -25,7 +25,12 @@ export const Action = ({
   label?: string;
   onClick: (e: SyntheticEvent) => void;
 }) => (
-  <button className={getClassName("action")} onClick={onClick} title={label}>
+  <button
+    type="button"
+    className={getClassName("action")}
+    onClick={onClick}
+    title={label}
+  >
     {children}
   </button>
 );

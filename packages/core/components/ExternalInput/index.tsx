@@ -116,6 +116,7 @@ export const ExternalInput = ({
         </button>
         {value && (
           <button
+            type="button"
             className={getClassName("detachButton")}
             onClick={() => {
               onChange(null);

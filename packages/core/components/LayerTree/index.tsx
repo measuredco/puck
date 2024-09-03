@@ -87,6 +87,7 @@ export const LayerTree = ({
             >
               <div className={getClassNameLayer("inner")}>
                 <button
+                  type="button"
                   className={getClassNameLayer("clickable")}
                   onClick={() => {
                     if (isSelected) {
