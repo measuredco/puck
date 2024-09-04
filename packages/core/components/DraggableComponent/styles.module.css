@@ -15,7 +15,6 @@
 
 .DraggableComponent-contents {
   position: relative; /* Reset stacking context */
-  
   z-index: 0;
 }
 
