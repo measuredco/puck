@@ -192,7 +192,10 @@ export const DraggableComponent = ({
           )}
 
           <div className={getClassName("overlay")} />
-          <div className={getClassName("contents")}>{children}</div>
+          <div
+            className={getClassName("contents")}
+            style={{ pointerEvents: isModifierHeld ? "auto" : "none" }}
+          >{children}</div>
         </div>
       )}
     </El>
