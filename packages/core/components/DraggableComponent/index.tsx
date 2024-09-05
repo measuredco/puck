@@ -195,7 +195,9 @@ export const DraggableComponent = ({
           <div
             className={getClassName("contents")}
             style={{ pointerEvents: isModifierHeld ? "auto" : "none" }}
-          >{children}</div>
+          >
+            {children}
+          </div>
         </div>
       )}
     </El>
