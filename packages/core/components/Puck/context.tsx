@@ -13,6 +13,7 @@ import {
   AppState,
   UiState,
   Plugin,
+  UserGenerics,
 } from "../../types";
 import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
@@ -49,8 +50,11 @@ type ZoomConfig = {
   zoom: number;
 };
 
-type AppContext<UserConfig extends Config = Config> = {
-  state: AppState;
+type AppContext<
+  UserConfig extends Config = Config,
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
+> = {
+  state: G["UserAppState"];
   dispatch: (action: PuckAction) => void;
   config: UserConfig;
   componentState: Record<string, { loading: boolean }>;

@@ -4,6 +4,7 @@ import {
   Config,
   DefaultComponentProps,
   Permissions,
+  UserGenerics,
 } from "../types";
 import { getChanged } from "./get-changed";
 
