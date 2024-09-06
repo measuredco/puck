@@ -31,7 +31,7 @@ export const resolveComponentData = async (
 ) => {
   const configForItem = config.components[item.type];
   if (configForItem.resolveData) {
-    const { item: oldItem = {}, resolved = {} } =
+    const { item: oldItem = null, resolved = {} } =
       cache.lastChange[item.props.id] || {};
 
     if (item && item === oldItem) {

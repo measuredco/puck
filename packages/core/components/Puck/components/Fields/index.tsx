@@ -64,7 +64,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
     _componentData: ComponentOrRootData,
     _params: {
       fields: FieldsType;
-      lastData: Partial<ComponentOrRootData>;
+      lastData: Partial<ComponentOrRootData> | null;
       lastFields: FieldsType;
       changed: Record<string, boolean>;
     }
@@ -79,7 +79,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
       const lastData =
         lastSelectedData.props?.id === componentData.props.id
           ? lastSelectedData
-          : {};
+          : null;
 
       const changed = getChanged(componentData, lastData);
 
