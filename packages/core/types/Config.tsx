@@ -49,9 +49,10 @@ export type ComponentConfig<
     data: DataShape,
     params: {
       changed: Partial<Record<keyof FieldProps, boolean>>;
-      lastPermissions: Partial<Permissions> | undefined;
-      initialPermissions: Partial<Permissions>;
+      lastPermissions: Partial<Permissions>;
+      permissions: Partial<Permissions>;
       appState: AppState;
+      lastData: DataShape | null;
     }
   ) => Partial<Permissions>;
 };

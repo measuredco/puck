@@ -17,30 +17,31 @@ export const resolvePermissions = <
     UserRootProps
   >
 >({
-  selectedItem,
+  data,
+  lastData,
   config,
   changed,
   lastPermissions,
-  initialPermissions,
+  permissions,
   appState,
 }: {
-  selectedItem: UserData["content"][0] | undefined;
+  data: UserData["content"][0] | undefined;
+  lastData: UserData["content"][0] | null;
   config: UserConfig;
   changed: Record<string, boolean>;
   lastPermissions: Partial<Permissions>;
-  initialPermissions: Partial<Permissions>;
+  permissions: Partial<Permissions>;
   appState: AppState<UserData>;
 }) => {
-  const componentConfig = selectedItem
-    ? config.components[selectedItem.type]
-    : null;
+  const componentConfig = data ? config.components[data.type] : null;
 
-  if (selectedItem && componentConfig?.resolvePermissions) {
-    return componentConfig.resolvePermissions(selectedItem, {
+  if (data && lastData && componentConfig?.resolvePermissions) {
+    return componentConfig.resolvePermissions(data, {
       changed,
       lastPermissions,
-      initialPermissions,
+      permissions,
       appState,
+      lastData,
     });
   }
 

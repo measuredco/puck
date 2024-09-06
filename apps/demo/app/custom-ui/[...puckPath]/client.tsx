@@ -337,7 +337,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           ...acc,
           [componentKey]: {
             ...acc[componentKey as keyof UserConfig["components"]],
-            resolvePermissions: (data: any, { initialPermissions }: any) => {
+            resolvePermissions: (data: any, { permissions }: any) => {
               if (lockedComponents[data.props.id]) {
                 return {
                   drag: false,
@@ -347,7 +347,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                 };
               }
 
-              return initialPermissions;
+              return permissions;
             },
           },
         };

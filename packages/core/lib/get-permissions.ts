@@ -1,19 +1,12 @@
-import {
-  AppState,
-  ComponentData,
-  Config,
-  DefaultComponentProps,
-  Permissions,
-  UserGenerics,
-} from "../types";
+import { ComponentData, Config, Permissions, UserGenerics } from "../types";
 import { getChanged } from "./get-changed";
 
 import { resolvePermissions } from "./resolve-permissions";
 
 const cache: {
   lastPermissions: Record<string, Partial<Permissions>>;
-  lastSelected: ComponentData | {} | undefined;
-} = { lastPermissions: {}, lastSelected: {} };
+  lastSelected: ComponentData | null;
+} = { lastPermissions: {}, lastSelected: null };
 
 export const getPermissions = <
   UserConfig extends Config = Config,
@@ -40,16 +33,17 @@ export const getPermissions = <
     globalPermissions,
   });
 
-  const changed = getChanged(selectedItem, cache.lastSelected);
+  const changed = getChanged(selectedItem, cache.lastSelected || {});
 
-  if (Object.values(changed).some((el) => el === true)) {
+  if (selectedItem && Object.values(changed).some((el) => el === true)) {
     const resolvedPermissions = resolvePermissions({
-      selectedItem,
+      data: selectedItem,
       config,
       changed,
       lastPermissions:
         cache.lastPermissions[componentId] || componentPermissions,
-      initialPermissions: componentPermissions,
+      permissions: componentPermissions,
+      lastData: cache.lastSelected as any,
       appState,
     });
 
