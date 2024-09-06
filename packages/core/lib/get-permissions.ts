@@ -15,23 +15,26 @@ const cache: {
   lastSelected: ComponentData | {} | undefined;
 } = { lastPermissions: {}, lastSelected: {} };
 
-export const getPermissions = ({
+export const getPermissions = <
+  UserConfig extends Config = Config,
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
+>({
   selectedItem,
   type,
   globalPermissions,
   config,
   appState,
 }: {
-  selectedItem?: ComponentData | undefined;
-  type?: keyof DefaultComponentProps;
+  selectedItem?: G["UserData"]["content"][0] | undefined;
+  type?: string;
   globalPermissions: Partial<Permissions>;
-  config: Config;
-  appState: AppState;
+  config: UserConfig;
+  appState: G["UserAppState"];
 }) => {
   const componentType = type || (selectedItem && selectedItem.type) || "";
   const componentId = (selectedItem && selectedItem.props.id) || "";
 
-  let componentPermissions = getInitialPermissions({
+  let componentPermissions = getInitialPermissions<UserConfig>({
     componentType,
     config,
     globalPermissions,
@@ -72,17 +75,17 @@ export const getPermissions = ({
   return componentPermissions;
 };
 
-export const getInitialPermissions = ({
+export const getInitialPermissions = <UserConfig extends Config = Config>({
   componentType,
   globalPermissions,
   config,
 }: {
-  componentType: keyof DefaultComponentProps;
+  componentType: string;
   globalPermissions: Partial<Permissions>;
-  config: Config;
+  config: UserConfig;
 }) => {
   return {
     ...globalPermissions,
-    ...config.components[componentType]?.permissions,
+    ...config.components[componentType as string]?.permissions,
   };
 };
