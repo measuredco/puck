@@ -26,7 +26,7 @@ export type ComponentConfig<
       changed: Partial<Record<keyof FieldProps, boolean>>;
       fields: Fields<FieldProps>;
       lastFields: Fields<FieldProps>;
-      lastData: DataShape;
+      lastData: DataShape | null;
       appState: AppState;
     }
   ) => Promise<Fields<FieldProps>> | Fields<FieldProps>;
@@ -34,7 +34,7 @@ export type ComponentConfig<
     data: DataShape,
     params: {
       changed: Partial<Record<keyof FieldProps, boolean>>;
-      lastData: DataShape;
+      lastData: DataShape | null;
     }
   ) =>
     | Promise<{
