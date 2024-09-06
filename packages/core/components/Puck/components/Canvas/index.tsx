@@ -85,6 +85,14 @@ export const Canvas = () => {
     }
   }, [zoomConfig.zoom]);
 
+  // Zoom whenever state changes, even if external driver
+  useEffect(() => {
+    if (ZOOM_ON_CHANGE) {
+      setShowTransition(true);
+      resetAutoZoom(ui);
+    }
+  }, [ui.viewports.current.width]);
+
   // Resize based on window size
   useEffect(() => {
     const observer = new ResizeObserver(() => {
