@@ -1,23 +1,19 @@
 "use client";
 
 import { rootDroppableId } from "../../lib/root-droppable-id";
-import {
-  Config,
-  Data,
-  ExtractPropsFromConfig,
-  ExtractRootPropsFromConfig,
-} from "../../types";
+import { Config, Data, UserGenerics } from "../../types";
 import { DropZone, DropZoneProvider } from "../DropZone";
 
 export function Render<
   UserConfig extends Config = Config,
-  UserProps extends ExtractPropsFromConfig<UserConfig> = ExtractPropsFromConfig<UserConfig>,
-  UserRootProps extends ExtractRootPropsFromConfig<UserConfig> = ExtractRootPropsFromConfig<UserConfig>,
-  UserData extends Data<UserProps, UserRootProps> | Data = Data<
-    UserProps,
-    UserRootProps
-  >
->({ config, data }: { config: UserConfig; data: Partial<UserData> }) {
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
+>({
+  config,
+  data,
+}: {
+  config: UserConfig;
+  data: Partial<G["UserData"] | Data>;
+}) {
   const defaultedData = {
     ...data,
     root: data.root || {},

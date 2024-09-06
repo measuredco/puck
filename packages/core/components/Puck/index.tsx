@@ -10,18 +10,15 @@ import {
 import { DragStart, DragUpdate } from "@measured/dnd";
 
 import type {
-  Config,
-  Data,
-  AppState,
   UiState,
   IframeConfig,
   OnAction,
   Overrides,
   Permissions,
-  ExtractPropsFromConfig,
-  ExtractRootPropsFromConfig,
   Plugin,
   InitialHistory,
+  UserGenerics,
+  Config,
 } from "../../types";
 import { Button } from "../Button";
 
@@ -65,12 +62,7 @@ const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
 
 export function Puck<
   UserConfig extends Config = Config,
-  UserProps extends ExtractPropsFromConfig<UserConfig> = ExtractPropsFromConfig<UserConfig>,
-  UserRootProps extends ExtractRootPropsFromConfig<UserConfig> = ExtractRootPropsFromConfig<UserConfig>,
-  UserData extends Data<UserProps, UserRootProps> | Data = Data<
-    UserProps,
-    UserRootProps
-  >
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
 >({
   children,
   config,
@@ -93,21 +85,21 @@ export function Puck<
 }: {
   children?: ReactNode;
   config: UserConfig;
-  data: Partial<UserData>;
+  data: Partial<G["UserData"]>;
   ui?: Partial<UiState>;
-  onChange?: (data: UserData) => void;
-  onPublish?: (data: UserData) => void;
-  onAction?: OnAction<UserData>;
+  onChange?: (data: G["UserData"]) => void;
+  onPublish?: (data: G["UserData"]) => void;
+  onAction?: OnAction<G["UserData"]>;
   permissions?: Partial<Permissions>;
   plugins?: Plugin[];
   overrides?: Partial<Overrides>;
   renderHeader?: (props: {
     children: ReactNode;
     dispatch: (action: PuckAction) => void;
-    state: AppState<UserData>;
+    state: G["UserAppState"];
   }) => ReactElement;
   renderHeaderActions?: (props: {
-    state: AppState<UserData>;
+    state: G["UserAppState"];
     dispatch: (action: PuckAction) => void;
   }) => ReactElement;
   headerTitle?: string;
@@ -125,10 +117,10 @@ export function Puck<
     ..._iframe,
   };
 
-  const [generatedAppState] = useState<AppState<UserData>>(() => {
+  const [generatedAppState] = useState<G["UserAppState"]>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
 
-    let clientUiState: Partial<AppState<UserData>["ui"]> = {};
+    let clientUiState: Partial<G["UserAppState"]["ui"]> = {};
 
     if (typeof window !== "undefined") {
       // Hide side bars on mobile
@@ -153,6 +145,7 @@ export function Puck<
 
       if (iframe.enabled) {
         clientUiState = {
+          ...clientUiState,
           viewports: {
             ...initial.viewports,
 
@@ -217,7 +210,7 @@ export function Puck<
             )
           : {},
       },
-    } as AppState<UserData>;
+    } as G["UserAppState"];
   });
 
   const { appendData = true } = _initialHistory || {};
@@ -239,16 +232,16 @@ export function Puck<
   });
 
   const [reducer] = useState(() =>
-    createReducer<UserConfig, UserData>({
+    createReducer<UserConfig, G["UserData"]>({
       config,
       record: historyStore.record,
       onAction,
     })
   );
 
-  const [appState, dispatch] = useReducer<StateReducer<UserData>>(
+  const [appState, dispatch] = useReducer<StateReducer<G["UserData"]>>(
     reducer,
-    flushZones<UserData>(initialAppState) as AppState<UserData>
+    flushZones<G["UserData"]>(initialAppState) as G["UserAppState"]
   );
 
   const { data, ui } = appState;
@@ -281,7 +274,7 @@ export function Puck<
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
   useEffect(() => {
-    if (onChange) onChange(data as UserData);
+    if (onChange) onChange(data as G["UserData"]);
   }, [data]);
 
   const { onDragStartOrUpdate, placeholderStyle } = usePlaceholderStyle();
@@ -532,7 +525,7 @@ export function Puck<
                           <CustomHeaderActions>
                             <Button
                               onClick={() => {
-                                onPublish && onPublish(data as UserData);
+                                onPublish && onPublish(data as G["UserData"]);
                               }}
                               icon={<Globe size="14px" />}
                             >
@@ -604,7 +597,7 @@ export function Puck<
                                 )}
                               </IconButton>
                             </div>
-                            <MenuBar<UserData>
+                            <MenuBar<G["UserData"]>
                               appState={appState}
                               dispatch={dispatch}
                               onPublish={onPublish}
