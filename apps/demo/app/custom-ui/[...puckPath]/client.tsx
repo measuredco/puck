@@ -7,8 +7,7 @@ import { useDemoData } from "../../../lib/use-demo-data";
 import { IconButton, usePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Drawer } from "@/core/components/Drawer";
-import { ChevronUp, ChevronDown, Globe, Bug } from "lucide-react";
-import { Overrides } from "@/core/types";
+import { ChevronUp, ChevronDown, Globe, Lock, Unlock } from "lucide-react";
 
 const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
   const { appState, dispatch } = usePuck();
@@ -278,31 +277,6 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
   );
 };
 
-const CustomActionBar: Overrides["actionBar"] = ({ children, label }) => {
-  const { appState, getPermissions, selectedItem } = usePuck();
-
-  const { debug } = getPermissions();
-
-  const onClick = () => {
-    alert(
-      `Index: ${appState.ui.itemSelector?.index} \nZone: ${
-        appState.ui.itemSelector?.zone
-      } \nData: ${JSON.stringify(selectedItem)}`
-    );
-  };
-  return (
-    <ActionBar label={label}>
-      {debug && (
-        <ActionBar.Action onClick={onClick} label="Debug information">
-          <Bug size={16} />
-        </ActionBar.Action>
-      )}
-
-      {children}
-    </ActionBar>
-  );
-};
-
 const CustomDrawer = () => {
   const { getPermissions } = usePuck();
 
@@ -351,29 +325,36 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     isEdit,
   });
 
+  const [lockedComponents, setLockedComponents] = useState<
+    Record<string, boolean>
+  >({});
+
   const configOverride: UserConfig = {
     ...config,
     components: {
-      ...config.components,
-      Hero: {
-        ...config.components.Hero,
-        permissions: {
-          debug: false,
-          drag: false,
-          delete: false,
-          duplicate: false,
-          insert: false,
-        },
-        resolvePermissions: (data) => {
-          if (data.props.title.includes("Puck")) {
-            return { duplicate: true };
-          } else {
-            return { duplicate: false };
-          }
-        },
-      },
+      ...Object.keys(config.components).reduce((acc, componentKey) => {
+        return {
+          ...acc,
+          [componentKey]: {
+            ...acc[componentKey as keyof UserConfig["components"]],
+            resolvePermissions: (data: any, { initialPermissions }: any) => {
+              if (lockedComponents[data.props.id]) {
+                return {
+                  drag: false,
+                  edit: false,
+                  duplicate: false,
+                  delete: false,
+                };
+              }
+
+              return initialPermissions;
+            },
+          },
+        };
+      }, config.components),
     },
   };
+
   if (isEdit) {
     return (
       <Puck<UserConfig>
@@ -382,15 +363,44 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
         iframe={{ enabled: false }}
         headerPath={path}
         permissions={{
-          debug: true,
+          lockable: true,
         }}
         overrides={{
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
           ),
-          actionBar: ({ children, label }) => (
-            <CustomActionBar label={label}>{children}</CustomActionBar>
-          ),
+          actionBar: ({ children, label }) => {
+            const { getPermissions, selectedItem } =
+              // Disable rules of hooks since this is a render function
+              // eslint-disable-next-line react-hooks/rules-of-hooks
+              usePuck<UserConfig>();
+
+            const globalPermissions = getPermissions();
+
+            if (!selectedItem)
+              return <ActionBar label={label}>{children}</ActionBar>;
+
+            const isLocked = !!lockedComponents[selectedItem.props.id];
+
+            return (
+              <ActionBar label={label}>
+                {children}
+                {globalPermissions.lockable && (
+                  <ActionBar.Action
+                    onClick={() => {
+                      setLockedComponents({
+                        ...lockedComponents,
+                        [selectedItem.props.id as string]: !isLocked,
+                      });
+                    }}
+                    label={isLocked ? "Unlock component" : "Lock component"}
+                  >
+                    {isLocked ? <Unlock size={16} /> : <Lock size={16} />}
+                  </ActionBar.Action>
+                )}
+              </ActionBar>
+            );
+          },
           components: () => <CustomDrawer />,
           puck: () => <CustomPuck dataKey={key} />,
         }}
