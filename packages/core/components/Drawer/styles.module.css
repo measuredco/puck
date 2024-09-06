@@ -2,7 +2,7 @@
   font-family: var(--puck-font-family);
 }
 
-.DrawerItem--disabled {
+.DrawerItem--disabled .DrawerItem-draggable {
   background: var(--puck-color-grey-11);
   color: var(--puck-color-grey-05);
   cursor: not-allowed; /** Move this out of inline styles */
