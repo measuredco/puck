@@ -146,7 +146,7 @@ export const DraggableComponent = ({
           style={{
             ...style,
             ...provided.draggableProps.style,
-            cursor: isModifierHeld || isDragDisabled ? "initial" : "grab",
+            cursor: isModifierHeld || isDragDisabled ? "pointer" : "grab",
           }}
           onMouseOver={onMouseOver}
           onMouseOut={onMouseOut}
