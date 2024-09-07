@@ -158,7 +158,7 @@ export const AppProvider = ({
 
   const getPermissions: GetPermissions = ({ item, type } = {}) => {
     return getResolvedPermissions({
-      selectedItem: item || selectedItem,
+      item: item || selectedItem,
       type: type as string,
       globalPermissions: value.globalPermissions || {},
       config: value.config,
