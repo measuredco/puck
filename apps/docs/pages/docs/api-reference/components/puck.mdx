@@ -189,10 +189,11 @@ Sets the undo/redo Puck history state when using the `usePuck` [history API](/do
 
 #### `initialHistory` params
 
-| Param                     | Example         | Type                                                                   | Status   |
-| ------------------------- | --------------- | ---------------------------------------------------------------------- | -------- |
-| [`histories`](#histories) | `histories: []` | [History](/docs/api-reference/functions/use-puck#historyhistories)\[\] | Required |
-| [`index`](#index)         | `index: 2`      | Number                                                                 | Required |
+| Param                       | Example             | Type                                                                   | Status   |
+| --------------------------- | ------------------- | ---------------------------------------------------------------------- | -------- |
+| [`histories`](#histories)   | `histories: []`     | [History](/docs/api-reference/functions/use-puck#historyhistories)\[\] | Required |
+| [`index`](#index)           | `index: 2`          | Number                                                                 | Required |
+| [`appendData`](#appenddata) | `appendData: false` | Boolean                                                                | -        |
 
 ##### `histories`
 
@@ -201,6 +202,12 @@ An array of histories to reset the Puck state history state to.
 ##### `index`
 
 The index of the histories to set the user to.
+
+##### `appendData`
+
+Append the Puck [`data`](#data) prop onto the end of [`histories`](#histories). Defaults to `true`.
+
+When `false`, the Puck `data` prop will be ignored but you must specify at least one item in the `histories` array.
 
 ### `onAction(action, appState, prevAppState)`
 
