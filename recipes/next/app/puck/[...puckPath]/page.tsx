@@ -38,3 +38,5 @@ export default async function Page({
 
   return <Client path={path} data={data || {}} />;
 }
+
+export const dynamic = "force-dynamic";
