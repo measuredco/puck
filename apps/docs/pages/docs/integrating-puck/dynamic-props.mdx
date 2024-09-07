@@ -63,6 +63,8 @@ const config = {
 }}
 />
 
+> When inserting components with `resolveData`, the Puck state will update twice - once for the initial insert, and once more when the method resolves, if it changes the data. This will be reflected in the undo/redo history.
+
 ### Setting fields as read-only
 
 [`resolveData`](/docs/api-reference/configuration/component-config#resolvedatadata-params) also allows us to mark fields as read-only using the [`readOnly` parameter](/docs/api-reference/configuration/component-config#datareadonly-1).
