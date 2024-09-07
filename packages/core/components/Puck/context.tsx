@@ -21,6 +21,7 @@ import { PuckHistory } from "../../lib/use-puck-history";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";
 import { UAParser } from "ua-parser-js";
+import { getResolvedPermissions } from "../../lib/get-resolved-permissions";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {} },
@@ -50,6 +51,14 @@ type ZoomConfig = {
   zoom: number;
 };
 
+type GetPermissions<
+  UserConfig extends Config = Config,
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
+> = (params?: {
+  item?: G["UserData"]["content"][0];
+  type?: keyof G["UserProps"];
+}) => Partial<Permissions>;
+
 type AppContext<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
@@ -70,6 +79,8 @@ type AppContext<
   iframe: IframeConfig;
   safariFallbackMode?: boolean;
   globalPermissions?: Partial<Permissions>;
+  selectedItem?: G["UserData"]["content"][0];
+  getPermissions: GetPermissions<UserConfig>;
 };
 
 const defaultContext: AppContext = {
@@ -93,6 +104,7 @@ const defaultContext: AppContext = {
   iframe: {},
   safariFallbackMode: false,
   globalPermissions: {},
+  getPermissions: () => ({}),
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
@@ -140,15 +152,31 @@ export const AppProvider = ({
     }
   }, []);
 
+  const selectedItem = value.state.ui.itemSelector
+    ? getItem(value.state.ui.itemSelector, value.state.data)
+    : undefined;
+
+  const getPermissions: GetPermissions = ({ item, type } = {}) => {
+    return getResolvedPermissions({
+      selectedItem: item || selectedItem,
+      type: type as string,
+      globalPermissions: value.globalPermissions || {},
+      config: value.config,
+      appState: value.state,
+    });
+  };
+
   return (
     <appContext.Provider
       value={{
         ...value,
+        selectedItem,
         zoomConfig,
         setZoomConfig,
         status,
         setStatus,
         safariFallbackMode,
+        getPermissions,
       }}
     >
       {children}
@@ -157,16 +185,11 @@ export const AppProvider = ({
 };
 
 export function useAppContext<UserConfig extends Config = Config>() {
-  const mainContext = useContext(appContext) as AppContext<UserConfig>;
-
-  const selectedItem = mainContext.state.ui.itemSelector
-    ? getItem(mainContext.state.ui.itemSelector, mainContext.state.data)
-    : undefined;
+  const mainContext = useContext<AppContext<UserConfig>>(appContext as any);
 
   return {
     ...mainContext,
     // Helpers
-    selectedItem,
     setUi: (ui: Partial<UiState>, recordHistory?: boolean) => {
       return mainContext.dispatch({
         type: "setUi",

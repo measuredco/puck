@@ -1,39 +1,21 @@
 import { useAppContext } from "../components/Puck/context";
 import { Config, UserGenerics } from "../types";
-import { getPermissions } from "./get-permissions";
 
-export const usePuck = <
-  UserConfig extends Config = Config,
-  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
->() => {
+export const usePuck = <UserConfig extends Config = Config>() => {
   const {
     state: appState,
     config,
     history,
     dispatch,
     selectedItem: currentItem,
-    globalPermissions,
+    getPermissions,
   } = useAppContext<UserConfig>();
 
   return {
     appState,
     config,
     dispatch,
-    getPermissions: ({
-      item,
-      type,
-    }: {
-      item?: G["UserData"]["content"][0];
-      type?: keyof G["UserProps"];
-    } = {}) => {
-      return getPermissions<UserConfig>({
-        selectedItem: item || currentItem,
-        type: type as string,
-        globalPermissions: globalPermissions || {},
-        config,
-        appState,
-      });
-    },
+    getPermissions,
     history: {
       back: history.back!,
       forward: history.forward!,

@@ -17,7 +17,6 @@ import { DefaultDraggable } from "../Draggable";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
 import { DefaultOverride } from "../DefaultOverride";
-import { getPermissions } from "../../lib/get-permissions";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -82,16 +81,8 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
-  const {
-    zoomConfig,
-    status,
-    overrides,
-    plugins,
-    selectedItem,
-    config,
-    globalPermissions,
-    state,
-  } = useAppContext();
+  const { zoomConfig, status, overrides, selectedItem, getPermissions } =
+    useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
@@ -113,14 +104,9 @@ export const DraggableComponent = ({
     [overrides.actionBar]
   );
 
-  const permissions =
-    selectedItem &&
-    getPermissions({
-      selectedItem,
-      globalPermissions: globalPermissions || {},
-      config,
-      appState: state,
-    });
+  const permissions = getPermissions({
+    item: selectedItem,
+  });
 
   return (
     <El
@@ -176,12 +162,12 @@ export const DraggableComponent = ({
                 }}
               >
                 <CustomActionBar label={label}>
-                  {permissions && permissions.duplicate && (
+                  {permissions.duplicate && (
                     <ActionBar.Action onClick={onDuplicate} label="Duplicate">
                       <Copy size={16} />
                     </ActionBar.Action>
                   )}
-                  {permissions && permissions.delete && (
+                  {permissions.delete && (
                     <ActionBar.Action onClick={onDelete} label="Delete">
                       <Trash size={16} />
                     </ActionBar.Action>

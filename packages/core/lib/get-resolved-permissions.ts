@@ -8,7 +8,7 @@ const cache: {
   lastSelected: ComponentData | null;
 } = { lastPermissions: {}, lastSelected: null };
 
-export const getPermissions = <
+export const getResolvedPermissions = <
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
 >({
@@ -33,7 +33,7 @@ export const getPermissions = <
     globalPermissions,
   });
 
-  const changed = getChanged(selectedItem, cache.lastSelected || {});
+  const changed = getChanged(selectedItem, cache.lastSelected);
 
   if (selectedItem && Object.values(changed).some((el) => el === true)) {
     const resolvedPermissions = resolvePermissions({
