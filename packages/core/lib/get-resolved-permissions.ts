@@ -12,20 +12,20 @@ export const getResolvedPermissions = <
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
 >({
-  selectedItem,
+  item,
   type,
   globalPermissions,
   config,
   appState,
 }: {
-  selectedItem?: G["UserData"]["content"][0] | undefined;
+  item?: G["UserData"]["content"][0] | undefined;
   type?: string;
   globalPermissions: Partial<Permissions>;
   config: UserConfig;
   appState: G["UserAppState"];
 }) => {
-  const componentType = type || (selectedItem && selectedItem.type) || "";
-  const componentId = (selectedItem && selectedItem.props.id) || "";
+  const componentType = type || (item && item.type) || "";
+  const componentId = (item && item.props.id) || "";
 
   let componentPermissions = getInitialPermissions<UserConfig>({
     componentType,
@@ -33,11 +33,11 @@ export const getResolvedPermissions = <
     globalPermissions,
   });
 
-  const changed = getChanged(selectedItem, cache.lastSelected);
+  const changed = getChanged(item, cache.lastSelected);
 
-  if (selectedItem && Object.values(changed).some((el) => el === true)) {
+  if (item && Object.values(changed).some((el) => el === true)) {
     const resolvedPermissions = resolvePermissions({
-      data: selectedItem,
+      data: item,
       config,
       changed,
       lastPermissions:
@@ -54,7 +54,7 @@ export const getResolvedPermissions = <
       };
     }
 
-    cache.lastSelected = selectedItem;
+    cache.lastSelected = item;
     cache.lastPermissions[componentId] = componentPermissions;
 
     return componentPermissions;
