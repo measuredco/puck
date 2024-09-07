@@ -21,6 +21,7 @@ import type {
   ExtractPropsFromConfig,
   ExtractRootPropsFromConfig,
   Plugin,
+  InitialHistory,
 } from "../../types";
 import { Button } from "../Button";
 
@@ -50,7 +51,7 @@ import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
 import { usePuckHistory } from "../../lib/use-puck-history";
-import { useHistoryStore, type History } from "../../lib/use-history-store";
+import { useHistoryStore } from "../../lib/use-history-store";
 import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";
@@ -90,7 +91,7 @@ export function Puck<
     enabled: true,
   },
   dnd,
-  initialHistory,
+  initialHistory: _initialHistory,
 }: {
   children?: ReactNode;
   config: UserConfig;
@@ -118,22 +119,9 @@ export function Puck<
   dnd?: {
     disableAutoScroll?: boolean;
   };
-  initialHistory?: {
-    histories: History<any>[];
-    index: number;
-  };
+  initialHistory?: InitialHistory;
 }) {
-  const historyStore = useHistoryStore(initialHistory);
-
-  const [reducer] = useState(() =>
-    createReducer<UserConfig, UserData>({
-      config,
-      record: historyStore.record,
-      onAction,
-    })
-  );
-
-  const [initialAppState] = useState<AppState<UserData>>(() => {
+  const [generatedAppState] = useState<AppState<UserData>>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
 
     let clientUiState: Partial<AppState<UserData>["ui"]> = {};
@@ -228,9 +216,29 @@ export function Puck<
     } as AppState<UserData>;
   });
 
+  const initialHistory: InitialHistory<AppState> = {
+    histories: [
+      ...(_initialHistory?.histories || []),
+      { data: generatedAppState },
+    ],
+    index: _initialHistory?.index || 0,
+  };
+
+  const initialAppState = initialHistory?.histories[initialHistory.index].data;
+
+  const historyStore = useHistoryStore(initialHistory);
+
+  const [reducer] = useState(() =>
+    createReducer<UserConfig, UserData>({
+      config,
+      record: historyStore.record,
+      onAction,
+    })
+  );
+
   const [appState, dispatch] = useReducer<StateReducer<UserData>>(
     reducer,
-    flushZones<UserData>(initialAppState)
+    flushZones<UserData>(initialAppState) as AppState<UserData>
   );
 
   const { data, ui } = appState;

@@ -9,13 +9,19 @@ describe("use-history-store", () => {
   let renderedHook: RenderHookResult<ReturnType<typeof useHistoryStore>, any>;
 
   beforeEach(() => {
-    renderedHook = renderHook(() => useHistoryStore());
+    renderedHook = renderHook(() =>
+      useHistoryStore({
+        index: 0,
+        histories: [{ data: "Strawberries", id: "initial" }],
+      })
+    );
   });
 
   test("should have the correct initial state", () => {
     expect(renderedHook.result.current.hasPast).toBe(false);
     expect(renderedHook.result.current.hasFuture).toBe(false);
-    expect(renderedHook.result.current.histories.length).toBe(0);
+    expect(renderedHook.result.current.histories.length).toBe(1);
+    expect(renderedHook.result.current.histories[0].data).toBe("Strawberries");
   });
 
   test("should record the history", () => {
@@ -24,9 +30,9 @@ describe("use-history-store", () => {
 
     expect(renderedHook.result.current.hasPast).toBe(true);
     expect(renderedHook.result.current.hasFuture).toBe(false);
-    expect(renderedHook.result.current.histories.length).toBe(2);
-    expect(renderedHook.result.current.histories[0].data).toBe("Apples");
-    expect(renderedHook.result.current.histories[1].data).toBe("Oranges");
+    expect(renderedHook.result.current.histories.length).toBe(3);
+    expect(renderedHook.result.current.histories[1].data).toBe("Apples");
+    expect(renderedHook.result.current.histories[2].data).toBe("Oranges");
     expect(renderedHook.result.current.currentHistory.data).toBe("Oranges");
   });
 
@@ -48,7 +54,9 @@ describe("use-history-store", () => {
 
     expect(renderedHook.result.current.hasPast).toBe(false);
     expect(renderedHook.result.current.hasFuture).toBe(true);
-    expect(renderedHook.result.current.currentHistory).toBeFalsy();
+    expect(renderedHook.result.current.currentHistory.data).toBe(
+      "Strawberries"
+    );
   });
 
   test("should enable partial fast-forwards through history", () => {
@@ -84,9 +92,9 @@ describe("use-history-store", () => {
 
     expect(renderedHook.result.current.hasPast).toBe(true);
     expect(renderedHook.result.current.hasFuture).toBe(false);
-    expect(renderedHook.result.current.histories.length).toBe(2);
-    expect(renderedHook.result.current.histories[0].data).toBe("Apples");
-    expect(renderedHook.result.current.histories[1].data).toBe("Banana");
+    expect(renderedHook.result.current.histories.length).toBe(3);
+    expect(renderedHook.result.current.histories[1].data).toBe("Apples");
+    expect(renderedHook.result.current.histories[2].data).toBe("Banana");
     expect(renderedHook.result.current.currentHistory.data).toBe("Banana");
   });
 
@@ -102,7 +110,7 @@ describe("use-history-store", () => {
       ])
     );
 
-    expect(renderedHook.result.current.hasPast).toBe(true);
+    expect(renderedHook.result.current.hasPast).toBe(false);
     expect(renderedHook.result.current.hasFuture).toBe(false);
     expect(renderedHook.result.current.histories.length).toBe(1);
     expect(renderedHook.result.current.histories[0].data).toBe("Oreo");
@@ -115,10 +123,12 @@ describe("use-history-store", () => {
     act(() => renderedHook.result.current.record("Oranges"));
     act(() => renderedHook.result.current.setHistoryIndex(0));
 
-    expect(renderedHook.result.current.hasPast).toBe(true);
+    expect(renderedHook.result.current.hasPast).toBe(false);
     expect(renderedHook.result.current.hasFuture).toBe(true);
-    expect(renderedHook.result.current.histories.length).toBe(2);
-    expect(renderedHook.result.current.currentHistory.data).toBe("Apples");
+    expect(renderedHook.result.current.histories.length).toBe(3);
+    expect(renderedHook.result.current.currentHistory.data).toBe(
+      "Strawberries"
+    );
     expect(renderedHook.result.current.index).toBe(0);
   });
 });

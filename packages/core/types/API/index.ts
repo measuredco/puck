@@ -25,6 +25,16 @@ export type Plugin = {
   overrides: Partial<Overrides>;
 };
 
+export type History<D = any> = {
+  data: D;
+  id: string;
+};
+
+export type InitialHistory<AS = AppState> = {
+  histories: History<AS>[];
+  index: number;
+};
+
 export * from "./Viewports";
 
 export type { Overrides };
