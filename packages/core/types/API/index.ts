@@ -30,19 +30,19 @@ export type History<D = any> = {
   id?: string;
 };
 
-type InitialHistoryAppend<AS = AppState> = {
+type InitialHistoryAppend<AS = Partial<AppState>> = {
   histories: History<AS>[];
   index: number;
   appendData?: true;
 };
 
-type InitialHistoryNoAppend<AS = AppState> = {
+type InitialHistoryNoAppend<AS = Partial<AppState>> = {
   histories: [History<AS>, ...History<AS>[]]; // Array with minimum length of 1
   index: number;
   appendData?: false;
 };
 
-export type InitialHistory<AS = AppState> =
+export type InitialHistory<AS = Partial<AppState>> =
   | InitialHistoryAppend<AS>
   | InitialHistoryNoAppend<AS>;
 

@@ -222,7 +222,11 @@ export function Puck<
     histories: [
       ...(_initialHistory?.histories || []),
       ...(appendData ? [{ state: generatedAppState }] : []),
-    ],
+    ].map((history) => ({
+      ...history,
+      // Inject default data to enable partial history injections
+      state: { ...generatedAppState, ...history.state },
+    })),
     index: _initialHistory?.index || 0,
   };
 
