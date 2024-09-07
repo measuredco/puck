@@ -12,7 +12,7 @@ describe("use-history-store", () => {
     renderedHook = renderHook(() =>
       useHistoryStore({
         index: 0,
-        histories: [{ data: "Strawberries", id: "initial" }],
+        histories: [{ state: "Strawberries", id: "initial" }],
       })
     );
   });
@@ -21,7 +21,7 @@ describe("use-history-store", () => {
     expect(renderedHook.result.current.hasPast).toBe(false);
     expect(renderedHook.result.current.hasFuture).toBe(false);
     expect(renderedHook.result.current.histories.length).toBe(1);
-    expect(renderedHook.result.current.histories[0].data).toBe("Strawberries");
+    expect(renderedHook.result.current.histories[0].state).toBe("Strawberries");
   });
 
   test("should record the history", () => {
@@ -31,9 +31,9 @@ describe("use-history-store", () => {
     expect(renderedHook.result.current.hasPast).toBe(true);
     expect(renderedHook.result.current.hasFuture).toBe(false);
     expect(renderedHook.result.current.histories.length).toBe(3);
-    expect(renderedHook.result.current.histories[1].data).toBe("Apples");
-    expect(renderedHook.result.current.histories[2].data).toBe("Oranges");
-    expect(renderedHook.result.current.currentHistory.data).toBe("Oranges");
+    expect(renderedHook.result.current.histories[1].state).toBe("Apples");
+    expect(renderedHook.result.current.histories[2].state).toBe("Oranges");
+    expect(renderedHook.result.current.currentHistory.state).toBe("Oranges");
   });
 
   test("should enable partial rewinds through history", () => {
@@ -43,7 +43,7 @@ describe("use-history-store", () => {
 
     expect(renderedHook.result.current.hasPast).toBe(true);
     expect(renderedHook.result.current.hasFuture).toBe(true);
-    expect(renderedHook.result.current.currentHistory.data).toBe("Apples");
+    expect(renderedHook.result.current.currentHistory.state).toBe("Apples");
   });
 
   test("should enable full rewinds through history", () => {
@@ -54,7 +54,7 @@ describe("use-history-store", () => {
 
     expect(renderedHook.result.current.hasPast).toBe(false);
     expect(renderedHook.result.current.hasFuture).toBe(true);
-    expect(renderedHook.result.current.currentHistory.data).toBe(
+    expect(renderedHook.result.current.currentHistory.state).toBe(
       "Strawberries"
     );
   });
@@ -68,7 +68,7 @@ describe("use-history-store", () => {
 
     expect(renderedHook.result.current.hasPast).toBe(true);
     expect(renderedHook.result.current.hasFuture).toBe(true);
-    expect(renderedHook.result.current.currentHistory.data).toBe("Apples");
+    expect(renderedHook.result.current.currentHistory.state).toBe("Apples");
   });
 
   test("should enable full fast-forwards through history", () => {
@@ -81,7 +81,7 @@ describe("use-history-store", () => {
 
     expect(renderedHook.result.current.hasPast).toBe(true);
     expect(renderedHook.result.current.hasFuture).toBe(false);
-    expect(renderedHook.result.current.currentHistory.data).toBe("Oranges");
+    expect(renderedHook.result.current.currentHistory.state).toBe("Oranges");
   });
 
   test("should replace the history if record is triggered after back", () => {
@@ -93,9 +93,9 @@ describe("use-history-store", () => {
     expect(renderedHook.result.current.hasPast).toBe(true);
     expect(renderedHook.result.current.hasFuture).toBe(false);
     expect(renderedHook.result.current.histories.length).toBe(3);
-    expect(renderedHook.result.current.histories[1].data).toBe("Apples");
-    expect(renderedHook.result.current.histories[2].data).toBe("Banana");
-    expect(renderedHook.result.current.currentHistory.data).toBe("Banana");
+    expect(renderedHook.result.current.histories[1].state).toBe("Apples");
+    expect(renderedHook.result.current.histories[2].state).toBe("Banana");
+    expect(renderedHook.result.current.currentHistory.state).toBe("Banana");
   });
 
   test("should reset histories and index on setHistories", () => {
@@ -105,7 +105,7 @@ describe("use-history-store", () => {
       renderedHook.result.current.setHistories([
         {
           id: "1",
-          data: "Oreo",
+          state: "Oreo",
         },
       ])
     );
@@ -113,8 +113,8 @@ describe("use-history-store", () => {
     expect(renderedHook.result.current.hasPast).toBe(false);
     expect(renderedHook.result.current.hasFuture).toBe(false);
     expect(renderedHook.result.current.histories.length).toBe(1);
-    expect(renderedHook.result.current.histories[0].data).toBe("Oreo");
-    expect(renderedHook.result.current.currentHistory.data).toBe("Oreo");
+    expect(renderedHook.result.current.histories[0].state).toBe("Oreo");
+    expect(renderedHook.result.current.currentHistory.state).toBe("Oreo");
     expect(renderedHook.result.current.index).toBe(0);
   });
 
@@ -126,7 +126,7 @@ describe("use-history-store", () => {
     expect(renderedHook.result.current.hasPast).toBe(false);
     expect(renderedHook.result.current.hasFuture).toBe(true);
     expect(renderedHook.result.current.histories.length).toBe(3);
-    expect(renderedHook.result.current.currentHistory.data).toBe(
+    expect(renderedHook.result.current.currentHistory.state).toBe(
       "Strawberries"
     );
     expect(renderedHook.result.current.index).toBe(0);
@@ -140,9 +140,9 @@ describe("use-history-store-prefilled", () => {
     renderedHook = renderHook(() =>
       useHistoryStore({
         histories: [
-          { id: "0", data: {} },
-          { id: "1", data: {} },
-          { id: "2", data: {} },
+          { id: "0", state: {} },
+          { id: "1", state: {} },
+          { id: "2", state: {} },
         ],
         index: 2,
       })

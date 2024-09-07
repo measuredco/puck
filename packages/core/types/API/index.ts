@@ -26,7 +26,7 @@ export type Plugin = {
 };
 
 export type History<D = any> = {
-  data: D;
+  state: D;
   id?: string;
 };
 

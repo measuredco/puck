@@ -24,7 +24,7 @@ export function usePuckHistory({
     if (historyStore.hasPast) {
       dispatch({
         type: "set",
-        state: historyStore.prevHistory?.data || initialAppState,
+        state: historyStore.prevHistory?.state || initialAppState,
       });
 
       historyStore.back();
@@ -33,7 +33,7 @@ export function usePuckHistory({
 
   const forward = () => {
     if (historyStore.nextHistory) {
-      dispatch({ type: "set", state: historyStore.nextHistory.data });
+      dispatch({ type: "set", state: historyStore.nextHistory.state });
 
       historyStore.forward();
     }
@@ -43,7 +43,7 @@ export function usePuckHistory({
     // dispatch the last history index or initial state
     dispatch({
       type: "set",
-      state: histories[histories.length - 1]?.data || initialAppState,
+      state: histories[histories.length - 1]?.state || initialAppState,
     });
 
     historyStore.setHistories(histories);
@@ -53,7 +53,7 @@ export function usePuckHistory({
     if (historyStore.histories.length > index) {
       dispatch({
         type: "set",
-        state: historyStore.histories[index]?.data || initialAppState,
+        state: historyStore.histories[index]?.state || initialAppState,
       });
 
       historyStore.setHistoryIndex(index);
