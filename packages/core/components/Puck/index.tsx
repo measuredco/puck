@@ -216,10 +216,12 @@ export function Puck<
     } as AppState<UserData>;
   });
 
+  const { appendData = true } = _initialHistory || {};
+
   const initialHistory: InitialHistory<AppState> = {
     histories: [
       ...(_initialHistory?.histories || []),
-      { state: generatedAppState },
+      ...(appendData ? [{ state: generatedAppState }] : []),
     ],
     index: _initialHistory?.index || 0,
   };

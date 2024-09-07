@@ -30,10 +30,21 @@ export type History<D = any> = {
   id?: string;
 };
 
-export type InitialHistory<AS = AppState> = {
+type InitialHistoryAppend<AS = AppState> = {
   histories: History<AS>[];
   index: number;
+  appendData?: true;
 };
+
+type InitialHistoryNoAppend<AS = AppState> = {
+  histories: [History<AS>, ...History<AS>[]]; // Array with minimum length of 1
+  index: number;
+  appendData?: false;
+};
+
+export type InitialHistory<AS = AppState> =
+  | InitialHistoryAppend<AS>
+  | InitialHistoryNoAppend<AS>;
 
 export * from "./Viewports";
 
