@@ -54,7 +54,7 @@ export type ComponentConfig<
       appState: AppState;
       lastData: DataShape | null;
     }
-  ) => Partial<Permissions>;
+  ) => Promise<Partial<Permissions>> | Partial<Permissions>;
 };
 
 type Category<ComponentName> = {

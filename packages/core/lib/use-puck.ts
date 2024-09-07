@@ -9,6 +9,7 @@ export const usePuck = <UserConfig extends Config = Config>() => {
     dispatch,
     selectedItem: currentItem,
     getPermissions,
+    refreshPermissions,
   } = useAppContext<UserConfig>();
 
   return {
@@ -16,6 +17,7 @@ export const usePuck = <UserConfig extends Config = Config>() => {
     config,
     dispatch,
     getPermissions,
+    refreshPermissions,
     history: {
       back: history.back!,
       forward: history.forward!,
