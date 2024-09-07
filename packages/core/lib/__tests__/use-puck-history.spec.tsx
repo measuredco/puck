@@ -40,7 +40,6 @@ describe("use-puck-history", () => {
   test("back function calls dispatch when there is a history", () => {
     historyStore.hasPast = true;
     historyStore.prevHistory = {
-      id: "",
       data: {
         ...defaultAppState,
         ui: { ...defaultAppState.ui, leftSideBarVisible: false },
@@ -80,7 +79,6 @@ describe("use-puck-history", () => {
 
   test("forward function calls dispatch when there is a future", () => {
     historyStore.nextHistory = {
-      id: "",
       data: {
         ...defaultAppState,
         ui: { ...defaultAppState.ui, leftSideBarVisible: false },
