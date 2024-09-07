@@ -21,7 +21,11 @@ import { PuckHistory } from "../../lib/use-puck-history";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";
 import { UAParser } from "ua-parser-js";
-import { getResolvedPermissions } from "../../lib/get-resolved-permissions";
+import {
+  GetPermissions,
+  RefreshPermissions,
+  useResolvedPermissions,
+} from "../../lib/use-resolved-permissions";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {} },
@@ -51,14 +55,6 @@ type ZoomConfig = {
   zoom: number;
 };
 
-type GetPermissions<
-  UserConfig extends Config = Config,
-  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
-> = (params?: {
-  item?: G["UserData"]["content"][0];
-  type?: keyof G["UserProps"];
-}) => Partial<Permissions>;
-
 type AppContext<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
@@ -81,6 +77,7 @@ type AppContext<
   globalPermissions?: Partial<Permissions>;
   selectedItem?: G["UserData"]["content"][0];
   getPermissions: GetPermissions<UserConfig>;
+  refreshPermissions: RefreshPermissions<UserConfig>;
 };
 
 const defaultContext: AppContext = {
@@ -105,6 +102,7 @@ const defaultContext: AppContext = {
   safariFallbackMode: false,
   globalPermissions: {},
   getPermissions: () => ({}),
+  refreshPermissions: () => null,
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
@@ -156,15 +154,11 @@ export const AppProvider = ({
     ? getItem(value.state.ui.itemSelector, value.state.data)
     : undefined;
 
-  const getPermissions: GetPermissions = ({ item, type } = {}) => {
-    return getResolvedPermissions({
-      item: item || selectedItem,
-      type: type as string,
-      globalPermissions: value.globalPermissions || {},
-      config: value.config,
-      appState: value.state,
-    });
-  };
+  const { getPermissions, refreshPermissions } = useResolvedPermissions(
+    value.config,
+    value.state,
+    value.globalPermissions || {}
+  );
 
   return (
     <appContext.Provider
@@ -177,6 +171,7 @@ export const AppProvider = ({
         setStatus,
         safariFallbackMode,
         getPermissions,
+        refreshPermissions,
       }}
     >
       {children}

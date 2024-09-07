@@ -4,6 +4,7 @@ import { PuckAction } from "../reducer";
 import { resolveComponentData } from "./resolve-component-data";
 import { applyDynamicProps } from "./apply-dynamic-props";
 import { resolveRootData } from "./resolve-root-data";
+import { flattenData } from "./flatten-data";
 
 export const useResolvedData = (
   appState: AppState,
@@ -45,9 +46,9 @@ export const useResolvedData = (
     // Flatten zones
     const newData = newAppState.data;
 
-    const flatContent = Object.keys(newData.zones || {})
-      .reduce((acc, zone) => [...acc, ...newData.zones![zone]], newData.content)
-      .filter((item) => !!config.components[item.type]?.resolveData);
+    const flatContent = flattenData(newData).filter(
+      (item) => !!config.components[item.type]?.resolveData
+    );
 
     const applyIfChange = (
       dynamicDataMap: Record<string, ComponentData>,

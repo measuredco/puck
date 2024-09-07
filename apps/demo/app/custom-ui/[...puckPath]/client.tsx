@@ -370,12 +370,20 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             <div style={{ padding: 16 }}>{children}</div>
           ),
           actionBar: ({ children, label }) => {
-            const { getPermissions, selectedItem } =
+            const { getPermissions, selectedItem, refreshPermissions } =
               // Disable rules of hooks since this is a render function
               // eslint-disable-next-line react-hooks/rules-of-hooks
               usePuck<UserConfig>();
 
             const globalPermissions = getPermissions();
+
+            useEffect(() => {
+              if (selectedItem) {
+                // We have to force refresh the permission resolver to refresh, since it relies on lockedComponents state
+                // Without this, the resolver won't trigger as no props will have changed
+                refreshPermissions({ item: selectedItem });
+              }
+            }, [lockedComponents]);
 
             if (!selectedItem)
               return <ActionBar label={label}>{children}</ActionBar>;

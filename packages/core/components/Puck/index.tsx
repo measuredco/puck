@@ -431,6 +431,8 @@ export function Puck<
             edit: true,
             ...permissions,
           },
+          getPermissions: () => ({}),
+          refreshPermissions: () => null,
         }}
       >
         <DragDropContext

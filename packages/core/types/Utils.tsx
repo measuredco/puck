@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Config } from "./Config";
 import { PuckContext } from "./Props";
-import { Data } from "./Data";
+import { ComponentData, Data } from "./Data";
 import { AppState } from "./AppState";
 
 export type WithId<Props> = Props & {
@@ -42,11 +42,13 @@ export type UserGenerics<
     UserProps,
     UserRootProps
   >,
-  UserAppState extends AppState<UserData> = AppState<UserData>
+  UserAppState extends AppState<UserData> = AppState<UserData>,
+  UserComponentData extends ComponentData = UserData["content"][0]
 > = {
   UserConfig: UserConfig;
   UserProps: UserProps;
   UserRootProps: UserRootProps;
   UserData: UserData;
   UserAppState: UserAppState;
+  UserComponentData: UserComponentData;
 };
