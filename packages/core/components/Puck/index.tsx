@@ -218,21 +218,21 @@ export function Puck<
 
   const { appendData = true } = _initialHistory || {};
 
-  const initialHistory: InitialHistory<AppState> = {
-    histories: [
-      ...(_initialHistory?.histories || []),
-      ...(appendData ? [{ state: generatedAppState }] : []),
-    ].map((history) => ({
-      ...history,
-      // Inject default data to enable partial history injections
-      state: { ...generatedAppState, ...history.state },
-    })),
-    index: _initialHistory?.index || 0,
-  };
+  const histories = [
+    ...(_initialHistory?.histories || []),
+    ...(appendData ? [{ state: generatedAppState }] : []),
+  ].map((history) => ({
+    ...history,
+    // Inject default data to enable partial history injections
+    state: { ...generatedAppState, ...history.state },
+  }));
+  const initialHistoryIndex = _initialHistory?.index || histories.length - 1;
+  const initialAppState = histories[initialHistoryIndex].state;
 
-  const initialAppState = initialHistory?.histories[initialHistory.index].state;
-
-  const historyStore = useHistoryStore(initialHistory);
+  const historyStore = useHistoryStore({
+    histories,
+    index: initialHistoryIndex,
+  });
 
   const [reducer] = useState(() =>
     createReducer<UserConfig, UserData>({
