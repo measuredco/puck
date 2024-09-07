@@ -35,7 +35,11 @@ export const insertComponent = (
   // Dispatch the insert, immediately
   dispatch({
     ...insertActionData, // Dispatch insert rather set, as user's may rely on this via onAction
-    recordHistory: false,
+
+    // We must always record history here so the insert is added to user history
+    // If the user has defined a resolveData method, they will end up with 2 history
+    // entries on insert - one for the initial insert, and one when the data resolves
+    recordHistory: true,
   });
 
   const itemSelector = {

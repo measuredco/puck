@@ -74,7 +74,7 @@ describe("use-insert-component", () => {
         destinationZone: rootDroppableId,
         destinationIndex: 0,
         id: expect.stringContaining("MyComponent-"),
-        recordHistory: false,
+        recordHistory: true,
       });
     });
 
