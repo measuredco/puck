@@ -27,7 +27,7 @@ export type Plugin = {
 
 export type History<D = any> = {
   data: D;
-  id: string;
+  id?: string;
 };
 
 export type InitialHistory<AS = AppState> = {
