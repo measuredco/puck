@@ -40,7 +40,7 @@ describe("use-puck-history", () => {
   test("back function calls dispatch when there is a history", () => {
     historyStore.hasPast = true;
     historyStore.prevHistory = {
-      data: {
+      state: {
         ...defaultAppState,
         ui: { ...defaultAppState.ui, leftSideBarVisible: false },
       },
@@ -57,7 +57,7 @@ describe("use-puck-history", () => {
     expect(historyStore.back).toHaveBeenCalled();
     expect(dispatch).toHaveBeenCalledWith({
       type: "set",
-      state: historyStore.prevHistory?.data || initialAppState,
+      state: historyStore.prevHistory?.state || initialAppState,
     });
   });
 
@@ -79,7 +79,7 @@ describe("use-puck-history", () => {
 
   test("forward function calls dispatch when there is a future", () => {
     historyStore.nextHistory = {
-      data: {
+      state: {
         ...defaultAppState,
         ui: { ...defaultAppState.ui, leftSideBarVisible: false },
       },
@@ -96,7 +96,7 @@ describe("use-puck-history", () => {
     expect(historyStore.forward).toHaveBeenCalled();
     expect(dispatch).toHaveBeenCalledWith({
       type: "set",
-      state: historyStore.nextHistory?.data,
+      state: historyStore.nextHistory?.state,
     });
   });
 
@@ -108,14 +108,14 @@ describe("use-puck-history", () => {
     const updatedHistories = [
       {
         id: "1",
-        data: {
+        state: {
           one: "foo 1",
           two: "bar 1",
         },
       },
       {
         id: "2",
-        data: {
+        state: {
           one: "foo 2",
           two: "bar 2",
         },
@@ -129,7 +129,7 @@ describe("use-puck-history", () => {
     expect(historyStore.setHistories).toHaveBeenCalled();
     expect(dispatch).toHaveBeenCalledWith({
       type: "set",
-      state: updatedHistories[1].data,
+      state: updatedHistories[1].state,
     });
   });
 
@@ -137,14 +137,14 @@ describe("use-puck-history", () => {
     const updatedHistories = [
       {
         id: "1",
-        data: {
+        state: {
           one: "foo 1",
           two: "bar 1",
         },
       },
       {
         id: "2",
-        data: {
+        state: {
           one: "foo 2",
           two: "bar 2",
         },
@@ -163,7 +163,7 @@ describe("use-puck-history", () => {
     expect(historyStore.setHistoryIndex).toHaveBeenCalled();
     expect(dispatch).toHaveBeenCalledWith({
       type: "set",
-      state: updatedHistories[0].data,
+      state: updatedHistories[0].state,
     });
   });
 

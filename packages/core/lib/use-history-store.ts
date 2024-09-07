@@ -48,9 +48,9 @@ export function useHistoryStore<D = any>(initialHistory: {
   const nextHistory = hasFuture ? histories[index + 1] : null;
   const prevHistory = hasPast ? histories[index - 1] : null;
 
-  const record = useDebouncedCallback((data: D) => {
+  const record = useDebouncedCallback((state: D) => {
     const history: History = {
-      data,
+      state,
       id: generateId("history"),
     };
 

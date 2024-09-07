@@ -219,12 +219,12 @@ export function Puck<
   const initialHistory: InitialHistory<AppState> = {
     histories: [
       ...(_initialHistory?.histories || []),
-      { data: generatedAppState },
+      { state: generatedAppState },
     ],
     index: _initialHistory?.index || 0,
   };
 
-  const initialAppState = initialHistory?.histories[initialHistory.index].data;
+  const initialAppState = initialHistory?.histories[initialHistory.index].state;
 
   const historyStore = useHistoryStore(initialHistory);
 
