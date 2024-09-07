@@ -16,7 +16,6 @@ import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 import { getChanged } from "../../../../lib/get-changed";
-import { getPermissions } from "../../../../lib/get-permissions";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -147,6 +146,8 @@ export const Fields = () => {
 
   const [fields, fieldsResolving] = useResolvedFields();
 
+  const { getPermissions } = useAppContext();
+
   const componentResolving = selectedItem
     ? componentState[selectedItem?.props.id]?.loading
     : componentState["puck-root"]?.loading;
@@ -250,10 +251,7 @@ export const Fields = () => {
           if (selectedItem && itemSelector) {
             const { readOnly = {} } = selectedItem;
             const { edit } = getPermissions({
-              selectedItem,
-              config,
-              globalPermissions: globalPermissions || {},
-              appState: state,
+              item: selectedItem,
             });
 
             return (
