@@ -13,8 +13,6 @@ export * from "./components/AutoField";
 export * from "./components/Button";
 export { Drawer } from "./components/Drawer";
 
-export type { History } from "./lib/use-history-store";
-
 // DEPRECATED
 export * from "./components/DropZone";
 export * from "./components/IconButton";

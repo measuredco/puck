@@ -1,7 +1,7 @@
-import type { AppState } from "../types";
+import type { AppState, History } from "../types";
 import { PuckAction } from "../reducer";
 import { useHotkeys } from "react-hotkeys-hook";
-import { History, HistoryStore } from "./use-history-store";
+import { HistoryStore } from "./use-history-store";
 
 export type PuckHistory = {
   back: VoidFunction;

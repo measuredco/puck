@@ -1,11 +1,7 @@
 import { useState } from "react";
-import { generateId } from "./generate-id";
 import { useDebouncedCallback } from "use-debounce";
-
-export type History<D = any> = {
-  id: string;
-  data: D;
-};
+import { History } from "../types";
+import { generateId } from "./generate-id";
 
 export type HistoryStore<D = any> = {
   // Exposed via usePuck
@@ -25,9 +21,9 @@ export type HistoryStore<D = any> = {
   setHistoryIndex: (index: number) => void;
 };
 
-const EMPTY_HISTORY_INDEX = -1;
+const EMPTY_HISTORY_INDEX = 0;
 
-export function useHistoryStore<D = any>(initialHistory?: {
+export function useHistoryStore<D = any>(initialHistory: {
   histories: History<any>[];
   index: number;
 }): HistoryStore<D> {
