@@ -45,17 +45,19 @@ export const ObjectField = ({
             const subFieldName = `${name}.${fieldName}`;
             const wildcardFieldName = `${name}.${fieldName}`;
 
+            const subReadOnly = readOnly
+              ? readOnly
+              : typeof readOnlyFields[subFieldName] !== "undefined"
+              ? readOnlyFields[subFieldName]
+              : readOnlyFields[wildcardFieldName];
+
             return (
               <AutoFieldPrivate
                 key={subFieldName}
                 name={subFieldName}
                 label={subField.label || fieldName}
                 id={`${id}_${fieldName}`}
-                readOnly={
-                  typeof readOnlyFields[subFieldName] !== "undefined"
-                    ? readOnlyFields[subFieldName]
-                    : readOnlyFields[wildcardFieldName]
-                }
+                readOnly={subReadOnly}
                 field={subField}
                 value={data[fieldName]}
                 onChange={(val, ui) => {
