@@ -174,6 +174,18 @@ export const Hero: ComponentConfig<HeroProps> = {
 
     return fields;
   },
+  resolvePermissions: async (data, params) => {
+    if (!params.changed.quote) return params.lastPermissions;
+
+    // Simulate delay
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    return {
+      ...params.permissions,
+      // Disable delete if quote 7 is selected
+      delete: data.props.quote?.index !== 7,
+    };
+  },
   render: ({ align, title, description, buttons, padding, image, puck }) => {
     // Empty state allows us to test that components support hooks
     // eslint-disable-next-line react-hooks/rules-of-hooks
