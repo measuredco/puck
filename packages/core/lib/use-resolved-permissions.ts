@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { flattenData } from "./flatten-data";
 import { ComponentData, Config, Permissions, UserGenerics } from "../types";
 import { getChanged } from "./get-changed";
-import { AppContext } from "../components/Puck/context";
 
 type PermissionsArgs<
   UserConfig extends Config = Config,

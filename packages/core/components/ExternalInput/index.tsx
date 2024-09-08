@@ -21,12 +21,14 @@ export const ExternalInput = ({
   value = null,
   name,
   id,
+  readOnly,
 }: {
   field: ExternalField;
   onChange: (value: any) => void;
   value: any;
   name?: string;
   id: string;
+  readOnly?: boolean;
 }) => {
   const {
     mapProp = (val: any) => val,
@@ -91,6 +93,7 @@ export const ExternalInput = ({
       className={getClassName({
         dataSelected: !!value,
         modalVisible: isOpen,
+        readOnly,
       })}
       id={id}
     >
@@ -99,6 +102,7 @@ export const ExternalInput = ({
           type="button"
           onClick={() => setOpen(true)}
           className={getClassName("button")}
+          disabled={readOnly}
         >
           {/* NB this is hardcoded to strapi for now */}
           {value ? (
@@ -121,6 +125,7 @@ export const ExternalInput = ({
             onClick={() => {
               onChange(null);
             }}
+            disabled={readOnly}
           >
             <Unlock size={16} />
           </button>
