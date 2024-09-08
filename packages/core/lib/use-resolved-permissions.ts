@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { flattenData } from "./flatten-data";
 import { ComponentData, Config, Permissions, UserGenerics } from "../types";
 import { getChanged } from "./get-changed";
+import { AppContext } from "../components/Puck/context";
 
 type PermissionsArgs<
   UserConfig extends Config = Config,
@@ -39,16 +40,18 @@ export const useResolvedPermissions = <
 >(
   config: UserConfig,
   appState: G["UserAppState"],
-  globalPermissions: Partial<Permissions>
+  globalPermissions: Partial<Permissions>,
+  setComponentLoading: (id: string) => void,
+  unsetComponentLoading: (id: string) => void
 ) => {
   const [resolvedPermissions, setResolvedPermissions] = useState<
     Record<string, Partial<Permissions>>
   >({});
 
-  const [permissionsLoading, setPermissionsLoading] = useState(false);
-
   const resolveDataForItem = useCallback(
     async (item: G["UserComponentData"], force: boolean = false) => {
+      setComponentLoading(item.props.id);
+
       const componentConfig = config.components[item.type];
 
       const initialPermissions = {
@@ -82,14 +85,14 @@ export const useResolvedPermissions = <
           }));
         }
       }
+
+      unsetComponentLoading(item.props.id);
     },
     [config, globalPermissions, appState]
   );
 
   const resolvePermissions = useCallback<ResolvePermissions<UserConfig>>(
     async ({ item, type } = {}, force = false) => {
-      setPermissionsLoading(true);
-
       if (item) {
         // Resolve specific item
         await resolveDataForItem(item, force);
@@ -106,17 +109,15 @@ export const useResolvedPermissions = <
           await resolveDataForItem(item, force);
         });
       }
-
-      setPermissionsLoading(true);
     },
-    [permissionsLoading, config, appState]
+    [config, appState]
   );
 
   const refreshPermissions = useCallback<ResolvePermissions<UserConfig>>(
     async (params) => {
       resolvePermissions(params, true);
     },
-    [permissionsLoading, config, appState]
+    [config, appState]
   );
 
   useEffect(() => {
@@ -153,6 +154,5 @@ export const useResolvedPermissions = <
   return {
     getPermissions,
     refreshPermissions,
-    permissionsLoading,
   };
 };

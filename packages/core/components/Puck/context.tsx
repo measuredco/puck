@@ -1,5 +1,6 @@
 import {
   ReactNode,
+  SetStateAction,
   createContext,
   useContext,
   useEffect,
@@ -26,6 +27,7 @@ import {
   RefreshPermissions,
   useResolvedPermissions,
 } from "../../lib/use-resolved-permissions";
+import { useResolvedData } from "../../lib/use-resolved-data";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {} },
@@ -55,14 +57,17 @@ type ZoomConfig = {
   zoom: number;
 };
 
-type AppContext<
+type ComponentState = Record<string, { loadingCount: number }>;
+
+export type AppContext<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
 > = {
   state: G["UserAppState"];
   dispatch: (action: PuckAction) => void;
   config: UserConfig;
-  componentState: Record<string, { loading: boolean }>;
+  componentState: ComponentState;
+  setComponentState: React.Dispatch<SetStateAction<ComponentState>>;
   resolveData: (newAppState: AppState) => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
@@ -85,6 +90,7 @@ const defaultContext: AppContext = {
   dispatch: () => null,
   config: { components: {} },
   componentState: {},
+  setComponentState: () => {},
   resolveData: () => {},
   plugins: [],
   overrides: {},
@@ -114,7 +120,13 @@ export const AppProvider = ({
   children: ReactNode;
   value: Omit<
     AppContext,
-    "zoomConfig" | "setZoomConfig" | "status" | "setStatus"
+    | "zoomConfig"
+    | "setZoomConfig"
+    | "status"
+    | "setStatus"
+    | "componentState"
+    | "setComponentState"
+    | "resolveData"
   >;
 }) => {
   const [zoomConfig, setZoomConfig] = useState(defaultContext.zoomConfig);
@@ -154,10 +166,45 @@ export const AppProvider = ({
     ? getItem(value.state.ui.itemSelector, value.state.data)
     : undefined;
 
+  const [componentState, setComponentState] = useState<
+    AppContext["componentState"]
+  >({});
+
+  const setComponentLoading = (id: string) => {
+    setComponentState((prev) => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        loadingCount: (prev[id]?.loadingCount || 0) + 1,
+      },
+    }));
+  };
+
+  const unsetComponentLoading = (id: string) => {
+    setComponentState((prev) => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        loadingCount: Math.max((prev[id]?.loadingCount || 0) - 1, 0),
+      },
+    }));
+  };
+
   const { getPermissions, refreshPermissions } = useResolvedPermissions(
     value.config,
     value.state,
-    value.globalPermissions || {}
+    value.globalPermissions || {},
+    setComponentLoading,
+    unsetComponentLoading
+  );
+
+  const { resolveData } = useResolvedData(
+    value.state,
+    value.config,
+    value.dispatch,
+    setComponentLoading,
+    unsetComponentLoading,
+    refreshPermissions
   );
 
   return (
@@ -172,6 +219,9 @@ export const AppProvider = ({
         safariFallbackMode,
         getPermissions,
         refreshPermissions,
+        componentState,
+        setComponentState,
+        resolveData,
       }}
     >
       {children}
