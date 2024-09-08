@@ -25,7 +25,7 @@ export const ArrayField = ({
   id,
   Label = (props) => <div {...props} />,
 }: FieldPropsInternal) => {
-  const { state, setUi, selectedItem } = useAppContext();
+  const { state, setUi, selectedItem, getPermissions } = useAppContext();
 
   const readOnlyFields = selectedItem?.readOnly || {};
 
@@ -103,6 +103,8 @@ export const ArrayField = ({
   }, []);
 
   const [hovering, setHovering] = useState(false);
+
+  const forceReadOnly = getPermissions({ item: selectedItem }).edit === false;
 
   if (field.type !== "array" || !field.arrayFields) {
     return null;
@@ -264,18 +266,19 @@ export const ArrayField = ({
                                   const subFieldName = `${name}[${i}].${fieldName}`;
                                   const wildcardFieldName = `${name}[*].${fieldName}`;
 
+                                  const subReadOnly = forceReadOnly
+                                    ? forceReadOnly
+                                    : typeof readOnlyFields[subFieldName] !==
+                                      "undefined"
+                                    ? readOnlyFields[subFieldName]
+                                    : readOnlyFields[wildcardFieldName];
                                   return (
                                     <AutoFieldPrivate
                                       key={subFieldName}
                                       name={subFieldName}
                                       label={subField.label || fieldName}
                                       id={`${_arrayId}_${fieldName}`}
-                                      readOnly={
-                                        typeof readOnlyFields[subFieldName] !==
-                                        "undefined"
-                                          ? readOnlyFields[subFieldName]
-                                          : readOnlyFields[wildcardFieldName]
-                                      }
+                                      readOnly={subReadOnly}
                                       field={subField}
                                       value={data[fieldName]}
                                       onChange={(val, ui) => {
