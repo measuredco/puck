@@ -149,8 +149,8 @@ export const Fields = () => {
   const { getPermissions } = useAppContext();
 
   const componentResolving = selectedItem
-    ? componentState[selectedItem?.props.id]?.loading
-    : componentState["puck-root"]?.loading;
+    ? componentState[selectedItem?.props.id]?.loadingCount > 0
+    : componentState["puck-root"]?.loadingCount > 0;
 
   const isLoading = fieldsResolving || componentResolving;
 

@@ -272,7 +272,8 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                           hoveringArea === componentId
                         }
                         isLoading={
-                          appContext.componentState[componentId]?.loading
+                          appContext.componentState[componentId]?.loadingCount >
+                          0
                         }
                         onMount={() => {
                           ctx.registerPath!({
