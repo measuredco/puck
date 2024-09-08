@@ -16,6 +16,7 @@ export const ExternalField = ({
   label,
   Label,
   id,
+  readOnly,
 }: FieldPropsInternal) => {
   // DEPRECATED
   const validField = field as ExternalFieldType;
@@ -56,6 +57,7 @@ export const ExternalField = ({
         onChange={onChange}
         value={value}
         id={id}
+        readOnly={readOnly}
       />
     </Label>
   );

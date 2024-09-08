@@ -11,7 +11,6 @@
   border: 1px solid var(--puck-color-grey-09);
   border-radius: 4px;
   color: var(--puck-color-azure-04);
-  cursor: pointer;
   padding: 12px 16px;
   font-weight: 500;
   white-space: nowrap;
@@ -29,13 +28,16 @@
   border-bottom-right-radius: 0px;
 }
 
+.ExternalInput--readOnly .ExternalInput-button {
+  background-color: var(--puck-color-grey-11);
+}
+
 .ExternalInput-detachButton {
   border: 1px solid var(--puck-color-grey-09);
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   background-color: var(--puck-color-grey-12);
   color: var(--puck-color-grey-05);
-  cursor: pointer;
   display: flex;
   gap: 8px;
   align-items: center;
@@ -54,19 +56,22 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .ExternalInput-button:hover,
-  .ExternalInput-detachButton:hover {
+  .ExternalInput:not(.ExternalInput--readOnly) .ExternalInput-button:hover,
+  .ExternalInput:not(.ExternalInput--readOnly)
+    .ExternalInput-detachButton:hover {
     background: var(--puck-color-azure-12);
     transition: none;
   }
 
-  .ExternalInput-detachButton:hover {
+  .ExternalInput:not(.ExternalInput--readOnly)
+    .ExternalInput-detachButton:hover {
     color: var(--puck-color-azure-04);
   }
 }
 
-.ExternalInput-button:active,
-.ExternalInput-detachButton:active {
+.ExternalInput:not(.ExternalInput--readOnly) .ExternalInput-button:active,
+.ExternalInput:not(.ExternalInput--readOnly)
+  .ExternalInput-detachButton:active {
   background: var(--puck-color-azure-11);
   transition: none;
 }
