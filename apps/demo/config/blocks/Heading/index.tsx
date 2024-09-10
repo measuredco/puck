@@ -35,6 +35,9 @@ const levelOptions = [
 
 export const Heading: ComponentConfig<HeadingProps> = {
   fields: {
+    text: {
+      type: "textarea",
+    },
     size: {
       type: "select",
       options: sizeOptions,
