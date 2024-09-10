@@ -32,7 +32,7 @@ export const useDemoData = ({
         return JSON.parse(dataStr);
       }
 
-      return initialData[path] || undefined;
+      return initialData[path] || {};
     }
   });
 
