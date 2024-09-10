@@ -9,7 +9,7 @@ export function Client({ path, data }: { path: string; data: Partial<Data> }) {
     <Puck
       config={config}
       data={data}
-      onPublish={async (data: Data) => {
+      onPublish={async (data) => {
         await fetch("/puck/api", {
           method: "post",
           body: JSON.stringify({ data, path }),
