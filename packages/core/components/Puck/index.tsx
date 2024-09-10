@@ -19,6 +19,7 @@ import type {
   InitialHistory,
   UserGenerics,
   Config,
+  Data,
 } from "../../types";
 import { Button } from "../Button";
 
@@ -84,7 +85,7 @@ export function Puck<
 }: {
   children?: ReactNode;
   config: UserConfig;
-  data: Partial<G["UserData"]>;
+  data: Partial<G["UserData"] | Data>;
   ui?: Partial<UiState>;
   onChange?: (data: G["UserData"]) => void;
   onPublish?: (data: G["UserData"]) => void;
