@@ -82,7 +82,7 @@ export type Config<
     ComponentConfig<
       DefaultRootRenderProps<RootProps>,
       AsFieldProps<RootProps>,
-      RootData
+      RootData<AsFieldProps<RootProps>>
     >
   >;
 };

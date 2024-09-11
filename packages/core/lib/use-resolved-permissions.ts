@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { flattenData } from "./flatten-data";
 import { ComponentData, Config, Permissions, UserGenerics } from "../types";
 import { getChanged } from "./get-changed";
@@ -9,6 +9,7 @@ type PermissionsArgs<
 > = {
   item?: G["UserComponentData"];
   type?: keyof G["UserProps"];
+  root?: boolean;
 };
 
 export type GetPermissions<UserConfig extends Config = Config> = (
@@ -25,13 +26,13 @@ export type RefreshPermissions<UserConfig extends Config = Config> = (
   force?: boolean
 ) => void;
 
-const cache: Record<
+type Cache = Record<
   string,
   {
     lastPermissions: Partial<Permissions>;
     lastData: ComponentData | null;
   }
-> = {};
+>;
 
 export const useResolvedPermissions = <
   UserConfig extends Config = Config,
@@ -43,6 +44,8 @@ export const useResolvedPermissions = <
   setComponentLoading?: (id: string) => void,
   unsetComponentLoading?: (id: string) => void
 ) => {
+  const [cache, setCache] = useState<Cache>({});
+
   const [resolvedPermissions, setResolvedPermissions] = useState<
     Record<string, Partial<Permissions>>
   >({});
@@ -51,7 +54,13 @@ export const useResolvedPermissions = <
     async (item: G["UserComponentData"], force: boolean = false) => {
       setComponentLoading?.(item.props.id);
 
-      const componentConfig = config.components[item.type];
+      const componentConfig =
+        item.type === "root" ? config.root : config.components[item.type];
+
+      if (!componentConfig) {
+        unsetComponentLoading?.(item.props.id);
+        return;
+      }
 
       const initialPermissions = {
         ...globalPermissions,
@@ -73,10 +82,13 @@ export const useResolvedPermissions = <
             }
           );
 
-          cache[item.props.id] = {
-            lastData: item,
-            lastPermissions: resolvedPermissions,
-          };
+          setCache((_cache) => ({
+            ..._cache,
+            [item.props.id]: {
+              lastData: item,
+              lastPermissions: resolvedPermissions,
+            },
+          }));
 
           setResolvedPermissions((p) => ({
             ...p,
@@ -87,11 +99,22 @@ export const useResolvedPermissions = <
 
       unsetComponentLoading?.(item.props.id);
     },
-    [config, globalPermissions, appState]
+    [config, globalPermissions, appState, cache]
   );
 
+  const resolveDataForRoot = (force = false) => {
+    resolveDataForItem(
+      // Shim the root data in by conforming to component data shape
+      {
+        type: "root",
+        props: { ...appState.data.root.props, id: "puck-root" },
+      } as G["UserComponentData"],
+      force
+    );
+  };
+
   const resolvePermissions = useCallback<ResolvePermissions<UserConfig>>(
-    async ({ item, type } = {}, force = false) => {
+    async ({ item, type, root } = {}, force = false) => {
       if (item) {
         // Resolve specific item
         await resolveDataForItem(item, force);
@@ -102,7 +125,11 @@ export const useResolvedPermissions = <
           .map(async (item) => {
             await resolveDataForItem(item, force);
           });
+      } else if (root) {
+        resolveDataForRoot(force);
       } else {
+        resolveDataForRoot(force);
+
         // Resolve everything
         flattenData<UserConfig>(appState.data).map(async (item) => {
           await resolveDataForItem(item, force);
@@ -126,7 +153,7 @@ export const useResolvedPermissions = <
   }, [config, appState.data]);
 
   const getPermissions: GetPermissions = useCallback(
-    ({ item, type } = {}) => {
+    ({ item, type, root } = {}) => {
       if (item) {
         const componentConfig = config.components[item.type];
 
@@ -147,6 +174,19 @@ export const useResolvedPermissions = <
           ...globalPermissions,
           ...componentConfig.permissions,
         };
+      } else if (root) {
+        const rootConfig = config.root;
+
+        const initialPermissions = {
+          ...globalPermissions,
+          ...rootConfig?.permissions,
+        };
+
+        const resolvedForItem = resolvedPermissions["puck-root"];
+
+        return resolvedForItem
+          ? { ...globalPermissions, ...resolvedForItem }
+          : initialPermissions;
       }
 
       return globalPermissions;
