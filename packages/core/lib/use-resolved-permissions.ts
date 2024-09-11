@@ -40,8 +40,8 @@ export const useResolvedPermissions = <
   config: UserConfig,
   appState: G["UserAppState"],
   globalPermissions: Partial<Permissions>,
-  setComponentLoading: (id: string) => void,
-  unsetComponentLoading: (id: string) => void
+  setComponentLoading?: (id: string) => void,
+  unsetComponentLoading?: (id: string) => void
 ) => {
   const [resolvedPermissions, setResolvedPermissions] = useState<
     Record<string, Partial<Permissions>>
@@ -49,7 +49,7 @@ export const useResolvedPermissions = <
 
   const resolveDataForItem = useCallback(
     async (item: G["UserComponentData"], force: boolean = false) => {
-      setComponentLoading(item.props.id);
+      setComponentLoading?.(item.props.id);
 
       const componentConfig = config.components[item.type];
 
@@ -85,7 +85,7 @@ export const useResolvedPermissions = <
         }
       }
 
-      unsetComponentLoading(item.props.id);
+      unsetComponentLoading?.(item.props.id);
     },
     [config, globalPermissions, appState]
   );
@@ -135,7 +135,11 @@ export const useResolvedPermissions = <
           ...componentConfig.permissions,
         };
 
-        return resolvedPermissions[item.props.id] || initialPermissions;
+        const resolvedForItem = resolvedPermissions[item.props.id];
+
+        return resolvedForItem
+          ? { ...globalPermissions, ...resolvedForItem }
+          : initialPermissions;
       } else if (type) {
         const componentConfig = config.components[type];
 
