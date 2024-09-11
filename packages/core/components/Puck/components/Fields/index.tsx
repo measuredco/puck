@@ -139,7 +139,6 @@ export const Fields = () => {
     resolveData,
     componentState,
     overrides,
-    globalPermissions,
   } = useAppContext();
   const { data, ui } = state;
   const { itemSelector } = ui;
@@ -270,6 +269,9 @@ export const Fields = () => {
               string,
               boolean
             >;
+            const { edit } = getPermissions({
+              root: true,
+            });
 
             return (
               <AutoFieldPrivate
@@ -277,7 +279,7 @@ export const Fields = () => {
                 field={field}
                 name={fieldName}
                 id={`root_${fieldName}`}
-                readOnly={readOnly[fieldName]}
+                readOnly={!edit || readOnly[fieldName]}
                 value={(rootProps as Record<string, any>)[fieldName]}
                 onChange={onChange}
               />
