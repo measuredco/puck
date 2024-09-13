@@ -1,4 +1,4 @@
-.ActionBarComponent {
+.ActionBar {
   display: flex;
   width: auto;
   padding: 4px;
@@ -13,7 +13,7 @@
   min-height: 26px;
 }
 
-.ActionBarComponent-actionsLabel {
+.ActionBar-actionsLabel {
   color: var(--puck-color-grey-08);
   display: flex;
   font-size: var(--puck-font-size-xxxs);
@@ -26,14 +26,14 @@
   white-space: nowrap;
 }
 
-.ActionBarComponent-group {
+.ActionBar-group {
   border-left: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
   display: flex;
   padding-left: 4px;
   padding-right: 4px;
 }
 
-.ActionBarComponent-action {
+.ActionBar-action {
   background: transparent;
   border: none;
   color: var(--puck-color-grey-08);
@@ -47,19 +47,19 @@
   transition: color 50ms ease-in;
 }
 
-.ActionBarComponent-action:focus-visible {
+.ActionBar-action:focus-visible {
   outline: 2px solid var(--puck-color-azure-05);
   outline-offset: -2px;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .ActionBarComponent-action:hover {
+  .ActionBar-action:hover {
     color: var(--puck-color-azure-06);
     transition: none;
   }
 }
 
-.ActionBarComponent-action:active {
+.ActionBar-action:active {
   color: var(--puck-color-azure-07);
   transition: none;
 }
