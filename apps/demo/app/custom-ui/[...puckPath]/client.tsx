@@ -388,7 +388,11 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             }, [lockedComponents, selectedItem, refreshPermissions]);
 
             if (!selectedItem)
-              return <ActionBar label={label}>{children}</ActionBar>;
+              return (
+                <ActionBar label={label}>
+                  <ActionBar.Group>{children}</ActionBar.Group>
+                </ActionBar>
+              );
 
             const isLocked = !!lockedComponents[selectedItem.props.id];
 
