@@ -2,6 +2,7 @@
   display: flex;
   width: auto;
   padding: 4px;
+  padding-right: 0;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   border-radius: 8px;
@@ -25,10 +26,11 @@
   white-space: nowrap;
 }
 
-.ActionBarComponent-action:first-of-type {
+.ActionBarComponent-group {
   border-left: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
-  border-radius: 0;
-  padding-left: 16px;
+  display: flex;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .ActionBarComponent-action {

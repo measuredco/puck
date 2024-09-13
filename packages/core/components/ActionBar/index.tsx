@@ -35,4 +35,9 @@ export const Action = ({
   </button>
 );
 
+export const Group = ({ children }: { children: ReactNode }) => (
+  <div className={getClassName("group")}>{children}</div>
+);
+
 ActionBar.Action = Action;
+ActionBar.Group = Group;
