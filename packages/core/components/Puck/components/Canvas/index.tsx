@@ -120,7 +120,7 @@ export const Canvas = () => {
   return (
     <div
       className={getClassName({
-        ready: status === "READY" || !iframe.enabled,
+        ready: status === "READY" || !iframe.enabled || !iframe.waitForStyles,
         showLoader,
       })}
       onClick={() =>

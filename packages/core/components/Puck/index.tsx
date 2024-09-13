@@ -121,6 +121,7 @@ export function Puck<
 }) {
   const iframe: IframeConfig = {
     enabled: true,
+    waitForStyles: true,
     ..._iframe,
   };
 
