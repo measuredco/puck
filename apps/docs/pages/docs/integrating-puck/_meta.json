@@ -8,5 +8,6 @@
   "external-data-sources": {},
   "server-components": {},
   "data-migration": {},
-  "viewports": {}
+  "viewports": {},
+  "feature-toggling": {}
 }
