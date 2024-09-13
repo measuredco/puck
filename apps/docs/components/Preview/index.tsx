@@ -62,7 +62,7 @@ export const PuckPreview = ({
   style?: CSSProperties;
 }) => {
   return (
-    <Puck {...puckProps} iframe={{ enabled: false }}>
+    <Puck config={{}} data={{}} {...puckProps} iframe={{ enabled: false }}>
       <PreviewFrame label={label} style={style}>
         {children}
       </PreviewFrame>
