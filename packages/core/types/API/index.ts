@@ -13,6 +13,7 @@ export type Permissions = {
 
 export type IframeConfig = {
   enabled?: boolean;
+  syncHostStyles?: boolean;
 };
 
 export type OnAction<UserData extends Data = Data> = (

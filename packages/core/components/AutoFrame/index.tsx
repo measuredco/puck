@@ -60,16 +60,24 @@ const CopyHostStyles = ({
   children,
   debug = false,
   onStylesLoaded = () => null,
+  enabled = true,
 }: {
   children: ReactNode;
   debug?: boolean;
   onStylesLoaded?: () => void;
+  enabled?: boolean;
 }) => {
   const { document: doc, window: win } = useFrame();
 
   useEffect(() => {
     if (!win || !doc) {
-      return () => {};
+      return;
+    }
+
+    if (!enabled) {
+      onStylesLoaded();
+
+      return;
     }
 
     let elements: { original: HTMLElement; mirror: HTMLElement }[] = [];
@@ -303,6 +311,7 @@ export type AutoFrameProps = {
   debug?: boolean;
   id?: string;
   onStylesLoaded?: () => void;
+  syncHostStyles?: boolean;
 };
 
 type AutoFrameContext = {
@@ -320,6 +329,7 @@ function AutoFrame({
   debug,
   id,
   onStylesLoaded,
+  syncHostStyles = true,
   ...props
 }: AutoFrameProps) {
   const [loaded, setLoaded] = useState(false);
@@ -351,7 +361,11 @@ function AutoFrame({
     >
       <autoFrameContext.Provider value={ctx}>
         {loaded && mountTarget && (
-          <CopyHostStyles debug={debug} onStylesLoaded={onStylesLoaded}>
+          <CopyHostStyles
+            debug={debug}
+            onStylesLoaded={onStylesLoaded}
+            enabled={syncHostStyles}
+          >
             {createPortal(children, mountTarget)}
           </CopyHostStyles>
         )}

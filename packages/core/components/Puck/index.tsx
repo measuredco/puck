@@ -87,9 +87,7 @@ export function Puck<
   headerTitle,
   headerPath,
   viewports = defaultViewports,
-  iframe = {
-    enabled: true,
-  },
+  iframe: _iframe,
   dnd,
   initialHistory: _initialHistory,
 }: {
@@ -121,6 +119,12 @@ export function Puck<
   };
   initialHistory?: InitialHistory;
 }) {
+  const iframe: IframeConfig = {
+    enabled: true,
+    syncHostStyles: true,
+    ..._iframe,
+  };
+
   const [generatedAppState] = useState<AppState<UserData>>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
 
