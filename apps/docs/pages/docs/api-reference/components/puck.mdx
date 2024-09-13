@@ -173,15 +173,20 @@ export function Editor() {
 
 #### iframe params
 
-| Param                 | Example          | Type    | Status |
-| --------------------- | ---------------- | ------- | ------ |
-| [`enabled`](#enabled) | `enabled: false` | boolean | -      |
+| Param                           | Example                | Type    | Status |
+| ------------------------------- | ---------------------- | ------- | ------ |
+| [`enabled`](#enabled)           | `enabled: false`       | boolean | -      |
+| [`waitForStyles`](#deferrender) | `waitForStyles: false` | boolean | -      |
 
 ##### `enabled`
 
 Render the Puck preview within iframe. Defaults to `true`.
 
 Disabling iframes will also disable [viewports](#viewports).
+
+##### `waitForStyles`
+
+Defer rendering of the Puck preview until the iframe styles have loaded, showing a spinner. Defaults to `true`.
 
 ### `initialHistory`
 
