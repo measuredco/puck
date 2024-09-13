@@ -34,7 +34,9 @@ const DefaultActionBar = ({
   children: ReactNode;
 }) => (
   <ActionBar label={label}>
-    <DefaultOverride>{children}</DefaultOverride>
+    <ActionBar.Group>
+      <DefaultOverride>{children}</DefaultOverride>
+    </ActionBar.Group>
   </ActionBar>
 );
 
