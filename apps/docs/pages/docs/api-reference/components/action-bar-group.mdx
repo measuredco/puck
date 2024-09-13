@@ -1,0 +1,40 @@
+---
+title: <ActionBar.Group>
+---
+
+import { PuckPreview } from "@/docs/components/Preview";
+import { ActionBar } from "@/core/components/ActionBar";
+
+# \<ActionBar.Group\>
+
+Render an action group in the [`<ActionBar>`](action-bar).
+
+```tsx showLineNumbers {2-3} copy
+<ActionBar label="Actions">
+  <ActionBar.Group>Group 1</ActionBar.Group>
+  <ActionBar.Group>Group 2</ActionBar.Group>
+</ActionBar>
+```
+
+<PuckPreview>
+  <div style={{ display: "flex" }}>
+    <ActionBar label="Actions">
+      <ActionBar.Group>Group 1</ActionBar.Group>
+      <ActionBar.Group>Group 2</ActionBar.Group>
+    </ActionBar>
+  </div>
+</PuckPreview>
+
+## Props
+
+| Prop                    | Example   | Type      | Status   |
+| ----------------------- | --------- | --------- | -------- |
+| [`children`](#children) | `<div />` | ReactNode | Required |
+
+## Required Props
+
+### `children`
+
+A node to render as the children of the action. If a fragment, the items will be rendered in a flex row.
+
+Normally contains [`<ActionBar.Action>`](action-bar-action)
