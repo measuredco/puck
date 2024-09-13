@@ -26,14 +26,16 @@ const config = {
 
 ## Params
 
-| Param                                          | Example                                         | Type     | Status   |
-| ---------------------------------------------- | ----------------------------------------------- | -------- | -------- |
-| [`render()`](#renderprops)                     | `render: () => <div />`                         | Function | Required |
-| [`fields`](#fields)                            | `fields: { title: { type: "text"} }`            | Object   | -        |
-| [`defaultProps`](#defaultprops)                | `defaultProps: { title: "Hello, world" }`       | Object   | -        |
-| [`label`](#label)                              | `label: "Heading Block"`                        | String   | -        |
-| [`resolveData()`](#resolvedatadata-params)     | `resolveData: async ({ props }) => ({ props })` | Object   | -        |
-| [`resolveFields()`](#resolvefieldsdata-params) | `resolveFields: async ({ props }) => ({})}`     | Object   | -        |
+| Param                                                    | Example                                          | Type     | Status   |
+| -------------------------------------------------------- | ------------------------------------------------ | -------- | -------- |
+| [`render()`](#renderprops)                               | `render: () => <div />`                          | Function | Required |
+| [`fields`](#fields)                                      | `fields: { title: { type: "text"} }`             | Object   | -        |
+| [`defaultProps`](#defaultprops)                          | `defaultProps: { title: "Hello, world" }`        | Object   | -        |
+| [`label`](#label)                                        | `label: "Heading Block"`                         | String   | -        |
+| [`permissions()`](#permissions)                          | `permissions: { delete: false }`                 | Object   | -        |
+| [`resolveData()`](#resolvedatadata-params)               | `resolveData: async ({ props }) => ({ props })`  | Object   | -        |
+| [`resolveFields()`](#resolvefieldsdata-params)           | `resolveFields: async ({ props }) => ({})}`      | Object   | -        |
+| [`resolvePermissions()`](#resolvepermissionsdata-params) | `resolvePermissions: async ({ props }) => ({})}` | Object   | -        |
 
 ## Required params
 
@@ -184,9 +186,26 @@ const config = {
   </Drawer>
 </PuckPreview>
 
+### `permissions`
+
+Set the [permissions](/docs/api-reference/permissions) for all instances of a component to toggle functionality. Inherits [global permissions](/docs/api-reference/components/puck/#permissions).
+
+```tsx {4-6} copy showLineNumbers
+const config = {
+  components: {
+    HeadingBlock: {
+      permissions: {
+        delete: false, // Disable deletion of all HeadingBlock instances
+      },
+      render: () => <h1>Hello, World</h1>,
+    },
+  },
+};
+```
+
 ### `resolveData(data, params)`
 
-Dynamically change the props and set fields as read-only. Can be used to make asynchronous calls.
+Dynamically change the props and set fields as read-only. Supports asynchronous calls.
 
 This function is triggered when [`<Puck>`](/docs/api-reference/components/puck) renders, when a field is changed, or when the [`resolveAllData` function](/docs/api-reference/functions/resolve-all-data) is called.
 
@@ -314,7 +333,7 @@ const resolveData = async ({ props }) => {
 
 ### `resolveFields(data, params)`
 
-Dynamically set the fields for this component. Can be used to make asynchronous calls.
+Dynamically set the fields for this component. Supports asynchronous calls.
 
 This function is triggered when the component data changes.
 
@@ -441,6 +460,76 @@ The data object from the previous run of this function.
 ##### `params.lastFields`
 
 The last fields object created by the previous run of this function.
+
+### `resolvePermissions(data, params)`
+
+Dynamically set the [permissions](/docs/api-reference/permissions) for this component to toggle functionality. Can be used to control the permissions on a specific component instance. Inherits [`permissions`](#permissions). Supports asynchronous calls.
+
+This function is triggered when the component data changes.
+
+```tsx {4-12} copy filename="Setting permissions for a specific instance" showLineNumbers
+const config = {
+  components: {
+    MyComponent: {
+      resolvePermissions: (data, { permissions }) => {
+        if (data.props.id === "MyComponent-1234") {
+          return {
+            delete: false, // Disable deletion on component with id MyComponent-1234
+          };
+        }
+
+        return { permissions }; // Fallback to inherited permissions
+      },
+      // ...
+    },
+  },
+};
+```
+
+#### Args
+
+| Prop     | Example                                                                             | Type   |
+| -------- | ----------------------------------------------------------------------------------- | ------ |
+| `data`   | `{ props: { title: "Hello, world" }, readOnly: {} }`                                | Object |
+| `params` | `{ appState: {}, changed: {}, permissions: {}, lastData: {}, lastPermissions: {} }` | Object |
+
+##### `data.props`
+
+The current props for the selected component.
+
+##### `data.readOnly`
+
+The fields currently set to read-only for this component.
+
+##### `params.appState`
+
+An object describing the [AppState](/docs/api-reference/app-state).
+
+##### `params.changed`
+
+An object describing which props have changed on this component since the last time this function was called. This helps prevent duplicate calls when making async operations.
+
+```tsx copy {2-4} /changed/1 filename="Example only updating the permissions when 'example' prop changes"
+const resolveFields = async ({ props }, { changed, lastPermissions }) => {
+  if (!changed.example) {
+    return lastPermissions; // Return the last permissions unless the `example` prop has changed
+  }
+
+  return await expensiveAsyncOperation();
+};
+```
+
+##### `params.permissions`
+
+The static fields for this component as defined by [`permissions`](#permissions).
+
+##### `params.lastData`
+
+The data object from the previous run of this function.
+
+##### `params.lastPermissions`
+
+The last permissions object created by the previous run of this function.
 
 #### Returns
 
