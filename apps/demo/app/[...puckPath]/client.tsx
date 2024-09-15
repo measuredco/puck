@@ -40,7 +40,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     );
   }
 
-  if (data) {
+  if (data.content) {
     return <Render config={config} data={resolvedData} />;
   }
 
