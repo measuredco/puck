@@ -193,13 +193,35 @@ Defer rendering of the Puck preview until the iframe styles have loaded, showing
 
 Sets the undo/redo Puck history state when using the `usePuck` [history API](/docs/api-reference/functions/use-puck#history).
 
+```tsx showLineNumbers copy {12-15}
+const historyState = {
+  data: {
+    root: {
+      props: { title: "My History" },
+    },
+  },
+};
+
+export function Editor() {
+  return (
+    <Puck
+      initialHistory={{
+        histories: [{ state: historyState }],
+        index: 0,
+      }}
+      // ...
+    />
+  );
+}
+```
+
 #### `initialHistory` params
 
-| Param                       | Example             | Type                                                                   | Status   |
-| --------------------------- | ------------------- | ---------------------------------------------------------------------- | -------- |
-| [`histories`](#histories)   | `histories: []`     | [History](/docs/api-reference/functions/use-puck#historyhistories)\[\] | Required |
-| [`index`](#index)           | `index: 2`          | Number                                                                 | Required |
-| [`appendData`](#appenddata) | `appendData: false` | Boolean                                                                | -        |
+| Param                       | Example             | Type                                                                 | Status   |
+| --------------------------- | ------------------- | -------------------------------------------------------------------- | -------- |
+| [`histories`](#histories)   | `histories: []`     | [History](/docs/api-reference/functions/use-puck#history-params)\[\] | Required |
+| [`index`](#index)           | `index: 2`          | Number                                                               | Required |
+| [`appendData`](#appenddata) | `appendData: false` | Boolean                                                              | -        |
 
 ##### `histories`
 
