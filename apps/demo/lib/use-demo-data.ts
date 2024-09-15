@@ -24,7 +24,7 @@ export const useDemoData = ({
 
   const key = `puck-demo:${componentKey}:${path}`;
 
-  const [data] = useState<UserData>(() => {
+  const [data] = useState<Partial<UserData>>(() => {
     if (isBrowser) {
       const dataStr = localStorage.getItem(key);
 
@@ -38,7 +38,7 @@ export const useDemoData = ({
 
   // Normally this would happen on the server, but we can't
   // do that because we're using local storage as a database
-  const [resolvedData, setResolvedData] = useState<UserData>(data);
+  const [resolvedData, setResolvedData] = useState<Partial<UserData>>(data);
 
   useEffect(() => {
     if (data && !isEdit) {
@@ -48,7 +48,7 @@ export const useDemoData = ({
 
   useEffect(() => {
     if (!isEdit) {
-      const title = data?.root.props?.title || data?.root?.title;
+      const title = data?.root?.props?.title || data?.root?.title;
       document.title = title || "";
     }
   }, [data, isEdit]);
