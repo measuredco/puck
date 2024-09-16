@@ -2,6 +2,58 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.16.0](https://github.com/measuredco/puck/compare/v0.15.0...v0.16.0) (2024-09-16)
+
+
+### Features
+
+* add actionBar override for adding component controls ([48ec0d7](https://github.com/measuredco/puck/commit/48ec0d786c7c589efc8b97152a5e1a4c065c0312))
+* add automatic RSC export, replacing /rsc bundle ([d21eba6](https://github.com/measuredco/puck/commit/d21eba6185da8efcbcb5458eaaa5be6c321b3d1a))
+* add isDisabled prop to Drawer.Item ([cad95b8](https://github.com/measuredco/puck/commit/cad95b887c6b06a41a2bacf28792fd4dbc808d72))
+* add generic type to usePuck hook ([01703a9](https://github.com/measuredco/puck/commit/01703a95093413a57af1314b1f31cc34f85c38e0))
+* add iframe override for style injection ([7cac376](https://github.com/measuredco/puck/commit/7cac3764d1f9336776b97fa08cbd48bec95e6a10))
+* add initialHistory prop to Puck ([54b5a87](https://github.com/measuredco/puck/commit/54b5a871570120a3d0d55e96738746ec375dee0d))
+* add onAction API to track and react to state changes ([c7007ac](https://github.com/measuredco/puck/commit/c7007acab334ec2d08f95669d685edb8c3947bcc))
+* add permissions API ([a43914d](https://github.com/measuredco/puck/commit/a43914dc36e70c5596c186d3c63b9497949365a9))
+* add plugin for injecting Emotion cache ([f8a88b9](https://github.com/measuredco/puck/commit/f8a88b9c2447c76f2f7a00ce5705f8fae07be58c))
+* add resolvePermissions API ([f0655f0](https://github.com/measuredco/puck/commit/f0655f08a96b853cf18d681025f40e8d30df3013))
+* add waitForStyles option to iframe config ([bc81d9c](https://github.com/measuredco/puck/commit/bc81d9c7de671fea0bc155911ee11598a1b920c2))
+* call resolveData when new item inserted ([3298831](https://github.com/measuredco/puck/commit/329883165c9e428b9f291add7b6009ba29680146))
+* don't mandate fields for optional props ([5a219ef](https://github.com/measuredco/puck/commit/5a219eff0c2f4763ec1d9f48f45fe684e6482b8f))
+* export ActionBar component for use in overrides ([04fd6c5](https://github.com/measuredco/puck/commit/04fd6c5c7a65fc3ec9a05da277865341efe229af))
+* infer Data type from user config ([50045bb](https://github.com/measuredco/puck/commit/50045bbda2cf3b64e37e0e6bedcfce14f680cda1))
+* make ID optional in History type (BREAKING CHANGE) ([d917229](https://github.com/measuredco/puck/commit/d917229ae4f553bb54a420e1c708c1a509431106))
+* provide ES Module build ([ff9076b](https://github.com/measuredco/puck/commit/ff9076b9d24d030ad47619b6a359b1f120422d70))
+* rename history.data to history.state (BREAKING CHANGE) ([b09244c](https://github.com/measuredco/puck/commit/b09244c864fd049ceeda2b7eb20ec6cab9f40054))
+* show spinner if iframe load takes over 500ms ([cfecf54](https://github.com/measuredco/puck/commit/cfecf5499d06b8e90438dc151e5e915da06ccb87))
+* streamline usePuck history API ([c8b2807](https://github.com/measuredco/puck/commit/c8b28075fde0081b8ac824eb256114c9b8836f9e))
+* upgrade "next" recipe to typescript@5.5.4 ([60fe631](https://github.com/measuredco/puck/commit/60fe63113f8ad8bbce52d8457ee4372aa4b09509))
+
+
+### Bug Fixes
+
+* add favicon to next recipe to prevent Puck 404 ([2c52d27](https://github.com/measuredco/puck/commit/2c52d271c6c20e9368a59eb1f2a5df184cef72bc))
+* add missing readOnly state to External fields ([bf1449d](https://github.com/measuredco/puck/commit/bf1449dd8b299a4f469986d94f8986b02b79a688))
+* always record history on component insert ([88c5ab6](https://github.com/measuredco/puck/commit/88c5ab6b545ecbd045de3ee0d43801c48f50e8b0))
+* don't cache /edit route in Next recipe ([94f16b2](https://github.com/measuredco/puck/commit/94f16b25efea86ff475683d3a21f5937e07b201c))
+* don't submit buttons if Puck used in form ([f761e5f](https://github.com/measuredco/puck/commit/f761e5fed63fc698e3a9d6ba94607364ed46f31b))
+* ensure demo types are satisfied with TypeScript@5 ([958dc25](https://github.com/measuredco/puck/commit/958dc255ac5d285f98b6b592df677883b74e2830))
+* export missing Plugin type ([eb42734](https://github.com/measuredco/puck/commit/eb427343fd58752861cac850f59c1098cf473f50))
+* fix crash if component in data is missing from config ([0daf478](https://github.com/measuredco/puck/commit/0daf478d9ad8b14d2844ff6ae2db9bd72970d680))
+* improve resiliency of iframe CSS for some frameworks, like Mantine ([538cb05](https://github.com/measuredco/puck/commit/538cb05606126c338e97c047b97065463e618d36))
+* make Config and Data types more robust ([6bcf555](https://github.com/measuredco/puck/commit/6bcf555da74d54d70f00f37878d35fa166bb7e4c))
+* prevent infinite loop when using plugins with some frameworks ([3870871](https://github.com/measuredco/puck/commit/38708716f32d65a9131b87fe664ba96b32aead15))
+* prevent Tailwind from clashing with viewport zoom select ([9151255](https://github.com/measuredco/puck/commit/91512553430b295c37c80a935f0db929bb37870c))
+* remove body margin in remix recipe ([0898b26](https://github.com/measuredco/puck/commit/0898b26cd021680dfb77a439b04140ce2fb8cb2c))
+* resize viewport when changed via app state ([14419ec](https://github.com/measuredco/puck/commit/14419ecf1c606e6fa0d6d9c5198401eb01bc72dd))
+* resolve fields when switching between items of same type ([a3518ca](https://github.com/measuredco/puck/commit/a3518ca8560ba9fcdbe5086220490920ecf24fc0))
+* return lastData as null instead of empty object in resolvers (BREAKING CHANGE) ([648eb92](https://github.com/measuredco/puck/commit/648eb92b3d2c5be8f5fc99a22db5eff64cefb155))
+* show warning if heading-analyzer styles aren't loaded ([4e7110b](https://github.com/measuredco/puck/commit/4e7110b591a4a12e2b3c89eb1fa98faf5f9338d4))
+* use correct color in FieldLabel labels ([b0469a1](https://github.com/measuredco/puck/commit/b0469a1134ac8eafc9a3b16de4d7805241127947))
+
+
+
+
 ## [0.15.0](https://github.com/measuredco/puck/compare/v0.14.2...v0.15.0) (2024-05-30)
 
 
