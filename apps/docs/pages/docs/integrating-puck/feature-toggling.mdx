@@ -8,7 +8,7 @@ Feature toggling is enabled by Puck's [Permissions API](/docs/api-reference/perm
 - Editing (setting all fields to read-only)
 - etc
 
-See the [supported permissions reference](#) for a complete list.
+See the [supported permissions reference](/docs/api-reference/permissions#supported-permissions) for a complete list.
 
 ## Toggling features globally
 
@@ -94,7 +94,7 @@ Permission resolvers are cached based on the component props. If none of the pro
 
 However, it's possible that you may want to avoid making an expensive operation unless a _specific_ prop has changed, rather than any prop.
 
-This can be restricted by checking the [`changed` param](#) before calling any expensive operations.
+This can be restricted by checking the [`changed` param](/docs/api-reference/configuration/component-config#paramschanged-2) before calling any expensive operations.
 
 ```tsx {6} showLineNumbers copy
 const config = {
