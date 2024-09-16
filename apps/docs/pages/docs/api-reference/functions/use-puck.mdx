@@ -36,8 +36,6 @@ export function Editor() {
 | [`history`](#history)                             | `{}`                                             | Object                                              |
 | [`refreshPermissions`](#refreshpermissionsparams) | `() => void`                                     | Function                                            |
 | [`selectedItem`](#selecteditem)                   | `{ type: "Heading", props: {id: "my-heading"} }` | [ComponentData](/docs/api-reference/data#content-1) |
-| [`setHistories`](#sethistories)                   | `setHistories: (histories) => void`              | Function                                            |
-| [`setHistoryIndex`](#sethistoryindex)             | `setHistoryIndex: (index) => void`               | Function                                            |
 
 ### `appState`
 
@@ -121,14 +119,16 @@ getPermissions({ type: "HeadingBlock" });
 
 The `history` API provides programmatic access to the undo/redo [AppState](/docs/api-reference/app-state) history.
 
-| Param                            | Example                        | Type                           |
-| -------------------------------- | ------------------------------ | ------------------------------ |
-| [`back`](#historyback)           | `() => void`                   | Function                       |
-| [`forward`](#historyforward)     | `() => void`                   | Function                       |
-| [`hasPast`](#historyhaspast)     | `true`                         | Boolean                        |
-| [`hasFuture`](#historyhasfuture) | `false`                        | Boolean                        |
-| [`histories`](#historyhistories) | `[{ id: 'abc123', data: {} }]` | [History](#history-params)\[\] |
-| [`index`](#historyindex)         | `5`                            | Number                         |
+| Param                                 | Example                             | Type                           |
+| ------------------------------------- | ----------------------------------- | ------------------------------ |
+| [`back`](#historyback)                | `() => void`                        | Function                       |
+| [`forward`](#historyforward)          | `() => void`                        | Function                       |
+| [`hasPast`](#historyhaspast)          | `true`                              | Boolean                        |
+| [`hasFuture`](#historyhasfuture)      | `false`                             | Boolean                        |
+| [`histories`](#historyhistories)      | `[{ id: 'abc123', data: {} }]`      | [History](#history-params)\[\] |
+| [`index`](#historyindex)              | `5`                                 | Number                         |
+| [`setHistories`](#sethistories)       | `setHistories: (histories) => void` | Function                       |
+| [`setHistoryIndex`](#sethistoryindex) | `setHistoryIndex: (index) => void`  | Function                       |
 
 #### `history.back()`
 
@@ -168,6 +168,24 @@ An optional ID for this history entry.
 #### `history.index`
 
 The index of the currently selected history in [`history.histories`](#historyhistories)
+
+#### `setHistories`
+
+A function to set the history state.
+
+```tsx
+const { setHistories } = usePuck();
+setHistories([]); // clears all history
+```
+
+#### `setHistoryIndex`
+
+A function to set current history index.
+
+```tsx
+const { setHistoryIndex } = usePuck();
+setHistoryIndex(2);
+```
 
 ### `refreshPermissions(params)`
 
@@ -218,22 +236,4 @@ The currently selected item, as defined by `appState.ui.itemSelector`.
 ```tsx
 console.log(selectedItem);
 // { type: "Heading", props: {id: "my-heading"} }
-```
-
-### `setHistories`
-
-A function to set the history state.
-
-```tsx
-const { setHistories } = usePuck();
-setHistories([]); // clears all history
-```
-
-### `setHistoryIndex`
-
-A function to set current history index.
-
-```tsx
-const { setHistoryIndex } = usePuck();
-setHistoryIndex(2);
 ```
