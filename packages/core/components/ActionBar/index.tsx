@@ -1,7 +1,7 @@
 import { ReactNode, SyntheticEvent } from "react";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
-const getClassName = getClassNameFactory("ActionBarComponent", styles);
+const getClassName = getClassNameFactory("ActionBar", styles);
 
 export const ActionBar = ({
   label,
