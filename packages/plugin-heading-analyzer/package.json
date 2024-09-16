@@ -1,6 +1,6 @@
 {
   "name": "@measured/puck-plugin-heading-analyzer",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "author": "Measured Corporation Ltd <hello@measured.co>",
   "repository": "measuredco/puck",
   "bugs": "https://github.com/measuredco/puck/issues",
@@ -25,7 +25,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@measured/puck": "^0.15.0",
+    "@measured/puck": "^0.16.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "eslint": "^7.32.0",
