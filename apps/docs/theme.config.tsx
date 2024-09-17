@@ -135,14 +135,13 @@ const theme: DocsThemeConfig = {
     process.env.NEXT_PUBLIC_IS_LATEST === "true"
       ? {
           dismissible: true,
-          key: "v0.15.0",
+          key: "v0.16.0",
           text: (
             <a
               href="https://github.com/measuredco/puck/releases"
               target="_blank"
             >
-              <b>🪄 Puck 0.15.0 released</b>: Introducing dynamic field
-              configuration →
+              <b>🔐 Puck 0.16.0</b>: Toggle functionality with permissions →
             </a>
           ),
         }
