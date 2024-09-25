@@ -41,7 +41,7 @@ export const directionalCollision = (
     dragShape.center,
     dropCenter,
     droppable.id.toString(),
-    "green"
+    "rebeccapurple"
   );
 
   if (distanceChange === "decreasing") {

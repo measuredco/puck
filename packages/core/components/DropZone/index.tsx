@@ -276,10 +276,15 @@ function DropZoneEdit({
       ref={(node) => {
         ref.current = node;
 
-        // if (isEnabled) {
-        dropRef(node);
+        // dnd-kit gets confused if both drop and drag refs are assigned during a drag.
+        // Luckily, during a drag, isDropEnabled === false for this item, so we can
+        // remove the ref.
+        // TODO see if there's a fix for this upstream
+        if (isDropEnabled) {
+          dropRef(node);
+        }
+
         if (dragRef) dragRef(node);
-        // }
       }}
       style={style}
     >

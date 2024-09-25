@@ -219,7 +219,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             fn(event, manager);
           });
         }}
-        onBeforeDragStart={(event) => {
+        onDragStart={(event) => {
           setDraggedItem(event.operation.source);
 
           const isNewComponent = event.operation.source?.data.type === "drawer";
@@ -233,7 +233,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             ui: { itemSelector: null, isDragging: true },
           });
 
-          dragListeners.beforedragstart?.forEach((fn) => {
+          dragListeners.dragstart?.forEach((fn) => {
             fn(event, manager);
           });
         }}
