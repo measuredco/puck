@@ -1,18 +1,7 @@
-import {
-  CSSProperties,
-  ReactNode,
-  SetStateAction,
-  createContext,
-  useCallback,
-  useState,
-} from "react";
+import { ReactNode, createContext, useCallback, useState } from "react";
 import { Config, Data } from "../../types/Config";
-import { DragStart, DragUpdate } from "@measured/dnd";
-import { ItemSelector, getItem } from "../../lib/get-item";
+import { ItemSelector } from "../../lib/get-item";
 import { PuckAction } from "../../reducer";
-import { rootDroppableId } from "../../lib/root-droppable-id";
-import { useDebounce } from "use-debounce";
-import { getZoneId } from "../../lib/get-zone-id";
 import type { Draggable } from "@dnd-kit/dom";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
@@ -28,11 +17,6 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   zoneCompound?: string;
   index?: number;
   draggedItem?: Draggable | null;
-  placeholderStyle?: CSSProperties;
-  hoveringArea?: string | null;
-  setHoveringArea?: (area: string | null) => void;
-  hoveringZone?: string | null;
-  setHoveringZone?: (zone: string | null) => void;
   hoveringComponent?: string | null;
   setHoveringComponent?: (id: string | null) => void;
   registerZoneArea?: (areaId: string) => void;
@@ -43,10 +27,10 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   pathData?: PathData;
   registerPath?: (selector: ItemSelector) => void;
   mode?: "edit" | "render";
-  zoneWillDrag?: string;
-  setZoneWillDrag?: (zone: string) => void;
   collisionPriority: number;
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
+  deepestZone?: string | null;
+  deepestArea?: string | null;
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
@@ -58,15 +42,8 @@ export const DropZoneProvider = ({
   children: ReactNode;
   value: DropZoneContext;
 }) => {
-  const [hoveringArea, setHoveringArea] = useState<string | null>(null);
-  const [hoveringZone, setHoveringZone] = useState<string | null>(
-    rootDroppableId
-  );
-
   // Hovering component may match area, but areas must always contain zones
   const [hoveringComponent, setHoveringComponent] = useState<string | null>();
-
-  const [hoveringAreaDb] = useDebounce(hoveringArea, 75, { leading: false });
 
   const [areasWithZones, setAreasWithZones] = useState<Record<string, boolean>>(
     {}
@@ -118,17 +95,11 @@ export const DropZoneProvider = ({
     [setActiveZones, dispatch]
   );
 
-  const [zoneWillDrag, setZoneWillDrag] = useState("");
-
   return (
     <>
       {value && (
         <dropZoneContext.Provider
           value={{
-            hoveringArea: value.draggedItem ? hoveringAreaDb : hoveringArea,
-            setHoveringArea,
-            hoveringZone,
-            setHoveringZone,
             hoveringComponent,
             setHoveringComponent,
             registerZoneArea,
@@ -136,8 +107,6 @@ export const DropZoneProvider = ({
             registerZone,
             unregisterZone,
             activeZones,
-            zoneWillDrag,
-            setZoneWillDrag,
             ...value,
           }}
         >

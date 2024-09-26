@@ -7,13 +7,11 @@ import {
   useReducer,
   useState,
 } from "react";
-import { DragStart, DragUpdate } from "@measured/dnd";
 
 import type { AppState, Config, Data, UiState } from "../../types/Config";
 import { Button } from "../Button";
 
 import { Plugin } from "../../types/Plugin";
-import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
 import {
@@ -25,8 +23,7 @@ import {
 } from "lucide-react";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
-import { DropZoneProvider } from "../DropZone";
-import { ItemSelector, getItem } from "../../lib/get-item";
+import { getItem } from "../../lib/get-item";
 import { PuckAction, StateReducer, createReducer } from "../../reducer";
 import { flushZones } from "../../lib/flush-zones";
 import getClassNameFactory from "../../lib/get-class-name-factory";
@@ -47,12 +44,7 @@ import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types/Viewports";
 import { DragDropContext } from "../DragDropContext";
 import { IframeConfig } from "../../types/IframeConfig";
-import { DragDropProvider, useDragDropManager } from "@dnd-kit/react";
 import { DragDropManager, Feedback } from "@dnd-kit/dom";
-import type { Draggable } from "@dnd-kit/dom";
-import { setupZone } from "../../lib/setup-zone";
-import { rootDroppableId } from "../../lib/root-droppable-id";
-import { generateId } from "../../lib/generate-id";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
 import { useDeferred } from "../../lib/use-deferred";
 
@@ -230,26 +222,11 @@ export function Puck<UserConfig extends Config = Config>({
 
   const { itemSelector, leftSideBarVisible, rightSideBarVisible } = ui;
 
-  const setItemSelector = useCallback(
-    (newItemSelector: ItemSelector | null) => {
-      if (newItemSelector === itemSelector) return;
-
-      dispatch({
-        type: "setUi",
-        ui: { itemSelector: newItemSelector },
-        recordHistory: true,
-      });
-    },
-    [itemSelector]
-  );
-
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
   useEffect(() => {
     if (onChange) onChange(data);
   }, [data]);
-
-  const { onDragStartOrUpdate, placeholderStyle } = usePlaceholderStyle();
 
   // DEPRECATED
   const rootProps = data.root.props || data.root;

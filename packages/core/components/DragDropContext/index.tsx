@@ -18,6 +18,7 @@ import { getItem, ItemSelector } from "../../lib/get-item";
 import { PathData } from "../DropZone/context";
 import { getZoneId } from "../../lib/get-zone-id";
 import { Direction } from "../DraggableComponent/collision/dynamic";
+import { createNestedDroppablePlugin } from "./NestedDroppablePlugin";
 
 type Events = DragDropEvents<Draggable, Droppable, DragDropManager>;
 type DragCbs = Partial<{ [eventName in keyof Events]: Events[eventName][] }>;
@@ -51,7 +52,23 @@ export function useDragListener(
 export const DragDropContext = ({ children }: { children: ReactNode }) => {
   const { state, config, deferred, dispatch } = useAppContext();
   const { data } = deferred?.isDeferred ? deferred.state : state;
-  const [manager] = useState(new DragDropManager({ plugins: [Feedback] }));
+  const [deepest, setDeepest] = useState<{
+    zone: string | null;
+    area: string | null;
+  } | null>(null);
+
+  const [manager] = useState(
+    new DragDropManager({
+      plugins: [
+        Feedback,
+        createNestedDroppablePlugin({
+          onChange: ({ deepestZoneId, deepestAreaId }) => {
+            setDeepest({ zone: deepestZoneId, area: deepestAreaId });
+          },
+        }),
+      ],
+    })
+  );
 
   const [draggedItem, setDraggedItem] = useState<Draggable | null>();
 
@@ -249,6 +266,8 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             collisionPriority: 1,
             registerPath,
             pathData,
+            deepestZone: deepest?.zone,
+            deepestArea: deepest?.area,
           }}
         >
           {children}

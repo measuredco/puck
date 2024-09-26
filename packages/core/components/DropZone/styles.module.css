@@ -7,7 +7,7 @@
 }
 
 .DropZone--isAreaSelected,
-.DropZone--draggingOverArea:not(.DropZone--isRootZone) {
+.DropZone--hoveringOverArea:not(.DropZone--isRootZone) {
   background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
   outline: 2px dashed var(--puck-color-azure-08);
 }
@@ -39,4 +39,8 @@
   height: 24px;
   width: 100%;
   z-index: 1;
+}
+
+.DropZone--isEnabled.DropZone--userIsDragging {
+  outline: 2px dashed var(--puck-color-azure-06);
 }

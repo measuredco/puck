@@ -6,12 +6,11 @@ import { rootDroppableId } from "../../lib/root-droppable-id";
 import { getClassNameFactory } from "../../lib";
 import styles from "./styles.module.css";
 import { DropZoneProvider, dropZoneContext } from "./context";
-import { getZoneId } from "../../lib/get-zone-id";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
 import { ComponentConfig, PuckContext } from "../../types/Config";
 
-import { useDroppable } from "@dnd-kit/react";
+import { useDroppable, UseDroppableInput } from "@dnd-kit/react";
 import { DrawerItemInner } from "../Drawer";
 import { pointerIntersection } from "@dnd-kit/collision";
 import { insert } from "../../lib/insert";
@@ -38,12 +37,7 @@ function DropZoneEdit({
     config,
     areaId,
     draggedItem,
-    placeholderStyle,
     registerZoneArea,
-    areasWithZones,
-    hoveringComponent,
-    zoneWillDrag,
-    setZoneWillDrag = () => null,
     collisionPriority,
     registerLocalZone,
   } = ctx! || {};
@@ -87,25 +81,16 @@ function DropZoneEdit({
 
   const ref = useRef<HTMLDivElement | null>();
 
-  const {
-    hoveringArea = "root",
-    setHoveringArea,
-    hoveringZone,
-    setHoveringZone,
-    setHoveringComponent,
-  } = ctx!;
+  const { deepestArea = "root" } = ctx!;
 
   const isDroppableTarget = useCallback(() => {
     if (!isDragging) {
-      // console.log("not dragging");
       return true;
     }
 
     const { componentType } = draggedItem.data;
 
     if (disallow) {
-      // console.log("has disallow");
-
       const defaultedAllow = allow || [];
 
       // remove any explicitly allowed items from disallow
@@ -114,15 +99,10 @@ function DropZoneEdit({
       );
 
       if (filteredDisallow.indexOf(componentType) !== -1) {
-        // console.log("dragged item is disallowed");
-
         return false;
       }
     } else if (allow) {
-      // console.log("has allow");
       if (allow.indexOf(componentType) === -1) {
-        // console.log("dragged item is not allowed");
-
         return false;
       }
     }
@@ -131,40 +111,6 @@ function DropZoneEdit({
 
     return true;
   }, [draggedItem]);
-
-  // Don't combine inline event handlers and event listeners, as they don't bubble together
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const onMouseOver = (e: Event) => {
-      if (!setHoveringArea || !setHoveringZone) return;
-
-      // Eject if this zone isn't droppable for the item
-      // console.log(
-      //   `${zoneCompound} (hover) isDroppableTarget ${isDroppableTarget()}`
-      // );
-      if (!isDroppableTarget()) {
-        console.log(`${zoneCompound} is not a droppable target`);
-
-        // setHoveringArea(zoneArea);
-
-        return;
-      }
-
-      // e.stopPropagation();
-
-      // console.log("dz", e.currentTarget, e.target, areaId, zoneCompound);
-
-      setHoveringArea(areaId || zoneArea);
-      setHoveringZone(zoneCompound);
-    };
-
-    ref.current.addEventListener("mouseover", onMouseOver);
-
-    return () => {
-      ref.current?.removeEventListener("mouseover", onMouseOver);
-    };
-  }, [ref, isDroppableTarget]);
 
   useEffect(() => {
     if (registerLocalZone) {
@@ -177,22 +123,9 @@ function DropZoneEdit({
     zone === rootDroppableId ||
     areaId === "root";
 
-  // const draggedSourceId = draggedItem && draggedItem.source.droppableId;
-  // const draggedDestinationId =
-  //   draggedItem && draggedItem.destination?.droppableId;
-  const [zoneArea] = getZoneId(zoneCompound);
-
-  // we use the index rather than spread to prevent down-level iteration warnings: https://stackoverflow.com/questions/53441292/why-downleveliteration-is-not-on-by-default
-  // const [draggedSourceArea] = getZoneId(draggedSourceId);
-
-  const userWillDrag = zoneWillDrag === zone;
-
-  const hoveringOverArea = hoveringArea ? hoveringArea === areaId : isRootZone;
-  const hoveringOverZone = hoveringZone === zoneCompound;
+  const hoveringOverArea = deepestArea ? deepestArea === areaId : isRootZone;
 
   const userIsDragging = !!draggedItem;
-  const draggingOverArea = userIsDragging && hoveringOverArea;
-  const draggingNewComponent = false; //draggedSourceId?.startsWith("component-list");
 
   // if (
   //   !ctx?.config ||
@@ -209,7 +142,7 @@ function DropZoneEdit({
   let isEnabled = true;
 
   if (draggedItem) {
-    isEnabled = hoveringOverArea && hoveringOverZone;
+    isEnabled = ctx?.deepestZone === zoneCompound;
   }
 
   if (isEnabled) {
@@ -218,15 +151,18 @@ function DropZoneEdit({
 
   const isDropEnabled = isEnabled && content.length === 0;
 
-  const { ref: dropRef } = useDroppable({
+  const droppableConfig: UseDroppableInput = {
     id: zoneCompound,
     collisionPriority: isEnabled ? collisionPriority : 0,
     disabled: !isDropEnabled,
     collisionDetector: pointerIntersection,
     data: {
       zone: true,
+      areaId,
     },
-  });
+  };
+
+  const { ref: dropRef } = useDroppable(droppableConfig);
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
   const isAreaSelected = selectedItem && areaId === selectedItem.props.id;
@@ -265,11 +201,8 @@ function DropZoneEdit({
       className={`${getClassName({
         isRootZone,
         userIsDragging,
-        draggingOverArea,
-        // hoveringOverArea,
-        draggingNewComponent,
-        // isDestination: draggedDestinationId === zoneCompound,
-        isDisabled: !isEnabled,
+        hoveringOverArea,
+        isEnabled,
         isAreaSelected,
         hasChildren: content.length > 0,
       })}${className ? ` ${className}` : ""}`}
@@ -280,9 +213,9 @@ function DropZoneEdit({
         // Luckily, during a drag, isDropEnabled === false for this item, so we can
         // remove the ref.
         // TODO see if there's a fix for this upstream
-        if (isDropEnabled) {
-          dropRef(node);
-        }
+        // if (isDropEnabled) {
+        dropRef(node);
+        // }
 
         if (dragRef) dragRef(node);
       }}

@@ -40,7 +40,6 @@ export const DraggableComponent = ({
   isSelected = false,
   debug,
   label,
-  indicativeHover = false,
   isEnabled,
   dragAxis,
   inDroppableZone = true,
@@ -56,7 +55,6 @@ export const DraggableComponent = ({
   label?: string;
   isLoading: boolean;
   isEnabled?: boolean;
-  indicativeHover?: boolean;
   dragAxis: DragAxis;
   inDroppableZone: boolean;
 }) => {
@@ -65,23 +63,6 @@ export const DraggableComponent = ({
   const ctx = useContext(dropZoneContext);
 
   const overlayRef = useRef<HTMLDivElement>(null);
-
-  const { ref: sortableRef, status } = useSortable({
-    id,
-    index,
-    group: zoneCompound,
-    data: { group: zoneCompound, index, componentType },
-    collisionPriority: isEnabled ? collisionPriority : 0,
-    collisionDetector: createDynamicCollisionDetector(dragAxis),
-    disabled: !isEnabled,
-    // handle: overlayRef,
-  });
-
-  const userIsDragging = !!ctx?.draggedItem;
-
-  const thisIsDragging = status === "dragging";
-
-  const ref = useRef<Element>();
 
   const [localZones, setLocalZones] = useState<Record<string, boolean>>({});
 
@@ -104,6 +85,28 @@ export const DraggableComponent = ({
 
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
+
+  const { ref: sortableRef, status } = useSortable({
+    id,
+    index,
+    group: zoneCompound,
+    data: {
+      group: zoneCompound,
+      index,
+      componentType,
+      containsActiveZone,
+    },
+    collisionPriority: isEnabled ? collisionPriority : 0,
+    collisionDetector: createDynamicCollisionDetector(dragAxis),
+    disabled: !isEnabled,
+    // handle: overlayRef,
+  });
+
+  const userIsDragging = !!ctx?.draggedItem;
+
+  const thisIsDragging = status === "dragging";
+
+  const ref = useRef<Element>();
 
   const refSetter = useCallback(
     (el: Element | null) => {
@@ -199,17 +202,7 @@ export const DraggableComponent = ({
 
   const [hover, setHover] = useState(false);
 
-  const activateParent = useCallback(() => {
-    if (inDroppableZone) {
-      if (ctx?.setHoveringArea) {
-        ctx.setHoveringArea(ctx.areaId || "");
-      }
-
-      if (ctx?.setHoveringZone) {
-        ctx.setHoveringZone(zoneCompound);
-      }
-    }
-  }, [inDroppableZone, ctx, zoneCompound]);
+  const indicativeHover = ctx?.hoveringComponent === id;
 
   useEffect(() => {
     if (!ref.current) {
@@ -231,10 +224,6 @@ export const DraggableComponent = ({
       }
 
       e.stopPropagation();
-
-      if (!containsActiveZone) {
-        activateParent();
-      }
     };
 
     const _onMouseOut = (e: Event) => {
@@ -389,27 +378,6 @@ export const DraggableComponent = ({
               </div>
             </div>
             <div className={getClassName("overlay")} />
-
-            {ctx?.hoveringArea === id && (
-              <>
-                <div
-                  className={getClassName("parentHitboxTop")}
-                  onMouseOver={activateParent}
-                ></div>
-                <div
-                  className={getClassName("parentHitboxBottom")}
-                  onMouseOver={activateParent}
-                ></div>
-                <div
-                  className={getClassName("parentHitboxLeft")}
-                  onMouseOver={activateParent}
-                ></div>
-                <div
-                  className={getClassName("parentHitboxRight")}
-                  onMouseOver={activateParent}
-                ></div>
-              </>
-            )}
           </div>,
           document.getElementById("puck-preview") || document.body
         )}

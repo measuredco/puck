@@ -58,11 +58,8 @@ export const LayerTree = ({
           const zonesForItem = findZonesForArea(data, item.props.id);
           const containsZone = Object.keys(zonesForItem).length > 0;
 
-          const {
-            setHoveringArea = () => {},
-            setHoveringComponent = () => {},
-            hoveringComponent,
-          } = ctx || {};
+          const { setHoveringComponent = () => {}, hoveringComponent } =
+            ctx || {};
 
           const selectedItem =
             itemSelector && data ? getItem(itemSelector, data) : null;
@@ -111,12 +108,10 @@ export const LayerTree = ({
                   }}
                   onMouseOver={(e) => {
                     e.stopPropagation();
-                    setHoveringArea(item.props.id);
                     setHoveringComponent(item.props.id);
                   }}
                   onMouseOut={(e) => {
                     e.stopPropagation();
-                    setHoveringArea(null);
                     setHoveringComponent(null);
                   }}
                 >
