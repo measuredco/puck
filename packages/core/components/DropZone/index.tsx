@@ -41,11 +41,11 @@ function DropZoneEdit({
     depth,
     registerLocalZone,
     deepestZone,
+    deepestArea = "root",
+    isDragging,
   } = ctx! || {};
 
   const { itemSelector } = appContext.state.ui;
-
-  const isDragging = !!draggedItem;
 
   let content = data.content || [];
   let zoneCompound = rootDroppableId;
@@ -82,10 +82,8 @@ function DropZoneEdit({
 
   const ref = useRef<HTMLDivElement | null>();
 
-  const { deepestArea = "root" } = ctx!;
-
   const isDroppableTarget = useCallback(() => {
-    if (!isDragging) {
+    if (!draggedItem) {
       return true;
     }
 
@@ -142,7 +140,7 @@ function DropZoneEdit({
 
   let isEnabled = true;
 
-  if (draggedItem) {
+  if (isDragging) {
     isEnabled = ctx?.deepestZone === zoneCompound;
   }
 
@@ -337,6 +335,7 @@ function DropZoneRender({ className, style, zone }: DropZoneProps) {
                 config,
                 areaId: item.props.id,
                 depth: 1,
+                isDragging: false,
               }}
             >
               <Component.render

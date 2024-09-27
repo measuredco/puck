@@ -17,6 +17,7 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   zoneCompound?: string;
   index?: number;
   draggedItem?: Draggable | null;
+  isDragging: boolean;
   hoveringComponent?: string | null;
   setHoveringComponent?: (id: string | null) => void;
   registerZoneArea?: (areaId: string) => void;

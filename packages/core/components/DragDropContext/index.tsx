@@ -78,6 +78,8 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
 
   const [dragMode, setDragMode] = useState<"new" | "existing" | null>(null);
 
+  const [isDragging, setIsDragging] = useState(false);
+
   const registerPath = useCallback(
     (selector: ItemSelector) => {
       const item = getItem(selector, data);
@@ -118,6 +120,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
         onDragEnd={(event) => {
           const { source, target } = event.operation;
 
+          setIsDragging(false);
           setDraggedItem(null);
 
           // TODO tidy up placeholder if aborted
@@ -254,6 +257,9 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             fn(event, manager);
           });
         }}
+        onBeforeDragStart={() => {
+          setIsDragging(true);
+        }}
       >
         <DropZoneProvider
           value={{
@@ -268,6 +274,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             pathData,
             deepestZone: deepest?.zone,
             deepestArea: deepest?.area,
+            isDragging,
           }}
         >
           {children}
