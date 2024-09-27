@@ -38,8 +38,9 @@ function DropZoneEdit({
     areaId,
     draggedItem,
     registerZoneArea,
-    collisionPriority,
+    depth,
     registerLocalZone,
+    deepestZone,
   } = ctx! || {};
 
   const { itemSelector } = appContext.state.ui;
@@ -153,12 +154,13 @@ function DropZoneEdit({
 
   const droppableConfig: UseDroppableInput = {
     id: zoneCompound,
-    collisionPriority: isEnabled ? collisionPriority : 0,
+    collisionPriority: isEnabled ? depth : 0,
     disabled: !isDropEnabled,
     collisionDetector: pointerIntersection,
     data: {
       zone: true,
       areaId,
+      depth,
     },
   };
 
@@ -273,7 +275,7 @@ function DropZoneEdit({
             id={componentId}
             componentType={componentType}
             zoneCompound={zoneCompound}
-            collisionPriority={collisionPriority + 1}
+            depth={depth + 1}
             index={i}
             isLoading={appContext.componentState[componentId]?.loading}
             isSelected={isSelected}
@@ -334,7 +336,7 @@ function DropZoneRender({ className, style, zone }: DropZoneProps) {
                 data,
                 config,
                 areaId: item.props.id,
-                collisionPriority: 1,
+                depth: 1,
               }}
             >
               <Component.render

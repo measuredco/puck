@@ -31,7 +31,7 @@ const actionsRight = space;
 
 export const DraggableComponent = ({
   children,
-  collisionPriority,
+  depth,
   componentType,
   id,
   index,
@@ -46,7 +46,7 @@ export const DraggableComponent = ({
 }: {
   children: (ref: Ref<any>) => ReactNode;
   componentType: string;
-  collisionPriority: number;
+  depth: number;
   id: string;
   index: number;
   zoneCompound: string;
@@ -95,8 +95,9 @@ export const DraggableComponent = ({
       index,
       componentType,
       containsActiveZone,
+      depth,
     },
-    collisionPriority: isEnabled ? collisionPriority : 0,
+    collisionPriority: isEnabled ? depth : 0,
     collisionDetector: createDynamicCollisionDetector(dragAxis),
     disabled: !isEnabled,
     // handle: overlayRef,
@@ -323,7 +324,7 @@ export const DraggableComponent = ({
         areaId: id,
         zoneCompound,
         index,
-        collisionPriority: collisionPriority + 1,
+        depth: depth + 1,
         registerLocalZone,
       }}
     >

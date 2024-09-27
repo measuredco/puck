@@ -45,12 +45,16 @@ const REFRESH_ON_MOVE = true;
 
 const depthSort = (candidates: Droppable[]) => {
   return candidates.sort((a, b) => {
-    if (!a.element || !b.element) return 0;
+    // Use depth instead of ref, as this is 1) faster and 2) handles cases where a and b share a ref
+    if (a.data.depth > b.data.depth) {
+      return 1;
+    }
 
-    // TODO could be swapped out for `data.depth` on the candidate for better performance
-    if (a.element.contains(b.element)) return -1;
+    if (b.data.depth > a.data.depth) {
+      return -1;
+    }
 
-    return 1;
+    return 0;
   });
 };
 

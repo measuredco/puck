@@ -27,7 +27,7 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   pathData?: PathData;
   registerPath?: (selector: ItemSelector) => void;
   mode?: "edit" | "render";
-  collisionPriority: number;
+  depth: number;
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
   deepestZone?: string | null;
   deepestArea?: string | null;

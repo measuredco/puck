@@ -263,7 +263,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             draggedItem,
             mode: "edit",
             areaId: "root",
-            collisionPriority: 1,
+            depth: 0,
             registerPath,
             pathData,
             deepestZone: deepest?.zone,
