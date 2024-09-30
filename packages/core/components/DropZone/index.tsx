@@ -20,6 +20,8 @@ const getClassName = getClassNameFactory("DropZone", styles);
 
 export { DropZoneProvider, dropZoneContext } from "./context";
 
+const DEBUG = false;
+
 function DropZoneEdit({
   zone,
   allow,
@@ -221,6 +223,12 @@ function DropZoneEdit({
       }}
       style={style}
     >
+      {isRootZone && DEBUG && (
+        <>
+          <p>{deepestZone || rootDroppableId}</p>
+          <p>{deepestArea || "No area"}</p>
+        </>
+      )}
       {contentWithPreview.map((item, i) => {
         const componentId = item.props.id;
 
