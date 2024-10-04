@@ -2,7 +2,7 @@
   display: flex;
   width: auto;
   padding: 4px;
-  padding-right: 0;
+  padding-right: 4px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   border-radius: 8px;
@@ -31,6 +31,14 @@
   display: flex;
   padding-left: 4px;
   padding-right: 4px;
+}
+
+.ActionBar-group:last-of-type {
+  padding-right: 0;
+}
+
+.ActionBar-group:empty {
+  display: none;
 }
 
 .ActionBar-action {
