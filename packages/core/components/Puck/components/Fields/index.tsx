@@ -73,6 +73,10 @@ const useResolvedFields = (): [FieldsType, boolean] => {
     ? selectedItem
     : { props: rootProps, readOnly: data.root.readOnly };
 
+  const hasComponentResolver = selectedItem && componentConfig?.resolveFields;
+  const hasRootResolver = !selectedItem && config.root?.resolveFields;
+  const hasResolver = hasComponentResolver || hasRootResolver;
+
   const resolveFields = useCallback(
     async (fields: FieldsType = {}) => {
       const lastData =
@@ -84,8 +88,8 @@ const useResolvedFields = (): [FieldsType, boolean] => {
 
       setLastSelectedData(componentData);
 
-      if (selectedItem && componentConfig?.resolveFields) {
-        return await componentConfig?.resolveFields(
+      if (hasComponentResolver) {
+        return await componentConfig!.resolveFields!(
           componentData as ComponentData,
           {
             changed,
@@ -97,8 +101,8 @@ const useResolvedFields = (): [FieldsType, boolean] => {
         );
       }
 
-      if (!selectedItem && config.root?.resolveFields) {
-        return await config.root?.resolveFields(componentData, {
+      if (hasRootResolver) {
+        return await config.root!.resolveFields!(componentData, {
           changed,
           fields,
           lastFields: resolvedFields,
@@ -118,14 +122,18 @@ const useResolvedFields = (): [FieldsType, boolean] => {
   );
 
   useEffect(() => {
-    setFieldsLoading(true);
+    if (hasResolver) {
+      setFieldsLoading(true);
 
-    resolveFields(defaultFields).then((fields) => {
-      setResolvedFields(fields || {});
+      resolveFields(defaultFields).then((fields) => {
+        setResolvedFields(fields || {});
 
-      setFieldsLoading(false);
-    });
-  }, [data, defaultFields, state.ui.itemSelector]);
+        setFieldsLoading(false);
+      });
+    } else {
+      setResolvedFields(defaultFields);
+    }
+  }, [data, defaultFields, state.ui.itemSelector, hasResolver]);
 
   return [resolvedFields, fieldsLoading];
 };
