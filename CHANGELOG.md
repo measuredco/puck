@@ -2,6 +2,22 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.16.1](https://github.com/measuredco/puck/compare/v0.16.0...v0.16.1) (2024-10-07)
+
+
+### Bug Fixes
+
+* don't delete array field on click in FieldLabel ([ed282b9](https://github.com/measuredco/puck/commit/ed282b98ebe8574258444ba91716d8da7e8117d1))
+* don't overwrite user input when field recently changed ([6126040](https://github.com/measuredco/puck/commit/61260407c5c87cc8c5c4fe925835f2d0d2a6f9ff))
+* don't show field loader if no resolver defined ([8c706cd](https://github.com/measuredco/puck/commit/8c706cda92474114faffc7ed77f4b4024f75bf68))
+* hide ActionBar.Group border when empty ([4345165](https://github.com/measuredco/puck/commit/4345165ee71b9762e6bca9baaa53d0c53144d0c4))
+* prevent item click before iframe load ([61e1653](https://github.com/measuredco/puck/commit/61e1653020b9e272133c70fa9494f1a81782531e))
+* prevent flash of field loader when no data changed ([20d7309](https://github.com/measuredco/puck/commit/20d730924d2f235871bfec4f0467a6652a518704))
+* respect readOnly styles in AutoField ([9ffe817](https://github.com/measuredco/puck/commit/9ffe8176c1c437524fd9f7b2912f1a5846fc5e55))
+
+
+
+
 ## [0.16.0](https://github.com/measuredco/puck/compare/v0.15.0...v0.16.0) (2024-09-16)
 
 
