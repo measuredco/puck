@@ -9,6 +9,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import {
@@ -185,6 +186,9 @@ function AutoFieldInternal<
   return <Render {...mergedProps}>{children}</Render>;
 }
 
+// Don't let external value changes update this if it's changed manually in the last X ms
+const RECENT_CHANGE_TIMEOUT = 200;
+
 export function AutoFieldPrivate<
   ValueType = any,
   FieldType extends Field<ValueType> = Field<ValueType>
@@ -197,6 +201,9 @@ export function AutoFieldPrivate<
 
   const [localValue, setLocalValue] = useState(value);
 
+  const [recentlyChanged, setRecentlyChanged] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
   const onChangeDb = useDebouncedCallback(
     (val, ui) => {
       onChange(val, ui);
@@ -207,11 +214,22 @@ export function AutoFieldPrivate<
 
   const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
     setLocalValue(val);
+
+    setRecentlyChanged(true);
+
+    clearTimeout(timeoutRef.current);
+
+    timeoutRef.current = setTimeout(() => {
+      setRecentlyChanged(false);
+    }, RECENT_CHANGE_TIMEOUT);
+
     onChangeDb(val, ui);
   }, []);
 
   useEffect(() => {
-    setLocalValue(value);
+    if (!recentlyChanged) {
+      setLocalValue(value);
+    }
   }, [value]);
 
   const localProps = {
