@@ -72,7 +72,7 @@ export const FieldLabelInternal = ({
   children,
   icon,
   label,
-  el = "div",
+  el = "label",
   readOnly,
 }: FieldLabelPropsInternal) => {
   const { overrides } = useAppContext();
