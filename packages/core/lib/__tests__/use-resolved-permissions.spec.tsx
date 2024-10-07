@@ -216,7 +216,32 @@ describe("use-resolved-permissions", () => {
     cleanup();
   });
 
-  it("should set loading state during resolution", () => {
+  it("should set loading state during resolution, when a resolver is defined", () => {
+    let setLoadCalled = false;
+    let unsetLoadCalled = false;
+
+    const setLoad = () => {
+      setLoadCalled = true;
+    };
+
+    const unsetLoad = () => {
+      unsetLoadCalled = true;
+    };
+
+    renderHook(() => {
+      return useResolvedPermissions(
+        configWithResolvedComponentPermissions,
+        state,
+        globalPermissions,
+        setLoad,
+        unsetLoad
+      );
+    });
+
+    expect(setLoadCalled).toBeTruthy();
+  });
+
+  it("should not set loading state during resolution, when no resolver defined", () => {
     let setLoadCalled = false;
     let unsetLoadCalled = false;
 
@@ -238,8 +263,8 @@ describe("use-resolved-permissions", () => {
       );
     });
 
-    expect(setLoadCalled).toBeTruthy();
-    expect(unsetLoadCalled).toBeTruthy();
+    expect(setLoadCalled).toBeFalsy();
+    expect(unsetLoadCalled).toBeFalsy();
   });
 
   describe("getPermissions method", () => {

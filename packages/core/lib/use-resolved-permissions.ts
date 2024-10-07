@@ -52,13 +52,10 @@ export const useResolvedPermissions = <
 
   const resolveDataForItem = useCallback(
     async (item: G["UserComponentData"], force: boolean = false) => {
-      setComponentLoading?.(item.props.id);
-
       const componentConfig =
         item.type === "root" ? config.root : config.components[item.type];
 
       if (!componentConfig) {
-        unsetComponentLoading?.(item.props.id);
         return;
       }
 
@@ -71,6 +68,8 @@ export const useResolvedPermissions = <
         const changed = getChanged(item, cache[item.props.id]?.lastData);
 
         if (Object.values(changed).some((el) => el === true) || force) {
+          setComponentLoading?.(item.props.id);
+
           const resolvedPermissions = await componentConfig.resolvePermissions(
             item,
             {
@@ -94,10 +93,10 @@ export const useResolvedPermissions = <
             ...p,
             [item.props.id]: resolvedPermissions,
           }));
+
+          unsetComponentLoading?.(item.props.id);
         }
       }
-
-      unsetComponentLoading?.(item.props.id);
     },
     [config, globalPermissions, appState, cache]
   );
