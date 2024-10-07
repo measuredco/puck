@@ -116,17 +116,6 @@ export const ConfigPreview = ({
       }}
       onPublish={() => {}}
       ui={{ itemSelector: { index: 0 } }}
-      overrides={{
-        fieldLabel: ({ children, label, icon }) => {
-          return (
-            <div className={getClassNameConfigPreview("fieldLabel")}>
-              <FieldLabel label={label} icon={icon}>
-                {children}
-              </FieldLabel>{" "}
-            </div>
-          );
-        },
-      }}
     >
       <PreviewFrame label={label} style={{ padding: 0 }} disableOnClick>
         <ConfigPreviewInner componentConfig={componentConfig} />
