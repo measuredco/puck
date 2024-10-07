@@ -385,7 +385,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
                 refreshPermissions({ item: selectedItem });
               }
               // eslint-disable-next-line react-hooks/exhaustive-deps
-            }, [lockedComponents, selectedItem, refreshPermissions]);
+            }, [lockedComponents, selectedItem?.props.id, refreshPermissions]);
 
             if (!selectedItem)
               return (
@@ -398,20 +398,22 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
 
             return (
               <ActionBar label={label}>
-                {children}
-                {globalPermissions.lockable && (
-                  <ActionBar.Action
-                    onClick={() => {
-                      setLockedComponents({
-                        ...lockedComponents,
-                        [selectedItem.props.id as string]: !isLocked,
-                      });
-                    }}
-                    label={isLocked ? "Unlock component" : "Lock component"}
-                  >
-                    {isLocked ? <Unlock size={16} /> : <Lock size={16} />}
-                  </ActionBar.Action>
-                )}
+                <ActionBar.Group>
+                  {children}
+                  {globalPermissions.lockable && (
+                    <ActionBar.Action
+                      onClick={() => {
+                        setLockedComponents({
+                          ...lockedComponents,
+                          [selectedItem.props.id as string]: !isLocked,
+                        });
+                      }}
+                      label={isLocked ? "Unlock component" : "Lock component"}
+                    >
+                      {isLocked ? <Unlock size={16} /> : <Lock size={16} />}
+                    </ActionBar.Action>
+                  )}
+                </ActionBar.Group>
               </ActionBar>
             );
           },
