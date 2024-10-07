@@ -222,12 +222,21 @@ export function AutoFieldPrivate<
   return <AutoFieldInternal<ValueType, FieldType> {...props} {...localProps} />;
 }
 
-const DefaultLabel = (props: any) => <div {...props} />;
-
 export function AutoField<
   ValueType = any,
   FieldType extends Field<ValueType> = Field<ValueType>
 >(props: FieldProps<ValueType, FieldType>) {
+  const DefaultLabel = useMemo(() => {
+    const DefaultLabel = (labelProps: any) => (
+      <div
+        {...labelProps}
+        className={getClassName({ readOnly: props.readOnly })}
+      />
+    );
+
+    return DefaultLabel;
+  }, [props.readOnly]);
+
   return (
     <AutoFieldInternal<ValueType, FieldType> {...props} Label={DefaultLabel} />
   );
