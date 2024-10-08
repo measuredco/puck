@@ -86,6 +86,8 @@ export const DraggableComponent = ({
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
 
+  const { path = [] } = ctx || {};
+
   const { ref: sortableRef, status } = useSortable({
     id,
     index,
@@ -96,6 +98,7 @@ export const DraggableComponent = ({
       componentType,
       containsActiveZone,
       depth,
+      path,
     },
     collisionPriority: isEnabled ? depth : 0,
     collisionDetector: createDynamicCollisionDetector(dragAxis),
@@ -326,6 +329,7 @@ export const DraggableComponent = ({
         index,
         depth: depth + 1,
         registerLocalZone,
+        path: [...path, id],
       }}
     >
       {/* <p>isEnabled: {JSON.stringify(isEnabled)}</p> */}

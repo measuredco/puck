@@ -44,8 +44,8 @@ function DropZoneEdit({
     registerLocalZone,
     deepestZone,
     deepestArea = "root",
-    isDragging,
-  } = ctx! || {};
+    path = [],
+  } = ctx!;
 
   const { itemSelector } = appContext.state.ui;
 
@@ -108,8 +108,6 @@ function DropZoneEdit({
       }
     }
 
-    // console.log("default");
-
     return true;
   }, [draggedItem]);
 
@@ -117,7 +115,7 @@ function DropZoneEdit({
     if (registerLocalZone) {
       registerLocalZone(zoneCompound, isDroppableTarget());
     }
-  }, [isDragging, zoneCompound]);
+  }, [draggedItem, zoneCompound]);
 
   const isRootZone =
     zoneCompound === rootDroppableId ||
@@ -142,7 +140,7 @@ function DropZoneEdit({
 
   let isEnabled = true;
 
-  if (isDragging) {
+  if (draggedItem) {
     isEnabled = ctx?.deepestZone === zoneCompound;
   }
 
@@ -161,6 +159,8 @@ function DropZoneEdit({
       zone: true,
       areaId,
       depth,
+      isDroppableTarget: isDroppableTarget(),
+      path,
     },
   };
 
@@ -276,36 +276,40 @@ function DropZoneEdit({
         }
 
         return (
-          <DraggableComponent
+          <DropZoneProvider
+            value={{ ...ctx!, path: [...path, zoneCompound] }}
             key={componentId}
-            id={componentId}
-            componentType={componentType}
-            zoneCompound={zoneCompound}
-            depth={depth + 1}
-            index={i}
-            isLoading={appContext.componentState[componentId]?.loading}
-            isSelected={isSelected}
-            label={label}
-            isEnabled={isEnabled}
-            dragAxis={dragAxis}
-            inDroppableZone={isDroppableTarget()}
           >
-            {(dragRef) =>
-              componentConfig?.inline ? (
-                <Render
-                  {...defaultedProps}
-                  puck={{
-                    ...defaultedProps.puck,
-                    dragRef,
-                  }}
-                />
-              ) : (
-                <div ref={dragRef}>
-                  <Render {...defaultedProps} />
-                </div>
-              )
-            }
-          </DraggableComponent>
+            <DraggableComponent
+              id={componentId}
+              componentType={componentType}
+              zoneCompound={zoneCompound}
+              depth={depth + 1}
+              index={i}
+              isLoading={appContext.componentState[componentId]?.loading}
+              isSelected={isSelected}
+              label={label}
+              isEnabled={isEnabled}
+              dragAxis={dragAxis}
+              inDroppableZone={isDroppableTarget()}
+            >
+              {(dragRef) =>
+                componentConfig?.inline ? (
+                  <Render
+                    {...defaultedProps}
+                    puck={{
+                      ...defaultedProps.puck,
+                      dragRef,
+                    }}
+                  />
+                ) : (
+                  <div ref={dragRef}>
+                    <Render {...defaultedProps} />
+                  </div>
+                )
+              }
+            </DraggableComponent>
+          </DropZoneProvider>
         );
       })}
     </div>
@@ -343,7 +347,7 @@ function DropZoneRender({ className, style, zone }: DropZoneProps) {
                 config,
                 areaId: item.props.id,
                 depth: 1,
-                isDragging: false,
+                path: [],
               }}
             >
               <Component.render

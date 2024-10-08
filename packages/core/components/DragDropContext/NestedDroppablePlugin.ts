@@ -160,14 +160,38 @@ export const createNestedDroppablePlugin = ({
           if (candidates.length > 0) {
             const sortedCandidates = depthSort(candidates);
 
+            const draggable = manager.dragOperation.source;
+
             const draggedCandidateIndex = sortedCandidates.findIndex(
-              (candidate) => candidate.id === manager.dragOperation.source?.id
+              (candidate) => candidate.id === draggable?.id
             );
 
-            const nonDraggedCandidates =
-              draggedCandidateIndex > -1
-                ? sortedCandidates.slice(0, draggedCandidateIndex)
-                : sortedCandidates;
+            const draggedCandidateId = draggable?.id;
+
+            let nonDraggedCandidates = [...sortedCandidates];
+
+            if (draggedCandidateId && draggedCandidateIndex > -1) {
+              // Removed dragged candidate
+              nonDraggedCandidates.splice(draggedCandidateIndex, 1);
+
+              // Remove any descendants
+              nonDraggedCandidates = nonDraggedCandidates.filter(
+                (candidate) => {
+                  if (candidate.data.path.indexOf(draggedCandidateId) > -1) {
+                    return false;
+                  }
+
+                  if (
+                    candidate.data.zone &&
+                    !candidate.data.isDroppableTarget
+                  ) {
+                    return false;
+                  }
+
+                  return true;
+                }
+              );
+            }
 
             nonDraggedCandidates.reverse();
 

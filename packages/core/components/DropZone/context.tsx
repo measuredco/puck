@@ -17,7 +17,6 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   zoneCompound?: string;
   index?: number;
   draggedItem?: Draggable | null;
-  isDragging: boolean;
   hoveringComponent?: string | null;
   setHoveringComponent?: (id: string | null) => void;
   registerZoneArea?: (areaId: string) => void;
@@ -32,6 +31,7 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
   deepestZone?: string | null;
   deepestArea?: string | null;
+  path: string[];
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
