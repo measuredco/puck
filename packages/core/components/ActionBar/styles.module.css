@@ -27,7 +27,7 @@
 }
 
 .ActionBar-group {
-  border-left: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
+  border-inline-start: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
   display: flex;
   padding-left: 4px;
   padding-right: 4px;
