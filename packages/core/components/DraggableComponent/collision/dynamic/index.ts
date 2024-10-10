@@ -35,7 +35,6 @@ export const createDynamicCollisionDetector = (
   midpointOffset: number = 0.05
 ) =>
   ((input) => {
-    // console.log("checking collision", input);
     const { dragOperation, droppable } = input;
 
     const { position } = dragOperation;
@@ -65,6 +64,8 @@ export const createDynamicCollisionDetector = (
       // movement in complex grid layouts
 
       const collision = directionalCollision(input, interval.previous);
+
+      collisionDebug(dragCenter, dropCenter, droppable.id.toString(), "yellow");
 
       if (collision) {
         return {

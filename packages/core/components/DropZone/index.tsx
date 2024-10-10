@@ -211,13 +211,12 @@ function DropZoneEdit({
       ref={(node) => {
         ref.current = node;
 
-        // dnd-kit gets confused if both drop and drag refs are assigned during a drag.
-        // Luckily, during a drag, isDropEnabled === false for this item, so we can
-        // remove the ref.
-        // TODO see if there's a fix for this upstream
-        // if (isDropEnabled) {
-        dropRef(node);
-        // }
+        // Don't apply dropRef if we have a dragRef, which is actually a
+        // sortableRef and so already includes drop reference. Including
+        // both confuses dnd-kit
+        if (!dragRef) {
+          dropRef(node);
+        }
 
         if (dragRef) dragRef(node);
       }}
