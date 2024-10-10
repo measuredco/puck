@@ -1,7 +1,7 @@
 import { Fields } from "./Fields";
 import { ComponentData, RootData } from "./Data";
 
-import { AsFieldProps, WithId, WithPuckProps } from "./Utils";
+import { AsFieldProps, DotBranch, WithId, WithPuckProps } from "./Utils";
 import { AppState } from "./AppState";
 import { DefaultComponentProps, DefaultRootRenderProps } from "./Props";
 import { Permissions } from "./API";
@@ -33,17 +33,17 @@ export type ComponentConfig<
   resolveData?: (
     data: DataShape,
     params: {
-      changed: Partial<Record<keyof FieldProps, boolean>>;
+      changed: Partial<Record<DotBranch<FieldProps>, boolean>>;
       lastData: DataShape | null;
     }
   ) =>
     | Promise<{
         props?: Partial<FieldProps>;
-        readOnly?: Partial<Record<keyof FieldProps, boolean>>;
+        readOnly?: Partial<Record<DotBranch<FieldProps>, boolean | string>>;
       }>
     | {
         props?: Partial<FieldProps>;
-        readOnly?: Partial<Record<keyof FieldProps, boolean>>;
+        readOnly?: Partial<Record<DotBranch<FieldProps>, boolean | string>>;
       };
   resolvePermissions?: (
     data: DataShape,
