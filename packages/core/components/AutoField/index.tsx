@@ -32,7 +32,7 @@ export const FieldLabel = ({
   children,
   icon,
   label,
-  el = "label",
+  el = "div",
   readOnly,
   className,
 }: {
