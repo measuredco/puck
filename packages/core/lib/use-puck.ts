@@ -7,6 +7,7 @@ export const usePuck = <UserConfig extends Config = Config>() => {
     config,
     history,
     dispatch,
+    iframe,
     selectedItem: currentItem,
     getPermissions,
     refreshPermissions,
@@ -30,5 +31,7 @@ export const usePuck = <UserConfig extends Config = Config>() => {
       historyStore: history.historyStore,
     },
     selectedItem: currentItem || null,
+    /** @description Iframe ref if enabled otherwise returns undefined */
+    iframeRef: iframe.ref,
   };
 };

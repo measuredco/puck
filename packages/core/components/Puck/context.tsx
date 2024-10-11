@@ -78,6 +78,7 @@ export type AppContext<
   status: Status;
   setStatus: (status: Status) => void;
   iframe: IframeConfig;
+  setIframe: (iframe: IframeConfig) => void;
   safariFallbackMode?: boolean;
   globalPermissions?: Partial<Permissions>;
   selectedItem?: G["UserData"]["content"][0];
@@ -105,6 +106,7 @@ const defaultContext: AppContext = {
   status: "LOADING",
   setStatus: () => null,
   iframe: {},
+  setIframe: () => null,
   safariFallbackMode: false,
   globalPermissions: {},
   getPermissions: () => ({}),

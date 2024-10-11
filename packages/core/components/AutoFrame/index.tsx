@@ -8,6 +8,7 @@ import {
 } from "react";
 import hash from "object-hash";
 import { createPortal } from "react-dom";
+import { appContext } from "../Puck/context";
 
 const styleSelector = 'style, link[rel="stylesheet"]';
 
@@ -326,12 +327,18 @@ function AutoFrame({
   const [ctx, setCtx] = useState<AutoFrameContext>({});
   const ref = useRef<HTMLIFrameElement>(null);
   const [mountTarget, setMountTarget] = useState<HTMLElement | null>();
+  const { setIframe, iframe } = useContext(appContext);
 
   useEffect(() => {
     if (ref.current) {
       setCtx({
         document: ref.current.contentDocument || undefined,
         window: ref.current.contentWindow || undefined,
+      });
+
+      setIframe({
+        ...iframe,
+        ref: ref,
       });
 
       setMountTarget(ref.current.contentDocument?.getElementById("frame-root"));
