@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 export const useModifierHeld = (modifier: "Shift" | "Alt" | "Control") => {
   const [modifierHeld, setModifierHeld] = useState(false);
+  const [mouseDown, setMouseDown] = useState(false);
 
   useEffect(() => {
     function downHandler({ key }: KeyboardEvent) {
@@ -11,18 +12,32 @@ export const useModifierHeld = (modifier: "Shift" | "Alt" | "Control") => {
     }
 
     function upHandler({ key }: KeyboardEvent) {
-      if (key === modifier) {
+      if (key === modifier && !mouseDown) {
         setModifierHeld(false);
       }
     }
 
+    function mouseDownHandler() {
+      setMouseDown(true);
+    }
+
+    function mouseUpHandler() {
+      setMouseDown(false);
+      setModifierHeld(false);
+    }
+
     window.addEventListener("keydown", downHandler);
     window.addEventListener("keyup", upHandler);
+    window.addEventListener("mousedown", mouseDownHandler);
+    window.addEventListener("mouseup", mouseUpHandler);
+
     return () => {
       window.removeEventListener("keydown", downHandler);
       window.removeEventListener("keyup", upHandler);
+      window.removeEventListener("mousedown", mouseDownHandler);
+      window.removeEventListener("mouseup", mouseUpHandler);
     };
-  }, [modifier]);
+  }, [modifier, mouseDown]);
 
   return modifierHeld;
 };
