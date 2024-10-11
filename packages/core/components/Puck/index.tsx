@@ -105,7 +105,7 @@ export function Puck<
   headerTitle?: string;
   headerPath?: string;
   viewports?: Viewports;
-  iframe?: IframeConfig;
+  iframe?: Omit<IframeConfig, "ref">;
   dnd?: {
     disableAutoScroll?: boolean;
   };
