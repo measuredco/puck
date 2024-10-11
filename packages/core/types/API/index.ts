@@ -14,6 +14,7 @@ export type Permissions = {
 export type IframeConfig = {
   enabled?: boolean;
   waitForStyles?: boolean;
+  ref?: React.RefObject<HTMLIFrameElement>;
 };
 
 export type OnAction<UserData extends Data = Data> = (
