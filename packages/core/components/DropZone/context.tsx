@@ -66,6 +66,7 @@ export const DropZoneProvider = ({
     {}
   );
 
+  // TODO memory leak
   const [activeZones, setActiveZones] = useState<Record<string, boolean>>({});
 
   const { dispatch = null } = value ? value : {};
@@ -112,7 +113,12 @@ export const DropZoneProvider = ({
     [setActiveZones, dispatch]
   );
 
-  const [pathData, setPathData] = useState<PathData>();
+  // TODO memory leak
+  const [pathData, setPathData] = useState<PathData>({});
+
+  if (Object.keys(activeZones).length > 0) {
+    console.log(JSON.stringify(activeZones).length);
+  }
 
   const registerPath = useCallback(
     (selector: ItemSelector) => {
@@ -128,20 +134,20 @@ export const DropZoneProvider = ({
 
       const [area] = getZoneId(selector.zone);
 
-      setPathData((latestPathData = {}) => {
-        const parentPathData = latestPathData[area] || { path: [] };
+      // setPathData((latestPathData = {}) => {
+      //   const parentPathData = latestPathData[area] || { path: [] };
 
-        return {
-          ...latestPathData,
-          [item.props.id]: {
-            path: [
-              ...parentPathData.path,
-              ...(selector.zone ? [selector.zone] : []),
-            ],
-            label: item.type as string,
-          },
-        };
-      });
+      //   return {
+      //     ...latestPathData,
+      //     [item.props.id]: {
+      //       path: [
+      //         ...parentPathData.path,
+      //         ...(selector.zone ? [selector.zone] : []),
+      //       ],
+      //       label: item.type as string,
+      //     },
+      //   };
+      // });
     },
     [value, setPathData]
   );
