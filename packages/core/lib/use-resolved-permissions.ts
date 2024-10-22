@@ -158,7 +158,7 @@ export const useResolvedPermissions = <
 
         const initialPermissions = {
           ...globalPermissions,
-          ...componentConfig.permissions,
+          ...componentConfig?.permissions,
         };
 
         const resolvedForItem = resolvedPermissions[item.props.id];
@@ -171,7 +171,7 @@ export const useResolvedPermissions = <
 
         return {
           ...globalPermissions,
-          ...componentConfig.permissions,
+          ...componentConfig?.permissions,
         };
       } else if (root) {
         const rootConfig = config.root;
