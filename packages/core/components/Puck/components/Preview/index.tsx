@@ -6,6 +6,7 @@ import AutoFrame, { autoFrameContext } from "../../../AutoFrame";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { DefaultRootRenderProps } from "../../../../types";
+import { Render } from "../../../Render";
 
 const getClassName = getClassNameFactory("PuckPreview", styles);
 
@@ -97,6 +98,23 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
 
   useBubbleIframeEvents(ref);
 
+  const inner =
+    state.ui.previewMode === "edit" ? (
+      <Page
+        {...rootProps}
+        puck={{
+          renderDropZone: DropZone,
+          isEditing: true,
+          dragRef: null,
+        }}
+        editMode={true} // DEPRECATED
+      >
+        <DropZone zone={rootDroppableId} />
+      </Page>
+    ) : (
+      <Render data={state.data} config={config} />
+    );
+
   return (
     <div
       className={getClassName()}
@@ -118,20 +136,6 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         >
           <autoFrameContext.Consumer>
             {({ document }) => {
-              const inner = (
-                <Page
-                  {...rootProps}
-                  puck={{
-                    renderDropZone: DropZone,
-                    isEditing: true,
-                    dragRef: null,
-                  }}
-                  editMode={true} // DEPRECATED
-                >
-                  <DropZone zone={rootDroppableId} />
-                </Page>
-              );
-
               if (Frame) {
                 return <Frame document={document}>{inner}</Frame>;
               }
@@ -147,13 +151,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           ref={ref}
           data-puck-entry
         >
-          <Page
-            {...rootProps}
-            puck={{ renderDropZone: DropZone, isEditing: true, dragRef: null }}
-            editMode={true} // DEPRECATED
-          >
-            <DropZone zone={rootDroppableId} />
-          </Page>
+          {inner}
         </div>
       )}
     </div>

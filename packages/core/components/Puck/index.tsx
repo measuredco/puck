@@ -52,6 +52,7 @@ import { DragDropContext } from "../DragDropContext";
 import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 import { DefaultOverride } from "../DefaultOverride";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
+import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -386,6 +387,8 @@ export function Puck<
   const selectedComponentLabel = selectedItem
     ? selectedComponentConfig?.["label"] ?? selectedItem.type.toString()
     : "";
+
+  usePreviewModeHotkeys(dispatch, iframe.enabled);
 
   return (
     <div className={`Puck ${getClassName()}`}>
