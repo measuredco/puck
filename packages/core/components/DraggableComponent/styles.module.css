@@ -15,7 +15,7 @@
 
 .DraggableComponent-contents {
   position: relative; /* Reset stacking context */
-  pointer-events: auto;
+  pointer-events: none;
   z-index: 0;
 }
 
