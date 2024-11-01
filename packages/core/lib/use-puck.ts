@@ -6,6 +6,8 @@ export const usePuck = <UserConfig extends Config = Config>() => {
     state: appState,
     config,
     history,
+    isInteractive,
+    setIsInteractive,
     dispatch,
     selectedItem: currentItem,
     getPermissions,
@@ -15,9 +17,11 @@ export const usePuck = <UserConfig extends Config = Config>() => {
   return {
     appState,
     config,
+    isInteractive,
     dispatch,
     getPermissions,
     refreshPermissions,
+    setIsInteractive,
     history: {
       back: history.back!,
       forward: history.forward!,

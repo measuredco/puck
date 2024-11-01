@@ -16,7 +16,6 @@ import { useAppContext } from "../Puck/context";
 import { DefaultDraggable } from "../Draggable";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
-import { DefaultOverride } from "../DefaultOverride";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 

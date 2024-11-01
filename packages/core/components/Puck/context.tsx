@@ -73,6 +73,7 @@ export type AppContext<
   overrides: Partial<Overrides>;
   history: Partial<PuckHistory>;
   isInteractive: boolean;
+  setIsInteractive: React.Dispatch<SetStateAction<boolean>>
   viewports: Viewports;
   zoomConfig: ZoomConfig;
   setZoomConfig: (zoomConfig: ZoomConfig) => void;
@@ -96,6 +97,7 @@ const defaultContext: AppContext = {
   plugins: [],
   overrides: {},
   isInteractive: false,
+  setIsInteractive: () => { },
   history: {},
   viewports: defaultViewports,
   zoomConfig: {
@@ -129,11 +131,14 @@ export const AppProvider = ({
     | "componentState"
     | "setComponentState"
     | "resolveData"
+    | "setIsInteractive"
   >;
 }) => {
   const [zoomConfig, setZoomConfig] = useState(defaultContext.zoomConfig);
 
   const [status, setStatus] = useState<Status>("LOADING");
+
+  const [isInteractive, setIsInteractive] = useState(false);
 
   // App is ready when client has loaded, after initial render
   // This triggers DropZones to activate
@@ -224,6 +229,8 @@ export const AppProvider = ({
         componentState,
         setComponentState,
         resolveData,
+        isInteractive,
+        setIsInteractive,
       }}
     >
       {children}
