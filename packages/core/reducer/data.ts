@@ -175,6 +175,13 @@ export function reduceData<UserData extends Data>(
   }
 
   if (action.type === "move") {
+    if (
+      action.sourceZone === action.destinationZone &&
+      action.sourceIndex === action.destinationIndex
+    ) {
+      return data;
+    }
+
     const newData = setupZone(
       setupZone(data, action.sourceZone),
       action.destinationZone
