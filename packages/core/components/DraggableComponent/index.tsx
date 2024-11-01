@@ -81,8 +81,9 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
-  const { zoomConfig, status, overrides, selectedItem, getPermissions } =
+  const { zoomConfig, status, overrides, selectedItem, getPermissions, isInteractive } =
     useAppContext();
+
   const isModifierHeld = useModifierHeld("Alt");
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
@@ -132,7 +133,7 @@ export const DraggableComponent = ({
           style={{
             ...style,
             ...provided.draggableProps.style,
-            cursor: isModifierHeld || isDragDisabled ? "pointer" : "grab",
+            cursor: isInteractive || isModifierHeld || isDragDisabled ? "pointer" : "grab",
           }}
           onMouseOver={onMouseOver}
           onMouseOut={onMouseOut}
@@ -177,8 +178,8 @@ export const DraggableComponent = ({
             </div>
           )}
 
-          <div className={getClassName("overlay")} />
-          <div className={getClassName("contents")}>{children}</div>
+          <div className={getClassName("overlay")} style={{ ...(isInteractive && { cursor: 'default', background: 'transparent' }) }} />
+          <div className={getClassName("contents")} style={{ ...(isInteractive && { pointerEvents: 'auto' }) }}>{children}</div>
         </div>
       )}
     </El>

@@ -72,6 +72,7 @@ export type AppContext<
   plugins: Plugin[];
   overrides: Partial<Overrides>;
   history: Partial<PuckHistory>;
+  isInteractive: boolean;
   viewports: Viewports;
   zoomConfig: ZoomConfig;
   setZoomConfig: (zoomConfig: ZoomConfig) => void;
@@ -90,10 +91,11 @@ const defaultContext: AppContext = {
   dispatch: () => null,
   config: { components: {} },
   componentState: {},
-  setComponentState: () => {},
-  resolveData: () => {},
+  setComponentState: () => { },
+  resolveData: () => { },
   plugins: [],
   overrides: {},
+  isInteractive: false,
   history: {},
   viewports: defaultViewports,
   zoomConfig: {
