@@ -10,6 +10,7 @@ import { ItemSelector } from "../../lib/get-item";
 
 import { PuckAction } from "../../reducer";
 import type { Draggable } from "@dnd-kit/dom";
+import { useAppContext } from "../Puck/context";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
@@ -19,7 +20,6 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   componentState?: Record<string, any>;
   itemSelector?: ItemSelector | null;
   setItemSelector?: (newIndex: ItemSelector | null) => void;
-  dispatch?: (action: PuckAction) => void;
   areaId?: string;
   zoneCompound?: string;
   index?: number;
@@ -62,7 +62,7 @@ export const DropZoneProvider = ({
 
   const [activeZones, setActiveZones] = useState<Record<string, boolean>>({});
 
-  const { dispatch = null } = value ? value : {};
+  const { dispatch } = useAppContext();
 
   const registerZoneArea = useCallback(
     (area: string) => {

@@ -412,6 +412,19 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
     let zoneCompound = rootDroppableId;
     let content = data?.content || [];
 
+    // Register zones if running Render mode inside editor (i.e. previewMode === "interactive")
+    useEffect(() => {
+      if (ctx?.registerZone) {
+        ctx?.registerZone(zoneCompound);
+      }
+
+      return () => {
+        if (ctx?.unregisterZone) {
+          ctx?.unregisterZone(zoneCompound);
+        }
+      };
+    }, []);
+
     if (!data || !config) {
       return null;
     }

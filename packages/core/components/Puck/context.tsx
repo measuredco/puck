@@ -37,6 +37,7 @@ export const defaultAppState: AppState = {
     itemSelector: null,
     componentList: {},
     isDragging: false,
+    previewMode: "edit",
     viewports: {
       current: {
         width: defaultViewports[0].width,

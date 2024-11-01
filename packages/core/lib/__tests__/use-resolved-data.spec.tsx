@@ -149,6 +149,7 @@ describe("use-resolved-data", () => {
             "isDragging": false,
             "itemSelector": null,
             "leftSideBarVisible": true,
+            "previewMode": "edit",
             "rightSideBarVisible": true,
             "viewports": {
               "controlsVisible": true,

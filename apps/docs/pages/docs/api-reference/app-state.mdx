@@ -20,6 +20,7 @@ The current state of the Puck editor interface.
 | [`isDragging`](#isdragging)                     | `false`                                               | Boolean |
 | [`itemSelector`](#uiitemselector)               | `{ index: 0, zone: "my-content" }`                    | Object  |
 | [`leftSideBarVisible`](#uileftsidebarvisible)   | `false`                                               | Boolean |
+| [`previewMode`](#uipreviewmode)                 | `"edit"`                                              | String  |
 | [`rightSideBarVisible`](#uirightsidebarvisible) | `false`                                               | Boolean |
 | [`viewports`](#uiviewports)                     | `{ controlsVisible: true, current: {}, options: [] }` | Object  |
 
@@ -82,6 +83,17 @@ The zone that the item is defined within. **Defaults to [main content zone](/doc
 ### `ui.leftSideBarVisible`
 
 Whether or not the left side bar is visible.
+
+---
+
+### `ui.previewMode`
+
+The mode for the preview area, controlling whether or not the user can interact with the underlying component. Accepts the following values:
+
+- **`"edit"` (default)**: Components can be dragged and modified. An overlay prevents interaction with the underlying component.
+- **`"interactive"`**: Editing functionality is disabled. The user can interact with the underlying component.
+
+Puck does not currently provide the UI to control this value, but it can be toggled via the `meta+i` hotkey.
 
 ---
 

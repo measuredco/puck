@@ -457,7 +457,6 @@ const DragDropContextClient = ({
             value={{
               data,
               config,
-              dispatch,
               draggedItem,
               mode: "edit",
               areaId: "root",
