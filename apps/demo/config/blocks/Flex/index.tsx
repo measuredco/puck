@@ -4,52 +4,76 @@ import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { DropZone } from "@/core/components/DropZone";
 import { Section } from "../../components/Section";
+import { WithLayout, withLayout } from "../../components/Layout";
 
 const getClassName = getClassNameFactory("Flex", styles);
 
-export type FlexProps = {
-  items: { minItemWidth?: number }[];
-  minItemWidth: number;
-};
+export type FlexProps = WithLayout<{
+  justifyContent: "start" | "center" | "end";
+  direction: "row" | "column";
+  gap: number;
+  wrap: "wrap" | "nowrap";
+}>;
 
-export const Flex: ComponentConfig<FlexProps> = {
+const FlexInternal: ComponentConfig<FlexProps> = {
   fields: {
-    items: {
-      type: "array",
-      arrayFields: {
-        minItemWidth: {
-          label: "Minimum Item Width",
-          type: "number",
-          min: 0,
-        },
-      },
-      getItemSummary: (_, id = -1) => `Item ${id + 1}`,
+    justifyContent: {
+      label: "Justify Content",
+      type: "radio",
+      options: [
+        { label: "Start", value: "start" },
+        { label: "Center", value: "center" },
+        { label: "End", value: "end" },
+      ],
     },
-    minItemWidth: {
-      label: "Minimum Item Width",
+    direction: {
+      label: "Direction",
+      type: "radio",
+      options: [
+        { label: "Row", value: "row" },
+        { label: "Column", value: "column" },
+      ],
+    },
+    gap: {
+      label: "Gap",
       type: "number",
       min: 0,
     },
+    wrap: {
+      label: "Wrap",
+      type: "radio",
+      options: [
+        { label: "true", value: "wrap" },
+        { label: "false", value: "nowrap" },
+      ],
+    },
   },
   defaultProps: {
-    items: [{}, {}],
-    minItemWidth: 356,
+    justifyContent: "start",
+    direction: "row",
+    gap: 24,
+    wrap: "wrap",
+    layout: {
+      grow: true,
+    },
   },
-  render: ({ items, minItemWidth }) => {
+  render: ({ justifyContent, direction, gap, wrap }) => {
     return (
-      <Section>
-        <div className={getClassName()}>
-          {items.map((item, idx) => (
-            <div
-              key={idx}
-              className={getClassName("item")}
-              style={{ minWidth: item.minItemWidth || minItemWidth }}
-            >
-              <DropZone zone={`item-${idx}`} />
-            </div>
-          ))}
-        </div>
+      <Section style={{ height: "100%" }}>
+        <DropZone
+          className={getClassName()}
+          style={{
+            justifyContent,
+            flexDirection: direction,
+            gap,
+            flexWrap: wrap,
+          }}
+          zone="flex"
+          disallow={["GridItem"]}
+        />
       </Section>
     );
   },
 };
+
+export const Flex = withLayout(FlexInternal);
