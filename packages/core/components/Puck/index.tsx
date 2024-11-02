@@ -7,7 +7,6 @@ import {
   useReducer,
   useState,
 } from "react";
-import { DragStart, DragUpdate } from "@measured/dnd";
 
 import type {
   UiState,
@@ -23,8 +22,6 @@ import type {
 } from "../../types";
 import { Button } from "../Button";
 
-import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
-
 import { SidebarSection } from "../SidebarSection";
 import {
   ChevronDown,
@@ -35,12 +32,11 @@ import {
 } from "lucide-react";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
-import { DropZoneProvider } from "../DropZone";
-import { ItemSelector, getItem } from "../../lib/get-item";
+import { getItem } from "../../lib/get-item";
 import { PuckAction, StateReducer, createReducer } from "../../reducer";
 import { flushZones } from "../../lib/flush-zones";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { appContext, AppProvider, defaultAppState } from "./context";
+import { AppProvider, defaultAppState } from "./context";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
@@ -53,9 +49,11 @@ import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";
 import { DragDropContext } from "../DragDropContext";
-import { insertComponent } from "../../lib/insert-component";
 import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 import { DefaultOverride } from "../DefaultOverride";
+import { IframeConfig } from "../../types/IframeConfig";
+import { DragDropManager, Feedback } from "@dnd-kit/dom";
+import { useInjectGlobalCss } from "../../lib/use-inject-css";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -116,6 +114,8 @@ export function Puck<
     waitForStyles: true,
     ..._iframe,
   };
+
+  useInjectGlobalCss(iframe.enabled);
 
   const [generatedAppState] = useState<G["UserAppState"]>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
@@ -252,30 +252,11 @@ export function Puck<
 
   const { itemSelector, leftSideBarVisible, rightSideBarVisible } = ui;
 
-  const setItemSelector = useCallback(
-    (newItemSelector: ItemSelector | null) => {
-      if (newItemSelector === itemSelector) return;
-
-      dispatch({
-        type: "setUi",
-        ui: { itemSelector: newItemSelector },
-        recordHistory: true,
-      });
-    },
-    [itemSelector]
-  );
-
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
   useEffect(() => {
     if (onChange) onChange(data as G["UserData"]);
   }, [data]);
-
-  const { onDragStartOrUpdate, placeholderStyle } = usePlaceholderStyle();
-
-  const [draggedItem, setDraggedItem] = useState<
-    DragStart & Partial<DragUpdate>
-  >();
 
   // DEPRECATED
   const rootProps = data.root.props || data.root;
@@ -403,6 +384,8 @@ export function Puck<
     ? selectedComponentConfig?.["label"] ?? selectedItem.type.toString()
     : "";
 
+  const [manager] = useState(new DragDropManager({ plugins: [Feedback] }));
+
   return (
     <div className={`Puck ${getClassName()}`}>
       <AppProvider
@@ -427,236 +410,139 @@ export function Puck<
           refreshPermissions: () => null,
         }}
       >
-        <appContext.Consumer>
-          {({ resolveData }) => (
-            <DragDropContext
-              autoScrollerOptions={{ disabled: dnd?.disableAutoScroll }}
-              onDragUpdate={(update) => {
-                setDraggedItem({ ...draggedItem, ...update });
-                onDragStartOrUpdate(update);
-              }}
-              onBeforeDragStart={(start) => {
-                onDragStartOrUpdate(start);
-                setItemSelector(null);
-                dispatch({ type: "setUi", ui: { isDragging: true } });
-              }}
-              onDragEnd={(droppedItem) => {
-                setDraggedItem(undefined);
-                dispatch({ type: "setUi", ui: { isDragging: false } });
-
-                // User cancel drag
-                if (!droppedItem.destination) {
-                  return;
-                }
-
-                // New component
-                if (
-                  droppedItem.source.droppableId.startsWith("component-list") &&
-                  droppedItem.destination
-                ) {
-                  const [_, componentType] =
-                    droppedItem.draggableId.split("::");
-
-                  insertComponent(
-                    componentType || droppedItem.draggableId,
-                    droppedItem.destination.droppableId,
-                    droppedItem.destination!.index,
-                    { config, dispatch, resolveData, state: appState }
-                  );
-
-                  return;
-                } else {
-                  const { source, destination } = droppedItem;
-
-                  if (source.droppableId === destination.droppableId) {
-                    dispatch({
-                      type: "reorder",
-                      sourceIndex: source.index,
-                      destinationIndex: destination.index,
-                      destinationZone: destination.droppableId,
-                    });
-                  } else {
-                    dispatch({
-                      type: "move",
-                      sourceZone: source.droppableId,
-                      sourceIndex: source.index,
-                      destinationIndex: destination.index,
-                      destinationZone: destination.droppableId,
-                    });
-                  }
-
-                  setItemSelector({
-                    index: destination.index,
-                    zone: destination.droppableId,
-                  });
-                }
-              }}
-            >
-              <DropZoneProvider
-                value={{
-                  data,
-                  itemSelector,
-                  setItemSelector,
-                  config,
-                  dispatch,
-                  draggedItem,
-                  placeholderStyle,
-                  mode: "edit",
-                  areaId: "root",
-                }}
+        <DragDropContext>
+          <CustomPuck>
+            {children || (
+              <div
+                className={getLayoutClassName({
+                  leftSideBarVisible,
+                  menuOpen,
+                  mounted,
+                  rightSideBarVisible,
+                })}
               >
-                <CustomPuck>
-                  {children || (
-                    <div
-                      className={getLayoutClassName({
-                        leftSideBarVisible,
-                        menuOpen,
-                        mounted,
-                        rightSideBarVisible,
-                      })}
-                    >
-                      <div className={getLayoutClassName("inner")}>
-                        <CustomHeader
-                          actions={
-                            <>
+                <div className={getLayoutClassName("inner")}>
+                  <CustomHeader
+                    actions={
+                      <>
+                        <CustomHeaderActions>
+                          <Button
+                            onClick={() => {
+                              onPublish && onPublish(data as G["UserData"]);
+                            }}
+                            icon={<Globe size="14px" />}
+                          >
+                            Publish
+                          </Button>
+                        </CustomHeaderActions>
+                      </>
+                    }
+                  >
+                    <header className={getLayoutClassName("header")}>
+                      <div className={getLayoutClassName("headerInner")}>
+                        <div className={getLayoutClassName("headerToggle")}>
+                          <div
+                            className={getLayoutClassName("leftSideBarToggle")}
+                          >
+                            <IconButton
+                              onClick={() => {
+                                toggleSidebars("left");
+                              }}
+                              title="Toggle left sidebar"
+                            >
+                              <PanelLeft focusable="false" />
+                            </IconButton>
+                          </div>
+                          <div
+                            className={getLayoutClassName("rightSideBarToggle")}
+                          >
+                            <IconButton
+                              onClick={() => {
+                                toggleSidebars("right");
+                              }}
+                              title="Toggle right sidebar"
+                            >
+                              <PanelRight focusable="false" />
+                            </IconButton>
+                          </div>
+                        </div>
+                        <div className={getLayoutClassName("headerTitle")}>
+                          <Heading rank="2" size="xs">
+                            {headerTitle || rootProps.title || "Page"}
+                            {headerPath && (
+                              <>
+                                {" "}
+                                <code
+                                  className={getLayoutClassName("headerPath")}
+                                >
+                                  {headerPath}
+                                </code>
+                              </>
+                            )}
+                          </Heading>
+                        </div>
+                        <div className={getLayoutClassName("headerTools")}>
+                          <div className={getLayoutClassName("menuButton")}>
+                            <IconButton
+                              onClick={() => {
+                                return setMenuOpen(!menuOpen);
+                              }}
+                              title="Toggle menu bar"
+                            >
+                              {menuOpen ? (
+                                <ChevronUp focusable="false" />
+                              ) : (
+                                <ChevronDown focusable="false" />
+                              )}
+                            </IconButton>
+                          </div>
+                          <MenuBar<G["UserData"]>
+                            appState={appState}
+                            dispatch={dispatch}
+                            onPublish={onPublish}
+                            menuOpen={menuOpen}
+                            renderHeaderActions={() => (
                               <CustomHeaderActions>
                                 <Button
                                   onClick={() => {
-                                    onPublish &&
-                                      onPublish(data as G["UserData"]);
+                                    onPublish && onPublish(data);
                                   }}
                                   icon={<Globe size="14px" />}
                                 >
                                   Publish
                                 </Button>
                               </CustomHeaderActions>
-                            </>
-                          }
-                        >
-                          <header className={getLayoutClassName("header")}>
-                            <div className={getLayoutClassName("headerInner")}>
-                              <div
-                                className={getLayoutClassName("headerToggle")}
-                              >
-                                <div
-                                  className={getLayoutClassName(
-                                    "leftSideBarToggle"
-                                  )}
-                                >
-                                  <IconButton
-                                    onClick={() => {
-                                      toggleSidebars("left");
-                                    }}
-                                    title="Toggle left sidebar"
-                                  >
-                                    <PanelLeft focusable="false" />
-                                  </IconButton>
-                                </div>
-                                <div
-                                  className={getLayoutClassName(
-                                    "rightSideBarToggle"
-                                  )}
-                                >
-                                  <IconButton
-                                    onClick={() => {
-                                      toggleSidebars("right");
-                                    }}
-                                    title="Toggle right sidebar"
-                                  >
-                                    <PanelRight focusable="false" />
-                                  </IconButton>
-                                </div>
-                              </div>
-                              <div
-                                className={getLayoutClassName("headerTitle")}
-                              >
-                                <Heading rank="2" size="xs">
-                                  {headerTitle || rootProps.title || "Page"}
-                                  {headerPath && (
-                                    <>
-                                      {" "}
-                                      <code
-                                        className={getLayoutClassName(
-                                          "headerPath"
-                                        )}
-                                      >
-                                        {headerPath}
-                                      </code>
-                                    </>
-                                  )}
-                                </Heading>
-                              </div>
-                              <div
-                                className={getLayoutClassName("headerTools")}
-                              >
-                                <div
-                                  className={getLayoutClassName("menuButton")}
-                                >
-                                  <IconButton
-                                    onClick={() => {
-                                      return setMenuOpen(!menuOpen);
-                                    }}
-                                    title="Toggle menu bar"
-                                  >
-                                    {menuOpen ? (
-                                      <ChevronUp focusable="false" />
-                                    ) : (
-                                      <ChevronDown focusable="false" />
-                                    )}
-                                  </IconButton>
-                                </div>
-                                <MenuBar<G["UserData"]>
-                                  appState={appState}
-                                  dispatch={dispatch}
-                                  onPublish={onPublish}
-                                  menuOpen={menuOpen}
-                                  renderHeaderActions={() => (
-                                    <CustomHeaderActions>
-                                      <Button
-                                        onClick={() => {
-                                          onPublish && onPublish(data);
-                                        }}
-                                        icon={<Globe size="14px" />}
-                                      >
-                                        Publish
-                                      </Button>
-                                    </CustomHeaderActions>
-                                  )}
-                                  setMenuOpen={setMenuOpen}
-                                />
-                              </div>
-                            </div>
-                          </header>
-                        </CustomHeader>
-                        <div className={getLayoutClassName("leftSideBar")}>
-                          <SidebarSection title="Components" noBorderTop>
-                            <Components />
-                          </SidebarSection>
-                          <SidebarSection title="Outline">
-                            <Outline />
-                          </SidebarSection>
-                        </div>
-                        <Canvas />
-                        <div className={getLayoutClassName("rightSideBar")}>
-                          <SidebarSection
-                            noPadding
-                            noBorderTop
-                            showBreadcrumbs
-                            title={
-                              selectedItem ? selectedComponentLabel : "Page"
-                            }
-                          >
-                            <Fields />
-                          </SidebarSection>
+                            )}
+                            setMenuOpen={setMenuOpen}
+                          />
                         </div>
                       </div>
-                    </div>
-                  )}
-                </CustomPuck>
-              </DropZoneProvider>
-            </DragDropContext>
-          )}
-        </appContext.Consumer>
+                    </header>
+                  </CustomHeader>
+                  <div className={getLayoutClassName("leftSideBar")}>
+                    <SidebarSection title="Components" noBorderTop>
+                      <Components />
+                    </SidebarSection>
+                    <SidebarSection title="Outline">
+                      <Outline />
+                    </SidebarSection>
+                  </div>
+                  <Canvas />
+                  <div className={getLayoutClassName("rightSideBar")}>
+                    <SidebarSection
+                      noPadding
+                      noBorderTop
+                      showBreadcrumbs
+                      title={selectedItem ? selectedComponentLabel : "Page"}
+                    >
+                      <Fields />
+                    </SidebarSection>
+                  </div>
+                </div>
+              </div>
+            )}
+          </CustomPuck>
+        </DragDropContext>
       </AppProvider>
       <div id="puck-portal-root" className={getClassName("portal")} />
     </div>

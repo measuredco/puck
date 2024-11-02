@@ -1,20 +1,8 @@
 .Drawer {
+  display: flex;
+  flex-direction: column;
   font-family: var(--puck-font-family);
-}
-
-.DrawerItem--disabled .DrawerItem-draggable {
-  background: var(--puck-color-grey-11);
-  color: var(--puck-color-grey-05);
-  cursor: not-allowed; /** Move this out of inline styles */
-}
-
-.DrawerItem-default .DrawerItem-draggableWrapper {
-  /* padding required here to prevent bug when cancelling a drag) */
-  padding-bottom: 12px;
-}
-
-.DrawerItem:last-of-type .DrawerItem-default .DrawerItem-draggableWrapper {
-  padding-bottom: 0;
+  gap: 12px;
 }
 
 .DrawerItem-draggable {
@@ -27,6 +15,12 @@
   justify-content: space-between;
   align-items: center;
   transition: background-color 50ms ease-in, color 50ms ease-in;
+}
+
+.DrawerItem--disabled .DrawerItem-draggable {
+  background: var(--puck-color-grey-11);
+  color: var(--puck-color-grey-05);
+  cursor: not-allowed; /** Move this out of inline styles */
 }
 
 .DrawerItem:focus-visible {

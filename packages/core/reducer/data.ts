@@ -11,7 +11,13 @@ import {
   removeRelatedZones,
 } from "../lib/reduce-related-zones";
 import { generateId } from "../lib/generate-id";
-import { InsertAction, PuckAction, ReplaceAction } from "./actions";
+import {
+  InsertAction,
+  PuckAction,
+  ReplaceAction,
+  ReorderAction,
+} from "./actions";
+import {} from "./actions";
 
 // Restore unregistered zones when re-registering in same session
 export const zoneCache: Record<string, Content> = {};
@@ -85,6 +91,36 @@ export function insertAction<UserData extends Data>(
   };
 }
 
+const reorderAction = <UserData extends Data>(
+  data: UserData,
+  action: ReorderAction
+) => {
+  if (action.destinationZone === rootDroppableId) {
+    return {
+      ...data,
+      content: reorder(
+        data.content,
+        action.sourceIndex,
+        action.destinationIndex
+      ),
+    };
+  }
+
+  const newData = setupZone(data, action.destinationZone);
+
+  return {
+    ...data,
+    zones: {
+      ...newData.zones,
+      [action.destinationZone]: reorder(
+        newData.zones[action.destinationZone],
+        action.sourceIndex,
+        action.destinationIndex
+      ),
+    },
+  };
+};
+
 export function reduceData<UserData extends Data>(
   data: UserData,
   action: PuckAction,
@@ -135,30 +171,7 @@ export function reduceData<UserData extends Data>(
   }
 
   if (action.type === "reorder") {
-    if (action.destinationZone === rootDroppableId) {
-      return {
-        ...data,
-        content: reorder(
-          data.content,
-          action.sourceIndex,
-          action.destinationIndex
-        ),
-      };
-    }
-
-    const newData = setupZone(data, action.destinationZone);
-
-    return {
-      ...data,
-      zones: {
-        ...newData.zones,
-        [action.destinationZone]: reorder(
-          newData.zones[action.destinationZone],
-          action.sourceIndex,
-          action.destinationIndex
-        ),
-      },
-    };
+    return reorderAction(data, action);
   }
 
   if (action.type === "move") {
@@ -171,6 +184,10 @@ export function reduceData<UserData extends Data>(
       { zone: action.sourceZone, index: action.sourceIndex },
       newData
     );
+
+    if (action.sourceZone === action.destinationZone) {
+      return reorderAction(data, { ...action, type: "reorder" });
+    }
 
     if (action.sourceZone === rootDroppableId) {
       return {

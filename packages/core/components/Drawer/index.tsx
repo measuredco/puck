@@ -1,46 +1,89 @@
-import { Droppable } from "../Droppable";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Draggable } from "../Draggable";
 import { DragIcon } from "../DragIcon";
-import {
-  ReactElement,
-  ReactNode,
-  createContext,
-  useContext,
-  useMemo,
-} from "react";
+import { ReactElement, ReactNode, Ref, useMemo, useState } from "react";
+import { useDraggable } from "@dnd-kit/react";
+import { generateId } from "../../lib/generate-id";
+import { useDragListener } from "../DragDropContext";
 
 const getClassName = getClassNameFactory("Drawer", styles);
 const getClassNameItem = getClassNameFactory("DrawerItem", styles);
 
-const drawerContext = createContext<{ droppableId: string }>({
-  droppableId: "",
-});
-
-const DrawerDraggable = ({
+export const DrawerItemInner = ({
   children,
-  id,
-  index,
+  name,
+  label,
+  dragRef,
   isDragDisabled,
 }: {
-  children: ReactNode;
-  id: string;
-  index: number;
+  children?: (props: { children: ReactNode; name: string }) => ReactElement;
+  name: string;
+  label?: string;
+  dragRef?: Ref<any>;
   isDragDisabled?: boolean;
 }) => {
+  const CustomInner = useMemo(
+    () =>
+      children ||
+      (({ children }: { children: ReactNode; name: string }) => (
+        <div className={getClassNameItem("default")}>{children}</div>
+      )),
+    [children]
+  );
+
   return (
-    <Draggable
-      key={id}
-      id={id}
-      index={index}
-      isDragDisabled={isDragDisabled}
-      showShadow
-      disableAnimations
-      className={() => getClassNameItem({ disabled: isDragDisabled })}
+    <div
+      className={getClassNameItem({ disabled: isDragDisabled })}
+      ref={dragRef}
+      onMouseDown={(e) => e.preventDefault()}
     >
-      {() => children}
-    </Draggable>
+      <CustomInner name={name}>
+        <div className={getClassNameItem("draggableWrapper")}>
+          <div className={getClassNameItem("draggable")}>
+            <div className={getClassNameItem("name")}>{label ?? name}</div>
+            <div className={getClassNameItem("icon")}>
+              <DragIcon />
+            </div>
+          </div>
+        </div>
+      </CustomInner>
+    </div>
+  );
+};
+
+/**
+ * Wrap `useDraggable`, remounting it when the `id` changes.
+ *
+ * Could be removed by remounting `useDraggable` upstream in dndkit on `id` changes.
+ */
+const DrawerItemDraggable = ({
+  children,
+  name,
+  label,
+  id,
+  isDragDisabled,
+}: {
+  children?: (props: { children: ReactNode; name: string }) => ReactElement;
+  name: string;
+  label?: string;
+  id: string;
+  isDragDisabled?: boolean;
+}) => {
+  const { ref } = useDraggable({
+    id,
+    data: { type: "drawer", componentType: name },
+    disabled: isDragDisabled,
+  });
+
+  return (
+    <DrawerItemInner
+      name={name}
+      label={label}
+      dragRef={ref}
+      isDragDisabled={isDragDisabled}
+    >
+      {children}
+    </DrawerItemInner>
   );
 };
 
@@ -49,80 +92,48 @@ const DrawerItem = ({
   children,
   id,
   label,
-  index,
   isDragDisabled,
 }: {
   name: string;
   children?: (props: { children: ReactNode; name: string }) => ReactElement;
   id?: string;
   label?: string;
-  index: number;
+  index?: number; // TODO deprecate
   isDragDisabled?: boolean;
 }) => {
-  const ctx = useContext(drawerContext);
+  const resolvedId = id || name;
+  const [dynamicId, setDynamicId] = useState(generateId(resolvedId));
 
-  const resolvedId = `${ctx.droppableId}::${id || name}`;
-
-  const CustomInner = useMemo(
-    () =>
-      children ||
-      (({ children, name }: { children: ReactNode; name: string }) => (
-        <div className={getClassNameItem("default")}>{children}</div>
-      )),
-    [children]
+  useDragListener(
+    "dragend",
+    () => {
+      setDynamicId(generateId(resolvedId));
+    },
+    [resolvedId]
   );
 
   return (
-    <DrawerDraggable
-      id={resolvedId}
-      index={index}
-      isDragDisabled={isDragDisabled}
-    >
-      <CustomInner name={name}>
-        <div className={getClassNameItem("draggableWrapper")}>
-          <div className={getClassNameItem("draggable")}>
-            <div className={getClassNameItem("name")}>{label ?? name}</div>
-            <div className={getClassNameItem("icon")}>
-              <DragIcon isDragDisabled={isDragDisabled} />
-            </div>
-          </div>
-        </div>
-      </CustomInner>
-    </DrawerDraggable>
+    <div key={dynamicId}>
+      <DrawerItemDraggable
+        name={name}
+        label={label}
+        id={dynamicId}
+        isDragDisabled={isDragDisabled}
+      >
+        {children}
+      </DrawerItemDraggable>
+    </div>
   );
 };
 
 export const Drawer = ({
   children,
-  droppableId: _droppableId = "default",
-  direction = "vertical",
 }: {
   children: ReactNode;
-  droppableId?: string;
-  direction?: "vertical" | "horizontal";
+  droppableId?: string; // TODO deprecate
+  direction?: "vertical" | "horizontal"; // TODO deprecate
 }) => {
-  const droppableId = `component-list:${_droppableId}`;
-
-  return (
-    <drawerContext.Provider value={{ droppableId }}>
-      <Droppable droppableId={droppableId} isDropDisabled direction={direction}>
-        {(provided, snapshot) => (
-          <div
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            className={getClassName({
-              isDraggingFrom: !!snapshot.draggingFromThisWith,
-            })}
-          >
-            {children}
-
-            {/* Use different element so we don't clash with :last-of-type */}
-            <span style={{ display: "none" }}>{provided.placeholder}</span>
-          </div>
-        )}
-      </Droppable>
-    </drawerContext.Provider>
-  );
+  return <div className={getClassName()}>{children}</div>;
 };
 
 Drawer.Item = DrawerItem;

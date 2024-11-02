@@ -6,7 +6,7 @@ import {
   DraggableProps,
   DraggableRubric,
 } from "@measured/dnd";
-import { useAppContext } from "../Puck/context";
+import { useAppContext } from "../../Puck/context";
 
 const defaultProvided: DraggableProvided = {
   draggableProps: {

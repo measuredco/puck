@@ -1,33 +1,12 @@
 .DropZone {
-  margin-left: auto;
-  margin-right: auto;
   position: relative;
-  min-height: 100%;
+  min-height: 128px;
   outline-offset: -2px;
   width: 100%;
 }
 
-.DropZone-content {
-  min-height: 128px;
-  height: 100%;
-}
-
-.DropZone--userIsDragging .DropZone-content {
-  pointer-events: all;
-}
-
-.DropZone--userIsDragging:not(.DropZone--draggingOverArea):not(
-    .DropZone--draggingNewComponent
-  )
-  > .DropZone-content {
-  pointer-events: none;
-}
-
 .DropZone--isAreaSelected,
-.DropZone--draggingOverArea:not(:has(.DropZone--hoveringOverArea)),
-.DropZone--hoveringOverArea:not(.DropZone--isDisabled):not(
-    .DropZone--isRootZone
-  ):not(.DropZone--hasChildren) {
+.DropZone--hoveringOverArea:not(.DropZone--isRootZone) {
   background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
   outline: 2px dashed var(--puck-color-azure-08);
 }
@@ -59,4 +38,8 @@
   height: 24px;
   width: 100%;
   z-index: 1;
+}
+
+.DropZone--isEnabled.DropZone--userIsDragging {
+  outline: 2px dashed var(--puck-color-azure-06);
 }
