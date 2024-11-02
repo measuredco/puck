@@ -10,8 +10,14 @@
   }
 }
 
-.Section:not(.Section .Section) .Section-inner {
+.Section-inner {
   margin-left: auto;
   margin-right: auto;
+  height: 100%;
   width: 100%;
+}
+
+.Section .Section .Section-inner {
+  margin-left: 0;
+  margin-right: 0;
 }
