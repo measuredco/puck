@@ -221,12 +221,12 @@ export const Hero: ComponentConfig<HeroProps> = {
 
     return (
       <Section
-        padding={padding}
         className={getClassName({
           left: align === "left",
           center: align === "center",
           hasImageBackground: image?.mode === "background",
         })}
+        style={{ paddingTop: padding, paddingBottom: padding }}
       >
         {image?.mode === "background" && (
           <>
