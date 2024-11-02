@@ -26,7 +26,15 @@ export function Render<
 
   if (config.root?.render) {
     return (
-      <DropZoneProvider value={{ data: defaultedData, config, mode: "render" }}>
+      <DropZoneProvider
+        value={{
+          data: defaultedData,
+          config,
+          mode: "render",
+          depth: 0,
+          path: [],
+        }}
+      >
         <config.root.render
           {...rootProps}
           puck={{
@@ -44,7 +52,15 @@ export function Render<
   }
 
   return (
-    <DropZoneProvider value={{ data: defaultedData, config, mode: "render" }}>
+    <DropZoneProvider
+      value={{
+        data: defaultedData,
+        config,
+        mode: "render",
+        depth: 0,
+        path: [],
+      }}
+    >
       <DropZone zone={rootDroppableId} />
     </DropZoneProvider>
   );

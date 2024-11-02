@@ -4,7 +4,7 @@ import {
   DroppableProvided,
   DroppableStateSnapshot,
 } from "@measured/dnd";
-import { useAppContext } from "../Puck/context";
+import { useAppContext } from "../../Puck/context";
 
 const defaultProvided: DroppableProvided = {
   droppableProps: {
