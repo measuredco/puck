@@ -1,29 +1,13 @@
 .DraggableComponent {
-  pointer-events: auto;
+  position: absolute;
+
+  pointer-events: none;
 
   --overlay-background: color-mix(
     in srgb,
     var(--puck-color-azure-08) 30%,
     transparent
   );
-}
-
-.DraggableComponent--isDragging {
-  background: color-mix(in srgb, var(--puck-color-azure-08) 10%, transparent);
-  overflow: hidden;
-}
-
-.DraggableComponent-contents {
-  position: relative; /* Reset stacking context */
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Prevent margin collapsing  */
-.DraggableComponent-contents::before,
-.DraggableComponent-contents::after {
-  content: " ";
-  display: table;
 }
 
 .DraggableComponent-overlay {
@@ -42,10 +26,6 @@
   outline: 1px solid var(--puck-color-azure-05);
 }
 
-.DraggableComponent--isDragging > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-09) solid !important;
-}
-
 .DraggableComponent-loadingOverlay {
   background: var(--puck-color-white);
   color: var(--puck-color-grey-03);
@@ -62,29 +42,19 @@
   z-index: 1;
 }
 
-.DraggableComponent:hover:not(.DraggableComponent--isLocked)
+.DraggableComponent--hover:not(.DraggableComponent--isLocked)
   > .DraggableComponent-overlay {
   background: var(--overlay-background);
-  pointer-events: none;
 }
 
-.DraggableComponent--forceHover > .DraggableComponent-overlay {
-  background: var(--overlay-background);
-  pointer-events: none;
-}
-
-.DraggableComponent:not(.DraggableComponent--isSelected):hover
+.DraggableComponent--hover:not(.DraggableComponent--isSelected)
   > .DraggableComponent-overlay {
   outline: 2px var(--puck-color-azure-09) solid !important;
 }
 
-.DraggableComponent--indicativeHover > .DraggableComponent-overlay {
-  pointer-events: none;
-}
-
 /* Won't work in FF */
 .DraggableComponent:not(.DraggableComponent--isSelected):has(
-    .DraggableComponent:hover > .DraggableComponent-overlay
+    .DraggableComponent--hover > .DraggableComponent-overlay
   )
   > .DraggableComponent-overlay {
   display: none;

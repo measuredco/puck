@@ -1,6 +1,6 @@
 import { DropZone } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
-import { useCallback, useMemo } from "react";
+import { RefObject, useCallback, useEffect, useRef, useMemo } from "react";
 import { useAppContext } from "../../context";
 import AutoFrame, { autoFrameContext } from "../../../AutoFrame";
 import styles from "./styles.module.css";
@@ -11,6 +11,32 @@ const getClassName = getClassNameFactory("PuckPreview", styles);
 
 type PageProps = DefaultRootRenderProps;
 
+const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement>) => {
+  useEffect(() => {
+    if (ref.current) {
+      const iframe = ref.current!;
+
+      // NB pointermove doesn't trigger whilst dragging on iframes
+      iframe.contentWindow?.addEventListener("mousemove", function (event) {
+        const rect = iframe.getBoundingClientRect();
+
+        // NB this is a different event
+        const evt = new CustomEvent("pointermove", {
+          bubbles: true,
+          cancelable: false,
+        }) as any;
+
+        const scaleFactor =
+          rect.width / (iframe.contentWindow?.innerWidth || 1);
+
+        evt.clientX = event.clientX * scaleFactor + rect.left;
+        evt.clientY = event.clientY * scaleFactor + rect.top;
+
+        iframe.dispatchEvent(evt);
+      });
+    }
+  }, [ref]);
+};
 export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   const { config, dispatch, state, setStatus, iframe, overrides } =
     useAppContext();
@@ -33,6 +59,10 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   // DEPRECATED
   const rootProps = state.data.root.props || state.data.root;
 
+  const ref = useRef<HTMLIFrameElement>(null);
+
+  useBubbleIframeEvents(ref);
+
   return (
     <div
       className={getClassName()}
@@ -49,6 +79,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           onStylesLoaded={() => {
             setStatus("READY");
           }}
+          frameRef={ref}
         >
           <autoFrameContext.Consumer>
             {({ document }) => {
@@ -71,7 +102,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           </autoFrameContext.Consumer>
         </AutoFrame>
       ) : (
-        <div id="preview-frame" className={getClassName("frame")}>
+        <div id="preview-frame" className={getClassName("frame")} ref={ref}>
           <Page
             {...rootProps}
             puck={{ renderDropZone: DropZone, isEditing: true }}

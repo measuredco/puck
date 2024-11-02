@@ -35,6 +35,8 @@ const dropzoneContext: DropZoneContext = {
       label: "MyComponent",
     },
   },
+  depth: 0,
+  path: [],
 };
 
 describe("use-breadcrumbs", () => {
