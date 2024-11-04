@@ -270,7 +270,7 @@ export const ArrayField = ({
                                           mapArrayStateToUi(regenerateArrayState(existingValue))
                                         );
                                       }}
-                                      title="Copy"
+                                      title="Duplicate"
                                     >
                                       <Copy size={16} />
                                     </IconButton>
