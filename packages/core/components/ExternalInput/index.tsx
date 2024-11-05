@@ -1,4 +1,10 @@
-import { useMemo, useEffect, useState, useCallback } from "react";
+import {
+  useMemo,
+  useEffect,
+  useState,
+  useCallback,
+  isValidElement,
+} from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ExternalField } from "../../types";
@@ -54,7 +60,11 @@ export const ExternalInput = ({
 
     for (const item of mappedData) {
       for (const key of Object.keys(item)) {
-        if (typeof item[key] === "string" || typeof item[key] === "number") {
+        if (
+          typeof item[key] === "string" ||
+          typeof item[key] === "number" ||
+          isValidElement(item[key])
+        ) {
           validKeys.add(key);
         }
       }
