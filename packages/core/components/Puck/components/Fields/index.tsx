@@ -46,9 +46,10 @@ const useResolvedFields = (): [FieldsType, boolean] => {
     ? config.components[selectedItem.type]
     : null;
 
-  const defaultFields = selectedItem
-    ? (componentConfig?.fields as Record<string, Field<any>>)
-    : rootFields;
+  const defaultFields =
+    (selectedItem
+      ? (componentConfig?.fields as Record<string, Field<any>>)
+      : rootFields) || {};
 
   // DEPRECATED
   const rootProps = data.root.props || data.root;
@@ -56,7 +57,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
   const [lastSelectedData, setLastSelectedData] = useState<
     Partial<ComponentOrRootData>
   >({});
-  const [resolvedFields, setResolvedFields] = useState(defaultFields || {});
+  const [resolvedFields, setResolvedFields] = useState(defaultFields);
   const [fieldsLoading, setFieldsLoading] = useState(false);
 
   const defaultResolveFields = (
