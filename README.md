@@ -18,6 +18,9 @@ The visual editor for React.
  <a aria-label="Browse the awesome-puck community repo" href="https://github.com/measuredco/awesome-puck">
     <img alt="" src="https://img.shields.io/badge/repo-awesome--puck-fc60a8.svg?style=for-the-badge&labelColor=000000&logoWidth=20">
   </a>
+  <a aria-label="Ask Puck Guru" href="https://gurubase.io/g/puck">
+    <img alt="" src="https://img.shields.io/badge/Gurubase-Ask%20Puck%20Guru-006BFF.svg?style=for-the-badge&labelColor=000000">
+  </a>
 </p>
 
 ## Demo
