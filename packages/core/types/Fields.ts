@@ -94,7 +94,7 @@ export type ExternalField<
   mapRow?: (value: any) => Record<string, string | number>;
   getItemSummary?: (item: Props, index?: number) => string;
   showSearch?: boolean;
-  renderFooter?: (data: any[]) => ReactElement;
+  renderFooter?: (props: { items: any[] }) => ReactElement;
   initialQuery?: string;
   filterFields?: Record<string, Field>;
   initialFilters?: Record<string, any>;
