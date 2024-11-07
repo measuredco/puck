@@ -2,6 +2,22 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.16.2](https://github.com/measuredco/puck/compare/v0.16.1...v0.16.2) (2024-11-07)
+
+
+### Bug Fixes
+
+* always treat data as immutable, fixing Redux issues ([51154e9](https://github.com/measuredco/puck/commit/51154e92b9022311afa79d086f69b70b6b8beb77))
+* don't crash if component definition missing ([525b506](https://github.com/measuredco/puck/commit/525b5065563675d03d89cf090ce1f7fdf8ff0486))
+* don't crash when selecting component with no config ([cb90f5d](https://github.com/measuredco/puck/commit/cb90f5d9109b340407bc9828fcd9761183d83e68)), closes [#671](https://github.com/measuredco/puck/issues/671)
+* export missing resolveAllData lib in RSC bundle ([2f5fb7b](https://github.com/measuredco/puck/commit/2f5fb7ba69b61b857ad14720b93ceab026571aa7))
+* fix RTL styles in action bar overlay ([bf5c5a3](https://github.com/measuredco/puck/commit/bf5c5a33081599331049063c79c7859aea96d0da))
+* remove internal AutoField and FieldLabel components from bundle ([5df1597](https://github.com/measuredco/puck/commit/5df1597feede2f0ff922ad13297fd3acaf942da2))
+* remove unused label from AutoField type ([18b6f1a](https://github.com/measuredco/puck/commit/18b6f1acae0186245817f35d4a27e6fdf4153ea1))
+
+
+
+
 ## [0.16.1](https://github.com/measuredco/puck/compare/v0.16.0...v0.16.1) (2024-10-07)
 
 
