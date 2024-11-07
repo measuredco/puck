@@ -121,7 +121,7 @@ export type FieldPropsInternal<ValueType = any, F = Field<any>> = FieldProps<
 
 function AutoFieldInternal<
   ValueType = any,
-  FieldType extends Field<ValueType> = Field<ValueType>
+  FieldType extends FieldNoLabel<ValueType> = FieldNoLabel<ValueType>
 >(
   props: FieldPropsInternalOptional<ValueType, FieldType> & {
     Label?: React.FC<FieldLabelPropsInternal>;
@@ -129,7 +129,10 @@ function AutoFieldInternal<
 ) {
   const { overrides } = useAppContext();
 
-  const { field, label = field.label, id, Label = FieldLabelInternal } = props;
+  const { id, Label = FieldLabelInternal } = props;
+
+  const field = props.field as Field<ValueType>;
+  const label = field.label;
 
   const defaultId = useSafeId();
   const resolvedId = id || defaultId;
@@ -189,9 +192,11 @@ function AutoFieldInternal<
 // Don't let external value changes update this if it's changed manually in the last X ms
 const RECENT_CHANGE_TIMEOUT = 200;
 
+type FieldNoLabel<Props extends any = any> = Omit<Field<Props>, "label">;
+
 export function AutoFieldPrivate<
   ValueType = any,
-  FieldType extends Field<ValueType> = Field<ValueType>
+  FieldType extends FieldNoLabel<ValueType> = FieldNoLabel<ValueType>
 >(
   props: FieldPropsInternalOptional<ValueType, FieldType> & {
     Label?: React.FC<FieldLabelPropsInternal>;
@@ -242,7 +247,7 @@ export function AutoFieldPrivate<
 
 export function AutoField<
   ValueType = any,
-  FieldType extends Field<ValueType> = Field<ValueType>
+  FieldType extends FieldNoLabel<ValueType> = FieldNoLabel<ValueType>
 >(props: FieldProps<ValueType, FieldType>) {
   const DefaultLabel = useMemo(() => {
     const DefaultLabel = (labelProps: any) => (
