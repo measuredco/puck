@@ -15,7 +15,7 @@ export const setupZone = <UserData extends Data>(
   // Preprocess to ensure zones is not undefined
   const newData = {
     ...data,
-    zones: data.zones || {},
+    zones: data.zones ? { ...data.zones } : {},
   };
 
   newData.zones[zoneKey] = newData.zones[zoneKey] || [];
