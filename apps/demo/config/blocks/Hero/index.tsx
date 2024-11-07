@@ -33,10 +33,10 @@ export const Hero: ComponentConfig<HeroProps> = {
       type: "external",
       placeholder: "Select a quote",
       showSearch: false,
-      renderFooter: (data) => {
+      renderFooter: ({ items }) => {
         return (
           <div>
-            {data.length} result{data.length === 1 ? "" : "s"}
+            {items.length} result{items.length === 1 ? "" : "s"}
           </div>
         );
       },
