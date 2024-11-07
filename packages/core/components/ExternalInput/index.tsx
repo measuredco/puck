@@ -265,10 +265,13 @@ export const ExternalInput = ({
               </div>
             </div>
           </div>
-
-          <div className={getClassNameModal("footer")}>
-            {mappedData.length} result{mappedData.length === 1 ? "" : "s"}
-          </div>
+          {field.renderFooter ? (
+            field.renderFooter(mappedData)
+          ) : (
+            <div className={getClassNameModal("footer")}>
+              {mappedData.length} result{mappedData.length === 1 ? "" : "s"}
+            </div>
+          )}
         </form>
       </Modal>
     </div>
