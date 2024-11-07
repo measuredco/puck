@@ -63,7 +63,7 @@ const config = {
 | [`mapRow()`](#maprowitem)                 | `mapRow: async ({ title }) => title`         | Function   | -        |
 | [`placeholder`](#placeholder)             | `placeholder: "Select content"`              | String     | -        |
 | [`showSearch`](#showsearch)               | `showSearch: true`                           | Boolean    | -        |
-| [`renderFooter()`](#renderfooterdata)     | `renderFooter: (data) => <p>Hello</p>`       | Function   | -        |
+| [`renderFooter()`](#renderfooterdata)     | `renderFooter: (props) => <p>Hello</p>`      | Function   | -        |
 
 ## Required params
 
@@ -612,7 +612,7 @@ const config = {
 }}
 />
 
-### `renderFooter(data)`
+### `renderFooter(props)`
 
 Customize what will be displayed in the footer of the modal.
 
@@ -629,7 +629,7 @@ const config = {
               { title: "Goodbye, world", description: "Lorem ipsum 2" },
             ];
           },
-          renderFooter: (data) => <span>Hello, footer</span>,
+          renderFooter: ({ items }) => <span>{items.length} results</span>,
         },
       },
       render: ({ data }) => {
@@ -653,7 +653,7 @@ const config = {
             { title: "Goodbye, world", description: "Lorem ipsum 2" },
           ];
         },
-        renderFooter: (data) => <span>Hello, footer</span>,
+        renderFooter: ({ items }) => <span>{items.length} results</span>,
       },
     },
     render: ({ data }) => {
