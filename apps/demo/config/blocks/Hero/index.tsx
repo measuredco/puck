@@ -35,17 +35,7 @@ export const Hero: ComponentConfig<HeroProps> = {
       showSearch: false,
       renderFooter: (data) => {
         return (
-          <div
-            style={{
-              textAlign: "end",
-              padding: "16px",
-              backgroundColor: "var(--puck-color-grey-12)",
-              color: "var(--puck-color-grey-04)",
-              borderTop: "1px solid var(--puck-color-grey-09)",
-              fontSize: "14px",
-              fontWeight: "500",
-            }}
-          >
+          <div>
             {data.length} result{data.length === 1 ? "" : "s"}
           </div>
         );
