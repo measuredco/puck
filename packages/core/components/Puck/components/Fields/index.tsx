@@ -46,10 +46,13 @@ const useResolvedFields = (): [FieldsType, boolean] => {
     ? config.components[selectedItem.type]
     : null;
 
-  const defaultFields =
-    (selectedItem
-      ? (componentConfig?.fields as Record<string, Field<any>>)
-      : rootFields) || {};
+  const defaultFields = useMemo(
+    () =>
+      (selectedItem
+        ? (componentConfig?.fields as Record<string, Field<any>>)
+        : rootFields) || {},
+    [selectedItem, rootFields, componentConfig?.fields]
+  );
 
   // DEPRECATED
   const rootProps = data.root.props || data.root;
