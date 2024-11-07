@@ -9,7 +9,8 @@ export * from "./types/Props";
 export * from "./types/Fields";
 
 export * from "./components/ActionBar";
-export * from "./components/AutoField";
+export { AutoField, FieldLabel } from "./components/AutoField";
+
 export * from "./components/Button";
 export { Drawer } from "./components/Drawer";
 
@@ -23,5 +24,3 @@ export * from "./lib/migrate";
 export * from "./lib/transform-props";
 export * from "./lib/resolve-all-data";
 export { usePuck } from "./lib/use-puck";
-
-export { FieldLabel } from "./components/AutoField";
