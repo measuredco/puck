@@ -141,7 +141,7 @@ const theme: DocsThemeConfig = {
               href="https://github.com/measuredco/puck/releases"
               target="_blank"
             >
-              <b>🔐 Puck 0.16.0</b>: Toggle functionality with permissions →
+              <b>🔐 Puck 0.16</b>: Toggle functionality with permissions →
             </a>
           ),
         }
