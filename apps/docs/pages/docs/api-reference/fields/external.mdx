@@ -63,6 +63,7 @@ const config = {
 | [`mapRow()`](#mappropitem)                | `mapRow: async ({ title }) => title`         | Function   | -        |
 | [`placeholder`](#placeholder)             | `placeholder: "Select content"`              | String     | -        |
 | [`showSearch`](#showsearch)               | `showSearch: true`                           | Boolean    | -        |
+| [`renderFooter`](#renderfooter)           | `renderFooter: (data) => <p>Hello</p>`       | Function   | -        |
 
 ## Required params
 
@@ -609,6 +610,56 @@ const config = {
     },
 
 }}
+/>
+
+### `renderFooter(data)`
+
+Customize what will be displayed in the footer of the modal.
+
+```tsx {13} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+          renderFooter: (data) => <span>Hello, footer</span>,
+        },
+      },
+      render: ({ data }) => {
+        return <p>{data || "No data selected"}</p>;
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async () => {
+          return [
+            { title: "Hello, world", description: "Lorem ipsum 1" },
+            { title: "Goodbye, world", description: "Lorem ipsum 2" },
+          ];
+        },
+        renderFooter: (data) => <span>Hello, footer</span>,
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+  }}
 />
 
 <div id="puck-portal-root" />
