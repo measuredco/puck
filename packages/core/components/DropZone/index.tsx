@@ -16,7 +16,7 @@ const getClassName = getClassNameFactory("DropZone", styles);
 
 export { DropZoneProvider, dropZoneContext } from "./context";
 
-function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
+function DropZoneEdit({ zone, allow, disallow, style ,className }: DropZoneProps) {
   const appContext = useAppContext();
   const ctx = useContext(dropZoneContext);
 
@@ -247,7 +247,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                 return (
                   <div
                     key={item.props.id}
-                    className={getClassName("item")}
+                    className={`${getClassName("item")} ${className || ""}`}
                     style={{ zIndex: isDragging ? 1 : undefined }}
                   >
                     <DropZoneProvider

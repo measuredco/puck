@@ -1,5 +1,5 @@
----
-title: <DropZone>
+Để bổ sung `className` vào tài liệu của `DropZone` cho phép áp dụng các lớp CSS tùy chỉnh vào thành phần, bạn có thể cập nhật phần tài liệu như sau:
+
 ---
 
 # \<DropZone\>
@@ -15,7 +15,7 @@ const config = {
       render: () => {
         return (
           <div>
-            <DropZone zone="my-content" />
+            <DropZone zone="my-content" className="custom-flex" />
           </div>
         );
       },
@@ -26,11 +26,12 @@ const config = {
 
 ## Props
 
-| Param                   | Example                      | Type   | Status   |
-| ----------------------- | ---------------------------- | ------ | -------- |
-| [`zone`](#zone)         | `zone: "my-zone"`            | String | Required |
-| [`allow`](#allow)       | `allow: ["HeadingBlock"]`    | Array  |          |
-| [`disallow`](#disallow) | `disallow: ["HeadingBlock"]` | Array  |          |
+| Param                   | Example                      | Type         | Status   |
+| ----------------------- | ---------------------------- | ------------ | -------- |
+| [`zone`](#zone)         | `zone: "my-zone"`            | String       | Required |
+| [`allow`](#allow)       | `allow: ["HeadingBlock"]`    | Array        |          |
+| [`disallow`](#disallow) | `disallow: ["HeadingBlock"]` | Array        |          |
+| [`className`](#className) | `className: "flex"`        | String       |          |
 
 ## Required props
 
@@ -98,6 +99,26 @@ const config = {
 };
 ```
 
+### `className`
+
+Apply custom CSS classes to the DropZone container where each draggable item is rendered. This can be used to set layout styles like `flex`, `grid`, etc. This is especially useful in `edit` mode when specific styling, such as `flex`, is needed for items within DropZone:
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" className="flex flex-col items-center" />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
 ## Restrictions
 
 You can't drag between DropZones that don't share a parent component.
@@ -107,3 +128,7 @@ You can't drag between DropZones that don't share a parent component.
 By default, DropZones don't work with React server components as they rely on context.
 
 Instead, you can use the [`renderDropZone` method](/docs/api-reference/configuration/component-config#propspuckrenderdropzone) passed to your component render function.
+
+---
+
+Với các bổ sung này, tài liệu sẽ hướng dẫn cách sử dụng `className` để áp dụng các lớp CSS tùy chỉnh vào `DropZone`. Điều này sẽ giúp người dùng hiểu rõ hơn về tính năng mới và cách sử dụng nó để định kiểu các vùng `DropZone` một cách linh hoạt.
