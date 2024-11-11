@@ -108,8 +108,6 @@ export const DraggableComponent = ({
     item: selectedItem,
   });
 
-  console.log(getClassName({ "contents": true, isInteractive: true }))
-
   return (
     <El
       key={id}
@@ -135,7 +133,7 @@ export const DraggableComponent = ({
           style={{
             ...style,
             ...provided.draggableProps.style,
-            cursor: isInteractive || isModifierHeld || isDragDisabled ? "pointer" : "grab",
+            cursor: isInteractive || isModifierHeld || isDragDisabled ? "default" : "grab",
           }}
           onMouseOver={onMouseOver}
           onMouseOut={onMouseOut}
@@ -179,8 +177,7 @@ export const DraggableComponent = ({
               </div>
             </div>
           )}
-          {/* style={{ ...(isInteractive && { cursor: 'default', background: 'transparent' }) }}  */}
-          {/* style={{ ...(isInteractive && { pointerEvents: 'auto' }) }} */}
+
           <div className={getClassName("overlay")} />
           <div className={getClassName("contents")} > {children}</div>
         </div>
