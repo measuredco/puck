@@ -176,9 +176,8 @@ export const DraggableComponent = ({
               </div>
             </div>
           )}
-
-          <div className={getClassName("overlay")} style={{ ...(isInteractive && { cursor: 'default', background: 'transparent' }) }} />
-          <div className={getClassName("contents")} style={{ ...(isInteractive && { pointerEvents: 'auto' }) }}>{children}</div>
+          <div className={getClassName({ "overlay": true, isInteractive })} />
+          <div className={getClassName({ "contents": true, isInteractive })} >{children}</div>
         </div>
       )}
     </El>
