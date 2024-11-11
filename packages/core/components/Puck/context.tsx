@@ -73,7 +73,7 @@ export type AppContext<
   overrides: Partial<Overrides>;
   history: Partial<PuckHistory>;
   isInteractive: boolean;
-  setIsInteractive: React.Dispatch<SetStateAction<boolean>>
+  setIsInteractive: React.Dispatch<SetStateAction<boolean>>;
   viewports: Viewports;
   zoomConfig: ZoomConfig;
   setZoomConfig: (zoomConfig: ZoomConfig) => void;
@@ -92,12 +92,12 @@ const defaultContext: AppContext = {
   dispatch: () => null,
   config: { components: {} },
   componentState: {},
-  setComponentState: () => { },
-  resolveData: () => { },
+  setComponentState: () => {},
+  resolveData: () => {},
   plugins: [],
   overrides: {},
   isInteractive: false,
-  setIsInteractive: () => { },
+  setIsInteractive: () => {},
   history: {},
   viewports: defaultViewports,
   zoomConfig: {

@@ -28,9 +28,9 @@ const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
     >
       <span style={{ fontWeight: 600 }}>Custom UI example </span>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
-        <div style={{ gap: 8, display: 'flex' }}>
+        <div style={{ gap: 8, display: "flex" }}>
           <Button onClick={() => setIsInteractive(!isInteractive)}>
-            Switch to {isInteractive ? 'editing' : 'interactive'} mode
+            Switch to {isInteractive ? "editing" : "interactive"} mode
           </Button>
           <Button
             onClick={() => onPublish(appState.data)}
