@@ -108,6 +108,8 @@ export const DraggableComponent = ({
     item: selectedItem,
   });
 
+  console.log(getClassName({ "contents": true, isInteractive: true }))
+
   return (
     <El
       key={id}
@@ -128,6 +130,7 @@ export const DraggableComponent = ({
             isLocked,
             forceHover,
             indicativeHover,
+            isInteractive,
           })}
           style={{
             ...style,
@@ -176,10 +179,12 @@ export const DraggableComponent = ({
               </div>
             </div>
           )}
-          <div className={getClassName({ "overlay": true, isInteractive })} />
-          <div className={getClassName({ "contents": true, isInteractive })} >{children}</div>
+          {/* style={{ ...(isInteractive && { cursor: 'default', background: 'transparent' }) }}  */}
+          {/* style={{ ...(isInteractive && { pointerEvents: 'auto' }) }} */}
+          <div className={getClassName("overlay")} />
+          <div className={getClassName("contents")} > {children}</div>
         </div>
       )}
-    </El>
+    </El >
   );
 };

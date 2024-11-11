@@ -10,7 +10,7 @@ import { Drawer } from "@/core/components/Drawer";
 import { ChevronUp, ChevronDown, Globe, Lock, Unlock } from "lucide-react";
 
 const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
-  const { appState, dispatch } = usePuck();
+  const { appState, dispatch, isInteractive } = usePuck();
 
   return (
     <header
@@ -28,7 +28,10 @@ const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
     >
       <span style={{ fontWeight: 600 }}>Custom UI example </span>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
-        <div>
+        <div style={{ gap: 8, display: 'flex' }}>
+          <Button>
+            Switch to {isInteractive ? 'editing' : 'interactive'} mode
+          </Button>
           <Button
             onClick={() => onPublish(appState.data)}
             icon={<Globe size="14" />}

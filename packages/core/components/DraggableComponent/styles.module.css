@@ -13,14 +13,19 @@
   overflow: hidden;
 }
 
+.DraggableComponent--isInteractive > .DraggableComponent-contents {
+  pointer-events: auto !important;
+}
+
+.DraggableComponent--isInteractive > .DraggableComponent-overlay {
+  cursor: default !important;
+  background: transparent !important;
+}
+
 .DraggableComponent-contents {
   position: relative; /* Reset stacking context */
   pointer-events: none;
   z-index: 0;
-}
-
-.DraggableComponent-contents--isInteractive {
-  pointer-events: auto;
 }
 
 /* Prevent margin collapsing  */
@@ -40,11 +45,6 @@
   pointer-events: none;
   box-sizing: border-box;
   z-index: 1;
-}
-
-.DraggableComponent-overlay--isInteractive {
-  cursor: default;
-  background: transparent;
 }
 
 .DraggableComponent:focus-visible > .DraggableComponent-overlay {
