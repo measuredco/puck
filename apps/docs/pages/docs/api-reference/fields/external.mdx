@@ -62,8 +62,8 @@ const config = {
 | [`mapProp()`](#mappropitem)               | `mapProp: async ({ title }) => title`        | Function   | -        |
 | [`mapRow()`](#maprowitem)                 | `mapRow: async ({ title }) => title`         | Function   | -        |
 | [`placeholder`](#placeholder)             | `placeholder: "Select content"`              | String     | -        |
-| [`showSearch`](#showsearch)               | `showSearch: true`                           | Boolean    | -        |
 | [`renderFooter()`](#renderfooterprops)    | `renderFooter: (props) => <p>Hello</p>`      | Function   | -        |
+| [`showSearch`](#showsearch)               | `showSearch: true`                           | Boolean    | -        |
 
 ## Required params
 
@@ -542,6 +542,58 @@ const config = {
   }}
 />
 
+### `renderFooter(props)`
+
+Customize what will be displayed in the footer of the modal.
+
+```tsx {13} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        data: {
+          type: "external",
+          fetchList: async () => {
+            return [
+              { title: "Hello, world", description: "Lorem ipsum 1" },
+              { title: "Goodbye, world", description: "Lorem ipsum 2" },
+            ];
+          },
+          renderFooter: ({ items }) => (
+            <b>Custom footer with {items.length} results</b>
+          ),
+        },
+      },
+      render: ({ data }) => {
+        return <p>{data || "No data selected"}</p>;
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      data: {
+        type: "external",
+        fetchList: async () => {
+          return [
+            { title: "Hello, world", description: "Lorem ipsum 1" },
+            { title: "Goodbye, world", description: "Lorem ipsum 2" },
+          ];
+        },
+        renderFooter: ({ items }) => <span>{items.length} results</span>,
+      },
+    },
+    render: ({ data }) => {
+      return <p>{data?.title || "No data selected"}</p>;
+    },
+  }}
+/>
+
 ### `showSearch`
 
 Show a search input, the value of which will be passed to `fetchList` as the `query` param.
@@ -610,56 +662,6 @@ const config = {
     },
 
 }}
-/>
-
-### `renderFooter(props)`
-
-Customize what will be displayed in the footer of the modal.
-
-```tsx {13} copy
-const config = {
-  components: {
-    Example: {
-      fields: {
-        data: {
-          type: "external",
-          fetchList: async () => {
-            return [
-              { title: "Hello, world", description: "Lorem ipsum 1" },
-              { title: "Goodbye, world", description: "Lorem ipsum 2" },
-            ];
-          },
-          renderFooter: ({ items }) => <span>{items.length} results</span>,
-        },
-      },
-      render: ({ data }) => {
-        return <p>{data || "No data selected"}</p>;
-      },
-      // ...
-    },
-  },
-};
-```
-
-<ConfigPreview
-  label="Example"
-  componentConfig={{
-    fields: {
-      data: {
-        type: "external",
-        fetchList: async () => {
-          return [
-            { title: "Hello, world", description: "Lorem ipsum 1" },
-            { title: "Goodbye, world", description: "Lorem ipsum 2" },
-          ];
-        },
-        renderFooter: ({ items }) => <span>{items.length} results</span>,
-      },
-    },
-    render: ({ data }) => {
-      return <p>{data?.title || "No data selected"}</p>;
-    },
-  }}
 />
 
 <div id="puck-portal-root" />
