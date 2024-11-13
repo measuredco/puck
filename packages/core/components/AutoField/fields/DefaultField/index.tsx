@@ -31,7 +31,7 @@ export const DefaultField = ({
         autoComplete="off"
         type={field.type}
         name={name}
-        value={typeof value === "undefined" ? "" : value}
+        value={typeof value === "undefined" ? "" : value.toString()}
         onChange={(e) => {
           if (field.type === "number") {
             onChange(Number(e.currentTarget.value));
