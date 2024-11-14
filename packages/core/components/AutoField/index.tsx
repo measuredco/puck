@@ -27,6 +27,7 @@ import { useAppContext } from "../Puck/context";
 import { useSafeId } from "../../lib/use-safe-id";
 
 const getClassName = getClassNameFactory("Input", styles);
+const getClassNameWrapper = getClassNameFactory("InputWrapper", styles);
 
 export const FieldLabel = ({
   children,
@@ -127,7 +128,7 @@ function AutoFieldInternal<
     Label?: React.FC<FieldLabelPropsInternal>;
   }
 ) {
-  const { overrides } = useAppContext();
+  const { dispatch, overrides } = useAppContext();
 
   const { id, Label = FieldLabelInternal } = props;
 
@@ -168,6 +169,33 @@ function AutoFieldInternal<
     id: resolvedId,
   };
 
+  const onFocus = useCallback(
+    (e: React.FocusEvent) => {
+      if (mergedProps.name && e.target.nodeName === "INPUT") {
+        e.stopPropagation();
+
+        dispatch({
+          type: "setUi",
+          ui: {
+            field: { focus: mergedProps.name },
+          },
+        });
+      }
+    },
+    [mergedProps.name]
+  );
+
+  const onBlur = useCallback((e: React.FocusEvent) => {
+    if ("name" in e.target) {
+      dispatch({
+        type: "setUi",
+        ui: {
+          field: { focus: null },
+        },
+      });
+    }
+  }, []);
+
   if (field.type === "custom") {
     if (!field.render) {
       return null;
@@ -176,8 +204,10 @@ function AutoFieldInternal<
     const CustomField = field.render as any;
 
     return (
-      <div className={getClassName()}>
-        <CustomField {...mergedProps} />
+      <div className={getClassNameWrapper()} onFocus={onFocus} onBlur={onBlur}>
+        <div className={getClassName()}>
+          <CustomField {...mergedProps} />
+        </div>
       </div>
     );
   }
@@ -186,7 +216,11 @@ function AutoFieldInternal<
 
   const Render = render[field.type] as (props: FieldProps) => ReactElement;
 
-  return <Render {...mergedProps}>{children}</Render>;
+  return (
+    <div className={getClassNameWrapper()} onFocus={onFocus} onBlur={onBlur}>
+      <Render {...mergedProps}>{children}</Render>
+    </div>
+  );
 }
 
 // Don't let external value changes update this if it's changed manually in the last X ms
