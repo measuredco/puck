@@ -236,12 +236,10 @@ export function AutoFieldPrivate<
     Label?: React.FC<FieldLabelPropsInternal>;
   }
 ) {
+  const { state } = useAppContext();
   const { value, onChange } = props;
 
   const [localValue, setLocalValue] = useState(value);
-
-  const [recentlyChanged, setRecentlyChanged] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout>();
 
   const onChangeDb = useDebouncedCallback(
     (val, ui) => {
@@ -254,19 +252,12 @@ export function AutoFieldPrivate<
   const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
     setLocalValue(val);
 
-    setRecentlyChanged(true);
-
-    clearTimeout(timeoutRef.current);
-
-    timeoutRef.current = setTimeout(() => {
-      setRecentlyChanged(false);
-    }, RECENT_CHANGE_TIMEOUT);
-
     onChangeDb(val, ui);
   }, []);
 
   useEffect(() => {
-    if (!recentlyChanged) {
+    // Prevent global state from setting local state if this field is focused
+    if (state.ui.field.focus !== props.name) {
       setLocalValue(value);
     }
   }, [value]);
