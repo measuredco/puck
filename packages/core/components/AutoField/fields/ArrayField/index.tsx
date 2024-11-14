@@ -1,6 +1,6 @@
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "./styles.module.css";
-import { List, Plus, Trash } from "lucide-react";
+import { Copy, List, Plus, Trash } from "lucide-react";
 import { AutoFieldPrivate, FieldPropsInternal } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
@@ -218,6 +218,35 @@ export const ArrayField = ({
                             <div className={getClassNameItem("rhs")}>
                               {!readOnly && (
                                 <div className={getClassNameItem("actions")}>
+                                  <div className={getClassNameItem("action")}>
+                                    <IconButton
+                                      type="button"
+                                      disabled={!!addDisabled}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+
+                                        const existingValue = [
+                                          ...(value || []),
+                                        ];
+
+                                        existingValue.splice(
+                                          i,
+                                          0,
+                                          existingValue[i]
+                                        );
+
+                                        onChange(
+                                          existingValue,
+                                          mapArrayStateToUi(
+                                            regenerateArrayState(existingValue)
+                                          )
+                                        );
+                                      }}
+                                      title="Duplicate"
+                                    >
+                                      <Copy size={16} />
+                                    </IconButton>
+                                  </div>
                                   <div className={getClassNameItem("action")}>
                                     <IconButton
                                       type="button"
