@@ -137,12 +137,16 @@ export const ArrayField = ({
               event.destination?.index
             );
 
-            onChange(newValue, {
+            const newUi = {
               arrayState: {
                 ...state.ui.arrayState,
                 [id]: { ...arrayState, items: newArrayStateItems },
               },
-            });
+            };
+
+            setUi(newUi, false);
+
+            onChange(newValue, newUi);
 
             setLocalState({
               value: newValue,
