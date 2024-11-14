@@ -34,7 +34,14 @@ export const Hero: ComponentConfig<HeroProps> = {
     quote: {
       type: "external",
       placeholder: "Select a quote",
-      showSearch: true,
+      showSearch: false,
+      renderFooter: ({ items }) => {
+        return (
+          <div>
+            {items.length} result{items.length === 1 ? "" : "s"}
+          </div>
+        );
+      },
       filterFields: {
         author: {
           type: "select",
