@@ -46,6 +46,7 @@ export const defaultAppState: AppState = {
       options: [],
       controlsVisible: true,
     },
+    field: { focus: null },
   },
 };
 

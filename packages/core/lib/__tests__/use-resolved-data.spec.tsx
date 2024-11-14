@@ -143,6 +143,9 @@ describe("use-resolved-data", () => {
           "ui": {
             "arrayState": {},
             "componentList": {},
+            "field": {
+              "focus": null,
+            },
             "isDragging": false,
             "itemSelector": null,
             "leftSideBarVisible": true,
