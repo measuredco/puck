@@ -221,6 +221,35 @@ export const ArrayField = ({
                                   <div className={getClassNameItem("action")}>
                                     <IconButton
                                       type="button"
+                                      disabled={!!addDisabled}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+
+                                        const existingValue = [
+                                          ...(value || []),
+                                        ];
+
+                                        existingValue.splice(
+                                          i,
+                                          0,
+                                          existingValue[i]
+                                        );
+
+                                        onChange(
+                                          existingValue,
+                                          mapArrayStateToUi(
+                                            regenerateArrayState(existingValue)
+                                          )
+                                        );
+                                      }}
+                                      title="Duplicate"
+                                    >
+                                      <Copy size={16} />
+                                    </IconButton>
+                                  </div>
+                                  <div className={getClassNameItem("action")}>
+                                    <IconButton
+                                      type="button"
                                       disabled={
                                         field.min !== undefined &&
                                         field.min >=
@@ -250,29 +279,6 @@ export const ArrayField = ({
                                       title="Delete"
                                     >
                                       <Trash size={16} />
-                                    </IconButton>
-                                  </div>
-                                  <div className={getClassNameItem("action")}>
-                                    <IconButton
-                                      type="button"
-                                      disabled={!!addDisabled}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-
-                                        const existingValue = [
-                                          ...(value || []),
-                                        ];
-
-                                        existingValue.splice(i, 0, existingValue[i]);
-
-                                        onChange(
-                                          existingValue,
-                                          mapArrayStateToUi(regenerateArrayState(existingValue))
-                                        );
-                                      }}
-                                      title="Duplicate"
-                                    >
-                                      <Copy size={16} />
                                     </IconButton>
                                   </div>
                                 </div>
