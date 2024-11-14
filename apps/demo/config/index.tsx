@@ -131,7 +131,11 @@ export const initialData: Record<string, UserData> = {
       {
         type: "Columns",
         props: {
-          columns: [{}, {}, {}],
+          columns: [
+            { id: "aed487d8-640d-4788-834f-39d282b48dbe" },
+            { id: "b225c7ba-c90c-4290-9faf-46809aeb2469" },
+            { id: "0059e9d0-1bd2-4262-afd8-841b7099cbaa" },
+          ],
           distribution: "auto",
           id: "Columns-2d650a8ceb081a2c04f3a2d17a7703ca6efb0d06",
         },
@@ -226,12 +230,12 @@ export const initialData: Record<string, UserData> = {
         type: "Columns",
         props: {
           columns: [
-            { span: 4 },
-            { span: 4 },
-            { span: 4 },
-            { span: 4 },
-            { span: 4 },
-            { span: 4 },
+            { span: 4, id: "f6baf6a3-3702-427f-a427-81c14855ad7f" },
+            { span: 4, id: "2d7e1c2e-5b50-4412-9aee-27441e99bc1e" },
+            { span: 4, id: "a23fcb9d-e0c4-4f07-9c03-d30f901d87c4" },
+            { span: 4, id: "ec906bd1-fce6-4386-893b-1840dfa8c3df" },
+            { span: 4, id: "812e374a-a5e0-4c45-95b4-0f9494d3d473" },
+            { span: 4, id: "71c77d92-2a30-4e0c-86d9-8dbdb017ee89" },
           ],
           id: "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634",
           distribution: "manual",
@@ -293,120 +297,129 @@ export const initialData: Record<string, UserData> = {
     ],
     root: { props: { title: "Puck Example" } },
     zones: {
-      "Columns-2d650a8ceb081a2c04f3a2d17a7703ca6efb0d06:column-0": [
-        {
-          type: "Card",
-          props: {
-            title: "Built for content teams",
-            description:
-              "Puck enables content teams to make changes to their content without a developer or breaking the UI.",
-            icon: "pen-tool",
-            mode: "flat",
-            id: "Card-0d9077e00e0ad66c34c62ab6986967e1ce04f9e4",
+      "Columns-2d650a8ceb081a2c04f3a2d17a7703ca6efb0d06:column-aed487d8-640d-4788-834f-39d282b48dbe":
+        [
+          {
+            type: "Card",
+            props: {
+              title: "Built for content teams",
+              description:
+                "Puck enables content teams to make changes to their content without a developer or breaking the UI.",
+              icon: "pen-tool",
+              mode: "flat",
+              id: "Card-0d9077e00e0ad66c34c62ab6986967e1ce04f9e4",
+            },
           },
-        },
-      ],
-      "Columns-2d650a8ceb081a2c04f3a2d17a7703ca6efb0d06:column-1": [
-        {
-          type: "Card",
-          props: {
-            title: "Easy to integrate",
-            description:
-              "Front-end developers can easily integrate their own components using a familiar React API.",
-            icon: "git-merge",
-            mode: "flat",
-            id: "Card-978bef5d136d4b0d9855f5272429986ceb22e5a6",
+        ],
+      "Columns-2d650a8ceb081a2c04f3a2d17a7703ca6efb0d06:column-b225c7ba-c90c-4290-9faf-46809aeb2469":
+        [
+          {
+            type: "Card",
+            props: {
+              title: "Easy to integrate",
+              description:
+                "Front-end developers can easily integrate their own components using a familiar React API.",
+              icon: "git-merge",
+              mode: "flat",
+              id: "Card-978bef5d136d4b0d9855f5272429986ceb22e5a6",
+            },
           },
-        },
-      ],
-      "Columns-2d650a8ceb081a2c04f3a2d17a7703ca6efb0d06:column-2": [
-        {
-          type: "Card",
-          props: {
-            title: "No vendor lock-in",
-            description:
-              "Completely open-source, Puck is designed to be integrated into your existing React application.",
-            icon: "github",
-            mode: "flat",
-            id: "Card-133a61826f0019841aec6f0aec011bf07e6bc6de",
+        ],
+      "Columns-2d650a8ceb081a2c04f3a2d17a7703ca6efb0d06:column-0059e9d0-1bd2-4262-afd8-841b7099cbaa":
+        [
+          {
+            type: "Card",
+            props: {
+              title: "No vendor lock-in",
+              description:
+                "Completely open-source, Puck is designed to be integrated into your existing React application.",
+              icon: "github",
+              mode: "flat",
+              id: "Card-133a61826f0019841aec6f0aec011bf07e6bc6de",
+            },
           },
-        },
-      ],
-      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-0": [
-        {
-          type: "Card",
-          props: {
-            title: "plugin-heading-analyzer",
-            description:
-              "Analyze the document structure and identify WCAG 2.1 issues with your heading hierarchy.",
-            icon: "align-left",
-            mode: "card",
-            id: "Card-e2e757b0b4a579d5f87564dfa9b4442f9794b45b",
+        ],
+      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-f6baf6a3-3702-427f-a427-81c14855ad7f":
+        [
+          {
+            type: "Card",
+            props: {
+              title: "plugin-heading-analyzer",
+              description:
+                "Analyze the document structure and identify WCAG 2.1 issues with your heading hierarchy.",
+              icon: "align-left",
+              mode: "card",
+              id: "Card-e2e757b0b4a579d5f87564dfa9b4442f9794b45b",
+            },
           },
-        },
-      ],
-      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-1": [
-        {
-          type: "Card",
-          props: {
-            title: "External data",
-            description:
-              "Connect your components with an existing data source, like Strapi.js.",
-            icon: "feather",
-            mode: "card",
-            id: "Card-4eea28543d13c41c30934c3e4c4c95a75017a89c",
+        ],
+      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-2d7e1c2e-5b50-4412-9aee-27441e99bc1e":
+        [
+          {
+            type: "Card",
+            props: {
+              title: "External data",
+              description:
+                "Connect your components with an existing data source, like Strapi.js.",
+              icon: "feather",
+              mode: "card",
+              id: "Card-4eea28543d13c41c30934c3e4c4c95a75017a89c",
+            },
           },
-        },
-      ],
-      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-2": [
-        {
-          type: "Card",
-          props: {
-            title: "Custom plugins",
-            description:
-              "Create your own plugin to extend Puck for your use case using React.",
-            icon: "feather",
-            mode: "card",
-            id: "Card-3314e8b24aa52843ce22ab7424b8f3b8064acfdf",
+        ],
+      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-a23fcb9d-e0c4-4f07-9c03-d30f901d87c4":
+        [
+          {
+            type: "Card",
+            props: {
+              title: "Custom plugins",
+              description:
+                "Create your own plugin to extend Puck for your use case using React.",
+              icon: "feather",
+              mode: "card",
+              id: "Card-3314e8b24aa52843ce22ab7424b8f3b8064acfdf",
+            },
           },
-        },
-      ],
-      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-3": [
-        {
-          type: "Card",
-          props: {
-            title: "Title",
-            description: "Description",
-            icon: "feather",
-            mode: "card",
-            id: "Card-49b11940784cfe8dc1a2b2facc5ac2bcf797792f",
+        ],
+      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-ec906bd1-fce6-4386-893b-1840dfa8c3df":
+        [
+          {
+            type: "Card",
+            props: {
+              title: "Title",
+              description: "Description",
+              icon: "feather",
+              mode: "card",
+              id: "Card-49b11940784cfe8dc1a2b2facc5ac2bcf797792f",
+            },
           },
-        },
-      ],
-      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-4": [
-        {
-          type: "Card",
-          props: {
-            title: "Title",
-            description: "Description",
-            icon: "feather",
-            mode: "card",
-            id: "Card-efb0a1ed06cc4152a7861376aafbe62b0445382d",
+        ],
+      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-812e374a-a5e0-4c45-95b4-0f9494d3d473":
+        [
+          {
+            type: "Card",
+            props: {
+              title: "Title",
+              description: "Description",
+              icon: "feather",
+              mode: "card",
+              id: "Card-efb0a1ed06cc4152a7861376aafbe62b0445382d",
+            },
           },
-        },
-      ],
-      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-5": [
-        {
-          type: "Card",
-          props: {
-            title: "Title",
-            description: "Description",
-            icon: "feather",
-            mode: "card",
-            id: "Card-513cfb17d07ba4b6e0212d931571c0760839f029",
+        ],
+      "Columns-3c2ca5b045ee26535fcdf0eddf409a6308764634:column-71c77d92-2a30-4e0c-86d9-8dbdb017ee89":
+        [
+          {
+            type: "Card",
+            props: {
+              title: "Title",
+              description: "Description",
+              icon: "feather",
+              mode: "card",
+              id: "Card-513cfb17d07ba4b6e0212d931571c0760839f029",
+            },
           },
-        },
-      ],
+        ],
     },
   },
   "/pricing": {
