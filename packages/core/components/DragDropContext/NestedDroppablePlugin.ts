@@ -193,6 +193,11 @@ export const createNestedDroppablePlugin = ({
                 return false;
               }
 
+              // Remove if dragged item is area
+              if (candidate.data.areaId === draggedCandidateId) {
+                return false;
+              }
+
               return true;
             });
 
