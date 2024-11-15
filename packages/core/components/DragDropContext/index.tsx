@@ -21,6 +21,7 @@ import { getZoneId } from "../../lib/get-zone-id";
 import { Direction } from "../DraggableComponent/collision/dynamic";
 import { createNestedDroppablePlugin } from "./NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
+import { useDebouncedCallback } from "use-debounce";
 
 type Events = DragDropEvents<Draggable, Droppable, DragDropManager>;
 type DragCbs = Partial<{ [eventName in keyof Events]: Events[eventName][] }>;
@@ -61,6 +62,8 @@ type Preview = {
 
 export const previewContext = createContext<Preview>(null);
 
+const AREA_CHANGE_DEBOUNCE_MS = 350;
+
 export const DragDropContext = ({ children }: { children: ReactNode }) => {
   const { state, config, dispatch, resolveData } = useAppContext();
 
@@ -71,14 +74,38 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
     zone: string | null;
     area: string | null;
   } | null>(null);
+  const [nextDeepest, setNextDeepest] = useState<{
+    zone: string | null;
+    area: string | null;
+  } | null>(null);
+
+  const setDeepestDb = useDebouncedCallback(
+    (params: { zone: string | null; area: string | null }) => {
+      setDeepest(params);
+
+      // Force a collision on area change
+      setTimeout(() => {
+        manager.collisionObserver.forceUpdate(true);
+      }, 50);
+    },
+    AREA_CHANGE_DEBOUNCE_MS
+  );
 
   const [manager] = useState(
     new DragDropManager({
       plugins: [
         Feedback,
         createNestedDroppablePlugin({
-          onChange: ({ deepestZoneId, deepestAreaId }) => {
-            setDeepest({ zone: deepestZoneId, area: deepestAreaId });
+          onChange: ({ deepestZoneId, deepestAreaId }, manager) => {
+            const params = { zone: deepestZoneId, area: deepestAreaId };
+
+            if (manager.dragOperation.status.dragging) {
+              setDeepestDb(params);
+            } else {
+              setDeepest(params);
+            }
+
+            setNextDeepest(params);
           },
         }),
       ],
@@ -308,6 +335,8 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
               pathData,
               deepestZone: deepest?.zone,
               deepestArea: deepest?.area,
+              nextDeepestZone: nextDeepest?.zone,
+              nextDeepestArea: nextDeepest?.area,
               path: [],
             }}
           >

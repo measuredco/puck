@@ -32,6 +32,8 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
   deepestZone?: string | null;
   deepestArea?: string | null;
+  nextDeepestZone?: string | null;
+  nextDeepestArea?: string | null;
   path: string[];
 } | null;
 
