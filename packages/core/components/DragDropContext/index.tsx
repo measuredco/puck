@@ -232,9 +232,12 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             const [sourceId] = (source.id as string).split(":");
             const [targetId] = (target.id as string).split(":");
 
-            const direction = manager.dragOperation.data?.direction as
-              | Direction
-              | undefined;
+            const direction = (
+              manager.dragOperation.data?.directionMap as Record<
+                string,
+                Direction | undefined
+              >
+            )?.[targetId];
 
             const collisionPosition =
               direction === "up" || direction === "left" ? "before" : "after";
@@ -249,7 +252,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
 
             if (isOverZone) {
               targetZone = target.id.toString();
-              targetIndex = 0; // TODO place at end
+              targetIndex = 0;
             }
 
             // Abort if dragging over self or descendant
