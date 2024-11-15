@@ -141,7 +141,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
     } else {
       setResolvedFields(defaultFields);
     }
-  }, [data, defaultFields, state.ui.itemSelector, hasResolver]);
+  }, [data, defaultFields, selectedItem, hasResolver]);
 
   return [resolvedFields, fieldsLoading];
 };
