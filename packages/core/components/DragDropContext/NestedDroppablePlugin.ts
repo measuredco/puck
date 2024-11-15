@@ -206,7 +206,16 @@ export const createNestedDroppablePlugin = ({
             const deepestZoneId = getZoneId(filteredCandidates[0]);
             const deepestAreaId = getDeepestId(filteredCandidates, getAreaId);
 
-            onChange({ deepestZoneId, deepestAreaId });
+            const result = { deepestZoneId, deepestAreaId };
+
+            onChange(result, manager);
+          } else {
+            const result = {
+              deepestZoneId: "default-zone",
+              deepestAreaId: null,
+            };
+
+            onChange(result, manager);
           }
         };
 
