@@ -16,6 +16,7 @@ import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 import { getChanged } from "../../../../lib/get-changed";
+import { useParent } from "../../../../lib/use-parent";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -37,6 +38,7 @@ type ComponentOrRootData = Omit<ComponentData<any>, "type">;
 
 const useResolvedFields = (): [FieldsType, boolean] => {
   const { selectedItem, state, config } = useAppContext();
+  const parent = useParent();
 
   const { data } = state;
 
@@ -101,6 +103,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
             lastFields: resolvedFields,
             lastData: lastData as ComponentData,
             appState: state,
+            parent,
           }
         );
       }
@@ -112,6 +115,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
           lastFields: resolvedFields,
           lastData: lastData as RootData,
           appState: state,
+          parent,
         });
       }
 

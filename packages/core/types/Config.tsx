@@ -28,6 +28,7 @@ export type ComponentConfig<
       lastFields: Fields<FieldProps>;
       lastData: DataShape | null;
       appState: AppState;
+      parent: ComponentData | null;
     }
   ) => Promise<Fields<FieldProps>> | Fields<FieldProps>;
   resolveData?: (

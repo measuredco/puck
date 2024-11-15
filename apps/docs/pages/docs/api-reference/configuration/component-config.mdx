@@ -414,10 +414,10 @@ const config = {
 
 #### Args
 
-| Prop     | Example                                                                   | Type   |
-| -------- | ------------------------------------------------------------------------- | ------ |
-| `data`   | `{ props: { title: "Hello, world" }, readOnly: {} }`                      | Object |
-| `params` | `{ appState: {}, changed: {}, fields: {}, lastData: {}, lastFields: {} }` | Object |
+| Prop     | Example                                                                               | Type   |
+| -------- | ------------------------------------------------------------------------------------- | ------ |
+| `data`   | `{ props: { title: "Hello, world" }, readOnly: {} }`                                  | Object |
+| `params` | `{ appState: {}, changed: {}, fields: {}, lastData: {}, lastFields: {}, parent: {} }` | Object |
 
 ##### `data.props`
 
@@ -460,6 +460,10 @@ The data object from the previous run of this function.
 ##### `params.lastFields`
 
 The last fields object created by the previous run of this function.
+
+##### `params.parent`
+
+The parent data object if this item is within a [DropZone](/docs/api-reference/components/drop-zone).
 
 ### `resolvePermissions(data, params)`
 
