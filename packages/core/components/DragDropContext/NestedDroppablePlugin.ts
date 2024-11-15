@@ -25,10 +25,13 @@ function isPositionInsideRect(
 }
 
 type NestedDroppablePluginOptions = {
-  onChange: (params: {
-    deepestAreaId: string | null;
-    deepestZoneId: string | null;
-  }) => void;
+  onChange: (
+    params: {
+      deepestAreaId: string | null;
+      deepestZoneId: string | null;
+    },
+    manager: DragDropManager
+  ) => void;
 };
 
 // Something is going wrong with tearing down the classes.
