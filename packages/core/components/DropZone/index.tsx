@@ -52,6 +52,8 @@ function DropZoneEdit({
     registerLocalZone,
     deepestZone = rootDroppableId,
     deepestArea,
+    nextDeepestZone = deepestZone,
+    nextDeepestArea,
     path = [],
   } = ctx!;
 
@@ -130,7 +132,9 @@ function DropZoneEdit({
     zone === rootDroppableId ||
     areaId === "root";
 
-  const hoveringOverArea = deepestArea ? deepestArea === areaId : isRootZone;
+  const hoveringOverArea = nextDeepestArea
+    ? nextDeepestArea === areaId
+    : isRootZone;
 
   const userIsDragging = !!draggedItem;
 
