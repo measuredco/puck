@@ -30,6 +30,10 @@ export { DropZoneProvider, dropZoneContext } from "./context";
 
 const DEBUG = false;
 
+const GRID_DRAG_AXIS: DragAxis = "x";
+const FLEX_ROW_DRAG_AXIS: DragAxis = "x";
+const DEFAULT_DRAG_AXIS: DragAxis = "y";
+
 function DropZoneEdit({
   zone,
   allow,
@@ -203,21 +207,21 @@ function DropZoneEdit({
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
   const isAreaSelected = selectedItem && areaId === selectedItem.props.id;
 
-  const [dragAxis, setDragAxis] = useState<DragAxis>("y");
+  const [dragAxis, setDragAxis] = useState<DragAxis>(DEFAULT_DRAG_AXIS);
 
   useEffect(() => {
     if (ref.current) {
       const computedStyle = window.getComputedStyle(ref.current);
 
       if (computedStyle.display === "grid") {
-        setDragAxis("dynamic");
+        setDragAxis(GRID_DRAG_AXIS);
       } else if (
         computedStyle.display === "flex" &&
         computedStyle.flexDirection === "row"
       ) {
-        setDragAxis("dynamic");
+        setDragAxis(FLEX_ROW_DRAG_AXIS);
       } else {
-        setDragAxis("y");
+        setDragAxis(DEFAULT_DRAG_AXIS);
       }
     }
     // Run when ref changes, or iframe loads
