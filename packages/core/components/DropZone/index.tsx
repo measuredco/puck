@@ -15,13 +15,12 @@ import styles from "./styles.module.css";
 import { DropZoneProvider, dropZoneContext } from "./context";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
-import { ComponentConfig, PuckContext } from "../../types";
+import { ComponentConfig, DragAxis, PuckContext } from "../../types";
 
 import { useDroppable, UseDroppableInput } from "@dnd-kit/react";
 import { DrawerItemInner } from "../Drawer";
 import { pointerIntersection } from "@dnd-kit/collision";
 import { insert } from "../../lib/insert";
-import { DragAxis } from "../DraggableComponent/collision/dynamic/get-direction";
 import { previewContext } from "../DragDropContext";
 
 const getClassName = getClassNameFactory("DropZone", styles);
@@ -41,6 +40,7 @@ function DropZoneEdit({
   style,
   className,
   dragRef,
+  collisionAxis,
 }: DropZoneProps) {
   const appContext = useAppContext();
   const ctx = useContext(dropZoneContext);
@@ -207,10 +207,12 @@ function DropZoneEdit({
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
   const isAreaSelected = selectedItem && areaId === selectedItem.props.id;
 
-  const [dragAxis, setDragAxis] = useState<DragAxis>(DEFAULT_DRAG_AXIS);
+  const [dragAxis, setDragAxis] = useState<DragAxis>(
+    collisionAxis || DEFAULT_DRAG_AXIS
+  );
 
   useEffect(() => {
-    if (ref.current) {
+    if (ref.current && !collisionAxis) {
       const computedStyle = window.getComputedStyle(ref.current);
 
       if (computedStyle.display === "grid") {
@@ -225,7 +227,7 @@ function DropZoneEdit({
       }
     }
     // Run when ref changes, or iframe loads
-  }, [ref, appContext.status]);
+  }, [ref, appContext.status, collisionAxis]);
 
   return (
     <div
