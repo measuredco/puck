@@ -1,8 +1,5 @@
 import { Point } from "@dnd-kit/geometry";
-
-export type Direction = "left" | "right" | "up" | "down" | null;
-
-export type DragAxis = "dynamic" | "y" | "x";
+import { DragAxis, Direction } from "../../../../types";
 
 export const getDirection = (dragAxis: DragAxis, delta: Point): Direction => {
   if (dragAxis === "dynamic") {

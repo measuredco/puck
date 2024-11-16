@@ -22,9 +22,8 @@ import { createPortal } from "react-dom";
 
 import { dropZoneContext, DropZoneProvider } from "../DropZone";
 import { createDynamicCollisionDetector } from "./collision/dynamic";
-import { DragAxis } from "./collision/dynamic/get-direction";
-import { DefaultComponentProps } from "../../types";
 import { getItem } from "../../lib/get-item";
+import { DragAxis } from "../../types";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
