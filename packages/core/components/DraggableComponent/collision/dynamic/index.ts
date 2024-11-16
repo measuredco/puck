@@ -5,11 +5,12 @@ import {
   CollisionType,
 } from "@dnd-kit/abstract";
 import { directionalCollision } from "../directional";
-import { DragAxis, getDirection } from "./get-direction";
+import { getDirection } from "./get-direction";
 import { getMidpointImpact } from "./get-midpoint-impact";
 import { trackMovementInterval } from "./track-movement-interval";
 import { collisionDebug } from "../collision-debug";
 import { closestCorners } from "@dnd-kit/collision";
+import { DragAxis } from "../../../../types";
 
 export type Direction = "left" | "right" | "up" | "down" | null;
 
