@@ -18,7 +18,10 @@ import type { Draggable, Droppable } from "@dnd-kit/dom";
 import { getItem, ItemSelector } from "../../lib/get-item";
 import { PathData } from "../DropZone/context";
 import { getZoneId } from "../../lib/get-zone-id";
-import { createNestedDroppablePlugin } from "./NestedDroppablePlugin";
+import {
+  createNestedDroppablePlugin,
+  findDeepestCandidate,
+} from "./NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
 import { Direction } from "../../types";
@@ -63,6 +66,11 @@ type Preview = {
 
 export const previewContext = createContext<Preview>(null);
 
+type DeepestParams = {
+  zone: string | null;
+  area: string | null;
+};
+
 const AREA_CHANGE_DEBOUNCE_MS = 350;
 
 export const DragDropContext = ({ children }: { children: ReactNode }) => {
@@ -71,46 +79,36 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
   const [preview, setPreview] = useState<Preview>(null);
 
   const { data } = state;
-  const [deepest, setDeepest] = useState<{
-    zone: string | null;
-    area: string | null;
-  } | null>(null);
-  const [nextDeepest, setNextDeepest] = useState<{
-    zone: string | null;
-    area: string | null;
-  } | null>(null);
+  const [deepest, setDeepest] = useState<DeepestParams | null>(null);
+  const [nextDeepest, setNextDeepest] = useState<DeepestParams | null>(null);
 
-  const setDeepestDb = useDebouncedCallback(
-    (params: { zone: string | null; area: string | null }) => {
-      setDeepest(params);
+  const setDeepestDb = useDebouncedCallback((params: DeepestParams) => {
+    setDeepest(params);
 
-      // Force a collision on area change
-      setTimeout(() => {
-        manager.collisionObserver.forceUpdate(true);
-      }, 50);
-    },
-    AREA_CHANGE_DEBOUNCE_MS
-  );
+    // Force a collision on area change
+    setTimeout(() => {
+      manager.collisionObserver.forceUpdate(true);
+    }, 50);
+  }, AREA_CHANGE_DEBOUNCE_MS);
 
   const [manager] = useState(
-    new DragDropManager({
-      plugins: [
-        Feedback,
-        createNestedDroppablePlugin({
-          onChange: ({ deepestZoneId, deepestAreaId }, manager) => {
-            const params = { zone: deepestZoneId, area: deepestAreaId };
+    () =>
+      new DragDropManager({
+        plugins: [
+          Feedback,
+          createNestedDroppablePlugin({
+            onChange: (params, manager) => {
+              if (manager.dragOperation.status.dragging) {
+                setDeepestDb(params);
+              } else {
+                setDeepest(params);
+              }
 
-            if (manager.dragOperation.status.dragging) {
-              setDeepestDb(params);
-            } else {
-              setDeepest(params);
-            }
-
-            setNextDeepest(params);
-          },
-        }),
-      ],
-    })
+              setNextDeepest(params);
+            },
+          }),
+        ],
+      })
   );
 
   const [draggedItem, setDraggedItem] = useState<Draggable | null>();
