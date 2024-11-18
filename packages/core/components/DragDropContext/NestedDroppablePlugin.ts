@@ -27,16 +27,12 @@ function isPositionInsideRect(
 type NestedDroppablePluginOptions = {
   onChange: (
     params: {
-      deepestAreaId: string | null;
-      deepestZoneId: string | null;
+      area: string | null;
+      zone: string | null;
     },
     manager: DragDropManager
   ) => void;
 };
-
-// Something is going wrong with tearing down the classes.
-// This is an awful hack to prevent the plugin from running more than once.
-let globallyRegistered = false;
 
 // Pixels to buffer sortable items by, helping when
 // 2 items are butted up against each-other
@@ -113,6 +109,99 @@ const expandHitBox = (rect: BoundingRectangle): BoundingRectangle => {
   };
 };
 
+const getPointerCollisions = (position: Position, manager: DragDropManager) => {
+  const candidates: Droppable[] = [];
+  for (const droppable of manager.registry.droppables.value) {
+    if (droppable.shape) {
+      let rect = droppable.shape.boundingRectangle;
+
+      const isNotSourceZone =
+        droppable.id !==
+        (manager.dragOperation.source?.data.group ||
+          manager.dragOperation.source?.id);
+
+      const isNotTargetZone =
+        droppable.id !==
+        (manager.dragOperation.source?.data.group ||
+          manager.dragOperation.source?.id);
+
+      // Expand hitboxes on zones
+      if (droppable.data.zone && isNotSourceZone && isNotTargetZone) {
+        rect = expandHitBox(rect);
+      }
+
+      if (isPositionInsideRect(position, rect)) {
+        candidates.push(droppable);
+      }
+    }
+  }
+
+  return candidates;
+};
+
+export const findDeepestCandidate = (
+  position: Position,
+  manager: DragDropManager
+) => {
+  const candidates = getPointerCollisions(position, manager);
+
+  if (candidates.length > 0) {
+    const sortedCandidates = depthSort(candidates);
+
+    const draggable = manager.dragOperation.source;
+
+    const draggedCandidateIndex = sortedCandidates.findIndex(
+      (candidate) => candidate.id === draggable?.id
+    );
+
+    const draggedCandidateId = draggable?.id;
+
+    let filteredCandidates = [...sortedCandidates];
+
+    if (draggedCandidateId && draggedCandidateIndex > -1) {
+      // Removed dragged candidate
+      filteredCandidates.splice(draggedCandidateIndex, 1);
+    }
+
+    // Remove any descendants
+    filteredCandidates = filteredCandidates.filter((candidate) => {
+      if (draggedCandidateId && draggedCandidateIndex > -1) {
+        if (candidate.data.path.indexOf(draggedCandidateId) > -1) {
+          return false;
+        }
+      }
+
+      // Remove non-droppable zones
+      if (candidate.data.zone && !candidate.data.isDroppableTarget) {
+        return false;
+      }
+
+      // Remove items in non-droppable zones
+      if (!candidate.data.zone && !candidate.data.inDroppableZone) {
+        return false;
+      }
+
+      // Remove if dragged item is area
+      if (candidate.data.areaId === draggedCandidateId) {
+        return false;
+      }
+
+      return true;
+    });
+
+    filteredCandidates.reverse();
+
+    const zone = getZoneId(filteredCandidates[0]);
+    const area = getDeepestId(filteredCandidates, getAreaId);
+
+    return { zone, area };
+  }
+  return {
+    zone: "default-zone",
+    area: null,
+  };
+};
+
 export const createNestedDroppablePlugin = ({
   onChange,
 }: NestedDroppablePluginOptions) =>
@@ -121,36 +210,6 @@ export const createNestedDroppablePlugin = ({
       super(manager);
 
       const cleanupEffect = effects(() => {
-        const getPointerCollisions = (position: Position) => {
-          const candidates: Droppable[] = [];
-          for (const droppable of manager.registry.droppables.value) {
-            if (droppable.shape) {
-              let rect = droppable.shape.boundingRectangle;
-
-              const isNotSourceZone =
-                droppable.id !==
-                (manager.dragOperation.source?.data.group ||
-                  manager.dragOperation.source?.id);
-
-              const isNotTargetZone =
-                droppable.id !==
-                (manager.dragOperation.source?.data.group ||
-                  manager.dragOperation.source?.id);
-
-              // Expand hitboxes on zones
-              if (droppable.data.zone && isNotSourceZone && isNotTargetZone) {
-                rect = expandHitBox(rect);
-              }
-
-              if (isPositionInsideRect(position, rect)) {
-                candidates.push(droppable);
-              }
-            }
-          }
-
-          return candidates;
-        };
-
         const handleMove = (position: Position) => {
           if (REFRESH_ON_MOVE) {
             for (const droppable of manager.registry.droppables.value) {
@@ -158,68 +217,7 @@ export const createNestedDroppablePlugin = ({
             }
           }
 
-          const candidates = getPointerCollisions(position);
-
-          if (candidates.length > 0) {
-            const sortedCandidates = depthSort(candidates);
-
-            const draggable = manager.dragOperation.source;
-
-            const draggedCandidateIndex = sortedCandidates.findIndex(
-              (candidate) => candidate.id === draggable?.id
-            );
-
-            const draggedCandidateId = draggable?.id;
-
-            let filteredCandidates = [...sortedCandidates];
-
-            if (draggedCandidateId && draggedCandidateIndex > -1) {
-              // Removed dragged candidate
-              filteredCandidates.splice(draggedCandidateIndex, 1);
-            }
-
-            // Remove any descendants
-            filteredCandidates = filteredCandidates.filter((candidate) => {
-              if (draggedCandidateId && draggedCandidateIndex > -1) {
-                if (candidate.data.path.indexOf(draggedCandidateId) > -1) {
-                  return false;
-                }
-              }
-
-              // Remove non-droppable zones
-              if (candidate.data.zone && !candidate.data.isDroppableTarget) {
-                return false;
-              }
-
-              // Remove items in non-droppable zones
-              if (!candidate.data.zone && !candidate.data.inDroppableZone) {
-                return false;
-              }
-
-              // Remove if dragged item is area
-              if (candidate.data.areaId === draggedCandidateId) {
-                return false;
-              }
-
-              return true;
-            });
-
-            filteredCandidates.reverse();
-
-            const deepestZoneId = getZoneId(filteredCandidates[0]);
-            const deepestAreaId = getDeepestId(filteredCandidates, getAreaId);
-
-            const result = { deepestZoneId, deepestAreaId };
-
-            onChange(result, manager);
-          } else {
-            const result = {
-              deepestZoneId: "default-zone",
-              deepestAreaId: null,
-            };
-
-            onChange(result, manager);
-          }
+          onChange(findDeepestCandidate(position, manager), manager);
         };
 
         const handleMoveThrottled = throttle(handleMove, 50);
@@ -231,17 +229,9 @@ export const createNestedDroppablePlugin = ({
           });
         };
 
-        // For some reason, this is getting instantiated multiple times. Hack to avoid it.
-        if (globallyRegistered) {
-          return;
-        }
-
         document.body.addEventListener("pointermove", handlePointerMove);
 
-        globallyRegistered = true;
-
         this.destroy = () => {
-          globallyRegistered = false;
           document.body.removeEventListener("pointermove", handlePointerMove);
           cleanupEffect();
         };
