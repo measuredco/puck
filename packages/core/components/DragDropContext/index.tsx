@@ -305,6 +305,10 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             });
           }}
           onDragStart={(event) => {
+            setDeepest(
+              findDeepestCandidate(event.operation.position.current, manager)
+            );
+
             dispatch({
               type: "setUi",
               ui: { itemSelector: null, isDragging: true },
