@@ -18,10 +18,11 @@ import type { Draggable, Droppable } from "@dnd-kit/dom";
 import { getItem, ItemSelector } from "../../lib/get-item";
 import { PathData } from "../DropZone/context";
 import { getZoneId } from "../../lib/get-zone-id";
-import { Direction } from "../DraggableComponent/collision/dynamic";
 import { createNestedDroppablePlugin } from "./NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
+import { Direction } from "../../types";
+import { CollisionMap } from "../DraggableComponent/collision/dynamic";
 
 type Events = DragDropEvents<Draggable, Droppable, DragDropManager>;
 type DragCbs = Partial<{ [eventName in keyof Events]: Events[eventName][] }>;
@@ -232,15 +233,19 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             const [sourceId] = (source.id as string).split(":");
             const [targetId] = (target.id as string).split(":");
 
-            const direction = (
-              manager.dragOperation.data?.directionMap as Record<
-                string,
-                Direction | undefined
-              >
+            const collisionData = (
+              manager.dragOperation.data?.collisionMap as CollisionMap
             )?.[targetId];
 
+            // if (collisionData?.void) {
+            //   return;
+            // }
+
             const collisionPosition =
-              direction === "up" || direction === "left" ? "before" : "after";
+              collisionData?.direction === "up" ||
+              collisionData?.direction === "left"
+                ? "before"
+                : "after";
 
             if (targetIndex >= sourceIndex && sourceZone === targetZone) {
               targetIndex = targetIndex - 1;

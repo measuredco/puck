@@ -3,6 +3,7 @@ import {
   CollisionDetector,
   CollisionPriority,
   CollisionType,
+  UniqueIdentifier,
 } from "@dnd-kit/abstract";
 import { directionalCollision } from "../directional";
 import { getDirection } from "./get-direction";
@@ -10,9 +11,17 @@ import { getMidpointImpact } from "./get-midpoint-impact";
 import { trackMovementInterval } from "./track-movement-interval";
 import { collisionDebug } from "../collision-debug";
 import { closestCorners } from "@dnd-kit/collision";
-import { DragAxis } from "../../../../types";
+import { DragAxis, Direction } from "../../../../types";
 
-export type Direction = "left" | "right" | "up" | "down" | null;
+export type CollisionMap = Record<
+  string,
+  {
+    direction: Direction;
+    [key: string]: any;
+  }
+>;
+
+let flushNext: UniqueIdentifier = "";
 
 /**
  * A factory for creating a "dynamic" collision detector
@@ -57,14 +66,14 @@ export const createDynamicCollisionDetector = (
       direction: interval.direction,
     };
 
-    const directionMap = (dragOperation.data.directionMap || {}) as Record<
-      string,
-      Direction
-    >;
+    const collisionMap = (dragOperation.data.collisionMap ||
+      {}) as CollisionMap;
 
-    dragOperation.data.directionMap = directionMap;
+    dragOperation.data.collisionMap = collisionMap;
 
-    directionMap[droppable.id] = interval.direction;
+    collisionMap[droppable.id] = {
+      direction: interval.direction,
+    };
 
     const { center: dropCenter } = dropShape;
 
@@ -101,7 +110,7 @@ export const createDynamicCollisionDetector = (
         dropCenter,
         droppable.id.toString(),
         "green",
-        intersectionArea.toString()
+        interval.direction
       );
 
       const collision: Collision = {
@@ -111,10 +120,15 @@ export const createDynamicCollisionDetector = (
         type: CollisionType.Collision,
       };
 
-      return collision;
+      // HACK: Flush ID if it's already in use by temporarily setting the id to something invalid. This forces dnd-kit to trigger a new dragmove event.
+      const shouldFlushId = flushNext === droppable.id;
+
+      flushNext = "";
+
+      return { ...collision, id: shouldFlushId ? "flush" : collision.id };
     }
 
-    if (!intersectionArea && dragOperation.source?.id !== droppable.id) {
+    if (dragOperation.source?.id !== droppable.id) {
       // Only calculate fallbacks when the draggable sits within the droppable's axis projection
       const xAxisOverlap =
         dropShape.boundingRectangle.right > dragShape.center.x &&
@@ -135,7 +149,32 @@ export const createDynamicCollisionDetector = (
             y: dragShape.center.y - (droppable.shape?.center.y || 0),
           });
 
-          directionMap[droppable.id] = direction;
+          collisionMap[droppable.id] = {
+            direction,
+          };
+
+          // Fallback collision exists for an intersecting item
+          // In this scenario, we trigger a "void" fallback transaction,
+          // which is prioritised over other fallback transactions
+          // Because dnd-kit won't trigger a dragmove event unless the
+          // target ID changes, we introduce an ID "flushing" hack
+          if (intersectionArea) {
+            collisionDebug(
+              dragCenter,
+              dropCenter,
+              droppable.id.toString(),
+              "red",
+              direction || ""
+            );
+
+            // HACK: We always flush the ID after this collision to ensure dnd-kit triggers onDragMove
+            flushNext = droppable.id;
+
+            return {
+              ...fallbackCollision,
+              priority: CollisionPriority.Low,
+            };
+          }
 
           collisionDebug(
             dragCenter,
@@ -152,7 +191,7 @@ export const createDynamicCollisionDetector = (
 
     collisionDebug(dragCenter, dropCenter, droppable.id.toString(), "hotpink");
 
-    delete directionMap[droppable.id];
+    delete collisionMap[droppable.id];
 
     return null;
   }) as CollisionDetector;
