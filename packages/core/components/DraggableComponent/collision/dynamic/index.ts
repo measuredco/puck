@@ -130,16 +130,16 @@ export const createDynamicCollisionDetector = (
 
     if (dragOperation.source?.id !== droppable.id) {
       // Only calculate fallbacks when the draggable sits within the droppable's axis projection
-      const xAxisOverlap =
-        dropShape.boundingRectangle.right > dragShape.center.x &&
-        dropShape.boundingRectangle.left < dragShape.center.x;
+      const xAxisIntersection =
+        dropShape.boundingRectangle.right > dragShape.boundingRectangle.left &&
+        dropShape.boundingRectangle.left < dragShape.boundingRectangle.right;
 
-      const yAxisOverlap =
-        dropShape.boundingRectangle.bottom > dragShape.center.y &&
-        dropShape.boundingRectangle.top < dragShape.center.y;
+      const yAxisIntersection =
+        dropShape.boundingRectangle.bottom > dragShape.boundingRectangle.top &&
+        dropShape.boundingRectangle.top < dragShape.boundingRectangle.bottom;
 
-      // If drag axis is Y, then lock to x-axis (vertical) overlap. Otherwise lock to y-axis (horizontal) overlap.
-      if ((dragAxis === "y" && xAxisOverlap) || yAxisOverlap) {
+      // If drag axis is Y, then lock to x-axis (vertical) intersect. Otherwise lock to y-axis (horizontal) intersect.
+      if ((dragAxis === "y" && xAxisIntersection) || yAxisIntersection) {
         const fallbackCollision = closestCorners(input);
 
         if (fallbackCollision) {
