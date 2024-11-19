@@ -19,9 +19,15 @@ const ComponentListItem = ({
 }) => {
   const { overrides, getPermissions, state } = useAppContext();
 
-  const canInsert = getPermissions({
-    item: flattenData(state.data).find((item) => item.type === name),
-  }).insert;
+  const item = flattenData(state.data).find((item) => item.type === name);
+
+  const canInsert = item
+    ? getPermissions({
+        item,
+      }).insert
+    : getPermissions({
+        type: name,
+      }).insert;
 
   return (
     <Drawer.Item
