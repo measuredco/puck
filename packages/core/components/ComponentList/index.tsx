@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { useAppContext } from "../Puck/context";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Drawer } from "../Drawer";
+import { flattenData } from "../../lib/flatten-data";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 
@@ -16,10 +17,10 @@ const ComponentListItem = ({
   label?: string;
   index: number;
 }) => {
-  const { overrides, getPermissions } = useAppContext();
+  const { overrides, getPermissions, state } = useAppContext();
 
   const canInsert = getPermissions({
-    type: name,
+    item: flattenData(state.data).find((item) => item.type === name),
   }).insert;
 
   return (
