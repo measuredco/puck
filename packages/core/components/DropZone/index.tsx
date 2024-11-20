@@ -383,7 +383,7 @@ function DropZoneRender({ className, style, zone }: DropZoneProps) {
             >
               <Component.render
                 {...item.props}
-                puck={{ renderDropZone: DropZone }}
+                puck={{ renderDropZone: DropZoneRender }}
               />
             </DropZoneProvider>
           );
