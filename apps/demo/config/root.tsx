@@ -6,9 +6,15 @@ export type RootProps = DefaultRootProps;
 
 function Root({ children, puck }: RootProps) {
   return (
-    <>
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
       <Header editMode={puck.isEditing} />
-      <DropZone zone={"default-zone"} disallow={["GridItem"]} />
+      <DropZone
+        zone={"default-zone"}
+        disallow={["GridItem"]}
+        style={{ flexGrow: 1 }}
+      />
       <Footer>
         <Footer.List title="Section">
           <Footer.Link href="#">Label</Footer.Link>
@@ -35,7 +41,7 @@ function Root({ children, puck }: RootProps) {
           <Footer.Link href="#">Label</Footer.Link>
         </Footer.List>
       </Footer>
-    </>
+    </div>
   );
 }
 

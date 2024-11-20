@@ -1,3 +1,7 @@
 @import url("https://rsms.me/inter/inter.css");
 @import "./styles/color.css";
 @import "./styles/typography.css";
+
+#frame-root {
+  height: 100vh;
+}
