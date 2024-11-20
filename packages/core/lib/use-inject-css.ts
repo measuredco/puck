@@ -15,6 +15,10 @@ const styles = `
   -webkit-user-select: none;
 }
 
+[data-puck-disabled] {
+  cursor: pointer;
+}
+
 [data-dnd-placeholder] {
   background: var(--puck-color-azure-06) !important;
   border: none !important;
