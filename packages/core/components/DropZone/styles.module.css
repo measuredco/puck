@@ -1,8 +1,29 @@
 .DropZone {
+  --drop-animation-ms: 250ms;
+  --resize-animation-ms: 150ms;
+
   position: relative;
+  height: 100%;
   min-height: 128px;
   outline-offset: -2px;
   width: 100%;
+}
+
+.DropZone--hasChildren {
+  min-height: 0;
+}
+
+.DropZone:empty {
+  min-height: 128px;
+}
+
+.DropZone--hasChildren:not(.DropZone--userIsDragging) {
+  transition: min-height var(--resize-animation-ms) var(--drop-animation-ms)
+    ease-in;
+}
+
+.DropZone:empty:not(.DropZone--userIsDragging) {
+  transition: min-height var(--resize-animation-ms) ease-in;
 }
 
 .DropZone--isAreaSelected,
@@ -11,7 +32,7 @@
   outline: 2px dashed var(--puck-color-azure-08);
 }
 
-.DropZone:not(.DropZone--hasChildren) {
+.DropZone:empty {
   background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
   outline: 2px dashed var(--puck-color-azure-08);
 }
