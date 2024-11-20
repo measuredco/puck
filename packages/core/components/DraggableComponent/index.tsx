@@ -123,6 +123,12 @@ export const DraggableComponent = ({
     }
   }, [state, index, zoneCompound, getPermissions]);
 
+  const userIsDragging = !!ctx?.draggedItem;
+
+  const canCollide = canDrag || userIsDragging;
+
+  const disabled = !isEnabled || !canCollide;
+
   const { ref: sortableRef, status } = useSortable({
     id,
     index,
@@ -138,7 +144,7 @@ export const DraggableComponent = ({
     },
     collisionPriority: isEnabled ? depth : 0,
     collisionDetector: createDynamicCollisionDetector(dragAxis),
-    disabled: !isEnabled || !canDrag, // TODO check this can still be dropped against
+    disabled,
 
     // "Out of the way" transition from react-beautiful-dnd
     transition: {
@@ -146,8 +152,6 @@ export const DraggableComponent = ({
       easing: "cubic-bezier(0.2, 0, 0, 1)",
     },
   });
-
-  const userIsDragging = !!ctx?.draggedItem;
 
   const thisIsDragging = status === "dragging";
 
@@ -311,6 +315,16 @@ export const DraggableComponent = ({
 
   useEffect(sync, [ref]);
   useEffect(sync, [state.data]);
+
+  useEffect(() => {
+    if (ref.current && disabled) {
+      ref.current.setAttribute("data-puck-disabled", "");
+
+      return () => {
+        ref.current?.removeAttribute("data-puck-disabled");
+      };
+    }
+  }, [disabled, ref]);
 
   const isVisible = isSelected || hover || indicativeHover;
 
