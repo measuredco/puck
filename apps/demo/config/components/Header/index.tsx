@@ -28,8 +28,8 @@ const NavItem = ({ label, href }: { label: string; href: string }) => {
 };
 
 const Header = ({ editMode }: { editMode: boolean }) => (
-  <div>
-    <header className={getClassName()}>
+  <div className={getClassName()}>
+    <header className={getClassName("inner")}>
       <div className={getClassName("logo")}>LOGO</div>
       <nav className={getClassName("items")}>
         <NavItem label="Home" href={`${editMode ? "" : "/"}`} />
