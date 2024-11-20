@@ -14,7 +14,7 @@ type PageProps = DefaultRootRenderProps;
 const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement>) => {
   useEffect(() => {
     if (ref.current) {
-      const iframe = ref.current!;
+      const iframe = ref.current;
 
       // NB pointermove doesn't trigger whilst dragging on iframes
       iframe.contentWindow?.addEventListener("mousemove", function (event) {
