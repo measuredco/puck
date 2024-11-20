@@ -1,4 +1,5 @@
 import {
+  CSSProperties,
   useCallback,
   useContext,
   useEffect,
@@ -39,6 +40,7 @@ function DropZoneEdit({
   disallow,
   style,
   className,
+  minEmptyHeight = 128,
   dragRef,
   collisionAxis,
 }: DropZoneProps) {
@@ -237,7 +239,7 @@ function DropZoneEdit({
         hoveringOverArea,
         isEnabled,
         isAreaSelected,
-        hasChildren: contentWithPreview.length > 0,
+        hasChildren: content.length > 0,
       })}${className ? ` ${className}` : ""}`}
       ref={(node) => {
         ref.current = node;
@@ -246,7 +248,12 @@ function DropZoneEdit({
 
         if (dragRef) dragRef(node);
       }}
-      style={style}
+      style={
+        {
+          ...style,
+          "--min-empty-height": `${minEmptyHeight}px`,
+        } as CSSProperties
+      }
     >
       {isRootZone && DEBUG && (
         <>
