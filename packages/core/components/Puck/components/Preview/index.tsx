@@ -86,7 +86,11 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
               const inner = (
                 <Page
                   {...rootProps}
-                  puck={{ renderDropZone: DropZone, isEditing: true }}
+                  puck={{
+                    renderDropZone: DropZone,
+                    isEditing: true,
+                    dragRef: null,
+                  }}
                   editMode={true} // DEPRECATED
                 >
                   <DropZone zone={rootDroppableId} />
@@ -105,7 +109,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         <div id="preview-frame" className={getClassName("frame")} ref={ref}>
           <Page
             {...rootProps}
-            puck={{ renderDropZone: DropZone, isEditing: true }}
+            puck={{ renderDropZone: DropZone, isEditing: true, dragRef: null }}
             editMode={true} // DEPRECATED
           >
             <DropZone zone={rootDroppableId} />
