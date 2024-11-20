@@ -11,7 +11,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { DragDropManager, Feedback } from "@dnd-kit/dom";
+import { defaultPreset, DragDropManager } from "@dnd-kit/dom";
 import { DragDropEvents } from "@dnd-kit/abstract";
 import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
@@ -95,7 +95,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
     () =>
       new DragDropManager({
         plugins: [
-          Feedback,
+          ...defaultPreset.plugins,
           createNestedDroppablePlugin({
             onChange: (params, manager) => {
               if (manager.dragOperation.status.dragging) {
@@ -234,10 +234,6 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             const collisionData = (
               manager.dragOperation.data?.collisionMap as CollisionMap
             )?.[targetId];
-
-            // if (collisionData?.void) {
-            //   return;
-            // }
 
             const collisionPosition =
               collisionData?.direction === "up" ||
