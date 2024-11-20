@@ -95,17 +95,15 @@ export const Canvas = () => {
 
   // Resize based on window size
   useEffect(() => {
-    const observer = new ResizeObserver(() => {
+    const cb = () => {
       setShowTransition(false);
       resetAutoZoom();
-    });
+    };
 
-    if (document.body) {
-      observer.observe(document.body);
-    }
+    window.addEventListener("resize", cb);
 
     return () => {
-      observer.disconnect();
+      window.removeEventListener("resize", cb);
     };
   }, []);
 
