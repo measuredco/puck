@@ -314,6 +314,23 @@ export const DraggableComponent = ({
 
   const isVisible = isSelected || hover || indicativeHover;
 
+  const [actionsWidth, setActionsWidth] = useState(250);
+  const actionsRef = useRef<HTMLDivElement>(null);
+
+  const updateActionsWidth = useCallback(() => {
+    if (actionsRef.current) {
+      const rect = actionsRef.current!.getBoundingClientRect();
+
+      setActionsWidth(rect.width);
+    }
+  }, []);
+
+  useEffect(updateActionsWidth, [
+    actionsRef.current,
+    zoomConfig.zoom,
+    isSelected,
+  ]);
+
   useEffect(() => {
     if (!ref.current || !overlayRef.current) {
       return;
@@ -403,6 +420,8 @@ export const DraggableComponent = ({
               className={getClassName("actionsOverlay")}
               style={{
                 top: actionsOverlayTop / zoomConfig.zoom,
+                // Offset against left of frame
+                minWidth: (actionsWidth + 2 * actionsRight) / zoomConfig.zoom,
               }}
             >
               <div
@@ -412,6 +431,7 @@ export const DraggableComponent = ({
                   top: actionsTop / zoomConfig.zoom,
                   right: actionsRight / zoomConfig.zoom,
                 }}
+                ref={actionsRef}
               >
                 <CustomActionBar label={label}>
                   {permissions.duplicate && (
