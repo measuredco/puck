@@ -1,6 +1,6 @@
 .DraggableComponent {
+  opacity: 0;
   position: absolute;
-
   pointer-events: none;
 
   --overlay-background: color-mix(
@@ -8,6 +8,10 @@
     var(--puck-color-azure-08) 30%,
     transparent
   );
+}
+
+.DraggableComponent--isReady {
+  opacity: 1;
 }
 
 .DraggableComponent-overlay {
@@ -64,8 +68,7 @@
   outline: 2px var(--puck-color-azure-07) solid !important;
 }
 
-.DraggableComponent--isSelected > .DraggableComponent-actionsOverlay {
-  display: block;
+.DraggableComponent-actionsOverlay {
   position: sticky;
   z-index: 2;
 }
