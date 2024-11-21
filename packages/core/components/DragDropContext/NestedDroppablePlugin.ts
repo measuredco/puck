@@ -41,7 +41,7 @@ type NestedDroppablePluginOptions = {
 const BUFFER_ZONE = 8;
 
 // Force shapes to refresh on mouse move.
-// TODO Expensive - can I remove this? Or restrict to during drag only?
+// TODO This is likely expensive. Explore ways to remove this.
 const REFRESH_ON_MOVE = true;
 
 const depthSort = (candidates: Droppable[]) => {
@@ -226,6 +226,10 @@ export const createNestedDroppablePlugin = ({
   class NestedDroppablePlugin extends Plugin<DragDropManager, {}> {
     constructor(manager: DragDropManager, options?: {}) {
       super(manager);
+
+      if (typeof window === "undefined") {
+        return;
+      }
 
       const cleanupEffect = effects(() => {
         const handleMove = (position: Position) => {

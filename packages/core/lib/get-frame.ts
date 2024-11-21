@@ -1,4 +1,6 @@
 export const getFrame = () => {
+  if (typeof window === "undefined") return;
+
   let frameEl: Element | Document | null | undefined =
     document.querySelector("#preview-frame");
 
