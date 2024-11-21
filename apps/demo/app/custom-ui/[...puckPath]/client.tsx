@@ -281,13 +281,15 @@ const CustomDrawer = () => {
   const { getPermissions } = usePuck();
 
   return (
-    <Drawer direction="horizontal">
+    <Drawer>
       <div
         style={{
-          display: "flex",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(256px, 1fr))",
           pointerEvents: "all",
           padding: "16px",
           background: "var(--puck-color-grey-12)",
+          gap: 8,
         }}
       >
         {Object.keys(config.components).map((componentKey, componentIndex) => {
@@ -299,19 +301,8 @@ const CustomDrawer = () => {
             <Drawer.Item
               key={componentKey}
               name={componentKey}
-              index={componentIndex}
               isDragDisabled={!canInsert}
-            >
-              {({ children }) => (
-                <div
-                  style={{
-                    marginRight: 8,
-                  }}
-                >
-                  {children}
-                </div>
-              )}
-            </Drawer.Item>
+            />
           );
         })}
       </div>
