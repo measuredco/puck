@@ -25,11 +25,12 @@ export function Editor() {
 
 ## Props
 
-| Prop                    | Example                   | Type     | Status   |
-| ----------------------- | ------------------------- | -------- | -------- |
-| [`name`](#name)         | `name: "Orange"`          | String   | Required |
-| [`children`](#children) | `children: () => <div />` | Function | -        |
-| [`id`](#id)             | `id: "OrangeComponent"`   | String   | -        |
+| Prop                                | Example                   | Type     | Status   |
+| ----------------------------------- | ------------------------- | -------- | -------- |
+| [`name`](#name)                     | `name: "Orange"`          | String   | Required |
+| [`children`](#children)             | `children: () => <div />` | Function | -        |
+| [`id`](#id)                         | `id: "OrangeComponent"`   | String   | -        |
+| [`isDragDisabled`](#isdragdisabled) | `isDragDisabled: false`   | Boolean  | -        |
 
 ## Required props
 
@@ -81,3 +82,7 @@ The original node for the drawer item.
 A unique id for this drawer item. Defaults to the value of [`name`](#name).
 
 If using the `<Drawer>` as a component list to be dragged into `<Puck.Preview>`, this should be the key of a component defined in the [Config](/docs/api-reference/configuration/config).
+
+### `isDragDisabled`
+
+Whether or not this item is disabled.
