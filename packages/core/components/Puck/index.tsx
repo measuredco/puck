@@ -246,7 +246,12 @@ export function Puck<
 
   const { data, ui } = appState;
 
-  const history = usePuckHistory({ dispatch, initialAppState, historyStore });
+  const history = usePuckHistory({
+    dispatch,
+    initialAppState,
+    historyStore,
+    iframeEnabled: _iframe?.enabled ?? true,
+  });
 
   const [menuOpen, setMenuOpen] = useState(false);
 
