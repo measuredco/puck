@@ -320,7 +320,7 @@ export const DraggableComponent = ({
     inDroppableZone,
   ]);
 
-  useEffect(sync, [ref]);
+  useEffect(sync, [ref, overlayRef]);
   useEffect(sync, [state.data]);
 
   useEffect(() => {
@@ -408,6 +408,8 @@ export const DraggableComponent = ({
     };
   }, [ref, overlayRef, isVisible, userIsDragging, hover, iframe]);
 
+  const overlayReady = ref.current && overlayRef.current;
+
   return (
     <DropZoneProvider
       value={{
@@ -427,6 +429,7 @@ export const DraggableComponent = ({
               isDragging: thisIsDragging,
               isSelected,
               isModifierHeld,
+              isReady: overlayReady,
               hover: hover || indicativeHover,
             })}
             ref={overlayRef}

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useAppContext } from "../components/Puck/context";
 
 const styles = `
 /* Prevent user from interacting with underlying component */
