@@ -19,7 +19,8 @@ const styles = `
   cursor: pointer;
 }
 
-[data-dnd-placeholder] {
+/* Placeholder */
+[data-puck-dragging]:not([data-dnd-dragging]) {
   background: var(--puck-color-azure-06) !important;
   border: none !important;
   color: #00000000 !important;
@@ -28,7 +29,7 @@ const styles = `
   transition: none !important;
 }
 
-[data-dnd-placeholder] *, [data-dnd-placeholder]::after, [data-dnd-placeholder]::before {
+[data-puck-dragging]:not([data-dnd-dragging]) *, [data-puck-dragging]:not([data-dnd-dragging])::after, [data-puck-dragging]:not([data-dnd-dragging])::before {
   opacity: 0 !important;
 }
 
