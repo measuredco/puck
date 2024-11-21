@@ -26,13 +26,14 @@ const config = {
 
 ## Props
 
-| Param                     | Example                      | Type          | Status   |
-| ------------------------- | ---------------------------- | ------------- | -------- |
-| [`zone`](#zone)           | `zone: "my-zone"`            | String        | Required |
-| [`allow`](#allow)         | `allow: ["HeadingBlock"]`    | Array         | -        |
-| [`className`](#className) | `className: "MyClass"`       | String        | -        |
-| [`disallow`](#disallow)   | `disallow: ["HeadingBlock"]` | Array         | -        |
-| [`style`](#style)         | `style: {display: "flex"}`   | CSSProperties | -        |
+| Param                               | Example                      | Type          | Status   |
+| ----------------------------------- | ---------------------------- | ------------- | -------- |
+| [`zone`](#zone)                     | `zone: "my-zone"`            | String        | Required |
+| [`allow`](#allow)                   | `allow: ["HeadingBlock"]`    | Array         | -        |
+| [`className`](#className)           | `className: "MyClass"`       | String        | -        |
+| [`disallow`](#disallow)             | `disallow: ["HeadingBlock"]` | Array         | -        |
+| [`minEmptyHeight`](#minEmptyHeight) | `minEmptyHeight: 256`        | Number        | -        |
+| [`style`](#style)                   | `style: {display: "flex"}`   | CSSProperties | -        |
 
 ## Required props
 
@@ -112,6 +113,26 @@ const config = {
         return (
           <div>
             <DropZone zone="my-content" className="MyComponent" />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+### `minEmptyHeight`
+
+The minimum height of the DropZone when empty, in pixels. Defaults to `128`.
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" minEmptyHeight={256} />
           </div>
         );
       },
