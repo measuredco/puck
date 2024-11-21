@@ -308,7 +308,11 @@ function DropZoneEdit({
           label =
             config.components[componentType]?.label ?? preview!.componentType;
 
-          Render = () => <DrawerItemInner name={label} />;
+          function Preview() {
+            return <DrawerItemInner name={label} />;
+          }
+
+          Render = Preview;
         }
 
         return (
