@@ -23,6 +23,7 @@ import { DrawerItemInner } from "../Drawer";
 import { pointerIntersection } from "@dnd-kit/collision";
 import { insert } from "../../lib/insert";
 import { previewContext } from "../DragDropContext";
+import { UniqueIdentifier } from "@dnd-kit/abstract";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -33,6 +34,13 @@ const DEBUG = false;
 const GRID_DRAG_AXIS: DragAxis = "dynamic";
 const FLEX_ROW_DRAG_AXIS: DragAxis = "x";
 const DEFAULT_DRAG_AXIS: DragAxis = "y";
+
+export type DropZoneDndData = {
+  areaId?: string;
+  depth: number;
+  path: UniqueIdentifier[];
+  isDroppableTarget: boolean;
+};
 
 function DropZoneEdit({
   zone,
@@ -190,13 +198,13 @@ function DropZoneEdit({
       ? contentWithPreview.length === 1
       : contentWithPreview.length === 0);
 
-  const droppableConfig: UseDroppableInput = {
+  const droppableConfig: UseDroppableInput<DropZoneDndData> = {
     id: zoneCompound,
     collisionPriority: isEnabled ? depth : 0,
     disabled: !isDropEnabled,
     collisionDetector: pointerIntersection,
+    type: "dropzone",
     data: {
-      zone: true,
       areaId,
       depth,
       isDroppableTarget: isDroppableTarget(),
