@@ -1,5 +1,6 @@
 import { Point } from "@dnd-kit/geometry";
-import { DragAxis, getDirection, type Direction } from "./get-direction";
+import { getDirection } from "./get-direction";
+import { Direction, DragAxis } from "../../../../types";
 
 type Interval = {
   current: Point;

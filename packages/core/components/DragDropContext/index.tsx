@@ -12,8 +12,8 @@ import {
   useState,
 } from "react";
 import { defaultPreset, DragDropManager } from "@dnd-kit/dom";
-import { DragDropEvents, DragOperation } from "@dnd-kit/abstract";
-import { DropZoneDndData, DropZoneProvider } from "../DropZone";
+import { DragDropEvents } from "@dnd-kit/abstract";
+import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
 import { getItem, ItemSelector } from "../../lib/get-item";
 import { PathData } from "../DropZone/context";
@@ -24,7 +24,6 @@ import {
 } from "./NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
-import { Direction } from "../../types";
 import { CollisionMap } from "../DraggableComponent/collision/dynamic";
 import { ComponentDndData } from "../DraggableComponent";
 
@@ -168,7 +167,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
 
             const { zone, index } = source.data as ComponentDndData;
 
-            // TODO replace with actual callback when exists
+            // Delay insert until animation has finished
             setTimeout(() => {
               if (preview) {
                 setPreview(null);
