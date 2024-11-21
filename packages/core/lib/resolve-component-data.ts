@@ -1,4 +1,4 @@
-import { ComponentData, Config, MappedItem } from "../types";
+import { AsFieldProps, ComponentData, Config, DefaultRootFieldProps, MappedItem } from "../types";
 import { getChanged } from "./get-changed";
 
 export const cache: {
@@ -24,11 +24,7 @@ export const resolveAllComponentData = async (
 };
 
 export const resolveComponentData = async (
-  item: ComponentData,
-  config: Config,
-  onResolveStart?: (item: MappedItem) => void,
-  onResolveEnd?: (item: MappedItem) => void
-) => {
+  item: ComponentData, config: Config, onResolveStart?: (item: MappedItem) => void, onResolveEnd?: (item: MappedItem) => void, rootProps?: Record<string, any>) => {
   const configForItem = config.components[item.type];
   if (configForItem.resolveData) {
     const { item: oldItem = null, resolved = {} } =
@@ -45,7 +41,7 @@ export const resolveComponentData = async (
     }
 
     const { props: resolvedProps, readOnly = {} } =
-      await configForItem.resolveData(item, { changed, lastData: oldItem });
+      await configForItem.resolveData(item, { changed, lastData: oldItem ,rootProps});
 
     const { readOnly: existingReadOnly = {} } = item || {};
 

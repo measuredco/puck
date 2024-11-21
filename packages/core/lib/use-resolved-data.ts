@@ -47,7 +47,7 @@ export const useResolvedData = (
   const runResolvers = async () => {
     // Flatten zones
     const newData = newAppState.data;
-
+    const rootProps = newData.root?.props || {};
     const flatContent = flattenData(newData).filter(
       (item) => !!config.components[item.type]?.resolveData
     );
@@ -111,7 +111,8 @@ export const useResolvedData = (
               deferredSetStates[item.props.id];
 
               _setComponentLoading(item.props.id, false);
-            }
+            },
+            rootProps
           );
 
           const dynamicDataMap = { [item.props.id]: dynamicData };

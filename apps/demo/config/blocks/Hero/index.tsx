@@ -173,7 +173,7 @@ export const Hero: ComponentConfig<HeroProps> = {
    *
    * For example, requesting a third-party API for the latest content.
    */
-  resolveData: async ({ props }, { changed }) => {
+  resolveData: async ({ props }, { changed,rootProps }) => {
     if (!props.quote)
       return { props, readOnly: { title: false, description: false } };
 
