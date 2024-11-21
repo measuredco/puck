@@ -3,7 +3,7 @@ import { Plugin } from "@dnd-kit/abstract";
 
 import type { Droppable } from "@dnd-kit/dom";
 
-import { effects } from "../../../../../dnd-kit/packages/state/dist";
+import { effects } from "@dnd-kit/state";
 import { BoundingRectangle } from "@dnd-kit/geometry";
 import { throttle } from "../../lib/throttle";
 import { ComponentDndData } from "../DraggableComponent";
