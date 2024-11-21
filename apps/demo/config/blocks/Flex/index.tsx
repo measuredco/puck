@@ -17,6 +17,14 @@ export type FlexProps = WithLayout<{
 
 const FlexInternal: ComponentConfig<FlexProps> = {
   fields: {
+    direction: {
+      label: "Direction",
+      type: "radio",
+      options: [
+        { label: "Row", value: "row" },
+        { label: "Column", value: "column" },
+      ],
+    },
     justifyContent: {
       label: "Justify Content",
       type: "radio",
@@ -24,14 +32,6 @@ const FlexInternal: ComponentConfig<FlexProps> = {
         { label: "Start", value: "start" },
         { label: "Center", value: "center" },
         { label: "End", value: "end" },
-      ],
-    },
-    direction: {
-      label: "Direction",
-      type: "radio",
-      options: [
-        { label: "Row", value: "row" },
-        { label: "Column", value: "column" },
       ],
     },
     gap: {
