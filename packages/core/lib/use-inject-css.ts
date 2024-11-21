@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getFrame } from "./get-frame";
 
 const styles = `
 /* Prevent user from interacting with underlying component */
@@ -43,19 +44,26 @@ export const useInjectStyleSheet = (
   initialStyles: string,
   iframeEnabled?: boolean
 ) => {
-  const [el] = useState<HTMLStyleElement>(document.createElement("style"));
+  const [el, setEl] = useState<HTMLStyleElement>();
 
   useEffect(() => {
+    setEl(document.createElement("style"));
+  }, []);
+
+  useEffect(() => {
+    if (!el || typeof window === "undefined") {
+      return;
+    }
+
     el.innerHTML = initialStyles;
 
     if (iframeEnabled) {
-      (
-        document.getElementById("preview-frame") as HTMLIFrameElement
-      ).contentWindow?.document.head.appendChild(el);
+      const frame = getFrame();
+      frame?.head?.appendChild(el);
     }
 
     document.head.appendChild(el);
-  }, [iframeEnabled]);
+  }, [iframeEnabled, el]);
 
   return el;
 };

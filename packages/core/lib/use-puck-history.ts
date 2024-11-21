@@ -76,7 +76,8 @@ export function usePuckHistory({
   };
 
   const frame = getFrame();
-  const resolvedFrame = frame !== document ? frame : undefined;
+  const resolvedFrame =
+    typeof window !== "undefined" && frame !== document ? frame : undefined;
 
   // Host hotkeys
   useHotkeys("meta+z", back, { preventDefault: true });
