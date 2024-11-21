@@ -66,7 +66,6 @@ function DropZoneEdit({
     registerLocalZone,
     deepestZone = rootDroppableId,
     deepestArea,
-    nextDeepestZone = deepestZone,
     nextDeepestArea,
     path = [],
   } = ctx!;

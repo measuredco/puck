@@ -14,7 +14,7 @@ export const collisionDebug = (
   b: Point,
   id: string,
   color: string,
-  label?: string
+  label?: string | null
 ) => {
   if (!DEBUG) return;
 

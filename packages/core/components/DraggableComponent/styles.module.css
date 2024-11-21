@@ -19,6 +19,7 @@
   height: 100%;
   width: 100%;
   top: 0;
+  outline: 2px var(--puck-color-azure-07) solid !important;
   outline-offset: -2px;
   position: absolute;
   pointer-events: none;
@@ -51,21 +52,16 @@
   background: var(--overlay-background);
 }
 
-.DraggableComponent--hover:not(.DraggableComponent--isSelected)
-  > .DraggableComponent-overlay {
+.DraggableComponent--hover > .DraggableComponent-overlay {
   outline: 2px var(--puck-color-azure-09) solid !important;
 }
 
 /* Won't work in FF */
-.DraggableComponent:not(.DraggableComponent--isSelected):has(
+.DraggableComponent:has(
     .DraggableComponent--hover > .DraggableComponent-overlay
   )
   > .DraggableComponent-overlay {
   display: none;
-}
-
-.DraggableComponent--isSelected > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-07) solid !important;
 }
 
 .DraggableComponent-actionsOverlay {
@@ -77,14 +73,8 @@
   position: absolute;
   width: auto;
   cursor: grab;
-  display: none;
+  display: flex;
   pointer-events: auto;
   box-sizing: border-box;
   transform-origin: right top;
-}
-
-.DraggableComponent--isSelected
-  > .DraggableComponent-actionsOverlay
-  > .DraggableComponent-actions {
-  display: flex;
 }
