@@ -75,6 +75,8 @@ const getZoneId = (candidate: Droppable | undefined) => {
     } else {
       id = data.zone;
     }
+  } else if (candidate.type === "void") {
+    return "void";
   }
 
   return id;

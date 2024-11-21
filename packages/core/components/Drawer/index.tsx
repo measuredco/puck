@@ -2,7 +2,7 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { DragIcon } from "../DragIcon";
 import { ReactElement, ReactNode, Ref, useMemo, useState } from "react";
-import { useDraggable } from "@dnd-kit/react";
+import { useDraggable, useDroppable } from "@dnd-kit/react";
 import { generateId } from "../../lib/generate-id";
 import { useDragListener } from "../DragDropContext";
 
@@ -92,6 +92,7 @@ const DrawerItem = ({
   children,
   id,
   label,
+  index,
   isDragDisabled,
 }: {
   name: string;
@@ -103,6 +104,12 @@ const DrawerItem = ({
 }) => {
   const resolvedId = id || name;
   const [dynamicId, setDynamicId] = useState(generateId(resolvedId));
+
+  if (typeof index !== "undefined") {
+    console.error(
+      "Warning: The `index` prop on Drawer.Item is deprecated and no longer required."
+    );
+  }
 
   useDragListener(
     "dragend",
@@ -128,12 +135,37 @@ const DrawerItem = ({
 
 export const Drawer = ({
   children,
+  droppableId,
+  direction,
 }: {
   children: ReactNode;
   droppableId?: string; // TODO deprecate
   direction?: "vertical" | "horizontal"; // TODO deprecate
 }) => {
-  return <div className={getClassName()}>{children}</div>;
+  if (droppableId) {
+    console.error(
+      "Warning: The `droppableId` prop on Drawer is deprecated and no longer required."
+    );
+  }
+
+  if (direction) {
+    console.error(
+      "Warning: The `direction` prop on Drawer is deprecated and no longer required to achieve multi-directional dragging."
+    );
+  }
+
+  const [id] = useState(generateId());
+
+  const { ref } = useDroppable({
+    id,
+    type: "void",
+  });
+
+  return (
+    <div className={getClassName()} ref={ref}>
+      {children}
+    </div>
+  );
 };
 
 Drawer.Item = DrawerItem;

@@ -91,6 +91,22 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
     }, 50);
   }, AREA_CHANGE_DEBOUNCE_MS);
 
+  const deepestRef = useRef(deepest);
+
+  const setDeepestDbMaybe = useCallback((params: DeepestParams) => {
+    if (
+      deepestRef.current === null ||
+      deepestRef.current?.zone === "void" ||
+      deepestRef.current?.zone === null
+    ) {
+      setDeepest(params);
+    } else {
+      setDeepestDb(params);
+    }
+
+    deepestRef.current = params;
+  }, []);
+
   const [manager] = useState(
     () =>
       new DragDropManager({
@@ -99,7 +115,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
           createNestedDroppablePlugin({
             onChange: (params, manager) => {
               if (manager.dragOperation.status.dragging) {
-                setDeepestDb(params);
+                setDeepestDbMaybe(params);
               } else {
                 setDeepest(params);
               }
@@ -162,10 +178,23 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
           onDragEnd={(event) => {
             setDraggedItem(null);
 
-            const { source } = event.operation;
+            const { source, target } = event.operation;
+
             if (!source) return;
 
             const { zone, index } = source.data as ComponentDndData;
+
+            if (target?.type === "void") {
+              if (preview) {
+                setPreview(null);
+              }
+
+              dragListeners.dragend?.forEach((fn) => {
+                fn(event, manager);
+              });
+
+              return;
+            }
 
             // Delay insert until animation has finished
             setTimeout(() => {
@@ -214,7 +243,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
 
             const { source, target } = event.operation;
 
-            if (!target || !source) return;
+            if (!target || !source || target.type === "void") return;
 
             const [sourceId] = (source.id as string).split(":");
             const [targetId] = (target.id as string).split(":");

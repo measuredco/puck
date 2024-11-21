@@ -16,7 +16,7 @@ export function Editor() {
   return (
     <Puck>
       <Drawer>
-        <Drawer.Item name="Orange" index={0} />
+        <Drawer.Item name="Orange" />
       </Drawer>
     </Puck>
   );
@@ -28,7 +28,6 @@ export function Editor() {
 | Prop                    | Example                   | Type     | Status   |
 | ----------------------- | ------------------------- | -------- | -------- |
 | [`name`](#name)         | `name: "Orange"`          | String   | Required |
-| [`index`](#index)       | `index: 0`                | Number   | Required |
 | [`children`](#children) | `children: () => <div />` | Function | -        |
 | [`id`](#id)             | `id: "OrangeComponent"`   | String   | -        |
 
@@ -40,13 +39,6 @@ The name of this drawer item.
 
 - This will be rendered on the item by default.
 - Will be used as the `id`, unless otherwise specified
-
-### `index`
-
-A numerical index for each item in the drawer.
-
-- Must be sequential, i.e. `0`, `1`, `2`.
-- Must start at `0`.
 
 ## Optional props
 
@@ -61,9 +53,7 @@ export function Editor() {
   return (
     <Puck>
       <Drawer>
-        <Drawer.Item name="Orange" index={0}>
-          {() => <div>Orange 🍊</div>}
-        </Drawer.Item>
+        <Drawer.Item name="Orange">{() => <div>Orange 🍊</div>}</Drawer.Item>
       </Drawer>
     </Puck>
   );
@@ -72,9 +62,7 @@ export function Editor() {
 
 <PuckPreview config={{}} data={{ root: { props: {} }, content: [] }}>
   <Drawer>
-    <Drawer.Item name="Orange" index={0}>
-      {() => <div>Orange 🍊</div>}
-    </Drawer.Item>
+    <Drawer.Item name="Orange">{() => <div>Orange 🍊</div>}</Drawer.Item>
   </Drawer>
 </PuckPreview>
 
