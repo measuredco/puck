@@ -71,7 +71,7 @@ type DeepestParams = {
   area: string | null;
 };
 
-const AREA_CHANGE_DEBOUNCE_MS = 350;
+const AREA_CHANGE_DEBOUNCE_MS = 150;
 
 export const DragDropContext = ({ children }: { children: ReactNode }) => {
   const { state, config, dispatch, resolveData } = useAppContext();
