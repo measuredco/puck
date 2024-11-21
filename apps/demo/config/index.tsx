@@ -146,13 +146,11 @@ export const initialData: Record<string, UserData> = {
         },
       },
       {
-        type: "Flex",
+        type: "Grid",
         props: {
-          id: "Flex-c4cd99ae-8c5e-4cdb-87d2-35a639f5163e",
-          justifyContent: "start",
-          direction: "row",
+          id: "Grid-c4cd99ae-8c5e-4cdb-87d2-35a639f5163e",
           gap: 24,
-          wrap: "wrap",
+          numColumns: 3,
         },
       },
       {
@@ -345,7 +343,7 @@ export const initialData: Record<string, UserData> = {
     ],
     root: { props: { title: "Puck Example" } },
     zones: {
-      "Flex-c4cd99ae-8c5e-4cdb-87d2-35a639f5163e:flex": [
+      "Grid-c4cd99ae-8c5e-4cdb-87d2-35a639f5163e:grid": [
         {
           type: "Card",
           props: {
