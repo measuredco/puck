@@ -31,6 +31,7 @@ const config = {
 | [`zone`](#zone)                     | `zone: "my-zone"`            | String        | Required |
 | [`allow`](#allow)                   | `allow: ["HeadingBlock"]`    | Array         | -        |
 | [`className`](#className)           | `className: "MyClass"`       | String        | -        |
+| [`collisionAxis`](#collisionAxis)   | `collisionAxis: "x"`         | String        | -        |
 | [`disallow`](#disallow)             | `disallow: ["HeadingBlock"]` | Array         | -        |
 | [`minEmptyHeight`](#minEmptyHeight) | `minEmptyHeight: 256`        | Number        | -        |
 | [`style`](#style)                   | `style: {display: "flex"}`   | CSSProperties | -        |
@@ -81,26 +82,6 @@ const config = {
 };
 ```
 
-### `disallow`
-
-Allow all but specific components to be dragged into the DropZone. Any items in `allow` will override `disallow`.
-
-```tsx copy {7}
-const config = {
-  components: {
-    Example: {
-      render: () => {
-        return (
-          <div>
-            <DropZone zone="my-content" disallow={["HeadingBlock"]} />
-          </div>
-        );
-      },
-    },
-  },
-};
-```
-
 ### `className`
 
 Provide a className to the DropZone component. The default DropZone styles will still be applied.
@@ -113,6 +94,58 @@ const config = {
         return (
           <div>
             <DropZone zone="my-content" className="MyComponent" />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+### `collisionAxis`
+
+Configure which axis Puck will use for overlap collision detection.
+
+Options:
+
+- `x` - detect collisions based their x-axis overlap
+- `y` - detect collisions based their y-axis overlap
+- `dynamic` - automatically choose an axis based on the direction of travel
+
+The defaults are set based on the CSS layout of the parent:
+
+- CSS Grid: `dynamic`
+- CSS Flexbox row: `x`
+- Everything else: `y`
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" collisionAxis="dynamic" />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+### `disallow`
+
+Allow all but specific components to be dragged into the DropZone. Any items in `allow` will override `disallow`.
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" disallow={["HeadingBlock"]} />
           </div>
         );
       },
