@@ -184,7 +184,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
 
             const { zone, index } = source.data as ComponentDndData;
 
-            if (target?.type === "void") {
+            if (event.canceled || target?.type === "void") {
               if (preview) {
                 setPreview(null);
               }
