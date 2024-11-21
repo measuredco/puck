@@ -439,7 +439,6 @@ export const DraggableComponent = ({
           <div
             className={getClassName({
               isDragging: thisIsDragging,
-              isSelected,
               isModifierHeld,
               isReady: overlayReady,
               hover: hover || indicativeHover,
