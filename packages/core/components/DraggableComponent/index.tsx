@@ -24,6 +24,7 @@ import { dropZoneContext, DropZoneProvider } from "../DropZone";
 import { createDynamicCollisionDetector } from "./collision/dynamic";
 import { getItem } from "../../lib/get-item";
 import { DragAxis } from "../../types";
+import { UniqueIdentifier } from "@dnd-kit/abstract";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -44,6 +45,16 @@ const DefaultActionBar = ({
     <ActionBar.Group>{children}</ActionBar.Group>
   </ActionBar>
 );
+
+export type ComponentDndData = {
+  zone: string;
+  index: number;
+  componentType: string;
+  containsActiveZone: boolean;
+  depth: number;
+  path: UniqueIdentifier[];
+  inDroppableZone: boolean;
+};
 
 export const DraggableComponent = ({
   children,
@@ -129,12 +140,13 @@ export const DraggableComponent = ({
 
   const disabled = !isEnabled || !canCollide;
 
-  const { ref: sortableRef, status } = useSortable({
+  const { ref: sortableRef, status } = useSortable<ComponentDndData>({
     id,
     index,
     group: zoneCompound,
+    type: "component",
     data: {
-      group: zoneCompound,
+      zone: zoneCompound,
       index,
       componentType,
       containsActiveZone,

@@ -6,6 +6,8 @@ import type { Droppable } from "@dnd-kit/dom";
 import { effects } from "../../../../../dnd-kit/packages/state/dist";
 import { BoundingRectangle } from "@dnd-kit/geometry";
 import { throttle } from "../../lib/throttle";
+import { ComponentDndData } from "../DraggableComponent";
+import { DropZoneDndData } from "../DropZone";
 
 interface Position {
   x: number;
@@ -44,12 +46,15 @@ const REFRESH_ON_MOVE = true;
 
 const depthSort = (candidates: Droppable[]) => {
   return candidates.sort((a, b) => {
+    const aData = a.data as ComponentDndData | DropZoneDndData;
+    const bData = b.data as ComponentDndData | DropZoneDndData;
+
     // Use depth instead of ref, as this is 1) faster and 2) handles cases where a and b share a ref
-    if (a.data.depth > b.data.depth) {
+    if (aData.depth > bData.depth) {
       return 1;
     }
 
-    if (b.data.depth > a.data.depth) {
+    if (bData.depth > aData.depth) {
       return -1;
     }
 
@@ -62,11 +67,13 @@ const getZoneId = (candidate: Droppable | undefined) => {
 
   if (!candidate) return null;
 
-  if (!candidate.data.zone) {
-    if (candidate.data.containsActiveZone) {
+  if (candidate.type === "component") {
+    const data = candidate.data as ComponentDndData;
+
+    if (data.containsActiveZone) {
       id = null;
     } else {
-      id = candidate.data.group;
+      id = data.zone;
     }
   }
 
@@ -74,8 +81,12 @@ const getZoneId = (candidate: Droppable | undefined) => {
 };
 
 const getAreaId = (candidate: Droppable) => {
-  if (candidate.data.containsActiveZone) {
-    return candidate.id as string;
+  if (candidate.type === "component") {
+    const data = candidate.data as ComponentDndData;
+
+    if (data.containsActiveZone) {
+      return candidate.id as string;
+    }
   }
 
   return null;
@@ -111,22 +122,19 @@ const expandHitBox = (rect: BoundingRectangle): BoundingRectangle => {
 
 const getPointerCollisions = (position: Position, manager: DragDropManager) => {
   const candidates: Droppable[] = [];
+
+  const source = manager.dragOperation?.source;
+  const sourceData = source ? (source.data as ComponentDndData) : undefined;
+
   for (const droppable of manager.registry.droppables.value) {
     if (droppable.shape) {
       let rect = droppable.shape.boundingRectangle;
 
-      const isNotSourceZone =
-        droppable.id !==
-        (manager.dragOperation.source?.data.group ||
-          manager.dragOperation.source?.id);
+      const isNotSourceZone = droppable.id !== (sourceData?.zone || source?.id);
+      const isNotTargetZone = droppable.id !== (sourceData?.zone || source?.id);
 
-      const isNotTargetZone =
-        droppable.id !==
-        (manager.dragOperation.source?.data.group ||
-          manager.dragOperation.source?.id);
-
-      // Expand hitboxes on zones
-      if (droppable.data.zone && isNotSourceZone && isNotTargetZone) {
+      // Expand hitboxes on dropzones
+      if (droppable.type === "dropzone" && isNotSourceZone && isNotTargetZone) {
         rect = expandHitBox(rect);
       }
 
@@ -165,25 +173,35 @@ export const findDeepestCandidate = (
 
     // Remove any descendants
     filteredCandidates = filteredCandidates.filter((candidate) => {
+      const candidateData = candidate.data as
+        | ComponentDndData
+        | DropZoneDndData;
+
       if (draggedCandidateId && draggedCandidateIndex > -1) {
-        if (candidate.data.path.indexOf(draggedCandidateId) > -1) {
+        if (candidateData.path.indexOf(draggedCandidateId) > -1) {
           return false;
         }
       }
 
-      // Remove non-droppable zones
-      if (candidate.data.zone && !candidate.data.isDroppableTarget) {
-        return false;
-      }
+      if (candidate.type === "component") {
+        const candidateData = candidate.data as ComponentDndData;
 
-      // Remove items in non-droppable zones
-      if (!candidate.data.zone && !candidate.data.inDroppableZone) {
-        return false;
-      }
+        // Remove items in non-droppable zones
+        if (!candidateData.inDroppableZone) {
+          return false;
+        }
+      } else {
+        const candidateData = candidate.data as DropZoneDndData;
 
-      // Remove if dragged item is area
-      if (candidate.data.areaId === draggedCandidateId) {
-        return false;
+        // Remove non-droppable zones
+        if (!candidateData.isDroppableTarget) {
+          return false;
+        }
+
+        // Remove if dragged item is area
+        if (candidateData.areaId === draggedCandidateId) {
+          return false;
+        }
       }
 
       return true;

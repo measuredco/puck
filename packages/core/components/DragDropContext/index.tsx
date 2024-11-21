@@ -12,8 +12,8 @@ import {
   useState,
 } from "react";
 import { defaultPreset, DragDropManager } from "@dnd-kit/dom";
-import { DragDropEvents } from "@dnd-kit/abstract";
-import { DropZoneProvider } from "../DropZone";
+import { DragDropEvents, DragOperation } from "@dnd-kit/abstract";
+import { DropZoneDndData, DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
 import { getItem, ItemSelector } from "../../lib/get-item";
 import { PathData } from "../DropZone/context";
@@ -26,6 +26,7 @@ import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
 import { Direction } from "../../types";
 import { CollisionMap } from "../DraggableComponent/collision/dynamic";
+import { ComponentDndData } from "../DraggableComponent";
 
 type Events = DragDropEvents<Draggable, Droppable, DragDropManager>;
 type DragCbs = Partial<{ [eventName in keyof Events]: Events[eventName][] }>;
@@ -160,14 +161,12 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
         <DragDropProvider
           manager={manager}
           onDragEnd={(event) => {
-            const { source, target } = event.operation;
-
             setDraggedItem(null);
 
+            const { source } = event.operation;
             if (!source) return;
 
-            let zone = source.data.group;
-            let index = source.data.index;
+            const { zone, index } = source.data as ComponentDndData;
 
             // TODO replace with actual callback when exists
             setTimeout(() => {
@@ -218,38 +217,41 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
 
             if (!target || !source) return;
 
-            const sourceData = source.data;
-            const targetData = target.data;
-
-            const isOverZone = targetData.zone;
-
-            let sourceZone = sourceData.group;
-            let sourceIndex = sourceData.index;
-            let targetZone = targetData.group;
-            let targetIndex = targetData.index;
-
             const [sourceId] = (source.id as string).split(":");
             const [targetId] = (target.id as string).split(":");
 
-            const collisionData = (
-              manager.dragOperation.data?.collisionMap as CollisionMap
-            )?.[targetId];
+            const sourceData = source.data as ComponentDndData;
 
-            const collisionPosition =
-              collisionData?.direction === "up" ||
-              collisionData?.direction === "left"
-                ? "before"
-                : "after";
+            let sourceZone = sourceData.zone;
+            let sourceIndex = sourceData.index;
 
-            if (targetIndex >= sourceIndex && sourceZone === targetZone) {
-              targetIndex = targetIndex - 1;
-            }
+            let targetZone = "";
+            let targetIndex = 0;
 
-            if (collisionPosition === "after") {
-              targetIndex = targetIndex + 1;
-            }
+            if (target.type === "component") {
+              const targetData = target.data as ComponentDndData;
 
-            if (isOverZone) {
+              targetZone = targetData.zone;
+              targetIndex = targetData.index;
+
+              const collisionData = (
+                manager.dragOperation.data?.collisionMap as CollisionMap
+              )?.[targetId];
+
+              const collisionPosition =
+                collisionData?.direction === "up" ||
+                collisionData?.direction === "left"
+                  ? "before"
+                  : "after";
+
+              if (targetIndex >= sourceIndex && sourceZone === targetZone) {
+                targetIndex = targetIndex - 1;
+              }
+
+              if (collisionPosition === "after") {
+                targetIndex = targetIndex + 1;
+              }
+            } else {
               targetZone = target.id.toString();
               targetIndex = 0;
             }
@@ -278,7 +280,7 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
             } else {
               if (!initialSelector.current) {
                 initialSelector.current = {
-                  zone: sourceData.group,
+                  zone: sourceData.zone,
                   index: sourceData.index,
                 };
               }
