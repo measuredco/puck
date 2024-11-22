@@ -393,6 +393,7 @@ export const DraggableComponent = ({
         createPortal(
           <div
             className={getClassName({
+              isSelected,
               isDragging: thisIsDragging,
               isModifierHeld,
               isReady: overlayReady,

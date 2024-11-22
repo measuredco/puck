@@ -37,6 +37,7 @@ const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement>) => {
     }
   }, [ref]);
 };
+
 export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   const { config, dispatch, state, setStatus, iframe, overrides } =
     useAppContext();
