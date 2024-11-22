@@ -2,9 +2,9 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { DragIcon } from "../DragIcon";
 import { ReactElement, ReactNode, Ref, useMemo, useState } from "react";
-import { useDraggable, useDroppable } from "@dnd-kit/react";
 import { generateId } from "../../lib/generate-id";
 import { useDragListener } from "../DragDropContext";
+import { useDraggableSafe, useDroppableSafe } from "../../lib/dnd-kit/safe";
 
 const getClassName = getClassNameFactory("Drawer", styles);
 const getClassNameItem = getClassNameFactory("DrawerItem", styles);
@@ -69,7 +69,7 @@ const DrawerItemDraggable = ({
   id: string;
   isDragDisabled?: boolean;
 }) => {
-  const { ref } = useDraggable({
+  const { ref } = useDraggableSafe({
     id,
     data: { type: "drawer", componentType: name },
     disabled: isDragDisabled,
@@ -156,7 +156,7 @@ export const Drawer = ({
 
   const [id] = useState(generateId());
 
-  const { ref } = useDroppable({
+  const { ref } = useDroppableSafe({
     id,
     type: "void",
   });
