@@ -18,12 +18,13 @@ import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
 import { ComponentConfig, DragAxis, PuckContext } from "../../types";
 
-import { useDroppable, UseDroppableInput } from "@dnd-kit/react";
+import { UseDroppableInput } from "@dnd-kit/react";
 import { DrawerItemInner } from "../Drawer";
 import { pointerIntersection } from "@dnd-kit/collision";
 import { insert } from "../../lib/insert";
 import { previewContext } from "../DragDropContext";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
+import { useDroppableSafe } from "../../lib/dnd-kit/safe";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -211,7 +212,7 @@ function DropZoneEdit({
     },
   };
 
-  const { ref: dropRef } = useDroppable(droppableConfig);
+  const { ref: dropRef } = useDroppableSafe(droppableConfig);
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
   const isAreaSelected = selectedItem && areaId === selectedItem.props.id;
