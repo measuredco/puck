@@ -10,7 +10,7 @@ import { Puck } from "@/core";
 Multi-column layouts can be achieved with two Puck APIs:
 
 1. The [`<DropZone>` component](/docs/api-reference/components/drop-zone), enabling you to nest components
-2. The [`inline` parameter](/docs/api-reference/config/component-config#inline), enable multi-directional drag-and-drop
+2. The [`inline` parameter](/docs/api-reference/configuration/component-config#inline), enable multi-directional drag-and-drop
 
 ## Nesting components with DropZones
 
@@ -32,8 +32,8 @@ const config = {
         );
       },
     },
-    HeadingBlock: {
-      render: () => <p>Hello, world</p>,
+    Card: {
+      render: () => <div>Hello, world</div>,
     },
   },
 };
@@ -52,9 +52,20 @@ const config = {
           );
         },
       },
-      HeadingBlock: {
+      Card: {
         render: () => {
-          return <p style={{ color: "black" }}>Hello, world</p>;
+          return (
+            <div
+              style={{
+                background: "white",
+                border: "1px solid black",
+                borderRadius: 4,
+                padding: 16,
+              }}
+            >
+              Hello, world
+            </div>
+          );
         },
       },
     },
@@ -63,9 +74,7 @@ const config = {
     content: [{ type: "Example", props: { id: "Example-1" } }],
     root: { props: {} },
     zones: {
-      "Example-1:my-content": [
-        { type: "HeadingBlock", props: { id: "Example-2" } },
-      ],
+      "Example-1:my-content": [{ type: "Card", props: { id: "Example-2" } }],
     },
   }}
 >
@@ -93,8 +102,8 @@ const config = {
         );
       },
     },
-    HeadingBlock: {
-      render: ({ text }) => <h2>{text}</h2>,
+    Card: {
+      render: () => <div>Hello, world</div>,
     },
   },
 };
@@ -103,6 +112,11 @@ const config = {
 <PuckPreview
   label="Multi-column DropZone example"
   config={{
+    root: {
+      render: ({ puck: { renderDropZone: DropZone } }) => (
+        <DropZone zone="default-zone" disallow={["Card"]} />
+      ),
+    },
     components: {
       Example: {
         render: ({ puck: { renderDropZone: DropZone } }) => {
@@ -112,7 +126,6 @@ const config = {
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
                 gap: 16,
-                padding: 32,
               }}
             >
               <DropZone zone="left-column" />
@@ -121,9 +134,20 @@ const config = {
           );
         },
       },
-      HeadingBlock: {
+      Card: {
         render: ({ content }) => {
-          return <p>{content}</p>;
+          return (
+            <div
+              style={{
+                background: "white",
+                border: "1px solid black",
+                borderRadius: 4,
+                padding: 16,
+              }}
+            >
+              {content}
+            </div>
+          );
         },
       },
     },
@@ -134,14 +158,14 @@ const config = {
     zones: {
       "Example-1:left-column": [
         {
-          type: "HeadingBlock",
-          props: { id: "Example-2", content: "Left column" },
+          type: "Card",
+          props: { id: "Example-2", content: "1" },
         },
       ],
       "Example-1:right-column": [
         {
-          type: "HeadingBlock",
-          props: { id: "Example-3", content: "Right column" },
+          type: "Card",
+          props: { id: "Example-3", content: "2" },
         },
       ],
     },
@@ -154,9 +178,13 @@ const config = {
 
 By default, Puck will wrap your components in a `div` element for a vertical `block` layout, restricting drag-and-drop to the y-axis.
 
-The `inline` component parameter allows you to eliminate the wrapping element. Combining this with DropZones enables advanced CSS layouts like Grid or Flexbox, with multi-directional drag-and-drop.
+The `inline` component parameter allows you to eliminate the wrapping element. Combining this with DropZones enables advanced CSS layouts with multi-directional drag-and-drop.
 
-```tsx {9,11,12} showLineNumbers copy
+### Basic CSS grid example
+
+For example, set `inline: true` to implement CSS grid layouts. When using inline mode, you must specify which element is draggable by passing the [`puck.dragRef` prop](/docs/api-reference/configuration/component-config#puckdragref) to your element's `ref` prop.
+
+```tsx {9,14,17} showLineNumbers copy
 import { DropZone } from "@measured/puck";
 
 const config = {
@@ -169,14 +197,14 @@ const config = {
         />
       ),
     },
-    HeadingBlock: {
+    Card: {
       inline: true, // Enable inline mode, removing the Puck wrapper
       render: ({ text, puck }) => (
-        <h2
+        <div
           ref={puck.dragRef} // Let Puck know this element is draggable
         >
           {text}
-        </h2>
+        </div>
       ),
     },
   },
@@ -184,54 +212,166 @@ const config = {
 ```
 
 <PuckPreview
-  label="CSS Grid example"
+  label="CSS grid example"
   config={{
+    root: {
+      render: ({ puck: { renderDropZone: DropZone } }) => (
+        <DropZone
+          zone="default-zone"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 16,
+          }}
+        />
+      ),
+    },
     components: {
-      Example: {
-        render: ({ puck: { renderDropZone: DropZone } }) => {
-          return (
-            <DropZone
-              zone="my-content"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 16,
-              }}
-            />
-          );
-        },
-      },
-      HeadingBlock: {
+      Card: {
         inline: true,
-        render: ({ content }) => {
+        render: ({ content, puck }) => {
           return (
-            <p
+            <div
+              style={{
+                background: "white",
+                border: "1px solid black",
+                borderRadius: 4,
+                padding: 16,
+              }}
               ref={puck.dragRef} // Let Puck know this element is draggable
             >
               {content}
-            </p>
+            </div>
           );
         },
       },
     },
   }}
   data={{
-    content: [{ type: "Example", props: { id: "Example-1" } }],
+    content: [
+      {
+        type: "Card",
+        props: { id: "Example-2", content: "1" },
+      },
+      {
+        type: "Card",
+        props: { id: "Example-3", content: "2" },
+      },
+    ],
     root: { props: {} },
-    zones: {
-      "Example-1:my-content": [
-        {
-          type: "HeadingBlock",
-          props: { id: "Example-2", content: "Left column" },
-        },
-        {
-          type: "HeadingBlock",
-          props: { id: "Example-3", content: "Right column" },
-        },
-      ],
-    },
   }}
 >
+  <Puck.Preview />
+</PuckPreview>
+
+### Advanced CSS grid example
+
+You can create more sophisticated layouts, too. Here's an advanced CSS grid example, with items spanning multiple rows and columns.
+
+```tsx {11-12,24-25} showLineNumbers copy
+import { DropZone } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      render: () => (
+        <DropZone
+          zone="my-content"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr 1fr",
+            gridTemplateRows: "1fr 1fr 1fr 1fr",
+            gap: 16,
+          }}
+        />
+      ),
+    },
+    Card: {
+      inline: true, // Enable inline mode, removing the Puck wrapper
+      render: ({ text, puck }) => (
+        <div
+          ref={puck.dragRef} // Let Puck know this element is draggable
+          style={{
+            gridColumn: `span ${spanCol}`,
+            gridRow: `span ${spanRow}`,
+          }}
+        >
+          {text}
+        </div>
+      ),
+    },
+  },
+};
+```
+
+<PuckPreview
+  label="Advanced grid example"
+  config={{
+    root: {
+      render: ({ puck: { renderDropZone: DropZone } }) => (
+        <DropZone
+          zone="default-zone"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr 1fr",
+            gridTemplateRows: "1fr 1fr 1fr",
+            gap: 16,
+          }}
+        />
+      ),
+    },
+    components: {
+      Card: {
+        inline: true,
+        render: ({ content, spanCol, spanRow, puck }) => {
+          return (
+            <div
+              style={{
+                background: 'white',border: "1px solid black",
+                borderRadius: 4,
+                padding: 16,
+                gridColumn: `span ${spanCol}`,
+                gridRow: `span ${spanRow}`,
+              }}
+              ref={puck.dragRef} // Let Puck know this element is draggable
+            >
+              {content}
+            </div>
+          );
+        },
+      },
+    },
+  }}
+  data={{
+    content: [
+      {
+        type: "Card",
+        props: { id: "Example-1", content: "1", spanCol: 2, spanRow: 2 },
+      },
+      {
+        type: "Card",
+        props: { id: "Example-2", content: "2", spanCol: 1, spanRow: 1 },
+      },
+      {
+        type: "Card",
+        props: { id: "Example-3", content: "3", spanCol: 1, spanRow: 1 },
+      },
+      {
+        type: "Card",
+        props: { id: "Example-4", content: "4", spanCol: 2, spanRow: 1 },
+      },
+      {
+        type: "Card",
+        props: { id: "Example-5", content: "5", spanCol: 1, spanRow: 1 },
+      },
+
+    ],
+    root: { props: {} },
+
+}}
+
+>
+
   <Puck.Preview />
 </PuckPreview>
 
@@ -248,7 +388,7 @@ const config = {
       render: () => {
         return (
           <div>
-            <DropZone zone="my-content" allow={["HeadingBlock"]} />
+            <DropZone zone="my-content" allow={["Card"]} />
           </div>
         );
       },
@@ -259,13 +399,13 @@ const config = {
 
 This can be combined with [categories](/docs/integrating-puck/categories) to restrict based on your existing groups:
 
-```tsx {4-8,14} showLineNumbers copy
+```tsx {4-8,16} showLineNumbers copy
 import { DropZone } from "@measured/puck";
 
 const config = {
   categories: {
     typography: {
-      components: ["HeadingBlock"],
+      components: ["Card"],
     },
   },
   components: {
@@ -288,6 +428,6 @@ const config = {
 ## Further reading
 
 - [The `<DropZone>` API](/docs/api-reference/components/drop-zone)
-- [The `inline` component config](/docs/api-reference/config/component-config#inline)
+- [The `inline` component config](/docs/api-reference/configuration/component-config#inline)
 - [How DropZones store data](/docs/api-reference/data#zones)
 - [DropZones and React Server Components](/docs/integrating-puck/server-components)
