@@ -17,7 +17,6 @@ import { useAppContext } from "../Puck/context";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
 
-import { useSortable } from "@dnd-kit/react/sortable";
 import { createPortal } from "react-dom";
 
 import { dropZoneContext, DropZoneProvider } from "../DropZone";
@@ -25,6 +24,7 @@ import { createDynamicCollisionDetector } from "./collision/dynamic";
 import { getItem } from "../../lib/get-item";
 import { DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
+import { useSortableSafe } from "../../lib/dnd-kit/safe";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -144,7 +144,7 @@ export const DraggableComponent = ({
 
   const [dragAxis, setDragAxis] = useState(userDragAxis || autoDragAxis);
 
-  const { ref: sortableRef, status } = useSortable<ComponentDndData>({
+  const { ref: sortableRef, status } = useSortableSafe<ComponentDndData>({
     id,
     index,
     group: zoneCompound,
