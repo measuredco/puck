@@ -188,11 +188,13 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
         <DragDropProvider
           manager={manager}
           onDragEnd={(event) => {
-            setDraggedItem(null);
-
             const { source, target } = event.operation;
 
-            if (!source) return;
+            if (!source) {
+              setDraggedItem(null);
+
+              return;
+            }
 
             const { zone, index } = source.data as ComponentDndData;
 
@@ -244,6 +246,10 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
               dragListeners.dragend?.forEach((fn) => {
                 fn(event, manager);
               });
+
+              setTimeout(() => {
+                setDraggedItem(null);
+              }, 10);
             }, 250);
           }}
           onDragOver={(event, manager) => {

@@ -365,17 +365,20 @@ export const DraggableComponent = ({
     setDragAxis(autoDragAxis);
   }, [ref, userDragAxis, autoDragAxis]);
 
-  useEffect(sync, [
-    ref,
-    overlayRef,
-    isVisible,
-    userIsDragging,
-    hover,
-    iframe,
-    state.data,
-  ]);
+  useEffect(sync, [ref, overlayRef, isVisible, hover, iframe, state.data]);
 
-  const overlayReady = ref.current && overlayRef.current;
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (!userIsDragging) {
+      sync();
+      setReady(true);
+    } else {
+      setReady(false);
+    }
+  }, [userIsDragging]);
+
+  const overlayReady = ref.current && overlayRef.current && ready;
 
   return (
     <DropZoneProvider
