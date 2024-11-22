@@ -189,33 +189,11 @@ export const DraggableComponent = ({
 
     const rect = ref.current!.getBoundingClientRect();
 
-    let iframeLeft = 0;
-    let iframeTop = 0;
-
-    if (iframe.enabled) {
-      const frameEl = document.getElementById("preview-frame");
-
-      if (!frameEl) {
-        throw new Error("iframe enabled, but could not find element");
-      }
-
-      const frameRect = frameEl.getBoundingClientRect();
-
-      iframeLeft = frameRect.left;
-      iframeTop = frameRect.top;
-    }
-
-    const previewEl = document.getElementById("puck-preview");
-
-    if (!previewEl) return;
-
-    const previewRect = previewEl.getBoundingClientRect();
-
     overlayRef.current!.style.left = `${
-      rect.left - previewRect.left + iframeLeft
+      rect.left + (ref.current.ownerDocument.defaultView?.scrollX || 0)
     }px`;
     overlayRef.current!.style.top = `${
-      rect.top - previewRect.top + iframeTop
+      rect.top + (ref.current.ownerDocument.defaultView?.scrollY || 0)
     }px`;
     overlayRef.current!.style.height = `${rect.height}px`;
     overlayRef.current!.style.width = `${rect.width}px`;
@@ -336,9 +314,6 @@ export const DraggableComponent = ({
     inDroppableZone,
   ]);
 
-  useEffect(sync, [ref, overlayRef]);
-  useEffect(sync, [state.data]);
-
   useEffect(() => {
     if (ref.current && disabled) {
       ref.current.setAttribute("data-puck-disabled", "");
@@ -369,62 +344,6 @@ export const DraggableComponent = ({
   ]);
 
   useEffect(() => {
-    if (!ref.current || !overlayRef.current) {
-      return;
-    }
-
-    const el = ref.current as HTMLElement;
-
-    const canvasRoot = document.getElementById("puck-canvas-root");
-
-    const onCanvasScroll = () => {
-      if (!ref.current || !overlayRef.current) return;
-
-      sync();
-    };
-
-    const scrollTarget = iframe.enabled
-      ? (document.getElementById("preview-frame") as HTMLIFrameElement)
-          .contentWindow
-      : canvasRoot;
-
-    if (isVisible) {
-      scrollTarget?.addEventListener("scroll", onCanvasScroll);
-    } else {
-      scrollTarget?.removeEventListener("scroll", onCanvasScroll);
-    }
-
-    const observer = new ResizeObserver(() => {
-      sync();
-    });
-
-    observer.observe(el);
-
-    let isObserving = true;
-
-    const loop = () => {
-      requestAnimationFrame(() => {
-        if (isObserving && isVisible && userIsDragging) {
-          sync();
-          loop();
-        }
-      });
-    };
-
-    if (isVisible && userIsDragging) {
-      loop();
-    }
-
-    return () => {
-      if (!ref.current) return;
-
-      isObserving = false;
-      observer.disconnect();
-      scrollTarget?.removeEventListener("scroll", onCanvasScroll);
-    };
-  }, [ref, overlayRef, isVisible, userIsDragging, hover, iframe]);
-
-  useEffect(() => {
     if (userDragAxis) {
       setDragAxis(userDragAxis);
       return;
@@ -445,6 +364,16 @@ export const DraggableComponent = ({
 
     setDragAxis(autoDragAxis);
   }, [ref, userDragAxis, autoDragAxis]);
+
+  useEffect(sync, [
+    ref,
+    overlayRef,
+    isVisible,
+    userIsDragging,
+    hover,
+    iframe,
+    state.data,
+  ]);
 
   const overlayReady = ref.current && overlayRef.current;
 
@@ -482,7 +411,7 @@ export const DraggableComponent = ({
               style={{
                 top: actionsOverlayTop / zoomConfig.zoom,
                 // Offset against left of frame
-                minWidth: (actionsWidth + 2 * actionsRight) / zoomConfig.zoom,
+                minWidth: actionsWidth + 2 * actionsRight,
               }}
             >
               <div
@@ -510,7 +439,9 @@ export const DraggableComponent = ({
             </div>
             <div className={getClassName("overlay")} />
           </div>,
-          document.getElementById("puck-preview") || document.body
+          ref.current?.ownerDocument.body ||
+            document.getElementById("puck-preview") ||
+            document.body
         )}
       {children(refSetter)}
     </DropZoneProvider>
