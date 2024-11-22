@@ -36,7 +36,7 @@ const styles = `
 [data-dnd-dragging] {
   pointer-events: none !important;
   outline: 2px var(--puck-color-azure-09) solid !important;
-  outline-offset: -2px;
+  outline-offset: -2px !important;
 }
 `;
 
