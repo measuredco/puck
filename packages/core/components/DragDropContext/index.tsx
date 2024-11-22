@@ -82,8 +82,13 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
   const [deepest, setDeepest] = useState<DeepestParams | null>(null);
   const [nextDeepest, setNextDeepest] = useState<DeepestParams | null>(null);
 
+  const deepestRef = useRef(deepest);
+  const dbDeepestRef = useRef(deepest);
+
   const setDeepestDb = useDebouncedCallback((params: DeepestParams) => {
     setDeepest(params);
+
+    dbDeepestRef.current = params;
 
     // Force a collision on area change
     setTimeout(() => {
@@ -91,21 +96,28 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
     }, 50);
   }, AREA_CHANGE_DEBOUNCE_MS);
 
-  const deepestRef = useRef(deepest);
+  const setDeepestDbMaybe = useCallback(
+    (params: DeepestParams) => {
+      if (
+        deepestRef.current === null ||
+        deepestRef.current?.zone === "void" ||
+        (params.zone &&
+          params.area &&
+          dbDeepestRef.current?.area === params.area)
+      ) {
+        setDeepest(params);
+      } else {
+        setDeepestDb(params);
+      }
 
-  const setDeepestDbMaybe = useCallback((params: DeepestParams) => {
-    if (
-      deepestRef.current === null ||
-      deepestRef.current?.zone === "void" ||
-      deepestRef.current?.zone === null
-    ) {
-      setDeepest(params);
-    } else {
-      setDeepestDb(params);
-    }
+      deepestRef.current = params;
 
-    deepestRef.current = params;
-  }, []);
+      if (!dbDeepestRef.current) {
+        dbDeepestRef.current = params;
+      }
+    },
+    [deepest]
+  );
 
   const [manager] = useState(
     () =>
