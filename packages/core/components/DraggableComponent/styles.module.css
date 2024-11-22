@@ -19,7 +19,7 @@
   height: 100%;
   width: 100%;
   top: 0;
-  outline: 2px var(--puck-color-azure-07) solid !important;
+  outline: 2px var(--puck-color-azure-09) solid;
   outline-offset: -2px;
   position: absolute;
   pointer-events: none;
@@ -53,7 +53,11 @@
 }
 
 .DraggableComponent--hover > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-09) solid !important;
+  outline: 2px var(--puck-color-azure-09) solid;
+}
+
+.DraggableComponent--isSelected > .DraggableComponent-overlay {
+  outline-color: var(--puck-color-azure-07);
 }
 
 /* Won't work in FF */
