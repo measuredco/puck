@@ -185,14 +185,7 @@ export const findDeepestCandidate = (
         }
       }
 
-      if (candidate.type === "component") {
-        const candidateData = candidate.data as ComponentDndData;
-
-        // Remove items in non-droppable zones
-        if (!candidateData.inDroppableZone) {
-          return false;
-        }
-      } else {
+      if (candidate.type === "dropzone") {
         const candidateData = candidate.data as DropZoneDndData;
 
         // Remove non-droppable zones
