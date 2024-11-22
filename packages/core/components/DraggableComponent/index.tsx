@@ -68,7 +68,8 @@ export const DraggableComponent = ({
   debug,
   label,
   isEnabled,
-  dragAxis,
+  autoDragAxis,
+  userDragAxis,
   inDroppableZone = true,
 }: {
   children: (ref: Ref<any>) => ReactNode;
@@ -82,7 +83,8 @@ export const DraggableComponent = ({
   label?: string;
   isLoading: boolean;
   isEnabled?: boolean;
-  dragAxis: DragAxis;
+  autoDragAxis: DragAxis;
+  userDragAxis?: DragAxis;
   inDroppableZone: boolean;
 }) => {
   const {
@@ -139,6 +141,8 @@ export const DraggableComponent = ({
   const canCollide = canDrag || userIsDragging;
 
   const disabled = !isEnabled || !canCollide;
+
+  const [dragAxis, setDragAxis] = useState(userDragAxis || autoDragAxis);
 
   const { ref: sortableRef, status } = useSortable<ComponentDndData>({
     id,
@@ -419,6 +423,28 @@ export const DraggableComponent = ({
       scrollTarget?.removeEventListener("scroll", onCanvasScroll);
     };
   }, [ref, overlayRef, isVisible, userIsDragging, hover, iframe]);
+
+  useEffect(() => {
+    if (userDragAxis) {
+      setDragAxis(userDragAxis);
+      return;
+    }
+
+    if (ref.current) {
+      const computedStyle = window.getComputedStyle(ref.current);
+
+      if (
+        computedStyle.display === "inline" ||
+        computedStyle.display === "inline-block"
+      ) {
+        setDragAxis("x");
+
+        return;
+      }
+    }
+
+    setDragAxis(autoDragAxis);
+  }, [ref, userDragAxis, autoDragAxis]);
 
   const overlayReady = ref.current && overlayRef.current;
 

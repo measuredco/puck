@@ -221,7 +221,7 @@ function DropZoneEdit({
   );
 
   useEffect(() => {
-    if (ref.current && !collisionAxis) {
+    if (ref.current) {
       const computedStyle = window.getComputedStyle(ref.current);
 
       if (computedStyle.display === "grid") {
@@ -332,7 +332,8 @@ function DropZoneEdit({
               isSelected={isSelected}
               label={label}
               isEnabled={isEnabled}
-              dragAxis={dragAxis}
+              autoDragAxis={dragAxis}
+              userDragAxis={collisionAxis}
               inDroppableZone={isDroppableTarget()}
             >
               {(dragRef) =>
