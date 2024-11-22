@@ -16,7 +16,7 @@ const getClassName = getClassNameFactory("DropZone", styles);
 
 export { DropZoneProvider, dropZoneContext } from "./context";
 
-function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
+function DropZoneEdit({ zone, allow, disallow, style ,className}: DropZoneProps) {
   const appContext = useAppContext();
   const ctx = useContext(dropZoneContext);
 
@@ -183,10 +183,12 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
         isDropDisabled={!isEnabled}
       >
         {(provided, snapshot) => {
+          const combinedClassName = `${getClassName("content")} ${className || ""}`
+
           return (
             <div
               {...(provided || { droppableProps: {} }).droppableProps}
-              className={getClassName("content")}
+              className={combinedClassName}
               ref={provided?.innerRef}
               style={style}
               id={zoneCompound}
@@ -226,10 +228,10 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                 const Render = config.components[item.type]
                   ? config.components[item.type].render
                   : () => (
-                      <div style={{ padding: 48, textAlign: "center" }}>
-                        No configuration for {item.type}
-                      </div>
-                    );
+                    <div style={{ padding: 48, textAlign: "center" }}>
+                      No configuration for {item.type}
+                    </div>
+                  );
 
                 const componentConfig: ComponentConfig | undefined =
                   config.components[item.type];
@@ -243,11 +245,9 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                     appContext.state.data
                   ),
                 }).drag;
-
                 return (
                   <div
                     key={item.props.id}
-                    className={getClassName("item")}
                     style={{ zIndex: isDragging ? 1 : undefined }}
                   >
                     <DropZoneProvider
@@ -380,7 +380,7 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   );
 }
 
-function DropZoneRender({ zone }: DropZoneProps) {
+function DropZoneRender({ zone,className,style }: DropZoneProps) {
   const ctx = useContext(dropZoneContext);
 
   const { data, areaId = "root", config } = ctx || {};
@@ -398,7 +398,7 @@ function DropZoneRender({ zone }: DropZoneProps) {
   }
 
   return (
-    <>
+    <div className={className} style={style}>
       {content.map((item) => {
         const Component = config.components[item.type];
 
@@ -418,7 +418,7 @@ function DropZoneRender({ zone }: DropZoneProps) {
 
         return null;
       })}
-    </>
+    </div>
   );
 }
 

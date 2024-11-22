@@ -31,14 +31,14 @@ const config = {
 | [`zone`](#zone)         | `zone: "my-zone"`            | String | Required |
 | [`allow`](#allow)       | `allow: ["HeadingBlock"]`    | Array  |          |
 | [`disallow`](#disallow) | `disallow: ["HeadingBlock"]` | Array  |          |
+| [`className`](#className) | `className: "flex flex-row"` | String | Optional |
+| [`style`](#style)       | `style: { marginTop: 10 }`   | Object | Optional |
 
-## Required props
+### Required props
 
-### `zone`
+#### `zone`
 
-Set the zone identifier for the given DropZone.
-
-Must be unique within this component, but two different components can both define DropZones with the same `zone` value.
+Defines the identifier for the DropZone. This identifier must be unique within a component but can be reused across different components.
 
 ```tsx /zone="my-content"/ copy
 const config = {
@@ -56,11 +56,11 @@ const config = {
 };
 ```
 
-## Optional props
+### Optional props
 
-### `allow`
+#### `allow`
 
-Only allow specific components to be dragged into the DropZone:
+Limits the types of components that can be dragged into this DropZone:
 
 ```tsx copy {7}
 const config = {
@@ -78,9 +78,9 @@ const config = {
 };
 ```
 
-### `disallow`
+#### `disallow`
 
-Allow all but specific components to be dragged into the DropZone. Any items in `allow` will override `disallow`.
+Prevents specific components from being dragged into this DropZone. Items specified in `allow` will override any exclusions set in `disallow`.
 
 ```tsx copy {7}
 const config = {
@@ -98,12 +98,47 @@ const config = {
 };
 ```
 
-## Restrictions
+#### `className`
 
-You can't drag between DropZones that don't share a parent component.
+Allows custom CSS classes to be applied to the main DropZone container. This is particularly useful when using utility-first CSS libraries like `tailwindcss`. Classes are consistently applied across both `edit` and `render` modes.
 
-## React server components
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" className="flex flex-row" />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
 
-By default, DropZones don't work with React server components as they rely on context.
+#### `style`
 
-Instead, you can use the [`renderDropZone` method](/docs/api-reference/configuration/component-config#propspuckrenderdropzone) passed to your component render function.
+Allows inline styling of the main DropZone container. Useful for directly applying inline styles.
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" style={{ marginTop: 10 }} />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+## Additional Notes
+
+- **Restrictions**: Dragging between DropZones that don't share a parent component is unsupported.
+- **React Server Components**: DropZones are not compatible with React server components by default, as they rely on context. However, you can use the [`renderDropZone` method](/docs/api-reference/configuration/component-config#propspuckrenderdropzone) within your component's render function to achieve similar functionality.
