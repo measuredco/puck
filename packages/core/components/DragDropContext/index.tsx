@@ -73,7 +73,7 @@ type DeepestParams = {
 
 const AREA_CHANGE_DEBOUNCE_MS = 150;
 
-export const DragDropContext = ({ children }: { children: ReactNode }) => {
+const DragDropContextClient = ({ children }: { children: ReactNode }) => {
   const { state, config, dispatch, resolveData } = useAppContext();
 
   const [preview, setPreview] = useState<Preview>(null);
@@ -400,4 +400,14 @@ export const DragDropContext = ({ children }: { children: ReactNode }) => {
       </previewContext.Provider>
     </dragListenerContext.Provider>
   );
+};
+
+export const DragDropContext = ({ children }: { children: ReactNode }) => {
+  const { status } = useAppContext();
+
+  if (status === "LOADING") {
+    return children;
+  }
+
+  return <DragDropContextClient>{children}</DragDropContextClient>;
 };
