@@ -34,7 +34,8 @@ export async function resolveAllData<
       zones[zoneKey],
       config,
       onResolveStart,
-      onResolveEnd
+      onResolveEnd,
+      dynamicRoot.props
     )) as Content<Props>;
   }
 
@@ -45,7 +46,8 @@ export async function resolveAllData<
       defaultedData.content,
       config,
       onResolveStart,
-      onResolveEnd
+      onResolveEnd,
+      dynamicRoot.props
     )) as Content<Props>,
     zones: resolvedZones,
   } as Data<Props, RootProps>;

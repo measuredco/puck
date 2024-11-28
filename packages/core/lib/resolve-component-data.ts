@@ -9,7 +9,8 @@ export const resolveAllComponentData = async (
   content: MappedItem[],
   config: Config,
   onResolveStart?: (item: MappedItem) => void,
-  onResolveEnd?: (item: MappedItem) => void
+  onResolveEnd?: (item: MappedItem) => void,
+  rootProps?: Record<string, any>
 ) => {
   return await Promise.all(
     content.map(async (item) => {
@@ -17,7 +18,8 @@ export const resolveAllComponentData = async (
         item,
         config,
         onResolveStart,
-        onResolveEnd
+        onResolveEnd,
+        rootProps
       );
     })
   );
