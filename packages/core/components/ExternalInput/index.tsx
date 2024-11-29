@@ -37,7 +37,7 @@ export const ExternalInput = ({
   readOnly?: boolean;
 }) => {
   const {
-    mapProp = (val: any) => val,
+    mapProp = (val: any,filters: object) => val,
     mapRow = (val: any) => val,
     filterFields,
   } = field || {};
@@ -266,7 +266,7 @@ export const ExternalInput = ({
                         style={{ whiteSpace: "nowrap" }}
                         className={getClassNameModal("tr")}
                         onClick={() => {
-                          onChange(mapProp(data[i]));
+                          onChange(mapProp(data[i],filters));
 
                           setOpen(false);
                         }}
