@@ -38,6 +38,7 @@ export const defaultAppState: AppState = {
     itemSelector: null,
     componentList: {},
     isDragging: false,
+    mode: "edit",
     viewports: {
       current: {
         width: defaultViewports[0].width,
@@ -71,9 +72,8 @@ export type AppContext<
   resolveData: (newAppState: AppState) => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
+  mode: "interactive" | "edit";
   history: Partial<PuckHistory>;
-  isInteractive: boolean;
-  setIsInteractive: React.Dispatch<SetStateAction<boolean>>;
   viewports: Viewports;
   zoomConfig: ZoomConfig;
   setZoomConfig: (zoomConfig: ZoomConfig) => void;
@@ -92,12 +92,10 @@ const defaultContext: AppContext = {
   dispatch: () => null,
   config: { components: {} },
   componentState: {},
-  setComponentState: () => {},
-  resolveData: () => {},
+  setComponentState: () => { },
+  resolveData: () => { },
   plugins: [],
   overrides: {},
-  isInteractive: false,
-  setIsInteractive: () => {},
   history: {},
   viewports: defaultViewports,
   zoomConfig: {
@@ -113,6 +111,7 @@ const defaultContext: AppContext = {
   globalPermissions: {},
   getPermissions: () => ({}),
   refreshPermissions: () => null,
+  mode: "edit"
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
@@ -131,14 +130,11 @@ export const AppProvider = ({
     | "componentState"
     | "setComponentState"
     | "resolveData"
-    | "setIsInteractive"
   >;
 }) => {
   const [zoomConfig, setZoomConfig] = useState(defaultContext.zoomConfig);
 
   const [status, setStatus] = useState<Status>("LOADING");
-
-  const [isInteractive, setIsInteractive] = useState(false);
 
   // App is ready when client has loaded, after initial render
   // This triggers DropZones to activate
@@ -229,8 +225,6 @@ export const AppProvider = ({
         componentState,
         setComponentState,
         resolveData,
-        isInteractive,
-        setIsInteractive,
       }}
     >
       {children}

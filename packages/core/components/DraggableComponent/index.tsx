@@ -86,9 +86,9 @@ export const DraggableComponent = ({
     overrides,
     selectedItem,
     getPermissions,
-    isInteractive,
+    mode,
   } = useAppContext();
-
+  const state = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
@@ -113,6 +113,8 @@ export const DraggableComponent = ({
   const permissions = getPermissions({
     item: selectedItem,
   });
+
+  const isInteractive = mode === "interactive";
 
   return (
     <El

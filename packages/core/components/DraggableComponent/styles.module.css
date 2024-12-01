@@ -20,6 +20,11 @@
 .DraggableComponent--isInteractive > .DraggableComponent-overlay {
   cursor: default !important;
   background: transparent !important;
+  outline: none !important;
+}
+
+.DraggableComponent--isInteractive:hover > .DraggableComopnent-overlay {
+  outline: none !important;
 }
 
 .DraggableComponent-contents {
@@ -52,7 +57,7 @@
 }
 
 .DraggableComponent--isDragging > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-09) solid !important;
+  outline: 2px var(--puck-color-azure-09) solid;
 }
 
 .DraggableComponent-loadingOverlay {
@@ -84,7 +89,7 @@
 
 .DraggableComponent:not(.DraggableComponent--isSelected):hover
   > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-09) solid !important;
+  outline: 2px var(--puck-color-azure-09) solid;
 }
 
 .DraggableComponent--indicativeHover > .DraggableComponent-overlay {
@@ -100,7 +105,7 @@
 }
 
 .DraggableComponent--isSelected > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-07) solid !important;
+  outline: 2px var(--puck-color-azure-07) solid;
 }
 
 .DraggableComponent--isSelected > .DraggableComponent-actionsOverlay {
