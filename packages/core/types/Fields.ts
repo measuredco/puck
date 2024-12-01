@@ -108,7 +108,7 @@ export type CustomField<Props extends any = {}> = BaseField & {
     id: string;
     value: Props;
     onChange: (value: Props) => void;
-    readOnly?: boolean;
+    readOnly?: boolean | string;
   }) => ReactElement;
 };
 
@@ -137,5 +137,5 @@ export type FieldProps<ValueType = any, F = Field<any>> = {
   value: ValueType;
   id?: string;
   onChange: (value: ValueType, uiState?: Partial<UiState>) => void;
-  readOnly?: boolean;
+  readOnly?: boolean | string;
 };

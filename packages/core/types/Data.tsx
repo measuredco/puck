@@ -1,10 +1,10 @@
 import { DefaultComponentProps, DefaultRootFieldProps } from "./Props";
-import { AsFieldProps, WithId } from "./Utils";
+import { AsFieldProps, DotBranch, WithId } from "./Utils";
 
 export type BaseData<
   Props extends { [key: string]: any } = { [key: string]: any }
 > = {
-  readOnly?: Partial<Record<keyof Props, boolean>>;
+  readOnly?: Partial<Record<DotBranch<Props>, boolean | string>>;
 };
 
 export type RootDataWithProps<
