@@ -16,7 +16,6 @@ import { useAppContext } from "../Puck/context";
 import { DefaultDraggable } from "../Draggable";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
-import { DefaultOverride } from "../DefaultOverride";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -81,8 +80,15 @@ export const DraggableComponent = ({
   indicativeHover?: boolean;
   style?: CSSProperties;
 }) => {
-  const { zoomConfig, status, overrides, selectedItem, getPermissions } =
-    useAppContext();
+  const {
+    zoomConfig,
+    status,
+    overrides,
+    selectedItem,
+    getPermissions,
+    mode,
+  } = useAppContext();
+  const state = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
@@ -108,6 +114,8 @@ export const DraggableComponent = ({
     item: selectedItem,
   });
 
+  const isInteractive = mode === "interactive";
+
   return (
     <El
       key={id}
@@ -128,11 +136,15 @@ export const DraggableComponent = ({
             isLocked,
             forceHover,
             indicativeHover,
+            isInteractive,
           })}
           style={{
             ...style,
             ...provided.draggableProps.style,
-            cursor: isModifierHeld || isDragDisabled ? "pointer" : "grab",
+            cursor:
+              isInteractive || isModifierHeld || isDragDisabled
+                ? "default"
+                : "grab",
           }}
           onMouseOver={onMouseOver}
           onMouseOut={onMouseOut}
@@ -178,7 +190,7 @@ export const DraggableComponent = ({
           )}
 
           <div className={getClassName("overlay")} />
-          <div className={getClassName("contents")}>{children}</div>
+          <div className={getClassName("contents")}> {children}</div>
         </div>
       )}
     </El>

@@ -11,7 +11,6 @@ export const usePuck = <UserConfig extends Config = Config>() => {
     getPermissions,
     refreshPermissions,
   } = useAppContext<UserConfig>();
-
   return {
     appState,
     config,
