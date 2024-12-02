@@ -119,7 +119,7 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
     [deepest]
   );
 
-  const [manager] = useState(
+  const createManager = useCallback(
     () =>
       new DragDropManager({
         plugins: [
@@ -136,8 +136,11 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
             },
           }),
         ],
-      })
+      }),
+    []
   );
+
+  const [manager] = useState<DragDropManager>(createManager);
 
   const [draggedItem, setDraggedItem] = useState<Draggable | null>();
 
