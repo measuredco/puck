@@ -41,8 +41,8 @@ export const ExternalInput = ({
   const [isLoading, setIsLoading] = useState(true);
 
   const hasFilterFields = !!filterFields;
-
-  const [filters, setFilters] = useState(field.initialFilters || {});
+  // @ts-ignore
+  const [filters, setFilters] = useState(field.initialFilters || value?.[name] || {});
   const [filtersToggled, setFiltersToggled] = useState(hasFilterFields);
 
   const mappedData = useMemo(() => {
