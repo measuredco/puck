@@ -110,8 +110,6 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
         setDeepestDb(params);
       }
 
-      deepestRef.current = params;
-
       if (!dbDeepestRef.current) {
         dbDeepestRef.current = params;
       }
@@ -126,13 +124,22 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
           ...defaultPreset.plugins,
           createNestedDroppablePlugin({
             onChange: (params, manager) => {
-              if (manager.dragOperation.status.dragging) {
-                setDeepestDbMaybe(params);
-              } else {
-                setDeepest(params);
+              const paramsChanged =
+                !deepestRef.current ||
+                params.area !== deepestRef.current?.area ||
+                params.zone !== deepestRef.current?.zone;
+
+              if (paramsChanged) {
+                if (manager.dragOperation.status.dragging) {
+                  setDeepestDbMaybe(params);
+                } else {
+                  setDeepest(params);
+                }
+
+                setNextDeepest(params);
               }
 
-              setNextDeepest(params);
+              deepestRef.current = params;
             },
           }),
         ],
