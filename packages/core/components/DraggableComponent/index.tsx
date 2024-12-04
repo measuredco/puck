@@ -184,20 +184,39 @@ export const DraggableComponent = ({
     [sortableRef]
   );
 
+  const [portalEl, setPortalEl] = useState<HTMLElement>();
+
+  useEffect(() => {
+    setPortalEl(
+      (iframe.enabled
+        ? ref.current?.ownerDocument.body
+        : document.getElementById("puck-preview")) ?? document.body
+    );
+  }, [iframe.enabled]);
+
   const sync = useCallback(() => {
     if (!ref.current || !overlayRef.current) return;
 
     const rect = ref.current!.getBoundingClientRect();
 
-    overlayRef.current!.style.left = `${
-      rect.left + (ref.current.ownerDocument.defaultView?.scrollX || 0)
-    }px`;
-    overlayRef.current!.style.top = `${
-      rect.top + (ref.current.ownerDocument.defaultView?.scrollY || 0)
-    }px`;
+    const doc = ref.current.ownerDocument;
+    const view = doc.defaultView;
+    const portalContainerEl = iframe.enabled
+      ? null
+      : document.getElementById("puck-preview");
+
+    const portalContainerRect = portalContainerEl?.getBoundingClientRect();
+
+    const scroll = {
+      x: (view?.scrollX || 0) - (portalContainerRect?.left ?? 0),
+      y: (view?.scrollY || 0) - (portalContainerRect?.top ?? 0),
+    };
+
+    overlayRef.current!.style.left = `${rect.left + scroll.x}px`;
+    overlayRef.current!.style.top = `${rect.top + scroll.y}px`;
     overlayRef.current!.style.height = `${rect.height}px`;
     overlayRef.current!.style.width = `${rect.width}px`;
-  }, [ref, overlayRef]);
+  }, [ref, overlayRef, iframe]);
 
   useEffect(() => {
     ctx?.registerPath!({
@@ -441,9 +460,7 @@ export const DraggableComponent = ({
             </div>
             <div className={getClassName("overlay")} />
           </div>,
-          ref.current?.ownerDocument.body ||
-            document.getElementById("puck-preview") ||
-            document.body
+          portalEl || document.body
         )}
       {children(refSetter)}
     </DropZoneProvider>
