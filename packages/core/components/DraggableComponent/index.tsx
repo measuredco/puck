@@ -216,6 +216,8 @@ export const DraggableComponent = ({
     overlayRef.current!.style.top = `${rect.top + scroll.y}px`;
     overlayRef.current!.style.height = `${rect.height}px`;
     overlayRef.current!.style.width = `${rect.width}px`;
+
+    overlayRef.current!.style.opacity = "1";
   }, [ref, overlayRef, iframe]);
 
   useEffect(() => {
@@ -386,17 +388,6 @@ export const DraggableComponent = ({
 
   useEffect(sync, [ref, overlayRef, isVisible, hover, iframe, state.data]);
 
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if (!userIsDragging) {
-      sync();
-      setReady(true);
-    } else {
-      setReady(false);
-    }
-  }, [userIsDragging]);
-
   return (
     <DropZoneProvider
       value={{
@@ -416,7 +407,6 @@ export const DraggableComponent = ({
               isSelected,
               isDragging: thisIsDragging,
               isModifierHeld,
-              isReady: ready,
               hover: hover || indicativeHover,
             })}
             ref={overlayRef}
