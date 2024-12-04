@@ -13,7 +13,7 @@ import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { Preview } from "../Preview";
 import { getZoomConfig } from "../../../../lib/get-zoom-config";
-import { AppState } from "../../../../types";
+import { AppState, UiState } from "../../../../types";
 import { Loader } from "../../../Loader";
 
 const getClassName = getClassNameFactory("PuckCanvas", styles);
@@ -143,9 +143,10 @@ export const Canvas = () => {
                 zoom: zoomConfig.zoom,
               };
 
-              const newUi = {
+              const newUi: UiState = {
                 ...ui,
                 viewports: { ...ui.viewports, current: uiViewport },
+                itemSelector: null,
               };
 
               setUi(newUi);
