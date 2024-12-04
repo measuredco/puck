@@ -28,6 +28,8 @@ import { useSortableSafe } from "../../lib/dnd-kit/safe";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
+const DEBUG = false;
+
 // Magic numbers are used to position actions overlay 8px from top of component, bottom of component (when sticky scrolling) and side of preview
 const space = 8;
 const actionsOverlayTop = space * 6.5;
@@ -434,7 +436,7 @@ export const DraggableComponent = ({
                 }}
                 ref={actionsRef}
               >
-                <CustomActionBar label={label}>
+                <CustomActionBar label={DEBUG ? id : label}>
                   {permissions.duplicate && (
                     <ActionBar.Action onClick={onDuplicate} label="Duplicate">
                       <Copy size={16} />
