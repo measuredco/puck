@@ -202,20 +202,24 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
 
             const { zone, index } = source.data as ComponentDndData;
 
-            if (event.canceled || target?.type === "void") {
-              if (preview) {
-                setPreview(null);
-              }
-
-              dragListeners.dragend?.forEach((fn) => {
-                fn(event, manager);
-              });
-
-              return;
-            }
-
             // Delay insert until animation has finished
             setTimeout(() => {
+              setDraggedItem(null);
+
+              // Tidy up cancellation
+              if (event.canceled || target?.type === "void") {
+                if (preview) {
+                  setPreview(null);
+                }
+
+                dragListeners.dragend?.forEach((fn) => {
+                  fn(event, manager);
+                });
+
+                return;
+              }
+
+              // Finalise the drag
               if (preview) {
                 setPreview(null);
 
@@ -250,10 +254,6 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
               dragListeners.dragend?.forEach((fn) => {
                 fn(event, manager);
               });
-
-              setTimeout(() => {
-                setDraggedItem(null);
-              }, 10);
             }, 250);
           }}
           onDragOver={(event, manager) => {
