@@ -10,10 +10,6 @@
   );
 }
 
-.DraggableComponent--isReady {
-  opacity: 1;
-}
-
 .DraggableComponent-overlay {
   cursor: pointer;
   height: 100%;
