@@ -89,11 +89,6 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
     setDeepest(params);
 
     dbDeepestRef.current = params;
-
-    // Force a collision on area change
-    setTimeout(() => {
-      manager.collisionObserver.forceUpdate(true);
-    }, 50);
   }, AREA_CHANGE_DEBOUNCE_MS);
 
   const setDeepestDbMaybe = useCallback(
@@ -117,37 +112,36 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
     [deepest]
   );
 
-  const createManager = useCallback(
-    () =>
-      new DragDropManager({
-        plugins: [
-          ...defaultPreset.plugins,
-          createNestedDroppablePlugin({
-            onChange: (params, manager) => {
-              const paramsChanged =
-                !deepestRef.current ||
-                params.area !== deepestRef.current?.area ||
-                params.zone !== deepestRef.current?.zone;
+  const [plugins] = useState(() => [
+    ...defaultPreset.plugins,
+    createNestedDroppablePlugin({
+      onChange: (params, manager) => {
+        const paramsChanged =
+          !deepestRef.current ||
+          params.area !== deepestRef.current?.area ||
+          params.zone !== deepestRef.current?.zone;
 
-              if (paramsChanged) {
-                if (manager.dragOperation.status.dragging) {
-                  setDeepestDbMaybe(params);
-                } else {
-                  setDeepest(params);
-                }
+        if (paramsChanged) {
+          if (manager.dragOperation.status.dragging) {
+            setDeepestDbMaybe(params);
+          } else {
+            setDeepest(params);
+          }
 
-                setNextDeepest(params);
-              }
+          setNextDeepest(params);
+        }
 
-              deepestRef.current = params;
-            },
-          }),
-        ],
-      }),
-    []
-  );
+        if (params.area !== deepestRef.current?.area) {
+          // Force a collision on area change
+          setTimeout(() => {
+            manager.collisionObserver.forceUpdate(true);
+          }, 50);
+        }
 
-  const [manager] = useState<DragDropManager>(createManager);
+        deepestRef.current = params;
+      },
+    }),
+  ]);
 
   const [draggedItem, setDraggedItem] = useState<Draggable | null>();
 
@@ -196,8 +190,8 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
     >
       <previewContext.Provider value={preview}>
         <DragDropProvider
-          manager={manager}
-          onDragEnd={(event) => {
+          plugins={plugins}
+          onDragEnd={(event, manager) => {
             const { source, target } = event.operation;
 
             if (!source) {
@@ -358,7 +352,7 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
               fn(event, manager);
             });
           }}
-          onDragStart={(event) => {
+          onDragStart={(event, manager) => {
             setDeepest(
               findDeepestCandidate(event.operation.position.current, manager)
             );
