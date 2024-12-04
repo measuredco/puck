@@ -378,8 +378,6 @@ export const DraggableComponent = ({
     }
   }, [userIsDragging]);
 
-  const overlayReady = ref.current && overlayRef.current && ready;
-
   return (
     <DropZoneProvider
       value={{
@@ -399,7 +397,7 @@ export const DraggableComponent = ({
               isSelected,
               isDragging: thisIsDragging,
               isModifierHeld,
-              isReady: overlayReady,
+              isReady: ready,
               hover: hover || indicativeHover,
             })}
             ref={overlayRef}
