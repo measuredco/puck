@@ -1,4 +1,4 @@
 module.exports = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   transpilePackages: ["@measured/puck", "lucide-react"],
 };
