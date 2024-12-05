@@ -16,24 +16,32 @@ const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement>) => {
     if (ref.current) {
       const iframe = ref.current;
 
-      // NB pointermove doesn't trigger whilst dragging on iframes
-      iframe.contentWindow?.addEventListener("mousemove", function (event) {
-        const rect = iframe.getBoundingClientRect();
+      const onLoad = () => {
+        // NB pointermove doesn't trigger whilst dragging on iframes
+        iframe.contentWindow?.addEventListener("mousemove", function (event) {
+          const rect = iframe.getBoundingClientRect();
 
-        // NB this is a different event
-        const evt = new CustomEvent("pointermove", {
-          bubbles: true,
-          cancelable: false,
-        }) as any;
+          // NB this is a different event
+          const evt = new CustomEvent("pointermove", {
+            bubbles: true,
+            cancelable: false,
+          }) as any;
 
-        const scaleFactor =
-          rect.width / (iframe.contentWindow?.innerWidth || 1);
+          const scaleFactor =
+            rect.width / (iframe.contentWindow?.innerWidth || 1);
 
-        evt.clientX = event.clientX * scaleFactor + rect.left;
-        evt.clientY = event.clientY * scaleFactor + rect.top;
+          evt.clientX = event.clientX * scaleFactor + rect.left;
+          evt.clientY = event.clientY * scaleFactor + rect.top;
 
-        iframe.dispatchEvent(evt);
-      });
+          iframe.dispatchEvent(evt);
+        });
+      };
+
+      iframe.addEventListener("load", onLoad);
+
+      return () => {
+        iframe.removeEventListener("load", onLoad);
+      };
     }
   }, [ref]);
 };
