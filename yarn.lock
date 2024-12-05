@@ -528,65 +528,65 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@dnd-kit/abstract@0.0.6-beta-20241121223708":
-  version "0.0.6-beta-20241121223708"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/abstract/-/abstract-0.0.6-beta-20241121223708.tgz#59c21f46f11f98bd9acb2b297a80aab74cbc1e97"
-  integrity sha512-SzVwlIjWV03Xvb/xPjEZA/YLPMIwGgBxO1HWdVNDIxeG8t13fQD3iXbtPpjo+y1eOJflGyVdhHumVGesRCwaFA==
+"@dnd-kit/abstract@0.0.6-beta-20241204184550":
+  version "0.0.6-beta-20241204184550"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/abstract/-/abstract-0.0.6-beta-20241204184550.tgz#9be99d52b9a0a812bc00222af59e9ddb28567463"
+  integrity sha512-dtD0ys0eROAdhKdDzGzbDTDSXdhC05bd0OkMhGli96XIQGXdiT0inrnb+FKw9P/k9wclojjrbopA48m0rdw21w==
   dependencies:
-    "@dnd-kit/geometry" "0.0.6-beta-20241121223708"
-    "@dnd-kit/state" "0.0.6-beta-20241121223708"
+    "@dnd-kit/geometry" "0.0.6-beta-20241204184550"
+    "@dnd-kit/state" "0.0.6-beta-20241204184550"
     tslib "^2.6.2"
 
-"@dnd-kit/collision@0.0.6-beta-20241121223708":
-  version "0.0.6-beta-20241121223708"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/collision/-/collision-0.0.6-beta-20241121223708.tgz#174979f50ed51b7357fc56b3172700457386eb60"
-  integrity sha512-N8hgbIbwHdv2MSXrw9KsXy2Yv2AXVXfnKX5y7ZvqZy90NSLL4vUSA/NeHW8dbVOUBPOwxXMJpHSYoXJr7I6wjg==
+"@dnd-kit/collision@0.0.6-beta-20241204184550":
+  version "0.0.6-beta-20241204184550"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/collision/-/collision-0.0.6-beta-20241204184550.tgz#9886b87515c7346b9a545fba7c777b1a3188938c"
+  integrity sha512-vwL12znvWmTNcmPfW1egB42iVO8pwmuPyO4OPuoSLBdrktDuTXeORWO/auFVygnVznNujTxMdPczAGVwBnEimQ==
   dependencies:
-    "@dnd-kit/abstract" "0.0.6-beta-20241121223708"
-    "@dnd-kit/geometry" "0.0.6-beta-20241121223708"
+    "@dnd-kit/abstract" "0.0.6-beta-20241204184550"
+    "@dnd-kit/geometry" "0.0.6-beta-20241204184550"
     tslib "^2.6.2"
 
-"@dnd-kit/dom@0.0.6-beta-20241121223708":
-  version "0.0.6-beta-20241121223708"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/dom/-/dom-0.0.6-beta-20241121223708.tgz#07221a22c850740f8f09364818090979c6d61109"
-  integrity sha512-I150LK4js6FrITGVhcTQL/cDyNuuLN/HpUNW5nK2risuN4lAFZIIxhP1bCHh6dWCodaj9FjbYmDzLfBB93w63A==
+"@dnd-kit/dom@0.0.6-beta-20241204184550":
+  version "0.0.6-beta-20241204184550"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/dom/-/dom-0.0.6-beta-20241204184550.tgz#2045b06864e73e35a40a10f763279964506b34dd"
+  integrity sha512-BXX0KLBimjdTmJqpkdznH9A37V0GHTSemSc4BigLmtsxst/oELKwVfaRGT/whOyPJt3yv8pIAavhtEdj0V2o6g==
   dependencies:
-    "@dnd-kit/abstract" "0.0.6-beta-20241121223708"
-    "@dnd-kit/collision" "0.0.6-beta-20241121223708"
-    "@dnd-kit/geometry" "0.0.6-beta-20241121223708"
-    "@dnd-kit/state" "0.0.6-beta-20241121223708"
+    "@dnd-kit/abstract" "0.0.6-beta-20241204184550"
+    "@dnd-kit/collision" "0.0.6-beta-20241204184550"
+    "@dnd-kit/geometry" "0.0.6-beta-20241204184550"
+    "@dnd-kit/state" "0.0.6-beta-20241204184550"
     tslib "^2.6.2"
 
-"@dnd-kit/geometry@0.0.6-beta-20241121223708":
-  version "0.0.6-beta-20241121223708"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/geometry/-/geometry-0.0.6-beta-20241121223708.tgz#543dc62b47ebaf203eb2b7980b41234bb6d1b2a7"
-  integrity sha512-wUHClMd65iMnPjIPneNYhimlMIVwG/5AN/wXR9OhIxkxvd+KWo7MpD+rN/VZnyNTyHj3ksVxZLy+bFDWC6jwMg==
+"@dnd-kit/geometry@0.0.6-beta-20241204184550":
+  version "0.0.6-beta-20241204184550"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/geometry/-/geometry-0.0.6-beta-20241204184550.tgz#d43bc782803673993f5f4167c0da3e7c3c55c852"
+  integrity sha512-TfkeKjmnB7bpg5H4CHQYSCv4XR6CQ6yhFPZTgPJZtCPS9yA04x5CNqHT1jpiYphox2/QcXYHsplbrNE4bJ7Yig==
   dependencies:
-    "@dnd-kit/state" "0.0.6-beta-20241121223708"
+    "@dnd-kit/state" "0.0.6-beta-20241204184550"
     tslib "^2.6.2"
 
-"@dnd-kit/helpers@0.0.6-beta-20241121223708":
-  version "0.0.6-beta-20241121223708"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/helpers/-/helpers-0.0.6-beta-20241121223708.tgz#6c8dfce79a8c3052e0dd25d02ce885fb4cd326a9"
-  integrity sha512-MjcwRWS3Gf0RUK28teZulNQDS922Sc7USAGLXUk2P4KvEUimObAgx9YXY6FKQFnKkbwXttpsvPK0oW7hzoBEaw==
+"@dnd-kit/helpers@0.0.6-beta-20241204184550":
+  version "0.0.6-beta-20241204184550"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/helpers/-/helpers-0.0.6-beta-20241204184550.tgz#efd5ce728a6b2135f79f01c34419f01490d23e2b"
+  integrity sha512-zR77EOut377HuYc+VxkJpMJMVj4Vpf+aE96Mz5titvru6WqYlQQGJYWqGnXl0f4ebKAgI2cCIUtGU95Ywgb6/Q==
   dependencies:
-    "@dnd-kit/abstract" "0.0.6-beta-20241121223708"
+    "@dnd-kit/abstract" "0.0.6-beta-20241204184550"
     tslib "^2.6.2"
 
-"@dnd-kit/react@0.0.6-beta-20241121223708":
-  version "0.0.6-beta-20241121223708"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/react/-/react-0.0.6-beta-20241121223708.tgz#7ecc28b9db09e1a088e5a7ee91ac15082870e1a2"
-  integrity sha512-I7uIKqJDoZNHCMvI6SLQRKOdZ+7UYYPWlHXpPoGqIV1/r0XaQIQvry7o9n5b/Leaeb6MZK5tITeUvj/fYK1iaw==
+"@dnd-kit/react@0.0.6-beta-20241204184550":
+  version "0.0.6-beta-20241204184550"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/react/-/react-0.0.6-beta-20241204184550.tgz#4255cb4176080f7e3ff6543d7632f5a81181e00a"
+  integrity sha512-EqlV77Ve01EHXoJ6tKrfupbtQ+uNKwezMfTbGqfQXfslLCiLD+1HNnaupwas8PkKmup+hF7ukyD+lpNMkZtg2w==
   dependencies:
-    "@dnd-kit/abstract" "0.0.6-beta-20241121223708"
-    "@dnd-kit/dom" "0.0.6-beta-20241121223708"
-    "@dnd-kit/state" "0.0.6-beta-20241121223708"
+    "@dnd-kit/abstract" "0.0.6-beta-20241204184550"
+    "@dnd-kit/dom" "0.0.6-beta-20241204184550"
+    "@dnd-kit/state" "0.0.6-beta-20241204184550"
     tslib "^2.6.2"
 
-"@dnd-kit/state@0.0.6-beta-20241121223708":
-  version "0.0.6-beta-20241121223708"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/state/-/state-0.0.6-beta-20241121223708.tgz#1218b2bbf6cf22954666cf84ef9cfd9423abdb13"
-  integrity sha512-ZpxjAHM0UYVb4HtKskH6SYe2YjYWU+OjPLFD7A0+mHcBkVjDa6XMLi6oyFc9csMf8Mq9Bc7rmP7g9bPCoGGdog==
+"@dnd-kit/state@0.0.6-beta-20241204184550":
+  version "0.0.6-beta-20241204184550"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/state/-/state-0.0.6-beta-20241204184550.tgz#f86b24b92f3dd2eccd3bf0c62b801361f804cbb5"
+  integrity sha512-9nYxpK2TKLHvZcb2qga0Y5obZtBLthx6T+R1r5CN/zk+Qwi9qadElBxSAMfruParyKjtujfWOpRQSwsTSzpPdw==
   dependencies:
     "@preact/signals-core" "^1.6.0"
     tslib "^2.6.2"

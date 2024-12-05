@@ -69,8 +69,8 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@dnd-kit/react": "0.0.6-beta-20241121223708",
-    "@dnd-kit/helpers": "0.0.6-beta-20241121223708",
+    "@dnd-kit/react": "0.0.6-beta-20241204184550",
+    "@dnd-kit/helpers": "0.0.6-beta-20241204184550",
     "@measured/dnd": "16.6.0-canary.4cba1d1",
     "deep-diff": "^1.0.2",
     "object-hash": "^3.0.0",
