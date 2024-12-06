@@ -4,6 +4,7 @@ import { getFrame } from "./get-frame";
 const styles = `
 /* Prevent user from interacting with underlying component */
 [data-puck-component] * {
+  pointer-events: none;
   user-select: none;
     -webkit-user-select: none;
 }
