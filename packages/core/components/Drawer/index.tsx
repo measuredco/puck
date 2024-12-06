@@ -159,6 +159,7 @@ export const Drawer = ({
   const { ref } = useDroppableSafe({
     id,
     type: "void",
+    collisionPriority: 0, // Never collide with this, but we use it so NestedDroppablePlugin respects the Drawer
   });
 
   return (
