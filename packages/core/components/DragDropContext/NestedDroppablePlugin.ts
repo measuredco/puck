@@ -246,10 +246,14 @@ export const createNestedDroppablePlugin = ({
           });
         };
 
-        document.body.addEventListener("pointermove", handlePointerMove);
+        document.body.addEventListener("pointermove", handlePointerMove, {
+          capture: true, // dndkit's PointerSensor prevents propagation during drag
+        });
 
         this.destroy = () => {
-          document.body.removeEventListener("pointermove", handlePointerMove);
+          document.body.removeEventListener("pointermove", handlePointerMove, {
+            capture: true,
+          });
           cleanupEffect();
         };
       });
