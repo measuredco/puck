@@ -177,6 +177,14 @@ export const Canvas = () => {
           }}
           suppressHydrationWarning // Suppress hydration warning as frame is not visible until after load
           id="puck-canvas-root"
+          onTransitionEnd={() => {
+            window.dispatchEvent(
+              new CustomEvent("viewportchange", {
+                bubbles: true,
+                cancelable: false,
+              })
+            );
+          }}
         >
           <CustomPreview>
             <Preview />
