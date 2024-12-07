@@ -11,7 +11,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { defaultPreset, DragDropManager } from "@dnd-kit/dom";
+import { defaultPreset, DragDropManager, PointerSensor } from "@dnd-kit/dom";
 import { DragDropEvents } from "@dnd-kit/abstract";
 import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
@@ -26,6 +26,7 @@ import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
 import { CollisionMap } from "../DraggableComponent/collision/dynamic";
 import { ComponentDndData } from "../DraggableComponent";
+import { isElement } from "@dnd-kit/dom/utilities";
 
 type Events = DragDropEvents<Draggable, Droppable, DragDropManager>;
 type DragCbs = Partial<{ [eventName in keyof Events]: Events[eventName][] }>;
@@ -143,6 +144,33 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
     }),
   ]);
 
+  const [sensors] = useState(() => [
+    PointerSensor.configure({
+      activationConstraints(event, source) {
+        const { pointerType, target } = event;
+
+        if (
+          pointerType === "mouse" &&
+          isElement(target) &&
+          (source.handle === target || source.handle?.contains(target))
+        ) {
+          return undefined;
+        }
+
+        const delay = { value: 200, tolerance: 10 };
+
+        if (pointerType === "touch") {
+          return { delay };
+        }
+
+        return {
+          delay,
+          distance: { value: 5 },
+        };
+      },
+    }),
+  ]);
+
   const [draggedItem, setDraggedItem] = useState<Draggable | null>();
 
   const [dragListeners, setDragListeners] = useState<DragCbs>({});
@@ -191,6 +219,7 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
       <previewContext.Provider value={preview}>
         <DragDropProvider
           plugins={plugins}
+          sensors={sensors}
           onDragEnd={(event, manager) => {
             const { source, target } = event.operation;
 
