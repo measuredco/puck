@@ -221,7 +221,7 @@ function DropZoneEdit({
     collisionAxis || DEFAULT_DRAG_AXIS
   );
 
-  useEffect(() => {
+  const calculateDragAxis = useCallback(() => {
     if (ref.current) {
       const computedStyle = window.getComputedStyle(ref.current);
 
@@ -236,8 +236,21 @@ function DropZoneEdit({
         setDragAxis(DEFAULT_DRAG_AXIS);
       }
     }
-    // Run when ref changes, or iframe loads
-  }, [ref, appContext.status, collisionAxis]);
+  }, [ref.current]);
+
+  useEffect(calculateDragAxis, [appContext.status, collisionAxis]);
+
+  useEffect(() => {
+    const onViewportChange = () => {
+      calculateDragAxis();
+    };
+
+    window.addEventListener("viewportchange", onViewportChange);
+
+    return () => {
+      window.removeEventListener("viewportchange", onViewportChange);
+    };
+  }, []);
 
   return (
     <div
