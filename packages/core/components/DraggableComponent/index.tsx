@@ -347,7 +347,7 @@ export const DraggableComponent = ({
     }
   }, [disabled, ref]);
 
-  const isVisible = isSelected || hover || indicativeHover;
+  const isVisible = (isSelected || hover || indicativeHover) && !userIsDragging;
 
   const [actionsWidth, setActionsWidth] = useState(250);
   const actionsRef = useRef<HTMLDivElement>(null);
