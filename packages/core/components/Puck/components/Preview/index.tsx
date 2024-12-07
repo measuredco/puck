@@ -12,38 +12,48 @@ const getClassName = getClassNameFactory("PuckPreview", styles);
 type PageProps = DefaultRootRenderProps;
 
 const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement>) => {
+  const { status } = useAppContext();
+
   useEffect(() => {
-    if (ref.current) {
+    if (ref.current && status === "READY") {
       const iframe = ref.current;
 
-      const onLoad = () => {
-        // NB pointermove doesn't trigger whilst dragging on iframes
-        iframe.contentWindow?.addEventListener("mousemove", function (event) {
-          const rect = iframe.getBoundingClientRect();
+      // Fallback to mousemove and touchmove for Safari
+      const handlePointerMove = (event: PointerEvent) => {
+        const rect = iframe.getBoundingClientRect();
 
-          // NB this is a different event
-          const evt = new CustomEvent("pointermove", {
-            bubbles: true,
-            cancelable: false,
-          }) as any;
+        const evt = new CustomEvent("pointermove", {
+          bubbles: true,
+          cancelable: false,
+        }) as any;
 
-          const scaleFactor =
-            rect.width / (iframe.contentWindow?.innerWidth || 1);
+        const scaleFactor =
+          rect.width / (iframe.contentWindow?.innerWidth || 1);
 
-          evt.clientX = event.clientX * scaleFactor + rect.left;
-          evt.clientY = event.clientY * scaleFactor + rect.top;
+        evt.clientX = event.clientX * scaleFactor + rect.left;
+        evt.clientY = event.clientY * scaleFactor + rect.top;
 
-          iframe.dispatchEvent(evt);
-        });
+        iframe.dispatchEvent(evt);
       };
 
-      iframe.addEventListener("load", onLoad);
+      // Add event listeners
+      iframe.contentDocument?.addEventListener(
+        "pointermove",
+        handlePointerMove,
+        {
+          capture: true,
+        }
+      );
 
       return () => {
-        iframe.removeEventListener("load", onLoad);
+        // Clean up event listeners
+        iframe.contentDocument?.removeEventListener(
+          "pointermove",
+          handlePointerMove
+        );
       };
     }
-  }, [ref]);
+  }, [status]);
 };
 
 export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
