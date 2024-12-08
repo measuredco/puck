@@ -19,12 +19,10 @@
 }
 
 .PuckCanvas-inner {
-  box-sizing: border-box;
   display: flex;
   height: 100%;
   justify-content: center;
   min-width: 358px;
-  overflow: hidden;
   position: relative;
   width: 100%;
 }
@@ -32,7 +30,7 @@
 .PuckCanvas-root {
   background: white;
   border: 1px solid var(--puck-color-grey-09);
-  box-sizing: border-box;
+  box-sizing: content-box;
   min-width: 321px;
   position: absolute;
   pointer-events: none;
