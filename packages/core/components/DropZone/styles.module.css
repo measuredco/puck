@@ -1,38 +1,38 @@
 .DropZone {
-  margin-left: auto;
-  margin-right: auto;
+  --drop-animation-ms: 250ms;
+  --resize-animation-ms: 150ms;
+
   position: relative;
-  min-height: 100%;
+  height: 100%;
+  min-height: var(--min-empty-height);
   outline-offset: -2px;
   width: 100%;
 }
 
-.DropZone-content {
-  min-height: 128px;
-  height: 100%;
+.DropZone--hasChildren {
+  min-height: 0;
 }
 
-.DropZone--userIsDragging .DropZone-content {
-  pointer-events: all;
+.DropZone:empty {
+  min-height: var(--min-empty-height);
 }
 
-.DropZone--userIsDragging:not(.DropZone--draggingOverArea):not(
-    .DropZone--draggingNewComponent
-  )
-  > .DropZone-content {
-  pointer-events: none;
+.DropZone--hasChildren:not(.DropZone--userIsDragging) {
+  transition: min-height var(--resize-animation-ms) var(--drop-animation-ms)
+    ease-in;
+}
+
+.DropZone:empty:not(.DropZone--userIsDragging) {
+  transition: min-height var(--resize-animation-ms) ease-in;
 }
 
 .DropZone--isAreaSelected,
-.DropZone--draggingOverArea:not(:has(.DropZone--hoveringOverArea)),
-.DropZone--hoveringOverArea:not(.DropZone--isDisabled):not(
-    .DropZone--isRootZone
-  ):not(.DropZone--hasChildren) {
+.DropZone--hoveringOverArea:not(.DropZone--isRootZone) {
   background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
   outline: 2px dashed var(--puck-color-azure-08);
 }
 
-.DropZone:not(.DropZone--hasChildren) {
+.DropZone:empty {
   background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
   outline: 2px dashed var(--puck-color-azure-08);
 }
@@ -59,4 +59,8 @@
   height: 24px;
   width: 100%;
   z-index: 1;
+}
+
+.DropZone--isEnabled.DropZone--userIsDragging {
+  outline: 2px dashed var(--puck-color-azure-06);
 }

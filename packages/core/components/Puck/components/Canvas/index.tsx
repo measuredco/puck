@@ -13,7 +13,7 @@ import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { Preview } from "../Preview";
 import { getZoomConfig } from "../../../../lib/get-zoom-config";
-import { AppState } from "../../../../types";
+import { AppState, UiState } from "../../../../types";
 import { Loader } from "../../../Loader";
 
 const getClassName = getClassNameFactory("PuckCanvas", styles);
@@ -95,17 +95,15 @@ export const Canvas = () => {
 
   // Resize based on window size
   useEffect(() => {
-    const observer = new ResizeObserver(() => {
+    const cb = () => {
       setShowTransition(false);
       resetAutoZoom();
-    });
+    };
 
-    if (document.body) {
-      observer.observe(document.body);
-    }
+    window.addEventListener("resize", cb);
 
     return () => {
-      observer.disconnect();
+      window.removeEventListener("resize", cb);
     };
   }, []);
 
@@ -145,9 +143,10 @@ export const Canvas = () => {
                 zoom: zoomConfig.zoom,
               };
 
-              const newUi = {
+              const newUi: UiState = {
                 ...ui,
                 viewports: { ...ui.viewports, current: uiViewport },
+                itemSelector: null,
               };
 
               setUi(newUi);
@@ -177,6 +176,15 @@ export const Canvas = () => {
             overflow: iframe.enabled ? undefined : "auto",
           }}
           suppressHydrationWarning // Suppress hydration warning as frame is not visible until after load
+          id="puck-canvas-root"
+          onTransitionEnd={() => {
+            window.dispatchEvent(
+              new CustomEvent("viewportchange", {
+                bubbles: true,
+                cancelable: false,
+              })
+            );
+          }}
         >
           <CustomPreview>
             <Preview />

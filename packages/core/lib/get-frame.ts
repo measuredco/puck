@@ -1,10 +1,12 @@
 export const getFrame = () => {
-  let frame: Element | Document | null | undefined =
+  if (typeof window === "undefined") return;
+
+  let frameEl: Element | Document | null | undefined =
     document.querySelector("#preview-frame");
 
-  if (frame?.tagName === "IFRAME") {
-    frame = (frame as HTMLIFrameElement)!.contentDocument;
+  if (frameEl?.tagName === "IFRAME") {
+    return (frameEl as HTMLIFrameElement)!.contentDocument || document;
   }
 
-  return frame;
+  return frameEl?.ownerDocument || document;
 };

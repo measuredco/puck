@@ -8,7 +8,13 @@ const config: Options = {
   dts: true,
   format: ["cjs", "esm"],
   inject: ["../tsup-config/react-import.js"],
-  external: ["react", "react-dom", "@measured/puck"],
+  external: [
+    "react",
+    "react-dom",
+    "@measured/puck",
+    "@dnd-kit/react",
+    "@dnd-kit/dom",
+  ],
   esbuildPlugins: [
     {
       name: "css-module",

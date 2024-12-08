@@ -32,7 +32,7 @@
 .PuckCanvas-root {
   background: white;
   border: 1px solid var(--puck-color-grey-09);
-  box-sizing: border-box;
+  box-sizing: content-box;
   min-width: 321px;
   position: absolute;
   pointer-events: none;

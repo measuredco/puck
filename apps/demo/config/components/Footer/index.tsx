@@ -58,19 +58,21 @@ const Footer = ({ children }: { children: ReactNode }) => {
   return (
     <footer style={{ background: "var(--puck-color-grey-12)" }}>
       <h2 style={{ visibility: "hidden", height: 0, margin: 0 }}>Footer</h2>
-      <Section padding="32px">
-        <div
-          style={{
-            display: "grid",
-            gridGap: 24,
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            paddingTop: 24,
-            paddingBottom: 24,
-          }}
-        >
-          {children}
-        </div>
-      </Section>
+      <div style={{ padding: 32 }}>
+        <Section>
+          <div
+            style={{
+              display: "grid",
+              gridGap: 24,
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              paddingTop: 24,
+              paddingBottom: 24,
+            }}
+          >
+            {children}
+          </div>
+        </Section>
+      </div>
       <div
         style={{
           padding: 64,

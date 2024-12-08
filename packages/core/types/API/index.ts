@@ -47,6 +47,7 @@ export type InitialHistory<AS = Partial<AppState>> =
   | InitialHistoryAppend<AS>
   | InitialHistoryNoAppend<AS>;
 
+export * from "./DropZone";
 export * from "./Viewports";
 
 export type { Overrides };
