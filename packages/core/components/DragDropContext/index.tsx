@@ -223,6 +223,8 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
           onDragEnd={(event, manager) => {
             const { source, target } = event.operation;
 
+            deepestRef.current = null;
+
             if (!source) {
               setDraggedItem(null);
 
