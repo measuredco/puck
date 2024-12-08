@@ -1,4 +1,5 @@
 import {
+  CSSProperties,
   ReactNode,
   Ref,
   SyntheticEvent,
@@ -196,8 +197,8 @@ export const DraggableComponent = ({
     );
   }, [iframe.enabled]);
 
-  const sync = useCallback(() => {
-    if (!ref.current || !overlayRef.current) return;
+  const getStyle = useCallback(() => {
+    if (!ref.current) return;
 
     const rect = ref.current!.getBoundingClientRect();
 
@@ -214,12 +215,20 @@ export const DraggableComponent = ({
       y: (view?.scrollY || 0) - (portalContainerRect?.top ?? 0),
     };
 
-    overlayRef.current!.style.left = `${rect.left + scroll.x}px`;
-    overlayRef.current!.style.top = `${rect.top + scroll.y}px`;
-    overlayRef.current!.style.height = `${rect.height}px`;
-    overlayRef.current!.style.width = `${rect.width}px`;
+    const style: CSSProperties = {
+      left: `${rect.left + scroll.x}px`,
+      top: `${rect.top + scroll.y}px`,
+      height: `${rect.height}px`,
+      width: `${rect.width}px`,
+    };
 
-    overlayRef.current!.style.opacity = "1";
+    return style;
+  }, [ref, overlayRef, iframe]);
+
+  const [style, setStyle] = useState<CSSProperties>();
+
+  const sync = useCallback(() => {
+    setStyle(getStyle());
   }, [ref, overlayRef, iframe]);
 
   useEffect(() => {
@@ -347,7 +356,17 @@ export const DraggableComponent = ({
     }
   }, [disabled, ref]);
 
-  const isVisible = (isSelected || hover || indicativeHover) && !userIsDragging;
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    sync();
+
+    if ((isSelected || hover || indicativeHover) && !userIsDragging) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  }, [isSelected, hover, indicativeHover, iframe, state.data, userIsDragging]);
 
   const [actionsWidth, setActionsWidth] = useState(250);
   const actionsRef = useRef<HTMLDivElement>(null);
@@ -388,8 +407,6 @@ export const DraggableComponent = ({
     setDragAxis(autoDragAxis);
   }, [ref, userDragAxis, autoDragAxis]);
 
-  useEffect(sync, [ref, overlayRef, isVisible, hover, iframe, state.data]);
-
   return (
     <DropZoneProvider
       value={{
@@ -412,6 +429,7 @@ export const DraggableComponent = ({
               hover: hover || indicativeHover,
             })}
             ref={overlayRef}
+            style={{ ...style }}
           >
             {debug}
             {isLoading && (
