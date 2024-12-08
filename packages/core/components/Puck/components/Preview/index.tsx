@@ -18,7 +18,6 @@ const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement>) => {
     if (ref.current && status === "READY") {
       const iframe = ref.current;
 
-      // Fallback to mousemove and touchmove for Safari
       const handlePointerMove = (event: PointerEvent) => {
         const rect = iframe.getBoundingClientRect();
 
