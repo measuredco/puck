@@ -285,7 +285,7 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
               dragListeners.dragend?.forEach((fn) => {
                 fn(event, manager);
               });
-            }, 250);
+            }, 300);
           }}
           onDragOver={(event, manager) => {
             // Prevent the optimistic re-ordering
