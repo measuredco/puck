@@ -264,9 +264,23 @@ export const DraggableComponent = ({
     (e: SyntheticEvent) => {
       e.stopPropagation();
       dispatch({
+        type: "setUi",
+        ui: {
+          itemSelector: null,
+        },
+      });
+
+      dispatch({
         type: "duplicate",
         sourceIndex: index,
         sourceZone: zoneCompound,
+      });
+
+      dispatch({
+        type: "setUi",
+        ui: {
+          itemSelector: { index: index + 1, zone: zoneCompound },
+        },
       });
     },
     [index, zoneCompound]
