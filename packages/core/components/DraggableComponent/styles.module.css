@@ -70,7 +70,8 @@
 
 .DraggableComponent--hover:not(.DraggableComponent--isSelected)
   .DraggableComponent-actionsOverlay {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .DraggableComponent-actions {

@@ -35,7 +35,7 @@ const DEBUG = false;
 const space = 8;
 const actionsOverlayTop = space * 6.5;
 const actionsTop = -(actionsOverlayTop - 8);
-const actionsRight = space;
+const actionsSide = space;
 
 const DefaultActionBar = ({
   label,
@@ -102,8 +102,6 @@ export const DraggableComponent = ({
 
   const isModifierHeld = useModifierHeld("Alt");
   const ctx = useContext(dropZoneContext);
-
-  const overlayRef = useRef<HTMLDivElement>(null);
 
   const [localZones, setLocalZones] = useState<Record<string, boolean>>({});
 
@@ -223,13 +221,13 @@ export const DraggableComponent = ({
     };
 
     return style;
-  }, [ref, overlayRef, iframe]);
+  }, [ref, iframe]);
 
   const [style, setStyle] = useState<CSSProperties>();
 
   const sync = useCallback(() => {
     setStyle(getStyle());
-  }, [ref, overlayRef, iframe]);
+  }, [ref, iframe]);
 
   useEffect(() => {
     ctx?.registerPath!({
@@ -338,7 +336,6 @@ export const DraggableComponent = ({
     };
   }, [
     ref,
-    overlayRef,
     onClick,
     containsActiveZone,
     zoneCompound,
@@ -370,22 +367,30 @@ export const DraggableComponent = ({
     }
   }, [isSelected, hover, indicativeHover, iframe, state.data, userIsDragging]);
 
-  const [actionsWidth, setActionsWidth] = useState(250);
-  const actionsRef = useRef<HTMLDivElement>(null);
+  const syncActionsPosition = useCallback(
+    (el: HTMLDivElement | null | undefined) => {
+      if (el) {
+        const view = el.ownerDocument.defaultView;
 
-  const updateActionsWidth = useCallback(() => {
-    if (actionsRef.current) {
-      const rect = actionsRef.current!.getBoundingClientRect();
+        if (view) {
+          const rect = el.getBoundingClientRect();
 
-      setActionsWidth(rect.width);
-    }
-  }, []);
+          const diffLeft = rect.x;
+          const exceedsBoundsLeft = diffLeft < 0;
 
-  useEffect(updateActionsWidth, [
-    actionsRef.current,
-    zoomConfig.zoom,
-    isSelected,
-  ]);
+          // Modify position if it spills over frame
+          if (exceedsBoundsLeft) {
+            el.style.transformOrigin = "left top";
+            el.style.left = "0px";
+          } else {
+            el.style.transformOrigin = "right top";
+            el.style.left = "";
+          }
+        }
+      }
+    },
+    [zoomConfig]
+  );
 
   useEffect(() => {
     if (userDragAxis) {
@@ -430,7 +435,6 @@ export const DraggableComponent = ({
               isModifierHeld,
               hover: hover || indicativeHover,
             })}
-            ref={overlayRef}
             style={{ ...style }}
           >
             {debug}
@@ -443,8 +447,6 @@ export const DraggableComponent = ({
               className={getClassName("actionsOverlay")}
               style={{
                 top: actionsOverlayTop / zoomConfig.zoom,
-                // Offset against left of frame
-                minWidth: actionsWidth + 2 * actionsRight,
               }}
             >
               <div
@@ -452,9 +454,11 @@ export const DraggableComponent = ({
                 style={{
                   transform: `scale(${1 / zoomConfig.zoom}`,
                   top: actionsTop / zoomConfig.zoom,
-                  right: actionsRight / zoomConfig.zoom,
+                  right: 0,
+                  paddingLeft: actionsSide,
+                  paddingRight: actionsSide,
                 }}
-                ref={actionsRef}
+                ref={syncActionsPosition}
               >
                 <CustomActionBar label={DEBUG ? id : label}>
                   {permissions.duplicate && (
