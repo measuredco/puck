@@ -65,13 +65,14 @@
 
 .DraggableComponent-actionsOverlay {
   position: sticky;
+  opacity: 0;
+  pointer-events: none;
   z-index: 2;
 }
 
-.DraggableComponent--hover:not(.DraggableComponent--isSelected)
-  .DraggableComponent-actionsOverlay {
-  opacity: 0;
-  pointer-events: none;
+.DraggableComponent--isSelected .DraggableComponent-actionsOverlay {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .DraggableComponent-actions {
