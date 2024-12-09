@@ -68,6 +68,11 @@
   z-index: 2;
 }
 
+.DraggableComponent--hover:not(.DraggableComponent--isSelected)
+  .DraggableComponent-actionsOverlay {
+  display: none;
+}
+
 .DraggableComponent-actions {
   position: absolute;
   width: auto;
