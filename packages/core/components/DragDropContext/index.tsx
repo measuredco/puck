@@ -78,6 +78,7 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
   const { state, config, dispatch, resolveData } = useAppContext();
 
   const [preview, setPreview] = useState<Preview>(null);
+  const previewRef = useRef<Preview>(null);
 
   const { data } = state;
   const [deepest, setDeepest] = useState<DeepestParams | null>(null);
@@ -238,8 +239,9 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
               setDraggedItem(null);
 
               // Tidy up cancellation
-              if (event.canceled || target?.type === "void" || !preview) {
+              if (event.canceled || target?.type === "void") {
                 setPreview(null);
+                previewRef.current = null;
 
                 dragListeners.dragend?.forEach((fn) => {
                   fn(event, manager);
@@ -249,14 +251,14 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
               }
 
               // Finalise the drag
-              if (preview) {
+              if (previewRef.current) {
                 setPreview(null);
 
-                if (preview.type === "insert") {
+                if (previewRef.current!.type === "insert") {
                   insertComponent(
-                    preview.componentType,
-                    preview.zone,
-                    preview.index,
+                    previewRef.current!.componentType,
+                    previewRef.current!.zone,
+                    previewRef.current!.index,
                     { config, dispatch, resolveData, state }
                   );
                 } else if (initialSelector.current) {
@@ -264,11 +266,13 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
                     type: "move",
                     sourceIndex: initialSelector.current.index,
                     sourceZone: initialSelector.current.zone,
-                    destinationIndex: preview.index,
-                    destinationZone: preview.zone,
+                    destinationIndex: previewRef.current!.index,
+                    destinationZone: previewRef.current!.zone,
                     recordHistory: false,
                   });
                 }
+
+                previewRef.current = null;
               }
 
               dispatch({
@@ -347,7 +351,7 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
             }
 
             if (dragMode.current === "new") {
-              setPreview({
+              previewRef.current = {
                 componentType: sourceData.componentType,
                 type: "insert",
                 index: targetIndex,
@@ -355,7 +359,8 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
                 props: {
                   id: source.id.toString(),
                 },
-              });
+              };
+              setPreview(previewRef.current);
             } else {
               if (!initialSelector.current) {
                 initialSelector.current = {
@@ -367,13 +372,15 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
               const item = getItem(initialSelector.current, data);
 
               if (item) {
-                setPreview({
+                previewRef.current = {
                   componentType: sourceData.componentType,
                   type: "move",
                   index: targetIndex,
                   zone: targetZone,
                   props: item.props,
-                });
+                };
+
+                setPreview(previewRef.current);
               }
             }
 
