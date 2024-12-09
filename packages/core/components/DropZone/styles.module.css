@@ -66,5 +66,5 @@
 }
 
 .DropZone > *:not([data-puck-component]) {
-  display: none;
+  opacity: 0;
 }
