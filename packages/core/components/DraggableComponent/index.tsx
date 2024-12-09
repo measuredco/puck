@@ -329,6 +329,7 @@ export const DraggableComponent = ({
     }
 
     return () => {
+      el.removeAttribute("data-puck-component");
       el.removeEventListener("click", onClick);
       el.removeEventListener("mouseover", _onMouseOver);
       el.removeEventListener("mouseout", _onMouseOut);
