@@ -5,6 +5,7 @@ import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import dynamic from "next/dynamic";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
+import { withLayout, WithLayout } from "../../components/Layout";
 
 const getClassName = getClassNameFactory("Card", styles);
 
@@ -24,14 +25,14 @@ const iconOptions = Object.keys(dynamicIconImports).map((iconName) => ({
   value: iconName,
 }));
 
-export type CardProps = {
+export type CardProps = WithLayout<{
   title: string;
   description: string;
   icon?: string;
   mode: "flat" | "card";
-};
+}>;
 
-export const Card: ComponentConfig<CardProps> = {
+const CardInner: ComponentConfig<CardProps> = {
   fields: {
     title: { type: "text" },
     description: { type: "textarea" },
@@ -56,10 +57,15 @@ export const Card: ComponentConfig<CardProps> = {
   render: ({ title, icon, description, mode }) => {
     return (
       <div className={getClassName({ [mode]: mode })}>
-        <div className={getClassName("icon")}>{icon && icons[icon]}</div>
-        <div className={getClassName("title")}>{title}</div>
-        <div className={getClassName("description")}>{description}</div>
+        <div className={getClassName("inner")}>
+          <div className={getClassName("icon")}>{icon && icons[icon]}</div>
+
+          <div className={getClassName("title")}>{title}</div>
+          <div className={getClassName("description")}>{description}</div>
+        </div>
       </div>
     );
   },
 };
+
+export const Card = withLayout(CardInner);

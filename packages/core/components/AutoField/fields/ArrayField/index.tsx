@@ -4,13 +4,13 @@ import { Copy, List, Plus, Trash } from "lucide-react";
 import { AutoFieldPrivate, FieldPropsInternal } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
-import { Droppable } from "../../../Droppable";
-import { Draggable } from "../../../Draggable";
+import { Droppable } from "../../../LegacyDnd/Droppable";
+import { Draggable } from "../../../LegacyDnd/Draggable";
 import { useCallback, useEffect, useState } from "react";
 import { DragIcon } from "../../../DragIcon";
 import { ArrayState, ItemWithId } from "../../../../types";
 import { useAppContext } from "../../../Puck/context";
-import { DragDropContext } from "../../../DragDropContext";
+import { DragDropContext } from "../../../LegacyDnd/DragDropContext";
 
 const getClassName = getClassNameFactory("ArrayField", styles);
 const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);

@@ -79,7 +79,6 @@ export type AppContext<
   status: Status;
   setStatus: (status: Status) => void;
   iframe: IframeConfig;
-  safariFallbackMode?: boolean;
   globalPermissions?: Partial<Permissions>;
   selectedItem?: G["UserData"]["content"][0];
   getPermissions: GetPermissions<UserConfig>;
@@ -106,7 +105,6 @@ const defaultContext: AppContext = {
   status: "LOADING",
   setStatus: () => null,
   iframe: {},
-  safariFallbackMode: false,
   globalPermissions: {},
   getPermissions: () => ({}),
   refreshPermissions: () => null,
@@ -138,29 +136,6 @@ export const AppProvider = ({
   // This triggers DropZones to activate
   useEffect(() => {
     setStatus("MOUNTED");
-  }, []);
-
-  const [safariFallbackMode, setSafariFallbackMode] = useState(false);
-
-  useEffect(() => {
-    const ua = new UAParser(navigator.userAgent);
-
-    const { browser } = ua.getResult();
-
-    if (
-      browser.name === "Safari" &&
-      (browser.version?.indexOf("17.2.") ||
-        browser.version?.indexOf("17.3.") ||
-        browser.version?.indexOf("17.4."))
-    ) {
-      if (process.env.NODE_ENV !== "production" && value.iframe.enabled) {
-        console.warn(
-          `Detected Safari ${browser.version}, which contains a bug that prevents Puck DropZones from detecting a mouseover event within an iframe. This affects Safari versions 17.2, 17.3 and 17.4.\n\nRunning in compatibility mode, which may have some DropZone side-effects. Alternatively, consider disabling iframes: https://puckeditor.com/docs/integrating-puck/viewports#opting-out-of-iframes.\n\nSee https://github.com/measuredco/puck/issues/411 for more information. This message will not show in production.`
-        );
-      }
-
-      setSafariFallbackMode(true);
-    }
   }, []);
 
   const selectedItem = value.state.ui.itemSelector
@@ -217,7 +192,6 @@ export const AppProvider = ({
         setZoomConfig,
         status,
         setStatus,
-        safariFallbackMode,
         getPermissions,
         refreshPermissions,
         componentState,

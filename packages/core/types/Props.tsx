@@ -4,6 +4,7 @@ import { WithChildren, WithPuckProps } from "./Utils";
 export type PuckContext = {
   renderDropZone: React.FC<DropZoneProps>;
   isEditing: boolean;
+  dragRef: ((element: Element | null) => void) | null;
 };
 
 export type DefaultRootFieldProps = {

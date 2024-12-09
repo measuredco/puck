@@ -4,14 +4,14 @@ import { ComponentConfig } from "@/core";
 import { Heading as _Heading } from "@/core/components/Heading";
 import type { HeadingProps as _HeadingProps } from "@/core/components/Heading";
 import { Section } from "../../components/Section";
+import { WithLayout, withLayout } from "../../components/Layout";
 
-export type HeadingProps = {
+export type HeadingProps = WithLayout<{
   align: "left" | "center" | "right";
   text?: string;
   level?: _HeadingProps["rank"];
   size: _HeadingProps["size"];
-  padding?: string;
-};
+}>;
 
 const sizeOptions = [
   { value: "xxxl", label: "XXXL" },
@@ -33,7 +33,7 @@ const levelOptions = [
   { label: "6", value: "6" },
 ];
 
-export const Heading: ComponentConfig<HeadingProps> = {
+const HeadingInternal: ComponentConfig<HeadingProps> = {
   fields: {
     text: {
       type: "textarea",
@@ -54,17 +54,18 @@ export const Heading: ComponentConfig<HeadingProps> = {
         { label: "Right", value: "right" },
       ],
     },
-    padding: { type: "text" },
   },
   defaultProps: {
     align: "left",
     text: "Heading",
-    padding: "24px",
     size: "m",
+    layout: {
+      padding: "8px",
+    },
   },
-  render: ({ align, text, size, level, padding }) => {
+  render: ({ align, text, size, level }) => {
     return (
-      <Section padding={padding}>
+      <Section>
         <_Heading size={size} rank={level as any}>
           <span style={{ display: "block", textAlign: align, width: "100%" }}>
             {text}
@@ -74,3 +75,5 @@ export const Heading: ComponentConfig<HeadingProps> = {
     );
   },
 };
+
+export const Heading = withLayout(HeadingInternal);
