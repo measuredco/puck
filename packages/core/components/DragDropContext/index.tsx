@@ -238,10 +238,8 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
               setDraggedItem(null);
 
               // Tidy up cancellation
-              if (event.canceled || target?.type === "void") {
-                if (preview) {
-                  setPreview(null);
-                }
+              if (event.canceled || target?.type === "void" || !preview) {
+                setPreview(null);
 
                 dragListeners.dragend?.forEach((fn) => {
                   fn(event, manager);
