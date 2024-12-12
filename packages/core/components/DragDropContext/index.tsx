@@ -236,6 +236,14 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
 
             const { zone, index } = source.data as ComponentDndData;
 
+            const thisPreview: Preview | null = previewRef.current
+              ? {
+                  ...previewRef.current,
+                }
+              : null;
+
+            previewRef.current = null;
+
             // Delay insert until animation has finished
             setTimeout(() => {
               setDraggedItem(null);
@@ -243,7 +251,6 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
               // Tidy up cancellation
               if (event.canceled || target?.type === "void") {
                 setPreview(null);
-                previewRef.current = null;
 
                 dragListeners.dragend?.forEach((fn) => {
                   fn(event, manager);
@@ -253,14 +260,14 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
               }
 
               // Finalise the drag
-              if (previewRef.current) {
+              if (thisPreview) {
                 setPreview(null);
 
-                if (previewRef.current!.type === "insert") {
+                if (thisPreview.type === "insert") {
                   insertComponent(
-                    previewRef.current!.componentType,
-                    previewRef.current!.zone,
-                    previewRef.current!.index,
+                    thisPreview.componentType,
+                    thisPreview.zone,
+                    thisPreview.index,
                     { config, dispatch, resolveData, state }
                   );
                 } else if (initialSelector.current) {
@@ -268,13 +275,11 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
                     type: "move",
                     sourceIndex: initialSelector.current.index,
                     sourceZone: initialSelector.current.zone,
-                    destinationIndex: previewRef.current!.index,
-                    destinationZone: previewRef.current!.zone,
+                    destinationIndex: thisPreview.index,
+                    destinationZone: thisPreview.zone,
                     recordHistory: false,
                   });
                 }
-
-                previewRef.current = null;
               }
 
               dispatch({
