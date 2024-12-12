@@ -27,18 +27,20 @@ export const SelectField = ({
     >
       <select
         id={id}
+        title={label || name}
         className={getClassName("input")}
         disabled={readOnly}
-        onChange={(e) => {
+        onChange={({ target: { value } }) => {
           if (
-            e.currentTarget.value === "true" ||
-            e.currentTarget.value === "false"
+          value === "true" ||
+          value === "false" ||
+          typeof value === "number"
           ) {
-            onChange(JSON.parse(e.currentTarget.value));
+            onChange(JSON.parse(value));
             return;
           }
 
-          onChange(e.currentTarget.value);
+          onChange(value);
         }}
         value={value}
       >
