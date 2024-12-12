@@ -10,11 +10,7 @@ function Root({ children, puck }: RootProps) {
       style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
       <Header editMode={puck.isEditing} />
-      <DropZone
-        zone={"default-zone"}
-        disallow={["GridItem"]}
-        style={{ flexGrow: 1 }}
-      />
+      {children}
       <Footer>
         <Footer.List title="Section">
           <Footer.Link href="#">Label</Footer.Link>
