@@ -3,6 +3,6 @@ export const safeJsonParse = <T>(str: string) => {
     const jsonValue: T = JSON.parse(str);
     return jsonValue;
   } catch {
-    return undefined;
+    return str;
   }
 };

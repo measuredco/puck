@@ -31,7 +31,7 @@ export const SelectField = ({
         title={label || name}
         className={getClassName("input")}
         disabled={readOnly}
-        onChange={({ target: { value } }) => safeJsonParse(value) ? onChange(JSON.parse(value)) : onChange(value)}
+        onChange={({ target: { value } }) => onChange(safeJsonParse(value) || value)}
         value={value}
       >
         {field.options.map((option) => (

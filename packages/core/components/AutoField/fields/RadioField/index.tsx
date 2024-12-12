@@ -39,7 +39,7 @@ export const RadioField = ({
               className={getClassName("radioInput")}
               value={option.value as string | number}
               name={name}
-              onChange={({ target: { value } }) => safeJsonParse(value) ? onChange(JSON.parse(value)) : onChange(value)}
+              onChange={({ target: { value } }) => onChange(safeJsonParse(value) || value)}
               disabled={readOnly}
               checked={value === option.value}
             />
