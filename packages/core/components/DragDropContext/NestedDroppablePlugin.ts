@@ -197,6 +197,13 @@ export const findDeepestCandidate = (
         if (candidateData.areaId === draggedCandidateId) {
           return false;
         }
+      } else if (candidate.type === "component") {
+        const candidateData = candidate.data as ComponentDndData;
+
+        // Remove non-droppable zones
+        if (!candidateData.inDroppableZone) {
+          return false;
+        }
       }
 
       return true;
