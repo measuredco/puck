@@ -35,7 +35,7 @@ export const Grid: ComponentConfig<GridProps> = {
       <Section>
         <DropZone
           zone="grid"
-          disallow={["Hero"]}
+          disallow={["Hero", "Stats"]}
           className={getClassName()}
           style={{
             gap,
