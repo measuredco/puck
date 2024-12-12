@@ -26,6 +26,7 @@ import { getItem } from "../../lib/get-item";
 import { DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useSortableSafe } from "../../lib/dnd-kit/safe";
+import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -172,10 +173,10 @@ export const DraggableComponent = ({
 
   const thisIsDragging = status === "dragging";
 
-  const ref = useRef<Element>();
+  const ref = useRef<HTMLElement>();
 
   const refSetter = useCallback(
-    (el: Element | null) => {
+    (el: HTMLElement | null) => {
       sortableRef(el);
 
       if (el) {
@@ -195,22 +196,23 @@ export const DraggableComponent = ({
     );
   }, [iframe.enabled]);
 
-  const getStyle = useCallback(() => {
-    if (!ref.current) return;
-
-    const rect = ref.current!.getBoundingClientRect();
-
-    const doc = ref.current.ownerDocument;
-    const view = doc.defaultView;
+  const portalContainerRect = useMemo<DOMRect | undefined>(() => {
     const portalContainerEl = iframe.enabled
       ? null
       : document.getElementById("puck-preview");
 
-    const portalContainerRect = portalContainerEl?.getBoundingClientRect();
+    return portalContainerEl?.getBoundingClientRect();
+  }, [iframe.enabled]);
+
+  const getStyle = useCallback(() => {
+    if (!ref.current) return;
+
+    const rect = ref.current!.getBoundingClientRect();
+    const deepScrollPosition = getDeepScrollPosition(ref.current);
 
     const scroll = {
-      x: (view?.scrollX || 0) - (portalContainerRect?.left ?? 0),
-      y: (view?.scrollY || 0) - (portalContainerRect?.top ?? 0),
+      x: deepScrollPosition.x - (portalContainerRect?.left ?? 0),
+      y: deepScrollPosition.y - (portalContainerRect?.top ?? 0),
     };
 
     const style: CSSProperties = {
@@ -221,7 +223,7 @@ export const DraggableComponent = ({
     };
 
     return style;
-  }, [ref, iframe]);
+  }, [ref, portalContainerRect]);
 
   const [style, setStyle] = useState<CSSProperties>();
 
