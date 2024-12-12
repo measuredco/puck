@@ -2,6 +2,7 @@ import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { ChevronDown } from "lucide-react";
 import { FieldPropsInternal } from "../..";
+import {safeJsonParse } from "../../../../lib/safe-json-parse"
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -34,7 +35,7 @@ export const SelectField = ({
           if (
           value === "true" ||
           value === "false" ||
-          typeof value === "number"
+          typeof safeJsonParse(value) === "number"
           ) {
             onChange(JSON.parse(value));
             return;
