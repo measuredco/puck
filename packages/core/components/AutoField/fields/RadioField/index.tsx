@@ -2,6 +2,8 @@ import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { CheckCircle } from "lucide-react";
 import { FieldPropsInternal } from "../..";
+import {safeJsonParse } from "../../../../lib/safe-json-parse"
+
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -37,17 +39,7 @@ export const RadioField = ({
               className={getClassName("radioInput")}
               value={option.value as string | number}
               name={name}
-              onChange={(e) => {
-                if (
-                  e.currentTarget.value === "true" ||
-                  e.currentTarget.value === "false"
-                ) {
-                  onChange(JSON.parse(e.currentTarget.value));
-                  return;
-                }
-
-                onChange(e.currentTarget.value);
-              }}
+              onChange={({ target: { value } }) => safeJsonParse(value) ? onChange(JSON.parse(value)) : onChange(value)}
               disabled={readOnly}
               checked={value === option.value}
             />
