@@ -11,7 +11,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { defaultPreset, DragDropManager, PointerSensor } from "@dnd-kit/dom";
+import { defaultPreset, DragDropManager } from "@dnd-kit/dom";
 import { DragDropEvents } from "@dnd-kit/abstract";
 import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
@@ -27,6 +27,8 @@ import { useDebouncedCallback } from "use-debounce";
 import { CollisionMap } from "../DraggableComponent/collision/dynamic";
 import { ComponentDndData } from "../DraggableComponent";
 import { isElement } from "@dnd-kit/dom/utilities";
+
+import { PointerSensor } from "./PointerSensor";
 
 type Events = DragDropEvents<Draggable, Droppable, DragDropManager>;
 type DragCbs = Partial<{ [eventName in keyof Events]: Events[eventName][] }>;
