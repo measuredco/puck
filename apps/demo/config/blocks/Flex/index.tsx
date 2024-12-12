@@ -69,7 +69,7 @@ const FlexInternal: ComponentConfig<FlexProps> = {
             flexWrap: wrap,
           }}
           zone="flex"
-          disallow={["GridItem"]}
+          disallow={["Hero", "Stats"]}
         />
       </Section>
     );
