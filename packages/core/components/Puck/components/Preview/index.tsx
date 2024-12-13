@@ -85,6 +85,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
     <div
       className={getClassName()}
       id={id}
+      data-puck-preview
       onClick={() => {
         dispatch({ type: "setUi", ui: { ...state.ui, itemSelector: null } });
       }}
