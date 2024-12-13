@@ -82,35 +82,6 @@ const getZoneId = (candidate: Droppable | undefined) => {
   return id;
 };
 
-const getAreaId = (candidate: Droppable) => {
-  if (candidate.type === "component") {
-    const data = candidate.data as ComponentDndData;
-
-    if (data.containsActiveZone) {
-      return candidate.id as string;
-    }
-  }
-
-  return null;
-};
-
-const getDeepestId = (
-  candidates: Droppable[],
-  idFn: (candidate: Droppable) => string | null
-) => {
-  let id: string | null = null;
-
-  for (let i = 0; i < candidates.length; i++) {
-    const candidate = candidates[i];
-
-    id = idFn(candidate);
-
-    if (id) break;
-  }
-
-  return id;
-};
-
 const expandHitBox = (rect: BoundingRectangle): BoundingRectangle => {
   return {
     bottom: rect.bottom + BUFFER_ZONE,
@@ -212,7 +183,7 @@ export const findDeepestCandidate = (
     filteredCandidates.reverse();
 
     const zone = getZoneId(filteredCandidates[0]);
-    const area = getDeepestId(filteredCandidates, getAreaId);
+    const area = filteredCandidates[0].data.areaId || null;
 
     return { zone, area };
   }
