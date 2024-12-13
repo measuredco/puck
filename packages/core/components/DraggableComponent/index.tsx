@@ -51,6 +51,7 @@ const DefaultActionBar = ({
 );
 
 export type ComponentDndData = {
+  areaId?: string;
   zone: string;
   index: number;
   componentType: string;
@@ -152,6 +153,7 @@ export const DraggableComponent = ({
     group: zoneCompound,
     type: "component",
     data: {
+      areaId: ctx?.areaId,
       zone: zoneCompound,
       index,
       componentType,
