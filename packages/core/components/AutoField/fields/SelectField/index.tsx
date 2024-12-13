@@ -2,6 +2,7 @@ import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { ChevronDown } from "lucide-react";
 import { FieldPropsInternal } from "../..";
+import { safeJsonParse } from "../../../../lib/safe-json-parse";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -27,19 +28,12 @@ export const SelectField = ({
     >
       <select
         id={id}
+        title={label || name}
         className={getClassName("input")}
         disabled={readOnly}
-        onChange={(e) => {
-          if (
-            e.currentTarget.value === "true" ||
-            e.currentTarget.value === "false"
-          ) {
-            onChange(JSON.parse(e.currentTarget.value));
-            return;
-          }
-
-          onChange(e.currentTarget.value);
-        }}
+        onChange={({ target: { value } }) =>
+          onChange(safeJsonParse(value) || value)
+        }
         value={value}
       >
         {field.options.map((option) => (
