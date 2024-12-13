@@ -7,6 +7,17 @@
   padding: 24px 16px;
 }
 
+#preview-puck {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+#preview-puck:hover {
+  cursor: pointer;
+}
+
 @media (min-width: 768px) {
   .Header {
     padding: 24px;
