@@ -190,19 +190,12 @@ export const DraggableComponent = ({
 
   useEffect(() => {
     setPortalEl(
-      (iframe.enabled
+      iframe.enabled
         ? ref.current?.ownerDocument.body
-        : document.getElementById("puck-preview")) ?? document.body
+        : ref.current?.closest<HTMLElement>("[data-puck-preview]") ??
+            document.body
     );
-  }, [iframe.enabled]);
-
-  const portalContainerRect = useMemo<DOMRect | undefined>(() => {
-    const portalContainerEl = iframe.enabled
-      ? null
-      : document.getElementById("puck-preview");
-
-    return portalContainerEl?.getBoundingClientRect();
-  }, [iframe.enabled]);
+  }, [iframe.enabled, ref.current]);
 
   const getStyle = useCallback(() => {
     if (!ref.current) return;
@@ -210,9 +203,22 @@ export const DraggableComponent = ({
     const rect = ref.current!.getBoundingClientRect();
     const deepScrollPosition = getDeepScrollPosition(ref.current);
 
+    const portalContainerEl = iframe.enabled
+      ? null
+      : ref.current?.closest<HTMLElement>("[data-puck-preview]");
+
+    const portalContainerRect = portalContainerEl?.getBoundingClientRect();
+    const portalScroll = portalContainerEl
+      ? getDeepScrollPosition(portalContainerEl)
+      : { x: 0, y: 0 };
+
     const scroll = {
-      x: deepScrollPosition.x - (portalContainerRect?.left ?? 0),
-      y: deepScrollPosition.y - (portalContainerRect?.top ?? 0),
+      x:
+        deepScrollPosition.x -
+        portalScroll.x -
+        (portalContainerRect?.left ?? 0),
+      y:
+        deepScrollPosition.y - portalScroll.y - (portalContainerRect?.top ?? 0),
     };
 
     const style: CSSProperties = {
@@ -223,7 +229,7 @@ export const DraggableComponent = ({
     };
 
     return style;
-  }, [ref, portalContainerRect]);
+  }, [ref.current]);
 
   const [style, setStyle] = useState<CSSProperties>();
 
