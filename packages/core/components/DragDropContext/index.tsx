@@ -87,62 +87,84 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
   const [nextDeepest, setNextDeepest] = useState<DeepestParams | null>(null);
 
   const deepestRef = useRef(deepest);
-  const dbDeepestRef = useRef(deepest);
+  const lastParamsRef = useRef<DeepestParams | null>(null);
 
-  const setDeepestDb = useDebouncedCallback((params: DeepestParams) => {
-    setDeepest(params);
+  const setDeepestAndCollide = useCallback(
+    (params: DeepestParams, manager: DragDropManager) => {
+      setDeepest(params);
 
-    dbDeepestRef.current = params;
-  }, AREA_CHANGE_DEBOUNCE_MS);
+      setTimeout(() => {
+        // Force update after debounce
+        manager.collisionObserver.forceUpdate(true);
+      }, 50);
 
-  const setDeepestDbMaybe = useCallback(
-    (params: DeepestParams) => {
-      if (
-        deepestRef.current === null ||
-        deepestRef.current?.zone === "void" ||
-        (params.zone &&
-          params.area &&
-          dbDeepestRef.current?.area === params.area)
-      ) {
-        setDeepest(params);
-      } else {
-        setDeepestDb(params);
-      }
-
-      if (!dbDeepestRef.current) {
-        dbDeepestRef.current = params;
-      }
+      lastParamsRef.current = null;
     },
-    [deepest]
+    []
   );
+
+  const setDeepestDb = useDebouncedCallback(
+    setDeepestAndCollide,
+    AREA_CHANGE_DEBOUNCE_MS
+  );
+
+  useEffect(() => {
+    deepestRef.current = deepest;
+  }, [deepest]);
+
+  const cancelDb = () => {
+    setDeepestDb.cancel();
+    lastParamsRef.current = null;
+  };
 
   const [plugins] = useState(() => [
     ...defaultPreset.plugins,
     createNestedDroppablePlugin({
       onChange: (params, manager) => {
-        const paramsChanged =
-          !deepestRef.current ||
-          params.area !== deepestRef.current?.area ||
-          params.zone !== deepestRef.current?.zone;
+        const lastParams = deepestRef.current;
+        const areaChanged = params.area !== lastParams?.area;
+        const zoneChanged = params.zone !== lastParams?.zone;
+        const isDragging = manager.dragOperation.status.dragging;
 
-        if (paramsChanged) {
-          if (manager.dragOperation.status.dragging) {
-            setDeepestDbMaybe(params);
-          } else {
-            setDeepest(params);
-          }
-
+        if (areaChanged || zoneChanged) {
           setNextDeepest(params);
         }
 
-        if (params.area !== deepestRef.current?.area) {
-          // Force a collision on area change
-          setTimeout(() => {
-            manager.collisionObserver.forceUpdate(true);
-          }, 50);
+        if (params.zone !== "void" && lastParams?.zone === "void") {
+          setDeepest(params);
+          manager.collisionObserver.forceUpdate(true);
+
+          return;
         }
 
-        deepestRef.current = params;
+        if (areaChanged) {
+          if (isDragging) {
+            // Only call the debounced function if these params differ from the last pending call
+            const lastParams = lastParamsRef.current;
+            const isSameParams =
+              lastParams &&
+              lastParams.area === params.area &&
+              lastParams.zone === params.zone;
+
+            if (!isSameParams) {
+              cancelDb(); // NB we always cancel the debounce if the params change, so we could just use a timer
+              setDeepestDb(params, manager);
+              lastParamsRef.current = params;
+            }
+          } else {
+            cancelDb();
+            setDeepestAndCollide(params, manager);
+          }
+
+          return;
+        }
+
+        if (zoneChanged) {
+          setDeepest(params);
+          manager.collisionObserver.forceUpdate(true);
+        }
+
+        cancelDb();
       },
     }),
   ]);
@@ -302,6 +324,9 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
 
             // Drag end can sometimes trigger after drag
             if (!draggedItem) return;
+
+            // Cancel any stale debounces
+            cancelDb();
 
             const { source, target } = event.operation;
 
