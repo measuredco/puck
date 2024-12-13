@@ -2,7 +2,7 @@ import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { ChevronDown } from "lucide-react";
 import { FieldPropsInternal } from "../..";
-import {safeJsonParse } from "../../../../lib/safe-json-parse"
+import { safeJsonParse } from "../../../../lib/safe-json-parse";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -31,7 +31,9 @@ export const SelectField = ({
         title={label || name}
         className={getClassName("input")}
         disabled={readOnly}
-        onChange={({ target: { value } }) => onChange(safeJsonParse(value) || value)}
+        onChange={({ target: { value } }) =>
+          onChange(safeJsonParse(value) || value)
+        }
         value={value}
       >
         {field.options.map((option) => (
