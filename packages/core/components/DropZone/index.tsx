@@ -277,10 +277,10 @@ function DropZoneEdit({
       }
     >
       {isRootZone && DEBUG && (
-        <>
+        <div data-puck-component>
           <p>{deepestZone || rootDroppableId}</p>
           <p>{deepestArea || "No area"}</p>
-        </>
+        </div>
       )}
 
       {contentWithPreview.map((item, i) => {
