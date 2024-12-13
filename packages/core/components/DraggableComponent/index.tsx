@@ -235,7 +235,19 @@ export const DraggableComponent = ({
 
   const sync = useCallback(() => {
     setStyle(getStyle());
-  }, [ref, iframe]);
+  }, [ref.current, iframe]);
+
+  useEffect(() => {
+    if (ref.current) {
+      const observer = new ResizeObserver(sync);
+
+      observer.observe(ref.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [ref.current]);
 
   useEffect(() => {
     ctx?.registerPath!({
