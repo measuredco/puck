@@ -14,6 +14,10 @@ const config: Options = {
     "@measured/puck",
     "@dnd-kit/react",
     "@dnd-kit/dom",
+    "@dnd-kit/abstract",
+    "@dnd-kit/state",
+    "@dnd-kit/geometry",
+    "@dnd-kit/utilities",
   ],
   esbuildPlugins: [
     {
