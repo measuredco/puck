@@ -368,7 +368,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
           ),
-          actionBar: ({ children, label }) => {
+          actionBar: ({ children, label, parentAction }) => {
             const { getPermissions, selectedItem, refreshPermissions } =
               // Disable rules of hooks since this is a render function
               // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -388,7 +388,11 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
 
             if (!selectedItem)
               return (
-                <ActionBar label={label}>
+                <ActionBar>
+                  <ActionBar.Group>
+                    {parentAction}
+                    {label && <ActionBar.Label label={label} />}
+                  </ActionBar.Group>
                   <ActionBar.Group>{children}</ActionBar.Group>
                 </ActionBar>
               );
@@ -396,7 +400,11 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             const isLocked = !!lockedComponents[selectedItem.props.id];
 
             return (
-              <ActionBar label={label}>
+              <ActionBar>
+                <ActionBar.Group>
+                  {parentAction}
+                  {label && <ActionBar.Label label={label} />}
+                </ActionBar.Group>
                 <ActionBar.Group>
                   {children}
                   {globalPermissions.lockable && (
