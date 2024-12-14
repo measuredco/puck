@@ -28,19 +28,36 @@ export const RadioField = ({
       el="div"
     >
       <div className={getClassName("radioGroupItems")} id={id}>
-        {field.options.map((option) => (
+        {field.options.map((option, index) => (
           <label
+            htmlFor={`${label}-${name}-${index}-${id}`}
             key={option.label + option.value}
             className={getClassName("radio")}
           >
             <input
+              id={`${label}-${name}-${index}-${id}`}
               type="radio"
               className={getClassName("radioInput")}
               value={option.value as string | number}
+<<<<<<< Updated upstream
               name={name}
               onChange={({ target: { value } }) =>
                 onChange(safeJsonParse(value) || value)
               }
+=======
+              name={`${label}-${name}-${index}-${id}`}
+              onChange={(e) => {
+                if (
+                  e.currentTarget.value === "true" ||
+                  e.currentTarget.value === "false"
+                ) {
+                  onChange(JSON.parse(e.currentTarget.value));
+                  return;
+                }
+
+                onChange(e.currentTarget.value);
+              }}
+>>>>>>> Stashed changes
               disabled={readOnly}
               checked={value === option.value}
             />

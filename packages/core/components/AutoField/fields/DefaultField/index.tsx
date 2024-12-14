@@ -24,6 +24,7 @@ export const DefaultField = ({
           {field.type === "number" && <Hash size={16} />}
         </>
       }
+    htmlFor={id}
       readOnly={readOnly}
     >
       <input

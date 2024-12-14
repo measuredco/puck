@@ -170,7 +170,7 @@ export const ExternalInput = ({
           <div className={getClassNameModal("masthead")}>
             {field.showSearch ? (
               <div className={getClassNameModal("searchForm")}>
-                <label className={getClassNameModal("search")}>
+                <label htmlFor="q" className={getClassNameModal("search")}>
                   <span className={getClassNameModal("searchIconText")}>
                     Search
                   </span>
