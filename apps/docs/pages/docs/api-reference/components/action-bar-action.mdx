@@ -7,26 +7,18 @@ import { ActionBar } from "@/core/components/ActionBar";
 
 # \<ActionBar.Action\>
 
-Render an action button in the [`<ActionBar>`](action-bar). Normally used inside an [`<ActionBar.Group>`](action-bar-group).
+Render an action button in the [`<ActionBar>`](action-bar). Often used inside an [`<ActionBar.Group>`](action-bar-group).
 
-```tsx showLineNumbers {3-5} copy
-<ActionBar label="Actions">
-  <ActionBar.Group>
-    <ActionBar.Action onClick={() => console.log("Clicked!")}>
-      ★
-    </ActionBar.Action>
-  </ActionBar.Group>
+```tsx showLineNumbers {2} copy
+<ActionBar>
+  <ActionBar.Action onClick={() => console.log("Clicked!")}>★</ActionBar.Action>
 </ActionBar>
 ```
 
 <PuckPreview>
   <div style={{ display: "flex" }}>
-    <ActionBar label="Actions">
-      <ActionBar.Group>
-        <ActionBar.Action onClick={() => console.log("Clicked!")}>
-          ★
-        </ActionBar.Action>
-      </ActionBar.Group>
+    <ActionBar>
+        <ActionBar.Action onClick={() => console.log("Clicked!")}>★</ActionBar.Action>
     </ActionBar>
 
   </div>

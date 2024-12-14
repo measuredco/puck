@@ -1,40 +1,51 @@
 .ActionBar {
+  align-items: center;
+  cursor: default;
   display: flex;
   width: auto;
   padding: 4px;
-  padding-right: 4px;
+  padding-left: 0;
+  padding-right: 0;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   border-radius: 8px;
   background: var(--puck-color-grey-01);
   color: var(--puck-color-white);
   font-family: var(--puck-font-family);
-  gap: 4px;
   min-height: 26px;
 }
 
-.ActionBar-actionsLabel {
+.ActionBar-label {
   color: var(--puck-color-grey-08);
-  display: flex;
   font-size: var(--puck-font-size-xxxs);
   font-weight: 500;
-  justify-content: center;
-  align-items: center;
   padding-left: 8px;
   padding-right: 8px;
+  margin-left: 4px;
+  margin-right: 4px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.ActionBar-action + .ActionBar-label {
+  padding-left: 0;
+}
+
+.ActionBar-label + .ActionBar-action {
+  margin-left: -4px;
+}
+
 .ActionBar-group {
+  align-items: center;
   border-inline-start: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
   display: flex;
+  height: 100%;
   padding-left: 4px;
   padding-right: 4px;
 }
 
-.ActionBar-group:last-of-type {
-  padding-right: 0;
+.ActionBar-group:first-of-type {
+  border-inline-start: 0;
 }
 
 .ActionBar-group:empty {
@@ -47,6 +58,8 @@
   color: var(--puck-color-grey-08);
   cursor: pointer;
   padding: 6px 8px;
+  margin-left: 4px;
+  margin-right: 4px;
   border-radius: 4px;
   overflow: hidden;
   display: flex;
@@ -70,4 +83,8 @@
 .ActionBar-action:active {
   color: var(--puck-color-azure-07);
   transition: none;
+}
+
+.ActionBar-group * {
+  margin: 0;
 }
