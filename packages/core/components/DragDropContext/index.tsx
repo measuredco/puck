@@ -87,7 +87,7 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
   const [nextDeepest, setNextDeepest] = useState<DeepestParams | null>(null);
 
   const deepestRef = useRef(deepest);
-  const lastParamsRef = useRef<DeepestParams | null>(null);
+  const debouncedParamsRef = useRef<DeepestParams | null>(null);
 
   const setDeepestAndCollide = useCallback(
     (params: DeepestParams, manager: DragDropManager) => {
@@ -98,7 +98,7 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
         manager.collisionObserver.forceUpdate(true);
       }, 50);
 
-      lastParamsRef.current = null;
+      debouncedParamsRef.current = null;
     },
     []
   );
@@ -114,7 +114,7 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
 
   const cancelDb = () => {
     setDeepestDb.cancel();
-    lastParamsRef.current = null;
+    debouncedParamsRef.current = null;
   };
 
   const [plugins] = useState(() => [
@@ -140,16 +140,16 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
         if (areaChanged) {
           if (isDragging) {
             // Only call the debounced function if these params differ from the last pending call
-            const lastParams = lastParamsRef.current;
+            const debouncedParams = debouncedParamsRef.current;
             const isSameParams =
-              lastParams &&
-              lastParams.area === params.area &&
-              lastParams.zone === params.zone;
+              debouncedParams &&
+              debouncedParams.area === params.area &&
+              debouncedParams.zone === params.zone;
 
             if (!isSameParams) {
               cancelDb(); // NB we always cancel the debounce if the params change, so we could just use a timer
               setDeepestDb(params, manager);
-              lastParamsRef.current = params;
+              debouncedParamsRef.current = params;
             }
           } else {
             cancelDb();
@@ -160,8 +160,7 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
         }
 
         if (zoneChanged) {
-          setDeepest(params);
-          manager.collisionObserver.forceUpdate(true);
+          setDeepestAndCollide(params, manager);
         }
 
         cancelDb();
