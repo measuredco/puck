@@ -268,8 +268,9 @@ export const DraggableComponent = ({
   });
 
   const onClick = useCallback(
-    (e: SyntheticEvent | Event) => {
+    (e: Event | SyntheticEvent) => {
       e.stopPropagation();
+
       dispatch({
         type: "setUi",
         ui: {
@@ -280,30 +281,21 @@ export const DraggableComponent = ({
     [index, zoneCompound, id]
   );
 
-  const onDuplicate = useCallback(
-    (e: SyntheticEvent) => {
-      e.stopPropagation();
+  const onDuplicate = useCallback(() => {
+    dispatch({
+      type: "duplicate",
+      sourceIndex: index,
+      sourceZone: zoneCompound,
+    });
+  }, [index, zoneCompound]);
 
-      dispatch({
-        type: "duplicate",
-        sourceIndex: index,
-        sourceZone: zoneCompound,
-      });
-    },
-    [index, zoneCompound]
-  );
-
-  const onDelete = useCallback(
-    (e: SyntheticEvent) => {
-      e.stopPropagation();
-      dispatch({
-        type: "remove",
-        index: index,
-        zone: zoneCompound,
-      });
-    },
-    [index, zoneCompound]
-  );
+  const onDelete = useCallback(() => {
+    dispatch({
+      type: "remove",
+      index: index,
+      zone: zoneCompound,
+    });
+  }, [index, zoneCompound]);
 
   const [hover, setHover] = useState(false);
 
