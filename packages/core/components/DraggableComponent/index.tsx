@@ -12,7 +12,7 @@ import {
 } from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Copy, Trash } from "lucide-react";
+import { Copy, CornerLeftUp, Trash } from "lucide-react";
 import { useModifierHeld } from "../../lib/use-modifier-held";
 import { useAppContext } from "../Puck/context";
 import { Loader } from "../Loader";
@@ -22,8 +22,8 @@ import { createPortal } from "react-dom";
 
 import { dropZoneContext, DropZoneProvider } from "../DropZone";
 import { createDynamicCollisionDetector } from "./collision/dynamic";
-import { getItem } from "../../lib/get-item";
-import { DragAxis } from "../../types";
+import { getItem, ItemSelector } from "../../lib/get-item";
+import { Data, DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useSortableSafe } from "../../lib/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
@@ -41,14 +41,38 @@ const actionsSide = space;
 const DefaultActionBar = ({
   label,
   children,
+  parentAction,
 }: {
   label: string | undefined;
   children: ReactNode;
+  parentAction: ReactNode;
 }) => (
-  <ActionBar label={label}>
+  <ActionBar>
+    <ActionBar.Group>
+      {parentAction}
+      {label && <ActionBar.Label label={label} />}
+    </ActionBar.Group>
     <ActionBar.Group>{children}</ActionBar.Group>
   </ActionBar>
 );
+
+const convertIdToSelector = (
+  id: string,
+  zoneCompound: string | null,
+  data: Data
+): ItemSelector => {
+  const content =
+    zoneCompound && data.zones && zoneCompound !== "default-zone"
+      ? data.zones[zoneCompound]
+      : data.content;
+
+  const index = content.findIndex((item) => item.props.id === id);
+
+  return {
+    zone: zoneCompound || "",
+    index,
+  };
+};
 
 export type ComponentDndData = {
   areaId?: string;
@@ -281,6 +305,28 @@ export const DraggableComponent = ({
     [index, zoneCompound, id]
   );
 
+  const onSelectParent = useCallback(() => {
+    if (!ctx?.areaId) {
+      return;
+    }
+
+    const parentAreaId = ctx.areaId;
+    const parentZone = path[path.length - 3];
+
+    const parentItemSelector = convertIdToSelector(
+      parentAreaId,
+      parentZone,
+      state.data
+    );
+
+    dispatch({
+      type: "setUi",
+      ui: {
+        itemSelector: parentItemSelector,
+      },
+    });
+  }, [ctx, path]);
+
   const onDuplicate = useCallback(() => {
     dispatch({
       type: "duplicate",
@@ -428,6 +474,12 @@ export const DraggableComponent = ({
     setDragAxis(autoDragAxis);
   }, [ref, userDragAxis, autoDragAxis]);
 
+  const parentAction = ctx?.areaId && ctx?.areaId !== "root" && (
+    <ActionBar.Action onClick={onSelectParent} label="Select parent">
+      <CornerLeftUp size={16} />
+    </ActionBar.Action>
+  );
+
   return (
     <DropZoneProvider
       value={{
@@ -474,7 +526,10 @@ export const DraggableComponent = ({
                 }}
                 ref={syncActionsPosition}
               >
-                <CustomActionBar label={DEBUG ? id : label}>
+                <CustomActionBar
+                  parentAction={parentAction}
+                  label={DEBUG ? id : label}
+                >
                   {permissions.duplicate && (
                     <ActionBar.Action onClick={onDuplicate} label="Duplicate">
                       <Copy size={16} />
