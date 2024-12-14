@@ -30,6 +30,7 @@ export type Overrides = OverridesGeneric<{
   actionBar: RenderFunc<{
     label?: string;
     children: ReactNode;
+    parentAction: ReactNode;
   }>;
   headerActions: RenderFunc<{ children: ReactNode }>;
   preview: RenderFunc;
