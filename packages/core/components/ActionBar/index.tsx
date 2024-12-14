@@ -10,7 +10,12 @@ export const ActionBar = ({
   label?: string;
   children?: ReactNode;
 }) => (
-  <div className={getClassName()}>
+  <div
+    className={getClassName()}
+    onClick={(e) => {
+      e.stopPropagation();
+    }}
+  >
     {label && <div className={getClassName("actionsLabel")}>{label}</div>}
     {children}
   </div>
