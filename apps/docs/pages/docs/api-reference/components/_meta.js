@@ -2,6 +2,7 @@ const menu = {
   "action-bar": {},
   "action-bar-action": {},
   "action-bar-group": {},
+  "action-bar-label": {},
   "auto-field": {},
   drawer: {},
   "drawer-item": {},
