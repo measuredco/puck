@@ -217,7 +217,17 @@ function AutoFieldInternal<
   const Render = render[field.type] as (props: FieldProps) => ReactElement;
 
   return (
-    <div className={getClassNameWrapper()} onFocus={onFocus} onBlur={onBlur}>
+    <div
+      className={getClassNameWrapper()}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      onClick={(e) => {
+        // Prevent propagation of any click events to parent field.
+        // For example, a field within an array may bubble an event
+        // and fail to stop propagation.
+        e.stopPropagation();
+      }}
+    >
       <Render {...mergedProps}>{children}</Render>
     </div>
   );
