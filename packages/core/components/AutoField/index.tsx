@@ -233,9 +233,6 @@ function AutoFieldInternal<
   );
 }
 
-// Don't let external value changes update this if it's changed manually in the last X ms
-const RECENT_CHANGE_TIMEOUT = 200;
-
 type FieldNoLabel<Props extends any = any> = Omit<Field<Props>, "label">;
 
 export function AutoFieldPrivate<
