@@ -53,6 +53,17 @@ const Head = () => {
       <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       <link rel="manifest" href="/manifest.webmanifest" />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: `{
+      "@context" : "https://schema.org",
+      "@type" : "WebSite",
+      "name" : "Puck",
+      "url" : "https://puckeditor.com/"
+    }`,
+        }}
+      />
       {asPath == "/" && (
         <script
           type="application/ld+json"
