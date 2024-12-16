@@ -11,7 +11,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { defaultPreset, DragDropManager } from "@dnd-kit/dom";
+import { AutoScroller, defaultPreset, DragDropManager } from "@dnd-kit/dom";
 import { DragDropEvents } from "@dnd-kit/abstract";
 import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
@@ -76,7 +76,15 @@ type DeepestParams = {
 
 const AREA_CHANGE_DEBOUNCE_MS = 100;
 
-const DragDropContextClient = ({ children }: { children: ReactNode }) => {
+type DragDropContextProps = {
+  children: ReactNode;
+  disableAutoScroll?: boolean;
+};
+
+const DragDropContextClient = ({
+  children,
+  disableAutoScroll,
+}: DragDropContextProps) => {
   const { state, config, dispatch, resolveData } = useAppContext();
 
   const [preview, setPreview] = useState<Preview>(null);
@@ -118,7 +126,9 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
   };
 
   const [plugins] = useState(() => [
-    ...defaultPreset.plugins,
+    ...(disableAutoScroll
+      ? defaultPreset.plugins.filter((plugin) => plugin !== AutoScroller)
+      : defaultPreset.plugins),
     createNestedDroppablePlugin({
       onChange: (params, manager) => {
         const lastParams = deepestRef.current;
@@ -473,12 +483,19 @@ const DragDropContextClient = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const DragDropContext = ({ children }: { children: ReactNode }) => {
+export const DragDropContext = ({
+  children,
+  disableAutoScroll,
+}: DragDropContextProps) => {
   const { status } = useAppContext();
 
   if (status === "LOADING") {
     return children;
   }
 
-  return <DragDropContextClient>{children}</DragDropContextClient>;
+  return (
+    <DragDropContextClient disableAutoScroll={disableAutoScroll}>
+      {children}
+    </DragDropContextClient>
+  );
 };
