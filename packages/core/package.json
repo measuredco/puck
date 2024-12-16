@@ -48,7 +48,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@testing-library/react": "^14.0.0",
+    "@testing-library/react": "^16.1.0",
     "@types/deep-diff": "^1.0.3",
     "@types/jest": "^29.5.4",
     "@types/object-hash": "^3.0.6",
