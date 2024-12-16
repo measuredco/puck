@@ -11,20 +11,20 @@
   "exports": {
     ".": {
       "react-server": {
+        "types": "./dist/rsc.d.ts",
         "import": "./dist/rsc.mjs",
-        "require": "./dist/rsc.js",
-        "types": "./dist/rsc.d.ts"
+        "require": "./dist/rsc.js"
       },
       "default": {
+        "types": "./dist/index.d.ts",
         "import": "./dist/index.mjs",
-        "require": "./dist/index.js",
-        "types": "./dist/index.d.ts"
+        "require": "./dist/index.js"
       }
     },
     "./rsc": {
+      "types": "./dist/rsc.d.ts",
       "import": "./dist/rsc.mjs",
-      "require": "./dist/rsc.js",
-      "types": "./dist/rsc.d.ts"
+      "require": "./dist/rsc.js"
     },
     "./puck.css": "./dist/index.css",
     "./dist/index.css": "./dist/index.css"
