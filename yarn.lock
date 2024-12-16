@@ -2816,29 +2816,28 @@
     "@tufjs/canonical-json" "1.0.0"
     minimatch "^9.0.0"
 
-"@turbo/gen@^1.9.7":
-  version "1.10.14"
-  resolved "https://registry.yarnpkg.com/@turbo/gen/-/gen-1.10.14.tgz#8eaf425248f7d56edfd0229b6af2e03381802459"
-  integrity sha512-g7ecPx0GCCTpnbH53blBGNk6pP4LhcWiTtR0kEprGkXpiHqjYDpOydz4JFoz9IC+Hj1Z28/+M7T/GfwJAjf0FQ==
+"@turbo/gen@^2.3.3":
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@turbo/gen/-/gen-2.3.3.tgz#6405c15f0a5d065cf5fd434de145beb98277a21c"
+  integrity sha512-MIXXX0sVRvfTWOrLhjDT1KJ15dqzRlNlHIvNeWoS5ZtTMQ9XuBl9D5ek/5vMj77n+84mFRS/VKAoEuScOIWwaw==
   dependencies:
-    "@turbo/workspaces" "1.10.14"
-    chalk "2.4.2"
+    "@turbo/workspaces" "2.3.3"
     commander "^10.0.0"
     fs-extra "^10.1.0"
     inquirer "^8.2.4"
     minimatch "^9.0.0"
     node-plop "^0.26.3"
+    picocolors "1.0.1"
     proxy-agent "^6.2.2"
-    ts-node "^10.9.1"
+    ts-node "^10.9.2"
     update-check "^1.5.4"
     validate-npm-package-name "^5.0.0"
 
-"@turbo/workspaces@1.10.14":
-  version "1.10.14"
-  resolved "https://registry.yarnpkg.com/@turbo/workspaces/-/workspaces-1.10.14.tgz#1850ef985541e80db32751a4e31d2f1e2e842bb0"
-  integrity sha512-MNJeCNJWIFdXQ0m7yp1VeZE/3edoFEeAFJlr9UxRiv6cge3TdhwI6OEuBewJDN73/4SZSeL4u6L+2DVULA0t+Q==
+"@turbo/workspaces@2.3.3":
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@turbo/workspaces/-/workspaces-2.3.3.tgz#1c9c1b6433acaa748a61b5c3bf9b30ce64bc0ee9"
+  integrity sha512-PSys7Hy5NuX76HBleOkd8wlRtI4GCzLHS2XUpKeGIj0vpzH4fqE+tpi7fBb5t9U7UiyM6E6pyabSKjoD2zUsoQ==
   dependencies:
-    chalk "2.4.2"
     commander "^10.0.0"
     execa "5.1.1"
     fast-glob "^3.2.12"
@@ -2847,8 +2846,8 @@
     inquirer "^8.0.0"
     js-yaml "^4.1.0"
     ora "4.1.1"
-    rimraf "^3.0.2"
-    semver "^7.3.5"
+    picocolors "1.0.1"
+    semver "7.6.2"
     update-check "^1.5.4"
 
 "@types/acorn@^4.0.0":
@@ -4406,15 +4405,6 @@ ccount@^2.0.0:
   resolved "https://registry.yarnpkg.com/ccount/-/ccount-2.0.1.tgz#17a3bf82302e0870d6da43a01311a8bc02a3ecf5"
   integrity sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==
 
-chalk@2.4.2, chalk@^2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
-  integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
-  dependencies:
-    ansi-styles "^3.2.1"
-    escape-string-regexp "^1.0.5"
-    supports-color "^5.3.0"
-
 chalk@4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.0.tgz#4e14870a618d9e2edd97dd8345fd9d9dc315646a"
@@ -4422,6 +4412,15 @@ chalk@4.1.0:
   dependencies:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
+
+chalk@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
+  integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
+  dependencies:
+    ansi-styles "^3.2.1"
+    escape-string-regexp "^1.0.5"
+    supports-color "^5.3.0"
 
 chalk@^3.0.0:
   version "3.0.0"
@@ -12292,15 +12291,15 @@ periscopic@^3.0.0:
     estree-walker "^3.0.0"
     is-reference "^3.0.0"
 
+picocolors@1.0.1, picocolors@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.1.tgz#a8ad579b571952f0e5d25892de5445bcfe25aaa1"
+  integrity sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==
+
 picocolors@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
   integrity sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==
-
-picocolors@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.1.tgz#a8ad579b571952f0e5d25892de5445bcfe25aaa1"
-  integrity sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==
 
 picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.2.3, picomatch@^2.3.1:
   version "2.3.1"
@@ -13526,6 +13525,11 @@ semver@7.5.3:
   dependencies:
     lru-cache "^6.0.0"
 
+semver@7.6.2:
+  version "7.6.2"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.2.tgz#1e3b34759f896e8f14d6134732ce798aeb0c6e13"
+  integrity sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==
+
 semver@^6.0.0, semver@^6.1.0, semver@^6.3.0, semver@^6.3.1:
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
@@ -14496,10 +14500,10 @@ ts-jest@^29.2.4:
     semver "^7.5.3"
     yargs-parser "^21.0.1"
 
-ts-node@^10.9.1:
-  version "10.9.1"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.9.1.tgz#e73de9102958af9e1f0b168a6ff320e25adcff4b"
-  integrity sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==
+ts-node@^10.9.2:
+  version "10.9.2"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.9.2.tgz#70f021c9e185bccdca820e26dc413805c101c71f"
+  integrity sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==
   dependencies:
     "@cspotcode/source-map-support" "^0.8.0"
     "@tsconfig/node10" "^1.0.7"
@@ -14587,47 +14591,47 @@ tuf-js@^1.1.7:
     debug "^4.3.4"
     make-fetch-happen "^11.1.1"
 
-turbo-darwin-64@1.10.14:
-  version "1.10.14"
-  resolved "https://registry.yarnpkg.com/turbo-darwin-64/-/turbo-darwin-64-1.10.14.tgz#9e8061bc0d706a69bc61d88fbfa7690fa2a897fc"
-  integrity sha512-I8RtFk1b9UILAExPdG/XRgGQz95nmXPE7OiGb6ytjtNIR5/UZBS/xVX/7HYpCdmfriKdVwBKhalCoV4oDvAGEg==
+turbo-darwin-64@2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/turbo-darwin-64/-/turbo-darwin-64-2.3.3.tgz#875975cddf7abdb52b28e9cab234fc73ca001e80"
+  integrity sha512-bxX82xe6du/3rPmm4aCC5RdEilIN99VUld4HkFQuw+mvFg6darNBuQxyWSHZTtc25XgYjQrjsV05888w1grpaA==
 
-turbo-darwin-arm64@1.10.14:
-  version "1.10.14"
-  resolved "https://registry.yarnpkg.com/turbo-darwin-arm64/-/turbo-darwin-arm64-1.10.14.tgz#2589aeb814257601c979dd40ff8a6cace6c9e4e5"
-  integrity sha512-KAdUWryJi/XX7OD0alOuOa0aJ5TLyd4DNIYkHPHYcM6/d7YAovYvxRNwmx9iv6Vx6IkzTnLeTiUB8zy69QkG9Q==
+turbo-darwin-arm64@2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/turbo-darwin-arm64/-/turbo-darwin-arm64-2.3.3.tgz#5e85d6dadac6560782bb91081fee56f9cfcd103e"
+  integrity sha512-DYbQwa3NsAuWkCUYVzfOUBbSUBVQzH5HWUFy2Kgi3fGjIWVZOFk86ss+xsWu//rlEAfYwEmopigsPYSmW4X15A==
 
-turbo-linux-64@1.10.14:
-  version "1.10.14"
-  resolved "https://registry.yarnpkg.com/turbo-linux-64/-/turbo-linux-64-1.10.14.tgz#c01d26f62f6c47701026dea083054918fe8caf47"
-  integrity sha512-BOBzoREC2u4Vgpap/WDxM6wETVqVMRcM8OZw4hWzqCj2bqbQ6L0wxs1LCLWVrghQf93JBQtIGAdFFLyCSBXjWQ==
+turbo-linux-64@2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/turbo-linux-64/-/turbo-linux-64-2.3.3.tgz#634f2053cff6ff056bec7f307c2fb4dd9a2bc86f"
+  integrity sha512-eHj9OIB0dFaP6BxB88jSuaCLsOQSYWBgmhy2ErCu6D2GG6xW3b6e2UWHl/1Ho9FsTg4uVgo4DB9wGsKa5erjUA==
 
-turbo-linux-arm64@1.10.14:
-  version "1.10.14"
-  resolved "https://registry.yarnpkg.com/turbo-linux-arm64/-/turbo-linux-arm64-1.10.14.tgz#7cbcb091995a09134342a57e0672501115b46df2"
-  integrity sha512-D8T6XxoTdN5D4V5qE2VZG+/lbZX/89BkAEHzXcsSUTRjrwfMepT3d2z8aT6hxv4yu8EDdooZq/2Bn/vjMI32xw==
+turbo-linux-arm64@2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/turbo-linux-arm64/-/turbo-linux-arm64-2.3.3.tgz#284e26825f5d692bffb5b126a9aeccaae6a4533b"
+  integrity sha512-NmDE/NjZoDj1UWBhMtOPmqFLEBKhzGS61KObfrDEbXvU3lekwHeoPvAMfcovzswzch+kN2DrtbNIlz+/rp8OCg==
 
-turbo-windows-64@1.10.14:
-  version "1.10.14"
-  resolved "https://registry.yarnpkg.com/turbo-windows-64/-/turbo-windows-64-1.10.14.tgz#935d2d1da7fb1f9a941fb3aa122fd9a70b61c416"
-  integrity sha512-zKNS3c1w4i6432N0cexZ20r/aIhV62g69opUn82FLVs/zk3Ie0GVkSB6h0rqIvMalCp7enIR87LkPSDGz9K4UA==
+turbo-windows-64@2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/turbo-windows-64/-/turbo-windows-64-2.3.3.tgz#2900ac2c00d9609bc480d90564a98ca1cc7f4b17"
+  integrity sha512-O2+BS4QqjK3dOERscXqv7N2GXNcqHr9hXumkMxDj/oGx9oCatIwnnwx34UmzodloSnJpgSqjl8iRWiY65SmYoQ==
 
-turbo-windows-arm64@1.10.14:
-  version "1.10.14"
-  resolved "https://registry.yarnpkg.com/turbo-windows-arm64/-/turbo-windows-arm64-1.10.14.tgz#cb3a55d30a75aa76258991e929e92f207cac872f"
-  integrity sha512-rkBwrTPTxNSOUF7of8eVvvM+BkfkhA2OvpHM94if8tVsU+khrjglilp8MTVPHlyS9byfemPAmFN90oRIPB05BA==
+turbo-windows-arm64@2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/turbo-windows-arm64/-/turbo-windows-arm64-2.3.3.tgz#395508cdf6b351d7dd324fb0b318c1b2cf1d66dd"
+  integrity sha512-dW4ZK1r6XLPNYLIKjC4o87HxYidtRRcBeo/hZ9Wng2XM/MqqYkAyzJXJGgRMsc0MMEN9z4+ZIfnSNBrA0b08ag==
 
-turbo@^1.9.7:
-  version "1.10.14"
-  resolved "https://registry.yarnpkg.com/turbo/-/turbo-1.10.14.tgz#31f3bb3017218191e0de64728da199678a50aa7d"
-  integrity sha512-hr9wDNYcsee+vLkCDIm8qTtwhJ6+UAMJc3nIY6+PNgUTtXcQgHxCq8BGoL7gbABvNWv76CNbK5qL4Lp9G3ZYRA==
+turbo@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/turbo/-/turbo-2.3.3.tgz#70736263c75f7c0c501278214dee49859e1c7fcd"
+  integrity sha512-DUHWQAcC8BTiUZDRzAYGvpSpGLiaOQPfYXlCieQbwUvmml/LRGIe3raKdrOPOoiX0DYlzxs2nH6BoWJoZrj8hA==
   optionalDependencies:
-    turbo-darwin-64 "1.10.14"
-    turbo-darwin-arm64 "1.10.14"
-    turbo-linux-64 "1.10.14"
-    turbo-linux-arm64 "1.10.14"
-    turbo-windows-64 "1.10.14"
-    turbo-windows-arm64 "1.10.14"
+    turbo-darwin-64 "2.3.3"
+    turbo-darwin-arm64 "2.3.3"
+    turbo-linux-64 "2.3.3"
+    turbo-linux-arm64 "2.3.3"
+    turbo-windows-64 "2.3.3"
+    turbo-windows-arm64 "2.3.3"
 
 twoslash-protocol@0.2.12:
   version "0.2.12"
