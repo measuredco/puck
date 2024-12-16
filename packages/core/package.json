@@ -61,7 +61,7 @@
     "eslint-config-custom": "*",
     "jest": "^29.6.4",
     "jest-environment-jsdom": "^29.6.4",
-    "lucide-react": "^0.298.0",
+    "lucide-react": "^0.468.0",
     "ts-jest": "^29.2.4",
     "tsconfig": "*",
     "tsup": "^8.2.4",
