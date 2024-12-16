@@ -1,4 +1,4 @@
-export const safeJsonParse = <T>(str: string) => {
+export const safeJsonParse = <T = any>(str: string) => {
   try {
     const jsonValue: T = JSON.parse(str);
     return jsonValue;

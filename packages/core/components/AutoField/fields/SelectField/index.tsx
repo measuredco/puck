@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { ChevronDown } from "lucide-react";
@@ -16,6 +17,12 @@ export const SelectField = ({
   readOnly,
   id,
 }: FieldPropsInternal) => {
+  const flatOptions = useMemo(
+    () =>
+      field.type === "select" ? field.options.map(({ value }) => value) : [],
+    [field]
+  );
+
   if (field.type !== "select" || !field.options) {
     return null;
   }
@@ -31,9 +38,15 @@ export const SelectField = ({
         title={label || name}
         className={getClassName("input")}
         disabled={readOnly}
-        onChange={({ target: { value } }) =>
-          onChange(safeJsonParse(value) || value)
-        }
+        onChange={(e) => {
+          const jsonValue = safeJsonParse(e.target.value) || e.target.value;
+
+          if (flatOptions.indexOf(jsonValue) > -1) {
+            onChange(jsonValue);
+          } else {
+            onChange(e.target.value);
+          }
+        }}
         value={value}
       >
         {field.options.map((option) => (
