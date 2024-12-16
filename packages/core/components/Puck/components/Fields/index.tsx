@@ -269,12 +269,14 @@ export const Fields = () => {
               item: selectedItem,
             });
 
+            const id = `${selectedItem.props.id}_${field.type}_${fieldName}`;
+
             return (
               <AutoFieldPrivate
-                key={`${selectedItem.props.id}_${fieldName}`}
+                key={id}
                 field={field}
                 name={fieldName}
-                id={`${selectedItem.props.id}_${fieldName}`}
+                id={id}
                 readOnly={!edit || readOnly[fieldName]}
                 value={selectedItem.props[fieldName]}
                 onChange={onChange}
@@ -289,12 +291,14 @@ export const Fields = () => {
               root: true,
             });
 
+            const id = `root_${field.type}_${fieldName}`;
+
             return (
               <AutoFieldPrivate
-                key={`page_${fieldName}`}
+                key={id}
                 field={field}
                 name={fieldName}
-                id={`root_${fieldName}`}
+                id={id}
                 readOnly={!edit || readOnly[fieldName]}
                 value={(rootProps as Record<string, any>)[fieldName]}
                 onChange={onChange}
