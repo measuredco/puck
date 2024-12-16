@@ -1,6 +1,7 @@
-const packageJson = require("./package.json");
+import packageJson from "./package.json" assert { type: "json" };
+import nextra from "nextra";
 
-const withNextra = require("nextra")({
+const withNextra = nextra({
   theme: "nextra-theme-docs",
   themeConfig: "./theme.config.tsx",
 });
@@ -8,7 +9,7 @@ const withNextra = require("nextra")({
 const BRANCH_NAME = process.env.VERCEL_GIT_COMMIT_REF || "";
 const IS_RELEASE_BRANCH = BRANCH_NAME.startsWith("releases/");
 
-module.exports = withNextra({
+export default withNextra({
   async redirects() {
     return [
       {
