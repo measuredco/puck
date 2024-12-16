@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { Fields } from "./Fields";
 import { ComponentData, RootData } from "./Data";
 
