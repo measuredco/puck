@@ -80,7 +80,6 @@
   width: auto;
   cursor: grab;
   display: flex;
-  pointer-events: auto;
   box-sizing: border-box;
   transform-origin: right top;
 }
