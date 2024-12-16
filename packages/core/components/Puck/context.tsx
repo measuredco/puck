@@ -86,7 +86,7 @@ export type AppContext<
   refreshPermissions: RefreshPermissions<UserConfig>;
 };
 
-const defaultContext: AppContext = {
+export const defaultContext: AppContext = {
   state: defaultAppState,
   dispatch: () => null,
   config: { components: {} },
