@@ -16,10 +16,11 @@ import { Metadata } from "next";
 import { getPage } from "../../lib/get-page";
 
 export async function generateMetadata({
-  params: { puckPath = [] },
+  params,
 }: {
-  params: { puckPath: string[] };
+  params: Promise<{ puckPath: string[] }>;
 }): Promise<Metadata> {
+  const { puckPath = [] } = await params;
   const path = `/${puckPath.join("/")}`;
 
   return {
@@ -28,10 +29,11 @@ export async function generateMetadata({
 }
 
 export default async function Page({
-  params: { puckPath = [] },
+  params,
 }: {
-  params: { puckPath: string[] };
+  params: Promise<{ puckPath: string[] }>;
 }) {
+  const { puckPath = [] } = await params;
   const path = `/${puckPath.join("/")}`;
   const data = getPage(path);
 
