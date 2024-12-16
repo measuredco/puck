@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { getClassNameFactory } from "../../lib";
 import styles from "./styles.module.css";
 
