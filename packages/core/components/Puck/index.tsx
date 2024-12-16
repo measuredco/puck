@@ -414,7 +414,7 @@ export function Puck<
           refreshPermissions: () => null,
         }}
       >
-        <DragDropContext>
+        <DragDropContext disableAutoScroll={dnd?.disableAutoScroll}>
           <CustomPuck>
             {children || (
               <div
