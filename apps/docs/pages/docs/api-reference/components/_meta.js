@@ -1,16 +1,18 @@
-{
+const menu = {
   "action-bar": {},
   "action-bar-action": {},
   "action-bar-group": {},
   "auto-field": {},
-  "drawer": {},
+  drawer: {},
   "drawer-item": {},
   "drop-zone": {},
   "field-label": {},
-  "puck": {},
+  puck: {},
   "puck-components": {},
   "puck-fields": {},
   "puck-outline": {},
   "puck-preview": {},
-  "render": {}
-}
+  render: {},
+};
+
+export default menu;
