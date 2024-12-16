@@ -23,8 +23,8 @@
   ],
   "devDependencies": {
     "@measured/puck": "^0.16.2",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
     "contentful": "^10.8.6",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
