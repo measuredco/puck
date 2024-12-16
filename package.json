@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --scope demo",
+    "dev": "turbo run dev --filter=demo",
     "lint": "turbo run lint",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,mdx,css}\"",
     "format": "prettier --write \"**/*.{ts,tsx,md,mdx,css}\"",
@@ -16,14 +16,14 @@
     "changelog": "node scripts/create-changelog"
   },
   "devDependencies": {
-    "@turbo/gen": "^1.9.7",
+    "@turbo/gen": "^2.3.3",
     "conventional-recommended-bump": "^6.0.5",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "lerna": "^7.1.1",
     "prettier": "^2.5.1",
     "standard-changelog": "^2.0.21",
-    "turbo": "^1.9.7"
+    "turbo": "^2.3.3"
   },
   "name": "puck-repo",
   "packageManager": "yarn@1.22.19",
