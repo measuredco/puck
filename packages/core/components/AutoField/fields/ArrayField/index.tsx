@@ -174,6 +174,9 @@ export const ArrayField = ({
                   e.stopPropagation();
                   setHovering(false);
                 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               >
                 {localState.arrayState.items.map((item, i) => {
                   const { _arrayId = `${id}-${i}`, _originalIndex = i } = item;
