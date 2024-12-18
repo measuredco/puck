@@ -10,8 +10,17 @@ export const ActionBar = ({
   label?: string;
   children?: ReactNode;
 }) => (
-  <div className={getClassName()}>
-    {label && <div className={getClassName("actionsLabel")}>{label}</div>}
+  <div
+    className={getClassName()}
+    onClick={(e) => {
+      e.stopPropagation();
+    }}
+  >
+    {label && (
+      <ActionBar.Group>
+        <div className={getClassName("label")}>{label}</div>
+      </ActionBar.Group>
+    )}
     {children}
   </div>
 );
@@ -39,5 +48,10 @@ export const Group = ({ children }: { children: ReactNode }) => (
   <div className={getClassName("group")}>{children}</div>
 );
 
+export const Label = ({ label }: { label: string }) => (
+  <div className={getClassName("label")}>{label}</div>
+);
+
 ActionBar.Action = Action;
+ActionBar.Label = Label;
 ActionBar.Group = Group;

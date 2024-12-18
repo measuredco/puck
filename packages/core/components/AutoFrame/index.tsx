@@ -1,6 +1,7 @@
 import {
   createContext,
   ReactNode,
+  RefObject,
   useContext,
   useEffect,
   useRef,
@@ -303,6 +304,7 @@ export type AutoFrameProps = {
   debug?: boolean;
   id?: string;
   onStylesLoaded?: () => void;
+  frameRef: RefObject<HTMLIFrameElement>;
 };
 
 type AutoFrameContext = {
@@ -320,23 +322,25 @@ function AutoFrame({
   debug,
   id,
   onStylesLoaded,
+  frameRef,
   ...props
 }: AutoFrameProps) {
   const [loaded, setLoaded] = useState(false);
   const [ctx, setCtx] = useState<AutoFrameContext>({});
-  const ref = useRef<HTMLIFrameElement>(null);
   const [mountTarget, setMountTarget] = useState<HTMLElement | null>();
 
   useEffect(() => {
-    if (ref.current) {
+    if (frameRef.current) {
       setCtx({
-        document: ref.current.contentDocument || undefined,
-        window: ref.current.contentWindow || undefined,
+        document: frameRef.current.contentDocument || undefined,
+        window: frameRef.current.contentWindow || undefined,
       });
 
-      setMountTarget(ref.current.contentDocument?.getElementById("frame-root"));
+      setMountTarget(
+        frameRef.current.contentDocument?.getElementById("frame-root")
+      );
     }
-  }, [ref, loaded]);
+  }, [frameRef, loaded]);
 
   return (
     <iframe
@@ -344,7 +348,7 @@ function AutoFrame({
       className={className}
       id={id}
       srcDoc='<!DOCTYPE html><html><head></head><body><div id="frame-root"></div></body></html>'
-      ref={ref}
+      ref={frameRef}
       onLoad={() => {
         setLoaded(true);
       }}

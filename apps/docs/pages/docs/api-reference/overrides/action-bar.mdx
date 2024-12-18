@@ -10,8 +10,8 @@ Override the action bar. Use the [`<ActionBar>` component](/docs/api-reference/c
 import { ActionBar } from "@measured/puck";
 
 const overrides = {
-  actionBar: ({ children }) => (
-    <ActionBar label="Actions">
+  actionBar: ({ children, label }) => (
+    <ActionBar label={label}>
       <ActionBar.Group>{children}</ActionBar.Group>
     </ActionBar>
   ),
@@ -20,10 +20,20 @@ const overrides = {
 
 ## Props
 
-| Prop                    | Example   | Type      |
-| ----------------------- | --------- | --------- |
-| [`children`](#children) | `<div />` | ReactNode |
+| Prop                            | Example          | Type      |
+| ------------------------------- | ---------------- | --------- |
+| [`children`](#children)         | `<div />`        | ReactNode |
+| [`label`](#label)               | `"HeadingBlock"` | String    |
+| [`parentAction`](#parentAction) | `<div />`        | ReactNode |
 
 ### `children`
 
 A fragment containing the default [actions](/docs/api-reference/components/action-bar-action). This should normally be rendered inside an [`<ActionBar.Group>`](/docs/api-reference/components/action-bar-group).
+
+### `label`
+
+The default label for the action bar.
+
+### `parentAction`
+
+A single [`<ActionBar.Action>`](/docs/api-reference/components/action-bar-action) to select the current component's parent.

@@ -26,7 +26,12 @@ beforeEach(() => {
 describe("use-puck-history", () => {
   test("back function does not call dispatch when there is no history", () => {
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     act(() => {
@@ -47,7 +52,12 @@ describe("use-puck-history", () => {
     };
 
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     act(() => {
@@ -66,7 +76,12 @@ describe("use-puck-history", () => {
     historyStore.nextHistory = null;
 
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     act(() => {
@@ -86,7 +101,12 @@ describe("use-puck-history", () => {
     };
 
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     act(() => {
@@ -102,7 +122,12 @@ describe("use-puck-history", () => {
 
   test("setHistories calls dispatch to last history item", () => {
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     const updatedHistories = [
@@ -153,7 +178,12 @@ describe("use-puck-history", () => {
     historyStore.histories = updatedHistories;
 
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     act(() => {
@@ -169,7 +199,12 @@ describe("use-puck-history", () => {
 
   test("setHistoryIndex does not call dispatch when index out of bounds", () => {
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     act(() => {

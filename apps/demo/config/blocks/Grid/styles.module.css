@@ -1,0 +1,11 @@
+.Grid {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+}
+
+@media (min-width: 768px) {
+  .Grid {
+    display: grid;
+  }
+}

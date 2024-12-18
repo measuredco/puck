@@ -11,6 +11,7 @@ import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { getZoneId } from "../../lib/get-zone-id";
 import { isChildOfZone } from "../../lib/is-child-of-zone";
 import { getFrame } from "../../lib/get-frame";
+import { onScrollEnd } from "../../lib/on-scroll-end";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -58,11 +59,8 @@ export const LayerTree = ({
           const zonesForItem = findZonesForArea(data, item.props.id);
           const containsZone = Object.keys(zonesForItem).length > 0;
 
-          const {
-            setHoveringArea = () => {},
-            setHoveringComponent = () => {},
-            hoveringComponent,
-          } = ctx || {};
+          const { setHoveringComponent = () => {}, hoveringComponent } =
+            ctx || {};
 
           const selectedItem =
             itemSelector && data ? getItem(itemSelector, data) : null;
@@ -95,29 +93,38 @@ export const LayerTree = ({
                       return;
                     }
 
-                    setItemSelector({
-                      index: i,
-                      zone,
-                    });
-
                     const id = zoneContent[i].props.id;
 
                     const frame = getFrame();
 
-                    scrollIntoView(
-                      frame?.querySelector(
-                        `[data-rfd-drag-handle-draggable-id="draggable-${id}"]`
-                      ) as HTMLElement
+                    const el = frame?.querySelector(
+                      `[data-puck-component="${id}"]`
                     );
+
+                    if (!el) {
+                      console.error(
+                        "Scroll failed. No element was found for",
+                        id
+                      );
+
+                      return;
+                    }
+
+                    scrollIntoView(el as HTMLElement);
+
+                    onScrollEnd(frame, () => {
+                      setItemSelector({
+                        index: i,
+                        zone,
+                      });
+                    });
                   }}
                   onMouseOver={(e) => {
                     e.stopPropagation();
-                    setHoveringArea(item.props.id);
                     setHoveringComponent(item.props.id);
                   }}
                   onMouseOut={(e) => {
                     e.stopPropagation();
-                    setHoveringArea(null);
                     setHoveringComponent(null);
                   }}
                 >
