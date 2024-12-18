@@ -546,7 +546,7 @@ const config = {
 
 Customize what will be displayed in the footer of the modal.
 
-```tsx {13} copy
+```tsx {13-15} copy
 const config = {
   components: {
     Example: {
@@ -585,7 +585,9 @@ const config = {
             { title: "Goodbye, world", description: "Lorem ipsum 2" },
           ];
         },
-        renderFooter: ({ items }) => <span>{items.length} results</span>,
+        renderFooter: ({ items }) => (
+          <b>Custom footer with {items.length} results</b>
+        ),
       },
     },
     render: ({ data }) => {
