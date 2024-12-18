@@ -121,7 +121,7 @@ export const DraggableComponent = ({
       key={id}
       draggableId={id}
       index={index}
-      isDragDisabled={isDragDisabled}
+      isDragDisabled={isDragDisabled || isInteractive}
       disableSecondaryAnimation={disableSecondaryAnimation}
     >
       {(provided, snapshot) => (
@@ -158,7 +158,7 @@ export const DraggableComponent = ({
               <Loader />
             </div>
           )}
-          {isSelected && (
+          {!isInteractive && isSelected && (
             <div
               className={getClassName("actionsOverlay")}
               style={{
@@ -192,7 +192,8 @@ export const DraggableComponent = ({
           <div className={getClassName("overlay")} />
           <div className={getClassName("contents")}> {children}</div>
         </div>
-      )}
-    </El>
+      )
+      }
+    </El >
   );
 };
