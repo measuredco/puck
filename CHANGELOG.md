@@ -2,6 +2,16 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.17.1](https://github.com/measuredco/puck/compare/v0.17.0...v0.17.1) (2024-12-18)
+
+
+### Bug Fixes
+
+* respect falsey booleans types in select/radio fields ([3406b01](https://github.com/measuredco/puck/commit/3406b01d5ce00e8f2b885a1f951b5c96aa7a7989))
+
+
+
+
 ## [0.17.0](https://github.com/measuredco/puck/compare/v0.16.2...v0.17.0) (2024-12-18)
 
 ### Features
