@@ -47,7 +47,7 @@ export const RadioField = ({
               name={name}
               onChange={(e) => {
                 const jsonValue =
-                  safeJsonParse(e.target.value) || e.target.value;
+                  safeJsonParse(e.target.value) ?? e.target.value;
 
                 if (flatOptions.indexOf(jsonValue) > -1) {
                   onChange(jsonValue);

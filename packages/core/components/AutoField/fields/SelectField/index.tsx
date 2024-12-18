@@ -39,7 +39,7 @@ export const SelectField = ({
         className={getClassName("input")}
         disabled={readOnly}
         onChange={(e) => {
-          const jsonValue = safeJsonParse(e.target.value) || e.target.value;
+          const jsonValue = safeJsonParse(e.target.value) ?? e.target.value;
 
           if (flatOptions.indexOf(jsonValue) > -1) {
             onChange(jsonValue);
