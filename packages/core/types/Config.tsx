@@ -37,6 +37,7 @@ export type ComponentConfig<
     params: {
       changed: Partial<Record<keyof FieldProps, boolean>>;
       lastData: DataShape | null;
+      rootProps?: Record<string, any>;
     }
   ) =>
     | Promise<{
