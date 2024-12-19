@@ -13,9 +13,9 @@ const menu = {
   },
   measured: {
     type: "page",
-    href: "https://measured.co",
-    title: "Hire us",
-    newWindow: true,
+    href: "/#support",
+    title: "Support",
+    newWindow: false,
   },
 };
 
