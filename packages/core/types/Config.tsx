@@ -21,6 +21,7 @@ export type ComponentConfig<
   defaultProps?: FieldProps;
   fields?: Fields<FieldProps>;
   permissions?: Partial<Permissions>;
+  inline?: boolean;
   resolveFields?: (
     data: DataShape,
     params: {

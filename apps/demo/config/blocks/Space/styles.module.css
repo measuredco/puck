@@ -1,0 +1,14 @@
+.Space {
+  display: block;
+  height: var(--size);
+  width: var(--size);
+}
+
+.Space--vertical {
+  width: 100%;
+}
+
+.Space--horizontal {
+  width: var(--size);
+  height: 100%;
+}

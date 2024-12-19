@@ -8,14 +8,14 @@ import { Puck } from "@/core/components/Puck";
 
 # \<Drawer\>
 
-A vertical or horizontal list of items that can be dragged into a [`<Puck.Preview>`](puck-preview). Used for composing custom Puck UIs.
+A list of items that can be dragged into a [`<Puck.Preview>`](puck-preview). Used for composing custom Puck UIs.
 
 <PuckPreview
   config={{ components: { Orange: { render: () => <div>Orange</div> } } }}
   data={{ root: { props: {} }, content: [] }}
 >
-  <Drawer droppableId="example">
-    <Drawer.Item name="Orange" index={0} />
+  <Drawer>
+    <Drawer.Item name="Orange" />
   </Drawer>
 </PuckPreview>
 
@@ -26,7 +26,7 @@ export function Editor() {
   return (
     <Puck>
       <Drawer>
-        <Drawer.Item name="Orange" index={0} />
+        <Drawer.Item name="Orange" />
       </Drawer>
     </Puck>
   );
@@ -35,31 +35,12 @@ export function Editor() {
 
 ## Props
 
-| Param                         | Example                     | Type                     | Status   |
-| ----------------------------- | --------------------------- | ------------------------ | -------- |
-| [`children`](#children)       | `children: <Drawer.Item />` | ReactNode                | Required |
-| [`direction`](#direction)     | `direction: "horizontal"`   | `horizontal`, `vertical` | -        |
-| [`droppableId`](#droppableId) | `droppableId: "my-drawer"`  | String                   | -        |
+| Param                   | Example                     | Type      | Status   |
+| ----------------------- | --------------------------- | --------- | -------- |
+| [`children`](#children) | `children: <Drawer.Item />` | ReactNode | Required |
 
 ## Required props
 
 ### `children`
 
 A React node representing the contents of the `<Drawer>`. Will likely contain [`<Drawer.Item>`](drawer-item) nodes.
-
-## Optional props
-
-### `direction`
-
-Set the direction of the drawer.
-
-Defaults to `vertical`.
-
-### `droppableId`
-
-Set a custom ID for the underlying [Droppable](https://github.com/hello-pangea/dnd/blob/main/docs/api/droppable.md).
-
-- Must be unique.
-- Will be prefixed with `component-list:`.
-
-Defaults to `default`.

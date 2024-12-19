@@ -281,13 +281,15 @@ const CustomDrawer = () => {
   const { getPermissions } = usePuck();
 
   return (
-    <Drawer direction="horizontal">
+    <Drawer>
       <div
         style={{
-          display: "flex",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(256px, 1fr))",
           pointerEvents: "all",
           padding: "16px",
           background: "var(--puck-color-grey-12)",
+          gap: 8,
         }}
       >
         {Object.keys(config.components).map((componentKey, componentIndex) => {
@@ -299,19 +301,8 @@ const CustomDrawer = () => {
             <Drawer.Item
               key={componentKey}
               name={componentKey}
-              index={componentIndex}
               isDragDisabled={!canInsert}
-            >
-              {({ children }) => (
-                <div
-                  style={{
-                    marginRight: 8,
-                  }}
-                >
-                  {children}
-                </div>
-              )}
-            </Drawer.Item>
+            />
           );
         })}
       </div>
@@ -377,7 +368,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
           ),
-          actionBar: ({ children, label }) => {
+          actionBar: ({ children, label, parentAction }) => {
             const { getPermissions, selectedItem, refreshPermissions } =
               // Disable rules of hooks since this is a render function
               // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -397,7 +388,11 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
 
             if (!selectedItem)
               return (
-                <ActionBar label={label}>
+                <ActionBar>
+                  <ActionBar.Group>
+                    {parentAction}
+                    {label && <ActionBar.Label label={label} />}
+                  </ActionBar.Group>
                   <ActionBar.Group>{children}</ActionBar.Group>
                 </ActionBar>
               );
@@ -405,7 +400,11 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
             const isLocked = !!lockedComponents[selectedItem.props.id];
 
             return (
-              <ActionBar label={label}>
+              <ActionBar>
+                <ActionBar.Group>
+                  {parentAction}
+                  {label && <ActionBar.Label label={label} />}
+                </ActionBar.Group>
                 <ActionBar.Group>
                   {children}
                   {globalPermissions.lockable && (

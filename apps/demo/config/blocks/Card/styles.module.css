@@ -1,24 +1,24 @@
 .Card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: auto;
-  margin-right: auto;
-  gap: 16px;
-  width: 100%;
+  height: 100%;
 }
 
 .Card--card {
   background: white;
   box-shadow: rgba(140, 152, 164, 0.25) 0px 3px 6px 0px;
   border-radius: 8px;
-  flex: 1;
   max-width: 100%;
-  margin-left: unset;
-  margin-right: unset;
-  padding: 24px;
+}
+
+.Card-inner {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
+.Card--card .Card-inner {
   align-items: flex-start;
-  width: auto;
+  padding: 24px;
 }
 
 .Card-icon {
