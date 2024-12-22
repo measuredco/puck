@@ -85,7 +85,7 @@ function Editor() {
             action: "",
             method: "post",
             encType: "application/json",
-          },
+          }
         );
       }}
     />
