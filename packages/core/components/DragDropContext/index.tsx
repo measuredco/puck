@@ -313,19 +313,22 @@ const DragDropContextClient = ({
                 }
               }
 
-              dispatch({
-                type: "setUi",
-                ui: {
-                  itemSelector: { index, zone },
-                  isDragging: false,
-                },
-                recordHistory: true,
-              });
+              // Delay selection until next cycle to give box chance to render
+              setTimeout(() => {
+                dispatch({
+                  type: "setUi",
+                  ui: {
+                    itemSelector: { index, zone },
+                    isDragging: false,
+                  },
+                  recordHistory: true,
+                });
+              }, 50);
 
               dragListeners.dragend?.forEach((fn) => {
                 fn(event, manager);
               });
-            }, 300);
+            }, 250);
           }}
           onDragOver={(event, manager) => {
             // Prevent the optimistic re-ordering
