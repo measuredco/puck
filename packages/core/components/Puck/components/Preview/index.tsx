@@ -11,7 +11,7 @@ const getClassName = getClassNameFactory("PuckPreview", styles);
 
 type PageProps = DefaultRootRenderProps;
 
-const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement>) => {
+const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
   const { status } = useAppContext();
 
   useEffect(() => {

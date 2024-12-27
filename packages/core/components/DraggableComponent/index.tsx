@@ -200,7 +200,7 @@ export const DraggableComponent = ({
 
   const thisIsDragging = status === "dragging";
 
-  const ref = useRef<HTMLElement>();
+  const ref = useRef<HTMLElement>(null);
 
   const refSetter = useCallback(
     (el: HTMLElement | null) => {

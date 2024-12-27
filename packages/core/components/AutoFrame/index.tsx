@@ -304,7 +304,7 @@ export type AutoFrameProps = {
   debug?: boolean;
   id?: string;
   onStylesLoaded?: () => void;
-  frameRef: RefObject<HTMLIFrameElement>;
+  frameRef: RefObject<HTMLIFrameElement | null>;
 };
 
 type AutoFrameContext = {

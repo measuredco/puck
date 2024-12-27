@@ -106,7 +106,7 @@ function DropZoneEdit({
     }
   }
 
-  const ref = useRef<HTMLDivElement | null>();
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const isDroppableTarget = useCallback(() => {
     if (!draggedItem) {
