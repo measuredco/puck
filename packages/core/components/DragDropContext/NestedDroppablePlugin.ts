@@ -183,7 +183,7 @@ export const findDeepestCandidate = (
     filteredCandidates.reverse();
 
     const zone = getZoneId(filteredCandidates[0]);
-    const area = filteredCandidates[0].data.areaId || null;
+    const area = filteredCandidates[0]?.data.areaId;
 
     return { zone, area };
   }
