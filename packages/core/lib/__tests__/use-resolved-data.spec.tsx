@@ -77,9 +77,9 @@ describe("use-resolved-data", () => {
 
             currentState = { ...currentState, ...newState(currentState) };
           },
-          () => {},
-          () => {},
-          () => {}
+          () => { },
+          () => { },
+          () => { }
         );
       });
 
@@ -149,6 +149,7 @@ describe("use-resolved-data", () => {
             "isDragging": false,
             "itemSelector": null,
             "leftSideBarVisible": true,
+            "mode": "edit",
             "rightSideBarVisible": true,
             "viewports": {
               "controlsVisible": true,
@@ -182,9 +183,9 @@ describe("use-resolved-data", () => {
 
             currentState = { ...currentState, ...newState(currentState) };
           },
-          () => {},
-          () => {},
-          () => {}
+          () => { },
+          () => { },
+          () => { }
         );
       });
 
@@ -219,9 +220,9 @@ describe("use-resolved-data", () => {
           hookArgs[0],
           hookArgs[1],
           hookArgs[2],
-          () => {},
-          () => {},
-          () => {}
+          () => { },
+          () => { },
+          () => { }
         )
       );
 
@@ -232,9 +233,9 @@ describe("use-resolved-data", () => {
             hookArgs[0],
             hookArgs[1],
             hookArgs[2],
-            () => {},
-            () => {},
-            () => {}
+            () => { },
+            () => { },
+            () => { }
           )
         );
 
@@ -248,9 +249,9 @@ describe("use-resolved-data", () => {
             hookArgs[0],
             hookArgs[1],
             hookArgs[2],
-            () => {},
-            () => {},
-            () => {}
+            () => { },
+            () => { },
+            () => { }
           )
         );
       });
@@ -278,9 +279,9 @@ describe("use-resolved-data", () => {
           (args) => {
             dispatchedEvent = args as any;
           },
-          () => {},
-          () => {},
-          () => {}
+          () => { },
+          () => { },
+          () => { }
         )
       );
 
@@ -325,7 +326,7 @@ describe("use-resolved-data", () => {
           },
           setComponentLoading,
           unsetComponentLoading,
-          () => {}
+          () => { }
         )
       );
 
@@ -367,8 +368,8 @@ describe("use-resolved-data", () => {
           (args) => {
             dispatchedEvent = args as any;
           },
-          () => {},
-          () => {},
+          () => { },
+          () => { },
           refreshPermissions
         )
       );
