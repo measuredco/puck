@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { Fields } from "./Fields";
 import { ComponentData, RootData } from "./Data";
 
@@ -28,6 +29,7 @@ export type ComponentConfig<
       lastFields: Fields<FieldProps>;
       lastData: DataShape | null;
       appState: AppState;
+      parent: ComponentData | null;
     }
   ) => Promise<Fields<FieldProps>> | Fields<FieldProps>;
   resolveData?: (

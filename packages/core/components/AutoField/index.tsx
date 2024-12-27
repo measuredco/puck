@@ -27,6 +27,7 @@ import { useAppContext } from "../Puck/context";
 import { useSafeId } from "../../lib/use-safe-id";
 
 const getClassName = getClassNameFactory("Input", styles);
+const getClassNameWrapper = getClassNameFactory("InputWrapper", styles);
 
 export const FieldLabel = ({
   children,
@@ -121,15 +122,18 @@ export type FieldPropsInternal<ValueType = any, F = Field<any>> = FieldProps<
 
 function AutoFieldInternal<
   ValueType = any,
-  FieldType extends Field<ValueType> = Field<ValueType>
+  FieldType extends FieldNoLabel<ValueType> = FieldNoLabel<ValueType>
 >(
   props: FieldPropsInternalOptional<ValueType, FieldType> & {
     Label?: React.FC<FieldLabelPropsInternal>;
   }
 ) {
-  const { overrides } = useAppContext();
+  const { dispatch, overrides } = useAppContext();
 
-  const { field, label = field.label, id, Label = FieldLabelInternal } = props;
+  const { id, Label = FieldLabelInternal } = props;
+
+  const field = props.field as Field<ValueType>;
+  const label = field.label;
 
   const defaultId = useSafeId();
   const resolvedId = id || defaultId;
@@ -165,6 +169,33 @@ function AutoFieldInternal<
     id: resolvedId,
   };
 
+  const onFocus = useCallback(
+    (e: React.FocusEvent) => {
+      if (mergedProps.name && e.target.nodeName === "INPUT") {
+        e.stopPropagation();
+
+        dispatch({
+          type: "setUi",
+          ui: {
+            field: { focus: mergedProps.name },
+          },
+        });
+      }
+    },
+    [mergedProps.name]
+  );
+
+  const onBlur = useCallback((e: React.FocusEvent) => {
+    if ("name" in e.target) {
+      dispatch({
+        type: "setUi",
+        ui: {
+          field: { focus: null },
+        },
+      });
+    }
+  }, []);
+
   if (field.type === "custom") {
     if (!field.render) {
       return null;
@@ -173,8 +204,10 @@ function AutoFieldInternal<
     const CustomField = field.render as any;
 
     return (
-      <div className={getClassName()}>
-        <CustomField {...mergedProps} />
+      <div className={getClassNameWrapper()} onFocus={onFocus} onBlur={onBlur}>
+        <div className={getClassName()}>
+          <CustomField {...mergedProps} />
+        </div>
       </div>
     );
   }
@@ -183,26 +216,37 @@ function AutoFieldInternal<
 
   const Render = render[field.type] as (props: FieldProps) => ReactElement;
 
-  return <Render {...mergedProps}>{children}</Render>;
+  return (
+    <div
+      className={getClassNameWrapper()}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      onClick={(e) => {
+        // Prevent propagation of any click events to parent field.
+        // For example, a field within an array may bubble an event
+        // and fail to stop propagation.
+        e.stopPropagation();
+      }}
+    >
+      <Render {...mergedProps}>{children}</Render>
+    </div>
+  );
 }
 
-// Don't let external value changes update this if it's changed manually in the last X ms
-const RECENT_CHANGE_TIMEOUT = 200;
+type FieldNoLabel<Props extends any = any> = Omit<Field<Props>, "label">;
 
 export function AutoFieldPrivate<
   ValueType = any,
-  FieldType extends Field<ValueType> = Field<ValueType>
+  FieldType extends FieldNoLabel<ValueType> = FieldNoLabel<ValueType>
 >(
   props: FieldPropsInternalOptional<ValueType, FieldType> & {
     Label?: React.FC<FieldLabelPropsInternal>;
   }
 ) {
+  const { state } = useAppContext();
   const { value, onChange } = props;
 
   const [localValue, setLocalValue] = useState(value);
-
-  const [recentlyChanged, setRecentlyChanged] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout>();
 
   const onChangeDb = useDebouncedCallback(
     (val, ui) => {
@@ -215,19 +259,12 @@ export function AutoFieldPrivate<
   const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
     setLocalValue(val);
 
-    setRecentlyChanged(true);
-
-    clearTimeout(timeoutRef.current);
-
-    timeoutRef.current = setTimeout(() => {
-      setRecentlyChanged(false);
-    }, RECENT_CHANGE_TIMEOUT);
-
     onChangeDb(val, ui);
   }, []);
 
   useEffect(() => {
-    if (!recentlyChanged) {
+    // Prevent global state from setting local state if this field is focused
+    if (state.ui.field.focus !== props.name) {
       setLocalValue(value);
     }
   }, [value]);
@@ -242,7 +279,7 @@ export function AutoFieldPrivate<
 
 export function AutoField<
   ValueType = any,
-  FieldType extends Field<ValueType> = Field<ValueType>
+  FieldType extends FieldNoLabel<ValueType> = FieldNoLabel<ValueType>
 >(props: FieldProps<ValueType, FieldType>) {
   const DefaultLabel = useMemo(() => {
     const DefaultLabel = (labelProps: any) => (

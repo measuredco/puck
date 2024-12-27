@@ -1,11 +1,16 @@
-.Input {
+.InputWrapper {
   color: var(--puck-color-grey-04);
   padding: 16px;
   padding-bottom: 12px;
   display: block;
 }
 
-.Input .Input {
+.InputWrapper + .InputWrapper {
+  border-top: 1px solid var(--puck-color-grey-09);
+  margin-top: 8px;
+}
+
+.Input .InputWrapper {
   padding: 0px;
 }
 
@@ -13,12 +18,7 @@
   box-sizing: border-box;
 }
 
-.Input + .Input {
-  border-top: 1px solid var(--puck-color-grey-09);
-  margin-top: 8px;
-}
-
-.Input .Input + .Input {
+.Input .InputWrapper + .InputWrapper {
   border-top: 0px;
   margin-top: 12px;
 }

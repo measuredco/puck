@@ -6,6 +6,8 @@ import { getClassNameFactory } from "@/core/lib";
 import { Button } from "@/core/components/Button";
 import { Section } from "../../components/Section";
 import { quotes } from "./quotes";
+import { AutoField, FieldLabel } from "@/core";
+import { Link2 } from "lucide-react";
 
 const getClassName = getClassNameFactory("Hero", styles);
 
@@ -32,7 +34,14 @@ export const Hero: ComponentConfig<HeroProps> = {
     quote: {
       type: "external",
       placeholder: "Select a quote",
-      showSearch: true,
+      showSearch: false,
+      renderFooter: ({ items }) => {
+        return (
+          <div>
+            {items.length} result{items.length === 1 ? "" : "s"}
+          </div>
+        );
+      },
       filterFields: {
         author: {
           type: "select",
@@ -77,7 +86,10 @@ export const Hero: ComponentConfig<HeroProps> = {
             }
           });
       },
-      mapRow: (item) => ({ title: item.title, description: item.description }),
+      mapRow: (item) => ({
+        title: item.title,
+        description: <span>{item.description}</span>,
+      }),
       mapProp: (result) => {
         return { index: result.index, label: result.description };
       },
@@ -116,7 +128,23 @@ export const Hero: ComponentConfig<HeroProps> = {
     image: {
       type: "object",
       objectFields: {
-        url: { type: "text" },
+        url: {
+          type: "custom",
+          render: ({ value, field, name, onChange, readOnly }) => (
+            <FieldLabel
+              label={field.label || name}
+              readOnly={readOnly}
+              icon={<Link2 size="16" />}
+            >
+              <AutoField
+                field={{ type: "text" }}
+                value={value}
+                onChange={onChange}
+                readOnly={readOnly}
+              />
+            </FieldLabel>
+          ),
+        },
         mode: {
           type: "radio",
           options: [

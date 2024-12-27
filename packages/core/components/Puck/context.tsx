@@ -47,6 +47,7 @@ export const defaultAppState: AppState = {
       options: [],
       controlsVisible: true,
     },
+    field: { focus: null },
   },
 };
 
@@ -87,7 +88,7 @@ export type AppContext<
   refreshPermissions: RefreshPermissions<UserConfig>;
 };
 
-const defaultContext: AppContext = {
+export const defaultContext: AppContext = {
   state: defaultAppState,
   dispatch: () => null,
   config: { components: {} },

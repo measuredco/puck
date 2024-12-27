@@ -1,4 +1,10 @@
-import { useMemo, useEffect, useState, useCallback } from "react";
+import {
+  useMemo,
+  useEffect,
+  useState,
+  useCallback,
+  isValidElement,
+} from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ExternalField } from "../../types";
@@ -54,7 +60,11 @@ export const ExternalInput = ({
 
     for (const item of mappedData) {
       for (const key of Object.keys(item)) {
-        if (typeof item[key] === "string" || typeof item[key] === "number") {
+        if (
+          typeof item[key] === "string" ||
+          typeof item[key] === "number" ||
+          isValidElement(item[key])
+        ) {
           validKeys.add(key);
         }
       }
@@ -82,6 +92,18 @@ export const ExternalInput = ({
       }
     },
     [id, field]
+  );
+
+  const Footer = useCallback(
+    (props: { items: any[] }) =>
+      field.renderFooter ? (
+        field.renderFooter(props)
+      ) : (
+        <span className={getClassNameModal("footer")}>
+          {props.items.length} result{props.items.length === 1 ? "" : "s"}
+        </span>
+      ),
+    [field.renderFooter]
   );
 
   useEffect(() => {
@@ -265,9 +287,8 @@ export const ExternalInput = ({
               </div>
             </div>
           </div>
-
-          <div className={getClassNameModal("footer")}>
-            {mappedData.length} result{mappedData.length === 1 ? "" : "s"}
+          <div className={getClassNameModal("footerContainer")}>
+            <Footer items={mappedData} />
           </div>
         </form>
       </Modal>

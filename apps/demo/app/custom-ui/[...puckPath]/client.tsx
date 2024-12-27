@@ -370,6 +370,14 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     },
   };
 
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
+
   if (isEdit) {
     return (
       <Puck<UserConfig>

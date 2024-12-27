@@ -9,7 +9,7 @@
     "NEXT_PUBLIC_BASE_URL",
     "NODE_ENV"
   ],
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]

@@ -4,15 +4,18 @@
   padding-top: 48px;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+  height: 100%;
+  max-height: 1280px;
 }
 
 @media (min-width: 768px) {
   .Home {
-    padding-bottom: 156px;
-    padding-top: 156px;
+    padding-bottom: 96px;
+    padding-top: 96px;
   }
 }
 
@@ -40,4 +43,79 @@
   display: flex;
   justify-content: center;
   gap: 16px;
+}
+
+.Home-builtBy {
+  color: currentColor;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
+.Home-builtBy a {
+  color: #0158ad;
+}
+
+:global(html.dark) .Home-builtBy a {
+  color: currentColor;
+}
+
+.Home-builtBy a:hover {
+  opacity: 0.8;
+}
+
+.Home-card {
+  background-color: var(--puck-color-azure-01);
+  background-image: url(https://res.cloudinary.com/measuredco/image/upload/v1732634892/site/site-background-top_v8ll2o.png),
+    url(https://res.cloudinary.com/measuredco/image/upload/v1732635074/site/site-background-repeat_kjbjx5.png);
+  background-position: center -1rem, top;
+  background-repeat: no-repeat, repeat-y;
+  background-size: auto;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 544px;
+  padding: 32px;
+  text-align: left;
+  border: 1px solid var(--puck-color-grey-03);
+  border-radius: 8px;
+}
+
+.Home-card p a {
+  color: #6db5f8 !important;
+}
+
+.Home-card p a:hover {
+  color: #93c5fa !important;
+  opacity: 0.8;
+}
+
+.Home-cardHeading {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.Home-cardActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.Home-dot {
+  border-radius: 8px;
+  background-color: currentColor;
+  padding: 2px;
+  margin: 28px;
+  opacity: 0.5;
+}
+
+.Home-peakWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 96px;
+  text-align: center;
+  width: 100%;
 }

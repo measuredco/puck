@@ -33,6 +33,7 @@ export type UiState = {
     controlsVisible: boolean;
     options: Viewport[];
   };
+  field: { focus?: string | null };
 };
 
 export type AppState<UserData extends Data = Data> = {

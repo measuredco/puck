@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "0.16.1",
+  "version": "0.17.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,17 +11,17 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.12",
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
     "eslint-config-custom": "*",
     "typescript": "^5.5.4"
   },
   "dependencies": {
     "next": "^14.2.11",
     "next-sitemap": "^4.2.3",
-    "nextra": "^2.13.2",
-    "nextra-theme-docs": "^2.13.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "nextra": "^3.2.5",
+    "nextra-theme-docs": "^3.2.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }

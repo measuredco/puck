@@ -1,7 +1,9 @@
+import { useMemo } from "react";
 import getClassNameFactory from "../../../../lib/get-class-name-factory";
 import styles from "../../styles.module.css";
 import { CheckCircle } from "lucide-react";
 import { FieldPropsInternal } from "../..";
+import { safeJsonParse } from "../../../../lib/safe-json-parse";
 
 const getClassName = getClassNameFactory("Input", styles);
 
@@ -15,6 +17,12 @@ export const RadioField = ({
   label,
   Label,
 }: FieldPropsInternal) => {
+  const flatOptions = useMemo(
+    () =>
+      field.type === "radio" ? field.options.map(({ value }) => value) : [],
+    [field]
+  );
+
   if (field.type !== "radio" || !field.options) {
     return null;
   }
@@ -38,15 +46,14 @@ export const RadioField = ({
               value={option.value as string | number}
               name={name}
               onChange={(e) => {
-                if (
-                  e.currentTarget.value === "true" ||
-                  e.currentTarget.value === "false"
-                ) {
-                  onChange(JSON.parse(e.currentTarget.value));
-                  return;
-                }
+                const jsonValue =
+                  safeJsonParse(e.target.value) ?? e.target.value;
 
-                onChange(e.currentTarget.value);
+                if (flatOptions.indexOf(jsonValue) > -1) {
+                  onChange(jsonValue);
+                } else {
+                  onChange(e.target.value);
+                }
               }}
               disabled={readOnly}
               checked={value === option.value}

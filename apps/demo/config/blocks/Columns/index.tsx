@@ -4,6 +4,7 @@ import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { DropZone } from "@/core/components/DropZone";
 import { Section } from "../../components/Section";
+import { generateId } from "@/core/lib/generate-id";
 
 const getClassName = getClassNameFactory("Columns", styles);
 
@@ -11,10 +12,27 @@ export type ColumnsProps = {
   distribution: "auto" | "manual";
   columns: {
     span?: number;
+    id?: string;
   }[];
 };
 
 export const Columns: ComponentConfig<ColumnsProps> = {
+  // Dynamically generate an ID for each column
+  resolveData: ({ props }, { lastData }) => {
+    if (lastData?.props.columns.length === props.columns.length) {
+      return { props };
+    }
+
+    return {
+      props: {
+        ...props,
+        columns: props.columns.map((column) => ({
+          ...column,
+          id: column.id ?? generateId(),
+        })),
+      },
+    };
+  },
   fields: {
     distribution: {
       type: "radio",
@@ -31,10 +49,10 @@ export const Columns: ComponentConfig<ColumnsProps> = {
     },
     columns: {
       type: "array",
-      getItemSummary: (col, id = -1) =>
-        `Column ${id + 1}, span ${
+      getItemSummary: (col) =>
+        `Column (span ${
           col.span ? Math.max(Math.min(col.span, 12), 1) : "auto"
-        }`,
+        })`,
       arrayFields: {
         span: {
           label: "Span (1-12)",
@@ -61,9 +79,9 @@ export const Columns: ComponentConfig<ColumnsProps> = {
                 : `repeat(${columns.length}, 1fr)`,
           }}
         >
-          {columns.map(({ span }, idx) => (
+          {columns.map(({ span, id }, idx) => (
             <div
-              key={idx}
+              key={id ?? idx}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -74,7 +92,7 @@ export const Columns: ComponentConfig<ColumnsProps> = {
               }}
             >
               <DropZone
-                zone={`column-${idx}`}
+                zone={`column-${id ?? idx}`}
                 disallow={["Hero", "Logos", "Stats"]}
               />
             </div>

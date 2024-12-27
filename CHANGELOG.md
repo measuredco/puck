@@ -2,6 +2,60 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.17.1](https://github.com/measuredco/puck/compare/v0.17.0...v0.17.1) (2024-12-18)
+
+
+### Bug Fixes
+
+* respect falsey booleans types in select/radio fields ([3406b01](https://github.com/measuredco/puck/commit/3406b01d5ce00e8f2b885a1f951b5c96aa7a7989))
+
+
+
+
+## [0.17.0](https://github.com/measuredco/puck/compare/v0.16.2...v0.17.0) (2024-12-18)
+
+### Features
+
+* add duplicate action to array field ([229cbdd](https://github.com/measuredco/puck/commit/229cbddb7eed513c8ac9a2e36e3af3b53ff28d7e))
+* add renderFooter API to external field ([ccec96e](https://github.com/measuredco/puck/commit/ccec96e5ddf831fcd89a2af335449ad4cff1ea81))
+* allow react elements in external field mapRow ([2f781de](https://github.com/measuredco/puck/commit/2f781de0a910a193f0a4bae795725119476f8e94))
+* enable resolveFields to access parent data ([196227b](https://github.com/measuredco/puck/commit/196227bdf33ee678ce47b68fc624804448008cc1))
+* list React 19 as supported peer dependency ([85e8cc1](https://github.com/measuredco/puck/commit/85e8cc1a6fcd29d9dd04e5e53c6e7f9a85f99959))
+* track focused field in app state ([91bc97a](https://github.com/measuredco/puck/commit/91bc97a760d1750d65dedbbffee962a6c6ee8d60))
+* upgrade next recipe to v15.1 ([8ef51c5](https://github.com/measuredco/puck/commit/8ef51c54e386528fca69be1e54b8a3ce69651bd0))
+* use React 19 in next recipe ([6b3d97f](https://github.com/measuredco/puck/commit/6b3d97f9f3d0cc2283178ba6f4bda3b23f1f718a))
+
+
+### Bug Fixes
+
+* always run field resolvers when item change ([159d819](https://github.com/measuredco/puck/commit/159d819e0263f4e91bff8a83adfa404601850aa5))
+* always update fields when resolveData runs ([39dd619](https://github.com/measuredco/puck/commit/39dd61934c15a452c59f26b0c6721802df0c1889))
+* ensure radio fields are functional inside arrays ([7736294](https://github.com/measuredco/puck/commit/7736294d201f432799c0854be14b35edbad156d8))
+* prevent field name collision causing hook render mismatch ([b51954a](https://github.com/measuredco/puck/commit/b51954a19875e1f3c87e0cdc03c10173e9786820))
+* prevent flicker when using resolveData with arrays ([1be9b88](https://github.com/measuredco/puck/commit/1be9b886325a1515434759011e9e3514c583bd2e))
+* provide better error when usePuck used inappropriately ([9991c07](https://github.com/measuredco/puck/commit/9991c079b2b7d8f18ecb42efc3ebc32e5d679b88))
+* remove leading zeros in Number field ([5ba9399](https://github.com/measuredco/puck/commit/5ba9399e6546919ae744d7a4986b59faa1cd7aef))
+* respect original value type in radio and select fields ([00ccd1d](https://github.com/measuredco/puck/commit/00ccd1df6513d2420c87cd136577e1df1ac9a9a3) and [6e5864a](https://github.com/measuredco/puck/commit/6e5864a5df01a52fb4e6b23132d68d4496f1e64e))
+
+
+
+
+## [0.16.2](https://github.com/measuredco/puck/compare/v0.16.1...v0.16.2) (2024-11-07)
+
+
+### Bug Fixes
+
+* always treat data as immutable, fixing Redux issues ([51154e9](https://github.com/measuredco/puck/commit/51154e92b9022311afa79d086f69b70b6b8beb77))
+* don't crash if component definition missing ([525b506](https://github.com/measuredco/puck/commit/525b5065563675d03d89cf090ce1f7fdf8ff0486))
+* don't crash when selecting component with no config ([cb90f5d](https://github.com/measuredco/puck/commit/cb90f5d9109b340407bc9828fcd9761183d83e68)), closes [#671](https://github.com/measuredco/puck/issues/671)
+* export missing resolveAllData lib in RSC bundle ([2f5fb7b](https://github.com/measuredco/puck/commit/2f5fb7ba69b61b857ad14720b93ceab026571aa7))
+* fix RTL styles in action bar overlay ([bf5c5a3](https://github.com/measuredco/puck/commit/bf5c5a33081599331049063c79c7859aea96d0da))
+* remove internal AutoField and FieldLabel components from bundle ([5df1597](https://github.com/measuredco/puck/commit/5df1597feede2f0ff922ad13297fd3acaf942da2))
+* remove unused label from AutoField type ([18b6f1a](https://github.com/measuredco/puck/commit/18b6f1acae0186245817f35d4a27e6fdf4153ea1))
+
+
+
+
 ## [0.16.1](https://github.com/measuredco/puck/compare/v0.16.0...v0.16.1) (2024-10-07)
 
 

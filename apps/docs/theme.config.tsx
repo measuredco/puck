@@ -47,11 +47,23 @@ const Head = () => {
         name="twitter:title"
         content={title !== defaultTitle ? `${title} - Puck` : defaultTitle}
       />
+      <title>{title !== defaultTitle ? `${title} - Puck` : defaultTitle}</title>
 
       <link rel="icon" href="/favicon.ico" sizes="48x48" />
       <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       <link rel="manifest" href="/manifest.webmanifest" />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: `{
+      "@context" : "https://schema.org",
+      "@type" : "WebSite",
+      "name" : "Puck",
+      "url" : "https://puckeditor.com/"
+    }`,
+        }}
+      />
       {asPath == "/" && (
         <script
           type="application/ld+json"
@@ -70,19 +82,6 @@ const Head = () => {
 };
 
 const theme: DocsThemeConfig = {
-  useNextSeoProps() {
-    const { pathname } = useRouter();
-
-    if (pathname && pathname !== "/") {
-      return {
-        titleTemplate: "%s – Puck",
-      };
-    }
-
-    return {
-      titleTemplate: "%s",
-    };
-  },
   head: Head,
   logo: (
     <div>
@@ -102,7 +101,7 @@ const theme: DocsThemeConfig = {
     link: "https://github.com/measuredco/puck",
   },
   footer: {
-    text: (
+    content: (
       <div className="flex w-full flex-col items-center sm:items-start">
         <p className="mt-6 text-xs">
           MIT © {new Date().getFullYear()}{" "}
@@ -135,19 +134,18 @@ const theme: DocsThemeConfig = {
     process.env.NEXT_PUBLIC_IS_LATEST === "true"
       ? {
           dismissible: true,
-          key: "v0.16.0",
-          text: (
+          key: "v0.17.0",
+          content: (
             <a
               href="https://github.com/measuredco/puck/releases"
               target="_blank"
             >
-              <b>🔐 Puck 0.16.0</b>: Toggle functionality with permissions →
+              <b>🎄 Puck 0.17</b>: React 19 and field enhancements →
             </a>
           ),
         }
       : {},
   docsRepositoryBase: "https://github.com/measuredco/puck/tree/main/apps/docs",
-  primarySaturation: 0,
   navbar: {
     extraContent: () => (
       <Viewport desktop>

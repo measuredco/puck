@@ -4,7 +4,7 @@ The `next` recipe showcases one of the most powerful ways to implement Puck usin
 
 ## Demonstrates
 
-- Next.js 13 App Router implementation
+- Next.js App Router implementation
 - JSON database implementation with HTTP API
 - Catch-all routes to use puck for any route on the platform
 - Incremental static regeneration (ISR) for all Puck pages

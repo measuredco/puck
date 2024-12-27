@@ -327,12 +327,15 @@
   align-self: center;
 }
 
-.ExternalInputModal-footer {
+.ExternalInputModal-footerContainer {
   background-color: var(--puck-color-grey-12);
   border-top: 1px solid var(--puck-color-grey-09);
   color: var(--puck-color-grey-04);
+  padding: 16px;
+}
+
+.ExternalInputModal-footer {
   font-weight: 500;
   font-size: 14px;
-  padding: 16px;
   text-align: right;
 }

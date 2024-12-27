@@ -16,6 +16,7 @@ import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 import { getChanged } from "../../../../lib/get-changed";
+import { useParent } from "../../../../lib/use-parent";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -37,6 +38,7 @@ type ComponentOrRootData = Omit<ComponentData<any>, "type">;
 
 const useResolvedFields = (): [FieldsType, boolean] => {
   const { selectedItem, state, config } = useAppContext();
+  const parent = useParent();
 
   const { data } = state;
 
@@ -46,9 +48,13 @@ const useResolvedFields = (): [FieldsType, boolean] => {
     ? config.components[selectedItem.type]
     : null;
 
-  const defaultFields = selectedItem
-    ? (componentConfig?.fields as Record<string, Field<any>>)
-    : rootFields;
+  const defaultFields = useMemo(
+    () =>
+      (selectedItem
+        ? (componentConfig?.fields as Record<string, Field<any>>)
+        : rootFields) || {},
+    [selectedItem, rootFields, componentConfig?.fields]
+  );
 
   // DEPRECATED
   const rootProps = data.root.props || data.root;
@@ -56,7 +62,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
   const [lastSelectedData, setLastSelectedData] = useState<
     Partial<ComponentOrRootData>
   >({});
-  const [resolvedFields, setResolvedFields] = useState(defaultFields || {});
+  const [resolvedFields, setResolvedFields] = useState(defaultFields);
   const [fieldsLoading, setFieldsLoading] = useState(false);
 
   const defaultResolveFields = (
@@ -97,6 +103,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
             lastFields: resolvedFields,
             lastData: lastData as ComponentData,
             appState: state,
+            parent,
           }
         );
       }
@@ -108,6 +115,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
           lastFields: resolvedFields,
           lastData: lastData as RootData,
           appState: state,
+          parent,
         });
       }
 
@@ -133,7 +141,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
     } else {
       setResolvedFields(defaultFields);
     }
-  }, [data, defaultFields, state.ui.itemSelector, hasResolver]);
+  }, [data, defaultFields, selectedItem, hasResolver]);
 
   return [resolvedFields, fieldsLoading];
 };
@@ -261,12 +269,14 @@ export const Fields = () => {
               item: selectedItem,
             });
 
+            const id = `${selectedItem.props.id}_${field.type}_${fieldName}`;
+
             return (
               <AutoFieldPrivate
-                key={`${selectedItem.props.id}_${fieldName}`}
+                key={id}
                 field={field}
                 name={fieldName}
-                id={`${selectedItem.props.id}_${fieldName}`}
+                id={id}
                 readOnly={!edit || readOnly[fieldName]}
                 value={selectedItem.props[fieldName]}
                 onChange={onChange}
@@ -281,12 +291,14 @@ export const Fields = () => {
               root: true,
             });
 
+            const id = `root_${field.type}_${fieldName}`;
+
             return (
               <AutoFieldPrivate
-                key={`page_${fieldName}`}
+                key={id}
                 field={field}
                 name={fieldName}
-                id={`root_${fieldName}`}
+                id={id}
                 readOnly={!edit || readOnly[fieldName]}
                 value={(rootProps as Record<string, any>)[fieldName]}
                 onChange={onChange}

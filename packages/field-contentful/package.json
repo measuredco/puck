@@ -1,6 +1,6 @@
 {
   "name": "@measured/puck-field-contentful",
-  "version": "0.16.1",
+  "version": "0.17.1",
   "author": "Measured Corporation Ltd <hello@measured.co>",
   "repository": "measuredco/puck",
   "bugs": "https://github.com/measuredco/puck/issues",
@@ -22,9 +22,9 @@
     "dist"
   ],
   "devDependencies": {
-    "@measured/puck": "^0.16.1",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@measured/puck": "^0.17.1",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
     "contentful": "^10.8.6",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
@@ -34,6 +34,6 @@
   },
   "peerDependencies": {
     "contentful": "^10.0.0",
-    "react": "^17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
   }
 }

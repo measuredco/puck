@@ -239,7 +239,7 @@ export function Puck<
     })
   );
 
-  const [appState, dispatch] = useReducer<StateReducer<G["UserData"]>>(
+  const [appState, dispatch] = useReducer(
     reducer,
     flushZones<G["UserData"]>(initialAppState) as G["UserAppState"]
   );

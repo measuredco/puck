@@ -1,6 +1,6 @@
 {
   "name": "@measured/puck",
-  "version": "0.16.1",
+  "version": "0.17.1",
   "author": "Measured Corporation Ltd <hello@measured.co>",
   "repository": "measuredco/puck",
   "bugs": "https://github.com/measuredco/puck/issues",
@@ -11,20 +11,20 @@
   "exports": {
     ".": {
       "react-server": {
+        "types": "./dist/rsc.d.ts",
         "import": "./dist/rsc.mjs",
-        "require": "./dist/rsc.js",
-        "types": "./dist/rsc.d.ts"
+        "require": "./dist/rsc.js"
       },
       "default": {
+        "types": "./dist/index.d.ts",
         "import": "./dist/index.mjs",
-        "require": "./dist/index.js",
-        "types": "./dist/index.d.ts"
+        "require": "./dist/index.js"
       }
     },
     "./rsc": {
+      "types": "./dist/rsc.d.ts",
       "import": "./dist/rsc.mjs",
-      "require": "./dist/rsc.js",
-      "types": "./dist/rsc.d.ts"
+      "require": "./dist/rsc.js"
     },
     "./puck.css": "./dist/index.css",
     "./dist/index.css": "./dist/index.css"
@@ -48,12 +48,12 @@
     "dist"
   ],
   "devDependencies": {
-    "@testing-library/react": "^14.0.0",
+    "@testing-library/react": "^16.1.0",
     "@types/deep-diff": "^1.0.3",
     "@types/jest": "^29.5.4",
     "@types/object-hash": "^3.0.6",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
     "@types/ua-parser-js": "^0.7.39",
     "@types/uuid": "^10.0.0",
     "css-box-model": "^1.2.1",
@@ -61,7 +61,7 @@
     "eslint-config-custom": "*",
     "jest": "^29.6.4",
     "jest-environment-jsdom": "^29.6.4",
-    "lucide-react": "^0.298.0",
+    "lucide-react": "^0.468.0",
     "ts-jest": "^29.2.4",
     "tsconfig": "*",
     "tsup": "^8.2.4",
@@ -78,6 +78,6 @@
     "uuid": "^9.0.1"
   },
   "peerDependencies": {
-    "react": "^17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
   }
 }

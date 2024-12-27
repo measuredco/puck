@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import styles from "./Button.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Loader } from "../Loader";
+import { filterDataAttrs } from "../../lib/filter-data-attrs";
 
 const getClassName = getClassNameFactory("Button", styles);
 
@@ -18,6 +19,7 @@ export const Button = ({
   icon,
   size = "medium",
   loading: loadingProp = false,
+  ...props
 }: {
   children: ReactNode;
   href?: string;
@@ -37,6 +39,7 @@ export const Button = ({
   useEffect(() => setLoading(loadingProp), [loadingProp]);
 
   const ElementType = href ? "a" : type ? "button" : "span";
+  const dataAttrs = filterDataAttrs(props);
 
   const el = (
     <ElementType
@@ -61,6 +64,7 @@ export const Button = ({
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noreferrer" : undefined}
       href={href}
+      {...dataAttrs}
     >
       {icon && <div className={getClassName("icon")}>{icon}</div>}
       {children}
