@@ -22,25 +22,20 @@ const ReactFromJSON =
   (ReactFromJSONModule as unknown as { default: typeof ReactFromJSONModule })
     .default || ReactFromJSONModule;
 
-const dataAttr = "data-puck-heading-analyzer-id";
-
-const getOutline = ({
-  addDataAttr = false,
-  frame,
-}: { addDataAttr?: boolean; frame?: Element | Document } = {}) => {
+const getOutline = ({ frame }: { frame?: Element | Document } = {}) => {
   const headings = frame?.querySelectorAll("h1,h2,h3,h4,h5,h6") || [];
 
-  const _outline: { rank: number; text: string; analyzeId: string }[] = [];
+  const _outline: {
+    rank: number;
+    text: string;
+    element: HTMLElement;
+  }[] = [];
 
   headings.forEach((item, i) => {
-    if (addDataAttr) {
-      item.setAttribute(dataAttr, i.toString());
-    }
-
     _outline.push({
       rank: parseInt(item.tagName.split("H")[1]),
       text: item.textContent!,
-      analyzeId: i.toString(),
+      element: item as HTMLElement,
     });
   });
 
@@ -53,10 +48,11 @@ type Block = {
   children?: Block[];
   missing?: boolean;
   analyzeId?: string;
+  element?: HTMLElement;
 };
 
 function buildHierarchy(frame: Element | Document): Block[] {
-  const headings = getOutline({ addDataAttr: true, frame });
+  const headings = getOutline({ frame });
 
   const root = { rank: 0, children: [], text: "" }; // Placeholder root node
   let path: Block[] = [root];
@@ -65,8 +61,8 @@ function buildHierarchy(frame: Element | Document): Block[] {
     const node: Block = {
       rank: heading.rank,
       text: heading.text,
-      analyzeId: heading.analyzeId,
       children: [],
+      element: heading.element,
     };
 
     // When encountering an h1, reset the path to only the root
@@ -102,23 +98,25 @@ function buildHierarchy(frame: Element | Document): Block[] {
 export const HeadingAnalyzer = () => {
   const { appState } = usePuck();
   const [hierarchy, setHierarchy] = useState<Block[]>([]);
-  const [firstRender, setFirstRender] = useState(true);
 
   // Re-render when content changes
   useEffect(() => {
     const frame = getFrame();
+    const entry = frame?.querySelector(`[data-puck-entry]`);
 
-    if (!frame) return;
+    if (!entry) return;
 
-    // We need to delay to allow remainder of page to render first
-    if (firstRender) {
-      setTimeout(() => {
-        setHierarchy(buildHierarchy(frame));
-        setFirstRender(false);
-      }, 100);
-    } else {
-      setHierarchy(buildHierarchy(frame));
-    }
+    setHierarchy(buildHierarchy(entry));
+
+    const observer = new MutationObserver(() => {
+      setHierarchy(buildHierarchy(entry));
+    });
+
+    observer.observe(entry, { subtree: true, childList: true });
+
+    return () => {
+      observer.disconnect();
+    };
   }, [appState.data]);
 
   return (
@@ -153,16 +151,12 @@ export const HeadingAnalyzer = () => {
                   <small
                     className={getClassNameItem({ missing: props.missing })}
                     onClick={
-                      typeof props.analyzeId == "undefined"
+                      typeof props.element == "undefined"
                         ? undefined
                         : (e) => {
                             e.stopPropagation();
 
-                            const frame = getFrame();
-
-                            const el = frame?.querySelector(
-                              `[${dataAttr}="${props.analyzeId}"]`
-                            ) as HTMLElement;
+                            const el = props.element;
 
                             const oldStyle = { ...el.style };
 

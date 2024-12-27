@@ -125,7 +125,12 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           </autoFrameContext.Consumer>
         </AutoFrame>
       ) : (
-        <div id="preview-frame" className={getClassName("frame")} ref={ref}>
+        <div
+          id="preview-frame"
+          className={getClassName("frame")}
+          ref={ref}
+          data-puck-entry
+        >
           <Page
             {...rootProps}
             puck={{ renderDropZone: DropZone, isEditing: true, dragRef: null }}
