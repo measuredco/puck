@@ -241,7 +241,7 @@ const DragDropContextClient = ({
     [data, setPathData]
   );
 
-  const initialSelector = useRef<{ zone: string; index: number }>();
+  const initialSelector = useRef<{ zone: string; index: number }>(undefined);
 
   return (
     <dragListenerContext.Provider
