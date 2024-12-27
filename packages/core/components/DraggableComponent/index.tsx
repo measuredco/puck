@@ -145,6 +145,24 @@ export const DraggableComponent = ({
     [setLocalZones]
   );
 
+  const unregisterLocalZone = useCallback(
+    (zoneCompound: string) => {
+      // Propagate local zone
+      ctx?.unregisterLocalZone?.(zoneCompound);
+
+      setLocalZones((obj) => {
+        const newLocalZones = {
+          ...obj,
+        };
+
+        delete newLocalZones[zoneCompound];
+
+        return newLocalZones;
+      });
+    },
+    [setLocalZones]
+  );
+
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
 
@@ -490,6 +508,7 @@ export const DraggableComponent = ({
         index,
         depth: depth + 1,
         registerLocalZone,
+        unregisterLocalZone,
         path: [...path, id],
       }}
     >

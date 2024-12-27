@@ -65,6 +65,7 @@ function DropZoneEdit({
     registerZoneArea,
     depth,
     registerLocalZone,
+    unregisterLocalZone,
     deepestZone = rootDroppableId,
     deepestArea,
     nextDeepestArea,
@@ -93,6 +94,10 @@ function DropZoneEdit({
     }
 
     return () => {
+      if (unregisterLocalZone) {
+        unregisterLocalZone(zoneCompound);
+      }
+
       if (ctx?.unregisterZone) {
         ctx?.unregisterZone(zoneCompound);
       }
