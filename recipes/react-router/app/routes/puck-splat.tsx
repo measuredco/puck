@@ -2,15 +2,13 @@ import { useFetcher, useLoaderData } from "react-router";
 import type { Data } from "@measured/puck";
 import { Puck, Render } from "@measured/puck";
 
-import "@measured/puck/puck.css";
-
 import type { Route } from "./+types/puck-splat";
-import { config } from "~/puck.config";
+import { config } from "../../puck.config";
 import { resolvePuckPath } from "~/lib/resolve-puck-path.server";
 import { getPage, savePage } from "~/lib/pages.server";
 
 export async function loader({ params }: Route.LoaderArgs) {
-  const pathname = params["*"];
+  const pathname = params["*"] ?? "/";
   const { isEditorRoute, path } = resolvePuckPath(pathname);
   let page = await getPage(path);
 
@@ -48,20 +46,8 @@ export function meta({ data: loaderData }: Route.MetaArgs) {
   ];
 }
 
-export default function PuckSplatRoute({ loaderData }: Route.ComponentProps) {
-  return (
-    <div>
-      {loaderData.isEditorRoute ? (
-        <Editor />
-      ) : (
-        <Render config={config} data={loaderData.data} />
-      )}
-    </div>
-  );
-}
-
 export async function action({ params, request }: Route.ActionArgs) {
-  const pathname = params["*"];
+  const pathname = params["*"] ?? "/";
   const { path } = resolvePuckPath(pathname);
   const body = (await request.json()) as { data: Data };
 
@@ -89,5 +75,17 @@ function Editor() {
         );
       }}
     />
+  );
+}
+
+export default function PuckSplatRoute({ loaderData }: Route.ComponentProps) {
+  return (
+    <div>
+      {loaderData.isEditorRoute ? (
+        <Editor />
+      ) : (
+        <Render config={config} data={loaderData.data} />
+      )}
+    </div>
   );
 }

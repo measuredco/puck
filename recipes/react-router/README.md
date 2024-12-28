@@ -4,7 +4,7 @@ The `react-router` recipe showcases one of the most powerful ways to implement P
 
 ## Demonstrates
 
-- React Router V7 (framework) implementation
+- React Router v7 (framework) implementation
 - JSON database implementation
 - Splat route to use puck for any route on the platform
 

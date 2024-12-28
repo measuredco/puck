@@ -1,3 +1,7 @@
-import { type RouteConfig, route } from "@react-router/dev/routes";
+import type { RouteConfig } from "@react-router/dev/routes";
+import { route, index } from "@react-router/dev/routes";
 
-export default [route("*", "routes/puck-splat.tsx")] satisfies RouteConfig;
+export default [
+  index("routes/_index.tsx"),
+  route("*", "routes/puck-splat.tsx"),
+] satisfies RouteConfig;

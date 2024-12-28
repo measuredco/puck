@@ -10,10 +10,10 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@measured/puck": "^0.17.1",
+    "@measured/puck": "*",
     "@react-router/node": "^7.0.2",
     "@react-router/serve": "^7.0.2",
-    "isbot": "^5.1.17",
+    "isbot": "^5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router": "^7.0.2"
@@ -26,7 +26,6 @@
     "autoprefixer": "^10.4.20",
     "cross-env": "^7.0.3",
     "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.16",
     "typescript": "^5.7.2",
     "vite": "^5.4.11",
     "vite-tsconfig-paths": "^5.1.4"
