@@ -36,6 +36,7 @@ export const DrawerItemInner = ({
       className={getClassNameItem({ disabled: isDragDisabled })}
       ref={dragRef}
       onMouseDown={(e) => e.preventDefault()}
+      data-testid={`drawer-item:${name}`}
     >
       <CustomInner name={name}>
         <div className={getClassNameItem("draggableWrapper")}>
