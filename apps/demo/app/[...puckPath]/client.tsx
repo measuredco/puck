@@ -21,6 +21,8 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
 
   if (!isClient) return null;
 
+  const params = new URL(window.location.href).searchParams;
+
   if (isEdit) {
     return (
       <div>
@@ -32,6 +34,9 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           }}
           plugins={[headingAnalyzer]}
           headerPath={path}
+          iframe={{
+            enabled: params.get("disableIframe") === "true" ? false : true,
+          }}
           overrides={{
             headerActions: ({ children }) => (
               <>

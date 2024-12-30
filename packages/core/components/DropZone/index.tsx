@@ -274,6 +274,8 @@ function DropZoneEdit({
 
         if (dragRef) dragRef(node);
       }}
+      data-testid={`dropzone:${zoneCompound}`}
+      data-puck-dropzone={zoneCompound}
       style={
         {
           ...style,
