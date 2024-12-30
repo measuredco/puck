@@ -13,14 +13,17 @@ const createEmotionCachePlugin = (key: string): Plugin => {
 
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
-          if (document) {
-            setCache(
-              createCache({
-                key,
-                container: document.head,
-              })
-            );
-          }
+          // Defer until next render
+          setTimeout(() => {
+            if (document) {
+              setCache(
+                createCache({
+                  key,
+                  container: document.head,
+                })
+              );
+            }
+          }, 0);
         }, [document, key]);
 
         if (cache) {
