@@ -105,17 +105,17 @@ export function Puck<
   headerTitle?: string;
   headerPath?: string;
   viewports?: Viewports;
-  iframe?: IframeConfig;
+  iframe?: Omit<IframeConfig, "ref">;
   dnd?: {
     disableAutoScroll?: boolean;
   };
   initialHistory?: InitialHistory;
 }) {
-  const iframe: IframeConfig = {
+  const [iframe, setIframe] = useState<IframeConfig>({
     enabled: true,
     waitForStyles: true,
     ..._iframe,
-  };
+  });
 
   const [generatedAppState] = useState<G["UserAppState"]>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
@@ -415,6 +415,7 @@ export function Puck<
           history,
           viewports,
           iframe,
+          setIframe,
           globalPermissions: {
             delete: true,
             drag: true,
