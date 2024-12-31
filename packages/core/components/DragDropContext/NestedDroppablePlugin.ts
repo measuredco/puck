@@ -4,26 +4,15 @@ import { Plugin } from "@dnd-kit/abstract";
 import type { Droppable } from "@dnd-kit/dom";
 
 import { effects } from "@dnd-kit/state";
-import { BoundingRectangle } from "@dnd-kit/geometry";
 import { throttle } from "../../lib/throttle";
 import { ComponentDndData } from "../DraggableComponent";
 import { DropZoneDndData } from "../DropZone";
+import { BubbledPointerEvent } from "../Puck/components/Preview";
+import { getFrame } from "../../lib/get-frame";
 
 interface Position {
   x: number;
   y: number;
-}
-
-function isPositionInsideRect(
-  position: Position,
-  rect: BoundingRectangle
-): boolean {
-  return (
-    position.x >= rect.left &&
-    position.x <= rect.right &&
-    position.y >= rect.top &&
-    position.y <= rect.bottom
-  );
 }
 
 type NestedDroppablePluginOptions = {
@@ -35,14 +24,6 @@ type NestedDroppablePluginOptions = {
     manager: DragDropManager
   ) => void;
 };
-
-// Pixels to buffer sortable items by, helping when
-// 2 items are butted up against each-other
-const BUFFER_ZONE = 8;
-
-// Force shapes to refresh on mouse move.
-// TODO This is likely expensive. Explore ways to remove this.
-const REFRESH_ON_MOVE = true;
 
 const depthSort = (candidates: Droppable[]) => {
   return candidates.sort((a, b) => {
@@ -82,37 +63,39 @@ const getZoneId = (candidate: Droppable | undefined) => {
   return id;
 };
 
-const expandHitBox = (rect: BoundingRectangle): BoundingRectangle => {
-  return {
-    bottom: rect.bottom + BUFFER_ZONE,
-    top: rect.top - BUFFER_ZONE,
-    width: rect.width + BUFFER_ZONE * 2,
-    height: rect.height + BUFFER_ZONE * 2,
-    left: rect.left - BUFFER_ZONE,
-    right: rect.right + BUFFER_ZONE,
-  };
-};
-
-const getPointerCollisions = (position: Position, manager: DragDropManager) => {
+const getPointerCollisions = (
+  position: Position,
+  manager: DragDropManager,
+  ownerDocument: Document
+) => {
   const candidates: Droppable[] = [];
 
-  const source = manager.dragOperation?.source;
-  const sourceData = source ? (source.data as ComponentDndData) : undefined;
+  let elements = ownerDocument.elementsFromPoint(position.x, position.y);
 
-  for (const droppable of manager.registry.droppables.value) {
-    if (droppable.shape) {
-      let rect = droppable.shape.boundingRectangle;
+  const previewFrame = elements.find((el) =>
+    el.getAttribute("data-puck-preview")
+  );
 
-      const isNotSourceZone = droppable.id !== (sourceData?.zone || source?.id);
-      const isNotTargetZone = droppable.id !== (sourceData?.zone || source?.id);
+  if (previewFrame) {
+    const frame = getFrame();
 
-      // Expand hitboxes on dropzones
-      if (droppable.type === "dropzone" && isNotSourceZone && isNotTargetZone) {
-        rect = expandHitBox(rect);
-      }
+    if (frame) {
+      elements = frame.elementsFromPoint(position.x, position.y);
+    }
+  }
 
-      if (isPositionInsideRect(position, rect)) {
-        candidates.push(droppable);
+  if (elements) {
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i];
+
+      const id = element.getAttribute("data-puck-dnd");
+
+      if (id) {
+        const droppable = manager.registry.droppables.get(id);
+
+        if (droppable) {
+          candidates.push(droppable);
+        }
       }
     }
   }
@@ -122,9 +105,10 @@ const getPointerCollisions = (position: Position, manager: DragDropManager) => {
 
 export const findDeepestCandidate = (
   position: Position,
-  manager: DragDropManager
+  manager: DragDropManager,
+  ownerDocument: Document
 ) => {
-  const candidates = getPointerCollisions(position, manager);
+  const candidates = getPointerCollisions(position, manager, ownerDocument);
 
   if (candidates.length > 0) {
     const sortedCandidates = depthSort(candidates);
@@ -205,23 +189,25 @@ export const createNestedDroppablePlugin = ({
       }
 
       const cleanupEffect = effects(() => {
-        const handleMove = (position: Position) => {
-          if (REFRESH_ON_MOVE) {
-            for (const droppable of manager.registry.droppables.value) {
-              droppable.refreshShape();
-            }
-          }
+        const handleMove = (event: BubbledPointerEvent) => {
+          const position: Position = {
+            x: event.clientX,
+            y: event.clientY,
+          };
 
-          onChange(findDeepestCandidate(position, manager), manager);
+          const target = (event.originalTarget || event.target) as HTMLElement;
+          const ownerDocument = target?.ownerDocument;
+
+          onChange(
+            findDeepestCandidate(position, manager, ownerDocument),
+            manager
+          );
         };
 
         const handleMoveThrottled = throttle(handleMove, 50);
 
         const handlePointerMove = (event: PointerEvent) => {
-          handleMoveThrottled({
-            x: event.clientX,
-            y: event.clientY,
-          });
+          handleMoveThrottled(event as BubbledPointerEvent);
         };
 
         document.body.addEventListener("pointermove", handlePointerMove, {

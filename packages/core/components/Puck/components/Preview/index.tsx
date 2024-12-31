@@ -11,6 +11,19 @@ const getClassName = getClassNameFactory("PuckPreview", styles);
 
 type PageProps = DefaultRootRenderProps;
 
+export class BubbledPointerEvent extends window.PointerEvent {
+  originalTarget: EventTarget | null;
+
+  constructor(
+    type: string,
+    data: PointerEvent & { originalTarget: EventTarget | null }
+  ) {
+    super(type, data);
+
+    this.originalTarget = data.originalTarget;
+  }
+}
+
 const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
   const { status } = useAppContext();
 
@@ -19,18 +32,14 @@ const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
       const iframe = ref.current;
 
       const handlePointerMove = (event: PointerEvent) => {
-        const rect = iframe.getBoundingClientRect();
-
-        const evt = new CustomEvent("pointermove", {
+        const evt = new BubbledPointerEvent("pointermove", {
+          ...event,
           bubbles: true,
           cancelable: false,
-        }) as any;
-
-        const scaleFactor =
-          rect.width / (iframe.contentWindow?.innerWidth || 1);
-
-        evt.clientX = event.clientX * scaleFactor + rect.left;
-        evt.clientY = event.clientY * scaleFactor + rect.top;
+          clientX: event.clientX,
+          clientY: event.clientY,
+          originalTarget: event.target,
+        });
 
         iframe.dispatchEvent(evt);
       };

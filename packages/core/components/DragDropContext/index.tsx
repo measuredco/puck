@@ -434,7 +434,11 @@ const DragDropContextClient = ({
           }}
           onDragStart={(event, manager) => {
             setDeepest(
-              findDeepestCandidate(event.operation.position.current, manager)
+              findDeepestCandidate(
+                event.operation.position.current,
+                manager,
+                event.operation.source?.element?.ownerDocument || document
+              )
             );
 
             dispatch({

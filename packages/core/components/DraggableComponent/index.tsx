@@ -395,6 +395,7 @@ export const DraggableComponent = ({
     };
 
     el.setAttribute("data-puck-component", id);
+    el.setAttribute("data-puck-dnd", id);
     el.style.position = "relative";
     el.addEventListener("click", onClick);
     el.addEventListener("mouseover", _onMouseOver);
@@ -408,6 +409,7 @@ export const DraggableComponent = ({
 
     return () => {
       el.removeAttribute("data-puck-component");
+      el.removeAttribute("data-puck-dnd");
       el.removeEventListener("click", onClick);
       el.removeEventListener("mouseover", _onMouseOver);
       el.removeEventListener("mouseout", _onMouseOut);
