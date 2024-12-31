@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { DraggableComponent } from "../DraggableComponent";
+import { ComponentDndData, DraggableComponent } from "../DraggableComponent";
 import { getItem } from "../../lib/get-item";
 import { setupZone } from "../../lib/setup-zone";
 import { rootDroppableId } from "../../lib/root-droppable-id";
@@ -23,7 +23,7 @@ import { DrawerItemInner } from "../Drawer";
 import { pointerIntersection } from "@dnd-kit/collision";
 import { insert } from "../../lib/insert";
 import { previewContext } from "../DragDropContext";
-import { UniqueIdentifier } from "@dnd-kit/abstract";
+import { Draggable, UniqueIdentifier } from "@dnd-kit/abstract";
 import { useDroppableSafe } from "../../lib/dnd-kit/safe";
 
 const getClassName = getClassNameFactory("DropZone", styles);
@@ -74,7 +74,6 @@ function DropZoneEdit({
 
   const { itemSelector } = appContext.state.ui;
 
-  let content = data.content || [];
   let zoneCompound = rootDroppableId;
 
   useEffect(() => {
@@ -85,19 +84,11 @@ function DropZoneEdit({
 
   // Register and unregister zone on mount
   useEffect(() => {
-    if (registerLocalZone) {
-      registerLocalZone(zoneCompound, isDroppableTarget());
-    }
-
     if (ctx?.registerZone) {
       ctx?.registerZone(zoneCompound);
     }
 
     return () => {
-      if (unregisterLocalZone) {
-        unregisterLocalZone(zoneCompound);
-      }
-
       if (ctx?.unregisterZone) {
         ctx?.unregisterZone(zoneCompound);
       }
@@ -107,43 +98,61 @@ function DropZoneEdit({
   if (areaId) {
     if (zone !== rootDroppableId) {
       zoneCompound = `${areaId}:${zone}`;
-      content = setupZone(data, zoneCompound).zones[zoneCompound];
     }
   }
 
+  const content = useMemo(() => {
+    if (areaId && zone !== rootDroppableId) {
+      return setupZone(data, zoneCompound).zones[zoneCompound];
+    }
+
+    return data.content || [];
+  }, [data, zoneCompound]);
+
   const ref = useRef<HTMLDivElement | null>(null);
 
-  const isDroppableTarget = useCallback(() => {
-    if (!draggedItem) {
+  const acceptsTarget = useCallback(
+    (target: Draggable | undefined | null) => {
+      if (!target) {
+        return true;
+      }
+
+      const data = target.data as ComponentDndData;
+
+      const { componentType } = data;
+
+      if (disallow) {
+        const defaultedAllow = allow || [];
+
+        // remove any explicitly allowed items from disallow
+        const filteredDisallow = (disallow || []).filter(
+          (item) => defaultedAllow.indexOf(item) === -1
+        );
+
+        if (filteredDisallow.indexOf(componentType) !== -1) {
+          return false;
+        }
+      } else if (allow) {
+        if (allow.indexOf(componentType) === -1) {
+          return false;
+        }
+      }
+
       return true;
-    }
-
-    const { componentType } = draggedItem.data;
-
-    if (disallow) {
-      const defaultedAllow = allow || [];
-
-      // remove any explicitly allowed items from disallow
-      const filteredDisallow = (disallow || []).filter(
-        (item) => defaultedAllow.indexOf(item) === -1
-      );
-
-      if (filteredDisallow.indexOf(componentType) !== -1) {
-        return false;
-      }
-    } else if (allow) {
-      if (allow.indexOf(componentType) === -1) {
-        return false;
-      }
-    }
-
-    return true;
-  }, [draggedItem]);
+    },
+    [allow, disallow]
+  );
 
   useEffect(() => {
     if (registerLocalZone) {
-      registerLocalZone(zoneCompound, isDroppableTarget());
+      registerLocalZone(zoneCompound, acceptsTarget(draggedItem));
     }
+
+    return () => {
+      if (unregisterLocalZone) {
+        unregisterLocalZone(zoneCompound);
+      }
+    };
   }, [draggedItem, zoneCompound]);
 
   const isRootZone =
@@ -164,7 +173,7 @@ function DropZoneEdit({
   }
 
   if (isEnabled) {
-    isEnabled = isDroppableTarget();
+    isEnabled = acceptsTarget(draggedItem);
   }
 
   const preview = useContext(previewContext);
@@ -212,7 +221,7 @@ function DropZoneEdit({
     data: {
       areaId,
       depth,
-      isDroppableTarget: isDroppableTarget(),
+      isDroppableTarget: acceptsTarget(draggedItem),
       path,
     },
   };
@@ -356,7 +365,7 @@ function DropZoneEdit({
               isEnabled={isEnabled}
               autoDragAxis={dragAxis}
               userDragAxis={collisionAxis}
-              inDroppableZone={isDroppableTarget()}
+              inDroppableZone={acceptsTarget(draggedItem)}
             >
               {(dragRef) =>
                 componentConfig?.inline ? (
