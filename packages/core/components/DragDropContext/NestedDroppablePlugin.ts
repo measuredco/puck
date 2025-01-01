@@ -77,10 +77,22 @@ const getPointerCollisions = (
   );
 
   if (previewFrame) {
-    const frame = getFrame();
+    const iframe = previewFrame.querySelector("iframe");
 
-    if (frame) {
-      elements = frame.elementsFromPoint(position.x, position.y);
+    if (iframe) {
+      // Perf: Consider moving this outside of this plugin
+      const rect = iframe.getBoundingClientRect();
+      const frame = getFrame();
+
+      if (frame) {
+        const scaleFactor =
+          rect.width / (iframe.contentWindow?.innerWidth || 1);
+
+        elements = frame.elementsFromPoint(
+          (position.x - rect.left) / scaleFactor,
+          (position.y - rect.top) / scaleFactor
+        );
+      }
     }
   }
 
