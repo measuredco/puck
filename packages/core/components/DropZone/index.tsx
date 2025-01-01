@@ -70,6 +70,7 @@ function DropZoneEdit({
     deepestArea,
     nextDeepestArea,
     path = [],
+    activeZones,
   } = ctx!;
 
   const { itemSelector } = appContext.state.ui;
@@ -275,6 +276,7 @@ function DropZoneEdit({
         isEnabled,
         isAreaSelected,
         hasChildren: content.length > 0,
+        isActive: activeZones?.[zoneCompound],
       })}${className ? ` ${className}` : ""}`}
       ref={(node) => {
         ref.current = node;
