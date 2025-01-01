@@ -1,4 +1,10 @@
-import { ReactNode, createContext, useCallback, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { Config, Data } from "../../types";
 import { ItemSelector } from "../../lib/get-item";
 
@@ -100,21 +106,25 @@ export const DropZoneProvider = ({
     [setActiveZones, dispatch]
   );
 
+  const memoValue = useMemo(
+    () =>
+      ({
+        hoveringComponent,
+        setHoveringComponent,
+        registerZoneArea,
+        areasWithZones,
+        registerZone,
+        unregisterZone,
+        activeZones,
+        ...value,
+      } as DropZoneContext),
+    [value, hoveringComponent, areasWithZones, activeZones]
+  );
+
   return (
     <>
-      {value && (
-        <dropZoneContext.Provider
-          value={{
-            hoveringComponent,
-            setHoveringComponent,
-            registerZoneArea,
-            areasWithZones,
-            registerZone,
-            unregisterZone,
-            activeZones,
-            ...value,
-          }}
-        >
+      {memoValue && (
+        <dropZoneContext.Provider value={memoValue}>
           {children}
         </dropZoneContext.Provider>
       )}
