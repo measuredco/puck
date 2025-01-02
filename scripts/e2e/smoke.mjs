@@ -2,6 +2,13 @@ import { smoke } from "./smoke-framework.mjs";
 import { dragAndDrop } from "./utils/drag-and-drop.mjs";
 
 const runs = {
+  oneLevel: async (page) => {
+    await dragAndDrop(
+      page,
+      '[data-testid="drawer-item:Heading"]',
+      '[data-testid="dropzone:default-zone"]'
+    );
+  },
   twoLevels: async (page) => {
     await dragAndDrop(
       page,
@@ -14,6 +21,26 @@ const runs = {
       page,
       '[data-testid="drawer-item:Heading"]',
       '[data-testid="dropzone:default-zone"] [data-puck-dropzone]'
+    );
+  },
+  threeLevels: async (page) => {
+    await dragAndDrop(
+      page,
+      '[data-testid="drawer-item:Grid"]',
+      '[data-testid="dropzone:default-zone"]',
+      "top"
+    );
+
+    await dragAndDrop(
+      page,
+      '[data-testid="drawer-item:Grid"]',
+      '[data-testid="dropzone:default-zone"] [data-puck-dropzone]'
+    );
+
+    await dragAndDrop(
+      page,
+      '[data-testid="drawer-item:Heading"]',
+      '[data-testid="dropzone:default-zone"] [data-puck-dropzone] [data-puck-dropzone]'
     );
   },
   sixLevels: async (page) => {
