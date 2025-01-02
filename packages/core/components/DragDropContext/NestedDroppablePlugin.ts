@@ -76,7 +76,14 @@ const getPointerCollisions = (
     el.getAttribute("data-puck-preview")
   );
 
-  // If cursor is over iframe, but user is in host doc, go into the iframe
+  // Restrict to drawer element if pointer is over drawer. This is necessary if
+  // the drawer is over dnd elements.
+  const drawer = elements.find((el) => el.getAttribute("data-puck-drawer"));
+  if (drawer) {
+    elements = [drawer];
+  }
+
+  // If cursor is over iframe (but not drawer), and user is in host doc, go into the iframe doc
   // This occurs when dragging in new items
   if (previewFrame) {
     const iframe = previewFrame.querySelector("iframe");

@@ -174,7 +174,12 @@ export const Drawer = ({
   });
 
   return (
-    <div className={getClassName()} ref={ref} data-puck-dnd={id}>
+    <div
+      className={getClassName()}
+      ref={ref}
+      data-puck-dnd={id}
+      data-puck-drawer
+    >
       {children}
     </div>
   );
