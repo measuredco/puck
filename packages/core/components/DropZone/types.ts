@@ -8,6 +8,5 @@ export type DropZoneProps = {
   style?: CSSProperties;
   minEmptyHeight?: number;
   className?: string;
-  dragRef?: ((element: Element | null) => void) | null;
   collisionAxis?: DragAxis;
 };
