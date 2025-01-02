@@ -25,6 +25,7 @@ import { insert } from "../../lib/insert";
 import { previewContext } from "../DragDropContext";
 import { Draggable, UniqueIdentifier } from "@dnd-kit/abstract";
 import { useDroppableSafe } from "../../lib/dnd-kit/safe";
+import { useMinEmptyHeight } from "./use-min-empty-height";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -49,7 +50,7 @@ function DropZoneEdit({
   disallow,
   style,
   className,
-  minEmptyHeight = 128,
+  minEmptyHeight: userMinEmptyHeight = 128,
   dragRef,
   collisionAxis,
 }: DropZoneProps) {
@@ -267,6 +268,13 @@ function DropZoneEdit({
     };
   }, []);
 
+  const [minEmptyHeight, isAnimating] = useMinEmptyHeight({
+    draggedItem,
+    zoneCompound,
+    userMinEmptyHeight,
+    ref,
+  });
+
   return (
     <div
       className={`${getClassName({
@@ -277,6 +285,7 @@ function DropZoneEdit({
         isAreaSelected,
         hasChildren: content.length > 0,
         isActive: activeZones?.[zoneCompound],
+        isAnimating,
       })}${className ? ` ${className}` : ""}`}
       ref={(node) => {
         ref.current = node;
