@@ -1,5 +1,4 @@
 .DropZone {
-  --drop-animation-ms: 250ms;
   --resize-animation-ms: 150ms;
 
   position: relative;
@@ -20,12 +19,7 @@
   min-height: var(--min-empty-height);
 }
 
-.DropZone--hasChildren:not(.DropZone--userIsDragging) {
-  transition: min-height var(--resize-animation-ms) var(--drop-animation-ms)
-    ease-in;
-}
-
-.DropZone:empty:not(.DropZone--userIsDragging) {
+.DropZone:not(.DropZone--userIsDragging) {
   transition: min-height var(--resize-animation-ms) ease-in;
 }
 
@@ -70,4 +64,9 @@
 
 .DropZone > *:not([data-puck-component]) {
   opacity: 0;
+}
+
+/* Hide overlays if DropZone is animating, which happens during a resize */
+body:has(.DropZone--isAnimating:empty) [data-puck-overlay] {
+  opacity: 0 !important;
 }

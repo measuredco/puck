@@ -521,6 +521,7 @@ export const DraggableComponent = ({
               hover: hover || indicativeHover,
             })}
             style={{ ...style }}
+            data-puck-overlay
           >
             {debug}
             {isLoading && (
