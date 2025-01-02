@@ -5,7 +5,7 @@
 .ArrayField {
   display: flex;
   flex-direction: column;
-  background-color: var(--puck-color-grey-09);
+  background: var(--puck-color-azure-11);
   border: 1px solid var(--puck-color-grey-09);
   border-radius: 4px;
 }
