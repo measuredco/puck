@@ -76,6 +76,8 @@ const getPointerCollisions = (
     el.getAttribute("data-puck-preview")
   );
 
+  // If cursor is over iframe, but user is in host doc, go into the iframe
+  // This occurs when dragging in new items
   if (previewFrame) {
     const iframe = previewFrame.querySelector("iframe");
 
