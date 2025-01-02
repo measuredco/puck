@@ -36,7 +36,8 @@ export const DrawerItemInner = ({
       className={getClassNameItem({ disabled: isDragDisabled })}
       ref={dragRef}
       onMouseDown={(e) => e.preventDefault()}
-      data-testid={`drawer-item:${name}`}
+      data-testid={dragRef ? `drawer-item:${name}` : ""}
+      data-puck-drawer-item
     >
       <CustomInner name={name}>
         <div className={getClassNameItem("draggableWrapper")}>
@@ -77,14 +78,23 @@ const DrawerItemDraggable = ({
   });
 
   return (
-    <DrawerItemInner
-      name={name}
-      label={label}
-      dragRef={ref}
-      isDragDisabled={isDragDisabled}
-    >
-      {children}
-    </DrawerItemInner>
+    <div className={getClassName("draggable")}>
+      <div className={getClassName("draggableBg")}>
+        <DrawerItemInner name={name} label={label}>
+          {children}
+        </DrawerItemInner>
+      </div>
+      <div className={getClassName("draggableFg")}>
+        <DrawerItemInner
+          name={name}
+          label={label}
+          dragRef={ref}
+          isDragDisabled={isDragDisabled}
+        >
+          {children}
+        </DrawerItemInner>
+      </div>
+    </div>
   );
 };
 
