@@ -34,6 +34,7 @@ const config = {
 | [`collisionAxis`](#collisionAxis)   | `collisionAxis: "x"`         | String        | -        |
 | [`disallow`](#disallow)             | `disallow: ["HeadingBlock"]` | Array         | -        |
 | [`minEmptyHeight`](#minEmptyHeight) | `minEmptyHeight: 256`        | Number        | -        |
+| [`ref`](#ref)                       | `ref: ref`                   | Ref           | -        |
 | [`style`](#style)                   | `style: {display: "flex"}`   | CSSProperties | -        |
 
 ## Required props
@@ -167,6 +168,28 @@ const config = {
         return (
           <div>
             <DropZone zone="my-content" minEmptyHeight={256} />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+### `ref`
+
+A [React ref](https://react.dev/learn/manipulating-the-dom-with-refs), assigned to the root node of the DropZone.
+
+```tsx copy {9}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        const ref = useRef();
+
+        return (
+          <div>
+            <DropZone zone="my-content" ref={ref} />
           </div>
         );
       },

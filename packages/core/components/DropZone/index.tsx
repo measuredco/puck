@@ -1,5 +1,6 @@
 import {
   CSSProperties,
+  forwardRef,
   useCallback,
   useContext,
   useEffect,
@@ -26,6 +27,7 @@ import { previewContext } from "../DragDropContext";
 import { Draggable, UniqueIdentifier } from "@dnd-kit/abstract";
 import { useDroppableSafe } from "../../lib/dnd-kit/safe";
 import { useMinEmptyHeight } from "./use-min-empty-height";
+import { assignRefs } from "../../lib/assign-refs";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -44,16 +46,18 @@ export type DropZoneDndData = {
   isDroppableTarget: boolean;
 };
 
-function DropZoneEdit({
-  zone,
-  allow,
-  disallow,
-  style,
-  className,
-  minEmptyHeight: userMinEmptyHeight = 128,
-  dragRef,
-  collisionAxis,
-}: DropZoneProps) {
+const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(function (
+  {
+    zone,
+    allow,
+    disallow,
+    style,
+    className,
+    minEmptyHeight: userMinEmptyHeight = 128,
+    collisionAxis,
+  },
+  userRef
+) {
   const appContext = useAppContext();
   const ctx = useContext(dropZoneContext);
 
@@ -288,11 +292,7 @@ function DropZoneEdit({
         isAnimating,
       })}${className ? ` ${className}` : ""}`}
       ref={(node) => {
-        ref.current = node;
-
-        dropRef(node);
-
-        if (dragRef) dragRef(node);
+        assignRefs<HTMLDivElement>([ref, dropRef, userRef], node);
       }}
       data-testid={`dropzone:${zoneCompound}`}
       data-puck-dropzone={zoneCompound}
@@ -399,9 +399,12 @@ function DropZoneEdit({
       })}
     </div>
   );
-}
+});
 
-function DropZoneRender({ className, style, zone }: DropZoneProps) {
+const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(function (
+  { className, style, zone },
+  ref
+) {
   const ctx = useContext(dropZoneContext);
 
   const { data, areaId = "root", config } = ctx || {};
@@ -419,7 +422,7 @@ function DropZoneRender({ className, style, zone }: DropZoneProps) {
   }
 
   return (
-    <div className={className} style={style}>
+    <div className={className} style={style} ref={ref}>
       {content.map((item) => {
         const Component = config.components[item.type];
 
@@ -447,22 +450,25 @@ function DropZoneRender({ className, style, zone }: DropZoneProps) {
       })}
     </div>
   );
-}
+});
 
-export function DropZone(props: DropZoneProps) {
+export const DropZone = forwardRef<HTMLDivElement, DropZoneProps>(function (
+  props: DropZoneProps,
+  ref
+) {
   const ctx = useContext(dropZoneContext);
 
   if (ctx?.mode === "edit") {
     return (
       <>
-        <DropZoneEdit {...props} />
+        <DropZoneEdit {...props} ref={ref} />
       </>
     );
   }
 
   return (
     <>
-      <DropZoneRender {...props} />
+      <DropZoneRender {...props} ref={ref} />
     </>
   );
-}
+});
