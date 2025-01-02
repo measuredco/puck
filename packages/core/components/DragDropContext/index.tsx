@@ -18,10 +18,7 @@ import type { Draggable, Droppable } from "@dnd-kit/dom";
 import { getItem, ItemSelector } from "../../lib/get-item";
 import { PathData } from "../DropZone/context";
 import { getZoneId } from "../../lib/get-zone-id";
-import {
-  createNestedDroppablePlugin,
-  findDeepestCandidate,
-} from "./NestedDroppablePlugin";
+import { createNestedDroppablePlugin } from "./NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
 import { CollisionMap } from "../DraggableComponent/collision/dynamic";
@@ -433,14 +430,6 @@ const DragDropContextClient = ({
             });
           }}
           onDragStart={(event, manager) => {
-            setDeepest(
-              findDeepestCandidate(
-                event.operation.position.current,
-                manager,
-                event.operation.source?.element?.ownerDocument || document
-              )
-            );
-
             dispatch({
               type: "setUi",
               ui: { itemSelector: null, isDragging: true },
