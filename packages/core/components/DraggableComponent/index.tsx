@@ -14,7 +14,6 @@ import styles from "./styles.module.css";
 import "./styles.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, CornerLeftUp, Trash } from "lucide-react";
-import { useModifierHeld } from "../../lib/use-modifier-held";
 import { useAppContext } from "../Puck/context";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
@@ -127,7 +126,6 @@ export const DraggableComponent = ({
     state,
   } = useAppContext();
 
-  const isModifierHeld = useModifierHeld("Alt");
   const ctx = useContext(dropZoneContext);
 
   const [localZones, setLocalZones] = useState<Record<string, boolean>>({});
@@ -517,7 +515,6 @@ export const DraggableComponent = ({
             className={getClassName({
               isSelected,
               isDragging: thisIsDragging,
-              isModifierHeld,
               hover: hover || indicativeHover,
             })}
             style={{ ...style }}
