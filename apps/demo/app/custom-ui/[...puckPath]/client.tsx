@@ -13,7 +13,7 @@ const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
   const { appState, dispatch } = usePuck();
 
   const {
-    ui: { mode }
+    ui: { mode },
   } = appState;
 
   const toggleMode = () => {
@@ -21,7 +21,7 @@ const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
       type: "setUi",
       ui: {
         mode: mode === "edit" ? "interactive" : "edit",
-      }
+      },
     });
   };
 
@@ -42,7 +42,9 @@ const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
       <span style={{ fontWeight: 600 }}>Custom UI example </span>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <Button onClick={toggleMode}>Switch to {mode === "edit" ? "interactive" : "edit"} mode</Button>
+          <Button onClick={toggleMode}>
+            Switch to {mode === "edit" ? "interactive" : "edit"} mode
+          </Button>
           <Button
             onClick={() => onPublish(appState.data)}
             icon={<Globe size="14" />}
