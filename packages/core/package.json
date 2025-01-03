@@ -54,7 +54,6 @@
     "@types/object-hash": "^3.0.6",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
-    "@types/ua-parser-js": "^0.7.39",
     "@types/uuid": "^10.0.0",
     "css-box-model": "^1.2.1",
     "eslint": "^7.32.0",
@@ -74,7 +73,6 @@
     "deep-diff": "^1.0.2",
     "object-hash": "^3.0.0",
     "react-hotkeys-hook": "^4.6.1",
-    "ua-parser-js": "^1.0.37",
     "use-debounce": "^9.0.4",
     "uuid": "^9.0.1"
   },

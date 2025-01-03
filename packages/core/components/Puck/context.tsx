@@ -21,7 +21,6 @@ import { getItem } from "../../lib/get-item";
 import { PuckHistory } from "../../lib/use-puck-history";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";
-import { UAParser } from "ua-parser-js";
 import {
   GetPermissions,
   RefreshPermissions,
