@@ -63,7 +63,7 @@
 }
 
 .DropZone > *:not([data-puck-component]) {
-  opacity: 0;
+  opacity: 1;
 }
 
 /* Hide overlays if DropZone is animating, which happens during a resize */

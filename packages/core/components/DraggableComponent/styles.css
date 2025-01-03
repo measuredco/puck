@@ -17,7 +17,7 @@
 }
 
 [data-puck-disabled] {
-  cursor: pointer;
+  cursor: default;
 }
 
 /* Placeholder */

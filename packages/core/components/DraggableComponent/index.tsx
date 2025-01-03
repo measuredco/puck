@@ -125,7 +125,10 @@ export const DraggableComponent = ({
     dispatch,
     iframe,
     state,
+    mode,
   } = useAppContext();
+
+  const isInteractive = mode === "interactive";
 
   const isModifierHeld = useModifierHeld("Alt");
   const ctx = useContext(dropZoneContext);
@@ -186,7 +189,7 @@ export const DraggableComponent = ({
 
   const canCollide = canDrag || userIsDragging;
 
-  const disabled = !isEnabled || !canCollide;
+  const disabled = !isEnabled || !canCollide || isInteractive;
 
   const [dragAxis, setDragAxis] = useState(userDragAxis || autoDragAxis);
 
@@ -238,7 +241,7 @@ export const DraggableComponent = ({
       iframe.enabled
         ? ref.current?.ownerDocument.body
         : ref.current?.closest<HTMLElement>("[data-puck-preview]") ??
-            document.body
+        document.body
     );
   }, [iframe.enabled, ref.current]);
 
@@ -394,14 +397,17 @@ export const DraggableComponent = ({
       setHover(false);
     };
 
-    el.setAttribute("data-puck-component", id);
-    el.setAttribute("data-puck-dnd", id);
-    el.style.position = "relative";
-    el.addEventListener("click", onClick);
-    el.addEventListener("mouseover", _onMouseOver);
-    el.addEventListener("mouseout", _onMouseOut);
+    if (!isInteractive) {
+      el.setAttribute("data-puck-component", id);
+      el.setAttribute("data-puck-dnd", id);
+      el.addEventListener("click", onClick);
+      el.addEventListener("mouseover", _onMouseOver);
+      el.addEventListener("mouseout", _onMouseOut);
+    }
 
-    if (thisIsDragging) {
+    el.style.position = "relative";
+
+    if (thisIsDragging && !isInteractive) {
       el.setAttribute("data-puck-dragging", "");
     } else {
       el.removeAttribute("data-puck-dragging");
@@ -424,6 +430,7 @@ export const DraggableComponent = ({
     userIsDragging,
     thisIsDragging,
     inDroppableZone,
+    isInteractive
   ]);
 
   useEffect(() => {

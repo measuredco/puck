@@ -14,6 +14,7 @@ export type UiState = {
   rightSideBarVisible: boolean;
   itemSelector: ItemSelector | null;
   arrayState: Record<string, ArrayState | undefined>;
+  mode: "interactive" | "edit";
   componentList: Record<
     string,
     {

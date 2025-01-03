@@ -38,6 +38,7 @@ export const defaultAppState: AppState = {
     itemSelector: null,
     componentList: {},
     isDragging: false,
+    mode: "edit",
     viewports: {
       current: {
         width: defaultViewports[0].width,
@@ -72,6 +73,7 @@ export type AppContext<
   resolveData: (newAppState: AppState) => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
+  mode: "interactive" | "edit";
   history: Partial<PuckHistory>;
   viewports: Viewports;
   zoomConfig: ZoomConfig;
@@ -90,8 +92,8 @@ export const defaultContext: AppContext = {
   dispatch: () => null,
   config: { components: {} },
   componentState: {},
-  setComponentState: () => {},
-  resolveData: () => {},
+  setComponentState: () => { },
+  resolveData: () => { },
   plugins: [],
   overrides: {},
   history: {},
@@ -108,6 +110,7 @@ export const defaultContext: AppContext = {
   globalPermissions: {},
   getPermissions: () => ({}),
   refreshPermissions: () => null,
+  mode: "edit"
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
