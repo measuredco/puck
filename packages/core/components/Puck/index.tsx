@@ -33,7 +33,7 @@ import {
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
 import { getItem } from "../../lib/get-item";
-import { PuckAction, StateReducer, createReducer } from "../../reducer";
+import { PuckAction, createReducer } from "../../reducer";
 import { flushZones } from "../../lib/flush-zones";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { AppProvider, defaultAppState } from "./context";
@@ -51,7 +51,6 @@ import { Viewports } from "../../types";
 import { DragDropContext } from "../DragDropContext";
 import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 import { DefaultOverride } from "../DefaultOverride";
-import { DragDropManager, Feedback } from "@dnd-kit/dom";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
 
 const getClassName = getClassNameFactory("Puck", styles);
@@ -387,8 +386,6 @@ export function Puck<
   const selectedComponentLabel = selectedItem
     ? selectedComponentConfig?.["label"] ?? selectedItem.type.toString()
     : "";
-
-  const [manager] = useState(new DragDropManager({ plugins: [Feedback] }));
 
   return (
     <div className={`Puck ${getClassName()}`}>
