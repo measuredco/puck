@@ -92,8 +92,8 @@ export const defaultContext: AppContext = {
   dispatch: () => null,
   config: { components: {} },
   componentState: {},
-  setComponentState: () => { },
-  resolveData: () => { },
+  setComponentState: () => {},
+  resolveData: () => {},
   plugins: [],
   overrides: {},
   history: {},
@@ -110,7 +110,7 @@ export const defaultContext: AppContext = {
   globalPermissions: {},
   getPermissions: () => ({}),
   refreshPermissions: () => null,
-  mode: "edit"
+  mode: "edit",
 };
 
 export const appContext = createContext<AppContext>(defaultContext);

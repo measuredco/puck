@@ -169,9 +169,10 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       zone === rootDroppableId ||
       areaId === "root";
 
-    const hoveringOverArea = nextDeepestArea && !isInteractive
-      ? nextDeepestArea === areaId
-      : isRootZone;
+    const hoveringOverArea =
+      nextDeepestArea && !isInteractive
+        ? nextDeepestArea === areaId
+        : isRootZone;
 
     const userIsDragging = !!draggedItem;
 
@@ -238,7 +239,8 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
     const { ref: dropRef } = useDroppableSafe(droppableConfig);
 
     const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
-    const isAreaSelected = selectedItem && areaId && !isInteractive === selectedItem.props.id;
+    const isAreaSelected =
+      selectedItem && areaId && !isInteractive === selectedItem.props.id;
 
     const [dragAxis, setDragAxis] = useState<DragAxis>(
       collisionAxis || DEFAULT_DRAG_AXIS
@@ -335,10 +337,10 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
           let Render = config.components[item.type]
             ? config.components[item.type].render
             : () => (
-              <div style={{ padding: 48, textAlign: "center" }}>
-                No configuration for {item.type}
-              </div>
-            );
+                <div style={{ padding: 48, textAlign: "center" }}>
+                  No configuration for {item.type}
+                </div>
+              );
 
           const componentConfig: ComponentConfig | undefined =
             config.components[item.type];

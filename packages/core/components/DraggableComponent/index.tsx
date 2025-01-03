@@ -241,7 +241,7 @@ export const DraggableComponent = ({
       iframe.enabled
         ? ref.current?.ownerDocument.body
         : ref.current?.closest<HTMLElement>("[data-puck-preview]") ??
-        document.body
+            document.body
     );
   }, [iframe.enabled, ref.current]);
 
@@ -430,7 +430,7 @@ export const DraggableComponent = ({
     userIsDragging,
     thisIsDragging,
     inDroppableZone,
-    isInteractive
+    isInteractive,
   ]);
 
   useEffect(() => {
