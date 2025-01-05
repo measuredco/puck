@@ -3,6 +3,7 @@ import {
   forwardRef,
   useCallback,
   useContext,
+  useDeferredValue,
   useEffect,
   useMemo,
   useRef,
@@ -186,31 +187,40 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       isEnabled = acceptsTarget(draggedComponentType);
     }
 
-    const preview = useZoneStore((s) => s.previewIndex[zoneCompound]);
-    const previewExists = useZoneStore(
+    const _preview = useZoneStore((s) => s.previewIndex[zoneCompound]);
+    const _previewExists = useZoneStore(
       (s) => Object.keys(s.previewIndex).length > 0
     );
+    // We need to defer as zustand causes re-render before dnd-kit is ready. Without this, the placeholder animation glitches.
+    const preview = useDeferredValue(_preview);
+    const previewExists = useDeferredValue(_previewExists);
 
     const contentWithPreview = useMemo(() => {
-      let contentWithPreview = previewExists
-        ? content.filter((item) => item.props.id !== draggedItemId)
-        : content;
-
       if (preview) {
         if (preview.type === "insert") {
-          contentWithPreview = insert(contentWithPreview, preview.index, {
-            type: "preview",
-            props: { id: preview.props.id },
-          });
+          return insert(
+            content.filter((item) => item.props.id !== preview.props.id),
+            preview.index,
+            {
+              type: "preview",
+              props: { id: preview.props.id },
+            }
+          );
         } else {
-          contentWithPreview = insert(contentWithPreview, preview.index, {
-            type: preview.componentType,
-            props: preview.props,
-          });
+          return insert(
+            content.filter((item) => item.props.id !== preview.props.id),
+            preview.index,
+            {
+              type: preview.componentType,
+              props: preview.props,
+            }
+          );
         }
       }
 
-      return contentWithPreview;
+      return previewExists
+        ? content.filter((item) => item.props.id !== draggedItemId)
+        : content;
     }, [preview, previewExists, content, draggedItemId]);
 
     const isDropEnabled =
