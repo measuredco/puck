@@ -8,9 +8,11 @@ export type BaseData<
 };
 
 export type RootDataWithProps<
-  Props extends DefaultComponentProps = DefaultRootFieldProps
+  Props extends DefaultComponentProps = DefaultRootFieldProps,
+  PropsMap extends DefaultComponentProps = DefaultComponentProps
 > = BaseData<Props> & {
   props: Props;
+  // props: Props & { children?: Content<PropsMap> };
 };
 
 // DEPRECATED
@@ -19,8 +21,9 @@ export type RootDataWithoutProps<
 > = Props;
 
 export type RootData<
-  Props extends DefaultComponentProps = DefaultRootFieldProps
-> = Partial<RootDataWithProps<AsFieldProps<Props>>> &
+  Props extends DefaultComponentProps = DefaultRootFieldProps,
+  PropsMap extends DefaultComponentProps = DefaultComponentProps
+> = Partial<RootDataWithProps<AsFieldProps<Props>, PropsMap>> &
   Partial<RootDataWithoutProps<Props>>; // DEPRECATED
 
 export type ComponentData<
@@ -35,20 +38,23 @@ export type ComponentData<
 export type MappedItem = ComponentData;
 
 export type ComponentDataMap<
-  Props extends Record<string, DefaultComponentProps> = DefaultComponentProps
+  PropsMap extends Record<string, DefaultComponentProps> = DefaultComponentProps
 > = {
-  [K in keyof Props]: ComponentData<Props[K], K extends string ? K : never>;
-}[keyof Props];
+  [K in keyof PropsMap]: ComponentData<
+    PropsMap[K],
+    K extends string ? K : never
+  >;
+}[keyof PropsMap];
 
 export type Content<
   PropsMap extends { [key: string]: any } = { [key: string]: any }
 > = ComponentDataMap<PropsMap>[];
 
 export type Data<
-  Props extends DefaultComponentProps = DefaultComponentProps,
+  PropsMap extends DefaultComponentProps = DefaultComponentProps,
   RootProps extends DefaultComponentProps = DefaultRootFieldProps
 > = {
-  root: RootData<RootProps>;
-  content: Content<Props>;
-  zones?: Record<string, Content<Props>>;
+  root: RootData<RootProps, PropsMap>;
+  content: Content<PropsMap>;
+  zones?: Record<string, Content<PropsMap>>;
 };

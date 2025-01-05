@@ -1,0 +1,72 @@
+.Slot {
+  --resize-animation-ms: 150ms;
+
+  position: relative;
+  height: 100%;
+  outline-offset: -2px;
+  width: 100%;
+}
+
+.Slot--isActive {
+  min-height: var(--min-empty-height);
+}
+
+.Slot--hasChildren {
+  min-height: 0;
+}
+
+.Slot--isActive.Slot:empty {
+  min-height: var(--min-empty-height);
+}
+
+.Slot:not(.Slot--userIsDragging) {
+  transition: min-height var(--resize-animation-ms) ease-in;
+}
+
+.Slot--isAreaSelected,
+.Slot--hoveringOverArea:not(.Slot--isRootZone) {
+  background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
+  outline: 2px dashed var(--puck-color-azure-08);
+}
+
+.Slot:empty {
+  background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
+  outline: 2px dashed var(--puck-color-azure-08);
+}
+
+.Slot--isDestination {
+  outline: 2px dashed var(--puck-color-azure-04) !important;
+}
+
+.Slot--isDestination:not(.Slot--isRootZone) {
+  background: color-mix(
+    in srgb,
+    var(--puck-color-azure-09) 30%,
+    transparent
+  ) !important;
+}
+
+.Slot-item {
+  position: relative;
+}
+
+.Slot-hitbox {
+  position: absolute;
+  bottom: -12px;
+  height: 24px;
+  width: 100%;
+  z-index: 1;
+}
+
+.Slot--isEnabled.Slot--userIsDragging {
+  outline: 2px dashed var(--puck-color-azure-06);
+}
+
+.Slot > *:not([data-puck-component]) {
+  opacity: 0;
+}
+
+/* Hide overlays if Slot is animating, which happens during a resize */
+body:has(.Slot--isAnimating:empty) [data-puck-overlay] {
+  opacity: 0 !important;
+}

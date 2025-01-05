@@ -16,8 +16,15 @@ export type DuplicateAction = {
 
 export type ReplaceAction = {
   type: "replace";
+  id?: string;
   destinationIndex: number;
   destinationZone: string;
+  data: any;
+};
+
+export type ReplaceByIdAction = {
+  type: "replace";
+  id: string;
   data: any;
 };
 
@@ -74,6 +81,7 @@ export type PuckAction = { recordHistory?: boolean } & (
   | InsertAction
   | MoveAction
   | ReplaceAction
+  | ReplaceByIdAction
   | RemoveAction
   | DuplicateAction
   | SetAction

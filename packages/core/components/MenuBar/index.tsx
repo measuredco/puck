@@ -13,15 +13,11 @@ import styles from "./styles.module.css";
 const getClassName = getClassNameFactory("MenuBar", styles);
 
 export function MenuBar<UserData extends Data>({
-  appState,
-  dispatch,
   menuOpen = false,
   onPublish,
   renderHeaderActions,
   setMenuOpen,
 }: {
-  appState: AppState<UserData>;
-  dispatch: (action: PuckAction) => void;
   onPublish?: (data: UserData) => void;
   menuOpen: boolean;
   renderHeaderActions?: (props: {
@@ -63,11 +59,11 @@ export function MenuBar<UserData extends Data>({
           </IconButton>
         </div>
         <>
-          {renderHeaderActions &&
+          {/* {renderHeaderActions &&
             renderHeaderActions({
               state: appState,
               dispatch,
-            })}
+            })} */}
         </>
       </div>
     </div>

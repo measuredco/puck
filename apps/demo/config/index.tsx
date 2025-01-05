@@ -482,6 +482,89 @@ export const initialData: Record<string, UserData> = {
     content: [],
     root: { props: { title: "About Us" } },
   },
+  "/slots": {
+    content: [
+      {
+        type: "Heading",
+        props: {
+          id: "heading-1",
+          align: "left",
+          text: "Level 1",
+          size: "m",
+          layout: {
+            padding: "8px",
+          },
+        },
+      },
+      {
+        type: "Flex",
+        props: {
+          id: "test",
+          gap: 5,
+          justifyContent: "center",
+          direction: "column",
+          wrap: "nowrap",
+          children: [
+            {
+              type: "Heading",
+              props: {
+                id: "heading-2",
+                align: "left",
+                text: "Level 2",
+                size: "m",
+                layout: {
+                  padding: "8px",
+                },
+              },
+            },
+            {
+              type: "Flex",
+              props: {
+                id: "test-2",
+                gap: 5,
+                justifyContent: "center",
+                direction: "column",
+                wrap: "nowrap",
+                children: [
+                  {
+                    type: "Heading",
+                    props: {
+                      id: "heading-3",
+                      align: "left",
+                      text: "Level 3",
+                      size: "m",
+                      layout: {
+                        padding: "8px",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+    root: {
+      props: {
+        title: "Slots",
+        // children: [],
+        // children: [
+        //   {
+        //     type: "Flex",
+        //     props: {
+        //       id: "test",
+        //       gap: 5,
+        //       justifyContent: "center",
+        //       direction: "column",
+        //       wrap: "nowrap",
+        //       children: [],
+        //     },
+        //   },
+        // ],
+      },
+    },
+  },
 };
 
 export default conf;

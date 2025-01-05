@@ -1,10 +1,12 @@
 import React from "react";
-import { ComponentConfig } from "@/core/types";
+import { ComponentConfig, Content } from "@/core/types";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { DropZone } from "@/core/components/DropZone";
+import { Slot } from "@/core/components/Slot";
 import { Section } from "../../components/Section";
 import { WithLayout, withLayout } from "../../components/Layout";
+import { Props } from "../..";
 
 const getClassName = getClassNameFactory("Flex", styles);
 
@@ -13,6 +15,7 @@ export type FlexProps = WithLayout<{
   direction: "row" | "column";
   gap: number;
   wrap: "wrap" | "nowrap";
+  children: Content<Props>;
 }>;
 
 const FlexInternal: ComponentConfig<FlexProps> = {
@@ -47,6 +50,9 @@ const FlexInternal: ComponentConfig<FlexProps> = {
         { label: "false", value: "nowrap" },
       ],
     },
+    children: {
+      type: "slot",
+    },
   },
   defaultProps: {
     justifyContent: "start",
@@ -56,11 +62,15 @@ const FlexInternal: ComponentConfig<FlexProps> = {
     layout: {
       grow: true,
     },
+    children: [],
   },
-  render: ({ justifyContent, direction, gap, wrap }) => {
+  render: ({ justifyContent, direction, gap, wrap, children, id }) => {
     return (
       <Section style={{ height: "100%" }}>
-        <DropZone
+        {children}
+        {/* <Slot content={children} name="children" areaId={id} /> */}
+
+        {/* <DropZone
           className={getClassName()}
           style={{
             justifyContent,
@@ -70,7 +80,18 @@ const FlexInternal: ComponentConfig<FlexProps> = {
           }}
           zone="flex"
           disallow={["Hero", "Stats"]}
-        />
+        /> */}
+        {/* <DropZone
+          className={getClassName()}
+          style={{
+            justifyContent,
+            flexDirection: direction,
+            gap,
+            flexWrap: wrap,
+          }}
+          zone="flex"
+          disallow={["Hero", "Stats"]}
+        /> */}
       </Section>
     );
   },

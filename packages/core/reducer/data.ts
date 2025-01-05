@@ -1,4 +1,4 @@
-import { Config, Content, Data } from "../types";
+import { ComponentData, Config, Content, Data, PathSegment } from "../types";
 import { reorder } from "../lib/reorder";
 import { rootDroppableId } from "../lib/root-droppable-id";
 import { insert } from "../lib/insert";
@@ -16,8 +16,10 @@ import {
   PuckAction,
   ReplaceAction,
   ReorderAction,
+  ReplaceByIdAction,
 } from "./actions";
 import {} from "./actions";
+import { useDataIndexStore } from "../stores/data-index";
 
 // Restore unregistered zones when re-registering in same session
 export const zoneCache: Record<string, Content> = {};
@@ -26,10 +28,98 @@ export const addToZoneCache = (key: string, data: Content) => {
   zoneCache[key] = data;
 };
 
+function setItemById<UserData extends Data>(
+  data: UserData,
+  id: string,
+  updateFn: (item: UserData["content"][0]) => UserData["content"][0]
+): UserData {
+  const { index } = useDataIndexStore.getState();
+
+  const path = index[id].path;
+  if (!path.length) {
+    throw new Error(`Path not found for ID "${id}"`);
+  }
+
+  const reducer = (
+    current: ComponentData,
+    segment: PathSegment,
+    pathIndex: number
+  ) => {
+    const { props } = current;
+
+    const slot: Content = props[segment.propName];
+
+    if (!slot || !Array.isArray(slot)) {
+      throw new Error(
+        `Invalid path: Property "${segment.propName}" is not a valid slot.`
+      );
+    }
+
+    const updatedSlot = [...slot];
+    const nextItem = updatedSlot[segment.index];
+
+    if (!nextItem) {
+      throw new Error(
+        `Invalid path: Index ${segment.index} in slot "${segment.propName}" does not exist.`
+      );
+    }
+
+    if (pathIndex === path.length - 1) {
+      updatedSlot[segment.index] = updateFn(nextItem);
+    } else {
+      updatedSlot[segment.index] = reducer(
+        nextItem,
+        path[pathIndex + 1],
+        pathIndex + 1
+      );
+    }
+
+    return {
+      ...current,
+      props: {
+        ...current.props,
+        [segment.propName]: updatedSlot,
+      },
+    };
+  };
+
+  // Kick off the reducer from the root data object
+  const rootSegment = path[0];
+  if (!data.content[rootSegment.index]) {
+    throw new Error(
+      `Invalid path: Root item does not exist at index ${rootSegment.index}.`
+    );
+  }
+
+  let rootItem: ComponentData = {
+    type: "",
+    props: { id: "", content: data.content },
+  };
+
+  return {
+    ...data,
+    content: reducer(rootItem, rootSegment, 0).props.content,
+  };
+}
+
 export const replaceAction = <UserData extends Data>(
   data: UserData,
-  action: ReplaceAction
+  _action: ReplaceAction | ReplaceByIdAction
 ) => {
+  if (_action.id) {
+    const action = _action as ReplaceByIdAction;
+
+    const newData = setItemById(
+      data,
+      action.id,
+      (item) => (item = action.data)
+    );
+
+    return newData;
+  }
+
+  const action = _action as ReplaceAction;
+
   if (action.destinationZone === rootDroppableId) {
     return {
       ...data,

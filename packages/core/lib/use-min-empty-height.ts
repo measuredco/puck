@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useState } from "react";
-import { ZoneStoreContext } from "./../context";
-import { useContextStore } from "../../../lib/use-context-store";
+import { ZoneStoreContext } from "../components/DropZone/context";
+import { useContextStore } from "../lib/use-context-store";
 
 export const useMinEmptyHeight = ({
   zoneCompound,

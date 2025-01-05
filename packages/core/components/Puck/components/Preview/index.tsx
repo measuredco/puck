@@ -8,6 +8,7 @@ import { getClassNameFactory } from "../../../../lib";
 import { DefaultRootRenderProps } from "../../../../types";
 import { Render } from "../../../Render";
 import { BubbledPointerEvent } from "../../../../lib/bubble-pointer-event";
+import { Slot } from "../../../Slot";
 
 const getClassName = getClassNameFactory("PuckPreview", styles);
 
@@ -91,6 +92,9 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         editMode={true} // DEPRECATED
       >
         <DropZonePure zone={rootDroppableId} />
+        {/* TODO migrate to state.data.root.children */}
+        <Slot name="content" content={state.data.content} config={config} />
+        {/* <DropZone zone={rootDroppableId} /> */}
       </Page>
     ) : (
       <Render data={state.data} config={config} />

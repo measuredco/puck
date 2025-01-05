@@ -2,11 +2,13 @@ import { Loader } from "../../../Loader";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import {
   ReplaceAction,
+  ReplaceByIdAction,
   SetAction,
   replaceAction,
   setAction,
 } from "../../../../reducer";
 import { UiState } from "../../../../types";
+import type { Data } from "../../../../types";
 import { AutoFieldPrivate } from "../../../AutoField";
 import { useAppContext } from "../../context";
 
@@ -84,15 +86,29 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
             };
 
             if (selectedItem && itemSelector) {
-              const replaceActionData: ReplaceAction = {
-                type: "replace",
-                destinationIndex: itemSelector.index,
-                destinationZone: itemSelector.zone || rootDroppableId,
-                data: { ...selectedItem, props: newProps },
-              };
+              let replacedData: Data = data;
+
+              if (itemSelector.id) {
+                const replaceActionData: ReplaceByIdAction = {
+                  type: "replace",
+                  id: itemSelector.id,
+                  data: { ...selectedItem, props: newProps },
+                };
+
+                replacedData = replaceAction(data, replaceActionData);
+              } else if (typeof itemSelector.index !== "undefined") {
+                const replaceActionData: ReplaceAction = {
+                  type: "replace",
+                  destinationIndex: itemSelector.index,
+                  destinationZone: itemSelector.zone || rootDroppableId,
+                  data: { ...selectedItem, props: newProps },
+                };
+
+                replacedData = replaceAction(data, replaceActionData);
+              }
 
               // We use `replace` action, then feed into `set` action so we can also process any UI changes
-              const replacedData = replaceAction(data, replaceActionData);
+              // const replacedData = replaceAction(data, replaceActionData);
 
               const setActionData: SetAction = {
                 type: "set",

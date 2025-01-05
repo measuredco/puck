@@ -16,7 +16,7 @@ import {
   Plugin,
   UserGenerics,
 } from "../../types";
-import { PuckAction } from "../../reducer";
+import { createReducer, PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
 import { PuckHistory } from "../../lib/use-puck-history";
 import { defaultViewports } from "../ViewportControls/default-viewports";
@@ -27,6 +27,7 @@ import {
   useResolvedPermissions,
 } from "../../lib/use-resolved-permissions";
 import { useResolvedData } from "../../lib/use-resolved-data";
+import { create } from "zustand";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {} },
@@ -109,6 +110,17 @@ export const defaultContext: AppContext = {
   getPermissions: () => ({}),
   refreshPermissions: () => null,
 };
+
+export const useAppStore = create<AppContext>((set) => ({
+  ...defaultContext,
+  // TODO move to own store?
+  dispatch: (action: PuckAction) =>
+    set((s) => {
+      const dispatch = createReducer({ config: s.config, record: () => {} });
+
+      return { ...s, state: dispatch(s.state, action) };
+    }),
+}));
 
 export const appContext = createContext<AppContext>(defaultContext);
 
@@ -205,13 +217,14 @@ export const AppProvider = ({
 };
 
 export function useAppContext<UserConfig extends Config = Config>() {
-  const mainContext = useContext<AppContext<UserConfig>>(appContext as any);
+  // const mainContext = useContext<AppContext<UserConfig>>(appContext as any);
+  const store = useAppStore();
 
   return {
-    ...mainContext,
+    ...store,
     // Helpers
     setUi: (ui: Partial<UiState>, recordHistory?: boolean) => {
-      return mainContext.dispatch({
+      return store.dispatch({
         type: "setUi",
         ui,
         recordHistory,

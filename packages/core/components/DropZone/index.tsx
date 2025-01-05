@@ -23,7 +23,7 @@ import { DrawerItemInner } from "../Drawer";
 import { pointerIntersection } from "@dnd-kit/collision";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useDroppableSafe } from "../../lib/dnd/dnd-kit/safe";
-import { useMinEmptyHeight } from "./lib/use-min-empty-height";
+import { useMinEmptyHeight } from "../../lib/use-min-empty-height";
 import { assignRefs } from "../../lib/assign-refs";
 import { useContentWithPreview } from "./lib/use-content-with-preview";
 import { useDragAxis } from "./lib/use-drag-axis";

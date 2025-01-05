@@ -1,0 +1,81 @@
+.SlotChild {
+  position: absolute;
+  pointer-events: none;
+
+  --overlay-background: color-mix(
+    in srgb,
+    var(--puck-color-azure-08) 30%,
+    transparent
+  );
+}
+
+.SlotChild-overlay {
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  outline: 2px var(--puck-color-azure-09) solid;
+  outline-offset: -2px;
+  position: absolute;
+  pointer-events: none;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+.SlotChild:focus-visible > .SlotChild-overlay {
+  outline: 1px solid var(--puck-color-azure-05);
+}
+
+.SlotChild-loadingOverlay {
+  background: var(--puck-color-white);
+  color: var(--puck-color-grey-03);
+  border-radius: 4px;
+  display: flex;
+  padding: 8px;
+  top: 8px;
+  right: 8px;
+  position: absolute;
+  z-index: 1;
+  pointer-events: all;
+  box-sizing: border-box;
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.SlotChild--hover:not(.SlotChild--isLocked) > .SlotChild-overlay {
+  background: var(--overlay-background);
+}
+
+.SlotChild--hover > .SlotChild-overlay {
+  outline: 2px var(--puck-color-azure-09) solid;
+}
+
+.SlotChild--isSelected > .SlotChild-overlay {
+  outline-color: var(--puck-color-azure-07);
+}
+
+/* Won't work in FF */
+.SlotChild:has(.SlotChild--hover > .SlotChild-overlay) > .SlotChild-overlay {
+  display: none;
+}
+
+.SlotChild-actionsOverlay {
+  position: sticky;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.SlotChild--isSelected .SlotChild-actionsOverlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.SlotChild-actions {
+  position: absolute;
+  width: auto;
+  cursor: grab;
+  display: flex;
+  box-sizing: border-box;
+  transform-origin: right top;
+}

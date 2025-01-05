@@ -7,6 +7,13 @@ export type ItemWithId = {
   _originalIndex: number;
 };
 
+export type PathSegment = {
+  index: number;
+  propName: string;
+  parentId?: string;
+};
+export type Path = PathSegment[];
+
 export type ArrayState = { items: ItemWithId[]; openId: string };
 
 export type UiState = {

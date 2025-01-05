@@ -1,0 +1,43 @@
+.Services {
+  display: flex;
+  padding-bottom: 48px;
+  padding-top: 48px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .Services {
+    padding-bottom: 156px;
+    padding-top: 156px;
+  }
+}
+
+.Services-title {
+  max-width: 1156px;
+}
+
+.Services-description {
+  max-width: 896px;
+}
+
+.Services-heading {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .Services-heading {
+    font-size: 64px;
+  }
+}
+
+.Services-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}

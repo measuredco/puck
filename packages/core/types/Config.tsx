@@ -1,15 +1,25 @@
-import type { JSX } from "react";
+import type { JSX, ReactNode } from "react";
 import { Fields } from "./Fields";
-import { ComponentData, RootData } from "./Data";
+import { ComponentData, RootData, Content } from "./Data";
 
 import { AsFieldProps, WithChildren, WithId, WithPuckProps } from "./Utils";
 import { AppState } from "./AppState";
 import { DefaultComponentProps } from "./Props";
 import { Permissions } from "./API";
 
-export type PuckComponent<Props> = (
-  props: WithId<WithPuckProps<Props>>
-) => JSX.Element;
+type WithContent<ComponentProps> = {
+  [PropName in keyof ComponentProps]: ComponentProps[PropName] extends Content
+    ? ReactNode
+    : ComponentProps[PropName];
+};
+
+export type ComponentProps<
+  Props extends DefaultComponentProps = DefaultComponentProps
+> = WithContent<WithId<WithPuckProps<Props>>>;
+
+export type PuckComponent<
+  Props extends DefaultComponentProps = DefaultComponentProps
+> = (props: ComponentProps<Props>) => JSX.Element;
 
 export type ComponentConfig<
   RenderProps extends DefaultComponentProps = DefaultComponentProps,

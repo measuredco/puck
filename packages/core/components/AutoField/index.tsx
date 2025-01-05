@@ -149,6 +149,7 @@ function AutoFieldInternal<
     radio: RadioField,
     text: DefaultField,
     number: DefaultField,
+    slot: () => null,
   };
 
   const render = {
@@ -219,31 +220,35 @@ function AutoFieldInternal<
 
   const children = defaultFields[field.type](mergedProps);
 
-  const Render = render[field.type] as (props: FieldProps) => ReactElement;
+  if (children) {
+    const Render = render[field.type] as (props: FieldProps) => ReactElement;
 
-  return (
-    <NestedFieldContext.Provider
-      value={{
-        readOnlyFields:
-          nestedFieldContext.readOnlyFields || selectedItem?.readOnly || {},
-        localName: nestedFieldContext.localName,
-      }}
-    >
-      <div
-        className={getClassNameWrapper()}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onClick={(e) => {
-          // Prevent propagation of any click events to parent field.
-          // For example, a field within an array may bubble an event
-          // and fail to stop propagation.
-          e.stopPropagation();
+    return (
+      <NestedFieldContext.Provider
+        value={{
+          readOnlyFields:
+            nestedFieldContext.readOnlyFields || selectedItem?.readOnly || {},
+          localName: nestedFieldContext.localName,
         }}
       >
-        <Render {...mergedProps}>{children}</Render>
-      </div>
-    </NestedFieldContext.Provider>
-  );
+        <div
+          className={getClassNameWrapper()}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onClick={(e) => {
+            // Prevent propagation of any click events to parent field.
+            // For example, a field within an array may bubble an event
+            // and fail to stop propagation.
+            e.stopPropagation();
+          }}
+        >
+          <Render {...mergedProps}>{children}</Render>
+        </div>
+      </NestedFieldContext.Provider>
+    );
+  }
+
+  return null;
 }
 
 type FieldNoLabel<Props extends any = any> = Omit<Field<Props>, "label">;

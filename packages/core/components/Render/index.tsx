@@ -3,6 +3,7 @@
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { Config, Data, UserGenerics } from "../../types";
 import { DropZonePure, DropZoneProvider } from "../DropZone";
+import { Slot } from "../Slot";
 
 export function Render<
   UserConfig extends Config = Config,
@@ -46,7 +47,10 @@ export function Render<
           editMode={false}
           id={"puck-root"}
         >
-          <DropZonePure zone={rootDroppableId} />
+          {data.content && (
+            <Slot name="content" content={data.content} config={config} />
+          )}
+          {/* <DropZonePure zone={rootDroppableId} /> */}
         </config.root.render>
       </DropZoneProvider>
     );
@@ -62,7 +66,10 @@ export function Render<
         path: [],
       }}
     >
-      <DropZonePure zone={rootDroppableId} />
+      {data.content && (
+        <Slot name="content" content={data.content} config={config} />
+      )}
+      {/* <DropZonePure zone={rootDroppableId} /> */}
     </DropZoneProvider>
   );
 }
