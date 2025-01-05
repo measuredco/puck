@@ -1,25 +1,24 @@
 import { RefObject, useEffect, useState } from "react";
-import { ComponentDndData } from "../DraggableComponent";
-import { Draggable } from "@dnd-kit/abstract";
+import { useZoneStore } from "./context";
 
 export const useMinEmptyHeight = ({
-  draggedItem,
   zoneCompound,
   userMinEmptyHeight,
   ref,
 }: {
-  draggedItem: Draggable<any> | null | undefined;
   zoneCompound: string;
   userMinEmptyHeight: number;
   ref: RefObject<HTMLDivElement | null>;
 }) => {
   const [prevHeight, setPrevHeight] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const draggedItem = useZoneStore((s) =>
+    s.draggedItem?.data.zone === zoneCompound ? s.draggedItem : null
+  );
+  const isZone = useZoneStore((s) => s.draggedItem?.data.zone === zoneCompound);
   useEffect(() => {
     if (draggedItem && ref.current) {
-      const componentData = draggedItem.data as ComponentDndData;
-
-      if (componentData.zone === zoneCompound) {
+      if (isZone) {
         const rect = ref.current.getBoundingClientRect();
 
         setPrevHeight(rect.height);
