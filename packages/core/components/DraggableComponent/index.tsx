@@ -27,6 +27,7 @@ import { Data, DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useSortableSafe } from "../../lib/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
+import { useZoneStore } from "../DropZone/context";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -180,7 +181,7 @@ export const DraggableComponent = ({
     }
   }, [state, index, zoneCompound, getPermissions]);
 
-  const userIsDragging = !!ctx?.draggedItem;
+  const userIsDragging = useZoneStore((s) => !!s.draggedItem);
 
   const canCollide = canDrag || userIsDragging;
 
@@ -293,10 +294,12 @@ export const DraggableComponent = ({
   }, [ref.current]);
 
   useEffect(() => {
-    ctx?.registerPath!({
-      index,
-      zone: zoneCompound,
-    });
+    if (isSelected) {
+      ctx?.registerPath!({
+        index,
+        zone: zoneCompound,
+      });
+    }
   }, [isSelected]);
 
   const CustomActionBar = useMemo(

@@ -8,9 +8,9 @@ import {
 import { Config, Data } from "../../types";
 import { ItemSelector } from "../../lib/get-item";
 
-import { PuckAction } from "../../reducer";
 import type { Draggable } from "@dnd-kit/dom";
 import { useAppContext } from "../Puck/context";
+import { create } from "zustand";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
@@ -23,7 +23,6 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   areaId?: string;
   zoneCompound?: string;
   index?: number;
-  draggedItem?: Draggable | null;
   hoveringComponent?: string | null;
   setHoveringComponent?: (id: string | null) => void;
   registerZoneArea?: (areaId: string) => void;
@@ -37,14 +36,34 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   depth: number;
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
   unregisterLocalZone?: (zone: string) => void;
-  deepestZone?: string | null;
-  deepestArea?: string | null;
-  nextDeepestZone?: string | null;
-  nextDeepestArea?: string | null;
   path: string[];
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
+
+export type Preview = {
+  componentType: string;
+  index: number;
+  zone: string;
+  props: Record<string, any>;
+  type: "insert" | "move";
+} | null;
+
+export const useZoneStore = create<{
+  zoneDepthIndex: Record<string, boolean>;
+  areaDepthIndex: Record<string, boolean>;
+  nextZoneDepthIndex: Record<string, boolean>;
+  nextAreaDepthIndex: Record<string, boolean>;
+  previewIndex: Record<string, Preview>;
+  draggedItem?: Draggable | null;
+}>(() => ({
+  zoneDepthIndex: {},
+  areaDepthIndex: {},
+  nextAreaDepthIndex: {},
+  nextZoneDepthIndex: {},
+  previewIndex: {},
+  draggedItem: null,
+}));
 
 export const DropZoneProvider = ({
   children,
