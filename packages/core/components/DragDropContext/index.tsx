@@ -26,6 +26,7 @@ import { ComponentDndData } from "../DraggableComponent";
 import { isElement } from "@dnd-kit/dom/utilities";
 
 import { PointerSensor } from "./PointerSensor";
+import { collisionStore } from "../DraggableComponent/collision/dynamic/store";
 
 const DEBUG = false;
 
@@ -94,6 +95,13 @@ const DragDropContextClient = ({
       }
 
       useZoneStore.setState({ zoneDepthIndex, areaDepthIndex });
+
+      // Disable fallback collisions temporarily after zone change, as
+      // these can cause unexpected collisions
+      collisionStore.setState({ fallbackEnabled: false });
+      setTimeout(() => {
+        collisionStore.setState({ fallbackEnabled: true });
+      }, 500);
 
       setTimeout(() => {
         // Force update after debounce
