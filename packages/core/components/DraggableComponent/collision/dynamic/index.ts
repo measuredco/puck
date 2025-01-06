@@ -12,6 +12,7 @@ import { trackMovementInterval } from "./track-movement-interval";
 import { collisionDebug } from "../collision-debug";
 import { closestCorners } from "@dnd-kit/collision";
 import { DragAxis, Direction } from "../../../../types";
+import { collisionStore } from "./store";
 
 export type CollisionMap = Record<
   string,
@@ -58,6 +59,8 @@ export const createDynamicCollisionDetector = (
     }
 
     const { center: dragCenter } = dragShape;
+
+    const { fallbackEnabled } = collisionStore.getState();
 
     const interval = trackMovementInterval(position.current, dragAxis);
 
@@ -128,7 +131,7 @@ export const createDynamicCollisionDetector = (
       return { ...collision, id: shouldFlushId ? "flush" : collision.id };
     }
 
-    if (dragOperation.source?.id !== droppable.id) {
+    if (fallbackEnabled && dragOperation.source?.id !== droppable.id) {
       // Only calculate fallbacks when the draggable sits within the droppable's axis projection
       const xAxisIntersection =
         dropShape.boundingRectangle.right > dragShape.boundingRectangle.left &&
