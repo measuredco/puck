@@ -118,7 +118,9 @@ const getChanged = (params: DeepestParams, id: string) => {
     zoneChanged = true;
   } else if (!params.zone && stateHasZone) {
     zoneChanged = true;
-  } else if (params.area && !areaDepthIndex[params.area]) {
+  }
+
+  if (params.area && !areaDepthIndex[params.area]) {
     areaChanged = true;
   } else if (!params.area && stateHasArea) {
     areaChanged = true;
