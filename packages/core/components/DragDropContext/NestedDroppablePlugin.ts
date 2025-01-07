@@ -198,9 +198,10 @@ export const findDeepestCandidate = (
   };
 };
 
-export const createNestedDroppablePlugin = ({
-  onChange,
-}: NestedDroppablePluginOptions) =>
+export const createNestedDroppablePlugin = (
+  { onChange }: NestedDroppablePluginOptions,
+  id: string
+) =>
   class NestedDroppablePlugin extends Plugin<DragDropManager, {}> {
     constructor(manager: DragDropManager, options?: {}) {
       super(manager);
@@ -228,7 +229,18 @@ export const createNestedDroppablePlugin = ({
         const handleMoveThrottled = throttle(handleMove, 50);
 
         const handlePointerMove = (event: PointerEvent) => {
-          handleMoveThrottled(event as BubbledPointerEvent);
+          const target = event.target as HTMLElement;
+
+          let elements = target.ownerDocument.elementsFromPoint(
+            event.clientX,
+            event.clientY
+          );
+
+          const overEl = elements.some((el) => el.id === id);
+
+          if (overEl) {
+            handleMoveThrottled(event as BubbledPointerEvent);
+          }
         };
 
         document.body.addEventListener("pointermove", handlePointerMove, {
