@@ -1,6 +1,8 @@
 import { getBox } from "./get-box.mjs";
 import { pause } from "./pause.mjs";
 
+const TIME_PREFIX = 0;
+
 export async function dragAndDrop(
   page,
   sourceSelector,
@@ -17,37 +19,33 @@ export async function dragAndDrop(
   );
   await page.mouse.down(); // Simulate drag start
 
-  await pause(300);
+  await pause(TIME_PREFIX + 300);
 
   if (position === "top") {
-    // Move below
+    // Move to top
+    await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y - 4);
+
+    await pause(TIME_PREFIX + 50);
+
+    // Move to center
     await page.mouse.move(
       targetBox.x + targetBox.width / 2,
-      targetBox.y + targetBox.height * 2
+      targetBox.y + targetBox.height / 2
     );
-
-    await pause(10);
+    await pause(TIME_PREFIX + 50);
 
     // Move to top
-    await page.mouse.move(
-      targetBox.x + targetBox.width / 2,
-      targetBox.y + 4 // move to top to trigger directional move
-    );
+    await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y - 4);
   } else {
     await page.mouse.move(
       targetBox.x + targetBox.width / 2,
       targetBox.y + targetBox.height / 2
     );
-
-    await pause(10);
-
-    await page.mouse.move(
-      targetBox.x + targetBox.width / 2,
-      targetBox.y + targetBox.height / 2 + 1 // wiggle
-    );
   }
+
+  await pause(TIME_PREFIX + 10);
 
   await page.mouse.up(); // Simulate drop
 
-  await pause(300);
+  await pause(TIME_PREFIX + 500);
 }
