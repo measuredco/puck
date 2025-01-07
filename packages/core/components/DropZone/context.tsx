@@ -37,6 +37,7 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
   unregisterLocalZone?: (zone: string) => void;
   path: string[];
+  providerId: string;
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
@@ -49,21 +50,18 @@ export type Preview = {
   type: "insert" | "move";
 } | null;
 
-export const useZoneStore = create<{
+export type ZoneStore = {
   zoneDepthIndex: Record<string, boolean>;
   areaDepthIndex: Record<string, boolean>;
   nextZoneDepthIndex: Record<string, boolean>;
   nextAreaDepthIndex: Record<string, boolean>;
   previewIndex: Record<string, Preview>;
   draggedItem?: Draggable | null;
-}>(() => ({
-  zoneDepthIndex: {},
-  areaDepthIndex: {},
-  nextAreaDepthIndex: {},
-  nextZoneDepthIndex: {},
-  previewIndex: {},
-  draggedItem: null,
-}));
+};
+
+export const useZoneStore = create<Record<string, ZoneStore | undefined>>(
+  () => ({})
+);
 
 export const DropZoneProvider = ({
   children,

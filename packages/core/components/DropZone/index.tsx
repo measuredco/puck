@@ -28,6 +28,7 @@ import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useDroppableSafe } from "../../lib/dnd-kit/safe";
 import { useMinEmptyHeight } from "./use-min-empty-height";
 import { assignRefs } from "../../lib/assign-refs";
+import { useShallow } from "zustand/react/shallow";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -76,6 +77,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       unregisterLocalZone,
       path = [],
       activeZones,
+      providerId,
     } = ctx!;
 
     let zoneCompound = rootDroppableId;
@@ -91,18 +93,30 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       zone === rootDroppableId ||
       areaId === "root";
 
-    const isDeepestZone = useZoneStore((s) => s.zoneDepthIndex[zoneCompound]);
-    const inNextDeepestArea = useZoneStore(
-      (s) => s.nextAreaDepthIndex[areaId || ""]
+    const {
+      isDeepestZone,
+      inNextDeepestArea,
+      draggedItemId,
+      draggedComponentType,
+      userIsDragging,
+      preview: _preview,
+      previewExists: _previewExists,
+    } = useZoneStore(
+      useShallow((s) => {
+        const providerState = s[providerId];
+
+        return {
+          isDeepestZone: providerState?.zoneDepthIndex[zoneCompound] ?? false,
+          inNextDeepestArea: providerState?.nextAreaDepthIndex[areaId || ""],
+          draggedItemId: providerState?.draggedItem?.id,
+          draggedComponentType: providerState?.draggedItem?.data.componentType,
+          userIsDragging: !!providerState?.draggedItem,
+          preview: providerState?.previewIndex[zoneCompound],
+          previewExists:
+            Object.keys(providerState?.previewIndex || {}).length > 0,
+        };
+      })
     );
-    const draggedItemId = useZoneStore((s) => s.draggedItem?.id);
-    const draggedComponentType = useZoneStore((s) => {
-      if (s.draggedItem) {
-        const data = s.draggedItem?.data as ComponentDndData;
-        return data.componentType;
-      }
-    });
-    const userIsDragging = useZoneStore((s) => !!s.draggedItem);
 
     const { itemSelector } = appContext.state.ui;
 
@@ -187,10 +201,6 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       isEnabled = acceptsTarget(draggedComponentType);
     }
 
-    const _preview = useZoneStore((s) => s.previewIndex[zoneCompound]);
-    const _previewExists = useZoneStore(
-      (s) => Object.keys(s.previewIndex).length > 0
-    );
     // We need to defer as zustand causes re-render before dnd-kit is ready. Without this, the placeholder animation glitches.
     const preview = useDeferredValue(_preview);
     const previewExists = useDeferredValue(_previewExists);
@@ -287,6 +297,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       zoneCompound,
       userMinEmptyHeight,
       ref,
+      providerId,
     });
 
     return (
@@ -452,6 +463,7 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
                   areaId: item.props.id,
                   depth: 1,
                   path: [],
+                  providerId: "",
                 }}
               >
                 <Component.render
