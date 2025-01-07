@@ -17,7 +17,12 @@ import { DragDropEvents } from "@dnd-kit/abstract";
 import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
 import { getItem, ItemSelector } from "../../lib/get-item";
-import { PathData, Preview, useZoneStore } from "../DropZone/context";
+import {
+  PathData,
+  Preview,
+  useZoneStore,
+  ZoneStore,
+} from "../DropZone/context";
 import { getZoneId } from "../../lib/get-zone-id";
 import { createNestedDroppablePlugin } from "./NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
@@ -99,14 +104,12 @@ const useTempDisableFallback = (timeout: number) => {
   }, []);
 };
 
-const getChanged = (params: DeepestParams) => {
-  const { zoneDepthIndex, areaDepthIndex } = useZoneStore.getState();
+const getChanged = (params: DeepestParams, id: string) => {
+  const { zoneDepthIndex = {}, areaDepthIndex = {} } =
+    useZoneStore.getState()[id] || {};
 
   const stateHasZone = Object.keys(zoneDepthIndex).length > 0;
   const stateHasArea = Object.keys(areaDepthIndex).length > 0;
-
-  if (params.zone) {
-  }
 
   let zoneChanged = false;
   let areaChanged = false;
@@ -130,6 +133,8 @@ const DragDropContextClient = ({
 }: DragDropContextProps) => {
   const { state, config, dispatch, resolveData } = useAppContext();
 
+  const id = useId();
+
   const { data } = state;
 
   const debouncedParamsRef = useRef<DeepestParams | null>(null);
@@ -138,11 +143,11 @@ const DragDropContextClient = ({
 
   const setDeepestAndCollide = useCallback(
     (params: DeepestParams, manager: DragDropManager) => {
-      const { zoneChanged, areaChanged } = getChanged(params);
+      const { zoneChanged, areaChanged } = getChanged(params, id);
 
       if (!zoneChanged && !areaChanged) return;
 
-      useZoneStore.setState({
+      setProviderStore({
         zoneDepthIndex: params.zone ? { [params.zone]: true } : {},
         areaDepthIndex: params.area ? { [params.area]: true } : {},
       });
@@ -158,7 +163,7 @@ const DragDropContextClient = ({
 
       debouncedParamsRef.current = null;
     },
-    []
+    [id]
   );
 
   const setDeepestDb = useDebouncedCallback(
@@ -175,15 +180,13 @@ const DragDropContextClient = ({
     if (DEBUG) {
       useZoneStore.subscribe((s) =>
         console.log(
-          s.previewIndex,
-          Object.entries(s.zoneDepthIndex)[0]?.[0],
-          Object.entries(s.areaDepthIndex)[0]?.[0]
+          s[id]?.previewIndex,
+          Object.entries(s[id]?.zoneDepthIndex || {})[0]?.[0],
+          Object.entries(s[id]?.areaDepthIndex || {})[0]?.[0]
         )
       );
     }
   }, []);
-
-  const id = useId();
 
   const [plugins] = useState(() => [
     ...(disableAutoScroll
@@ -192,9 +195,9 @@ const DragDropContextClient = ({
     createNestedDroppablePlugin(
       {
         onChange: (params, manager) => {
-          const state = useZoneStore.getState();
+          const state = useZoneStore.getState()[id];
 
-          const { zoneChanged, areaChanged } = getChanged(params);
+          const { zoneChanged, areaChanged } = getChanged(params, id);
 
           const isDragging = manager.dragOperation.status.dragging;
 
@@ -210,10 +213,10 @@ const DragDropContextClient = ({
               nextAreaDepthIndex = { [params.area]: true };
             }
 
-            useZoneStore.setState({ nextZoneDepthIndex, nextAreaDepthIndex });
+            setProviderStore({ nextZoneDepthIndex, nextAreaDepthIndex });
           }
 
-          if (params.zone !== "void" && state.zoneDepthIndex["void"]) {
+          if (params.zone !== "void" && state?.zoneDepthIndex["void"]) {
             setDeepestAndCollide(params, manager);
             return;
           }
@@ -314,6 +317,32 @@ const DragDropContextClient = ({
 
   const initialSelector = useRef<{ zone: string; index: number }>(undefined);
 
+  const setProviderStore = useCallback(
+    (v: Partial<ZoneStore>) => {
+      useZoneStore.setState((s) =>
+        s[id]
+          ? {
+              [id]: { ...s[id], ...v },
+            }
+          : {}
+      );
+    },
+    [id]
+  );
+
+  useEffect(() => {
+    useZoneStore.setState({
+      [id]: {
+        zoneDepthIndex: {},
+        nextZoneDepthIndex: {},
+        areaDepthIndex: {},
+        nextAreaDepthIndex: {},
+        draggedItem: null,
+        previewIndex: {},
+      },
+    });
+  }, [id]);
+
   return (
     <div id={id}>
       <dragListenerContext.Provider
@@ -329,14 +358,14 @@ const DragDropContextClient = ({
             const { source, target } = event.operation;
 
             if (!source) {
-              useZoneStore.setState({ draggedItem: null });
+              setProviderStore({ draggedItem: null });
 
               return;
             }
 
             const { zone, index } = source.data as ComponentDndData;
 
-            const { previewIndex } = useZoneStore.getState();
+            const { previewIndex = {} } = useZoneStore.getState()[id] || {};
 
             const thisPreview: Preview | null =
               previewIndex[zone]?.props.id === source.id
@@ -345,11 +374,11 @@ const DragDropContextClient = ({
 
             // Delay insert until animation has finished
             setTimeout(() => {
-              useZoneStore.setState({ draggedItem: null });
+              setProviderStore({ draggedItem: null });
 
               // Tidy up cancellation
               if (event.canceled || target?.type === "void") {
-                useZoneStore.setState({ previewIndex: {} });
+                setProviderStore({ previewIndex: {} });
 
                 dragListeners.dragend?.forEach((fn) => {
                   fn(event, manager);
@@ -360,7 +389,7 @@ const DragDropContextClient = ({
 
               // Finalise the drag
               if (thisPreview) {
-                useZoneStore.setState({ previewIndex: {} });
+                setProviderStore({ previewIndex: {} });
 
                 if (thisPreview.type === "insert") {
                   insertComponent(
@@ -402,7 +431,7 @@ const DragDropContextClient = ({
             // Prevent the optimistic re-ordering
             event.preventDefault();
 
-            const draggedItem = useZoneStore.getState().draggedItem;
+            const draggedItem = useZoneStore.getState()[id]?.draggedItem;
 
             // Drag end can sometimes trigger after drag
             if (!draggedItem) return;
@@ -465,7 +494,7 @@ const DragDropContextClient = ({
             }
 
             if (dragMode.current === "new") {
-              useZoneStore.setState({
+              setProviderStore({
                 previewIndex: {
                   [targetZone]: {
                     componentType: sourceData.componentType,
@@ -489,7 +518,7 @@ const DragDropContextClient = ({
               const item = getItem(initialSelector.current, data);
 
               if (item) {
-                useZoneStore.setState({
+                setProviderStore({
                   previewIndex: {
                     [targetZone]: {
                       componentType: sourceData.componentType,
@@ -524,7 +553,7 @@ const DragDropContextClient = ({
             dragMode.current = isNewComponent ? "new" : "existing";
             initialSelector.current = undefined;
 
-            useZoneStore.setState({ draggedItem: event.operation.source });
+            setProviderStore({ draggedItem: event.operation.source });
           }}
         >
           <DropZoneProvider
@@ -537,6 +566,7 @@ const DragDropContextClient = ({
               registerPath,
               pathData,
               path: [],
+              providerId: id,
             }}
           >
             {children}
