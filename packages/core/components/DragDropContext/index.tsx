@@ -511,12 +511,6 @@ const DragDropContextClient = ({
           });
         }}
         onBeforeDragStart={(event) => {
-          const draggedItem = useZoneStore.getState().draggedItem;
-
-          if (draggedItem) {
-            console.warn("New drag started before previous drag cleaned up");
-          }
-
           const isNewComponent = event.operation.source?.data.type === "drawer";
 
           dragMode.current = isNewComponent ? "new" : "existing";
