@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import config, {
-  initialData,
-  Props,
-  RootProps,
-  UserConfig,
-  UserData,
-} from "../config";
+import config, { initialData, Props, RootProps, UserData } from "../config";
 import { resolveAllData } from "@/core";
 
 const isBrowser = typeof window !== "undefined";
