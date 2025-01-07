@@ -220,18 +220,7 @@ export const createNestedDroppablePlugin = (
           const target = (event.originalTarget || event.target) as HTMLElement;
           const ownerDocument = target?.ownerDocument;
 
-          onChange(
-            findDeepestCandidate(position, manager, ownerDocument),
-            manager
-          );
-        };
-
-        const handleMoveThrottled = throttle(handleMove, 50);
-
-        const handlePointerMove = (event: PointerEvent) => {
-          const target = event.target as HTMLElement;
-
-          let elements = target.ownerDocument.elementsFromPoint(
+          const elements = document.elementsFromPoint(
             event.clientX,
             event.clientY
           );
@@ -239,8 +228,17 @@ export const createNestedDroppablePlugin = (
           const overEl = elements.some((el) => el.id === id);
 
           if (overEl) {
-            handleMoveThrottled(event as BubbledPointerEvent);
+            onChange(
+              findDeepestCandidate(position, manager, ownerDocument),
+              manager
+            );
           }
+        };
+
+        const handleMoveThrottled = throttle(handleMove, 50);
+
+        const handlePointerMove = (event: PointerEvent) => {
+          handleMoveThrottled(event as BubbledPointerEvent);
         };
 
         document.body.addEventListener("pointermove", handlePointerMove, {
