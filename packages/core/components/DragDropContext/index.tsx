@@ -27,6 +27,7 @@ import { isElement } from "@dnd-kit/dom/utilities";
 
 import { PointerSensor } from "./PointerSensor";
 import { collisionStore } from "../DraggableComponent/collision/dynamic/store";
+import { generateId } from "../../lib/generate-id";
 
 const DEBUG = false;
 
@@ -71,6 +72,57 @@ type DragDropContextProps = {
   disableAutoScroll?: boolean;
 };
 
+/**
+ * Temporarily disable fallback collisions types, which
+ * can cause issues during a zone switch.
+ *
+ * @param timeout the time in ms to disable the fallback collision for
+ * @returns a function that temporarily disables the collision
+ */
+const useTempDisableFallback = (timeout: number) => {
+  const lastFallbackDisable = useRef<string>(null);
+
+  return useCallback((manager: DragDropManager) => {
+    collisionStore.setState({ fallbackEnabled: false });
+
+    // Track an ID in case called more than once, so only last call re-enables
+    const fallbackId = generateId();
+    lastFallbackDisable.current = fallbackId;
+
+    setTimeout(() => {
+      if (lastFallbackDisable.current === fallbackId) {
+        collisionStore.setState({ fallbackEnabled: true });
+        manager.collisionObserver.forceUpdate(true);
+      }
+    }, timeout);
+  }, []);
+};
+
+const getChanged = (params: DeepestParams) => {
+  const { zoneDepthIndex, areaDepthIndex } = useZoneStore.getState();
+
+  const stateHasZone = Object.keys(zoneDepthIndex).length > 0;
+  const stateHasArea = Object.keys(areaDepthIndex).length > 0;
+
+  if (params.zone) {
+  }
+
+  let zoneChanged = false;
+  let areaChanged = false;
+
+  if (params.zone && !zoneDepthIndex[params.zone]) {
+    zoneChanged = true;
+  } else if (!params.zone && stateHasZone) {
+    zoneChanged = true;
+  } else if (params.area && !areaDepthIndex[params.area]) {
+    areaChanged = true;
+  } else if (!params.area && stateHasArea) {
+    areaChanged = true;
+  }
+
+  return { zoneChanged, areaChanged };
+};
+
 const DragDropContextClient = ({
   children,
   disableAutoScroll,
@@ -81,27 +133,22 @@ const DragDropContextClient = ({
 
   const debouncedParamsRef = useRef<DeepestParams | null>(null);
 
+  const tempDisableFallback = useTempDisableFallback(100);
+
   const setDeepestAndCollide = useCallback(
     (params: DeepestParams, manager: DragDropManager) => {
-      let zoneDepthIndex: Record<string, boolean> = {};
-      let areaDepthIndex: Record<string, boolean> = {};
+      const { zoneChanged, areaChanged } = getChanged(params);
 
-      if (params.zone) {
-        zoneDepthIndex = { [params.zone]: true };
-      }
+      if (!zoneChanged && !areaChanged) return;
 
-      if (params.area) {
-        areaDepthIndex = { [params.area]: true };
-      }
+      useZoneStore.setState({
+        zoneDepthIndex: params.zone ? { [params.zone]: true } : {},
+        areaDepthIndex: params.area ? { [params.area]: true } : {},
+      });
 
-      useZoneStore.setState({ zoneDepthIndex, areaDepthIndex });
-
-      // Disable fallback collisions temporarily after zone change, as
-      // these can cause unexpected collisions
-      collisionStore.setState({ fallbackEnabled: false });
-      setTimeout(() => {
-        collisionStore.setState({ fallbackEnabled: true });
-      }, 500);
+      // Disable fallback collisions temporarily after zone change,
+      // as these can cause unexpected collisions
+      tempDisableFallback(manager);
 
       setTimeout(() => {
         // Force update after debounce
@@ -143,8 +190,8 @@ const DragDropContextClient = ({
       onChange: (params, manager) => {
         const state = useZoneStore.getState();
 
-        const areaChanged = !state.areaDepthIndex[params.area || ""];
-        const zoneChanged = !state.zoneDepthIndex[params.zone || ""];
+        const { zoneChanged, areaChanged } = getChanged(params);
+
         const isDragging = manager.dragOperation.status.dragging;
 
         if (areaChanged || zoneChanged) {
