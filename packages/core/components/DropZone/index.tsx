@@ -3,22 +3,26 @@ import {
   forwardRef,
   useCallback,
   useContext,
-  useDeferredValue,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { ComponentDndData, DraggableComponent } from "../DraggableComponent";
+import { DraggableComponent } from "../DraggableComponent";
 import { getItem } from "../../lib/get-item";
 import { setupZone } from "../../lib/setup-zone";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { getClassNameFactory } from "../../lib";
 import styles from "./styles.module.css";
-import { DropZoneProvider, dropZoneContext, useZoneStore } from "./context";
+import {
+  DropZoneProvider,
+  Preview,
+  dropZoneContext,
+  useZoneStore,
+} from "./context";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
-import { ComponentConfig, DragAxis, PuckContext } from "../../types";
+import { ComponentConfig, Content, DragAxis, PuckContext } from "../../types";
 
 import { UseDroppableInput } from "@dnd-kit/react";
 import { DrawerItemInner } from "../Drawer";
@@ -29,6 +33,7 @@ import { useDroppableSafe } from "../../lib/dnd-kit/safe";
 import { useMinEmptyHeight } from "./use-min-empty-height";
 import { assignRefs } from "../../lib/assign-refs";
 import { useShallow } from "zustand/react/shallow";
+import { useRenderedCallback } from "../../lib/dnd-kit/use-rendered-callback";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -48,6 +53,70 @@ export type DropZoneDndData = {
   depth: number;
   path: UniqueIdentifier[];
   isDroppableTarget: boolean;
+};
+
+const useContentWithPreview = (
+  content: Content,
+  providerId: string,
+  zoneCompound: string
+) => {
+  const { draggedItemId, preview, previewExists } = useZoneStore(
+    useShallow((s) => {
+      const providerState = s[providerId];
+
+      return {
+        draggedItemId: providerState?.draggedItem?.id,
+        preview: providerState?.previewIndex[zoneCompound],
+        previewExists:
+          Object.keys(providerState?.previewIndex || {}).length > 0,
+      };
+    })
+  );
+
+  const [contentWithPreview, setContentWithPreview] = useState(content);
+
+  const updateContent = useRenderedCallback(
+    (content: Content, preview: Preview | undefined) => {
+      if (preview) {
+        if (preview.type === "insert") {
+          setContentWithPreview(
+            insert(
+              content.filter((item) => item.props.id !== preview.props.id),
+              preview.index,
+              {
+                type: "preview",
+                props: { id: preview.props.id },
+              }
+            )
+          );
+        } else {
+          setContentWithPreview(
+            insert(
+              content.filter((item) => item.props.id !== preview.props.id),
+              preview.index,
+              {
+                type: preview.componentType,
+                props: preview.props,
+              }
+            )
+          );
+        }
+      } else {
+        setContentWithPreview(
+          previewExists
+            ? content.filter((item) => item.props.id !== draggedItemId)
+            : content
+        );
+      }
+    },
+    [draggedItemId, previewExists]
+  );
+
+  useEffect(() => {
+    updateContent(content, preview);
+  }, [content, preview]);
+
+  return contentWithPreview;
 };
 
 const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
@@ -96,11 +165,9 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
     const {
       isDeepestZone,
       inNextDeepestArea,
-      draggedItemId,
       draggedComponentType,
       userIsDragging,
-      preview: _preview,
-      previewExists: _previewExists,
+      preview,
     } = useZoneStore(
       useShallow((s) => {
         const providerState = s[providerId];
@@ -112,8 +179,6 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
           draggedComponentType: providerState?.draggedItem?.data.componentType,
           userIsDragging: !!providerState?.draggedItem,
           preview: providerState?.previewIndex[zoneCompound],
-          previewExists:
-            Object.keys(providerState?.previewIndex || {}).length > 0,
         };
       })
     );
@@ -201,37 +266,11 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       isEnabled = acceptsTarget(draggedComponentType);
     }
 
-    // We need to defer as zustand causes re-render before dnd-kit is ready. Without this, the placeholder animation glitches.
-    const preview = useDeferredValue(_preview);
-    const previewExists = useDeferredValue(_previewExists);
-
-    const contentWithPreview = useMemo(() => {
-      if (preview) {
-        if (preview.type === "insert") {
-          return insert(
-            content.filter((item) => item.props.id !== preview.props.id),
-            preview.index,
-            {
-              type: "preview",
-              props: { id: preview.props.id },
-            }
-          );
-        } else {
-          return insert(
-            content.filter((item) => item.props.id !== preview.props.id),
-            preview.index,
-            {
-              type: preview.componentType,
-              props: preview.props,
-            }
-          );
-        }
-      }
-
-      return previewExists
-        ? content.filter((item) => item.props.id !== draggedItemId)
-        : content;
-    }, [preview, previewExists, content, draggedItemId]);
+    const contentWithPreview = useContentWithPreview(
+      content,
+      providerId,
+      zoneCompound
+    );
 
     const isDropEnabled =
       isEnabled &&
@@ -359,11 +398,11 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
 
           let label = componentConfig?.["label"] ?? item.type.toString();
 
-          if (item.type === "preview") {
-            componentType = preview!.componentType;
+          if (item.type === "preview" && preview) {
+            componentType = preview.componentType;
 
             label =
-              config.components[componentType]?.label ?? preview!.componentType;
+              config.components[componentType]?.label ?? preview.componentType;
 
             function Preview() {
               return <DrawerItemInner name={label} />;
