@@ -1,4 +1,5 @@
 import {
+  PropsWithChildren,
   ReactNode,
   createContext,
   useCallback,
@@ -10,7 +11,7 @@ import { ItemSelector } from "../../lib/get-item";
 
 import type { Draggable } from "@dnd-kit/dom";
 import { useAppContext } from "../Puck/context";
-import { create } from "zustand";
+import { createStore, StoreApi } from "zustand";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
@@ -37,7 +38,6 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
   unregisterLocalZone?: (zone: string) => void;
   path: string[];
-  providerId: string;
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
@@ -59,9 +59,27 @@ export type ZoneStore = {
   draggedItem?: Draggable | null;
 };
 
-export const useZoneStore = create<Record<string, ZoneStore | undefined>>(
-  () => ({})
+export const ZoneStoreContext = createContext<StoreApi<ZoneStore>>(
+  createStore(() => ({
+    zoneDepthIndex: {},
+    nextZoneDepthIndex: {},
+    areaDepthIndex: {},
+    nextAreaDepthIndex: {},
+    draggedItem: null,
+    previewIndex: {},
+  }))
 );
+
+export const ZoneStoreProvider = ({
+  children,
+  store,
+}: PropsWithChildren<{ store: StoreApi<ZoneStore> }>) => {
+  return (
+    <ZoneStoreContext.Provider value={store}>
+      {children}
+    </ZoneStoreContext.Provider>
+  );
+};
 
 export const DropZoneProvider = ({
   children,

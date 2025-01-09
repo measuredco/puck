@@ -20,8 +20,8 @@ import { getItem, ItemSelector } from "../../lib/get-item";
 import {
   PathData,
   Preview,
-  useZoneStore,
   ZoneStore,
+  ZoneStoreProvider,
 } from "../DropZone/context";
 import { getZoneId } from "../../lib/get-zone-id";
 import { createNestedDroppablePlugin } from "./NestedDroppablePlugin";
@@ -34,6 +34,7 @@ import { isElement } from "@dnd-kit/dom/utilities";
 import { PointerSensor } from "./PointerSensor";
 import { collisionStore } from "../DraggableComponent/collision/dynamic/store";
 import { generateId } from "../../lib/generate-id";
+import { createStore } from "zustand";
 
 const DEBUG = false;
 
@@ -104,31 +105,6 @@ const useTempDisableFallback = (timeout: number) => {
   }, []);
 };
 
-const getChanged = (params: DeepestParams, id: string) => {
-  const { zoneDepthIndex = {}, areaDepthIndex = {} } =
-    useZoneStore.getState()[id] || {};
-
-  const stateHasZone = Object.keys(zoneDepthIndex).length > 0;
-  const stateHasArea = Object.keys(areaDepthIndex).length > 0;
-
-  let zoneChanged = false;
-  let areaChanged = false;
-
-  if (params.zone && !zoneDepthIndex[params.zone]) {
-    zoneChanged = true;
-  } else if (!params.zone && stateHasZone) {
-    zoneChanged = true;
-  }
-
-  if (params.area && !areaDepthIndex[params.area]) {
-    areaChanged = true;
-  } else if (!params.area && stateHasArea) {
-    areaChanged = true;
-  }
-
-  return { zoneChanged, areaChanged };
-};
-
 const DragDropContextClient = ({
   children,
   disableAutoScroll,
@@ -143,13 +119,52 @@ const DragDropContextClient = ({
 
   const tempDisableFallback = useTempDisableFallback(100);
 
+  const [zoneStore] = useState(() =>
+    createStore<ZoneStore>(() => ({
+      zoneDepthIndex: {},
+      nextZoneDepthIndex: {},
+      areaDepthIndex: {},
+      nextAreaDepthIndex: {},
+      draggedItem: null,
+      previewIndex: {},
+    }))
+  );
+
+  const getChanged = useCallback(
+    (params: DeepestParams, id: string) => {
+      const { zoneDepthIndex = {}, areaDepthIndex = {} } =
+        zoneStore.getState() || {};
+
+      const stateHasZone = Object.keys(zoneDepthIndex).length > 0;
+      const stateHasArea = Object.keys(areaDepthIndex).length > 0;
+
+      let zoneChanged = false;
+      let areaChanged = false;
+
+      if (params.zone && !zoneDepthIndex[params.zone]) {
+        zoneChanged = true;
+      } else if (!params.zone && stateHasZone) {
+        zoneChanged = true;
+      }
+
+      if (params.area && !areaDepthIndex[params.area]) {
+        areaChanged = true;
+      } else if (!params.area && stateHasArea) {
+        areaChanged = true;
+      }
+
+      return { zoneChanged, areaChanged };
+    },
+    [zoneStore]
+  );
+
   const setDeepestAndCollide = useCallback(
     (params: DeepestParams, manager: DragDropManager) => {
       const { zoneChanged, areaChanged } = getChanged(params, id);
 
       if (!zoneChanged && !areaChanged) return;
 
-      setProviderStore({
+      zoneStore.setState({
         zoneDepthIndex: params.zone ? { [params.zone]: true } : {},
         areaDepthIndex: params.area ? { [params.area]: true } : {},
       });
@@ -165,7 +180,7 @@ const DragDropContextClient = ({
 
       debouncedParamsRef.current = null;
     },
-    [id]
+    [zoneStore]
   );
 
   const setDeepestDb = useDebouncedCallback(
@@ -180,11 +195,11 @@ const DragDropContextClient = ({
 
   useEffect(() => {
     if (DEBUG) {
-      useZoneStore.subscribe((s) =>
+      zoneStore.subscribe((s) =>
         console.log(
-          s[id]?.previewIndex,
-          Object.entries(s[id]?.zoneDepthIndex || {})[0]?.[0],
-          Object.entries(s[id]?.areaDepthIndex || {})[0]?.[0]
+          s.previewIndex,
+          Object.entries(s.zoneDepthIndex || {})[0]?.[0],
+          Object.entries(s.areaDepthIndex || {})[0]?.[0]
         )
       );
     }
@@ -197,7 +212,7 @@ const DragDropContextClient = ({
     createNestedDroppablePlugin(
       {
         onChange: (params, manager) => {
-          const state = useZoneStore.getState()[id];
+          const state = zoneStore.getState();
 
           const { zoneChanged, areaChanged } = getChanged(params, id);
 
@@ -215,7 +230,7 @@ const DragDropContextClient = ({
               nextAreaDepthIndex = { [params.area]: true };
             }
 
-            setProviderStore({ nextZoneDepthIndex, nextAreaDepthIndex });
+            zoneStore.setState({ nextZoneDepthIndex, nextAreaDepthIndex });
           }
 
           if (params.zone !== "void" && state?.zoneDepthIndex["void"]) {
@@ -319,32 +334,6 @@ const DragDropContextClient = ({
 
   const initialSelector = useRef<{ zone: string; index: number }>(undefined);
 
-  const setProviderStore = useCallback(
-    (v: Partial<ZoneStore>) => {
-      useZoneStore.setState((s) =>
-        s[id]
-          ? {
-              [id]: { ...s[id], ...v },
-            }
-          : {}
-      );
-    },
-    [id]
-  );
-
-  useEffect(() => {
-    useZoneStore.setState({
-      [id]: {
-        zoneDepthIndex: {},
-        nextZoneDepthIndex: {},
-        areaDepthIndex: {},
-        nextAreaDepthIndex: {},
-        draggedItem: null,
-        previewIndex: {},
-      },
-    });
-  }, [id]);
-
   return (
     <div id={id}>
       <dragListenerContext.Provider
@@ -360,14 +349,14 @@ const DragDropContextClient = ({
             const { source, target } = event.operation;
 
             if (!source) {
-              setProviderStore({ draggedItem: null });
+              zoneStore.setState({ draggedItem: null });
 
               return;
             }
 
             const { zone, index } = source.data as ComponentDndData;
 
-            const { previewIndex = {} } = useZoneStore.getState()[id] || {};
+            const { previewIndex = {} } = zoneStore.getState() || {};
 
             const thisPreview: Preview | null =
               previewIndex[zone]?.props.id === source.id
@@ -376,11 +365,11 @@ const DragDropContextClient = ({
 
             // Delay insert until animation has finished
             setTimeout(() => {
-              setProviderStore({ draggedItem: null });
+              zoneStore.setState({ draggedItem: null });
 
               // Tidy up cancellation
               if (event.canceled || target?.type === "void") {
-                setProviderStore({ previewIndex: {} });
+                zoneStore.setState({ previewIndex: {} });
 
                 dragListeners.dragend?.forEach((fn) => {
                   fn(event, manager);
@@ -391,7 +380,7 @@ const DragDropContextClient = ({
 
               // Finalise the drag
               if (thisPreview) {
-                setProviderStore({ previewIndex: {} });
+                zoneStore.setState({ previewIndex: {} });
 
                 if (thisPreview.type === "insert") {
                   insertComponent(
@@ -433,7 +422,7 @@ const DragDropContextClient = ({
             // Prevent the optimistic re-ordering
             event.preventDefault();
 
-            const draggedItem = useZoneStore.getState()[id]?.draggedItem;
+            const draggedItem = zoneStore.getState()?.draggedItem;
 
             // Drag end can sometimes trigger after drag
             if (!draggedItem) return;
@@ -496,7 +485,7 @@ const DragDropContextClient = ({
             }
 
             if (dragMode.current === "new") {
-              setProviderStore({
+              zoneStore.setState({
                 previewIndex: {
                   [targetZone]: {
                     componentType: sourceData.componentType,
@@ -520,7 +509,7 @@ const DragDropContextClient = ({
               const item = getItem(initialSelector.current, data);
 
               if (item) {
-                setProviderStore({
+                zoneStore.setState({
                   previewIndex: {
                     [targetZone]: {
                       componentType: sourceData.componentType,
@@ -555,24 +544,25 @@ const DragDropContextClient = ({
             dragMode.current = isNewComponent ? "new" : "existing";
             initialSelector.current = undefined;
 
-            setProviderStore({ draggedItem: event.operation.source });
+            zoneStore.setState({ draggedItem: event.operation.source });
           }}
         >
-          <DropZoneProvider
-            value={{
-              data,
-              config,
-              mode: "edit",
-              areaId: "root",
-              depth: 0,
-              registerPath,
-              pathData,
-              path: [],
-              providerId: id,
-            }}
-          >
-            {children}
-          </DropZoneProvider>
+          <ZoneStoreProvider store={zoneStore}>
+            <DropZoneProvider
+              value={{
+                data,
+                config,
+                mode: "edit",
+                areaId: "root",
+                depth: 0,
+                registerPath,
+                pathData,
+                path: [],
+              }}
+            >
+              {children}
+            </DropZoneProvider>
+          </ZoneStoreProvider>
         </DragDropProvider>
       </dragListenerContext.Provider>
     </div>

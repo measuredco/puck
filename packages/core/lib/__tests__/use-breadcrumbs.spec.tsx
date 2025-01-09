@@ -37,7 +37,6 @@ const dropzoneContext: DropZoneContext = {
   },
   depth: 0,
   path: [],
-  providerId: "",
 };
 
 describe("use-breadcrumbs", () => {

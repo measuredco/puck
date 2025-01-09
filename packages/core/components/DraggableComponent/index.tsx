@@ -27,7 +27,8 @@ import { Data, DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useSortableSafe } from "../../lib/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
-import { useZoneStore } from "../DropZone/context";
+import { ZoneStoreContext } from "../DropZone/context";
+import { useContextStore } from "../../lib/use-context-store";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -181,7 +182,10 @@ export const DraggableComponent = ({
     }
   }, [state, index, zoneCompound, getPermissions]);
 
-  const userIsDragging = useZoneStore((s) => !!s.draggedItem);
+  const userIsDragging = useContextStore(
+    ZoneStoreContext,
+    (s) => !!s.draggedItem
+  );
 
   const canCollide = canDrag || userIsDragging;
 

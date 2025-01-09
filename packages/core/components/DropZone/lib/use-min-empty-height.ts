@@ -1,33 +1,25 @@
 import { RefObject, useEffect, useState } from "react";
-import { useZoneStore } from "./../context";
-import { useShallow } from "zustand/react/shallow";
+import { ZoneStoreContext } from "./../context";
+import { useContextStore } from "../../../lib/use-context-store";
 
 export const useMinEmptyHeight = ({
   zoneCompound,
   userMinEmptyHeight,
   ref,
-  providerId,
 }: {
   zoneCompound: string;
   userMinEmptyHeight: number;
   ref: RefObject<HTMLDivElement | null>;
-  providerId: string;
 }) => {
   const [prevHeight, setPrevHeight] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const { draggedItem, isZone } = useZoneStore(
-    useShallow((s) => {
-      const providerState = s[providerId];
-
-      return {
-        draggedItem:
-          providerState?.draggedItem?.data.zone === zoneCompound
-            ? providerState.draggedItem
-            : null,
-        isZone: providerState?.draggedItem?.data.zone === zoneCompound,
-      };
-    })
-  );
+  const { draggedItem, isZone } = useContextStore(ZoneStoreContext, (s) => {
+    return {
+      draggedItem:
+        s.draggedItem?.data.zone === zoneCompound ? s.draggedItem : null,
+      isZone: s.draggedItem?.data.zone === zoneCompound,
+    };
+  });
 
   useEffect(() => {
     if (draggedItem && ref.current) {

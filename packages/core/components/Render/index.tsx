@@ -59,7 +59,6 @@ export function Render<
         mode: "render",
         depth: 0,
         path: [],
-        providerId: "",
       }}
     >
       <DropZone zone={rootDroppableId} />
