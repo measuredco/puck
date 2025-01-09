@@ -4,7 +4,7 @@ import { DragIcon } from "../DragIcon";
 import { ReactElement, ReactNode, Ref, useMemo, useState } from "react";
 import { generateId } from "../../lib/generate-id";
 import { useDragListener } from "../DragDropContext";
-import { useDraggableSafe, useDroppableSafe } from "../../lib/dnd-kit/safe";
+import { useDraggableSafe, useDroppableSafe } from "../../lib/dnd/dnd-kit/safe";
 
 const getClassName = getClassNameFactory("Drawer", styles);
 const getClassNameItem = getClassNameFactory("DrawerItem", styles);

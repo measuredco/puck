@@ -4,11 +4,11 @@ import { Plugin } from "@dnd-kit/abstract";
 import type { Droppable } from "@dnd-kit/dom";
 
 import { effects } from "@dnd-kit/state";
-import { throttle } from "../../lib/throttle";
+import { throttle } from "../throttle";
 import { ComponentDndData } from "../../components/DraggableComponent";
 import { DropZoneDndData } from "../../components/DropZone";
 import { BubbledPointerEvent } from "../../components/Puck/components/Preview";
-import { getFrame } from "../../lib/get-frame";
+import { getFrame } from "../get-frame";
 
 interface Position {
   x: number;
