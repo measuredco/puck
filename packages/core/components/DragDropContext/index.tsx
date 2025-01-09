@@ -533,6 +533,34 @@ const DragDropContextClient = ({
               ui: { itemSelector: null, isDragging: true },
             });
 
+            const { source } = event.operation;
+
+            if (source && source.type !== "void") {
+              const sourceData = source.data as ComponentDndData;
+
+              const item = getItem(
+                {
+                  zone: sourceData.zone,
+                  index: sourceData.index,
+                },
+                data
+              );
+
+              if (item) {
+                zoneStore.setState({
+                  previewIndex: {
+                    [sourceData.zone]: {
+                      componentType: sourceData.componentType,
+                      type: "move",
+                      index: sourceData.index,
+                      zone: sourceData.zone,
+                      props: item.props,
+                    },
+                  },
+                });
+              }
+            }
+
             dragListeners.dragstart?.forEach((fn) => {
               fn(event, manager);
             });

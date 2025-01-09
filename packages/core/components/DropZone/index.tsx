@@ -6,7 +6,6 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
 import { DraggableComponent } from "../DraggableComponent";
 import { getItem } from "../../lib/get-item";
