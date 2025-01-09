@@ -21,7 +21,7 @@ import { ActionBar } from "../ActionBar";
 import { createPortal } from "react-dom";
 
 import { dropZoneContext, DropZoneProvider } from "../DropZone";
-import { createDynamicCollisionDetector } from "./collision/dynamic";
+import { createDynamicCollisionDetector } from "../../lib/dnd-kit/collision/dynamic";
 import { getItem, ItemSelector } from "../../lib/get-item";
 import { Data, DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";

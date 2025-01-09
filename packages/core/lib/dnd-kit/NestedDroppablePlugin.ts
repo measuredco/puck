@@ -5,9 +5,9 @@ import type { Droppable } from "@dnd-kit/dom";
 
 import { effects } from "@dnd-kit/state";
 import { throttle } from "../../lib/throttle";
-import { ComponentDndData } from "../DraggableComponent";
-import { DropZoneDndData } from "../DropZone";
-import { BubbledPointerEvent } from "../Puck/components/Preview";
+import { ComponentDndData } from "../../components/DraggableComponent";
+import { DropZoneDndData } from "../../components/DropZone";
+import { BubbledPointerEvent } from "../../components/Puck/components/Preview";
 import { getFrame } from "../../lib/get-frame";
 
 interface Position {
