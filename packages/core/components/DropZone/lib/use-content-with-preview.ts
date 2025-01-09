@@ -1,7 +1,7 @@
 import { Content } from "../../../types";
 import { Preview } from "./../context";
 import { useEffect, useState } from "react";
-import { useRenderedCallback } from "../../../lib/dnd-kit/use-rendered-callback";
+import { useRenderedCallback } from "../../../lib/dnd/use-rendered-callback";
 import { insert } from "../../../lib/insert";
 import { ZoneStoreContext } from "../context";
 import { useContextStore } from "../../../lib/use-context-store";

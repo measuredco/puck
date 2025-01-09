@@ -24,15 +24,15 @@ import {
   ZoneStoreProvider,
 } from "../DropZone/context";
 import { getZoneId } from "../../lib/get-zone-id";
-import { createNestedDroppablePlugin } from "../../lib/dnd-kit/NestedDroppablePlugin";
+import { createNestedDroppablePlugin } from "../../lib/dnd/NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
-import { CollisionMap } from "../../lib/dnd-kit/collision/dynamic";
+import { CollisionMap } from "../../lib/dnd/collision/dynamic";
 import { ComponentDndData } from "../DraggableComponent";
 import { isElement } from "@dnd-kit/dom/utilities";
 
-import { PointerSensor } from "../../lib/dnd-kit/PointerSensor";
-import { collisionStore } from "../../lib/dnd-kit/collision/dynamic/store";
+import { PointerSensor } from "../../lib/dnd/PointerSensor";
+import { collisionStore } from "../../lib/dnd/collision/dynamic/store";
 import { generateId } from "../../lib/generate-id";
 import { createStore } from "zustand";
 

@@ -1,6 +1,6 @@
 import { DragDropProvider } from "@dnd-kit/react";
 import { PropsWithChildren, ReactNode, useState } from "react";
-import { useSortableSafe } from "../../lib/dnd-kit/safe";
+import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
 
 export const SortableProvider = ({
   children,
