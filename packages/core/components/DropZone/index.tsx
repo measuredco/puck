@@ -289,7 +289,11 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
               config.components[componentType]?.label ?? preview.componentType;
 
             function Preview() {
-              return <DrawerItemInner name={label} />;
+              return (
+                <DrawerItemInner name={label}>
+                  {appContext.overrides.componentItem}
+                </DrawerItemInner>
+              );
             }
 
             Render = Preview;
