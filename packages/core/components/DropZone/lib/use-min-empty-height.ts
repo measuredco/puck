@@ -1,5 +1,5 @@
 import { RefObject, useEffect, useState } from "react";
-import { useZoneStore } from "./context";
+import { useZoneStore } from "./../context";
 import { useShallow } from "zustand/react/shallow";
 
 export const useMinEmptyHeight = ({
