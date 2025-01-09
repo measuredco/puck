@@ -1,26 +1,24 @@
-import { useShallow } from "zustand/react/shallow";
 import { Content } from "../../../types";
-import { Preview, useZoneStore } from "./../context";
+import { Preview } from "./../context";
 import { useEffect, useState } from "react";
 import { useRenderedCallback } from "../../../lib/dnd-kit/use-rendered-callback";
 import { insert } from "../../../lib/insert";
+import { ZoneStoreContext } from "../context";
+import { useContextStore } from "../../../lib/use-context-store";
 
 export const useContentWithPreview = (
   content: Content,
-  providerId: string,
   zoneCompound: string
 ) => {
-  const { draggedItemId, preview, previewExists } = useZoneStore(
-    useShallow((s) => {
-      const providerState = s[providerId];
-
+  const { draggedItemId, preview, previewExists } = useContextStore(
+    ZoneStoreContext,
+    (s) => {
       return {
-        draggedItemId: providerState?.draggedItem?.id,
-        preview: providerState?.previewIndex[zoneCompound],
-        previewExists:
-          Object.keys(providerState?.previewIndex || {}).length > 0,
+        draggedItemId: s.draggedItem?.id,
+        preview: s.previewIndex[zoneCompound],
+        previewExists: Object.keys(s.previewIndex || {}).length > 0,
       };
-    })
+    }
   );
 
   const [contentWithPreview, setContentWithPreview] = useState(content);
