@@ -14,26 +14,21 @@ import { setupZone } from "../../lib/setup-zone";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { getClassNameFactory } from "../../lib";
 import styles from "./styles.module.css";
-import {
-  DropZoneProvider,
-  Preview,
-  dropZoneContext,
-  useZoneStore,
-} from "./context";
+import { DropZoneProvider, dropZoneContext, useZoneStore } from "./context";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
-import { ComponentConfig, Content, DragAxis, PuckContext } from "../../types";
+import { ComponentConfig, DragAxis, PuckContext } from "../../types";
 
 import { UseDroppableInput } from "@dnd-kit/react";
 import { DrawerItemInner } from "../Drawer";
 import { pointerIntersection } from "@dnd-kit/collision";
-import { insert } from "../../lib/insert";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useDroppableSafe } from "../../lib/dnd-kit/safe";
-import { useMinEmptyHeight } from "./use-min-empty-height";
+import { useMinEmptyHeight } from "./lib/use-min-empty-height";
 import { assignRefs } from "../../lib/assign-refs";
 import { useShallow } from "zustand/react/shallow";
-import { useRenderedCallback } from "../../lib/dnd-kit/use-rendered-callback";
+import { useContentWithPreview } from "./lib/use-content-with-preview";
+import { useDragAxis } from "./lib/use-drag-axis";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -44,79 +39,11 @@ const getRandomColor = () =>
 
 const RENDER_DEBUG = false;
 
-const GRID_DRAG_AXIS: DragAxis = "dynamic";
-const FLEX_ROW_DRAG_AXIS: DragAxis = "x";
-const DEFAULT_DRAG_AXIS: DragAxis = "y";
-
 export type DropZoneDndData = {
   areaId?: string;
   depth: number;
   path: UniqueIdentifier[];
   isDroppableTarget: boolean;
-};
-
-const useContentWithPreview = (
-  content: Content,
-  providerId: string,
-  zoneCompound: string
-) => {
-  const { draggedItemId, preview, previewExists } = useZoneStore(
-    useShallow((s) => {
-      const providerState = s[providerId];
-
-      return {
-        draggedItemId: providerState?.draggedItem?.id,
-        preview: providerState?.previewIndex[zoneCompound],
-        previewExists:
-          Object.keys(providerState?.previewIndex || {}).length > 0,
-      };
-    })
-  );
-
-  const [contentWithPreview, setContentWithPreview] = useState(content);
-
-  const updateContent = useRenderedCallback(
-    (content: Content, preview: Preview | undefined) => {
-      if (preview) {
-        if (preview.type === "insert") {
-          setContentWithPreview(
-            insert(
-              content.filter((item) => item.props.id !== preview.props.id),
-              preview.index,
-              {
-                type: "preview",
-                props: { id: preview.props.id },
-              }
-            )
-          );
-        } else {
-          setContentWithPreview(
-            insert(
-              content.filter((item) => item.props.id !== preview.props.id),
-              preview.index,
-              {
-                type: preview.componentType,
-                props: preview.props,
-              }
-            )
-          );
-        }
-      } else {
-        setContentWithPreview(
-          previewExists
-            ? content.filter((item) => item.props.id !== draggedItemId)
-            : content
-        );
-      }
-    },
-    [draggedItemId, previewExists]
-  );
-
-  useEffect(() => {
-    updateContent(content, preview);
-  }, [content, preview]);
-
-  return contentWithPreview;
 };
 
 const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
@@ -297,40 +224,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
     const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
     const isAreaSelected = selectedItem && areaId === selectedItem.props.id;
 
-    const [dragAxis, setDragAxis] = useState<DragAxis>(
-      collisionAxis || DEFAULT_DRAG_AXIS
-    );
-
-    const calculateDragAxis = useCallback(() => {
-      if (ref.current) {
-        const computedStyle = window.getComputedStyle(ref.current);
-
-        if (computedStyle.display === "grid") {
-          setDragAxis(GRID_DRAG_AXIS);
-        } else if (
-          computedStyle.display === "flex" &&
-          computedStyle.flexDirection === "row"
-        ) {
-          setDragAxis(FLEX_ROW_DRAG_AXIS);
-        } else {
-          setDragAxis(DEFAULT_DRAG_AXIS);
-        }
-      }
-    }, [ref.current]);
-
-    useEffect(calculateDragAxis, [appContext.status, collisionAxis]);
-
-    useEffect(() => {
-      const onViewportChange = () => {
-        calculateDragAxis();
-      };
-
-      window.addEventListener("viewportchange", onViewportChange);
-
-      return () => {
-        window.removeEventListener("viewportchange", onViewportChange);
-      };
-    }, []);
+    const [dragAxis] = useDragAxis(ref, collisionAxis);
 
     const [minEmptyHeight, isAnimating] = useMinEmptyHeight({
       zoneCompound,
