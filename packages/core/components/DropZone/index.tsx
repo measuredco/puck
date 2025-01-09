@@ -266,13 +266,14 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
 
           const isSelected = selectedItem?.props.id === componentId || false;
 
-          let Render = config.components[item.type]
-            ? config.components[item.type].render
-            : () => (
-                <div style={{ padding: 48, textAlign: "center" }}>
-                  No configuration for {item.type}
-                </div>
-              );
+          let Render =
+            config.components[item.type] && item.type !== "preview"
+              ? config.components[item.type].render
+              : () => (
+                  <div style={{ padding: 48, textAlign: "center" }}>
+                    No configuration for {item.type}
+                  </div>
+                );
 
           const componentConfig: ComponentConfig | undefined =
             config.components[item.type];
