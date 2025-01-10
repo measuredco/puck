@@ -9,11 +9,7 @@ import { ComponentDndData } from "../../components/DraggableComponent";
 import { DropZoneDndData } from "../../components/DropZone";
 import { BubbledPointerEvent } from "../../components/Puck/components/Preview";
 import { getFrame } from "../get-frame";
-
-interface Position {
-  x: number;
-  y: number;
-}
+import { GlobalPosition } from "../global-position";
 
 type NestedDroppablePluginOptions = {
   onChange: (
@@ -64,13 +60,15 @@ const getZoneId = (candidate: Droppable | undefined) => {
 };
 
 const getPointerCollisions = (
-  position: Position,
-  manager: DragDropManager,
-  ownerDocument: Document
+  position: GlobalPosition,
+  manager: DragDropManager
 ) => {
   const candidates: Droppable[] = [];
 
-  let elements = ownerDocument.elementsFromPoint(position.x, position.y);
+  let elements = position.target.ownerDocument.elementsFromPoint(
+    position.x,
+    position.y
+  );
 
   const previewFrame = elements.find((el) =>
     el.getAttribute("data-puck-preview")
@@ -86,22 +84,11 @@ const getPointerCollisions = (
   // If cursor is over iframe (but not drawer), and user is in host doc, go into the iframe doc
   // This occurs when dragging in new items
   if (previewFrame) {
-    const iframe = previewFrame.querySelector("iframe");
+    // Perf: Consider moving this outside of this plugin
+    const frame = getFrame();
 
-    if (iframe) {
-      // Perf: Consider moving this outside of this plugin
-      const rect = iframe.getBoundingClientRect();
-      const frame = getFrame();
-
-      if (frame) {
-        const scaleFactor =
-          rect.width / (iframe.contentWindow?.innerWidth || 1);
-
-        elements = frame.elementsFromPoint(
-          (position.x - rect.left) / scaleFactor,
-          (position.y - rect.top) / scaleFactor
-        );
-      }
+    if (frame) {
+      elements = frame.elementsFromPoint(position.frame.x, position.frame.y);
     }
   }
 
@@ -125,11 +112,10 @@ const getPointerCollisions = (
 };
 
 export const findDeepestCandidate = (
-  position: Position,
-  manager: DragDropManager,
-  ownerDocument: Document
+  position: GlobalPosition,
+  manager: DragDropManager
 ) => {
-  const candidates = getPointerCollisions(position, manager, ownerDocument);
+  const candidates = getPointerCollisions(position, manager);
 
   if (candidates.length > 0) {
     const sortedCandidates = depthSort(candidates);
@@ -212,26 +198,22 @@ export const createNestedDroppablePlugin = (
 
       const cleanupEffect = effects(() => {
         const handleMove = (event: BubbledPointerEvent) => {
-          const position: Position = {
+          const target = (event.originalTarget || event.target) as HTMLElement;
+
+          const position = new GlobalPosition(target, {
             x: event.clientX,
             y: event.clientY,
-          };
-
-          const target = (event.originalTarget || event.target) as HTMLElement;
-          const ownerDocument = target?.ownerDocument;
+          });
 
           const elements = document.elementsFromPoint(
-            event.clientX,
-            event.clientY
+            position.global.x,
+            position.global.y
           );
 
           const overEl = elements.some((el) => el.id === id);
 
           if (overEl) {
-            onChange(
-              findDeepestCandidate(position, manager, ownerDocument),
-              manager
-            );
+            onChange(findDeepestCandidate(position, manager), manager);
           }
         };
 
