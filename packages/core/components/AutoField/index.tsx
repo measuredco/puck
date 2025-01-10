@@ -130,6 +130,7 @@ function AutoFieldInternal<
   }
 ) {
   const { dispatch, overrides, selectedItem } = useAppContext();
+  const nestedFieldContext = useContext(NestedFieldContext);
 
   const { id, Label = FieldLabelInternal } = props;
 
@@ -216,8 +217,6 @@ function AutoFieldInternal<
   const children = defaultFields[field.type](mergedProps);
 
   const Render = render[field.type] as (props: FieldProps) => ReactElement;
-
-  const nestedFieldContext = useContext(NestedFieldContext);
 
   return (
     <NestedFieldContext.Provider
