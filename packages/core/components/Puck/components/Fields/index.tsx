@@ -126,22 +126,38 @@ const useResolvedFields = (): [FieldsType, boolean] => {
         lastData,
       });
     },
-    [data, config, componentData, selectedItem, resolvedFields, state]
+    [data, config, componentData, selectedItem, resolvedFields, state, parent]
   );
 
+  const [hasParent, setHasParent] = useState(false);
+
   useEffect(() => {
-    if (hasResolver) {
-      setFieldsLoading(true);
+    setHasParent(!!parent);
+  }, [parent]);
 
-      resolveFields(defaultFields).then((fields) => {
-        setResolvedFields(fields || {});
+  useEffect(() => {
+    // Must either be in root zone, or have parent
+    if (!state.ui.itemSelector?.zone || hasParent) {
+      if (hasResolver) {
+        setFieldsLoading(true);
 
-        setFieldsLoading(false);
-      });
-    } else {
-      setResolvedFields(defaultFields);
+        resolveFields(defaultFields).then((fields) => {
+          setResolvedFields(fields || {});
+
+          setFieldsLoading(false);
+        });
+      } else {
+        setResolvedFields(defaultFields);
+      }
     }
-  }, [data, defaultFields, selectedItem, hasResolver]);
+  }, [
+    data,
+    defaultFields,
+    state.ui.itemSelector,
+    selectedItem,
+    hasResolver,
+    hasParent,
+  ]);
 
   return [resolvedFields, fieldsLoading];
 };
