@@ -35,7 +35,17 @@ export const DefaultField = ({
         value={typeof value === "undefined" ? "" : value.toString()}
         onChange={(e) => {
           if (field.type === "number") {
-            onChange(Number(e.currentTarget.value));
+            const numberValue = Number(e.currentTarget.value);
+
+            if (typeof field.min !== "undefined" && numberValue < field.min) {
+              return;
+            }
+
+            if (typeof field.max !== "undefined" && numberValue > field.max) {
+              return;
+            }
+
+            onChange(numberValue);
           } else {
             onChange(e.currentTarget.value);
           }
