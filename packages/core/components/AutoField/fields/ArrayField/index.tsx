@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { DragIcon } from "../../../DragIcon";
 import { ArrayState, ItemWithId } from "../../../../types";
 import { useAppContext } from "../../../Puck/context";
+import { NestedFieldProvider, useNestedFieldContext } from "../../context";
 import { DragDropContext } from "../../../DragDropContext";
 
 const getClassName = getClassNameFactory("ArrayField", styles);
@@ -26,8 +27,7 @@ export const ArrayField = ({
   Label = (props) => <div {...props} />,
 }: FieldPropsInternal) => {
   const { state, setUi, selectedItem, getPermissions } = useAppContext();
-
-  const readOnlyFields = selectedItem?.readOnly || {};
+  const { readOnlyFields, localName = name } = useNestedFieldContext();
 
   const value: object[] = _value;
 
@@ -295,44 +295,55 @@ export const ArrayField = ({
                           <div className={getClassNameItem("body")}>
                             <fieldset className={getClassNameItem("fieldset")}>
                               {Object.keys(field.arrayFields!).map(
-                                (fieldName) => {
-                                  const subField =
-                                    field.arrayFields![fieldName];
+                                (subName) => {
+                                  const subField = field.arrayFields![subName];
 
-                                  const subFieldName = `${name}[${i}].${fieldName}`;
-                                  const wildcardFieldName = `${name}[*].${fieldName}`;
+                                  const indexName = `${name}[${i}]`;
+                                  const subPath = `${indexName}.${subName}`;
+
+                                  const localIndexName = `${localName}[${i}]`;
+                                  const localWildcardName = `${localName}[*]`;
+                                  const localSubPath = `${localIndexName}.${subName}`;
+                                  const localWildcardSubPath = `${localWildcardName}.${subName}`;
 
                                   const subReadOnly = forceReadOnly
                                     ? forceReadOnly
-                                    : typeof readOnlyFields[subFieldName] !==
+                                    : typeof readOnlyFields[subPath] !==
                                       "undefined"
-                                    ? readOnlyFields[subFieldName]
-                                    : readOnlyFields[wildcardFieldName];
+                                    ? readOnlyFields[localSubPath]
+                                    : readOnlyFields[localWildcardSubPath];
 
-                                  const label = subField.label || fieldName;
+                                  const label = subField.label || subName;
 
                                   return (
-                                    <AutoFieldPrivate
-                                      key={subFieldName}
-                                      name={subFieldName}
-                                      label={label}
-                                      id={`${_arrayId}_${fieldName}`}
-                                      readOnly={subReadOnly}
-                                      field={{
-                                        ...subField,
-                                        label, // May be used by custom fields
-                                      }}
-                                      value={data[fieldName]}
-                                      onChange={(val, ui) => {
-                                        onChange(
-                                          replace(value, i, {
-                                            ...data,
-                                            [fieldName]: val,
-                                          }),
-                                          ui
-                                        );
-                                      }}
-                                    />
+                                    <NestedFieldProvider
+                                      key={subPath}
+                                      name={localIndexName}
+                                      wildcardName={localWildcardName}
+                                      subName={subName}
+                                      readOnlyFields={readOnlyFields}
+                                    >
+                                      <AutoFieldPrivate
+                                        name={subPath}
+                                        label={label}
+                                        id={`${_arrayId}_${subName}`}
+                                        readOnly={subReadOnly}
+                                        field={{
+                                          ...subField,
+                                          label, // May be used by custom fields
+                                        }}
+                                        value={data[subName]}
+                                        onChange={(val, ui) => {
+                                          onChange(
+                                            replace(value, i, {
+                                              ...data,
+                                              [subName]: val,
+                                            }),
+                                            ui
+                                          );
+                                        }}
+                                      />
+                                    </NestedFieldProvider>
                                   );
                                 }
                               )}
