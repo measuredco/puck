@@ -2,6 +2,25 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.17.2](https://github.com/measuredco/puck/compare/v0.17.1...v0.17.2) (2025-01-10)
+
+
+### Bug Fixes
+
+* always respect history hotkeys inside iframes ([1134e8b](https://github.com/measuredco/puck/commit/1134e8b893e6828ad6407d570d987d4206e71566))
+* clear old readOnly data when running resolveData ([3e91adc](https://github.com/measuredco/puck/commit/3e91adcf38a3a0f03537d592d15458f368048857))
+* don't trigger move action if source / destination the same ([8a0b811](https://github.com/measuredco/puck/commit/8a0b811c79d7ec91cd6cc0007f05048680e42997))
+* ensure parent is not null on first render in resolveFields ([773a81a](https://github.com/measuredco/puck/commit/773a81a330bc133b2d77b58d3ec99300cda1546e))
+* factor in border when setting viewport size ([cc3b3b8](https://github.com/measuredco/puck/commit/cc3b3b8685e63cccba2c5a59e349a9394445f1f6))
+* fix plugin-emotion-cache style sync when using initialData ([ac8679c](https://github.com/measuredco/puck/commit/ac8679c309a5b9b46670aa41b263b7369d155a46))
+* fix readOnly behaviour in nested fields ([f6ab512](https://github.com/measuredco/puck/commit/f6ab51269d6f2acfb3a366ac5c33337158ac30ba))
+* remove unnecessary transpile from next recipe ([a5f2d08](https://github.com/measuredco/puck/commit/a5f2d08efe6e3aec8c65ed1a1d59df26f45277be))
+* respect min/max for freeform input in number field ([715710a](https://github.com/measuredco/puck/commit/715710a37c06ec6f255036c3e1334cf4fb0b2549))
+* use correct label for array and object subfields ([c00ea00](https://github.com/measuredco/puck/commit/c00ea007f20242766786c57b915e43c65047a045))
+
+
+
+
 ## [0.17.1](https://github.com/measuredco/puck/compare/v0.17.0...v0.17.1) (2024-12-18)
 
 
