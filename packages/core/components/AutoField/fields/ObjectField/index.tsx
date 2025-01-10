@@ -51,14 +51,19 @@ export const ObjectField = ({
               ? readOnlyFields[subFieldName]
               : readOnlyFields[wildcardFieldName];
 
+            const label = subField.label || fieldName;
+
             return (
               <AutoFieldPrivate
                 key={subFieldName}
                 name={subFieldName}
-                label={subField.label || fieldName}
+                label={label}
                 id={`${id}_${fieldName}`}
                 readOnly={subReadOnly}
-                field={subField}
+                field={{
+                  ...subField,
+                  label, // May be used by custom fields
+                }}
                 value={data[fieldName]}
                 onChange={(val, ui) => {
                   onChange(
