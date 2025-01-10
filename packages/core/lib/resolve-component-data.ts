@@ -47,10 +47,6 @@ export const resolveComponentData = async (
     const { props: resolvedProps, readOnly = {} } =
       await configForItem.resolveData(item, { changed, lastData: oldItem });
 
-    const { readOnly: existingReadOnly = {} } = item || {};
-
-    const newReadOnly = { ...existingReadOnly, ...readOnly };
-
     const resolvedItem = {
       ...item,
       props: {
@@ -59,8 +55,8 @@ export const resolveComponentData = async (
       },
     };
 
-    if (Object.keys(newReadOnly).length) {
-      resolvedItem.readOnly = newReadOnly;
+    if (Object.keys(readOnly).length) {
+      resolvedItem.readOnly = readOnly;
     }
 
     cache.lastChange[item.props.id] = {
