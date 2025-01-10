@@ -7,9 +7,9 @@ import {
   ReactElement,
   ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import {
@@ -25,6 +25,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { ObjectField } from "./fields/ObjectField";
 import { useAppContext } from "../Puck/context";
 import { useSafeId } from "../../lib/use-safe-id";
+import { NestedFieldContext } from "./context";
 
 const getClassName = getClassNameFactory("Input", styles);
 const getClassNameWrapper = getClassNameFactory("InputWrapper", styles);
@@ -128,7 +129,7 @@ function AutoFieldInternal<
     Label?: React.FC<FieldLabelPropsInternal>;
   }
 ) {
-  const { dispatch, overrides } = useAppContext();
+  const { dispatch, overrides, selectedItem } = useAppContext();
 
   const { id, Label = FieldLabelInternal } = props;
 
@@ -216,20 +217,30 @@ function AutoFieldInternal<
 
   const Render = render[field.type] as (props: FieldProps) => ReactElement;
 
+  const nestedFieldContext = useContext(NestedFieldContext);
+
   return (
-    <div
-      className={getClassNameWrapper()}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      onClick={(e) => {
-        // Prevent propagation of any click events to parent field.
-        // For example, a field within an array may bubble an event
-        // and fail to stop propagation.
-        e.stopPropagation();
+    <NestedFieldContext.Provider
+      value={{
+        readOnlyFields:
+          nestedFieldContext.readOnlyFields || selectedItem?.readOnly || {},
+        localName: nestedFieldContext.localName,
       }}
     >
-      <Render {...mergedProps}>{children}</Render>
-    </div>
+      <div
+        className={getClassNameWrapper()}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onClick={(e) => {
+          // Prevent propagation of any click events to parent field.
+          // For example, a field within an array may bubble an event
+          // and fail to stop propagation.
+          e.stopPropagation();
+        }}
+      >
+        <Render {...mergedProps}>{children}</Render>
+      </div>
+    </NestedFieldContext.Provider>
   );
 }
 
