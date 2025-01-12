@@ -394,7 +394,11 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
               >
                 <Component.render
                   {...item.props}
-                  puck={{ renderDropZone: DropZoneRender }}
+                  puck={{
+                    renderDropZone: (props: DropZoneProps) => (
+                      <DropZoneRender {...props} />
+                    ),
+                  }}
                 />
               </DropZoneProvider>
             );
