@@ -1,6 +1,7 @@
 import { defaultAppState } from "../../components/Puck/context";
-import { SetUiAction, createReducer } from "../../reducer";
-import { AppState, Config } from "../../types";
+import { rootDroppableId } from "../../lib/root-droppable-id";
+import { DuplicateAction, SetUiAction, createReducer } from "../../reducer";
+import { AppState, Config, Data, UiState } from "../../types";
 
 type Props = {
   Comp: {
@@ -9,6 +10,9 @@ type Props = {
 };
 
 type UserConfig = Config<Props>;
+
+const defaultData: Data = defaultAppState.data;
+const defaultUi: UiState = defaultAppState.ui;
 
 describe("State reducer", () => {
   const config: UserConfig = {
@@ -33,6 +37,32 @@ describe("State reducer", () => {
 
       const newState = reducer(state, action);
       expect(newState.ui.leftSideBarVisible).toEqual(false);
+    });
+  });
+
+  describe("duplicate action", () => {
+    it("should select the duplicated item", () => {
+      const state: AppState = {
+        ui: defaultUi,
+        data: {
+          ...defaultData,
+          content: [
+            {
+              type: "Comp",
+              props: { id: "sampleId", prop: "Some example data" },
+            },
+          ],
+        },
+      };
+      const action: DuplicateAction = {
+        type: "duplicate",
+        sourceIndex: 0,
+        sourceZone: rootDroppableId,
+      };
+
+      const newState = reducer(state, action);
+      expect(newState.ui.itemSelector?.index).toBe(1);
+      expect(newState.ui.itemSelector?.zone).toBe(rootDroppableId);
     });
   });
 });
