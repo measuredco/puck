@@ -282,11 +282,13 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
 
           let label = componentConfig?.["label"] ?? item.type.toString();
 
-          if (item.type === "preview" && preview) {
-            componentType = preview.componentType;
+          if (item.type === "preview") {
+            componentType = preview?.componentType ?? "__preview";
 
             label =
-              config.components[componentType]?.label ?? preview.componentType;
+              config.components[componentType]?.label ??
+              componentType ??
+              "Preview";
 
             function Preview() {
               return (
