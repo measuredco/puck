@@ -45,6 +45,8 @@ export type DropZoneDndData = {
   isDroppableTarget: boolean;
 };
 
+const DropZoneEditPure = (props: DropZoneProps) => <DropZoneEdit {...props} />;
+
 const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
   function DropZoneEditInternal(
     {
@@ -252,7 +254,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
           const componentId = item.props.id;
 
           const puckProps: PuckContext = {
-            renderDropZone: (props) => <DropZoneEdit {...props} />,
+            renderDropZone: DropZoneEditPure,
             isEditing: true,
             dragRef: null,
           };
@@ -344,6 +346,10 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
   }
 );
 
+const DropZoneRenderPure = (props: DropZoneProps) => (
+  <DropZoneRender {...props} />
+);
+
 const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
   function DropZoneRenderInternal({ className, style, zone }, ref) {
     const ctx = useContext(dropZoneContext);
@@ -395,9 +401,7 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
                 <Component.render
                   {...item.props}
                   puck={{
-                    renderDropZone: (props: DropZoneProps) => (
-                      <DropZoneRender {...props} />
-                    ),
+                    renderDropZone: DropZoneRenderPure,
                   }}
                 />
               </DropZoneProvider>
