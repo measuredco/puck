@@ -136,8 +136,12 @@ const useResolvedFields = (): [FieldsType, boolean] => {
   }, [parent]);
 
   useEffect(() => {
-    // Must either be in root zone, or have parent
-    if (!state.ui.itemSelector?.zone || hasParent) {
+    // Must either be in default zone, or have parent
+    if (
+      !state.ui.itemSelector?.zone ||
+      state.ui.itemSelector?.zone === "default-zone" ||
+      hasParent
+    ) {
       if (hasResolver) {
         setFieldsLoading(true);
 
