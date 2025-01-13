@@ -36,7 +36,7 @@
     "recipes/*",
     "packages/*"
   ],
-  "version": "0.17.2",
+  "version": "0.17.3",
   "engines": {
     "node": ">=18.18"
   }
