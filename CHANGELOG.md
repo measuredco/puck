@@ -2,6 +2,16 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.17.3](https://github.com/measuredco/puck/compare/v0.17.2...v0.17.3) (2025-01-13)
+
+
+### Bug Fixes
+
+* ensure items in root DropZone can be selected ([f61dd4a](https://github.com/measuredco/puck/commit/f61dd4a955e6c09d49f4fc1967e1cac5445697f7))
+
+
+
+
 ## [0.17.2](https://github.com/measuredco/puck/compare/v0.17.1...v0.17.2) (2025-01-10)
 
 
