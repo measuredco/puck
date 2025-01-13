@@ -23,5 +23,12 @@ export const reduceUi = (ui: UiState, action: PuckAction): UiState => {
     };
   }
 
+  if (action.type === "remove") {
+    return {
+      ...ui,
+      itemSelector: null,
+    };
+  }
+
   return ui;
 };
