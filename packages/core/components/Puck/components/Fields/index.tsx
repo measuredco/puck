@@ -196,7 +196,7 @@ export const Fields = () => {
 
   return (
     <form
-      className={getClassName()}
+      className={getClassName({ wrapFields:true })}
       onSubmit={(e) => {
         e.preventDefault();
       }}
@@ -292,15 +292,16 @@ export const Fields = () => {
             const id = `${selectedItem.props.id}_${field.type}_${fieldName}`;
 
             return (
-              <AutoFieldPrivate
-                key={id}
-                field={field}
-                name={fieldName}
-                id={id}
-                readOnly={!edit || readOnly[fieldName]}
-                value={selectedItem.props[fieldName]}
-                onChange={onChange}
-              />
+              <div key={id} className={getClassName("field")}>
+                <AutoFieldPrivate
+                  field={field}
+                  name={fieldName}
+                  id={id}
+                  readOnly={!edit || readOnly[fieldName]}
+                  value={selectedItem.props[fieldName]}
+                  onChange={onChange}
+                />
+              </div>
             );
           } else {
             const readOnly = (data.root.readOnly || {}) as Record<
@@ -314,15 +315,16 @@ export const Fields = () => {
             const id = `root_${field.type}_${fieldName}`;
 
             return (
-              <AutoFieldPrivate
-                key={id}
-                field={field}
-                name={fieldName}
-                id={id}
-                readOnly={!edit || readOnly[fieldName]}
-                value={(rootProps as Record<string, any>)[fieldName]}
-                onChange={onChange}
-              />
+              <div key={id} className={getClassName("field")}>
+                <AutoFieldPrivate
+                  field={field}
+                  name={fieldName}
+                  id={id}
+                  readOnly={!edit || readOnly[fieldName]}
+                  value={(rootProps as Record<string, any>)[fieldName]}
+                  onChange={onChange}
+                />
+              </div>
             );
           }
         })}
