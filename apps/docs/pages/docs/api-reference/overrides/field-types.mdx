@@ -8,7 +8,7 @@ Override each [field type](/docs/api-reference/fields).
 
 ```tsx copy
 const overrides = {
-  fieldType: {
+  fieldTypes: {
     number: ({ onChange }) => (
       <input type="number" onChange={(e) => onChange(e.currentTarget.value)} />
     ),
