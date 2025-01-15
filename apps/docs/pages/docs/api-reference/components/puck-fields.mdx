@@ -35,4 +35,24 @@ export function Editor() {
 
 ## Props
 
-This component doesn't accept any props.
+| Param                       | Example             | Type    | Status |
+| --------------------------- | ------------------- | ------- | ------ |
+| [`wrapFields`](#wrapfields) | `wrapFields: false` | boolean | -      |
+
+## Optional props
+
+### `wrapFields`
+
+Whether or not the top-level fields should be padded and separated by a a border. Defaults to `true`.
+
+```tsx {6} copy
+import { Puck } from "@measured/puck";
+
+export function Editor() {
+  return (
+    <Puck>
+      <Puck.Fields wrapFields={false} />
+    </Puck>
+  );
+}
+```
