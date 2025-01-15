@@ -166,7 +166,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
   return [resolvedFields, fieldsLoading];
 };
 
-export const Fields = () => {
+export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
   const {
     selectedItem,
     state,
@@ -196,7 +196,7 @@ export const Fields = () => {
 
   return (
     <form
-      className={getClassName({ wrapFields:true })}
+      className={getClassName({ wrapFields })}
       onSubmit={(e) => {
         e.preventDefault();
       }}
