@@ -3,5 +3,6 @@
 @import "./styles/typography.css";
 
 #frame-root {
+  height: 1px; /* Enables DropZone to inherit min-height */
   min-height: 100vh;
 }
