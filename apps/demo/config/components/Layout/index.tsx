@@ -54,7 +54,7 @@ export const layoutField: ObjectField<LayoutFieldProps> = {
   },
 };
 
-export const Layout = forwardRef<HTMLDivElement, LayoutProps>(
+const Layout = forwardRef<HTMLDivElement, LayoutProps>(
   ({ children, className, layout, style }, ref) => {
     return (
       <div
@@ -78,6 +78,10 @@ export const Layout = forwardRef<HTMLDivElement, LayoutProps>(
     );
   }
 );
+
+Layout.displayName = "Layout";
+
+export { Layout };
 
 export function withLayout<
   Props extends DefaultComponentProps = DefaultComponentProps
