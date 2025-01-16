@@ -150,10 +150,12 @@ const useResolvedFields = (): [FieldsType, boolean] => {
 
           setFieldsLoading(false);
         });
-      } else {
-        setResolvedFields(defaultFields);
+
+        return;
       }
     }
+
+    setResolvedFields(defaultFields);
   }, [
     data,
     defaultFields,
