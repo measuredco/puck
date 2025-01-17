@@ -13,10 +13,12 @@ import { useAppContext } from "../../context";
 
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
-import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 import { getChanged } from "../../../../lib/get-changed";
 import { useParent } from "../../../../lib/use-parent";
+import { useOnValueChange } from "../../../../lib/use-on-value-change";
+import { selectorIs } from "../../../../lib/selector-is";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -64,6 +66,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
   >({});
   const [resolvedFields, setResolvedFields] = useState(defaultFields);
   const [fieldsLoading, setFieldsLoading] = useState(false);
+  const lastFields = useRef<FieldsType>({});
 
   const defaultResolveFields = (
     _componentData: ComponentOrRootData,
@@ -100,7 +103,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
           {
             changed,
             fields,
-            lastFields: resolvedFields,
+            lastFields: lastFields.current,
             lastData: lastData as ComponentData,
             appState: state,
             parent,
@@ -112,7 +115,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
         return await config.root!.resolveFields!(componentData, {
           changed,
           fields,
-          lastFields: resolvedFields,
+          lastFields: lastFields.current,
           lastData: lastData as RootData,
           appState: state,
           parent,
@@ -122,25 +125,19 @@ const useResolvedFields = (): [FieldsType, boolean] => {
       return defaultResolveFields(componentData, {
         changed,
         fields,
-        lastFields: resolvedFields,
+        lastFields: lastFields.current,
         lastData,
       });
     },
-    [data, config, componentData, selectedItem, resolvedFields, state, parent]
+    [data, config, componentData, selectedItem, state, parent]
   );
 
-  const [hasParent, setHasParent] = useState(false);
-
-  useEffect(() => {
-    setHasParent(!!parent);
-  }, [parent]);
-
-  useEffect(() => {
+  const triggerResolver = useCallback(() => {
     // Must either be in default zone, or have parent
     if (
       !state.ui.itemSelector?.zone ||
       state.ui.itemSelector?.zone === "default-zone" ||
-      hasParent
+      parent
     ) {
       if (hasResolver) {
         setFieldsLoading(true);
@@ -156,14 +153,23 @@ const useResolvedFields = (): [FieldsType, boolean] => {
     }
 
     setResolvedFields(defaultFields);
-  }, [
-    data,
-    defaultFields,
+  }, [defaultFields, state.ui.itemSelector, hasResolver, parent]);
+
+  useOnValueChange<ItemSelector | null>(
     state.ui.itemSelector,
-    selectedItem,
-    hasResolver,
-    hasParent,
-  ]);
+    () => {
+      lastFields.current = defaultFields;
+    },
+    selectorIs
+  );
+
+  useOnValueChange(
+    { data, parent, itemSelector: state.ui.itemSelector },
+    () => {
+      triggerResolver();
+    },
+    (a, b) => JSON.stringify(a) === JSON.stringify(b)
+  );
 
   return [resolvedFields, fieldsLoading];
 };
