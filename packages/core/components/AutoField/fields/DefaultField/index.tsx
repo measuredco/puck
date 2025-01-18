@@ -9,12 +9,14 @@ export const DefaultField = ({
   field,
   onChange,
   readOnly,
-  value,
+  value: _value,
   name,
   label,
   Label,
   id,
 }: FieldPropsInternal) => {
+  const value = _value as string | number | undefined | null;
+
   return (
     <Label
       label={label || name}
@@ -32,7 +34,7 @@ export const DefaultField = ({
         type={field.type}
         title={label || name}
         name={name}
-        value={typeof value === "undefined" ? "" : value.toString()}
+        value={value?.toString ? value.toString() : ""}
         onChange={(e) => {
           if (field.type === "number") {
             const numberValue = Number(e.currentTarget.value);
