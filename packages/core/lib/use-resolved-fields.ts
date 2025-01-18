@@ -2,7 +2,7 @@ import { ComponentData, RootData } from "../types";
 import type { Field, Fields as FieldsType } from "../types";
 import { useAppContext } from "../components/Puck/context";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ItemSelector } from "../lib/get-item";
 import { getChanged } from "../lib/get-changed";
 import { useParent } from "../lib/use-parent";
@@ -43,7 +43,7 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
   >({});
   const [resolvedFields, setResolvedFields] = useState(defaultFields);
   const [fieldsLoading, setFieldsLoading] = useState(false);
-  const lastFields = useRef<FieldsType>({});
+  const lastFields = useRef<FieldsType>(defaultFields);
 
   const defaultResolveFields = (
     _componentData: ComponentOrRootData,
@@ -122,13 +122,14 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
         resolveFields(defaultFields).then((fields) => {
           setResolvedFields(fields || {});
 
+          lastFields.current = fields;
+
           setFieldsLoading(false);
         });
 
         return;
       }
     }
-
     setResolvedFields(defaultFields);
   }, [defaultFields, state.ui.itemSelector, hasResolver, parent]);
 
@@ -147,6 +148,10 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
     },
     (a, b) => JSON.stringify(a) === JSON.stringify(b)
   );
+
+  useEffect(() => {
+    triggerResolver();
+  }, []);
 
   return [resolvedFields, fieldsLoading];
 };
