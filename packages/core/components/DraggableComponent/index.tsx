@@ -298,13 +298,15 @@ export const DraggableComponent = ({
   }, [ref.current]);
 
   useEffect(() => {
-    if (isSelected) {
-      ctx?.registerPath!({
+    ctx?.registerPath!(
+      id,
+      {
         index,
         zone: zoneCompound,
-      });
-    }
-  }, [isSelected]);
+      },
+      componentType
+    );
+  }, [id, zoneCompound, index, componentType]);
 
   const CustomActionBar = useMemo(
     () => overrides.actionBar || DefaultActionBar,

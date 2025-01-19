@@ -32,7 +32,7 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   unregisterZone?: (zoneCompound: string) => void;
   activeZones?: Record<string, boolean>;
   pathData?: PathData;
-  registerPath?: (selector: ItemSelector) => void;
+  registerPath?: (id: string, selector: ItemSelector, label: string) => void;
   mode?: "edit" | "render";
   depth: number;
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
