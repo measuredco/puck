@@ -306,6 +306,10 @@ export const DraggableComponent = ({
       },
       componentType
     );
+
+    return () => {
+      ctx?.unregisterPath?.(id);
+    };
   }, [id, zoneCompound, index, componentType]);
 
   const CustomActionBar = useMemo(
