@@ -2,6 +2,18 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.17.4](https://github.com/measuredco/puck/compare/v0.17.3...v0.17.4) (2025-01-19)
+
+
+### Bug Fixes
+
+* handle null when provided to text/textarea/number fields ([e778246](https://github.com/measuredco/puck/commit/e778246e4ae8925f3d04962369a33a9c1a4b6589))
+* improve stability of resolveFields API ([5c60d6a](https://github.com/measuredco/puck/commit/5c60d6a11512086f395ace352eec868fcd748f44))
+* respect allow prop for existing items ([e414e34](https://github.com/measuredco/puck/commit/e414e34680acb7259dcee1da081060f5be923c02))
+
+
+
+
 ## [0.17.3](https://github.com/measuredco/puck/compare/v0.17.2...v0.17.3) (2025-01-13)
 
 
