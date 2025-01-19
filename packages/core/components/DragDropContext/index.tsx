@@ -305,13 +305,7 @@ const DragDropContextClient = ({
   const dragMode = useRef<"new" | "existing" | null>(null);
 
   const registerPath = useCallback(
-    (selector: ItemSelector) => {
-      const item = getItem(selector, data);
-
-      if (!item) {
-        return;
-      }
-
+    (id: string, selector: ItemSelector, label: string) => {
       const [area] = getZoneId(selector.zone);
 
       setPathData((latestPathData = {}) => {
@@ -319,12 +313,12 @@ const DragDropContextClient = ({
 
         return {
           ...latestPathData,
-          [item.props.id]: {
+          [id]: {
             path: [
               ...parentPathData.path,
               ...(selector.zone ? [selector.zone] : []),
             ],
-            label: item.type as string,
+            label: label,
           },
         };
       });
