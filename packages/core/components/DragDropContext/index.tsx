@@ -326,6 +326,19 @@ const DragDropContextClient = ({
     [data, setPathData]
   );
 
+  const unregisterPath = useCallback(
+    (id: string) => {
+      setPathData((latestPathData = {}) => {
+        const newPathData = { ...latestPathData };
+
+        delete newPathData[id];
+
+        return newPathData;
+      });
+    },
+    [data, setPathData]
+  );
+
   const initialSelector = useRef<{ zone: string; index: number }>(undefined);
 
   return (
@@ -578,6 +591,7 @@ const DragDropContextClient = ({
                 areaId: "root",
                 depth: 0,
                 registerPath,
+                unregisterPath,
                 pathData,
                 path: [],
               }}
