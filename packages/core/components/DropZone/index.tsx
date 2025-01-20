@@ -242,7 +242,6 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
         }}
         data-testid={`dropzone:${zoneCompound}`}
         data-puck-dropzone={zoneCompound}
-        data-puck-dnd={zoneCompound}
         style={
           {
             ...style,

@@ -96,6 +96,16 @@ const getPointerCollisions = (
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i];
 
+      const dropzoneId = element.getAttribute("data-puck-dropzone");
+
+      if (dropzoneId) {
+        const droppable = manager.registry.droppables.get(dropzoneId);
+
+        if (droppable) {
+          candidates.push(droppable);
+        }
+      }
+
       const id = element.getAttribute("data-puck-dnd");
 
       if (id) {
