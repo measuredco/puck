@@ -94,7 +94,6 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       inNextDeepestArea,
       draggedComponentType,
       userIsDragging,
-      preview,
     } = useContextStore(ZoneStoreContext, (s) => {
       return {
         isDeepestZone: s.zoneDepthIndex[zoneCompound] ?? false,
@@ -102,7 +101,6 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
         draggedItemId: s.draggedItem?.id,
         draggedComponentType: s.draggedItem?.data.componentType,
         userIsDragging: !!s.draggedItem,
-        preview: s.previewIndex[zoneCompound],
       };
     });
 
@@ -189,7 +187,10 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       isEnabled = acceptsTarget(draggedComponentType);
     }
 
-    const contentWithPreview = useContentWithPreview(content, zoneCompound);
+    const [contentWithPreview, preview] = useContentWithPreview(
+      content,
+      zoneCompound
+    );
 
     const isDropEnabled =
       isEnabled &&
