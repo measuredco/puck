@@ -247,7 +247,9 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
           {
             ...style,
             "--min-empty-height": `${minEmptyHeight}px`,
-            backgroundColor: RENDER_DEBUG ? getRandomColor() : undefined,
+            backgroundColor: RENDER_DEBUG
+              ? getRandomColor()
+              : style?.backgroundColor,
           } as CSSProperties
         }
       >
