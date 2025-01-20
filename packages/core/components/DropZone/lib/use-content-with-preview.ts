@@ -10,7 +10,7 @@ import { useAppContext } from "../../Puck/context";
 export const useContentWithPreview = (
   content: Content,
   zoneCompound: string
-) => {
+): [Content, Preview | undefined] => {
   const { draggedItemId, preview, previewExists } = useContextStore(
     ZoneStoreContext,
     (s) => {
@@ -30,6 +30,9 @@ export const useContentWithPreview = (
   } = useAppContext();
 
   const [contentWithPreview, setContentWithPreview] = useState(content);
+  const [localPreview, setLocalPreview] = useState<Preview | undefined>(
+    preview
+  );
 
   const updateContent = useRenderedCallback(
     (content: Content, preview: Preview | undefined, isDragging: boolean) => {
@@ -71,6 +74,8 @@ export const useContentWithPreview = (
             : content
         );
       }
+
+      setLocalPreview(preview);
     },
     [draggedItemId, previewExists]
   );
@@ -79,5 +84,5 @@ export const useContentWithPreview = (
     updateContent(content, preview, isDragging);
   }, [content, preview, isDragging]);
 
-  return contentWithPreview;
+  return [contentWithPreview, localPreview];
 };
