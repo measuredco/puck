@@ -5,6 +5,7 @@ import { useRenderedCallback } from "../../../lib/dnd/use-rendered-callback";
 import { insert } from "../../../lib/insert";
 import { ZoneStoreContext } from "../context";
 import { useContextStore } from "../../../lib/use-context-store";
+import { useAppContext } from "../../Puck/context";
 
 export const useContentWithPreview = (
   content: Content,
@@ -21,10 +22,24 @@ export const useContentWithPreview = (
     }
   );
 
+  // Refactor this once all state uses zustand
+  const {
+    state: {
+      ui: { isDragging },
+    },
+  } = useAppContext();
+
   const [contentWithPreview, setContentWithPreview] = useState(content);
 
   const updateContent = useRenderedCallback(
-    (content: Content, preview: Preview | undefined) => {
+    (content: Content, preview: Preview | undefined, isDragging: boolean) => {
+      // Preview is cleared but context hasn't yet caught up
+      // This is necessary because Zustand clears the preview before the dispatcher finishes
+      // Refactor this once all state has moved to Zustand.
+      if (isDragging && !previewExists) {
+        return;
+      }
+
       if (preview) {
         if (preview.type === "insert") {
           setContentWithPreview(
@@ -61,8 +76,8 @@ export const useContentWithPreview = (
   );
 
   useEffect(() => {
-    updateContent(content, preview);
-  }, [content, preview]);
+    updateContent(content, preview, isDragging);
+  }, [content, preview, isDragging]);
 
   return contentWithPreview;
 };
