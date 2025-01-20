@@ -1,19 +1,15 @@
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { useAppContext } from "../components/Puck/context";
 import { getItem, ItemSelector } from "./get-item";
-import { dropZoneContext } from "../components/DropZone";
 import { convertPathDataToBreadcrumbs } from "./use-breadcrumbs";
 import { PathData } from "../components/DropZone/context";
-import { Data } from "../types";
+import { ComponentData, Data } from "../types";
 
-export const getParent = (
-  itemSelector: ItemSelector | null,
+export const getParentByItem = (
+  item: ComponentData | undefined,
   pathData: PathData | undefined,
   data: Data
 ) => {
-  if (!itemSelector) return null;
-
-  const item = getItem(itemSelector, data);
   const breadcrumbs = convertPathDataToBreadcrumbs(item, pathData, data);
 
   const lastItem = breadcrumbs[breadcrumbs.length - 1];
@@ -24,16 +20,40 @@ export const getParent = (
   return parent || null;
 };
 
+export const getParent = (
+  itemSelector: ItemSelector | null,
+  pathData: PathData | undefined,
+  data: Data
+) => {
+  if (!itemSelector) return null;
+
+  const item = getItem(itemSelector, data);
+
+  return getParentByItem(item, pathData, data);
+};
+
 export const useGetParent = () => {
-  const { state } = useAppContext();
-  const { pathData } = useContext(dropZoneContext) || {};
+  const { state, pathData } = useAppContext();
 
   return useCallback(
-    () => getParent(state.ui.itemSelector, pathData, state.data),
-    [state.ui.itemSelector, pathData, state.data]
+    (itemSelector: ItemSelector | null) =>
+      getParent(itemSelector, pathData, state.data),
+    [pathData, state.data]
+  );
+};
+
+export const useGetParentByItem = () => {
+  const { state, pathData } = useAppContext();
+
+  return useCallback(
+    (item: ComponentData | undefined) =>
+      getParentByItem(item, pathData, state.data),
+    [pathData, state.data]
   );
 };
 
 export const useParent = () => {
-  return useGetParent()();
+  const { state } = useAppContext();
+
+  return useGetParent()(state.ui.itemSelector);
 };

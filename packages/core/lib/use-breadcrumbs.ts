@@ -81,13 +81,13 @@ export const useBreadcrumbs = (renderCount?: number) => {
   const {
     state: { data },
     selectedItem,
+    pathData,
   } = useAppContext();
-  const dzContext = useContext(dropZoneContext);
 
   return useMemo<Breadcrumb[]>(() => {
     const breadcrumbs = convertPathDataToBreadcrumbs(
       selectedItem,
-      dzContext?.pathData,
+      pathData,
       data
     );
 
@@ -96,5 +96,5 @@ export const useBreadcrumbs = (renderCount?: number) => {
     }
 
     return breadcrumbs;
-  }, [selectedItem, dzContext?.pathData, renderCount]);
+  }, [selectedItem, pathData, renderCount]);
 };

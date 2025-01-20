@@ -2,6 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import { flattenData } from "./flatten-data";
 import { ComponentData, Config, Permissions, UserGenerics } from "../types";
 import { getChanged } from "./get-changed";
+import {
+  getParentByItem,
+  useGetParent,
+  useGetParentByItem,
+} from "./use-parent";
+import { PathData } from "../components/DropZone/context";
 
 type PermissionsArgs<
   UserConfig extends Config = Config,
@@ -42,7 +48,8 @@ export const useResolvedPermissions = <
   appState: G["UserAppState"],
   globalPermissions: Partial<Permissions>,
   setComponentLoading?: (id: string) => void,
-  unsetComponentLoading?: (id: string) => void
+  unsetComponentLoading?: (id: string) => void,
+  pathData?: PathData
 ) => {
   const [cache, setCache] = useState<Cache>({});
 
@@ -78,6 +85,7 @@ export const useResolvedPermissions = <
               permissions: initialPermissions,
               appState,
               lastData: cache[item.props.id]?.lastData || null,
+              parent: getParentByItem(item, pathData, appState.data),
             }
           );
 
@@ -98,7 +106,7 @@ export const useResolvedPermissions = <
         }
       }
     },
-    [config, globalPermissions, appState, cache]
+    [config, globalPermissions, appState, cache, pathData]
   );
 
   const resolveDataForRoot = (force = false) => {
@@ -149,7 +157,7 @@ export const useResolvedPermissions = <
     resolvePermissions();
 
     // We only trigger this effect on appState.data to avoid triggering on all UI changes
-  }, [config, appState.data]);
+  }, [config, appState.data, pathData]);
 
   const getPermissions: GetPermissions = useCallback(
     ({ item, type, root } = {}) => {

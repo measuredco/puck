@@ -126,6 +126,8 @@ export const DraggableComponent = ({
     dispatch,
     iframe,
     state,
+    registerPath,
+    unregisterPath,
   } = useAppContext();
 
   const ctx = useContext(dropZoneContext);
@@ -298,7 +300,7 @@ export const DraggableComponent = ({
   }, [ref.current]);
 
   useEffect(() => {
-    ctx?.registerPath!(
+    registerPath!(
       id,
       {
         index,
@@ -308,7 +310,7 @@ export const DraggableComponent = ({
     );
 
     return () => {
-      ctx?.unregisterPath?.(id);
+      unregisterPath?.(id);
     };
   }, [id, zoneCompound, index, componentType]);
 

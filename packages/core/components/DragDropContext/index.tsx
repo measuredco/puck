@@ -29,7 +29,6 @@ import { PointerSensor } from "../../lib/dnd/PointerSensor";
 import { collisionStore } from "../../lib/dnd/collision/dynamic/store";
 import { generateId } from "../../lib/generate-id";
 import { createStore } from "zustand";
-import { usePathData } from "../../lib/use-path-data";
 
 const DEBUG = false;
 
@@ -104,7 +103,7 @@ const DragDropContextClient = ({
   children,
   disableAutoScroll,
 }: DragDropContextProps) => {
-  const { state, config, dispatch, resolveData } = useAppContext();
+  const { state, config, dispatch, resolveData, pathData } = useAppContext();
 
   const id = useId();
 
@@ -296,8 +295,6 @@ const DragDropContextClient = ({
   const [dragListeners, setDragListeners] = useState<DragCbs>({});
 
   const dragMode = useRef<"new" | "existing" | null>(null);
-
-  const { pathData, registerPath, unregisterPath } = usePathData(data);
 
   const initialSelector = useRef<{ zone: string; index: number }>(undefined);
 
@@ -550,9 +547,6 @@ const DragDropContextClient = ({
                 mode: "edit",
                 areaId: "root",
                 depth: 0,
-                registerPath,
-                unregisterPath,
-                pathData,
                 path: [],
               }}
             >

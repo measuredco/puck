@@ -17,7 +17,7 @@ import {
   UserGenerics,
 } from "../../types";
 import { PuckAction } from "../../reducer";
-import { getItem } from "../../lib/get-item";
+import { getItem, ItemSelector } from "../../lib/get-item";
 import { PuckHistory } from "../../lib/use-puck-history";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";
@@ -27,6 +27,8 @@ import {
   useResolvedPermissions,
 } from "../../lib/use-resolved-permissions";
 import { useResolvedData } from "../../lib/use-resolved-data";
+import { usePathData } from "../../lib/use-path-data";
+import { PathData } from "../DropZone/context";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {} },
@@ -83,6 +85,9 @@ export type AppContext<
   selectedItem?: G["UserData"]["content"][0];
   getPermissions: GetPermissions<UserConfig>;
   refreshPermissions: RefreshPermissions<UserConfig>;
+  pathData?: PathData;
+  registerPath?: (id: string, selector: ItemSelector, label: string) => void;
+  unregisterPath?: (id: string) => void;
 };
 
 export const defaultContext: AppContext = {
@@ -132,6 +137,10 @@ export const AppProvider = ({
 
   const [status, setStatus] = useState<Status>("LOADING");
 
+  const { pathData, registerPath, unregisterPath } = usePathData(
+    value.state.data
+  );
+
   // App is ready when client has loaded, after initial render
   // This triggers DropZones to activate
   useEffect(() => {
@@ -171,7 +180,8 @@ export const AppProvider = ({
     value.state,
     value.globalPermissions || {},
     setComponentLoading,
-    unsetComponentLoading
+    unsetComponentLoading,
+    pathData
   );
 
   const { resolveData } = useResolvedData(
@@ -197,6 +207,9 @@ export const AppProvider = ({
         componentState,
         setComponentState,
         resolveData,
+        pathData,
+        registerPath,
+        unregisterPath,
       }}
     >
       {children}
