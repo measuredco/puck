@@ -12,7 +12,7 @@
   -webkit-user-select: none;
 }
 
-[data-puck-dnd] {
+[data-puck-dropzone] {
   pointer-events: auto !important; /* Ensure DropZones still capture pointer events inside data-puck-components so elementsFromPoint triggers */
 }
 
