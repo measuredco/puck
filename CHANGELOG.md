@@ -2,6 +2,41 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.18.0](https://github.com/measuredco/puck/compare/v0.17.1...v0.18.0) (2025-01-21)
+
+
+### Features
+
+* add action to select parent component to ActionBar ([7c910d5](https://github.com/measuredco/puck/commit/7c910d5272e8d6d77819ccb3280dff143ea848fd))
+* add ActionBar.Label component for adding labels to action bars ([d2645fd](https://github.com/measuredco/puck/commit/d2645fd68a57b4c07bb8a3948ab6a845c2ce1988))
+* add DropZone collisionAxis API for forcing collision direction ([ba68732](https://github.com/measuredco/puck/commit/ba687329c6fac5085f78768bff6eb37bfd842f33))
+* add meta+i hotkey and previewMode state to toggle interactivity ([ec1eba5](https://github.com/measuredco/puck/commit/ec1eba58525e0245ee1214f8e401fa935c41fe23))
+* add wrapFields prop to control padding of fields in Puck.Fields ([30f9a92](https://github.com/measuredco/puck/commit/30f9a926d2640a5bf9f65d8f4c2b6018e73f8719))
+* control empty DropZone height with minEmptyHeight prop ([96f8340](https://github.com/measuredco/puck/commit/96f83408f4e6219dd35f5c29b204ef18e6d11d64))
+* deselect item on viewport change ([e35585d](https://github.com/measuredco/puck/commit/e35585d767c857413ed5560f311d64bcab1218c4))
+* forward the ref to the DropZone component ([676aa1c](https://github.com/measuredco/puck/commit/676aa1c974bd1260aaa687aa3edc2c54ef34e22b))
+* introduce new drag-and-drop engine ([6ebb3b8](https://github.com/measuredco/puck/commit/6ebb3b8724b8ed56cc76d3ce166b1dc87ed07dad))
+* reduce DropZone to height of items unless empty ([2b2595a](https://github.com/measuredco/puck/commit/2b2595a4e3e1c5ed8352cdfbec704290a1b396e8))
+* remove `position: fixed;` from Puck layout ([5deb774](https://github.com/measuredco/puck/commit/5deb7744c07fca12e6aa44d058b495f65b298eab))
+* support inline Drawers, deprecating unnecessary props ([f93b71e](https://github.com/measuredco/puck/commit/f93b71e1ad555184fc1a43f151ef1b161be148c6))
+
+
+### Bug Fixes
+
+* deselect item on delete ([f27871b](https://github.com/measuredco/puck/commit/f27871b5b63be8246cd281d93c49f7744d7e186f))
+* improve heading-analyzer reliability ([ab6c018](https://github.com/measuredco/puck/commit/ab6c01862c35e27929b249a6d4bc4d2e9065dc12))
+* never render FieldLabel with padding or borders ([a97b54f](https://github.com/measuredco/puck/commit/a97b54fd9427f3cd587951a0a30a95d56c5ff020))
+* prevent propagation of custom ActionBar actions by default ([14909bd](https://github.com/measuredco/puck/commit/14909bdc5a782330af661a32bc80ab387ab12897))
+* prevent user pollution of ActionBar styles ([e154cb7](https://github.com/measuredco/puck/commit/e154cb7c72c4fce735ccd60ccbdc862314f0ad26))
+* render DropZones the same in Puck and Render ([d975aaf](https://github.com/measuredco/puck/commit/d975aaf90bf7d0956ccf1d6c377a6e20ba224801))
+* reset resolveFields lastFields param when changing component ([7fead35](https://github.com/measuredco/puck/commit/7fead35fddf8fef49b41508a27c0e6be458ab2c4))
+* select new item when dispatching duplicate action ([e3d0025](https://github.com/measuredco/puck/commit/e3d0025d08408103940c2f84c4524266288f38fd))
+* set root DropZone to 100% height ([3d93f46](https://github.com/measuredco/puck/commit/3d93f46555372e83ead6f671e40970937802f5f4))
+* stop actions from overflowing outside left of frame ([c036b6d](https://github.com/measuredco/puck/commit/c036b6d2036cc759e0a2eda6154bdec5b8a7784e))
+* trigger iframe resize when closing devtools ([2c0b782](https://github.com/measuredco/puck/commit/2c0b782d41817caa2b6fae41fc52b1a7ccbb8d09))
+
+
+
 ## [0.17.4](https://github.com/measuredco/puck/compare/v0.17.3...v0.17.4) (2025-01-19)
 
 
