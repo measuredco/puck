@@ -572,7 +572,7 @@ An object describing the [AppState](/docs/api-reference/app-state).
 An object describing which props have changed on this component since the last time this function was called. This helps prevent duplicate calls when making async operations.
 
 ```tsx copy {2-4} /changed/1 filename="Example only updating the permissions when 'example' prop changes"
-const resolveFields = async ({ props }, { changed, lastPermissions }) => {
+const resolvePermissions = async ({ props }, { changed, lastPermissions }) => {
   if (!changed.example) {
     return lastPermissions; // Return the last permissions unless the `example` prop has changed
   }
