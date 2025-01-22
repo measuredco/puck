@@ -7,14 +7,11 @@ import { Puck } from "@/core";
 
 # Multi-column Layouts
 
-Multi-column layouts can be achieved with two Puck APIs:
-
-1. The [`<DropZone>` component](/docs/api-reference/components/drop-zone), enabling you to nest components
-2. The [`inline` parameter](/docs/api-reference/configuration/component-config#inline), enable multi-directional drag-and-drop
+Puck supports nesting components and multi-column layouts across any CSS layout using the [`<DropZone>` component](/docs/api-reference/components/drop-zone).
 
 ## Nested components
 
-Puck provides support for nesting components via the [`<DropZone>`](/docs/api-reference/components/drop-zone) component. This can be rendered anywhere within your component, creating a zone that you can drop components into.
+The [`<DropZone>`](/docs/api-reference/components/drop-zone) component is the fundamental building block for building nested or multi-column layouts. This can be rendered anywhere within your component, creating a zone that you can drop components into.
 
 ```tsx {1,9} showLineNumbers copy
 import { DropZone } from "@measured/puck";
