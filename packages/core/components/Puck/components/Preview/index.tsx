@@ -27,7 +27,15 @@ const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
         extends PointerEvent
         implements BubbledPointerEvent
       {
-        originalTarget: EventTarget | null;
+        _originalTarget: EventTarget | null = null;
+
+        set originalTarget(target: EventTarget | null) {
+          this._originalTarget = target;
+        }
+
+        get originalTarget() {
+          return this._originalTarget;
+        }
 
         constructor(
           type: string,
