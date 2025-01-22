@@ -7,11 +7,11 @@ import { Puck } from "@/core";
 
 # Multi-column Layouts
 
-Puck supports nesting components and multi-column layouts across any CSS layout using the [`<DropZone>` component](/docs/api-reference/components/drop-zone).
+Puck supports nested and multi-column layouts across any CSS layout using the [`<DropZone>` component](/docs/api-reference/components/drop-zone).
 
 ## Nested components
 
-The [`<DropZone>`](/docs/api-reference/components/drop-zone) component is the fundamental building block for building nested or multi-column layouts. This can be rendered anywhere within your component, creating a zone that you can drop components into.
+Add the [`<DropZone>`](/docs/api-reference/components/drop-zone) component to your render function to create a zone that you can drop components into.
 
 ```tsx {1,9} showLineNumbers copy
 import { DropZone } from "@measured/puck";
@@ -78,7 +78,7 @@ const config = {
 
 ## Fixed layouts
 
-Combining multiple DropZones enables you to achieve fixed layouts. By default, each DropZone is restricted to the vertical (`block`) axis.
+Combine multiple DropZones to achieve fixed layouts. By default, components inside a DropZone are arranged along the vertical (`block`) axis.
 
 ```tsx {9,11,12} showLineNumbers copy
 import { DropZone } from "@measured/puck";
@@ -171,7 +171,7 @@ const config = {
 
 ## Fluid layouts
 
-Puck supports all [CSS display](https://developer.mozilla.org/en-US/docs/Web/CSS/display) properties to enable fluid layouts with multi-directional drag-and-drop, including those with CSS grid and flexbox.
+Apply the [CSS display](https://developer.mozilla.org/en-US/docs/Web/CSS/display) property to a DropZone to arrange your components in different layouts. Puck supports all `display` values, including `grid` and `flex`, for multi-directional drag-and-drop.
 
 ```tsx {9-10} showLineNumbers copy
 import { DropZone } from "@measured/puck";
@@ -251,7 +251,7 @@ By default, Puck will wrap your components in a `div` element. For some layouts,
 
 For example, this is required if you wish to use CSS rules like `flex-grow`, `grid-column`, or `grid-row`.
 
-The [`inline`](/docs/api-reference/configuration/component-config#inline) component parameter allows you to eliminate the wrapping element. **When using inline mode, you must also specify which element is draggable by passing the [`puck.dragRef` prop](/docs/api-reference/configuration/component-config#puckdragref) to your element's `ref` prop.**
+Use the [`inline`](/docs/api-reference/configuration/component-config#inline) component parameter to remove the wrapping element. **When using this API, you must also specify which element is draggable by passing the [`puck.dragRef` prop](/docs/api-reference/configuration/component-config#puckdragref) to your element's `ref` prop.**
 
 ```tsx {11-12,19,22-26} showLineNumbers copy
 import { DropZone } from "@measured/puck";
@@ -362,7 +362,7 @@ const config = {
 
 ## Restricting components
 
-The [`allow`](/docs/api-reference/components/drop-zone#allow) and [`disallow`](/docs/api-reference/components/drop-zone#disallow) DropZone props allow you to restrict which components can be dragged into a DropZone.
+Use the [`allow`](/docs/api-reference/components/drop-zone#allow) and [`disallow`](/docs/api-reference/components/drop-zone#disallow) DropZone props to restrict which components can be dragged into a DropZone.
 
 ```tsx {9} showLineNumbers copy
 import { DropZone } from "@measured/puck";
@@ -382,7 +382,7 @@ const config = {
 };
 ```
 
-This can be combined with [categories](/docs/integrating-puck/categories) to restrict based on your existing groups:
+Combine this with [categories](/docs/integrating-puck/categories) to restrict behavior based on your existing groups:
 
 ```tsx {4-8,16} showLineNumbers copy
 import { DropZone } from "@measured/puck";
