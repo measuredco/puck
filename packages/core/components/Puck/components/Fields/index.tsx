@@ -83,7 +83,7 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
               [fieldName]: value,
             };
 
-            if (itemSelector) {
+            if (selectedItem && itemSelector) {
               const replaceActionData: ReplaceAction = {
                 type: "replace",
                 destinationIndex: itemSelector.index,
@@ -103,7 +103,7 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
               };
 
               // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-              if (config.components[selectedItem!.type]?.resolveData) {
+              if (config.components[selectedItem.type]?.resolveData) {
                 resolveData(setAction(state, setActionData));
               } else {
                 dispatch({
