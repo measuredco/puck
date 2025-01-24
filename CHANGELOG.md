@@ -2,6 +2,19 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.18.1](https://github.com/measuredco/puck/compare/v0.18.0...v0.18.1) (2025-01-24)
+
+
+### Bug Fixes
+
+* address React 19 peer dependency issues ([7649086](https://github.com/measuredco/puck/commit/7649086009deb9b9ceb5c4790e9c356b107a20b6))
+* address ResizeObserver loop error ([d3e6b57](https://github.com/measuredco/puck/commit/d3e6b57190e3f6e8a4f857a45a51cbb060daf050))
+* don't access selectedItem if undefined right after drop ([0573b18](https://github.com/measuredco/puck/commit/0573b182452f1c614a15f4125fefa81a880e37a2))
+* ensure nested drag-and-drop works in Firefox ([f077a37](https://github.com/measuredco/puck/commit/f077a37158194867a10c1406252fe4a8f4f6974c))
+
+
+
+
 ## [0.18.0](https://github.com/measuredco/puck/compare/v0.17.1...v0.18.0) (2025-01-21)
 
 
