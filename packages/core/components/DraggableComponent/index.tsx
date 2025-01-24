@@ -286,7 +286,7 @@ export const DraggableComponent = ({
   }, [ref.current, iframe]);
 
   useEffect(() => {
-    if (ref.current) {
+    if (ref.current && !userIsDragging) {
       const observer = new ResizeObserver(sync);
 
       observer.observe(ref.current);
@@ -295,7 +295,7 @@ export const DraggableComponent = ({
         observer.disconnect();
       };
     }
-  }, [ref.current]);
+  }, [ref.current, userIsDragging]);
 
   useEffect(() => {
     ctx?.registerPath!(
