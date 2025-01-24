@@ -4,6 +4,7 @@ import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { DropZone } from "@/core/components/DropZone";
 import { Section } from "../../components/Section";
+import { withLayout } from "../../components/Layout";
 
 const getClassName = getClassNameFactory("Grid", styles);
 
@@ -12,7 +13,7 @@ export type GridProps = {
   gap: number;
 };
 
-export const Grid: ComponentConfig<GridProps> = {
+export const GridInternal: ComponentConfig<GridProps> = {
   fields: {
     numColumns: {
       type: "number",
@@ -46,3 +47,5 @@ export const Grid: ComponentConfig<GridProps> = {
     );
   },
 };
+
+export const Grid = withLayout(GridInternal);
