@@ -2,7 +2,9 @@
 
 Puck provides support for [React Server Components](https://react.dev/reference/react/use-server#use-server) (RSC), but the interactive-nature of Puck requires special consideration.
 
-## The server environment
+## Environments
+
+### Server
 
 Puck supports the server environment for the following APIs:
 
@@ -13,13 +15,13 @@ These APIs can be used in an RSC environment, but in order to do so the Puck con
 
 This can be done by either avoiding client-only code (React `useState`, Puck `<DropZone>`, etc), or split out client components with the `"use client";` directive.
 
-## The client environment
+### Client
 
 All other Puck APIs, including the core `<Puck>` component, cannot run in an RSC environment due to their high-degree of interactivity.
 
 As these APIs render on the client, the Puck config provided must be safe for client-use, avoiding any server-specific logic.
 
-## Implementation
+## Implementations
 
 Since the Puck config can be referenced on the client or the server, we need to consider how to satisfy both environments.
 
@@ -29,7 +31,7 @@ There are three approaches to this:
 2. Mark your components up with the `"use client";` directive if you need client-specific functionality
 3. Create separate configs for client and server rendering
 
-### Avoid client-specific code
+### 1. Avoid client-specific code
 
 Avoiding client-specific code is the easiest way to support RSC across both environments, but may not be realistic for all users. This means:
 
@@ -52,7 +54,7 @@ const config = {
 };
 ```
 
-### Marking up components with `"use client";`
+### 2. Marking up components with `"use client";`
 
 Many modern component libraries will require some degree of client-side behaviour. For these cases, you'll need to mark them up with the `"use client";` directive.
 
@@ -119,43 +121,28 @@ export default async function Page() {
 }
 ```
 
-### Creating separate configs
+### 3. Creating separate configs
 
 Alternatively, consider entirely separate configs for the `<Puck>` and `<Render>` components. This approach can enable you to have different rendering behavior for a component for when it renders on the client or the server.
 
-To achieve this, you can create a shared config type:
+Create a shared config type:
 
-```tsx copy showLineNumbers filename="puck.config.ts"
+```tsx copy showLineNumbers filename="puck-types.ts"
 import type { Config } from "@measured/puck";
-import type { HeadingBlockProps } from "./components/HeadingBlock";
 
 type Props = {
-  HeadingBlock: HeadingBlockProps;
+  HeadingBlock: {
+    title: string;
+  };
 };
 
 export type UserConfig = Config<Props>;
 ```
 
-Define a server component config that uses any server-only components, excluding any unnecessary fields:
-
-```tsx copy showLineNumbers filename="puck.config.server.tsx"
-import type { UserConfig } from "./puck.config.ts";
-import HeadingBlockServer from "./components/HeadingBlockServer"; // Import server component
-
-export const config: UserConfig = {
-  components: {
-    HeadingBlock: {
-      render: HeadingBlockServer,
-    },
-  },
-};
-```
-
-And a separate client component config, for use within the `<Puck>` component on the client:
+Define a client component config for use within the `<Puck>` component:
 
 ```tsx copy showLineNumbers filename="puck.config.client.tsx"
-import type { UserConfig } from "./puck.config.server.ts";
-import HeadingBlockClient from "./components/HeadingBlockClient";
+import type { UserConfig } from "./puck-types.ts";
 
 export const config: UserConfig = {
   components: {
@@ -166,13 +153,41 @@ export const config: UserConfig = {
       defaultProps: {
         title: "Heading",
       },
-      render: ({ title }) => <HeadingBlockClient title={title} />, // Note you must call the component, rather than passing it in directly
+      render: ({ title }) => {
+        useState(); // useState fails on the server
+
+        return (
+          <div style={{ padding: 64 }}>
+            <h1>{title}</h1>
+          </div>
+        );
+      },
     },
   },
 };
 ```
 
-Now you can render with different configs depending on the context. Here's a Next.js app router example of a server render:
+Define a server config using the shared types for use within the `<Render>` component, excluding fields as they are unnecessary in this environment:
+
+```tsx copy showLineNumbers filename="puck.config.server.tsx"
+import type { UserConfig } from "./puck-types.ts";
+
+export const config: UserConfig = {
+  components: {
+    HeadingBlock: {
+      render: ({ title }) => {
+        return (
+          <div style={{ padding: 64 }}>
+            <h1>{title}</h1>
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+Render the appropriate config depending on the environment. Here's a Next.js app router example of a server render:
 
 ```tsx copy showLineNumbers filename="app/page.tsx"
 import { config } from "../puck.config.server.tsx";
@@ -180,6 +195,6 @@ import { config } from "../puck.config.server.tsx";
 export default async function Page() {
   const data = await getData(); // Some server function
 
-  return <Render data={resolvedData} config={config} />;
+  return <Render data={data} config={config} />;
 }
 ```
