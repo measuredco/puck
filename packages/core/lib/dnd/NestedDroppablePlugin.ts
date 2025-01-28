@@ -7,9 +7,12 @@ import { effects } from "@dnd-kit/state";
 import { throttle } from "../throttle";
 import { ComponentDndData } from "../../components/DraggableComponent";
 import { DropZoneDndData } from "../../components/DropZone";
-import { BubbledPointerEvent } from "../../components/Puck/components/Preview";
 import { getFrame } from "../get-frame";
 import { GlobalPosition } from "../global-position";
+import {
+  BubbledPointerEvent,
+  BubbledPointerEventType,
+} from "../bubble-pointer-event";
 
 type NestedDroppablePluginOptions = {
   onChange: (
@@ -207,8 +210,12 @@ export const createNestedDroppablePlugin = (
       }
 
       const cleanupEffect = effects(() => {
-        const handleMove = (event: BubbledPointerEvent) => {
-          const target = (event.originalTarget || event.target) as HTMLElement;
+        const handleMove = (event: BubbledPointerEventType | PointerEvent) => {
+          const target = (
+            event instanceof BubbledPointerEvent // Necessary for Firefox
+              ? event.originalTarget || event.target
+              : event.target
+          ) as HTMLElement;
 
           const position = new GlobalPosition(target, {
             x: event.clientX,
@@ -230,7 +237,7 @@ export const createNestedDroppablePlugin = (
         const handleMoveThrottled = throttle(handleMove, 50);
 
         const handlePointerMove = (event: PointerEvent) => {
-          handleMoveThrottled(event as BubbledPointerEvent);
+          handleMoveThrottled(event);
         };
 
         document.body.addEventListener("pointermove", handlePointerMove, {

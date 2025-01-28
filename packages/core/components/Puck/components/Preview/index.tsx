@@ -7,14 +7,11 @@ import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { DefaultRootRenderProps } from "../../../../types";
 import { Render } from "../../../Render";
+import { BubbledPointerEvent } from "../../../../lib/bubble-pointer-event";
 
 const getClassName = getClassNameFactory("PuckPreview", styles);
 
 type PageProps = DefaultRootRenderProps;
-
-export interface BubbledPointerEvent extends PointerEvent {
-  originalTarget: EventTarget | null;
-}
 
 const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
   const { status } = useAppContext();
@@ -23,32 +20,8 @@ const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
     if (ref.current && status === "READY") {
       const iframe = ref.current;
 
-      class BubbledPointerEventClass
-        extends PointerEvent
-        implements BubbledPointerEvent
-      {
-        _originalTarget: EventTarget | null = null;
-
-        set originalTarget(target: EventTarget | null) {
-          this._originalTarget = target;
-        }
-
-        get originalTarget() {
-          return this._originalTarget;
-        }
-
-        constructor(
-          type: string,
-          data: PointerEvent & { originalTarget: EventTarget | null }
-        ) {
-          super(type, data);
-
-          this.originalTarget = data.originalTarget;
-        }
-      }
-
       const handlePointerMove = (event: PointerEvent) => {
-        const evt = new BubbledPointerEventClass("pointermove", {
+        const evt = new BubbledPointerEvent("pointermove", {
           ...event,
           bubbles: true,
           cancelable: false,
@@ -57,7 +30,7 @@ const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
           originalTarget: event.target,
         });
 
-        iframe.dispatchEvent(evt);
+        iframe.dispatchEvent(evt as any);
       };
 
       // Add event listeners
