@@ -31,4 +31,10 @@ export const usePreviewModeHotkeys = (
     preventDefault: true,
     document: resolvedFrame,
   });
+  // For Windows
+  useHotkeys("ctrl+i", toggleInteractive, { preventDefault: true });
+  useHotkeys("ctrl+i", toggleInteractiveIframe, {
+    preventDefault: true,
+    document: resolvedFrame,
+  });
 };
