@@ -59,7 +59,7 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
     () =>
       selectedItem
         ? selectedItem
-        : { props: rootProps, readOnly: data.root.readOnly },
+        : { props: rootProps, readOnly: data.root.readOnly || {} },
     [selectedItem, rootProps, data.root.readOnly]
   );
 
