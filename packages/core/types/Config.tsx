@@ -2,9 +2,9 @@ import type { JSX } from "react";
 import { Fields } from "./Fields";
 import { ComponentData, RootData } from "./Data";
 
-import { AsFieldProps, WithId, WithPuckProps } from "./Utils";
+import { AsFieldProps, WithChildren, WithId, WithPuckProps } from "./Utils";
 import { AppState } from "./AppState";
-import { DefaultComponentProps, DefaultRootRenderProps } from "./Props";
+import { DefaultComponentProps } from "./Props";
 import { Permissions } from "./API";
 
 export type PuckComponent<Props> = (
@@ -83,7 +83,7 @@ export type Config<
   };
   root?: Partial<
     ComponentConfig<
-      DefaultRootRenderProps<RootProps>,
+      WithChildren<RootProps>,
       AsFieldProps<RootProps>,
       RootData<AsFieldProps<RootProps>>
     >

@@ -40,6 +40,7 @@ export function Render<
           puck={{
             renderDropZone: DropZone,
             isEditing: false,
+            dragRef: null,
           }}
           title={title}
           editMode={false}

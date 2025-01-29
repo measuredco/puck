@@ -80,6 +80,7 @@ export function Render<UserConfig extends Config = Config>({
             <DropZoneRender zone={zone} data={data} config={config} />
           ),
           isEditing: false,
+          dragRef: null,
         }}
         title={title}
         editMode={false}
