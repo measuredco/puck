@@ -8,8 +8,8 @@
 .Header-inner {
   align-items: center;
   display: flex;
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
   max-width: 1280px;
   padding: 24px 16px;
 }
@@ -30,7 +30,7 @@
 .Header-items {
   display: flex;
   gap: 24px;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 @media (min-width: 1024px) {

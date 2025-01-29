@@ -127,7 +127,7 @@
 .PuckLayout-headerToggle {
   color: var(--puck-color-grey-05);
   display: flex;
-  margin-left: -4px;
+  margin-inline-start: -4px;
   padding-top: 2px;
 }
 
@@ -155,7 +155,7 @@
 
 .PuckLayout-menuButton {
   color: var(--puck-color-grey-05);
-  margin-left: -4px;
+  margin-inline-start: -4px;
 }
 
 .PuckLayout--menuOpen .PuckLayout-menuButton {
@@ -170,7 +170,7 @@
 
 .PuckLayout-leftSideBar {
   background: var(--puck-color-grey-12);
-  border-right: 1px solid var(--puck-color-grey-09);
+  border-inline-end: 1px solid var(--puck-color-grey-09);
   display: flex;
   flex-direction: column;
   grid-area: left;
@@ -179,7 +179,7 @@
 
 .PuckLayout-rightSideBar {
   background: var(--puck-color-white);
-  border-left: 1px solid var(--puck-color-grey-09);
+  border-inline-start: 1px solid var(--puck-color-grey-09);
   display: flex;
   flex-direction: column;
   grid-area: right;

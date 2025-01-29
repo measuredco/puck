@@ -8,7 +8,7 @@
 
 .FooterActions-releaseSwitcher {
   display: block;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 @media (min-width: 768px) {
