@@ -28,11 +28,38 @@ const blankContext = {
     },
     components: {
       Flex: {
-        fields: {},
+        fields: { title: { type: "number" } },
       },
       Heading: {
         fields: { title: { type: "text" } },
       },
+    },
+  },
+};
+
+const blankContextWithData = {
+  ...blankContext,
+  state: {
+    ...blankContext.state,
+    data: {
+      ...blankContext.state.data,
+      content: [
+        ...blankContext.state.data.content,
+        {
+          type: "Heading",
+          props: {
+            id: "heading-1",
+            title: "Hello, world",
+          },
+        },
+        {
+          type: "Flex",
+          props: {
+            id: "flex-1",
+            title: 1,
+          },
+        },
+      ],
     },
   },
 };
@@ -52,7 +79,7 @@ const contextWithRootResolver = (resolveFields: any) => {
 
 const contextWithItemResolver = (resolveFields: any) => {
   return {
-    ...blankContext,
+    ...blankContextWithData,
     state: {
       ...blankContext.state,
       data: {
@@ -157,6 +184,78 @@ describe("use-resolved-fields", () => {
 
     expect(result.current[0]).toEqual({ title: { type: "text" } });
     expect(result.current[1]).toBe(false);
+  });
+
+  describe("when changing the selected item", () => {
+    const contextWithSelectedItem = {
+      ...blankContextWithData,
+      state: {
+        ...blankContextWithData.state,
+        ui: {
+          ...blankContextWithData.state.ui,
+          itemSelector: { zone: "default-zone", index: 0 },
+        },
+      },
+      selectedItem: blankContextWithData.state.data.content[0],
+    };
+
+    const contextWithSelectedItemAlt = {
+      ...blankContextWithData,
+      state: {
+        ...blankContextWithData.state,
+        ui: {
+          ...blankContextWithData.state.ui,
+          itemSelector: { zone: "default-zone", index: 1 },
+        },
+      },
+      selectedItem: blankContextWithData.state.data.content[1],
+    };
+
+    it("(failure case) returns the old fields, if NOT checking the id, with value check disabled", async () => {
+      useAppContextMock.mockReturnValue(contextWithSelectedItem);
+      useParentMock.mockReturnValue(null);
+
+      await act(() => {
+        params = renderHook(() =>
+          useResolvedFields({ _skipValueCheck: true, _skipIdCheck: true })
+        ); // we need to skip the value check, as this will cause a re-render and make test pass in any scenario
+      });
+
+      const { result, rerender } = params;
+
+      expect(result.current[0]).toEqual({ title: { type: "text" } });
+      expect(result.current[1]).toBe(false);
+
+      useAppContextMock.mockReturnValue(contextWithSelectedItemAlt);
+
+      await act(() => {
+        rerender();
+      });
+
+      expect(result.current[0]).toEqual({ title: { type: "text" } }); // We're asserting the failure. If behaving correctly, this would be `number` (see case below).
+    });
+
+    it("returns the default fields, if checking the id, with value check disabled", async () => {
+      useAppContextMock.mockReturnValue(contextWithSelectedItem);
+      useParentMock.mockReturnValue(null);
+
+      await act(() => {
+        params = renderHook(() => useResolvedFields({ _skipValueCheck: true })); // we need to skip the value check, as this will cause a re-render and make test pass in any scenario
+      });
+
+      const { result, rerender } = params;
+
+      expect(result.current[0]).toEqual({ title: { type: "text" } });
+      expect(result.current[1]).toBe(false);
+
+      useAppContextMock.mockReturnValue(contextWithSelectedItemAlt);
+
+      await act(() => {
+        rerender();
+      });
+
+      expect(result.current[0]).toEqual({ title: { type: "number" } }); // We're asserting the success.
+    });
   });
 
   describe("with resolveFields on the root", () => {

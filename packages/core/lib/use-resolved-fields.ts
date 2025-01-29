@@ -15,7 +15,13 @@ const defaultPageFields: Record<string, Field> = {
 
 type ComponentOrRootData = Omit<ComponentData<any>, "type">;
 
-export const useResolvedFields = (): [FieldsType, boolean] => {
+export const useResolvedFields = ({
+  _skipValueCheck,
+  _skipIdCheck,
+}: {
+  _skipValueCheck?: boolean;
+  _skipIdCheck?: boolean;
+} = {}): [FieldsType, boolean] => {
   const { selectedItem, state, config } = useAppContext();
   const parent = useParent();
 
@@ -41,7 +47,10 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
   const [lastSelectedData, setLastSelectedData] = useState<
     Partial<ComponentOrRootData>
   >({});
-  const [resolvedFields, setResolvedFields] = useState(defaultFields);
+  const [resolvedFields, setResolvedFields] = useState({
+    fields: defaultFields,
+    id: selectedItem?.props.id,
+  });
   const [fieldsLoading, setFieldsLoading] = useState(false);
   const lastFields = useRef<FieldsType>(defaultFields);
 
@@ -124,7 +133,10 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
         setFieldsLoading(true);
 
         resolveFields(defaultFields).then((fields) => {
-          setResolvedFields(fields || {});
+          setResolvedFields({
+            fields: fields || {},
+            id: selectedItem?.props.id,
+          });
 
           lastFields.current = fields;
 
@@ -134,10 +146,11 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
         return;
       }
     }
-    setResolvedFields(defaultFields);
+    setResolvedFields({ fields: defaultFields, id: selectedItem?.props.id });
   }, [
     defaultFields,
     state.ui.itemSelector,
+    selectedItem,
     hasResolver,
     parent,
     resolveFields,
@@ -154,6 +167,8 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
   useOnValueChange(
     { data, parent, itemSelector: state.ui.itemSelector },
     () => {
+      if (_skipValueCheck) return;
+
       triggerResolver();
     },
     (a, b) => JSON.stringify(a) === JSON.stringify(b)
@@ -163,5 +178,9 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
     triggerResolver();
   }, []);
 
-  return [resolvedFields, fieldsLoading];
+  if (resolvedFields.id !== selectedItem?.props.id && !_skipIdCheck) {
+    return [defaultFields, fieldsLoading];
+  }
+
+  return [resolvedFields.fields, fieldsLoading];
 };
