@@ -45,7 +45,9 @@ export type DropZoneDndData = {
   isDroppableTarget: boolean;
 };
 
-const DropZoneEditPure = (props: DropZoneProps) => <DropZoneEdit {...props} />;
+export const DropZoneEditPure = (props: DropZoneProps) => (
+  <DropZoneEdit {...props} />
+);
 
 const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
   function DropZoneEditInternal(
@@ -350,7 +352,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
   }
 );
 
-const DropZoneRenderPure = (props: DropZoneProps) => (
+export const DropZoneRenderPure = (props: DropZoneProps) => (
   <DropZoneRender {...props} />
 );
 
@@ -418,6 +420,8 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
     );
   }
 );
+
+export const DropZonePure = (props: DropZoneProps) => <DropZone {...props} />;
 
 export const DropZone = forwardRef<HTMLDivElement, DropZoneProps>(
   function DropZone(props: DropZoneProps, ref) {

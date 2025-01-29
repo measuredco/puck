@@ -1,4 +1,4 @@
-import { DropZone } from "../../../DropZone";
+import { DropZonePure } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { RefObject, useCallback, useEffect, useRef, useMemo } from "react";
 import { useAppContext } from "../../context";
@@ -84,13 +84,13 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
       <Page
         {...rootProps}
         puck={{
-          renderDropZone: DropZone,
+          renderDropZone: DropZonePure,
           isEditing: true,
           dragRef: null,
         }}
         editMode={true} // DEPRECATED
       >
-        <DropZone zone={rootDroppableId} />
+        <DropZonePure zone={rootDroppableId} />
       </Page>
     ) : (
       <Render data={state.data} config={config} />

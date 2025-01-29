@@ -14,8 +14,7 @@ export { AutoField, FieldLabel } from "./components/AutoField";
 export * from "./components/Button";
 export { Drawer } from "./components/Drawer";
 
-// DEPRECATED
-export * from "./components/DropZone";
+export { DropZone } from "./components/DropZone";
 export * from "./components/IconButton";
 export * from "./components/Puck";
 export * from "./components/Render";
