@@ -35,6 +35,7 @@ import { PointerSensor } from "../../lib/dnd/PointerSensor";
 import { collisionStore } from "../../lib/dnd/collision/dynamic/store";
 import { generateId } from "../../lib/generate-id";
 import { createStore } from "zustand";
+import { getDeepDir } from "../../lib/get-deep-dir";
 
 const DEBUG = false;
 
@@ -462,9 +463,12 @@ const DragDropContextClient = ({
                 manager.dragOperation.data?.collisionMap as CollisionMap
               )?.[targetId];
 
+              const dir = getDeepDir(target.element);
+
               const collisionPosition =
                 collisionData?.direction === "up" ||
-                collisionData?.direction === "left"
+                (dir === "ltr" && collisionData?.direction === "left") ||
+                (dir === "rtl" && collisionData?.direction === "right")
                   ? "before"
                   : "after";
 
