@@ -26,7 +26,7 @@
 }
 
 .PreviewFrame-label {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .PreviewFrame-body {

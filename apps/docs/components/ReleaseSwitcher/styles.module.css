@@ -8,8 +8,8 @@
   background-color: var(--puck-color-grey-11);
   border-radius: 100px;
   color: black;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-inline-start: 16px;
+  padding-inline-end: 16px;
   height: 33px; /* Magic number to align with Nextra search */
   width: 156px;
 }

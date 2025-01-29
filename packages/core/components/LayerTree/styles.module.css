@@ -33,7 +33,7 @@
 }
 
 .Layer--containsZone > .Layer-inner {
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 
 .Layer-clickable {
@@ -45,8 +45,8 @@
   cursor: pointer;
   display: flex;
   font: inherit;
-  padding-left: 12px;
-  padding-right: 4px;
+  padding-inline-start: 12px;
+  padding-inline-end: 4px;
   width: 100%;
 }
 
@@ -81,7 +81,7 @@
 
 .Layer-zones {
   display: none;
-  margin-left: 12px;
+  margin-inline-start: 12px;
 }
 
 .Layer--isSelected > .Layer-zones,
@@ -90,7 +90,7 @@
 }
 
 .Layer-zones > .LayerTree {
-  margin-left: 12px;
+  margin-inline-start: 12px;
 }
 
 .Layer-title,
