@@ -182,7 +182,7 @@ describe("use-resolved-fields", () => {
       expect(mockResolveFields).toHaveBeenCalledWith(
         {
           props: {},
-          readOnly: undefined,
+          readOnly: {},
         },
         {
           appState: {
@@ -230,7 +230,7 @@ describe("use-resolved-fields", () => {
         expect(mockResolveFields).toHaveBeenCalledWith(
           {
             props: {},
-            readOnly: undefined,
+            readOnly: {},
           },
           {
             appState: {
@@ -280,7 +280,7 @@ describe("use-resolved-fields", () => {
       expect(result.current[1]).toBe(false);
       expect(mockResolveFields).toHaveBeenCalledTimes(2);
       expect(mockResolveFields.mock.calls[1]).toEqual([
-        { props: { foo: "bar" }, readOnly: undefined },
+        { props: { foo: "bar" }, readOnly: {} },
         {
           appState: {
             data: { content: [], root: { props: { foo: "bar" } } }, // props changed
@@ -288,7 +288,7 @@ describe("use-resolved-fields", () => {
           },
           changed: { foo: true }, // track changed
           fields: { title: { type: "text" } },
-          lastData: { props: {}, readOnly: undefined },
+          lastData: { props: {}, readOnly: {} },
           lastFields: { title: { type: "textarea" } }, // track previous fields due to re-render
           parent: null,
         },
