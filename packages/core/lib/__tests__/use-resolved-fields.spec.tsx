@@ -247,7 +247,7 @@ describe("use-resolved-fields", () => {
       });
     });
 
-    it("tracks lastFields when rerendering", async () => {
+    it("calls resolver with appropriate fields on props change", async () => {
       const mockResolveFields = jest.fn().mockResolvedValue({
         title: { type: "textarea" },
       });
@@ -261,9 +261,13 @@ describe("use-resolved-fields", () => {
         params = renderHook(() => useResolvedFields());
       });
 
+      // update state and trigger re-render
       useAppContextMock.mockReturnValue({
         ...context,
-        state: { ...context.state, data: { root: { foo: "bar" } } }, // trigger re-render
+        state: {
+          ...context.state,
+          data: { ...context.state.data, root: { props: { foo: "bar" } } },
+        },
       });
 
       await act(() => {
@@ -275,20 +279,20 @@ describe("use-resolved-fields", () => {
       expect(result.current[0]).toEqual({ title: { type: "textarea" } });
       expect(result.current[1]).toBe(false);
       expect(mockResolveFields).toHaveBeenCalledTimes(2);
-      expect(mockResolveFields).toHaveBeenCalledWith(
-        { props: {}, readOnly: undefined },
+      expect(mockResolveFields.mock.calls[1]).toEqual([
+        { props: { foo: "bar" }, readOnly: undefined },
         {
           appState: {
-            data: { content: [], root: { props: {} } },
+            data: { content: [], root: { props: { foo: "bar" } } }, // props changed
             ui: { itemSelector: null },
           },
-          changed: {},
+          changed: { foo: true }, // track changed
           fields: { title: { type: "text" } },
-          lastData: {},
-          lastFields: { title: { type: "textarea" } },
+          lastData: { props: {}, readOnly: undefined },
+          lastFields: { title: { type: "textarea" } }, // track previous fields due to re-render
           parent: null,
-        }
-      );
+        },
+      ]);
     });
   });
 

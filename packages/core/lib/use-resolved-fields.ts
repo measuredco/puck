@@ -55,9 +55,13 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
     }
   ) => defaultFields;
 
-  const componentData: ComponentOrRootData = selectedItem
-    ? selectedItem
-    : { props: rootProps, readOnly: data.root.readOnly };
+  const componentData: ComponentOrRootData = useMemo(
+    () =>
+      selectedItem
+        ? selectedItem
+        : { props: rootProps, readOnly: data.root.readOnly },
+    [selectedItem, rootProps, data.root.readOnly]
+  );
 
   const hasComponentResolver = selectedItem && componentConfig?.resolveFields;
   const hasRootResolver = !selectedItem && config.root?.resolveFields;
@@ -131,7 +135,13 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
       }
     }
     setResolvedFields(defaultFields);
-  }, [defaultFields, state.ui.itemSelector, hasResolver, parent]);
+  }, [
+    defaultFields,
+    state.ui.itemSelector,
+    hasResolver,
+    parent,
+    resolveFields,
+  ]);
 
   useOnValueChange<ItemSelector | null>(
     state.ui.itemSelector,
