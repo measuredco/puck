@@ -25,7 +25,6 @@ export type HeroProps = {
     label: string;
     href: string;
     variant?: "primary" | "secondary";
-    more?: { text: string }[];
   }[];
 };
 
