@@ -339,3 +339,10 @@
   font-size: 14px;
   text-align: right;
 }
+
+.ExternalInputModal-field {
+  color: var(--puck-color-grey-04);
+  margin: 16px;
+  margin-bottom: 12px;
+  display: block;
+}
