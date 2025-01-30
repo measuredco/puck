@@ -259,7 +259,12 @@ export const ArrayField = ({
                       </div>
                     </div>
                     <div className={getClassNameItem("body")}>
-                      <fieldset className={getClassNameItem("fieldset")}>
+                      <fieldset
+                        className={getClassNameItem("fieldset")}
+                        onPointerDownCapture={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
                         {Object.keys(field.arrayFields!).map((subName) => {
                           const subField = field.arrayFields![subName];
 
