@@ -29,13 +29,12 @@ import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
 import { CollisionMap } from "../../lib/dnd/collision/dynamic";
 import { ComponentDndData } from "../DraggableComponent";
-import { isElement } from "@dnd-kit/dom/utilities";
 
-import { PointerSensor } from "../../lib/dnd/PointerSensor";
 import { collisionStore } from "../../lib/dnd/collision/dynamic/store";
 import { generateId } from "../../lib/generate-id";
 import { createStore } from "zustand";
 import { getDeepDir } from "../../lib/get-deep-dir";
+import { useSensors } from "../../lib/dnd/use-sensors";
 
 const DEBUG = false;
 
@@ -272,32 +271,7 @@ const DragDropContextClient = ({
     ),
   ]);
 
-  const [sensors] = useState(() => [
-    PointerSensor.configure({
-      activationConstraints(event, source) {
-        const { pointerType, target } = event;
-
-        if (
-          pointerType === "mouse" &&
-          isElement(target) &&
-          (source.handle === target || source.handle?.contains(target))
-        ) {
-          return undefined;
-        }
-
-        const delay = { value: 200, tolerance: 10 };
-
-        if (pointerType === "touch") {
-          return { delay };
-        }
-
-        return {
-          delay,
-          distance: { value: 5 },
-        };
-      },
-    }),
-  ]);
+  const sensors = useSensors();
 
   const [dragListeners, setDragListeners] = useState<DragCbs>({});
 
