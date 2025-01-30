@@ -10,8 +10,12 @@ import { RestrictToElement } from "@dnd-kit/dom/modifiers";
 
 export const SortableProvider = ({
   children,
+  onDragStart,
+  onDragEnd,
   onMove,
 }: PropsWithChildren<{
+  onDragStart: () => void;
+  onDragEnd: () => void;
   onMove: (moveData: { source: number; target: number }) => void;
 }>) => {
   const [move, setMove] = useState({ source: -1, target: -1 });
@@ -28,6 +32,7 @@ export const SortableProvider = ({
           },
         }),
       ]}
+      onDragStart={onDragStart}
       onDragOver={(event, manager) => {
         const { operation } = event;
         const { source, target } = operation;
@@ -60,13 +65,15 @@ export const SortableProvider = ({
         }
       }}
       onDragEnd={() => {
-        if (move.source !== -1 && move.target !== -1) {
-          // Delay until animation finished
-          setTimeout(() => {
+        setTimeout(() => {
+          if (move.source !== -1 && move.target !== -1) {
+            // Delay until animation finished
             // TODO use this in onDragOver instead of optimistic rendering once re-renders reduced to polish out edge cases
             onMove(move);
-          }, 250);
-        }
+          }
+
+          onDragEnd();
+        }, 250);
 
         setMove({ source: -1, target: -1 });
       }}

@@ -100,6 +100,8 @@ export const ArrayField = ({
     }
   }, []);
 
+  const [isDragging, setIsDragging] = useState(false);
+
   const forceReadOnly = getPermissions({ item: selectedItem }).edit === false;
 
   if (field.type !== "array" || !field.arrayFields) {
@@ -119,6 +121,8 @@ export const ArrayField = ({
       readOnly={readOnly}
     >
       <SortableProvider
+        onDragStart={() => setIsDragging(true)}
+        onDragEnd={() => setIsDragging(false)}
         onMove={(move) => {
           const newValue = reorder(value, move.source, move.target);
           const newArrayStateItems: ItemWithId[] = reorder(
@@ -172,6 +176,8 @@ export const ArrayField = ({
                     >
                       <div
                         onClick={(e) => {
+                          if (isDragging) return;
+
                           e.preventDefault();
                           e.stopPropagation();
 
@@ -334,6 +340,8 @@ export const ArrayField = ({
               type="button"
               className={getClassName("addButton")}
               onClick={() => {
+                if (isDragging) return;
+
                 const existingValue = value || [];
 
                 const newValue = [
