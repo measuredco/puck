@@ -56,6 +56,10 @@
   transition: none;
 }
 
+.ArrayField-inner {
+  margin-top: -1px;
+}
+
 /**
  * ArrayFieldItem
  */
@@ -67,15 +71,12 @@
   position: relative;
 }
 
-/* Pseudo-border so we can remove border whilst dragging. Last item will be 1px larger, but it's imperceptible. */
-.ArrayFieldItem:not(.ArrayFieldItem--isDragging):not(:first-of-type)::before {
-  background-color: var(--puck-color-grey-09);
-  position: absolute;
-  width: 100%;
-  height: 1px;
-  content: "";
-  z-index: 1;
-  top: -1px;
+.ArrayFieldItem {
+  border-top: 1px solid var(--puck-color-grey-09);
+}
+
+.ArrayFieldItem--isDragging {
+  border-top: transparent;
 }
 
 .ArrayFieldItem--isExpanded::before {
@@ -90,8 +91,7 @@
 }
 
 .ArrayFieldItem--isDragging {
-  box-shadow: color-mix(in srgb, var(--puck-color-grey-06) 25%, transparent) 0
-    3px 6px 0;
+  outline: 2px var(--puck-color-azure-09) solid !important;
 }
 
 .ArrayFieldItem--isDragging .ArrayFieldItem-summary:active {
@@ -114,7 +114,6 @@
   font-size: var(--puck-font-size-xxs);
   list-style: none;
   padding: 12px 15px;
-  padding-bottom: 13px; /* Add one additional px to account for pseudo border */
   position: relative;
   overflow: hidden;
   transition: background-color 50ms ease-in;
@@ -126,13 +125,16 @@
 }
 
 .ArrayField--addDisabled
+  > .ArrayField-inner
   > .ArrayFieldItem:last-of-type:not(.ArrayFieldItem--isExpanded)
   > .ArrayFieldItem-summary {
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
 }
 
-.ArrayField--addDisabled > .ArrayFieldItem--isExpanded:last-of-type {
+.ArrayField--addDisabled
+  > .ArrayField-inner
+  > .ArrayFieldItem--isExpanded:last-of-type {
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
 }
