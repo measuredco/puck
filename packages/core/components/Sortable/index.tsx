@@ -1,6 +1,7 @@
 import { DragDropProvider } from "@dnd-kit/react";
 import { PropsWithChildren, ReactNode, useState } from "react";
 import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
+import { useSensors } from "../../lib/dnd/use-sensors";
 
 export const SortableProvider = ({
   children,
@@ -10,8 +11,11 @@ export const SortableProvider = ({
 }>) => {
   const [move, setMove] = useState({ source: -1, target: -1 });
 
+  const sensors = useSensors();
+
   return (
     <DragDropProvider
+      sensors={sensors}
       onDragOver={(event) => {
         const { operation } = event;
 
