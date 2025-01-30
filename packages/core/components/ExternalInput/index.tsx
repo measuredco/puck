@@ -223,21 +223,28 @@ export const ExternalInput = ({
                   Object.keys(filterFields).map((fieldName) => {
                     const filterField = filterFields[fieldName];
                     return (
-                      <AutoFieldPrivate
+                      <div
+                        className={getClassNameModal("field")}
                         key={fieldName}
-                        field={filterField}
-                        name={fieldName}
-                        id={`external_field_${fieldName}_filter`}
-                        label={filterField.label || fieldName}
-                        value={filters[fieldName]}
-                        onChange={(value) => {
-                          const newFilters = { ...filters, [fieldName]: value };
+                      >
+                        <AutoFieldPrivate
+                          field={filterField}
+                          name={fieldName}
+                          id={`external_field_${fieldName}_filter`}
+                          label={filterField.label || fieldName}
+                          value={filters[fieldName]}
+                          onChange={(value) => {
+                            const newFilters = {
+                              ...filters,
+                              [fieldName]: value,
+                            };
 
-                          setFilters(newFilters);
+                            setFilters(newFilters);
 
-                          search(searchQuery, newFilters);
-                        }}
-                      />
+                            search(searchQuery, newFilters);
+                          }}
+                        />
+                      </div>
                     );
                   })}
               </div>
