@@ -2,6 +2,11 @@ import { DragDropProvider } from "@dnd-kit/react";
 import { PropsWithChildren, ReactNode, useState } from "react";
 import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
 import { useSensors } from "../../lib/dnd/use-sensors";
+import {
+  CollisionMap,
+  createDynamicCollisionDetector,
+} from "../../lib/dnd/collision/dynamic";
+import { RestrictToElement } from "@dnd-kit/dom/modifiers";
 
 export const SortableProvider = ({
   children,
@@ -16,27 +21,54 @@ export const SortableProvider = ({
   return (
     <DragDropProvider
       sensors={sensors}
-      onDragOver={(event) => {
+      modifiers={[
+        RestrictToElement.configure({
+          element() {
+            return document.querySelector("[data-dnd-container]");
+          },
+        }),
+      ]}
+      onDragOver={(event, manager) => {
         const { operation } = event;
+        const { source, target } = operation;
 
-        if (operation.source && operation.target) {
-          const newMove = {
-            source: operation.source.data.index,
-            target: operation.target.data.index,
-          };
+        if (!source || !target) return;
 
-          if (newMove.source !== newMove.target) {
-            setMove({
-              source: operation.source.data.index,
-              target: operation.target.data.index,
-            });
+        let sourceIndex = source.data.index;
+        let targetIndex = target.data.index;
+
+        const collisionData = (
+          manager.dragOperation.data?.collisionMap as CollisionMap
+        )?.[target.id];
+
+        if (sourceIndex !== targetIndex && source.id !== target.id) {
+          const collisionPosition =
+            collisionData?.direction === "up" ? "before" : "after";
+
+          if (targetIndex >= sourceIndex) {
+            targetIndex = targetIndex - 1;
           }
+
+          if (collisionPosition === "after") {
+            targetIndex = targetIndex + 1;
+          }
+
+          setMove({
+            source: sourceIndex,
+            target: targetIndex,
+          });
         }
       }}
       onDragEnd={() => {
         if (move.source !== -1 && move.target !== -1) {
-          onMove(move);
+          // Delay until animation finished
+          setTimeout(() => {
+            // TODO use this in onDragOver instead of optimistic rendering once re-renders reduced to polish out edge cases
+            onMove(move);
+          }, 250);
         }
+
+        setMove({ source: -1, target: -1 });
       }}
     >
       {children}
@@ -66,6 +98,7 @@ export const Sortable = ({
     index,
     disabled,
     data: { index },
+    collisionDetector: createDynamicCollisionDetector("y"),
   });
 
   return children({ status, ref: sortableRef });
