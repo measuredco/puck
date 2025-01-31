@@ -2,6 +2,32 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.18.2](https://github.com/measuredco/puck/compare/v0.18.0...v0.18.2) (2025-01-31)
+
+
+### Bug Fixes
+
+* add missing types for root render method ([0f52caf](https://github.com/measuredco/puck/commit/0f52caf0a3d77978d913b0915bbb23725fc94a3d))
+* address ownerDocument permission error in Firefox ([c22b3a9](https://github.com/measuredco/puck/commit/c22b3a9838fad6c65c71091eb89bb9104b6aabaf))
+* address prop name collision regression ([3a69ad4](https://github.com/measuredco/puck/commit/3a69ad4ac3e982340b3fcae6b5773240d88e7f92))
+* correctly infer types when using Render with RSC ([ad7fbf4](https://github.com/measuredco/puck/commit/ad7fbf4bc7534cfb348dd7fdbac56b84b03552e3))
+* don't jump to end of textarea fields during change ([36c27a9](https://github.com/measuredco/puck/commit/36c27a9c166affc83ecfd36f79974cb9990917c6))
+* don't trigger clicks when dropping array items ([29a7f1d](https://github.com/measuredco/puck/commit/29a7f1df55f1eff6bee55ee7984ec7974a4feaec))
+* don't trigger drag when interacting with array fields ([c7cd341](https://github.com/measuredco/puck/commit/c7cd34165cbde90ae0297ab79a1ea6852f9d9726))
+* ensure ctrl+i interactive toggle hotkey works on Windows ([5db6f4d](https://github.com/measuredco/puck/commit/5db6f4d5f90b222423df363e9964ec344b9a0a7e))
+* ensure renderDropZone provided correctly to root render ([b9ce5b7](https://github.com/measuredco/puck/commit/b9ce5b700056f985362d1f4a9125996badfcbdd7))
+* fix RTL drag-and-drop behaviour ([28f518a](https://github.com/measuredco/puck/commit/28f518aad9da211042e3b51e52369b6c126c75d8))
+* improve behaviour of array drag-and-drop ([565fabd](https://github.com/measuredco/puck/commit/565fabdaa78f92fdbb327d878d7142e0455f5e8a))
+* provide empty readOnly object instead of undefined to root resolveFields ([8992a94](https://github.com/measuredco/puck/commit/8992a9476ab2bc3837bb986bbd3e1042babd81a8))
+* provide updated props to resolveFields ([b7ff689](https://github.com/measuredco/puck/commit/b7ff6898618a1a30b07a85669f16e891db975ffd))
+* reinstate padding for external field filters ([28ccfda](https://github.com/measuredco/puck/commit/28ccfdaf8b6c546464df18f1a3ebb2b8b6363dc7))
+* tidy up stale items on drag cancellation ([de48691](https://github.com/measuredco/puck/commit/de48691b017a66c251616ba31861bd0b8816ef68))
+* update styles for RTL ([23c8dda](https://github.com/measuredco/puck/commit/23c8dda031b0f50e30eacdb15d3a774bd8045879))
+* use correct type for onChange args when overriding fieldTypes ([daff71e](https://github.com/measuredco/puck/commit/daff71ef726ad74d2b5628c466b2ddbaa1850160))
+
+
+
+
 ## [0.18.1](https://github.com/measuredco/puck/compare/v0.18.0...v0.18.1) (2025-01-24)
 
 
