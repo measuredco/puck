@@ -132,7 +132,7 @@ export type Fields<
   >;
 };
 
-export type FieldProps<ValueType = any, F = Field<any>> = {
+export type FieldProps<F = Field<any>, ValueType = any> = {
   field: F;
   value: ValueType;
   id?: string;
