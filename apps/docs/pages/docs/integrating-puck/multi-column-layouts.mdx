@@ -76,6 +76,8 @@ const config = {
   <Puck.Preview />
 </PuckPreview>
 
+You can also use DropZones in the `root` render function to change the default layout. See [Root DropZones](#root-dropzones)
+
 ## Fixed layouts
 
 Combine multiple DropZones to achieve fixed layouts. By default, components inside a DropZone are arranged along the vertical (`block`) axis.
@@ -409,6 +411,92 @@ const config = {
   },
 };
 ```
+
+## Root DropZones
+
+The `root` uses a DropZone internally. When providing a render function to `root`, the `children` prop renders a DropZone for a zone called **default-zone**.
+
+```tsx showLineNumbers copy {4-5}
+const config = {
+  root: {
+    render: ({ children }) => {
+      // children renders <DropZone zone="default-zone" />
+      return <div>{children}</div>;
+    },
+  },
+};
+```
+
+Instead of rendering children, use DropZone to achieve multi-column layouts at the root:
+
+```tsx showLineNumbers copy {4-7}
+const config = {
+  root: {
+    render: () => (
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <DropZone zone="left-column" />
+        <DropZone zone="right-column" />
+      </div>
+    ),
+  },
+};
+```
+
+<PuckPreview
+  label="Root DropZone example"
+  config={{
+    root: {
+      render: ({ puck: { renderDropZone: DropZone } }) => (
+        <div
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}
+        >
+          <DropZone zone="left-column" />
+          <DropZone zone="right-column" />
+        </div>
+      ),
+    },
+    components: {
+      Card: {
+        render: ({ content }) => {
+          return (
+            <div
+              style={{
+                background: "white",
+                border: "1px solid black",
+                borderRadius: 4,
+                padding: 16,
+              }}
+            >
+              {content}
+            </div>
+          );
+        },
+      },
+    },
+  }}
+  data={{
+    content: [],
+    root: { props: {} },
+    zones: {
+      "root:left-column": [
+        {
+          type: "Card",
+          props: { id: "Example-2", content: "1" },
+        },
+      ],
+      "root:right-column": [
+        {
+          type: "Card",
+          props: { id: "Example-3", content: "2" },
+        },
+      ],
+    },
+  }}
+>
+  <Puck.Preview />
+</PuckPreview>
+
+When passing **default-zone** to a DropZone in the root render function, the component data will be stored under [`content`](/docs/api-reference/data#content). Otherwise, the component data will be stored under [`zones`](/docs/api-reference/data#zones)
 
 ## Further reading
 
