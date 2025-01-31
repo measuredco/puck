@@ -357,6 +357,14 @@ const DragDropContextClient = ({
                   fn(event, manager);
                 });
 
+                dispatch({
+                  type: "setUi",
+                  ui: {
+                    itemSelector: null,
+                    isDragging: false,
+                  },
+                });
+
                 return;
               }
 
