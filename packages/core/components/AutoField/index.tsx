@@ -103,8 +103,8 @@ export const FieldLabelInternal = ({
 };
 
 type FieldPropsInternalOptional<ValueType = any, F = Field<any>> = FieldProps<
-  ValueType,
-  F
+  F,
+  ValueType
 > & {
   Label?: React.FC<FieldLabelPropsInternal>;
   label?: string;
@@ -112,8 +112,8 @@ type FieldPropsInternalOptional<ValueType = any, F = Field<any>> = FieldProps<
 };
 
 export type FieldPropsInternal<ValueType = any, F = Field<any>> = FieldProps<
-  ValueType,
-  F
+  F,
+  ValueType
 > & {
   Label: React.FC<FieldLabelPropsInternal>;
   label?: string;
@@ -293,7 +293,7 @@ export function AutoFieldPrivate<
 export function AutoField<
   ValueType = any,
   FieldType extends FieldNoLabel<ValueType> = FieldNoLabel<ValueType>
->(props: FieldProps<ValueType, FieldType>) {
+>(props: FieldProps<FieldType, ValueType>) {
   const DefaultLabel = useMemo(() => {
     const DefaultLabel = (labelProps: any) => (
       <div
