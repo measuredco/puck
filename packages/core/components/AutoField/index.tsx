@@ -173,7 +173,10 @@ function AutoFieldInternal<
 
   const onFocus = useCallback(
     (e: React.FocusEvent) => {
-      if (mergedProps.name && e.target.nodeName === "INPUT") {
+      if (
+        mergedProps.name &&
+        (e.target.nodeName === "INPUT" || e.target.nodeName === "TEXTAREA")
+      ) {
         e.stopPropagation();
 
         dispatch({
