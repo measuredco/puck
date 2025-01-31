@@ -57,7 +57,7 @@ export type Overrides = OverridesGeneric<{
 export type FieldRenderFunctions = Omit<
   {
     [Type in Field["type"]]: React.FunctionComponent<
-      FieldProps<Extract<Field, { type: Type }>> & {
+      FieldProps<any, Extract<Field, { type: Type }>> & {
         children: ReactNode;
         name: string;
       }
