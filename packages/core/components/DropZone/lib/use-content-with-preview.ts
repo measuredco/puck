@@ -39,7 +39,7 @@ export const useContentWithPreview = (
       // Preview is cleared but context hasn't yet caught up
       // This is necessary because Zustand clears the preview before the dispatcher finishes
       // Refactor this once all state has moved to Zustand.
-      if (isDragging && !previewExists) {
+      if (isDragging && preview && !previewExists) {
         return;
       }
 
