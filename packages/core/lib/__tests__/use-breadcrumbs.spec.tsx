@@ -1,4 +1,8 @@
-import { DropZoneContext } from "../../components/DropZone/context";
+import {
+  AppContext,
+  defaultAppState,
+  defaultContext,
+} from "../../components/Puck/context";
 import { Config, Data } from "../../types";
 import { convertPathDataToBreadcrumbs } from "../use-breadcrumbs";
 
@@ -24,8 +28,9 @@ const config: Config = {
   },
 };
 
-const dropzoneContext: DropZoneContext = {
-  data,
+const appContext: AppContext = {
+  ...defaultContext,
+  state: { ...defaultAppState, data },
   config,
   pathData: {
     "MyComponent-1": { path: [], label: "MyComponent" },
@@ -35,16 +40,13 @@ const dropzoneContext: DropZoneContext = {
       label: "MyComponent",
     },
   },
-  depth: 0,
-  path: [],
 };
 
 describe("use-breadcrumbs", () => {
   describe("convert-path-data-to-breadcrumbs", () => {
     it("should convert path data to breadcrumbs", () => {
-      expect(
-        convertPathDataToBreadcrumbs(item3, dropzoneContext.pathData, data)
-      ).toMatchInlineSnapshot(`
+      expect(convertPathDataToBreadcrumbs(item3, appContext.pathData, data))
+        .toMatchInlineSnapshot(`
         [
           {
             "label": "MyComponent",

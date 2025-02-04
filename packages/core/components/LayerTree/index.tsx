@@ -12,6 +12,7 @@ import { getZoneId } from "../../lib/get-zone-id";
 import { isChildOfZone } from "../../lib/is-child-of-zone";
 import { getFrame } from "../../lib/get-frame";
 import { onScrollEnd } from "../../lib/on-scroll-end";
+import { useAppContext } from "../Puck/context";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -35,6 +36,7 @@ export const LayerTree = ({
 }) => {
   const zones = data.zones || {};
   const ctx = useContext(dropZoneContext);
+  const appContext = useAppContext();
 
   return (
     <>
@@ -67,7 +69,7 @@ export const LayerTree = ({
 
           const isHovering = hoveringComponent === item.props.id;
 
-          const childIsSelected = isChildOfZone(item, selectedItem, ctx);
+          const childIsSelected = isChildOfZone(item, selectedItem, appContext);
 
           const componentConfig: ComponentConfig | undefined =
             config.components[item.type];

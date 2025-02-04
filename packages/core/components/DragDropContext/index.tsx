@@ -16,14 +16,8 @@ import { AutoScroller, defaultPreset, DragDropManager } from "@dnd-kit/dom";
 import { DragDropEvents } from "@dnd-kit/abstract";
 import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
-import { getItem, ItemSelector } from "../../lib/get-item";
-import {
-  PathData,
-  Preview,
-  ZoneStore,
-  ZoneStoreProvider,
-} from "../DropZone/context";
-import { getZoneId } from "../../lib/get-zone-id";
+import { getItem } from "../../lib/get-item";
+import { Preview, ZoneStore, ZoneStoreProvider } from "../DropZone/context";
 import { createNestedDroppablePlugin } from "../../lib/dnd/NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
@@ -109,7 +103,7 @@ const DragDropContextClient = ({
   children,
   disableAutoScroll,
 }: DragDropContextProps) => {
-  const { state, config, dispatch, resolveData } = useAppContext();
+  const { state, config, dispatch, resolveData, pathData } = useAppContext();
 
   const id = useId();
 
@@ -275,44 +269,7 @@ const DragDropContextClient = ({
 
   const [dragListeners, setDragListeners] = useState<DragCbs>({});
 
-  const [pathData, setPathData] = useState<PathData>();
-
   const dragMode = useRef<"new" | "existing" | null>(null);
-
-  const registerPath = useCallback(
-    (id: string, selector: ItemSelector, label: string) => {
-      const [area] = getZoneId(selector.zone);
-
-      setPathData((latestPathData = {}) => {
-        const parentPathData = latestPathData[area] || { path: [] };
-
-        return {
-          ...latestPathData,
-          [id]: {
-            path: [
-              ...parentPathData.path,
-              ...(selector.zone ? [selector.zone] : []),
-            ],
-            label: label,
-          },
-        };
-      });
-    },
-    [data, setPathData]
-  );
-
-  const unregisterPath = useCallback(
-    (id: string) => {
-      setPathData((latestPathData = {}) => {
-        const newPathData = { ...latestPathData };
-
-        delete newPathData[id];
-
-        return newPathData;
-      });
-    },
-    [data, setPathData]
-  );
 
   const initialSelector = useRef<{ zone: string; index: number }>(undefined);
 
@@ -576,9 +533,6 @@ const DragDropContextClient = ({
                 mode: "edit",
                 areaId: "root",
                 depth: 0,
-                registerPath,
-                unregisterPath,
-                pathData,
                 path: [],
               }}
             >
