@@ -7,7 +7,7 @@ import { useDemoData } from "../../lib/use-demo-data";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
+export function Client({ path, isEdit, externalData }: { path: string; isEdit: boolean, externalData?: any }) {
   const { data, resolvedData, key } = useDemoData({
     path,
     isEdit,
@@ -50,13 +50,14 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
               </>
             ),
           }}
+          externalData={externalData}
         />
       </div>
     );
   }
 
   if (data.content) {
-    return <Render config={config} data={resolvedData} />;
+    return <Render config={config} data={resolvedData} externalData={externalData} />;
   }
 
   return (
