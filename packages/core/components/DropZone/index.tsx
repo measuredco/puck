@@ -267,8 +267,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
           const originalItem = { props: { ...config.components[item.type]?.defaultProps, ...item.props, } };
 
           // Transform props using shared external data before rendering if applicable
-          const transformedItem = transformProps(originalItem, appContext.externalData, config.components[item.type]?.beforeRender);
-          if (config.components[item.type]?.beforeRender) console.log("transformedItem", { originalItem, transformedItem });
+          const transformedItem = beforeRenderProps(originalItem, appContext.externalData, config.components[item.type]?.beforeRender);
 
           const defaultedProps = {
             ...originalItem.props,
@@ -283,10 +282,10 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
             config.components[item.type] && item.type !== "preview"
               ? config.components[item.type].render
               : () => (
-                  <div style={{ padding: 48, textAlign: "center" }}>
-                    No configuration for {item.type}
-                  </div>
-                );
+                <div style={{ padding: 48, textAlign: "center" }}>
+                  No configuration for {item.type}
+                </div>
+              );
 
           const componentConfig: ComponentConfig | undefined =
             config.components[item.type];
@@ -400,8 +399,8 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
           const Component = config.components[item.type];
 
           // Transform props using shared external data before rendering if applicable
-          const transformedItem = transformProps({ props: item.props }, ctx?.externalData, config.components[item.type]?.beforeRender);
-          console.log("transformedItem", { item, transformedItem });
+          const transformedItem = beforeRenderProps({ props: item.props }, ctx?.externalData, config.components[item.type]?.beforeRender);
+          
           if (Component) {
             return (
               <DropZoneProvider
@@ -455,8 +454,7 @@ export const DropZone = forwardRef<HTMLDivElement, DropZoneProps>(
   }
 );
 
-const transformProps = (original: { props: Partial<FieldProps> | FieldProps }, externalData: any, componentBeforeRender?: (data: | { props: Partial<FieldProps> | FieldProps; }, params: { externalData: any; }) => | { props?: Partial<FieldProps> | FieldProps; }) => {
-  if (componentBeforeRender) console.log("transformProps", { original, externalData, componentBeforeRender: !!componentBeforeRender });
+const beforeRenderProps = (original: { props: Partial<FieldProps> | FieldProps }, externalData: any, componentBeforeRender?: (data: | { props: Partial<FieldProps> | FieldProps; }, params: { externalData: any; }) => | { props?: Partial<FieldProps> | FieldProps; }) => {
   if (!componentBeforeRender && typeof componentBeforeRender !== "function") {
     return original;
   }

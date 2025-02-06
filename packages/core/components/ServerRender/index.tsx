@@ -1,7 +1,7 @@
 import { CSSProperties } from "react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
-import { Config, Data, UserGenerics } from "../../types";
 import { setupZone } from "../../lib/setup-zone";
+import { Config, Data, FieldProps, UserGenerics } from "../../types";
 
 type DropZoneRenderProps = {
   zone: string;
@@ -9,6 +9,7 @@ type DropZoneRenderProps = {
   config: Config;
   areaId?: string;
   style?: CSSProperties;
+  externalData?: any;
 };
 
 function DropZoneRender({
@@ -16,6 +17,7 @@ function DropZoneRender({
   data,
   areaId = "root",
   config,
+  externalData
 }: DropZoneRenderProps) {
   let zoneCompound = rootDroppableId;
   let content = data?.content || [];
@@ -33,12 +35,13 @@ function DropZoneRender({
     <>
       {content.map((item) => {
         const Component = config.components[item.type];
+        const transformedItem = beforeServerRenderProps({ props: item.props }, externalData, config.components[item.type].beforeRender);
 
         if (Component) {
           return (
             <Component.render
               key={item.props.id}
-              {...item.props}
+              {...transformedItem.props}
               puck={{
                 renderDropZone: ({ zone }: { zone: string }) => (
                   <DropZoneRender
@@ -46,6 +49,7 @@ function DropZoneRender({
                     data={data}
                     areaId={item.props.id}
                     config={config}
+                    externalData={externalData}
                   />
                 ),
               }}
@@ -62,7 +66,7 @@ function DropZoneRender({
 export function Render<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
->({ config, data }: { config: UserConfig; data: G["UserData"] }) {
+>({ config, data, externalData }: { config: UserConfig; data: G["UserData"], externalData?: any }) {
   if (config.root?.render) {
     // DEPRECATED
     const rootProps = data.root.props || data.root;
@@ -74,7 +78,7 @@ export function Render<
         {...rootProps}
         puck={{
           renderDropZone: ({ zone }: { zone: string }) => (
-            <DropZoneRender zone={zone} data={data} config={config} />
+            <DropZoneRender zone={zone} data={data} config={config} externalData={externalData} />
           ),
           isEditing: false,
           dragRef: null,
@@ -83,10 +87,24 @@ export function Render<
         editMode={false}
         id={"puck-root"}
       >
-        <DropZoneRender config={config} data={data} zone={rootDroppableId} />
+        <DropZoneRender config={config} data={data} zone={rootDroppableId} externalData={externalData} />
       </config.root.render>
     );
   }
 
-  return <DropZoneRender config={config} data={data} zone={rootDroppableId} />;
+  return <DropZoneRender config={config} data={data} zone={rootDroppableId} externalData={externalData}/>;
+}
+
+const beforeServerRenderProps = (original: { props: Partial<FieldProps> | FieldProps }, externalData: any, componentBeforeRender?: (data: | { props: Partial<FieldProps> | FieldProps; }, params: { externalData: any; }) => | { props?: Partial<FieldProps> | FieldProps; }) => {
+  if (!componentBeforeRender && typeof componentBeforeRender !== "function") {
+    return original;
+  }
+
+  const transformed = {
+    props: {
+      ...componentBeforeRender(original, { externalData }).props,
+    },
+  };
+
+  return transformed;
 }
