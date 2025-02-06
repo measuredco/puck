@@ -10,9 +10,11 @@ export function Render<
 >({
   config,
   data,
+  externalData,
 }: {
   config: UserConfig;
   data: Partial<G["UserData"] | Data>;
+  externalData?: any;
 }) {
   const defaultedData = {
     ...data,
@@ -33,6 +35,7 @@ export function Render<
           mode: "render",
           depth: 0,
           path: [],
+          externalData
         }}
       >
         <config.root.render
@@ -60,6 +63,7 @@ export function Render<
         mode: "render",
         depth: 0,
         path: [],
+        externalData
       }}
     >
       <DropZonePure zone={rootDroppableId} />

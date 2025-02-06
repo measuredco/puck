@@ -39,6 +39,7 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
   unregisterLocalZone?: (zone: string) => void;
   path: string[];
+  externalData?: any
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);

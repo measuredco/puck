@@ -79,6 +79,7 @@ export function Puck<
   iframe: _iframe,
   dnd,
   initialHistory: _initialHistory,
+  externalData,
 }: {
   children?: ReactNode;
   config: UserConfig;
@@ -107,6 +108,7 @@ export function Puck<
     disableAutoScroll?: boolean;
   };
   initialHistory?: InitialHistory;
+  externalData?: any;
 }) {
   const iframe: IframeConfig = {
     enabled: true,
@@ -412,6 +414,7 @@ export function Puck<
           },
           getPermissions: () => ({}),
           refreshPermissions: () => null,
+          externalData,
         }}
       >
         <DragDropContext disableAutoScroll={dnd?.disableAutoScroll}>

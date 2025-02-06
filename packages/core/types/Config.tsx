@@ -58,6 +58,12 @@ export type ComponentConfig<
       lastData: DataShape | null;
     }
   ) => Promise<Partial<Permissions>> | Partial<Permissions>;
+  beforeRender?: (
+    data: DataShape,
+    params: {
+      externalData: any;
+    }
+  ) => { props: Partial<FieldProps> | FieldProps; };
 };
 
 type Category<ComponentName> = {

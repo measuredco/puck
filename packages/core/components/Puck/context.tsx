@@ -83,6 +83,7 @@ export type AppContext<
   selectedItem?: G["UserData"]["content"][0];
   getPermissions: GetPermissions<UserConfig>;
   refreshPermissions: RefreshPermissions<UserConfig>;
+  externalData?: any;
 };
 
 export const defaultContext: AppContext = {
@@ -108,6 +109,7 @@ export const defaultContext: AppContext = {
   globalPermissions: {},
   getPermissions: () => ({}),
   refreshPermissions: () => null,
+  externalData: {}
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
