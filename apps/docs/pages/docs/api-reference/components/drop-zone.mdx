@@ -36,6 +36,7 @@ const config = {
 | [`minEmptyHeight`](#minemptyheight) | `minEmptyHeight: 256`        | Number        | -        |
 | [`ref`](#ref)                       | `ref: ref`                   | Ref           | -        |
 | [`style`](#style)                   | `style: {display: "flex"}`   | CSSProperties | -        |
+| [`as`](#as)                         | `as: "section"`              | ElementType   | -        |
 
 ## Required props
 
@@ -210,6 +211,26 @@ const config = {
         return (
           <div>
             <DropZone zone="my-content" style={{ display: "flex" }} />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+### `as`
+
+Change the underlying HTML element of the DropZone. Defaults to `div`.
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" as="section" />
           </div>
         );
       },

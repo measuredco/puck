@@ -1,5 +1,8 @@
 import {
+  ComponentProps,
+  ComponentPropsWithRef,
   CSSProperties,
+  ElementType,
   forwardRef,
   useCallback,
   useContext,
@@ -49,8 +52,8 @@ export const DropZoneEditPure = (props: DropZoneProps) => (
   <DropZoneEdit {...props} />
 );
 
-const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
-  function DropZoneEditInternal(
+const DropZoneEdit = forwardRef(
+  function DropZoneEditInternal<T extends ElementType = "div">(
     {
       zone,
       allow,
@@ -59,8 +62,9 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       className,
       minEmptyHeight: userMinEmptyHeight = 128,
       collisionAxis,
-    },
-    userRef
+      as,
+    }: DropZoneProps<T>,
+    userRef: ComponentPropsWithRef<T>["ref"]
   ) {
     const appContext = useAppContext();
     const ctx = useContext(dropZoneContext);
@@ -135,7 +139,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       return data.content || [];
     }, [data, zoneCompound]);
 
-    const ref = useRef<HTMLDivElement | null>(null);
+    const ref = useRef<ComponentProps<T> | null>(null);
 
     const acceptsTarget = useCallback(
       (componentType: string | null | undefined) => {
@@ -227,8 +231,10 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       ref,
     });
 
+    const Tag = as ?? "div"
+
     return (
-      <div
+      <Tag
         className={`${getClassName({
           isRootZone,
           userIsDragging,
@@ -347,7 +353,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
             </DropZoneProvider>
           );
         })}
-      </div>
+      </Tag>
     );
   }
 );
@@ -356,89 +362,93 @@ export const DropZoneRenderPure = (props: DropZoneProps) => (
   <DropZoneRender {...props} />
 );
 
-const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
-  function DropZoneRenderInternal({ className, style, zone }, ref) {
-    const ctx = useContext(dropZoneContext);
+const DropZoneRender = forwardRef(function DropZoneRenderInternal<T extends ElementType = "div">(
+  { className, style, zone, as }: DropZoneProps<T>,
+  ref: ComponentPropsWithRef<T>["ref"],
+) {
+  const ctx = useContext(dropZoneContext);
 
-    const { data, areaId = "root", config } = ctx || {};
+  const { data, areaId = "root", config } = ctx || {};
 
-    let zoneCompound = rootDroppableId;
-    let content = data?.content || [];
+  let zoneCompound = rootDroppableId;
+  let content = data?.content || [];
 
-    // Register zones if running Render mode inside editor (i.e. previewMode === "interactive")
-    useEffect(() => {
-      if (ctx?.registerZone) {
-        ctx?.registerZone(zoneCompound);
+  // Register zones if running Render mode inside editor (i.e. previewMode === "interactive")
+  useEffect(() => {
+    if (ctx?.registerZone) {
+      ctx?.registerZone(zoneCompound);
+    }
+
+    return () => {
+      if (ctx?.unregisterZone) {
+        ctx?.unregisterZone(zoneCompound);
       }
+    };
+  }, []);
 
-      return () => {
-        if (ctx?.unregisterZone) {
-          ctx?.unregisterZone(zoneCompound);
-        }
-      };
-    }, []);
-
-    if (!data || !config) {
-      return null;
-    }
-
-    if (areaId && zone && zone !== rootDroppableId) {
-      zoneCompound = `${areaId}:${zone}`;
-      content = setupZone(data, zoneCompound).zones[zoneCompound];
-    }
-
-    return (
-      <div className={className} style={style} ref={ref}>
-        {content.map((item) => {
-          const Component = config.components[item.type];
-
-          if (Component) {
-            return (
-              <DropZoneProvider
-                key={item.props.id}
-                value={{
-                  data,
-                  config,
-                  areaId: item.props.id,
-                  depth: 1,
-                  path: [],
-                }}
-              >
-                <Component.render
-                  {...item.props}
-                  puck={{
-                    renderDropZone: DropZoneRenderPure,
-                  }}
-                />
-              </DropZoneProvider>
-            );
-          }
-
-          return null;
-        })}
-      </div>
-    );
+  if (!data || !config) {
+    return null;
   }
-);
+
+  if (areaId && zone && zone !== rootDroppableId) {
+    zoneCompound = `${areaId}:${zone}`;
+    content = setupZone(data, zoneCompound).zones[zoneCompound];
+  }
+
+  const Tag = as ?? "div";
+
+  return (
+    <Tag className={className} style={style} ref={ref}>
+      {content.map((item) => {
+        const Component = config.components[item.type];
+
+        if (Component) {
+          return (
+            <DropZoneProvider
+              key={item.props.id}
+              value={{
+                data,
+                config,
+                areaId: item.props.id,
+                depth: 1,
+                path: [],
+              }}
+            >
+              <Component.render
+                {...item.props}
+                puck={{
+                  renderDropZone: DropZoneRenderPure,
+                }}
+              />
+            </DropZoneProvider>
+          );
+        }
+
+        return null;
+      })}
+    </Tag>
+  );
+});
 
 export const DropZonePure = (props: DropZoneProps) => <DropZone {...props} />;
 
-export const DropZone = forwardRef<HTMLDivElement, DropZoneProps>(
-  function DropZone(props: DropZoneProps, ref) {
-    const ctx = useContext(dropZoneContext);
+export const DropZone = forwardRef(function DropZone<T extends ElementType = "div">(
+  props: DropZoneProps<T>,
+  ref: ComponentPropsWithRef<T>["ref"]
+) {
+  const ctx = useContext(dropZoneContext);
 
-    if (ctx?.mode === "edit") {
-      return (
-        <>
-          <DropZoneEdit {...props} ref={ref} />
-        </>
-      );
-    }
-
+  if (ctx?.mode === "edit") {
     return (
       <>
-        <DropZoneRender {...props} ref={ref} />
+        <DropZoneEdit {...props} ref={ref} />
       </>
     );
   }
-);
+
+  return (
+    <>
+      <DropZoneRender {...props} ref={ref} />
+    </>
+  );
+});
