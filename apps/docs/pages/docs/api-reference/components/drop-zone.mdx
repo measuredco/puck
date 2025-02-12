@@ -30,13 +30,13 @@ const config = {
 | ----------------------------------- | ---------------------------- | ------------- | -------- |
 | [`zone`](#zone)                     | `zone: "my-zone"`            | String        | Required |
 | [`allow`](#allow)                   | `allow: ["HeadingBlock"]`    | Array         | -        |
+| [`as`](#as)                         | `as: "section"`              | ElementType   | -        |
 | [`className`](#classname)           | `className: "MyClass"`       | String        | -        |
 | [`collisionAxis`](#collisionaxis)   | `collisionAxis: "x"`         | String        | -        |
 | [`disallow`](#disallow)             | `disallow: ["HeadingBlock"]` | Array         | -        |
 | [`minEmptyHeight`](#minemptyheight) | `minEmptyHeight: 256`        | Number        | -        |
 | [`ref`](#ref)                       | `ref: ref`                   | Ref           | -        |
 | [`style`](#style)                   | `style: {display: "flex"}`   | CSSProperties | -        |
-| [`as`](#as)                         | `as: "section"`              | ElementType   | -        |
 
 ## Required props
 
@@ -76,6 +76,26 @@ const config = {
         return (
           <div>
             <DropZone zone="my-content" allow={["HeadingBlock"]} />
+          </div>
+        );
+      },
+    },
+  },
+};
+```
+
+### `as`
+
+Change the underlying HTML element of the DropZone. Defaults to `div`.
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      render: () => {
+        return (
+          <div>
+            <DropZone zone="my-content" as="section" />
           </div>
         );
       },
@@ -211,26 +231,6 @@ const config = {
         return (
           <div>
             <DropZone zone="my-content" style={{ display: "flex" }} />
-          </div>
-        );
-      },
-    },
-  },
-};
-```
-
-### `as`
-
-Change the underlying HTML element of the DropZone. Defaults to `div`.
-
-```tsx copy {7}
-const config = {
-  components: {
-    Example: {
-      render: () => {
-        return (
-          <div>
-            <DropZone zone="my-content" as="section" />
           </div>
         );
       },
