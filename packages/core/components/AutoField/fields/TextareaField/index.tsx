@@ -6,6 +6,7 @@ import { FieldPropsInternal } from "../..";
 const getClassName = getClassNameFactory("Input", styles);
 
 export const TextareaField = ({
+  field,
   onChange,
   readOnly,
   value,
@@ -26,6 +27,7 @@ export const TextareaField = ({
         readOnly={readOnly}
         tabIndex={readOnly ? -1 : undefined}
         rows={5}
+        placeholder={field.type === "textarea" ? field.placeholder : undefined}
       />
     </Label>
   );

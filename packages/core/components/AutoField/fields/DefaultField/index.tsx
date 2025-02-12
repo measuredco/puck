@@ -57,6 +57,11 @@ export const DefaultField = ({
         id={id}
         min={field.type === "number" ? field.min : undefined}
         max={field.type === "number" ? field.max : undefined}
+        placeholder={
+          field.type === "text" || field.type === "number"
+            ? field.placeholder
+            : undefined
+        }
       />
     </Label>
   );
