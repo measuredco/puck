@@ -68,8 +68,8 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@dnd-kit/helpers": "0.0.7-beta-20250130032138",
-    "@dnd-kit/react": "0.0.7-beta-20250130032138",
+    "@dnd-kit/helpers": "0.0.10-beta-20250212025300",
+    "@dnd-kit/react": "0.0.10-beta-20250212025300",
     "deep-diff": "^1.0.2",
     "object-hash": "^3.0.0",
     "react-hotkeys-hook": "^4.6.1",

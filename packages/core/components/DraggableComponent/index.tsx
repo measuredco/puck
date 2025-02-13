@@ -412,19 +412,12 @@ export const DraggableComponent = ({
     el.addEventListener("mouseover", _onMouseOver);
     el.addEventListener("mouseout", _onMouseOut);
 
-    if (thisIsDragging) {
-      el.setAttribute("data-puck-dragging", "");
-    } else {
-      el.removeAttribute("data-puck-dragging");
-    }
-
     return () => {
       el.removeAttribute("data-puck-component");
       el.removeAttribute("data-puck-dnd");
       el.removeEventListener("click", onClick);
       el.removeEventListener("mouseover", _onMouseOver);
       el.removeEventListener("mouseout", _onMouseOut);
-      el.removeAttribute("data-puck-dragging");
     };
   }, [
     ref,
