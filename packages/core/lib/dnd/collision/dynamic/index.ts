@@ -60,23 +60,20 @@ export const createDynamicCollisionDetector = (
 
     const { center: dragCenter } = dragShape;
 
-    const { fallbackEnabled } = collisionStore.getState();
+    const { collisionMap, fallbackEnabled } = collisionStore.getState();
 
     const interval = trackMovementInterval(position.current, dragAxis);
 
-    dragOperation.data = {
-      ...dragOperation.data,
-      direction: interval.direction,
-    };
+    collisionStore.setState({ direction: interval.direction });
 
-    const collisionMap = (dragOperation.data.collisionMap ||
-      {}) as CollisionMap;
-
-    dragOperation.data.collisionMap = collisionMap;
-
-    collisionMap[droppable.id] = {
-      direction: interval.direction,
-    };
+    collisionStore.setState({
+      collisionMap: {
+        ...collisionMap,
+        [droppable.id]: {
+          direction: interval.direction,
+        },
+      },
+    });
 
     const { center: dropCenter } = dropShape;
 
@@ -195,6 +192,10 @@ export const createDynamicCollisionDetector = (
     collisionDebug(dragCenter, dropCenter, droppable.id.toString(), "hotpink");
 
     delete collisionMap[droppable.id];
+
+    collisionStore.setState({
+      collisionMap,
+    });
 
     return null;
   }) as CollisionDetector;

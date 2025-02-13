@@ -412,9 +412,8 @@ const DragDropContextClient = ({
               targetZone = targetData.zone;
               targetIndex = targetData.index;
 
-              const collisionData = (
-                manager.dragOperation.data?.collisionMap as CollisionMap
-              )?.[targetId];
+              const { collisionMap } = collisionStore.getState();
+              const collisionData = collisionMap[targetId];
 
               const dir = getDeepDir(target.element);
 

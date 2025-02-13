@@ -7,6 +7,7 @@ import {
   createDynamicCollisionDetector,
 } from "../../lib/dnd/collision/dynamic";
 import "./styles.css";
+import { collisionStore } from "../../lib/dnd/collision/dynamic/store";
 
 export const SortableProvider = ({
   children,
@@ -28,7 +29,7 @@ export const SortableProvider = ({
       onDragStart={(event) =>
         onDragStart(event.operation.source?.id.toString() ?? "")
       }
-      onDragOver={(event, manager) => {
+      onDragOver={(event) => {
         event.preventDefault();
 
         const { operation } = event;
@@ -41,9 +42,8 @@ export const SortableProvider = ({
 
         // NB drag operation can come out of sync with collision
         // Would be better for event itself to contain collision data
-        const collisionData = (
-          manager.dragOperation.data?.collisionMap as CollisionMap
-        )?.[target.id];
+        const { collisionMap } = collisionStore.getState();
+        const collisionData = collisionMap[target.id];
 
         if (sourceIndex !== targetIndex && source.id !== target.id) {
           const collisionPosition =
@@ -86,7 +86,8 @@ export const Sortable = ({
   index: number;
   disabled?: boolean;
   children: (props: {
-    status: "idle" | "dragging" | "dropping";
+    isDragging: boolean;
+    isDropping: boolean;
     ref: (element: Element | null) => void;
     handleRef: (element: Element | null) => void;
   }) => ReactNode;
@@ -94,7 +95,8 @@ export const Sortable = ({
 }) => {
   const {
     ref: sortableRef,
-    status,
+    isDragging,
+    isDropping,
     handleRef,
   } = useSortableSafe({
     id,
@@ -105,5 +107,5 @@ export const Sortable = ({
     collisionDetector: createDynamicCollisionDetector("y"),
   });
 
-  return children({ status, ref: sortableRef, handleRef });
+  return children({ isDragging, isDropping, ref: sortableRef, handleRef });
 };

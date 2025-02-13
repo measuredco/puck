@@ -31,9 +31,17 @@ export function useDraggableSafe<T extends Data>(
 
 export function useSortableSafe<T extends Data>(
   input: UseSortableInput<T>
-): Pick<ReturnType<typeof useSortable<T>>, "ref" | "status" | "handleRef"> {
+): Pick<
+  ReturnType<typeof useSortable<T>>,
+  "ref" | "isDragging" | "isDropping" | "handleRef"
+> {
   if (typeof window === "undefined") {
-    return { ref: () => {}, status: "idle", handleRef: () => {} };
+    return {
+      ref: () => {},
+      isDragging: false,
+      isDropping: false,
+      handleRef: () => {},
+    };
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
