@@ -552,67 +552,67 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@dnd-kit/abstract@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/abstract/-/abstract-0.0.7-beta-20250130032138.tgz#3d888a741e7861faebcc0cb7f559a4459c58178c"
-  integrity sha512-CFprqfJTtvSqq6ST7AEu41M1CIMk3lko5JNggTsx9seuqodJ0kCqBDul92BBWoAxPiRuQPm+TrK5vijj1tO7rg==
+"@dnd-kit/abstract@^0.1.17":
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/abstract/-/abstract-0.1.17.tgz#a919e86152456ea81067048e31a02d17c018b5ff"
+  integrity sha512-Ck8BKTqMX+8nhMZ5k8AQ+6BH/DAuShrdpW5O2xqjTri+P+q6J7bdgqpjIanGRJGsau1i3FUJ01tLAEbUtySFtQ==
   dependencies:
-    "@dnd-kit/geometry" "0.0.7-beta-20250130032138"
-    "@dnd-kit/state" "0.0.7-beta-20250130032138"
+    "@dnd-kit/geometry" "^0.1.17"
+    "@dnd-kit/state" "^0.1.17"
     tslib "^2.6.2"
 
-"@dnd-kit/collision@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/collision/-/collision-0.0.7-beta-20250130032138.tgz#46986adec7f61a3b08c06176d11679854e2f9f52"
-  integrity sha512-IlR3Qi1Fwc+DFDIdxHCcuolv7+l+M/0KAXdW5gd8m4y5sfW1do1pogAcRA6qNHcUvlUtbsdINf/CzFoztMJ5Bw==
+"@dnd-kit/collision@^0.1.17":
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/collision/-/collision-0.1.17.tgz#269432a7a1f0a214ee0d2430d49291e8a3ba1460"
+  integrity sha512-SEAYTsqJK3XivCgn4NDnde4HjXYAJ+jgPa2+ogOaMJRbiSsH5SofF9VIvylpdOPwqS5gVhoTz9zHMUPJydKYPQ==
   dependencies:
-    "@dnd-kit/abstract" "0.0.7-beta-20250130032138"
-    "@dnd-kit/geometry" "0.0.7-beta-20250130032138"
+    "@dnd-kit/abstract" "^0.1.17"
+    "@dnd-kit/geometry" "^0.1.17"
     tslib "^2.6.2"
 
-"@dnd-kit/dom@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/dom/-/dom-0.0.7-beta-20250130032138.tgz#46897d1b96ee1be32adb36fea36e5628c8d12045"
-  integrity sha512-LuySH+UkuvlNgMGDfRPe00cSbRMxyE9PbVNfUEmsnXUmltSW9ht5jVZrkQYAI8kZB3y7ry8h1fZtK/dOI3QFBg==
+"@dnd-kit/dom@^0.1.17":
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/dom/-/dom-0.1.17.tgz#598689af68f63a5f21e109d37621e6e42e1c187f"
+  integrity sha512-D5ESrwsoRk/wzPZgfBI9VpEgvALggeT9PhTDJMEMdy2pQvWYGn4fs9uspRpDHPmiyibx6DYOeyiFEfjtX/vFhw==
   dependencies:
-    "@dnd-kit/abstract" "0.0.7-beta-20250130032138"
-    "@dnd-kit/collision" "0.0.7-beta-20250130032138"
-    "@dnd-kit/geometry" "0.0.7-beta-20250130032138"
-    "@dnd-kit/state" "0.0.7-beta-20250130032138"
+    "@dnd-kit/abstract" "^0.1.17"
+    "@dnd-kit/collision" "^0.1.17"
+    "@dnd-kit/geometry" "^0.1.17"
+    "@dnd-kit/state" "^0.1.17"
     tslib "^2.6.2"
 
-"@dnd-kit/geometry@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/geometry/-/geometry-0.0.7-beta-20250130032138.tgz#67ce0f2ff0245deee8bbdf1bacc37565f26eddc8"
-  integrity sha512-XfXqVq+LdMt5VKTjiyhvCcc68xRvD9xZilA52mdODN1qM3wh5ezpe17MyjlqefqH+sratpjmZwifHk2CONRWeg==
+"@dnd-kit/geometry@^0.1.17":
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/geometry/-/geometry-0.1.17.tgz#cf2902268d2558c72b882725d3a64d36cded5c2a"
+  integrity sha512-xT0Q40KC0XFGlDjq/LuedTDDvZbqfHqXRKOVqtIjVKLuN9FwkI/RSGmVHtvmXeYoXE71cklvrxWUpjr1k7YC5g==
   dependencies:
-    "@dnd-kit/state" "0.0.7-beta-20250130032138"
+    "@dnd-kit/state" "^0.1.17"
     tslib "^2.6.2"
 
-"@dnd-kit/helpers@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/helpers/-/helpers-0.0.7-beta-20250130032138.tgz#2b92aa5ba003b6d5cafc6ff1eac5be198dc8b149"
-  integrity sha512-KzZhgi3zoSJMSEwSL+6d/8GS2FfvY1s5wpIUPxEAgJM9ati+iU8uFL4T5qgxeTt8LVxobyFRzI5rVisUGgSICA==
+"@dnd-kit/helpers@0.1.17":
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/helpers/-/helpers-0.1.17.tgz#41ca2169925fb149146c88b2b778967b9b9369f6"
+  integrity sha512-yHYDC6OHgxReF1y4Rmc3uITigNdwAOmtHYFHBOco1dWso2H0WL37fi6NFFp3NKoBbLd4c1O33JsWtWEXfaYKwA==
   dependencies:
-    "@dnd-kit/abstract" "0.0.7-beta-20250130032138"
+    "@dnd-kit/abstract" "^0.1.17"
     tslib "^2.6.2"
 
-"@dnd-kit/react@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/react/-/react-0.0.7-beta-20250130032138.tgz#b74839fd64b5688aa7f4fd20d766e478fd97701f"
-  integrity sha512-JsBHxVGoJlmFMt0mo6/7mwasrvq09Iz/uFUXcX/M7ob8UjdthNjL5y9vk8VGnJlka7yMHQxEGHJvQs6yh+FWow==
+"@dnd-kit/react@0.1.17":
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/react/-/react-0.1.17.tgz#310cded3cb21f063c33ae015a627b7deb483f22e"
+  integrity sha512-xijA29t2ZQiW+G8+bKJn6Ax+WCRa/gDnACHaBPe+BI8pJlKvVFvv63QB7ieI4H6UAVMtubCoiTzMLXdSzKAf6A==
   dependencies:
-    "@dnd-kit/abstract" "0.0.7-beta-20250130032138"
-    "@dnd-kit/dom" "0.0.7-beta-20250130032138"
-    "@dnd-kit/state" "0.0.7-beta-20250130032138"
+    "@dnd-kit/abstract" "^0.1.17"
+    "@dnd-kit/dom" "^0.1.17"
+    "@dnd-kit/state" "^0.1.17"
     tslib "^2.6.2"
 
-"@dnd-kit/state@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/state/-/state-0.0.7-beta-20250130032138.tgz#16d947a2468a5e8fe668c4bfa276b55b2d6a60a6"
-  integrity sha512-xBW0LTG+jzXbdeha35uAlvZhO4M6F81fq7vpA54nodIu/RkBIB38NhnReMv/UrVRHxaZlwILDpW/3oHGu5h2jg==
+"@dnd-kit/state@^0.1.17":
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/state/-/state-0.1.17.tgz#3459d447e485d2adbe7d1ee2ea5ecc48c135b087"
+  integrity sha512-AEdvx4Dsv2DN6h4M43yoJ2WSA+pi6QBUWGw85Ol7bvdkKNUOTfsm1+yLYEvZpiRNg473U9dnUz5/18nT4dg9kA==
   dependencies:
-    "@preact/signals-core" "^1.6.0"
+    "@preact/signals-core" "^1.8.0"
     tslib "^2.6.2"
 
 "@emnapi/runtime@^1.2.0":
@@ -2604,10 +2604,10 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@preact/signals-core@^1.6.0":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@preact/signals-core/-/signals-core-1.6.1.tgz#d9ce4e6806be22325e569dd9fee06b6b41eb3bee"
-  integrity sha512-KXEEmJoKDlo0Igju/cj9YvKIgyaWFDgnprShQjzimUd5VynAAdTWMshawEOjUVeKbsI0aR58V6WOQp+DNcKApw==
+"@preact/signals-core@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@preact/signals-core/-/signals-core-1.8.0.tgz#45ffadb81b48a298a4accd26b3f6c0140cd6dacc"
+  integrity sha512-OBvUsRZqNmjzCZXWLxkZfhcgT+Fk8DDcT/8vD6a1xhDemodyy87UJRJfASMuSD8FaAIeGgGm85ydXhm7lr4fyA==
 
 "@puppeteer/browsers@2.10.4":
   version "2.10.4"
@@ -14836,16 +14836,7 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
-
-"string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+"string-width-cjs@npm:string-width@^4.2.0", "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -14952,14 +14943,7 @@ stringify-entities@^4.0.0:
     character-entities-html4 "^2.0.0"
     character-entities-legacy "^3.0.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -15498,7 +15482,7 @@ tsconfig-paths@^4.0.0, tsconfig-paths@^4.1.2, tsconfig-paths@^4.2.0:
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
-tslib@2, tslib@^2.8.0:
+tslib@2, tslib@^2.6.2, tslib@^2.8.0:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
@@ -15512,11 +15496,6 @@ tslib@^2.0.1, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.4.0:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
-
-tslib@^2.6.2:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.3.tgz#0438f810ad7a9edcde7a241c3d80db693c8cbfe0"
-  integrity sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==
 
 tsup@^8.2.4:
   version "8.3.5"
@@ -16501,7 +16480,7 @@ wordwrap@^1.0.0:
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
   integrity sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -16514,15 +16493,6 @@ wrap-ansi@^6.0.1, wrap-ansi@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
   integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
-  dependencies:
-    ansi-styles "^4.0.0"
-    string-width "^4.1.0"
-    strip-ansi "^6.0.0"
-
-wrap-ansi@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
-  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
   dependencies:
     ansi-styles "^4.0.0"
     string-width "^4.1.0"
