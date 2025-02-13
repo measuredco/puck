@@ -1,7 +1,7 @@
 import { CSSProperties } from "react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { setupZone } from "../../lib/setup-zone";
-import { Config, Data, FieldProps, UserGenerics } from "../../types";
+import { Config, Data, FieldProps, MetaData, UserGenerics } from "../../types";
 
 type DropZoneRenderProps = {
   zone: string;
@@ -9,7 +9,7 @@ type DropZoneRenderProps = {
   config: Config;
   areaId?: string;
   style?: CSSProperties;
-  externalData?: any;
+  metadata: MetaData;
 };
 
 function DropZoneRender({
@@ -17,7 +17,7 @@ function DropZoneRender({
   data,
   areaId = "root",
   config,
-  externalData
+  metadata = {}
 }: DropZoneRenderProps) {
   let zoneCompound = rootDroppableId;
   let content = data?.content || [];
@@ -35,13 +35,12 @@ function DropZoneRender({
     <>
       {content.map((item) => {
         const Component = config.components[item.type];
-        const transformedItem = beforeServerRenderProps({ props: item.props }, externalData, config.components[item.type].beforeRender);
 
         if (Component) {
           return (
             <Component.render
               key={item.props.id}
-              {...transformedItem.props}
+              {...item.props}
               puck={{
                 renderDropZone: ({ zone }: { zone: string }) => (
                   <DropZoneRender
@@ -49,9 +48,10 @@ function DropZoneRender({
                     data={data}
                     areaId={item.props.id}
                     config={config}
-                    externalData={externalData}
+                    metadata={metadata}
                   />
                 ),
+                metadata
               }}
             />
           );
@@ -66,7 +66,7 @@ function DropZoneRender({
 export function Render<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
->({ config, data, externalData }: { config: UserConfig; data: G["UserData"], externalData?: any }) {
+>({ config, data, metadata }: { config: UserConfig; data: G["UserData"], metadata: MetaData }) {
   if (config.root?.render) {
     // DEPRECATED
     const rootProps = data.root.props || data.root;
@@ -78,7 +78,7 @@ export function Render<
         {...rootProps}
         puck={{
           renderDropZone: ({ zone }: { zone: string }) => (
-            <DropZoneRender zone={zone} data={data} config={config} externalData={externalData} />
+            <DropZoneRender zone={zone} data={data} config={config} metadata={metadata} />
           ),
           isEditing: false,
           dragRef: null,
@@ -87,24 +87,10 @@ export function Render<
         editMode={false}
         id={"puck-root"}
       >
-        <DropZoneRender config={config} data={data} zone={rootDroppableId} externalData={externalData} />
+        <DropZoneRender config={config} data={data} zone={rootDroppableId} metadata={metadata} />
       </config.root.render>
     );
   }
 
-  return <DropZoneRender config={config} data={data} zone={rootDroppableId} externalData={externalData}/>;
-}
-
-const beforeServerRenderProps = (original: { props: Partial<FieldProps> | FieldProps }, externalData: any, componentBeforeRender?: (data: | { props: Partial<FieldProps> | FieldProps; }, params: { externalData: any; }) => | { props?: Partial<FieldProps> | FieldProps; }) => {
-  if (!componentBeforeRender && typeof componentBeforeRender !== "function") {
-    return original;
-  }
-
-  const transformed = {
-    props: {
-      ...componentBeforeRender(original, { externalData }).props,
-    },
-  };
-
-  return transformed;
+  return <DropZoneRender config={config} data={data} zone={rootDroppableId} metadata={metadata}/>;
 }

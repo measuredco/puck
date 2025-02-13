@@ -79,7 +79,8 @@ describe("use-resolved-data", () => {
           },
           () => {},
           () => {},
-          () => {}
+          () => {},
+          {}
         );
       });
 
@@ -185,7 +186,8 @@ describe("use-resolved-data", () => {
           },
           () => {},
           () => {},
-          () => {}
+          () => {},
+          {}
         );
       });
 
@@ -222,7 +224,8 @@ describe("use-resolved-data", () => {
           hookArgs[2],
           () => {},
           () => {},
-          () => {}
+          () => {},
+          {}
         )
       );
 
@@ -235,7 +238,8 @@ describe("use-resolved-data", () => {
             hookArgs[2],
             () => {},
             () => {},
-            () => {}
+            () => {},
+            {}
           )
         );
 
@@ -251,7 +255,8 @@ describe("use-resolved-data", () => {
             hookArgs[2],
             () => {},
             () => {},
-            () => {}
+            () => {},
+            {}
           )
         );
       });
@@ -281,7 +286,8 @@ describe("use-resolved-data", () => {
           },
           () => {},
           () => {},
-          () => {}
+          () => {},
+          {}
         )
       );
 
@@ -326,7 +332,8 @@ describe("use-resolved-data", () => {
           },
           setComponentLoading,
           unsetComponentLoading,
-          () => {}
+          () => {},
+          {}
         )
       );
 
@@ -370,7 +377,8 @@ describe("use-resolved-data", () => {
           },
           () => {},
           () => {},
-          refreshPermissions
+          refreshPermissions,
+          {}
         )
       );
 

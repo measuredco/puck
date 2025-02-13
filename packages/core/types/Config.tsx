@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { Fields } from "./Fields";
-import { ComponentData, RootData } from "./Data";
+import { ComponentData, MetaData, RootData } from "./Data";
 
 import { AsFieldProps, WithChildren, WithId, WithPuckProps } from "./Utils";
 import { AppState } from "./AppState";
@@ -14,7 +14,7 @@ export type PuckComponent<Props> = (
 export type ComponentConfig<
   RenderProps extends DefaultComponentProps = DefaultComponentProps,
   FieldProps extends DefaultComponentProps = RenderProps,
-  DataShape = Omit<ComponentData<FieldProps>, "type">
+  DataShape = Omit<ComponentData<FieldProps>, "type">,
 > = {
   render: PuckComponent<RenderProps>;
   label?: string;
@@ -38,15 +38,18 @@ export type ComponentConfig<
     params: {
       changed: Partial<Record<keyof FieldProps, boolean>>;
       lastData: DataShape | null;
+      metadata: MetaData;
     }
   ) =>
     | Promise<{
         props?: Partial<FieldProps>;
         readOnly?: Partial<Record<keyof FieldProps, boolean>>;
+        renderProps?: Partial<FieldProps>;
       }>
     | {
         props?: Partial<FieldProps>;
         readOnly?: Partial<Record<keyof FieldProps, boolean>>;
+        renderProps?: Partial<FieldProps>;
       };
   resolvePermissions?: (
     data: DataShape,
@@ -58,12 +61,7 @@ export type ComponentConfig<
       lastData: DataShape | null;
     }
   ) => Promise<Partial<Permissions>> | Partial<Permissions>;
-  beforeRender?: (
-    data: DataShape,
-    params: {
-      externalData: any;
-    }
-  ) => { props: Partial<FieldProps> | FieldProps; };
+  // mapMetadata?: (metadata:MetaData, props:Partial<FieldProps> | FieldProps) => {}
 };
 
 type Category<ComponentName> = {

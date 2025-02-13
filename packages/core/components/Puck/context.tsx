@@ -15,6 +15,7 @@ import {
   UiState,
   Plugin,
   UserGenerics,
+  MetaData
 } from "../../types";
 import { PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
@@ -83,7 +84,7 @@ export type AppContext<
   selectedItem?: G["UserData"]["content"][0];
   getPermissions: GetPermissions<UserConfig>;
   refreshPermissions: RefreshPermissions<UserConfig>;
-  externalData?: any;
+  metadata: MetaData;
 };
 
 export const defaultContext: AppContext = {
@@ -109,7 +110,7 @@ export const defaultContext: AppContext = {
   globalPermissions: {},
   getPermissions: () => ({}),
   refreshPermissions: () => null,
-  externalData: {}
+  metadata: {}
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
@@ -182,7 +183,8 @@ export const AppProvider = ({
     value.dispatch,
     setComponentLoading,
     unsetComponentLoading,
-    refreshPermissions
+    refreshPermissions,
+    value.metadata
   );
 
   return (

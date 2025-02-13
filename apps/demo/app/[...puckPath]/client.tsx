@@ -1,16 +1,17 @@
 "use client";
 
-import { Button, Puck, Render } from "@/core";
+import { Button, MetaData, Puck, Render } from "@/core";
 import headingAnalyzer from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config from "../../config";
 import { useDemoData } from "../../lib/use-demo-data";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-export function Client({ path, isEdit, externalData }: { path: string; isEdit: boolean, externalData?: any }) {
+export function Client({ path, isEdit, metadata = {} }: { path: string; isEdit: boolean, metadata: MetaData }) {
   const { data, resolvedData, key } = useDemoData({
     path,
     isEdit,
+    metadata
   });
 
   const [isClient, setIsClient] = useState(false);
@@ -50,14 +51,14 @@ export function Client({ path, isEdit, externalData }: { path: string; isEdit: b
               </>
             ),
           }}
-          externalData={externalData}
+          metadata={metadata}
         />
       </div>
     );
   }
 
   if (data.content) {
-    return <Render config={config} data={resolvedData} externalData={externalData} />;
+    return <Render config={config} data={resolvedData} metadata={metadata} />;
   }
 
   return (

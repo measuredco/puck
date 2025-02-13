@@ -1,7 +1,7 @@
 import resolvePuckPath from "../../lib/resolve-puck-path";
 import { Metadata } from "next";
 import Client from "./client";
-import "@measured/puck/puck.css"; // Editor wasn't rendering styles without this  
+import { useMetadata } from "../../lib/use-metadata";
 export async function generateMetadata({
   params,
 }: {
@@ -21,13 +21,6 @@ export async function generateMetadata({
   };
 }
 
-const getExternalData = async () => {
-  return {
-    heading: "Transform your content right before rendering",
-    text: "Using external data, you can now substitute content prior to rendering while leaving your original data intact.",
-  }
-}
-
 export default async function Page({
   params,
 }: {
@@ -35,7 +28,7 @@ export default async function Page({
 }) {
   const { puckPath } = await params;
   const { isEdit, path } = resolvePuckPath(puckPath);
-  const externalData = await getExternalData();
+  const metadata = await useMetadata();
 
-  return <Client isEdit={isEdit} path={path} externalData={externalData} />;
+  return <Client isEdit={isEdit} path={path} metadata={metadata} />;
 }

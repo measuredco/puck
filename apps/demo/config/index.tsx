@@ -9,8 +9,6 @@ import { Logos, LogosProps } from "./blocks/Logos";
 import { Stats, StatsProps } from "./blocks/Stats";
 import { Text, TextProps } from "./blocks/Text";
 import { Space, SpaceProps } from "./blocks/Space";
-import { HandlebarsHeading, HandlebarsHeadingProps } from "./blocks/HandlebarsHeading";
-import { HandlebarsText, HandlebarsTextProps } from "./blocks/HandlebarsText";
 
 import Root, { RootProps } from "./root";
 
@@ -27,8 +25,6 @@ export type Props = {
   Stats: StatsProps;
   Text: TextProps;
   Space: SpaceProps;
-  HandlebarsHeading: HandlebarsHeadingProps
-  HandlebarsText: HandlebarsTextProps
 };
 
 export type UserConfig = Config<
@@ -52,7 +48,7 @@ export const conf: UserConfig = {
       components: ["Grid", "Flex", "Space"],
     },
     typography: {
-      components: ["Heading", "HandlebarsHeading", "Text", "HandlebarsText"],
+      components: ["Heading", "Text"],
     },
     interactive: {
       title: "Actions",
@@ -74,8 +70,6 @@ export const conf: UserConfig = {
     Stats,
     Text,
     Space,
-    HandlebarsHeading,
-    HandlebarsText
   },
 };
 
@@ -114,33 +108,11 @@ export const initialData: Record<string, UserData> = {
         },
       },
       {
-        type: "HandlebarsHeading",
-        props: {
-          align: "center",
-          level: "2",
-          text: "{{heading}}",
-          layout: { padding: "0px" },
-          size: "xxl",
-          id: "HeadingExternalData-1687297593514",
-        },
-      },
-      {
         type: "Space",
         props: {
           size: "8px",
           id: "Space-1687284122745",
           direction: "vertical",
-        },
-      },
-      {
-        type: "HandlebarsText",
-        props: {
-          align: "center",
-          text: "{{text}}",
-          layout: { padding: "0px" },
-          size: "m",
-          id: "Text-1687297621557",
-          color: "muted",
         },
       },
       {
