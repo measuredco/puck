@@ -6,21 +6,15 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Config, Data } from "../../types";
 import { ItemSelector } from "../../lib/get-item";
 
 import type { Draggable } from "@dnd-kit/dom";
-import { useAppContext } from "../Puck/context";
+import { useAppStore } from "../Puck/context";
 import { createStore, StoreApi } from "zustand";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
-export type DropZoneContext<UserConfig extends Config = Config> = {
-  data: Data;
-  config: UserConfig;
-  componentState?: Record<string, any>;
-  itemSelector?: ItemSelector | null;
-  setItemSelector?: (newIndex: ItemSelector | null) => void;
+export type DropZoneContext = {
   areaId?: string;
   zoneCompound?: string;
   index?: number;
@@ -98,7 +92,7 @@ export const DropZoneProvider = ({
 
   const [activeZones, setActiveZones] = useState<Record<string, boolean>>({});
 
-  const { dispatch } = useAppContext();
+  const dispatch = useAppStore((s) => s.dispatch);
 
   const registerZoneArea = useCallback(
     (area: string) => {

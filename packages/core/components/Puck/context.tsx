@@ -16,7 +16,7 @@ import {
   Plugin,
   UserGenerics,
 } from "../../types";
-import { PuckAction } from "../../reducer";
+import { createReducer, PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
 import { PuckHistory } from "../../lib/use-puck-history";
 import { defaultViewports } from "../ViewportControls/default-viewports";
@@ -27,6 +27,7 @@ import {
   useResolvedPermissions,
 } from "../../lib/use-resolved-permissions";
 import { useResolvedData } from "../../lib/use-resolved-data";
+import { create } from "zustand";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {} },
@@ -68,7 +69,7 @@ export type AppContext<
   dispatch: (action: PuckAction) => void;
   config: UserConfig;
   componentState: ComponentState;
-  setComponentState: React.Dispatch<SetStateAction<ComponentState>>;
+  setComponentState: (componentState: ComponentState) => void;
   resolveData: (newAppState: AppState) => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
@@ -80,9 +81,10 @@ export type AppContext<
   setStatus: (status: Status) => void;
   iframe: IframeConfig;
   globalPermissions?: Partial<Permissions>;
-  selectedItem?: G["UserData"]["content"][0];
+  selectedItem?: G["UserData"]["content"][0] | null;
   getPermissions: GetPermissions<UserConfig>;
   refreshPermissions: RefreshPermissions<UserConfig>;
+  setUi: (ui: Partial<UiState>, recordHistory?: boolean) => void;
 };
 
 export const defaultContext: AppContext = {
@@ -108,114 +110,154 @@ export const defaultContext: AppContext = {
   globalPermissions: {},
   getPermissions: () => ({}),
   refreshPermissions: () => null,
+  setUi: () => null,
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
 
-export const AppProvider = ({
-  children,
-  value,
-}: {
-  children: ReactNode;
-  value: Omit<
-    AppContext,
-    | "zoomConfig"
-    | "setZoomConfig"
-    | "status"
-    | "setStatus"
-    | "componentState"
-    | "setComponentState"
-    | "resolveData"
-  >;
-}) => {
-  const [zoomConfig, setZoomConfig] = useState(defaultContext.zoomConfig);
+// export const AppProvider = ({
+//   children,
+//   value,
+// }: {
+//   children: ReactNode;
+//   value: Omit<
+//     AppContext,
+//     | "zoomConfig"
+//     | "setZoomConfig"
+//     | "status"
+//     | "setStatus"
+//     | "componentState"
+//     | "setComponentState"
+//     | "resolveData"
+//   >;
+// }) => {
+//   const [zoomConfig, setZoomConfig] = useState(defaultContext.zoomConfig);
 
-  const [status, setStatus] = useState<Status>("LOADING");
+//   const [status, setStatus] = useState<Status>("LOADING");
 
-  // App is ready when client has loaded, after initial render
-  // This triggers DropZones to activate
-  useEffect(() => {
-    setStatus("MOUNTED");
-  }, []);
+//   // App is ready when client has loaded, after initial render
+//   // This triggers DropZones to activate
+//   useEffect(() => {
+//     setStatus("MOUNTED");
+//   }, []);
 
-  const selectedItem = value.state.ui.itemSelector
-    ? getItem(value.state.ui.itemSelector, value.state.data)
-    : undefined;
+//   const selectedItem = value.state.ui.itemSelector
+//     ? getItem(value.state.ui.itemSelector, value.state.data)
+//     : undefined;
 
-  const [componentState, setComponentState] = useState<
-    AppContext["componentState"]
-  >({});
+//   const [componentState, setComponentState] = useState<
+//     AppContext["componentState"]
+//   >({});
 
-  const setComponentLoading = (id: string) => {
-    setComponentState((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        loadingCount: (prev[id]?.loadingCount || 0) + 1,
-      },
-    }));
-  };
+//   const setComponentLoading = (id: string) => {
+//     setComponentState((prev) => ({
+//       ...prev,
+//       [id]: {
+//         ...prev[id],
+//         loadingCount: (prev[id]?.loadingCount || 0) + 1,
+//       },
+//     }));
+//   };
 
-  const unsetComponentLoading = (id: string) => {
-    setComponentState((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        loadingCount: Math.max((prev[id]?.loadingCount || 0) - 1, 0),
-      },
-    }));
-  };
+//   const unsetComponentLoading = (id: string) => {
+//     setComponentState((prev) => ({
+//       ...prev,
+//       [id]: {
+//         ...prev[id],
+//         loadingCount: Math.max((prev[id]?.loadingCount || 0) - 1, 0),
+//       },
+//     }));
+//   };
 
-  const { getPermissions, refreshPermissions } = useResolvedPermissions(
-    value.config,
-    value.state,
-    value.globalPermissions || {},
-    setComponentLoading,
-    unsetComponentLoading
-  );
+//   const { getPermissions, refreshPermissions } = useResolvedPermissions(
+//     value.config,
+//     value.state,
+//     value.globalPermissions || {},
+//     setComponentLoading,
+//     unsetComponentLoading
+//   );
 
-  const { resolveData } = useResolvedData(
-    value.state,
-    value.config,
-    value.dispatch,
-    setComponentLoading,
-    unsetComponentLoading,
-    refreshPermissions
-  );
+//   const { resolveData } = useResolvedData(
+//     value.state,
+//     value.config,
+//     value.dispatch,
+//     setComponentLoading,
+//     unsetComponentLoading,
+//     refreshPermissions
+//   );
 
-  return (
-    <appContext.Provider
-      value={{
-        ...value,
-        selectedItem,
-        zoomConfig,
-        setZoomConfig,
-        status,
-        setStatus,
-        getPermissions,
-        refreshPermissions,
-        componentState,
-        setComponentState,
-        resolveData,
-      }}
-    >
-      {children}
-    </appContext.Provider>
-  );
-};
+//   return (
+//     <appContext.Provider
+//       value={{
+//         ...value,
+//         selectedItem,
+//         zoomConfig,
+//         setZoomConfig,
+//         status,
+//         setStatus,
+//         getPermissions,
+//         refreshPermissions,
+//         componentState,
+//         setComponentState,
+//         resolveData,
+//       }}
+//     >
+//       {children}
+//     </appContext.Provider>
+//   );
+// };
 
-export function useAppContext<UserConfig extends Config = Config>() {
-  const mainContext = useContext<AppContext<UserConfig>>(appContext as any);
+export const useAppStore = create<AppContext>((set) => ({
+  ...defaultContext,
+  // TODO move to own store?
+  dispatch: (action: PuckAction) =>
+    set((s) => {
+      const dispatch = createReducer({ config: s.config, record: () => {} });
 
-  return {
-    ...mainContext,
-    // Helpers
-    setUi: (ui: Partial<UiState>, recordHistory?: boolean) => {
-      return mainContext.dispatch({
+      const state = dispatch(s.state, action);
+
+      const selectedItem = state.ui.itemSelector
+        ? getItem(state.ui.itemSelector, state.data)
+        : null;
+
+      console.log("store dispatch", action);
+
+      return { ...s, state, selectedItem };
+    }),
+  setZoomConfig: (zoomConfig) => set({ zoomConfig }),
+  setStatus: (status) => set({ status }),
+  setComponentState: (componentState) => set({ componentState }),
+  // Helper
+  setUi: (ui: Partial<UiState>, recordHistory?: boolean) =>
+    set((s) => {
+      const dispatch = createReducer({ config: s.config, record: () => {} });
+
+      const state = dispatch(s.state, {
         type: "setUi",
         ui,
         recordHistory,
       });
-    },
+
+      return { ...s, state };
+    }),
+  // TODO reimplement
+  getPermissions: () => ({
+    drag: true,
+    edit: true,
+    delete: true,
+    duplicate: true,
+  }),
+}));
+
+export function getAppStore<UserConfig extends Config = Config>() {
+  return useAppStore.getState() as unknown as AppContext<UserConfig>;
+}
+
+export function useAppContext<UserConfig extends Config = Config>() {
+  // const mainContext = useContext<AppContext<UserConfig>>(appContext as any);
+  const store = useAppStore() as unknown as AppContext<UserConfig>;
+
+  return {
+    ...store,
   };
 }

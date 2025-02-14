@@ -1,5 +1,5 @@
 import { DragDropProvider } from "@dnd-kit/react";
-import { useAppContext } from "../Puck/context";
+import { getAppStore, useAppContext, useAppStore } from "../Puck/context";
 import {
   createContext,
   Dispatch,
@@ -109,11 +109,11 @@ const DragDropContextClient = ({
   children,
   disableAutoScroll,
 }: DragDropContextProps) => {
-  const { state, config, dispatch, resolveData } = useAppContext();
+  const config = useAppStore((s) => s.config);
+  const dispatch = useAppStore((s) => s.dispatch);
+  const resolveData = useAppStore((s) => s.resolveData);
 
   const id = useId();
-
-  const { data } = state;
 
   const debouncedParamsRef = useRef<DeepestParams | null>(null);
 
@@ -298,7 +298,7 @@ const DragDropContextClient = ({
         };
       });
     },
-    [data, setPathData]
+    [setPathData]
   );
 
   const unregisterPath = useCallback(
@@ -311,13 +311,14 @@ const DragDropContextClient = ({
         return newPathData;
       });
     },
-    [data, setPathData]
+    [setPathData]
   );
 
   const initialSelector = useRef<{ zone: string; index: number }>(undefined);
 
   return (
     <div id={id}>
+      ddcontext {Math.random()}
       <dragListenerContext.Provider
         value={{
           dragListeners,
@@ -371,6 +372,8 @@ const DragDropContextClient = ({
               // Finalise the drag
               if (thisPreview) {
                 zoneStore.setState({ previewIndex: {} });
+
+                const state = getAppStore().state;
 
                 if (thisPreview.type === "insert") {
                   insertComponent(
@@ -499,7 +502,10 @@ const DragDropContextClient = ({
                 };
               }
 
-              const item = getItem(initialSelector.current, data);
+              const item = getItem(
+                initialSelector.current,
+                getAppStore().state.data
+              );
 
               if (item) {
                 zoneStore.setState({
@@ -530,6 +536,7 @@ const DragDropContextClient = ({
 
             if (source && source.type !== "void") {
               const sourceData = source.data as ComponentDndData;
+              const { data } = getAppStore().state;
 
               const item = getItem(
                 {
@@ -571,8 +578,6 @@ const DragDropContextClient = ({
           <ZoneStoreProvider store={zoneStore}>
             <DropZoneProvider
               value={{
-                data,
-                config,
                 mode: "edit",
                 areaId: "root",
                 depth: 0,
@@ -595,7 +600,7 @@ export const DragDropContext = ({
   children,
   disableAutoScroll,
 }: DragDropContextProps) => {
-  const { status } = useAppContext();
+  const status = useAppStore((s) => s.status);
 
   if (status === "LOADING") {
     return children;

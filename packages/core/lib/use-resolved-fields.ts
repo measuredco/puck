@@ -1,8 +1,7 @@
 import { ComponentData, RootData } from "../types";
 import type { Field, Fields as FieldsType } from "../types";
-import { useAppContext } from "../components/Puck/context";
-
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { getAppStore, useAppStore } from "../components/Puck/context";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ItemSelector } from "../lib/get-item";
 import { getChanged } from "../lib/get-changed";
 import { useParent } from "../lib/use-parent";
@@ -22,34 +21,33 @@ export const useResolvedFields = ({
   _skipValueCheck?: boolean;
   _skipIdCheck?: boolean;
 } = {}): [FieldsType, boolean] => {
-  const { selectedItem, state, config } = useAppContext();
-  const parent = useParent();
-
-  const { data } = state;
-
-  const rootFields = config.root?.fields || defaultPageFields;
-
-  const componentConfig = selectedItem
-    ? config.components[selectedItem.type]
-    : null;
-
-  const defaultFields = useMemo(
-    () =>
-      (selectedItem
-        ? (componentConfig?.fields as Record<string, Field<any>>)
-        : rootFields) || {},
-    [selectedItem, rootFields, componentConfig?.fields]
+  const componentConfig = useAppStore((s) =>
+    s.selectedItem ? s.config.components[s.selectedItem.type] : null
   );
+  const itemSelector = useAppStore((s) => s.state.ui.itemSelector);
 
-  // DEPRECATED
-  const rootProps = data.root.props || data.root;
+  const parent = null; //useParent();
+
+  // const { data } = state;
+
+  const defaultFields = useAppStore((s) => {
+    const rootFields = s.config.root?.fields || defaultPageFields;
+
+    return (
+      (s.selectedItem
+        ? (componentConfig?.fields as Record<string, Field<any>>)
+        : rootFields) || {}
+    );
+  });
+
+  const id = useAppStore((s) => s.selectedItem?.props.id as string | undefined);
 
   const [lastSelectedData, setLastSelectedData] = useState<
     Partial<ComponentOrRootData>
   >({});
   const [resolvedFields, setResolvedFields] = useState({
     fields: defaultFields,
-    id: selectedItem?.props.id,
+    id,
   });
   const [fieldsLoading, setFieldsLoading] = useState(false);
   const lastFields = useRef<FieldsType>(defaultFields);
@@ -64,20 +62,26 @@ export const useResolvedFields = ({
     }
   ) => defaultFields;
 
-  const componentData: ComponentOrRootData = useMemo(
-    () =>
-      selectedItem
-        ? selectedItem
-        : { props: rootProps, readOnly: data.root.readOnly || {} },
-    [selectedItem, rootProps, data.root.readOnly]
+  const hasComponentResolver = useAppStore(
+    (s) => !!(s.selectedItem && componentConfig?.resolveFields)
   );
-
-  const hasComponentResolver = selectedItem && componentConfig?.resolveFields;
-  const hasRootResolver = !selectedItem && config.root?.resolveFields;
+  const hasRootResolver = useAppStore(
+    (s) => !!(!s.selectedItem && s.config.root?.resolveFields)
+  );
   const hasResolver = hasComponentResolver || hasRootResolver;
 
   const resolveFields = useCallback(
     async (fields: FieldsType = {}) => {
+      const { config, state, selectedItem } = getAppStore();
+      const { data } = state;
+
+      // DEPRECATED
+      const rootProps = data.root.props || data.root;
+
+      const componentData = selectedItem
+        ? selectedItem
+        : { props: rootProps, readOnly: data.root.readOnly || {} };
+
       const lastData =
         lastSelectedData.props?.id === componentData.props.id
           ? lastSelectedData
@@ -119,20 +123,25 @@ export const useResolvedFields = ({
         lastData,
       });
     },
-    [data, config, componentData, selectedItem, state, parent]
+    [componentConfig, parent]
   );
 
   const triggerResolver = useCallback(() => {
+    const selectedItem = getAppStore().selectedItem;
+
     // Must either be in default zone, or have parent
     if (
-      !state.ui.itemSelector?.zone ||
-      state.ui.itemSelector?.zone === "default-zone" ||
+      !itemSelector?.zone ||
+      itemSelector?.zone === "default-zone" ||
       parent
     ) {
+      console.log("trigger resolver", itemSelector, hasResolver, defaultFields);
       if (hasResolver) {
         setFieldsLoading(true);
 
         resolveFields(defaultFields).then((fields) => {
+          console.log("resolved", fields);
+
           setResolvedFields({
             fields: fields || {},
             id: selectedItem?.props.id,
@@ -147,17 +156,10 @@ export const useResolvedFields = ({
       }
     }
     setResolvedFields({ fields: defaultFields, id: selectedItem?.props.id });
-  }, [
-    defaultFields,
-    state.ui.itemSelector,
-    selectedItem,
-    hasResolver,
-    parent,
-    resolveFields,
-  ]);
+  }, [defaultFields, itemSelector, hasResolver, parent, resolveFields]);
 
   useOnValueChange<ItemSelector | null>(
-    state.ui.itemSelector,
+    itemSelector,
     () => {
       lastFields.current = defaultFields;
     },
@@ -165,7 +167,8 @@ export const useResolvedFields = ({
   );
 
   useOnValueChange(
-    { data, parent, itemSelector: state.ui.itemSelector },
+    { parent, itemSelector },
+    // { data, parent, itemSelector },
     () => {
       if (_skipValueCheck) return;
 
@@ -178,7 +181,7 @@ export const useResolvedFields = ({
     triggerResolver();
   }, []);
 
-  if (resolvedFields.id !== selectedItem?.props.id && !_skipIdCheck) {
+  if (resolvedFields.id !== id && !_skipIdCheck) {
     return [defaultFields, fieldsLoading];
   }
 

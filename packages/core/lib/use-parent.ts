@@ -1,16 +1,16 @@
 import { useCallback, useContext } from "react";
-import { useAppContext } from "../components/Puck/context";
-import { getItem, ItemSelector } from "./get-item";
+import { getAppStore } from "../components/Puck/context";
+import { getItem } from "./get-item";
 import { dropZoneContext } from "../components/DropZone";
 import { convertPathDataToBreadcrumbs } from "./use-breadcrumbs";
 import { PathData } from "../components/DropZone/context";
-import { Data } from "../types";
 
-export const getParent = (
-  itemSelector: ItemSelector | null,
-  pathData: PathData | undefined,
-  data: Data
-) => {
+export const getParent = (pathData: PathData | undefined) => {
+  const {
+    data,
+    ui: { itemSelector },
+  } = getAppStore().state;
+
   if (!itemSelector) return null;
 
   const item = getItem(itemSelector, data);
@@ -25,13 +25,9 @@ export const getParent = (
 };
 
 export const useGetParent = () => {
-  const { state } = useAppContext();
   const { pathData } = useContext(dropZoneContext) || {};
 
-  return useCallback(
-    () => getParent(state.ui.itemSelector, pathData, state.data),
-    [state.ui.itemSelector, pathData, state.data]
-  );
+  return useCallback(() => getParent(pathData), [pathData]);
 };
 
 export const useParent = () => {

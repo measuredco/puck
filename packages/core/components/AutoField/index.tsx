@@ -23,7 +23,7 @@ import {
 import { Lock } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { ObjectField } from "./fields/ObjectField";
-import { useAppContext } from "../Puck/context";
+import { useAppStore } from "../Puck/context";
 import { useSafeId } from "../../lib/use-safe-id";
 import { NestedFieldContext } from "./context";
 
@@ -78,7 +78,7 @@ export const FieldLabelInternal = ({
   el = "label",
   readOnly,
 }: FieldLabelPropsInternal) => {
-  const { overrides } = useAppContext();
+  const overrides = useAppStore((s) => s.overrides);
 
   const Wrapper = useMemo(
     () => overrides.fieldLabel || FieldLabel,
@@ -129,7 +129,9 @@ function AutoFieldInternal<
     Label?: React.FC<FieldLabelPropsInternal>;
   }
 ) {
-  const { dispatch, overrides, selectedItem } = useAppContext();
+  const dispatch = useAppStore((s) => s.dispatch);
+  const overrides = useAppStore((s) => s.overrides);
+  const readOnly = useAppStore((s) => s.selectedItem?.readOnly);
   const nestedFieldContext = useContext(NestedFieldContext);
 
   const { id, Label = FieldLabelInternal } = props;
@@ -224,8 +226,7 @@ function AutoFieldInternal<
   return (
     <NestedFieldContext.Provider
       value={{
-        readOnlyFields:
-          nestedFieldContext.readOnlyFields || selectedItem?.readOnly || {},
+        readOnlyFields: nestedFieldContext.readOnlyFields || readOnly || {},
         localName: nestedFieldContext.localName,
       }}
     >
@@ -256,28 +257,28 @@ export function AutoFieldPrivate<
     Label?: React.FC<FieldLabelPropsInternal>;
   }
 ) {
-  const { state } = useAppContext();
+  const isFocused = useAppStore((s) => s.state.ui.field.focus === props.name);
   const { value, onChange } = props;
 
   const [localValue, setLocalValue] = useState(value);
 
-  const onChangeDb = useDebouncedCallback(
-    (val, ui) => {
-      onChange(val, ui);
-    },
-    50,
-    { leading: true }
-  );
+  // const onChangeDb = useDebouncedCallback(
+  //   (val, ui) => {
+  //     onChange(val, ui);
+  //   },
+  //   50,
+  //   { leading: true }
+  // );
 
   const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
     setLocalValue(val);
 
-    onChangeDb(val, ui);
+    onChange(val, ui);
   }, []);
 
   useEffect(() => {
     // Prevent global state from setting local state if this field is focused
-    if (state.ui.field.focus !== props.name) {
+    if (isFocused) {
       setLocalValue(value);
     }
   }, [value]);
@@ -287,7 +288,12 @@ export function AutoFieldPrivate<
     onChange: onChangeLocal,
   };
 
-  return <AutoFieldInternal<ValueType, FieldType> {...props} {...localProps} />;
+  return (
+    <>
+      {Math.random()}
+      <AutoFieldInternal<ValueType, FieldType> {...props} {...localProps} />
+    </>
+  );
 }
 
 export function AutoField<

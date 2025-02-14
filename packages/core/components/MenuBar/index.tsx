@@ -13,21 +13,18 @@ import styles from "./styles.module.css";
 const getClassName = getClassNameFactory("MenuBar", styles);
 
 export function MenuBar<UserData extends Data>({
-  appState,
+  // appState,
   dispatch,
   menuOpen = false,
   onPublish,
   renderHeaderActions,
   setMenuOpen,
 }: {
-  appState: AppState<UserData>;
+  // appState: AppState<UserData>;
   dispatch: (action: PuckAction) => void;
   onPublish?: (data: UserData) => void;
   menuOpen: boolean;
-  renderHeaderActions?: (props: {
-    state: AppState<UserData>;
-    dispatch: (action: PuckAction) => void;
-  }) => ReactElement;
+  renderHeaderActions?: () => ReactElement;
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const {
@@ -62,13 +59,7 @@ export function MenuBar<UserData extends Data>({
             <Redo2Icon size={21} />
           </IconButton>
         </div>
-        <>
-          {renderHeaderActions &&
-            renderHeaderActions({
-              state: appState,
-              dispatch,
-            })}
-        </>
+        <>{renderHeaderActions && renderHeaderActions()}</>
       </div>
     </div>
   );

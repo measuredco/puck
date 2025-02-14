@@ -1,7 +1,7 @@
 import { DropZonePure } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { RefObject, useCallback, useEffect, useRef, useMemo } from "react";
-import { useAppContext } from "../../context";
+import { useAppContext, useAppStore } from "../../context";
 import AutoFrame, { autoFrameContext } from "../../../AutoFrame";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
@@ -14,7 +14,7 @@ const getClassName = getClassNameFactory("PuckPreview", styles);
 type PageProps = DefaultRootRenderProps;
 
 const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
-  const { status } = useAppContext();
+  const status = useAppStore((s) => s.status);
 
   useEffect(() => {
     if (ref.current && status === "READY") {
@@ -54,8 +54,15 @@ const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
 };
 
 export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
-  const { config, dispatch, state, setStatus, iframe, overrides } =
-    useAppContext();
+  const dispatch = useAppStore((s) => s.dispatch);
+  const root = useAppStore((s) => s.state.data.root);
+  const config = useAppStore((s) => s.config);
+  const setStatus = useAppStore((s) => s.setStatus);
+  const iframe = useAppStore((s) => s.iframe);
+  const overrides = useAppStore((s) => s.overrides);
+  const renderData = useAppStore((s) =>
+    s.state.ui.previewMode === "edit" ? null : s.state.data
+  );
 
   const Page = useCallback<React.FC<PageProps>>(
     (pageProps) =>
@@ -73,28 +80,27 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   const Frame = useMemo(() => overrides.iframe, [overrides]);
 
   // DEPRECATED
-  const rootProps = state.data.root.props || state.data.root;
+  const rootProps = root.props || root;
 
   const ref = useRef<HTMLIFrameElement>(null);
 
   useBubbleIframeEvents(ref);
 
-  const inner =
-    state.ui.previewMode === "edit" ? (
-      <Page
-        {...rootProps}
-        puck={{
-          renderDropZone: DropZonePure,
-          isEditing: true,
-          dragRef: null,
-        }}
-        editMode={true} // DEPRECATED
-      >
-        <DropZonePure zone={rootDroppableId} />
-      </Page>
-    ) : (
-      <Render data={state.data} config={config} />
-    );
+  const inner = !renderData ? (
+    <Page
+      {...rootProps}
+      puck={{
+        renderDropZone: DropZonePure,
+        isEditing: true,
+        dragRef: null,
+      }}
+      editMode={true} // DEPRECATED
+    >
+      <DropZonePure zone={rootDroppableId} />
+    </Page>
+  ) : (
+    <Render data={renderData} config={config} />
+  );
 
   return (
     <div
@@ -102,9 +108,10 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
       id={id}
       data-puck-preview
       onClick={() => {
-        dispatch({ type: "setUi", ui: { ...state.ui, itemSelector: null } });
+        dispatch({ type: "setUi", ui: { itemSelector: null } });
       }}
     >
+      Preview {Math.random()}
       {iframe.enabled ? (
         <AutoFrame
           id="preview-frame"

@@ -6,15 +6,16 @@ import {
   replaceAction,
   setAction,
 } from "../../../../reducer";
-import { UiState } from "../../../../types";
+import { Field, UiState } from "../../../../types";
 import { AutoFieldPrivate } from "../../../AutoField";
-import { useAppContext } from "../../context";
+import { getAppStore, useAppStore } from "../../context";
 
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 import { useResolvedFields } from "../../../../lib/use-resolved-fields";
+import { useShallow } from "zustand/react/shallow";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -28,31 +29,78 @@ const DefaultFields = ({
   return <>{children}</>;
 };
 
+const FieldsChild = ({
+  field,
+  fieldName,
+  onChange,
+}: {
+  field: Field;
+  fieldName: string;
+  onChange: (value: any) => void;
+}) => {
+  const readOnly = useAppStore((s) =>
+    s.selectedItem ? s.selectedItem.readOnly : s.state.data.root.readOnly
+  );
+  const value = useAppStore((s) => {
+    // DEPRECATED
+    const rootProps = s.state.data.root.props || s.state.data.root;
+
+    return s.selectedItem
+      ? s.selectedItem.props[fieldName]
+      : rootProps[fieldName];
+  });
+
+  const id = useAppStore((s) => {
+    return s.selectedItem
+      ? `${s.selectedItem.props.id}_${field.type}_${fieldName}`
+      : `root_${field.type}_${fieldName}`;
+  });
+
+  const permissions = useAppStore(
+    useShallow((s) => {
+      if (s.selectedItem) {
+        return s.getPermissions({
+          item: s.selectedItem,
+        });
+      }
+
+      return s.getPermissions({
+        root: true,
+      });
+    })
+  );
+
+  return (
+    <div key={id} className={getClassName("field")}>
+      <AutoFieldPrivate
+        field={field}
+        name={fieldName}
+        id={id}
+        readOnly={!permissions.edit || readOnly?.[fieldName]}
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+};
+
 export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
-  const {
-    selectedItem,
-    state,
-    dispatch,
-    config,
-    resolveData,
-    componentState,
-    overrides,
-  } = useAppContext();
-  const { data, ui } = state;
-  const { itemSelector } = ui;
+  const dispatch = useAppStore((s) => s.dispatch);
+  const config = useAppStore((s) => s.config);
+  const overrides = useAppStore((s) => s.overrides);
+  // const thisComponentState = useAppStore((s) =>
+  //   s.selectedItem
+  //     ? s.componentState[s.selectedItem.props.id]
+  //     : s.componentState["puck-root"]
+  // );
+  const resolveData = (d: any) => {}; //useAppStore((s) => s.resolveData);
+  // const itemSelector = useAppStore(useShallow((s) => s.state.ui.itemSelector));
 
   const [fields, fieldsResolving] = useResolvedFields();
 
-  const { getPermissions } = useAppContext();
-
-  const componentResolving = selectedItem
-    ? componentState[selectedItem?.props.id]?.loadingCount > 0
-    : componentState["puck-root"]?.loadingCount > 0;
+  const componentResolving = false; //thisComponentState?.loadingCount > 0;
 
   const isLoading = fieldsResolving || componentResolving;
-
-  // DEPRECATED
-  const rootProps = data.root.props || data.root;
 
   const Wrapper = useMemo(() => overrides.fields || DefaultFields, [overrides]);
 
@@ -63,7 +111,8 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
         e.preventDefault();
       }}
     >
-      <Wrapper isLoading={isLoading} itemSelector={itemSelector}>
+      Form {Math.random()}
+      <Wrapper isLoading={isLoading} itemSelector={null}>
         {Object.keys(fields).map((fieldName) => {
           const field = fields[fieldName];
 
@@ -71,6 +120,13 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
 
           const onChange = (value: any, updatedUi?: Partial<UiState>) => {
             let currentProps;
+
+            const { state, selectedItem } = getAppStore();
+            const { data, ui } = state;
+            const { itemSelector } = ui;
+
+            // DEPRECATED
+            const rootProps = data.root.props || data.root;
 
             if (selectedItem) {
               currentProps = selectedItem.props;
@@ -145,50 +201,14 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
             }
           };
 
-          if (selectedItem && itemSelector) {
-            const { readOnly = {} } = selectedItem;
-            const { edit } = getPermissions({
-              item: selectedItem,
-            });
-
-            const id = `${selectedItem.props.id}_${field.type}_${fieldName}`;
-
-            return (
-              <div key={id} className={getClassName("field")}>
-                <AutoFieldPrivate
-                  field={field}
-                  name={fieldName}
-                  id={id}
-                  readOnly={!edit || readOnly[fieldName]}
-                  value={selectedItem.props[fieldName]}
-                  onChange={onChange}
-                />
-              </div>
-            );
-          } else {
-            const readOnly = (data.root.readOnly || {}) as Record<
-              string,
-              boolean
-            >;
-            const { edit } = getPermissions({
-              root: true,
-            });
-
-            const id = `root_${field.type}_${fieldName}`;
-
-            return (
-              <div key={id} className={getClassName("field")}>
-                <AutoFieldPrivate
-                  field={field}
-                  name={fieldName}
-                  id={id}
-                  readOnly={!edit || readOnly[fieldName]}
-                  value={(rootProps as Record<string, any>)[fieldName]}
-                  onChange={onChange}
-                />
-              </div>
-            );
-          }
+          return (
+            <FieldsChild
+              key={fieldName}
+              field={field}
+              fieldName={fieldName}
+              onChange={onChange}
+            />
+          );
         })}
       </Wrapper>
       {isLoading && (

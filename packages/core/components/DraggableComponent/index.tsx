@@ -14,7 +14,7 @@ import styles from "./styles.module.css";
 import "./styles.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, CornerLeftUp, Trash } from "lucide-react";
-import { useAppContext } from "../Puck/context";
+import { getAppStore, useAppStore } from "../Puck/context";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
 
@@ -118,15 +118,16 @@ export const DraggableComponent = ({
   userDragAxis?: DragAxis;
   inDroppableZone: boolean;
 }) => {
-  const {
-    zoomConfig,
-    overrides,
-    selectedItem,
-    getPermissions,
-    dispatch,
-    iframe,
-    state,
-  } = useAppContext();
+  const zoom = useAppStore((s) =>
+    s.selectedItem?.props.id === id ? s.zoomConfig.zoom : 1
+  );
+  const overrides = useAppStore((s) => s.overrides);
+  const selectedItem = useAppStore((s) =>
+    s.selectedItem?.props.id === id ? s.selectedItem : null
+  );
+  const getPermissions = useAppStore((s) => s.getPermissions);
+  const dispatch = useAppStore((s) => s.dispatch);
+  const iframe = useAppStore((s) => s.iframe);
 
   const ctx = useContext(dropZoneContext);
 
@@ -171,6 +172,7 @@ export const DraggableComponent = ({
   const [canDrag, setCanDrag] = useState(false);
 
   useEffect(() => {
+    const { state } = getAppStore();
     const item = getItem({ index, zone: zoneCompound }, state.data);
 
     if (item) {
@@ -180,7 +182,7 @@ export const DraggableComponent = ({
 
       setCanDrag(perms.drag ?? true);
     }
-  }, [state, index, zoneCompound, getPermissions]);
+  }, [index, zoneCompound, getPermissions]);
 
   const userIsDragging = useContextStore(
     ZoneStoreContext,
@@ -210,7 +212,7 @@ export const DraggableComponent = ({
     },
     collisionPriority: isEnabled ? depth : 0,
     collisionDetector: createDynamicCollisionDetector(dragAxis),
-    disabled,
+    disabled: false,
 
     // "Out of the way" transition from react-beautiful-dnd
     transition: {
@@ -343,6 +345,8 @@ export const DraggableComponent = ({
     const parentAreaId = ctx.areaId;
     const parentZone = path[path.length - 3];
 
+    const { state } = getAppStore();
+
     const parentItemSelector = convertIdToSelector(
       parentAreaId,
       parentZone,
@@ -457,7 +461,14 @@ export const DraggableComponent = ({
     } else {
       setIsVisible(false);
     }
-  }, [isSelected, hover, indicativeHover, iframe, state.data, userIsDragging]);
+  }, [
+    isSelected,
+    hover,
+    indicativeHover,
+    iframe,
+    userIsDragging,
+    // state.data,
+  ]);
 
   const syncActionsPosition = useCallback(
     (el: HTMLDivElement | null | undefined) => {
@@ -478,7 +489,7 @@ export const DraggableComponent = ({
         }
       }
     },
-    [zoomConfig]
+    [zoom]
   );
 
   useEffect(() => {
@@ -542,14 +553,14 @@ export const DraggableComponent = ({
             <div
               className={getClassName("actionsOverlay")}
               style={{
-                top: actionsOverlayTop / zoomConfig.zoom,
+                top: actionsOverlayTop / zoom,
               }}
             >
               <div
                 className={getClassName("actions")}
                 style={{
-                  transform: `scale(${1 / zoomConfig.zoom}`,
-                  top: actionsTop / zoomConfig.zoom,
+                  transform: `scale(${1 / zoom}`,
+                  top: actionsTop / zoom,
                   right: 0,
                   paddingLeft: actionsSide,
                   paddingRight: actionsSide,
