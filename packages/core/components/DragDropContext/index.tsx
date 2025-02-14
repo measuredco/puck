@@ -109,7 +109,7 @@ const DragDropContextClient = ({
   children,
   disableAutoScroll,
 }: DragDropContextProps) => {
-  const { state, config, dispatch, resolveData } = useAppContext();
+  const { state, config, dispatch, resolveData, metadata } = useAppContext();
 
   const id = useId();
 
@@ -580,6 +580,7 @@ const DragDropContextClient = ({
                 unregisterPath,
                 pathData,
                 path: [],
+                metadata,
               }}
             >
               {children}

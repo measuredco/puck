@@ -1,8 +1,10 @@
 import { DropZoneProps } from "../components/DropZone/types";
+import { MetaData } from "./Data";
 import { WithChildren, WithPuckProps } from "./Utils";
 
 export type PuckContext = {
   renderDropZone: React.FC<DropZoneProps>;
+  metadata: MetaData;
   isEditing: boolean;
   dragRef: ((element: Element | null) => void) | null;
 };

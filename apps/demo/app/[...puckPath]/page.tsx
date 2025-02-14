@@ -1,6 +1,7 @@
 import resolvePuckPath from "../../lib/resolve-puck-path";
 import { Metadata } from "next";
 import Client from "./client";
+import { useMetadata } from "../../lib/use-metadata";
 export async function generateMetadata({
   params,
 }: {
@@ -27,6 +28,7 @@ export default async function Page({
 }) {
   const { puckPath } = await params;
   const { isEdit, path } = resolvePuckPath(puckPath);
+  const metadata = await useMetadata();
 
-  return <Client isEdit={isEdit} path={path} />;
+  return <Client isEdit={isEdit} path={path} metadata={metadata} />;
 }

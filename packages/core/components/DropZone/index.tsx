@@ -259,6 +259,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
 
           const puckProps: PuckContext = {
             renderDropZone: DropZoneEditPure,
+            metadata: appContext.metadata,
             isEditing: true,
             dragRef: null,
           };
@@ -276,10 +277,10 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
             config.components[item.type] && item.type !== "preview"
               ? config.components[item.type].render
               : () => (
-                  <div style={{ padding: 48, textAlign: "center" }}>
-                    No configuration for {item.type}
-                  </div>
-                );
+                <div style={{ padding: 48, textAlign: "center" }}>
+                  No configuration for {item.type}
+                </div>
+              );
 
           const componentConfig: ComponentConfig | undefined =
             config.components[item.type];
@@ -391,7 +392,6 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
       <div className={className} style={style} ref={ref}>
         {content.map((item) => {
           const Component = config.components[item.type];
-
           if (Component) {
             return (
               <DropZoneProvider
@@ -402,12 +402,14 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
                   areaId: item.props.id,
                   depth: 1,
                   path: [],
+                  metadata: ctx?.metadata || {}
                 }}
               >
                 <Component.render
                   {...item.props}
                   puck={{
                     renderDropZone: DropZoneRenderPure,
+                    metadata: ctx?.metadata || {},
                   }}
                 />
               </DropZoneProvider>
