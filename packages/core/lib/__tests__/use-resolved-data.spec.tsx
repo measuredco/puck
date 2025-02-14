@@ -3,8 +3,8 @@ import { AppState, Config, Data, Metadata } from "../../types";
 import { useResolvedData } from "../use-resolved-data";
 import { SetAction, SetDataAction } from "../../reducer";
 import { cache } from "../resolve-component-data";
-import { defaultAppState } from "../../components/Puck/context";
-import { RefreshPermissions } from "../use-resolved-permissions";
+import { defaultAppState } from "../../stores/app-store";
+import { usePermissionsStore } from "../../stores/permissions-store";
 
 const item1 = { type: "MyComponent", props: { id: "MyComponent-1" } };
 const item2 = { type: "MyComponent", props: { id: "MyComponent-2" } };

@@ -6,40 +6,25 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Config, Data, Metadata } from "../../types";
-import { ItemSelector } from "../../lib/get-item";
-
 import type { Draggable } from "@dnd-kit/dom";
-import { useAppContext } from "../Puck/context";
+import { useAppStore } from "../../stores/app-store";
 import { createStore, StoreApi } from "zustand";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
-export type DropZoneContext<UserConfig extends Config = Config> = {
-  data: Data;
-  config: UserConfig;
-  componentState?: Record<string, any>;
-  itemSelector?: ItemSelector | null;
-  setItemSelector?: (newIndex: ItemSelector | null) => void;
+export type DropZoneContext = {
   areaId?: string;
   zoneCompound?: string;
   index?: number;
   hoveringComponent?: string | null;
   setHoveringComponent?: (id: string | null) => void;
-  registerZoneArea?: (areaId: string) => void;
-  areasWithZones?: Record<string, boolean>;
   registerZone?: (zoneCompound: string) => void;
   unregisterZone?: (zoneCompound: string) => void;
   activeZones?: Record<string, boolean>;
-  pathData?: PathData;
-  registerPath?: (id: string, selector: ItemSelector, label: string) => void;
-  unregisterPath?: (id: string) => void;
   mode?: "edit" | "render";
   depth: number;
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
   unregisterLocalZone?: (zone: string) => void;
-  path: string[];
-  metadata: Metadata;
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
@@ -93,20 +78,9 @@ export const DropZoneProvider = ({
   // Hovering component may match area, but areas must always contain zones
   const [hoveringComponent, setHoveringComponent] = useState<string | null>();
 
-  const [areasWithZones, setAreasWithZones] = useState<Record<string, boolean>>(
-    {}
-  );
-
   const [activeZones, setActiveZones] = useState<Record<string, boolean>>({});
 
-  const { dispatch } = useAppContext();
-
-  const registerZoneArea = useCallback(
-    (area: string) => {
-      setAreasWithZones((latest) => ({ ...latest, [area]: true }));
-    },
-    [setAreasWithZones]
-  );
+  const dispatch = useAppStore((s) => s.dispatch);
 
   const registerZone = useCallback(
     (zoneCompound: string) => {
@@ -148,14 +122,12 @@ export const DropZoneProvider = ({
       ({
         hoveringComponent,
         setHoveringComponent,
-        registerZoneArea,
-        areasWithZones,
         registerZone,
         unregisterZone,
         activeZones,
         ...value,
       } as DropZoneContext),
-    [value, hoveringComponent, areasWithZones, activeZones]
+    [value, hoveringComponent, activeZones]
   );
 
   return (

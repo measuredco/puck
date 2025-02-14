@@ -9,9 +9,9 @@ import { useContext } from "react";
 import { dropZoneContext } from "../DropZone/context";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { getZoneId } from "../../lib/get-zone-id";
-import { isChildOfZone } from "../../lib/is-child-of-zone";
 import { getFrame } from "../../lib/get-frame";
 import { onScrollEnd } from "../../lib/on-scroll-end";
+import { useNodeStore } from "../../stores/node-store";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -35,6 +35,9 @@ export const LayerTree = ({
 }) => {
   const zones = data.zones || {};
   const ctx = useContext(dropZoneContext);
+
+  // TODO change this for performance
+  const nodes = useNodeStore((s) => s.nodes);
 
   return (
     <>
@@ -67,7 +70,16 @@ export const LayerTree = ({
 
           const isHovering = hoveringComponent === item.props.id;
 
-          const childIsSelected = isChildOfZone(item, selectedItem, ctx);
+          const path = selectedItem
+            ? nodes[selectedItem?.props.id]?.path ?? []
+            : [];
+
+          const childIsSelected =
+            path?.some((candidate) => {
+              const [candidateId] = candidate.split(":");
+
+              return candidateId === item.props.id;
+            }) ?? false;
 
           const componentConfig: ComponentConfig | undefined =
             config.components[item.type];

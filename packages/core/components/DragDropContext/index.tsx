@@ -1,5 +1,5 @@
 import { DragDropProvider } from "@dnd-kit/react";
-import { useAppContext } from "../Puck/context";
+import { getAppStore, useAppStore } from "../../stores/app-store";
 import {
   createContext,
   Dispatch,
@@ -16,14 +16,8 @@ import { AutoScroller, defaultPreset, DragDropManager } from "@dnd-kit/dom";
 import { DragDropEvents } from "@dnd-kit/abstract";
 import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
-import { getItem, ItemSelector } from "../../lib/get-item";
-import {
-  PathData,
-  Preview,
-  ZoneStore,
-  ZoneStoreProvider,
-} from "../DropZone/context";
-import { getZoneId } from "../../lib/get-zone-id";
+import { getItem } from "../../lib/get-item";
+import { Preview, ZoneStore, ZoneStoreProvider } from "../DropZone/context";
 import { createNestedDroppablePlugin } from "../../lib/dnd/NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
@@ -35,6 +29,7 @@ import { generateId } from "../../lib/generate-id";
 import { createStore } from "zustand";
 import { getDeepDir } from "../../lib/get-deep-dir";
 import { useSensors } from "../../lib/dnd/use-sensors";
+import { useNodeStore } from "../../stores/node-store";
 
 const DEBUG = false;
 
@@ -109,11 +104,12 @@ const DragDropContextClient = ({
   children,
   disableAutoScroll,
 }: DragDropContextProps) => {
-  const { state, config, dispatch, resolveData, metadata } = useAppContext();
+  const config = useAppStore((s) => s.config);
+  const dispatch = useAppStore((s) => s.dispatch);
+  const resolveData = useAppStore((s) => s.resolveData);
+  const metadata = useAppStore((s) => s.metadata);
 
   const id = useId();
-
-  const { data } = state;
 
   const debouncedParamsRef = useRef<DeepestParams | null>(null);
 
@@ -275,44 +271,7 @@ const DragDropContextClient = ({
 
   const [dragListeners, setDragListeners] = useState<DragCbs>({});
 
-  const [pathData, setPathData] = useState<PathData>();
-
   const dragMode = useRef<"new" | "existing" | null>(null);
-
-  const registerPath = useCallback(
-    (id: string, selector: ItemSelector, label: string) => {
-      const [area] = getZoneId(selector.zone);
-
-      setPathData((latestPathData = {}) => {
-        const parentPathData = latestPathData[area] || { path: [] };
-
-        return {
-          ...latestPathData,
-          [id]: {
-            path: [
-              ...parentPathData.path,
-              ...(selector.zone ? [selector.zone] : []),
-            ],
-            label: label,
-          },
-        };
-      });
-    },
-    [data, setPathData]
-  );
-
-  const unregisterPath = useCallback(
-    (id: string) => {
-      setPathData((latestPathData = {}) => {
-        const newPathData = { ...latestPathData };
-
-        delete newPathData[id];
-
-        return newPathData;
-      });
-    },
-    [data, setPathData]
-  );
 
   const initialSelector = useRef<{ zone: string; index: number }>(undefined);
 
@@ -371,6 +330,8 @@ const DragDropContextClient = ({
               // Finalise the drag
               if (thisPreview) {
                 zoneStore.setState({ previewIndex: {} });
+
+                const state = getAppStore().state;
 
                 if (thisPreview.type === "insert") {
                   insertComponent(
@@ -466,10 +427,12 @@ const DragDropContextClient = ({
               targetIndex = 0;
             }
 
+            const path = useNodeStore.getState().nodes[target.id]?.path || [];
+
             // Abort if dragging over self or descendant
             if (
               targetId === sourceId ||
-              pathData?.[target.id]?.path.find((path) => {
+              path.find((path) => {
                 const [pathId] = (path as string).split(":");
                 return pathId === sourceId;
               })
@@ -499,7 +462,10 @@ const DragDropContextClient = ({
                 };
               }
 
-              const item = getItem(initialSelector.current, data);
+              const item = getItem(
+                initialSelector.current,
+                getAppStore().state.data
+              );
 
               if (item) {
                 zoneStore.setState({
@@ -530,6 +496,7 @@ const DragDropContextClient = ({
 
             if (source && source.type !== "void") {
               const sourceData = source.data as ComponentDndData;
+              const { data } = getAppStore().state;
 
               const item = getItem(
                 {
@@ -571,15 +538,9 @@ const DragDropContextClient = ({
           <ZoneStoreProvider store={zoneStore}>
             <DropZoneProvider
               value={{
-                data,
-                config,
                 mode: "edit",
                 areaId: "root",
                 depth: 0,
-                registerPath,
-                unregisterPath,
-                pathData,
-                path: [],
                 metadata,
               }}
             >
@@ -596,7 +557,7 @@ export const DragDropContext = ({
   children,
   disableAutoScroll,
 }: DragDropContextProps) => {
-  const { status } = useAppContext();
+  const status = useAppStore((s) => s.status);
 
   if (status === "LOADING") {
     return children;

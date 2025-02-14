@@ -1,16 +1,15 @@
-import { Content } from "../../../types";
 import { Preview } from "./../context";
 import { useEffect, useState } from "react";
 import { useRenderedCallback } from "../../../lib/dnd/use-rendered-callback";
 import { insert } from "../../../lib/insert";
 import { ZoneStoreContext } from "../context";
 import { useContextStore } from "../../../lib/use-context-store";
-import { useAppContext } from "../../Puck/context";
+import { useAppStore } from "../../../stores/app-store";
 
-export const useContentWithPreview = (
-  content: Content,
+export const useContentIdsWithPreview = (
+  contentIds: string[],
   zoneCompound: string
-): [Content, Preview | undefined] => {
+): [string[], Preview | undefined] => {
   const { draggedItemId, preview, previewExists } = useContextStore(
     ZoneStoreContext,
     (s) => {
@@ -22,20 +21,20 @@ export const useContentWithPreview = (
     }
   );
 
-  // Refactor this once all state uses zustand
-  const {
-    state: {
-      ui: { isDragging },
-    },
-  } = useAppContext();
+  const isDragging = useAppStore((s) => s.state.ui.isDragging);
 
-  const [contentWithPreview, setContentWithPreview] = useState(content);
+  const [contentIdsWithPreview, setContentIdsWithPreview] =
+    useState(contentIds);
   const [localPreview, setLocalPreview] = useState<Preview | undefined>(
     preview
   );
 
   const updateContent = useRenderedCallback(
-    (content: Content, preview: Preview | undefined, isDragging: boolean) => {
+    (
+      contentIds: string[],
+      preview: Preview | undefined,
+      isDragging: boolean
+    ) => {
       // Preview is cleared but context hasn't yet caught up
       // This is necessary because Zustand clears the preview before the dispatcher finishes
       // Refactor this once all state has moved to Zustand.
@@ -45,33 +44,27 @@ export const useContentWithPreview = (
 
       if (preview) {
         if (preview.type === "insert") {
-          setContentWithPreview(
+          setContentIdsWithPreview(
             insert(
-              content.filter((item) => item.props.id !== preview.props.id),
+              contentIds.filter((id) => id !== preview.props.id),
               preview.index,
-              {
-                type: "preview",
-                props: { id: preview.props.id },
-              }
+              preview.props.id
             )
           );
         } else {
-          setContentWithPreview(
+          setContentIdsWithPreview(
             insert(
-              content.filter((item) => item.props.id !== preview.props.id),
+              contentIds.filter((id) => id !== preview.props.id),
               preview.index,
-              {
-                type: preview.componentType,
-                props: preview.props,
-              }
+              preview.props.id
             )
           );
         }
       } else {
-        setContentWithPreview(
+        setContentIdsWithPreview(
           previewExists
-            ? content.filter((item) => item.props.id !== draggedItemId)
-            : content
+            ? contentIds.filter((id) => id !== draggedItemId)
+            : contentIds
         );
       }
 
@@ -81,8 +74,8 @@ export const useContentWithPreview = (
   );
 
   useEffect(() => {
-    updateContent(content, preview, isDragging);
-  }, [content, preview, isDragging]);
+    updateContent(contentIds, preview, isDragging);
+  }, [contentIds, preview, isDragging]);
 
-  return [contentWithPreview, localPreview];
+  return [contentIdsWithPreview, localPreview];
 };
