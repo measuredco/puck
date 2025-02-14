@@ -2,7 +2,22 @@
 
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { Config, Data, Metadata, UserGenerics } from "../../types";
-import { DropZonePure, DropZoneProvider } from "../DropZone";
+import {
+  DropZonePure,
+  DropZoneProvider,
+  DropZoneRenderPure,
+} from "../DropZone";
+import React from "react";
+
+export const renderContext = React.createContext<{
+  config: Config;
+  data: Data;
+  metadata: Metadata;
+}>({
+  config: { components: {} },
+  data: { root: {}, content: [] },
+  metadata: {},
+});
 
 export function Render<
   UserConfig extends Config = Config,
@@ -28,45 +43,41 @@ export function Render<
 
   if (config.root?.render) {
     return (
-      <DropZoneProvider
-        value={{
-          data: defaultedData,
-          config,
-          mode: "render",
-          depth: 0,
-          path: [],
-          metadata,
-        }}
-      >
-        <config.root.render
-          {...rootProps}
-          puck={{
-            renderDropZone: DropZonePure,
-            isEditing: false,
-            dragRef: null,
+      <renderContext.Provider value={{ config, data: defaultedData, metadata }}>
+        <DropZoneProvider
+          value={{
+            mode: "render",
+            depth: 0,
           }}
-          title={title}
-          editMode={false}
-          id={"puck-root"}
         >
-          <DropZonePure zone={rootDroppableId} />
-        </config.root.render>
-      </DropZoneProvider>
+          <config.root.render
+            {...rootProps}
+            puck={{
+              renderDropZone: DropZonePure,
+              isEditing: false,
+              dragRef: null,
+            }}
+            title={title}
+            editMode={false}
+            id={"puck-root"}
+          >
+            <DropZoneRenderPure zone={rootDroppableId} />
+          </config.root.render>
+        </DropZoneProvider>
+      </renderContext.Provider>
     );
   }
 
   return (
-    <DropZoneProvider
-      value={{
-        data: defaultedData,
-        config,
-        mode: "render",
-        depth: 0,
-        path: [],
-        metadata,
-      }}
-    >
-      <DropZonePure zone={rootDroppableId} />
-    </DropZoneProvider>
+    <renderContext.Provider value={{ config, data: defaultedData, metadata }}>
+      <DropZoneProvider
+        value={{
+          mode: "render",
+          depth: 0,
+        }}
+      >
+        <DropZoneRenderPure zone={rootDroppableId} />
+      </DropZoneProvider>
+    </renderContext.Provider>
   );
 }

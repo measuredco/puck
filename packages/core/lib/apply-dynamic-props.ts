@@ -1,5 +1,10 @@
 import { ComponentData, Data, RootData } from "../types";
 
+/**
+ * Apply the provided data to the Puck data payload.
+ *
+ * Modifies in-place, retains references to avoid re-renders.
+ */
 export const applyDynamicProps = (
   data: Data,
   dynamicProps: Record<string, ComponentData>,
@@ -7,10 +12,12 @@ export const applyDynamicProps = (
 ) => {
   return {
     ...data,
-    root: {
-      ...data.root,
-      ...(rootData ? rootData : {}),
-    },
+    root: rootData
+      ? {
+          ...data.root,
+          ...(rootData ? rootData : {}),
+        }
+      : data.root,
     content: data.content.map((item) => {
       return dynamicProps[item.props.id]
         ? { ...item, ...dynamicProps[item.props.id] }

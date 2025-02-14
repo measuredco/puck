@@ -51,7 +51,7 @@ describe("use-breadcrumbs", () => {
             "label": "MyComponent",
             "selector": {
               "index": 0,
-              "zone": "default-zone",
+              "zone": "root:default-zone",
             },
             "zoneCompound": "MyComponent-1:zone",
           },

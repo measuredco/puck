@@ -1,7 +1,7 @@
 import { cleanup } from "@testing-library/react";
 import { AppState, Config, Data } from "../../types";
 import { PuckAction } from "../../reducer";
-import { defaultAppState } from "../../components/Puck/context";
+import { defaultAppState } from "../../stores/app-store";
 import { insertComponent } from "../insert-component";
 import { rootDroppableId } from "../root-droppable-id";
 

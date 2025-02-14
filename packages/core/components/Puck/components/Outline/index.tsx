@@ -2,18 +2,22 @@ import { areaContainsZones } from "../../../../lib/area-contains-zones";
 import { findZonesForArea } from "../../../../lib/find-zones-for-area";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { LayerTree } from "../../../LayerTree";
-import { useAppContext } from "../../context";
+import { getAppStore, useAppStore } from "../../../../stores/app-store";
 import { dropZoneContext } from "../../../DropZone";
 import { useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 
 export const Outline = () => {
-  const { dispatch, state, overrides, config } = useAppContext();
+  const state = useAppStore((s) => s.state); // Perf: Will cause re-render whenever any state changes
+  const config = useAppStore((s) => s.config);
+  const outlineOverride = useAppStore((s) => s.overrides.outline);
   const { data, ui } = state;
   const { itemSelector } = ui;
 
   const setItemSelector = useCallback(
     (newItemSelector: ItemSelector | null) => {
+      const { dispatch } = getAppStore();
+
       dispatch({
         type: "setUi",
         ui: { itemSelector: newItemSelector },
@@ -22,7 +26,7 @@ export const Outline = () => {
     []
   );
 
-  const Wrapper = useMemo(() => overrides.outline || "div", [overrides]);
+  const Wrapper = useMemo(() => outlineOverride || "div", [outlineOverride]);
   return (
     <Wrapper>
       <dropZoneContext.Consumer>

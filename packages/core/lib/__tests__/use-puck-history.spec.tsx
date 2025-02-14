@@ -1,7 +1,7 @@
 import { renderHook, act } from "@testing-library/react";
 import { usePuckHistory } from "../use-puck-history";
 import { HistoryStore } from "../use-history-store";
-import { defaultAppState } from "../../components/Puck/context";
+import { defaultAppState } from "../../stores/app-store";
 
 jest.mock("react-hotkeys-hook");
 jest.mock("../use-history-store");

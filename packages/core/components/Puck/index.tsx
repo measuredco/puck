@@ -4,7 +4,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useReducer,
   useState,
 } from "react";
 
@@ -33,19 +32,20 @@ import {
 } from "lucide-react";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
-import { getItem } from "../../lib/get-item";
-import { PuckAction, createReducer } from "../../reducer";
-import { flushZones } from "../../lib/flush-zones";
+import { PuckAction } from "../../reducer";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { AppProvider, defaultAppState } from "./context";
+import {
+  defaultAppState,
+  getAppStore,
+  useAppStore,
+} from "../../stores/app-store";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
-import { usePuckHistory } from "../../lib/use-puck-history";
-import { useHistoryStore } from "../../lib/use-history-store";
+import { useRegisterHistoryStore } from "../../stores/history-store";
 import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";
@@ -54,9 +54,26 @@ import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 import { DefaultOverride } from "../DefaultOverride";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
 import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
+import { useRegisterNodeStore } from "../../stores/node-store";
+import { useRegisterPermissionsStore } from "../../stores/permissions-store";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
+
+const FieldSideBar = () => {
+  const title = useAppStore((s) =>
+    s.selectedItem
+      ? s.config.components[s.selectedItem.type]?.["label"] ??
+        s.selectedItem.type.toString()
+      : "Page"
+  );
+
+  return (
+    <SidebarSection noPadding noBorderTop showBreadcrumbs title={title}>
+      <Fields />
+    </SidebarSection>
+  );
+};
 
 export function Puck<
   UserConfig extends Config = Config,
@@ -217,7 +234,7 @@ export function Puck<
 
   const { appendData = true } = _initialHistory || {};
 
-  const histories = [
+  const blendedHistories = [
     ...(_initialHistory?.histories || []),
     ...(appendData ? [{ state: generatedAppState }] : []),
   ].map((history) => ({
@@ -225,48 +242,37 @@ export function Puck<
     // Inject default data to enable partial history injections
     state: { ...generatedAppState, ...history.state },
   }));
-  const initialHistoryIndex = _initialHistory?.index || histories.length - 1;
-  const initialAppState = histories[initialHistoryIndex].state;
+  const initialHistoryIndex =
+    _initialHistory?.index || blendedHistories.length - 1;
+  const initialAppState = blendedHistories[initialHistoryIndex].state;
 
-  const historyStore = useHistoryStore({
-    histories,
+  useRegisterHistoryStore({
+    histories: blendedHistories,
     index: initialHistoryIndex,
-  });
-
-  const [reducer] = useState(() =>
-    createReducer<UserConfig, G["UserData"]>({
-      config,
-      record: historyStore.record,
-      onAction,
-    })
-  );
-
-  const [appState, dispatch] = useReducer(
-    reducer,
-    flushZones<G["UserData"]>(initialAppState) as G["UserAppState"]
-  );
-
-  const { data, ui } = appState;
-
-  const history = usePuckHistory({
-    dispatch,
     initialAppState,
-    historyStore,
     iframeEnabled: _iframe?.enabled ?? true,
   });
 
+  const dispatch = useAppStore((s) => s.dispatch);
+
+  const leftSideBarVisible = useAppStore((s) => s.state.ui.leftSideBarVisible);
+  const rightSideBarVisible = useAppStore(
+    (s) => s.state.ui.rightSideBarVisible
+  );
+
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { itemSelector, leftSideBarVisible, rightSideBarVisible } = ui;
-
-  const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
-
   useEffect(() => {
-    if (onChange) onChange(data as G["UserData"]);
-  }, [data]);
+    // TODO use selector
+    useAppStore.subscribe((s) => {
+      if (onChange) onChange(s.state.data as G["UserData"]);
+    });
+  }, []);
 
   // DEPRECATED
-  const rootProps = data.root.props || data.root;
+  const rootProps = useAppStore(
+    (s) => s.state.data.root.props || s.state.data.root.props
+  );
 
   const toggleSidebars = useCallback(
     (sidebar: "left" | "right") => {
@@ -327,6 +333,8 @@ export function Puck<
       const RenderHeader = ({ actions, ...props }: any) => {
         const Comp = renderHeader!;
 
+        const appState = useAppStore((s) => s.state);
+
         return (
           <Comp {...props} dispatch={dispatch} state={appState}>
             {actions}
@@ -349,6 +357,8 @@ export function Puck<
 
       const RenderHeader = (props: any) => {
         const Comp = renderHeaderActions!;
+
+        const appState = useAppStore((s) => s.state);
 
         return <Comp {...props} dispatch={dispatch} state={appState}></Comp>;
       };
@@ -385,173 +395,159 @@ export function Puck<
     setMounted(true);
   }, []);
 
-  const selectedComponentConfig =
-    selectedItem && config.components[selectedItem.type];
-  const selectedComponentLabel = selectedItem
-    ? selectedComponentConfig?.["label"] ?? selectedItem.type.toString()
-    : "";
-
   usePreviewModeHotkeys(dispatch, iframe.enabled);
+
+  useEffect(() => {
+    useAppStore.setState({
+      state: initialAppState,
+      config,
+      plugins: plugins || [],
+      overrides: loadedOverrides,
+      viewports,
+      iframe,
+    });
+  }, []);
+
+  useRegisterNodeStore();
+
+  useRegisterPermissionsStore(permissions);
+
+  useEffect(() => {
+    const { state, resolveData } = getAppStore();
+
+    resolveData(state);
+  }, []);
 
   return (
     <div className={`Puck ${getClassName()}`}>
-      <AppProvider
-        value={{
-          state: appState,
-          dispatch,
-          config,
-          plugins: plugins || [],
-          overrides: loadedOverrides,
-          history,
-          viewports,
-          iframe,
-          globalPermissions: {
-            delete: true,
-            drag: true,
-            duplicate: true,
-            insert: true,
-            edit: true,
-            ...permissions,
-          },
-          getPermissions: () => ({}),
-          refreshPermissions: () => null,
-          metadata: metadata || {},
-        }}
-      >
-        <DragDropContext disableAutoScroll={dnd?.disableAutoScroll}>
-          <CustomPuck>
-            {children || (
-              <div
-                className={getLayoutClassName({
-                  leftSideBarVisible,
-                  menuOpen,
-                  mounted,
-                  rightSideBarVisible,
-                })}
-              >
-                <div className={getLayoutClassName("inner")}>
-                  <CustomHeader
-                    actions={
-                      <>
-                        <CustomHeaderActions>
-                          <Button
+      <DragDropContext disableAutoScroll={dnd?.disableAutoScroll}>
+        <CustomPuck>
+          {children || (
+            <div
+              className={getLayoutClassName({
+                leftSideBarVisible,
+                menuOpen,
+                mounted,
+                rightSideBarVisible,
+              })}
+            >
+              <div className={getLayoutClassName("inner")}>
+                <CustomHeader
+                  actions={
+                    <>
+                      <CustomHeaderActions>
+                        <Button
+                          onClick={() => {
+                            const data = useAppStore.getState().state.data;
+                            onPublish && onPublish(data as G["UserData"]);
+                          }}
+                          icon={<Globe size="14px" />}
+                        >
+                          Publish
+                        </Button>
+                      </CustomHeaderActions>
+                    </>
+                  }
+                >
+                  <header className={getLayoutClassName("header")}>
+                    <div className={getLayoutClassName("headerInner")}>
+                      <div className={getLayoutClassName("headerToggle")}>
+                        <div
+                          className={getLayoutClassName("leftSideBarToggle")}
+                        >
+                          <IconButton
                             onClick={() => {
-                              onPublish && onPublish(data as G["UserData"]);
+                              toggleSidebars("left");
                             }}
-                            icon={<Globe size="14px" />}
+                            title="Toggle left sidebar"
                           >
-                            Publish
-                          </Button>
-                        </CustomHeaderActions>
-                      </>
-                    }
-                  >
-                    <header className={getLayoutClassName("header")}>
-                      <div className={getLayoutClassName("headerInner")}>
-                        <div className={getLayoutClassName("headerToggle")}>
-                          <div
-                            className={getLayoutClassName("leftSideBarToggle")}
-                          >
-                            <IconButton
-                              onClick={() => {
-                                toggleSidebars("left");
-                              }}
-                              title="Toggle left sidebar"
-                            >
-                              <PanelLeft focusable="false" />
-                            </IconButton>
-                          </div>
-                          <div
-                            className={getLayoutClassName("rightSideBarToggle")}
-                          >
-                            <IconButton
-                              onClick={() => {
-                                toggleSidebars("right");
-                              }}
-                              title="Toggle right sidebar"
-                            >
-                              <PanelRight focusable="false" />
-                            </IconButton>
-                          </div>
+                            <PanelLeft focusable="false" />
+                          </IconButton>
                         </div>
-                        <div className={getLayoutClassName("headerTitle")}>
-                          <Heading rank="2" size="xs">
-                            {headerTitle || rootProps.title || "Page"}
-                            {headerPath && (
-                              <>
-                                {" "}
-                                <code
-                                  className={getLayoutClassName("headerPath")}
-                                >
-                                  {headerPath}
-                                </code>
-                              </>
-                            )}
-                          </Heading>
-                        </div>
-                        <div className={getLayoutClassName("headerTools")}>
-                          <div className={getLayoutClassName("menuButton")}>
-                            <IconButton
-                              onClick={() => {
-                                return setMenuOpen(!menuOpen);
-                              }}
-                              title="Toggle menu bar"
-                            >
-                              {menuOpen ? (
-                                <ChevronUp focusable="false" />
-                              ) : (
-                                <ChevronDown focusable="false" />
-                              )}
-                            </IconButton>
-                          </div>
-                          <MenuBar<G["UserData"]>
-                            appState={appState}
-                            dispatch={dispatch}
-                            onPublish={onPublish}
-                            menuOpen={menuOpen}
-                            renderHeaderActions={() => (
-                              <CustomHeaderActions>
-                                <Button
-                                  onClick={() => {
-                                    onPublish && onPublish(data);
-                                  }}
-                                  icon={<Globe size="14px" />}
-                                >
-                                  Publish
-                                </Button>
-                              </CustomHeaderActions>
-                            )}
-                            setMenuOpen={setMenuOpen}
-                          />
+                        <div
+                          className={getLayoutClassName("rightSideBarToggle")}
+                        >
+                          <IconButton
+                            onClick={() => {
+                              toggleSidebars("right");
+                            }}
+                            title="Toggle right sidebar"
+                          >
+                            <PanelRight focusable="false" />
+                          </IconButton>
                         </div>
                       </div>
-                    </header>
-                  </CustomHeader>
-                  <div className={getLayoutClassName("leftSideBar")}>
-                    <SidebarSection title="Components" noBorderTop>
-                      <Components />
-                    </SidebarSection>
-                    <SidebarSection title="Outline">
-                      <Outline />
-                    </SidebarSection>
-                  </div>
-                  <Canvas />
-                  <div className={getLayoutClassName("rightSideBar")}>
-                    <SidebarSection
-                      noPadding
-                      noBorderTop
-                      showBreadcrumbs
-                      title={selectedItem ? selectedComponentLabel : "Page"}
-                    >
-                      <Fields />
-                    </SidebarSection>
-                  </div>
+                      <div className={getLayoutClassName("headerTitle")}>
+                        <Heading rank="2" size="xs">
+                          {headerTitle || rootProps?.title || "Page"}
+                          {headerPath && (
+                            <>
+                              {" "}
+                              <code
+                                className={getLayoutClassName("headerPath")}
+                              >
+                                {headerPath}
+                              </code>
+                            </>
+                          )}
+                        </Heading>
+                      </div>
+                      <div className={getLayoutClassName("headerTools")}>
+                        <div className={getLayoutClassName("menuButton")}>
+                          <IconButton
+                            onClick={() => {
+                              return setMenuOpen(!menuOpen);
+                            }}
+                            title="Toggle menu bar"
+                          >
+                            {menuOpen ? (
+                              <ChevronUp focusable="false" />
+                            ) : (
+                              <ChevronDown focusable="false" />
+                            )}
+                          </IconButton>
+                        </div>
+                        <MenuBar<G["UserData"]>
+                          dispatch={dispatch}
+                          onPublish={onPublish}
+                          menuOpen={menuOpen}
+                          renderHeaderActions={() => (
+                            <CustomHeaderActions>
+                              <Button
+                                onClick={() => {
+                                  const data = useAppStore.getState().state
+                                    .data as G["UserData"];
+                                  onPublish && onPublish(data);
+                                }}
+                                icon={<Globe size="14px" />}
+                              >
+                                Publish
+                              </Button>
+                            </CustomHeaderActions>
+                          )}
+                          setMenuOpen={setMenuOpen}
+                        />
+                      </div>
+                    </div>
+                  </header>
+                </CustomHeader>
+                <div className={getLayoutClassName("leftSideBar")}>
+                  <SidebarSection title="Components" noBorderTop>
+                    <Components />
+                  </SidebarSection>
+                  <SidebarSection title="Outline">
+                    <Outline />
+                  </SidebarSection>
+                </div>
+                <Canvas />
+                <div className={getLayoutClassName("rightSideBar")}>
+                  <FieldSideBar />
                 </div>
               </div>
-            )}
-          </CustomPuck>
-        </DragDropContext>
-      </AppProvider>
+            </div>
+          )}
+        </CustomPuck>
+      </DragDropContext>
       <div id="puck-portal-root" className={getClassName("portal")} />
     </div>
   );
