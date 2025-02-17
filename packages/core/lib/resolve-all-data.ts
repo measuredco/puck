@@ -5,7 +5,7 @@ import {
   Data,
   DefaultComponentProps,
   DefaultRootFieldProps,
-  MetaData,
+  Metadata,
 } from "../types";
 import { resolveAllComponentData } from "./resolve-component-data";
 import { resolveRootData } from "./resolve-root-data";
@@ -17,13 +17,17 @@ export async function resolveAllData<
 >(
   data: Partial<Data>,
   config: Config,
-  metadata: MetaData = {},
+  metadata: Metadata = {},
   onResolveStart?: (item: ComponentData) => void,
   onResolveEnd?: (item: ComponentData) => void
 ) {
   const defaultedData = defaultData(data);
 
-  const dynamicRoot = await resolveRootData<RootProps>(defaultedData, config, metadata);
+  const dynamicRoot = await resolveRootData<RootProps>(
+    defaultedData,
+    config,
+    metadata
+  );
 
   const { zones = {} } = data;
 

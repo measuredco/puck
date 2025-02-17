@@ -53,4 +53,4 @@ export type Data<
   zones?: Record<string, Content<Props>>;
 };
 
-export type MetaData = { [key: string]: any };
+export type Metadata = { [key: string]: any };

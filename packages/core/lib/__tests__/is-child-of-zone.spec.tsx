@@ -37,7 +37,7 @@ const dropzoneContext: DropZoneContext = {
   },
   path: [],
   depth: 0,
-  metadata: {}
+  metadata: {},
 };
 
 describe("is-child-of-zone", () => {

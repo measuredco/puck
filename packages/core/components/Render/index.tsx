@@ -1,7 +1,7 @@
 "use client";
 
 import { rootDroppableId } from "../../lib/root-droppable-id";
-import { Config, Data, MetaData, UserGenerics } from "../../types";
+import { Config, Data, Metadata, UserGenerics } from "../../types";
 import { DropZonePure, DropZoneProvider } from "../DropZone";
 
 export function Render<
@@ -14,7 +14,7 @@ export function Render<
 }: {
   config: UserConfig;
   data: Partial<G["UserData"] | Data>;
-  metadata?: MetaData;
+  metadata?: Metadata;
 }) {
   const defaultedData = {
     ...data,
@@ -35,7 +35,7 @@ export function Render<
           mode: "render",
           depth: 0,
           path: [],
-          metadata
+          metadata,
         }}
       >
         <config.root.render
@@ -63,7 +63,7 @@ export function Render<
         mode: "render",
         depth: 0,
         path: [],
-        metadata
+        metadata,
       }}
     >
       <DropZonePure zone={rootDroppableId} />

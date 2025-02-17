@@ -1,4 +1,4 @@
-import { ComponentData, Config, MappedItem, MetaData } from "../types";
+import { ComponentData, Config, MappedItem, Metadata } from "../types";
 import { getChanged } from "./get-changed";
 
 export const cache: {
@@ -8,7 +8,7 @@ export const cache: {
 export const resolveAllComponentData = async (
   content: MappedItem[],
   config: Config,
-  metadata: MetaData = {},
+  metadata: Metadata = {},
   onResolveStart?: (item: MappedItem) => void,
   onResolveEnd?: (item: MappedItem) => void
 ) => {
@@ -28,7 +28,7 @@ export const resolveAllComponentData = async (
 export const resolveComponentData = async (
   item: ComponentData,
   config: Config,
-  metadata: MetaData = {},
+  metadata: Metadata = {},
   onResolveStart?: (item: MappedItem) => void,
   onResolveEnd?: (item: MappedItem) => void
 ) => {
@@ -48,7 +48,11 @@ export const resolveComponentData = async (
     }
 
     const { props: resolvedProps, readOnly = {} } =
-      await configForItem.resolveData(item, { changed, lastData: oldItem, metadata });
+      await configForItem.resolveData(item, {
+        changed,
+        lastData: oldItem,
+        metadata,
+      });
 
     const resolvedItem = {
       ...item,

@@ -87,6 +87,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           renderDropZone: DropZonePure,
           isEditing: true,
           dragRef: null,
+          metadata: {},
         }}
         editMode={true} // DEPRECATED
       >

@@ -108,22 +108,6 @@ export const initialData: Record<string, UserData> = {
         },
       },
       {
-        type: "Space",
-        props: {
-          size: "8px",
-          id: "Space-1687284122745",
-          direction: "vertical",
-        },
-      },
-      {
-        type: "Space",
-        props: {
-          size: "96px",
-          id: "Space-1687298109537",
-          direction: "vertical",
-        },
-      },
-      {
         type: "Heading",
         props: {
           align: "center",

@@ -20,7 +20,7 @@ export function Example() {
 | ----------------------- | ---------------------------- | ---------------------------------------- | -------- |
 | [`config`](#config)     | `config: { components: {} }` | [Config](/docs/api-reference/config)     | Required |
 | [`data`](#data)         | `data: {}`                   | [Data](/docs/api-reference/data)         | Required |
-| [`metadata`](#metadata) | `metadata: {}`               | [Metadata](/docs/api-reference/metadata) | Optional |
+| [`metadata`](#metadata) | `metadata: {}`               | [Metadata](/docs/api-reference/metadata) | -        |
 
 ## Required props
 
@@ -77,7 +77,7 @@ export function Example() {
 
 ### `metadata`
 
-Global metadata to be used in conjunction with data to render against the provided config. See the [`Metadata` docs](/docs/api-reference/metadata) for a full reference.
+Provide additional data to the [`puck.metadata`](/docs/api-reference/configuration/component-config#puckmetadata) render prop provided to all components.
 
 ```tsx {4-12} copy
 export function Example() {
@@ -85,7 +85,7 @@ export function Example() {
     <Render
       metadata={{
         title: "Page title",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
+        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
       }}
       // ...
     />

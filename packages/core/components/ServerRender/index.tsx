@@ -1,7 +1,7 @@
 import { CSSProperties } from "react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { setupZone } from "../../lib/setup-zone";
-import { Config, Data, FieldProps, MetaData, UserGenerics } from "../../types";
+import { Config, Data, FieldProps, Metadata, UserGenerics } from "../../types";
 
 type DropZoneRenderProps = {
   zone: string;
@@ -9,7 +9,7 @@ type DropZoneRenderProps = {
   config: Config;
   areaId?: string;
   style?: CSSProperties;
-  metadata: MetaData;
+  metadata: Metadata;
 };
 
 function DropZoneRender({
@@ -17,7 +17,7 @@ function DropZoneRender({
   data,
   areaId = "root",
   config,
-  metadata = {}
+  metadata = {},
 }: DropZoneRenderProps) {
   let zoneCompound = rootDroppableId;
   let content = data?.content || [];
@@ -51,7 +51,7 @@ function DropZoneRender({
                     metadata={metadata}
                   />
                 ),
-                metadata
+                metadata,
               }}
             />
           );
@@ -66,7 +66,15 @@ function DropZoneRender({
 export function Render<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
->({ config, data, metadata }: { config: UserConfig; data: G["UserData"], metadata: MetaData }) {
+>({
+  config,
+  data,
+  metadata,
+}: {
+  config: UserConfig;
+  data: G["UserData"];
+  metadata: Metadata;
+}) {
   if (config.root?.render) {
     // DEPRECATED
     const rootProps = data.root.props || data.root;
@@ -78,7 +86,12 @@ export function Render<
         {...rootProps}
         puck={{
           renderDropZone: ({ zone }: { zone: string }) => (
-            <DropZoneRender zone={zone} data={data} config={config} metadata={metadata} />
+            <DropZoneRender
+              zone={zone}
+              data={data}
+              config={config}
+              metadata={metadata}
+            />
           ),
           isEditing: false,
           dragRef: null,
@@ -87,10 +100,22 @@ export function Render<
         editMode={false}
         id={"puck-root"}
       >
-        <DropZoneRender config={config} data={data} zone={rootDroppableId} metadata={metadata} />
+        <DropZoneRender
+          config={config}
+          data={data}
+          zone={rootDroppableId}
+          metadata={metadata}
+        />
       </config.root.render>
     );
   }
 
-  return <DropZoneRender config={config} data={data} zone={rootDroppableId} metadata={metadata}/>;
+  return (
+    <DropZoneRender
+      config={config}
+      data={data}
+      zone={rootDroppableId}
+      metadata={metadata}
+    />
+  );
 }

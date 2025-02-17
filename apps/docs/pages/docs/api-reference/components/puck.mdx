@@ -29,7 +29,7 @@ export function Editor() {
 | ----------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- | ------------ |
 | [`config`](#config)                                   | `config: { components: {} }`                       | [Config](/docs/api-reference/configuration/config) | Required     |
 | [`data`](#data)                                       | `data: {}`                                         | [Data](/docs/api-reference/data)                   | Required     |
-| [`metadata`](#metadata)                               | `metadata: {}`                                     | [Metadata](/docs/api-reference/metadata)                       | -            |
+| [`metadata`](#metadata)                               | `metadata: {}`                                     | [Metadata](/docs/api-reference/metadata)           | -            |
 | [`dnd`](#dnd)                                         | `dnd: {}`                                          | [DndConfig](#dnd-params)                           | -            |
 | [`children`](#children)                               | `children: <Puck.Preview />`                       | ReactNode                                          | -            |
 | [`headerPath`](#headerpath)                           | `headerPath: "/my-page"`                           | String                                             | -            |
@@ -116,7 +116,7 @@ export function Editor() {
 
 ### `metadata`
 
-Configure drag-and-drop behavior.
+Provide additional data to the [`puck.metadata`](/docs/api-reference/configuration/component-config#puckmetadata) render prop provided to all components.
 
 ```tsx {4} copy
 export function Editor() {

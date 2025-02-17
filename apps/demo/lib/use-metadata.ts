@@ -3,5 +3,5 @@ export const useMetadata = async () => {
   return {
     heading: "Transform your content right before rendering",
     text: "Using external data, you can now substitute content prior to rendering while leaving your original data intact.",
-  }
-}
+  };
+};

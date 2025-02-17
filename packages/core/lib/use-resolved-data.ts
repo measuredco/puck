@@ -1,4 +1,4 @@
-import { AppState, ComponentData, Config, MetaData, RootData } from "../types";
+import { AppState, ComponentData, Config, Metadata, RootData } from "../types";
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { PuckAction } from "../reducer";
 import { resolveComponentData } from "./resolve-component-data";
@@ -15,7 +15,7 @@ export const useResolvedData = (
   setComponentLoading: (id: string) => void,
   unsetComponentLoading: (id: string) => void,
   refreshPermissions: RefreshPermissions,
-  metadata: MetaData
+  metadata: Metadata
 ) => {
   const [{ resolverKey, newAppState }, setResolverState] = useState({
     resolverKey: 0,

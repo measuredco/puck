@@ -19,7 +19,7 @@ import type {
   UserGenerics,
   Config,
   Data,
-  MetaData,
+  Metadata,
 } from "../../types";
 import { Button } from "../Button";
 
@@ -109,7 +109,7 @@ export function Puck<
     disableAutoScroll?: boolean;
   };
   initialHistory?: InitialHistory;
-  metadata?: MetaData;
+  metadata?: Metadata;
 }) {
   const iframe: IframeConfig = {
     enabled: true,
@@ -197,19 +197,19 @@ export function Puck<
         // Store categories under componentList on state to allow render functions and plugins to modify
         componentList: config.categories
           ? Object.entries(config.categories).reduce(
-            (acc, [categoryName, category]) => {
-              return {
-                ...acc,
-                [categoryName]: {
-                  title: category.title,
-                  components: category.components,
-                  expanded: category.defaultExpanded,
-                  visible: category.visible,
-                },
-              };
-            },
-            {}
-          )
+              (acc, [categoryName, category]) => {
+                return {
+                  ...acc,
+                  [categoryName]: {
+                    title: category.title,
+                    components: category.components,
+                    expanded: category.defaultExpanded,
+                    visible: category.visible,
+                  },
+                };
+              },
+              {}
+            )
           : {},
       },
     } as G["UserAppState"];
