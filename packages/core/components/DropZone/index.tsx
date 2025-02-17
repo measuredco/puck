@@ -7,8 +7,7 @@ import {
   useMemo,
   useRef,
 } from "react";
-import { ComponentDndData, DraggableComponent } from "../DraggableComponent";
-import { getItem } from "../../lib/get-item";
+import { DraggableComponent } from "../DraggableComponent";
 import { setupZone } from "../../lib/setup-zone";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { getClassNameFactory } from "../../lib";
@@ -19,9 +18,9 @@ import {
   ZoneStoreContext,
   dropZoneContext,
 } from "./context";
-import { getAppStore, useAppStore } from "../Puck/context";
+import { useAppStore } from "../Puck/context";
 import { DropZoneProps } from "./types";
-import { ComponentConfig, Content, DragAxis, PuckContext } from "../../types";
+import { Content, DragAxis, PuckContext } from "../../types";
 
 import { UseDroppableInput } from "@dnd-kit/react";
 import { DrawerItemInner } from "../Drawer";
@@ -112,6 +111,20 @@ const DropZoneChild = ({
     (s) => s.selectedItem?.props.id === componentId || false
   );
 
+  let label = componentConfig?.label ?? item?.type.toString() ?? "Component";
+
+  const renderPreview = useMemo(
+    () =>
+      function Preview() {
+        return (
+          <DrawerItemInner name={label}>
+            {overrides.componentItem}
+          </DrawerItemInner>
+        );
+      },
+    [componentId, label, overrides]
+  );
+
   if (!item) return;
 
   const defaultedProps = {
@@ -131,22 +144,11 @@ const DropZoneChild = ({
 
   let componentType = item.type as string;
 
-  let label = componentConfig?.["label"] ?? item.type.toString();
+  const isPreview =
+    componentId === preview?.props.id && preview.type === "insert";
 
-  if (item.type === "preview") {
-    componentType = preview?.componentType ?? "__preview";
-
-    label = componentConfig?.label ?? componentType ?? "Preview";
-
-    function Preview() {
-      return (
-        <DrawerItemInner name={label}>
-          {overrides.componentItem}
-        </DrawerItemInner>
-      );
-    }
-
-    Render = Preview;
+  if (isPreview) {
+    Render = renderPreview;
   }
 
   return (
@@ -169,7 +171,7 @@ const DropZoneChild = ({
         inDroppableZone={inDroppableZone}
       >
         {(dragRef) =>
-          componentConfig?.inline ? (
+          componentConfig?.inline && !isPreview ? (
             <>
               {/* draggable inner {Math.random()} */}
               <Render
