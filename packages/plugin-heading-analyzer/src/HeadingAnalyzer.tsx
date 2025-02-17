@@ -32,6 +32,10 @@ const getOutline = ({ frame }: { frame?: Element | Document } = {}) => {
   }[] = [];
 
   headings.forEach((item, i) => {
+    if (item.closest("[data-dnd-dragging]")) {
+      return;
+    }
+
     _outline.push({
       rank: parseInt(item.tagName.split("H")[1]),
       text: item.textContent!,
