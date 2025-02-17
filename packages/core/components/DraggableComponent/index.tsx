@@ -29,6 +29,7 @@ import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
+import { useNodeStore } from "../../stores/node-store";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -299,6 +300,9 @@ export const DraggableComponent = ({
     }
   }, [ref.current, userIsDragging]);
 
+  const registerNode = useNodeStore((s) => s.registerNode);
+  const unregisterNode = useNodeStore((s) => s.unregisterNode);
+
   useEffect(() => {
     ctx?.registerPath!(
       id,
@@ -309,10 +313,13 @@ export const DraggableComponent = ({
       componentType
     );
 
+    registerNode({ id, sync });
+
     return () => {
       ctx?.unregisterPath?.(id);
+      unregisterNode(id);
     };
-  }, [id, zoneCompound, index, componentType]);
+  }, [id, zoneCompound, index, componentType, sync]);
 
   const CustomActionBar = useMemo(
     () => overrides.actionBar || DefaultActionBar,
@@ -461,14 +468,7 @@ export const DraggableComponent = ({
     } else {
       setIsVisible(false);
     }
-  }, [
-    isSelected,
-    hover,
-    indicativeHover,
-    iframe,
-    userIsDragging,
-    // state.data,
-  ]);
+  }, [isSelected, hover, indicativeHover, iframe, userIsDragging]);
 
   const syncActionsPosition = useCallback(
     (el: HTMLDivElement | null | undefined) => {
