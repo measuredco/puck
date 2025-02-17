@@ -33,21 +33,37 @@ const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
         iframe.dispatchEvent(evt as any);
       };
 
-      // Add event listeners
-      iframe.contentDocument?.addEventListener(
-        "pointermove",
-        handlePointerMove,
-        {
-          capture: true,
-        }
-      );
+      const register = () => {
+        unregister();
 
-      return () => {
+        // Add event listeners
+        iframe.contentDocument?.addEventListener(
+          "pointermove",
+          handlePointerMove,
+          {
+            capture: true,
+          }
+        );
+      };
+
+      const unregister = () => {
         // Clean up event listeners
         iframe.contentDocument?.removeEventListener(
           "pointermove",
           handlePointerMove
         );
+      };
+
+      const onLoad = () => {
+        register();
+        iframe.removeEventListener("load", onLoad);
+      };
+
+      iframe.addEventListener("load", onLoad);
+
+      return () => {
+        iframe.removeEventListener("load", onLoad);
+        unregister();
       };
     }
   }, [status]);
