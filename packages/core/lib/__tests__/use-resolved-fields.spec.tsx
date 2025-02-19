@@ -3,6 +3,7 @@ import { useResolvedFields } from "../use-resolved-fields";
 import { useAppContext } from "../../components/Puck/context";
 import { useParent } from "../use-parent";
 import { AppState, ComponentData, Data, Fields, UiState } from "../../types";
+import { rootDroppableId } from "../root-droppable-id";
 
 jest.mock("../../components/Puck/context", () => ({
   useAppContext: jest.fn(),
@@ -193,7 +194,7 @@ describe("use-resolved-fields", () => {
         ...blankContextWithData.state,
         ui: {
           ...blankContextWithData.state.ui,
-          itemSelector: { zone: "default-zone", index: 0 },
+          itemSelector: { zone: rootDroppableId, index: 0 },
         },
       },
       selectedItem: blankContextWithData.state.data.content[0],
@@ -205,7 +206,7 @@ describe("use-resolved-fields", () => {
         ...blankContextWithData.state,
         ui: {
           ...blankContextWithData.state.ui,
-          itemSelector: { zone: "default-zone", index: 1 },
+          itemSelector: { zone: rootDroppableId, index: 1 },
         },
       },
       selectedItem: blankContextWithData.state.data.content[1],
@@ -409,7 +410,7 @@ describe("use-resolved-fields", () => {
           ...defaultContext.state,
           ui: {
             ...defaultContext.state.ui,
-            itemSelector: { zone: "default-zone", index: 0 },
+            itemSelector: { zone: rootDroppableId, index: 0 },
           },
         },
         selectedItem: defaultContext.state.data.content[0],
@@ -462,7 +463,7 @@ describe("use-resolved-fields", () => {
           ...defaultContext.state,
           ui: {
             ...defaultContext.state.ui,
-            itemSelector: { zone: "default-zone", index: 0 },
+            itemSelector: { zone: rootDroppableId, index: 0 },
           },
         },
         selectedItem: defaultContext.state.data.content[0],

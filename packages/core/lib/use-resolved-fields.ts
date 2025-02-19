@@ -7,6 +7,7 @@ import { getChanged } from "../lib/get-changed";
 import { useParent } from "../lib/use-parent";
 import { useOnValueChange } from "../lib/use-on-value-change";
 import { selectorIs } from "../lib/selector-is";
+import { rootDroppableId } from "./root-droppable-id";
 
 const defaultPageFields: Record<string, Field> = {
   title: { type: "text" },
@@ -132,7 +133,7 @@ export const useResolvedFields = ({
     // Must either be in default zone, or have parent
     if (
       !itemSelector?.zone ||
-      itemSelector?.zone === "default-zone" ||
+      itemSelector?.zone === rootDroppableId ||
       parent
     ) {
       console.log("trigger resolver", itemSelector, hasResolver, defaultFields);

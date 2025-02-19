@@ -238,7 +238,11 @@ export const useAppStore = create<AppContext>((set) => ({
         recordHistory,
       });
 
-      return { ...s, state };
+      const selectedItem = state.ui.itemSelector
+        ? getItem(state.ui.itemSelector, state.data)
+        : null;
+
+      return { ...s, state, selectedItem };
     }),
   // TODO reimplement
   getPermissions: () => ({

@@ -22,7 +22,7 @@ import { createPortal } from "react-dom";
 
 import { dropZoneContext, DropZoneProvider } from "../DropZone";
 import { createDynamicCollisionDetector } from "../../lib/dnd/collision/dynamic";
-import { getItem, ItemSelector } from "../../lib/get-item";
+import { ItemSelector } from "../../lib/get-item";
 import { Data, DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
@@ -30,6 +30,7 @@ import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
 import { useNodeStore } from "../../stores/node-store";
+import { rootDroppableId } from "../../lib/root-droppable-id";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -65,7 +66,7 @@ const convertIdToSelector = (
   data: Data
 ): ItemSelector => {
   const content =
-    zoneCompound && data.zones && zoneCompound !== "default-zone"
+    zoneCompound && data.zones && zoneCompound !== rootDroppableId
       ? data.zones[zoneCompound]
       : data.content;
 
@@ -168,7 +169,7 @@ export const DraggableComponent = ({
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
 
-  const { path = [] } = ctx || {};
+  const path = useNodeStore((s) => s.nodes[id]?.path);
 
   const [canDrag, setCanDrag] = useState(false);
 
@@ -176,19 +177,6 @@ export const DraggableComponent = ({
     ZoneStoreContext,
     (s) => !!s.draggedItem
   );
-
-  useEffect(() => {
-    const { state } = getAppStore();
-    const item = getItem({ index, zone: zoneCompound }, state.data);
-
-    if (item) {
-      const perms = getPermissions({
-        item,
-      });
-
-      setCanDrag(perms.drag ?? true);
-    }
-  }, [index, zoneCompound, getPermissions, userIsDragging]);
 
   const canCollide = canDrag || userIsDragging;
 
@@ -223,6 +211,18 @@ export const DraggableComponent = ({
   });
 
   const thisIsDragging = status === "dragging";
+
+  useEffect(() => {
+    const item = useNodeStore.getState().nodes[id]?.data;
+
+    if (item) {
+      const perms = getPermissions({
+        item,
+      });
+
+      setCanDrag(perms.drag ?? true);
+    }
+  }, [index, zoneCompound, getPermissions, thisIsDragging]);
 
   const ref = useRef<HTMLElement>(null);
 
@@ -304,20 +304,10 @@ export const DraggableComponent = ({
   const unregisterNode = useNodeStore((s) => s.unregisterNode);
 
   useEffect(() => {
-    ctx?.registerPath!(
-      id,
-      {
-        index,
-        zone: zoneCompound,
-      },
-      componentType
-    );
-
-    registerNode({ id, sync });
+    registerNode(id, { methods: { sync }, element: ref.current ?? null });
 
     return () => {
-      ctx?.unregisterPath?.(id);
-      unregisterNode(id);
+      unregisterNode(id, { methods: { sync: () => null }, element: null });
     };
   }, [id, zoneCompound, index, componentType, sync]);
 
@@ -530,7 +520,6 @@ export const DraggableComponent = ({
         depth: depth + 1,
         registerLocalZone,
         unregisterLocalZone,
-        path: [...path, id],
       }}
     >
       {isVisible &&

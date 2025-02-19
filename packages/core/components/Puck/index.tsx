@@ -32,11 +32,9 @@ import {
 } from "lucide-react";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
-import { getItem } from "../../lib/get-item";
 import { PuckAction, createReducer } from "../../reducer";
-import { flushZones } from "../../lib/flush-zones";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { AppProvider, defaultAppState, useAppStore } from "./context";
+import { defaultAppState, useAppStore } from "./context";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
@@ -53,7 +51,7 @@ import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 import { DefaultOverride } from "../DefaultOverride";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
 import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
-import { useShallow } from "zustand/react/shallow";
+import { useMonitorNodeIndex } from "../../lib/use-monitor-node-index";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -432,6 +430,8 @@ export function Puck<
       },
     });
   }, []);
+
+  useMonitorNodeIndex();
 
   return (
     <div className={`Puck ${getClassName()}`}>

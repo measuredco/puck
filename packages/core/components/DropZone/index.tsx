@@ -33,6 +33,7 @@ import { useContentIdsWithPreview } from "./lib/use-content-with-preview";
 import { useDragAxis } from "./lib/use-drag-axis";
 import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
+import { useNodeStore } from "../../stores/node-store";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -82,13 +83,13 @@ const DropZoneChild = ({
   };
 
   const ctx = useContext(dropZoneContext);
-  const { areaId, depth, path = [] } = ctx!;
+  const { depth } = ctx!;
 
   let contentItem = useAppStore(
     useShallow((s) => {
       let content: Content = s.state.data.content || [];
 
-      if (areaId && zone !== rootDroppableId) {
+      if (zoneCompound !== rootDroppableId) {
         content = setupZone(s.state.data, zoneCompound).zones[zoneCompound];
       }
 
@@ -152,45 +153,38 @@ const DropZoneChild = ({
   }
 
   return (
-    <DropZoneProvider
-      value={{ ...ctx!, path: [...path, zoneCompound] }}
-      key={componentId}
+    <DraggableComponent
+      id={componentId}
+      componentType={componentType}
+      zoneCompound={zoneCompound}
+      depth={depth + 1}
+      index={index}
+      isLoading={thisComponentState?.loadingCount > 0}
+      isSelected={isSelected}
+      label={label}
+      isEnabled={isEnabled}
+      autoDragAxis={dragAxis}
+      userDragAxis={collisionAxis}
+      inDroppableZone={inDroppableZone}
     >
-      <DraggableComponent
-        id={componentId}
-        componentType={componentType}
-        zoneCompound={zoneCompound}
-        depth={depth + 1}
-        index={index}
-        isLoading={thisComponentState?.loadingCount > 0}
-        isSelected={isSelected}
-        label={label}
-        isEnabled={isEnabled}
-        autoDragAxis={dragAxis}
-        userDragAxis={collisionAxis}
-        inDroppableZone={inDroppableZone}
-      >
-        {(dragRef) =>
-          componentConfig?.inline && !isPreview ? (
-            <>
-              {/* draggable inner {Math.random()} */}
-              <Render
-                {...defaultedProps}
-                puck={{
-                  ...defaultedProps.puck,
-                  dragRef,
-                }}
-              />
-            </>
-          ) : (
-            <div ref={dragRef}>
-              {/* draggable inner {Math.random()} */}
-              <Render {...defaultedProps} />
-            </div>
-          )
-        }
-      </DraggableComponent>
-    </DropZoneProvider>
+      {(dragRef) =>
+        componentConfig?.inline && !isPreview ? (
+          <>
+            <Render
+              {...defaultedProps}
+              puck={{
+                ...defaultedProps.puck,
+                dragRef,
+              }}
+            />
+          </>
+        ) : (
+          <div ref={dragRef}>
+            <Render {...defaultedProps} />
+          </div>
+        )
+      }
+    </DraggableComponent>
   );
 };
 
@@ -212,13 +206,13 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
     const {
       // These all need setting via context
       areaId,
-      registerZoneArea,
       depth,
       registerLocalZone,
       unregisterLocalZone,
-      path = [],
       activeZones,
     } = ctx!;
+
+    const path = useNodeStore((s) => (areaId ? s.nodes[areaId]?.path : null));
 
     let zoneCompound = rootDroppableId;
 
@@ -248,12 +242,6 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       };
     });
 
-    useEffect(() => {
-      if (areaId && registerZoneArea) {
-        registerZoneArea(areaId);
-      }
-    }, [areaId]);
-
     // Register and unregister zone on mount
     useEffect(() => {
       if (ctx?.registerZone) {
@@ -271,7 +259,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       useShallow((s) => {
         let content: Content = s.state.data.content || [];
 
-        if (areaId && zone !== rootDroppableId) {
+        if (zoneCompound !== rootDroppableId) {
           content = setupZone(s.state.data, zoneCompound).zones[zoneCompound];
         }
 
@@ -354,7 +342,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
         areaId,
         depth,
         isDroppableTarget: acceptsTarget(draggedComponentType),
-        path,
+        path: path || [],
       },
     };
 

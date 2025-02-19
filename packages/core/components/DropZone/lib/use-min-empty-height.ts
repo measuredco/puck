@@ -39,7 +39,7 @@ export const useMinEmptyHeight = ({
       const { nodes } = useNodeStore.getState();
 
       Object.entries(nodes).forEach(([_, node]) => {
-        node.sync();
+        node.methods.sync();
       });
 
       setIsAnimating(false);
