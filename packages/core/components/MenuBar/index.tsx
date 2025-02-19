@@ -1,12 +1,11 @@
 import { Dispatch, ReactElement, SetStateAction } from "react";
-import { Globe, Undo2Icon, Redo2Icon } from "lucide-react";
+import { Undo2Icon, Redo2Icon } from "lucide-react";
 
-import { Button } from "../Button";
 import { IconButton } from "../IconButton/IconButton";
-import { useAppContext } from "../Puck/context";
+import { useAppStore } from "../Puck/context";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { PuckAction } from "../../reducer";
-import type { AppState, Data } from "../../types";
+import type { Data } from "../../types";
 
 import styles from "./styles.module.css";
 
@@ -27,9 +26,8 @@ export function MenuBar<UserData extends Data>({
   renderHeaderActions?: () => ReactElement;
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const {
-    history: { back, forward, historyStore },
-  } = useAppContext();
+  const history = useAppStore((s) => s.history);
+  const { back, forward, historyStore } = history;
 
   const { hasFuture = false, hasPast = false } = historyStore || {};
 

@@ -1,7 +1,7 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ReactNode } from "react";
-import { useAppContext } from "../Puck/context";
+import { useAppStore } from "../Puck/context";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Drawer } from "../Drawer";
 
@@ -15,7 +15,8 @@ const ComponentListItem = ({
   label?: string;
   index?: number; // TODO deprecate
 }) => {
-  const { overrides, getPermissions } = useAppContext();
+  const overrides = useAppStore((s) => s.overrides);
+  const getPermissions = useAppStore((s) => s.getPermissions);
 
   const canInsert = getPermissions({
     type: name,
@@ -37,9 +38,11 @@ const ComponentList = ({
   children?: ReactNode;
   title?: string;
 }) => {
-  const { config, state, setUi } = useAppContext();
+  const config = useAppStore((s) => s.config);
+  const setUi = useAppStore((s) => s.setUi);
+  const componentList = useAppStore((s) => s.state.ui.componentList);
 
-  const { expanded = true } = state.ui.componentList[id] || {};
+  const { expanded = true } = componentList[id] || {};
 
   return (
     <div className={getClassName({ isExpanded: expanded })}>
@@ -50,9 +53,9 @@ const ComponentList = ({
           onClick={() =>
             setUi({
               componentList: {
-                ...state.ui.componentList,
+                ...componentList,
                 [id]: {
-                  ...state.ui.componentList[id],
+                  ...componentList[id],
                   expanded: !expanded,
                 },
               },
