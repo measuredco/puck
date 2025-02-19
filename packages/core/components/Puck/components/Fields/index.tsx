@@ -38,9 +38,13 @@ const FieldsChild = ({
   fieldName: string;
   onChange: (value: any) => void;
 }) => {
-  const readOnly = useAppStore((s) =>
-    s.selectedItem ? s.selectedItem.readOnly : s.state.data.root.readOnly
+  const isReadOnly = useAppStore(
+    (s) =>
+      ((s.selectedItem
+        ? s.selectedItem.readOnly
+        : s.state.data.root.readOnly) || {})[fieldName]
   );
+
   const value = useAppStore((s) => {
     // DEPRECATED
     const rootProps = s.state.data.root.props || s.state.data.root;
@@ -76,7 +80,7 @@ const FieldsChild = ({
         field={field}
         name={fieldName}
         id={id}
-        readOnly={!permissions.edit || readOnly?.[fieldName]}
+        readOnly={!permissions.edit || isReadOnly}
         value={value}
         onChange={onChange}
       />
