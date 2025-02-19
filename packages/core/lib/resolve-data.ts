@@ -4,6 +4,7 @@ import { applyDynamicProps } from "./apply-dynamic-props";
 import { resolveRootData } from "./resolve-root-data";
 import { flattenData } from "./flatten-data";
 import { getAppStore } from "../components/Puck/context";
+import fdeq from "fast-deep-equal";
 
 export const resolveData = (newAppState: AppState) => {
   const {
@@ -61,8 +62,7 @@ export const resolveData = (newAppState: AppState) => {
 
       const processedAppState = { ...appState, data: processed };
 
-      const containsChanges =
-        JSON.stringify(appState) !== JSON.stringify(processedAppState);
+      const containsChanges = !fdeq(appState, processedAppState);
 
       if (containsChanges) {
         dispatch({
