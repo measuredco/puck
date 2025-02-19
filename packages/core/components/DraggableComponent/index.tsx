@@ -172,6 +172,11 @@ export const DraggableComponent = ({
 
   const [canDrag, setCanDrag] = useState(false);
 
+  const userIsDragging = useContextStore(
+    ZoneStoreContext,
+    (s) => !!s.draggedItem
+  );
+
   useEffect(() => {
     const { state } = getAppStore();
     const item = getItem({ index, zone: zoneCompound }, state.data);
@@ -183,12 +188,7 @@ export const DraggableComponent = ({
 
       setCanDrag(perms.drag ?? true);
     }
-  }, [index, zoneCompound, getPermissions]);
-
-  const userIsDragging = useContextStore(
-    ZoneStoreContext,
-    (s) => !!s.draggedItem
-  );
+  }, [index, zoneCompound, getPermissions, userIsDragging]);
 
   const canCollide = canDrag || userIsDragging;
 
