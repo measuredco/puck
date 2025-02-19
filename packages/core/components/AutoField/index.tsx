@@ -278,7 +278,7 @@ export function AutoFieldPrivate<
 
   useEffect(() => {
     // Prevent global state from setting local state if this field is focused
-    if (isFocused) {
+    if (!isFocused) {
       setLocalValue(value);
     }
   }, [value]);
