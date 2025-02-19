@@ -1,11 +1,4 @@
-import {
-  ReactNode,
-  SetStateAction,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext } from "react";
 import {
   Config,
   IframeConfig,
@@ -26,8 +19,8 @@ import {
   RefreshPermissions,
   useResolvedPermissions,
 } from "../../lib/use-resolved-permissions";
-import { useResolvedData } from "../../lib/use-resolved-data";
 import { create } from "zustand";
+import { resolveData } from "../../lib/resolve-data";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {} },
@@ -70,6 +63,9 @@ export type AppContext<
   config: UserConfig;
   componentState: ComponentState;
   setComponentState: (componentState: ComponentState) => void;
+  setComponentLoading: (id: string) => void;
+  unsetComponentLoading: (id: string) => void;
+  resolveDataRuns: number;
   resolveData: (newAppState: AppState) => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
@@ -93,6 +89,9 @@ export const defaultContext: AppContext = {
   config: { components: {} },
   componentState: {},
   setComponentState: () => {},
+  setComponentLoading: () => {},
+  unsetComponentLoading: () => {},
+  resolveDataRuns: 0,
   resolveData: () => {},
   plugins: [],
   overrides: {},
@@ -207,9 +206,8 @@ export const appContext = createContext<AppContext>(defaultContext);
 //   );
 // };
 
-export const useAppStore = create<AppContext>((set) => ({
+export const useAppStore = create<AppContext>((set, get) => ({
   ...defaultContext,
-  // TODO move to own store?
   dispatch: (action: PuckAction) =>
     set((s) => {
       const dispatch = createReducer({ config: s.config, record: () => {} });
@@ -227,6 +225,28 @@ export const useAppStore = create<AppContext>((set) => ({
   setZoomConfig: (zoomConfig) => set({ zoomConfig }),
   setStatus: (status) => set({ status }),
   setComponentState: (componentState) => set({ componentState }),
+  setComponentLoading: (id: string) => {
+    const { setComponentState, componentState } = get();
+
+    setComponentState({
+      ...componentState,
+      [id]: {
+        ...componentState[id],
+        loadingCount: (componentState[id]?.loadingCount || 0) + 1,
+      },
+    });
+  },
+  unsetComponentLoading: (id: string) => {
+    const { setComponentState, componentState } = get();
+
+    setComponentState({
+      ...componentState,
+      [id]: {
+        ...componentState[id],
+        loadingCount: Math.max((componentState[id]?.loadingCount || 0) - 1, 0),
+      },
+    });
+  },
   // Helper
   setUi: (ui: Partial<UiState>, recordHistory?: boolean) =>
     set((s) => {
@@ -252,6 +272,13 @@ export const useAppStore = create<AppContext>((set) => ({
     duplicate: true,
     insert: true,
   }),
+  resolveDataRuns: 0,
+  resolveData: (newAppState) =>
+    set((s) => {
+      resolveData(newAppState);
+
+      return { ...s, resolveDataRuns: s.resolveDataRuns + 1 };
+    }),
 }));
 
 export function getAppStore<UserConfig extends Config = Config>() {

@@ -34,7 +34,7 @@ import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
 import { PuckAction, createReducer } from "../../reducer";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { defaultAppState, useAppStore } from "./context";
+import { defaultAppState, getAppStore, useAppStore } from "./context";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
@@ -432,6 +432,12 @@ export function Puck<
   }, []);
 
   useMonitorNodeIndex();
+
+  useEffect(() => {
+    const { state, resolveData } = getAppStore();
+
+    resolveData(state);
+  }, []);
 
   return (
     <div className={`Puck ${getClassName()}`}>

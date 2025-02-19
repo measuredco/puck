@@ -1,48 +1,44 @@
-import { AppState, ComponentData, Config, RootData } from "../types";
-import { Dispatch, useCallback, useEffect, useState } from "react";
-import { PuckAction } from "../reducer";
+import { AppState, ComponentData, RootData } from "../types";
 import { resolveComponentData } from "./resolve-component-data";
 import { applyDynamicProps } from "./apply-dynamic-props";
 import { resolveRootData } from "./resolve-root-data";
 import { flattenData } from "./flatten-data";
-import { AppContext } from "../components/Puck/context";
-import { RefreshPermissions } from "./use-resolved-permissions";
+import { getAppStore } from "../components/Puck/context";
 
-export const useResolvedData = (
-  appState: AppState,
-  config: Config,
-  dispatch: Dispatch<PuckAction>,
-  setComponentLoading: (id: string) => void,
-  unsetComponentLoading: (id: string) => void,
-  refreshPermissions: RefreshPermissions
-) => {
-  const [{ resolverKey, newAppState }, setResolverState] = useState({
-    resolverKey: 0,
-    newAppState: appState,
-  });
+export const resolveData = (newAppState: AppState) => {
+  const {
+    state: appState,
+    config,
+    dispatch,
+    refreshPermissions,
+    resolveDataRuns,
+    setComponentLoading,
+    unsetComponentLoading,
+  } = getAppStore();
 
   const deferredSetStates: Record<string, NodeJS.Timeout> = {};
 
-  const _setComponentLoading = useCallback(
-    (id: string, loading: boolean, defer: number = 0) => {
-      if (deferredSetStates[id]) {
-        clearTimeout(deferredSetStates[id]);
+  const _setComponentLoading = (
+    id: string,
+    loading: boolean,
+    defer: number = 0
+  ) => {
+    if (deferredSetStates[id]) {
+      clearTimeout(deferredSetStates[id]);
 
-        delete deferredSetStates[id];
+      delete deferredSetStates[id];
+    }
+
+    deferredSetStates[id] = setTimeout(() => {
+      if (loading) {
+        setComponentLoading(id);
+      } else {
+        unsetComponentLoading(id);
       }
 
-      deferredSetStates[id] = setTimeout(() => {
-        if (loading) {
-          setComponentLoading(id);
-        } else {
-          unsetComponentLoading(id);
-        }
-
-        delete deferredSetStates[id];
-      }, defer);
-    },
-    []
-  );
+      delete deferredSetStates[id];
+    }, defer);
+  };
 
   const runResolvers = async () => {
     // Flatten zones
@@ -74,9 +70,10 @@ export const useResolvedData = (
           state: (prev) => ({
             ...prev,
             data: applyDynamicProps(prev.data, dynamicDataMap, dynamicRoot),
-            ui: resolverKey > 0 ? { ...prev.ui, ...newAppState.ui } : prev.ui,
+            ui:
+              resolveDataRuns > 0 ? { ...prev.ui, ...newAppState.ui } : prev.ui,
           }),
-          recordHistory: resolverKey > 0,
+          recordHistory: resolveDataRuns > 0,
         });
       }
     };
@@ -124,18 +121,5 @@ export const useResolvedData = (
     await Promise.all(promises);
   };
 
-  useEffect(() => {
-    runResolvers();
-  }, [resolverKey]);
-
-  const resolveData = useCallback((newAppState: AppState = appState) => {
-    setResolverState((curr) => ({
-      resolverKey: curr.resolverKey + 1,
-      newAppState,
-    }));
-  }, []);
-
-  return {
-    resolveData,
-  };
+  return runResolvers();
 };
