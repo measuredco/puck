@@ -8,6 +8,7 @@ import { useParent } from "../lib/use-parent";
 import { useOnValueChange } from "../lib/use-on-value-change";
 import { selectorIs } from "../lib/selector-is";
 import { rootDroppableId } from "./root-droppable-id";
+import fastDeepEqual from "fast-deep-equal";
 
 const defaultPageFields: Record<string, Field> = {
   title: { type: "text" },
@@ -27,9 +28,7 @@ export const useResolvedFields = ({
   );
   const itemSelector = useAppStore((s) => s.state.ui.itemSelector);
 
-  const parent = null; //useParent();
-
-  // const { data } = state;
+  const parent = useParent();
 
   const defaultFields = useAppStore((s) => {
     const rootFields = s.config.root?.fields || defaultPageFields;
@@ -169,13 +168,12 @@ export const useResolvedFields = ({
 
   useOnValueChange(
     { parent, itemSelector },
-    // { data, parent, itemSelector },
     () => {
       if (_skipValueCheck) return;
 
       triggerResolver();
     },
-    (a, b) => JSON.stringify(a) === JSON.stringify(b)
+    (a, b) => fastDeepEqual(a, b)
   );
 
   useEffect(() => {
