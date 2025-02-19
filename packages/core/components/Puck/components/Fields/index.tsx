@@ -88,17 +88,17 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
   const dispatch = useAppStore((s) => s.dispatch);
   const config = useAppStore((s) => s.config);
   const overrides = useAppStore((s) => s.overrides);
-  const thisComponentState = useAppStore((s) =>
-    s.selectedItem
-      ? s.componentState[s.selectedItem.props.id]
-      : s.componentState["puck-root"]
-  );
+  const componentResolving = useAppStore((s) => {
+    const loadingCount = s.selectedItem
+      ? s.componentState[s.selectedItem.props.id]?.loadingCount
+      : s.componentState["puck-root"]?.loadingCount;
+
+    return (loadingCount ?? 0) > 0;
+  });
   const resolveData = useAppStore((s) => s.resolveData);
   const itemSelector = useAppStore(useShallow((s) => s.state.ui.itemSelector));
 
   const [fields, fieldsResolving] = useResolvedFields();
-
-  const componentResolving = thisComponentState?.loadingCount > 0;
 
   const isLoading = fieldsResolving || componentResolving;
 
