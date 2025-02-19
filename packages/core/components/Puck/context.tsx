@@ -246,6 +246,7 @@ export const useAppStore = create<AppContext>((set) => ({
     edit: true,
     delete: true,
     duplicate: true,
+    insert: true,
   }),
 }));
 
