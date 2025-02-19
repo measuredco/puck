@@ -212,8 +212,8 @@ export const DraggableComponent = ({
       inDroppableZone,
     },
     collisionPriority: isEnabled ? depth : 0,
-    collisionDetector: createDynamicCollisionDetector(dragAxis),
-    disabled: false,
+    collisionDetector: createDynamicCollisionDetector(dragAxis, 0, id),
+    disabled,
 
     // "Out of the way" transition from react-beautiful-dnd
     transition: {
