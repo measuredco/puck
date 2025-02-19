@@ -55,7 +55,7 @@ export const resolveData = (newAppState: AppState) => {
     ) => {
       // Apply the dynamic content to `data`, not `newData`, in case `data` has been changed by the user
       const processed = applyDynamicProps(
-        appState.data,
+        { ...appState.data },
         dynamicDataMap,
         dynamicRoot
       );
