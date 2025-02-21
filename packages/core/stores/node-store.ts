@@ -29,11 +29,13 @@ type PuckNode = {
   element: HTMLElement | null;
 };
 
-export const useNodeStore = create<{
-  nodes: Record<string, PuckNode>;
+type NodeStore = {
+  nodes: Record<string, PuckNode | undefined>;
   registerNode: (id: string, node: Partial<PuckNode>) => void;
   unregisterNode: (id: string, node?: Partial<PuckNode>) => void;
-}>((set) => ({
+};
+
+export const useNodeStore = create<NodeStore>((set) => ({
   nodes: {},
   registerNode: (id: string, node: Partial<PuckNode>) => {
     set((s) => {

@@ -8,6 +8,8 @@ import {
   UiState,
   Plugin,
   UserGenerics,
+  Field,
+  ComponentConfig,
 } from "../../types";
 import { createReducer, PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
@@ -81,6 +83,7 @@ export type AppContext<
   getPermissions: GetPermissions<UserConfig>;
   refreshPermissions: RefreshPermissions<UserConfig>;
   setUi: (ui: Partial<UiState>, recordHistory?: boolean) => void;
+  getComponentConfig: (type?: string) => ComponentConfig | null | undefined;
 };
 
 export const defaultContext: AppContext = {
@@ -110,6 +113,7 @@ export const defaultContext: AppContext = {
   getPermissions: () => ({}),
   refreshPermissions: () => null,
   setUi: () => null,
+  getComponentConfig: () => null,
 };
 
 export const appContext = createContext<AppContext>(defaultContext);
@@ -206,8 +210,22 @@ export const appContext = createContext<AppContext>(defaultContext);
 //   );
 // };
 
+const defaultPageFields: Record<string, Field> = {
+  title: { type: "text" },
+};
+
 export const useAppStore = create<AppContext>((set, get) => ({
   ...defaultContext,
+  getComponentConfig: (type?: string) => {
+    const { config, selectedItem } = get();
+    const rootFields = config.root?.fields || defaultPageFields;
+
+    return type
+      ? config.components[type]
+      : selectedItem
+      ? config.components[selectedItem.type]
+      : ({ ...config.root, fields: rootFields } as ComponentConfig);
+  },
   dispatch: (action: PuckAction) =>
     set((s) => {
       const dispatch = createReducer({ config: s.config, record: () => {} });

@@ -72,6 +72,13 @@ export const useMonitorNodeIndex = () => {
 
         registerNode(componentId, nodeIndex[componentId]);
       });
+
+      // DEPRECATED
+      const rootProps = data.root.props || data.root;
+
+      registerNode("root", {
+        data: { type: "root", props: { id: "root", ...rootProps } },
+      });
     });
   }, []);
 };
