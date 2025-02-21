@@ -215,7 +215,7 @@ export const useAppStore = create<AppContext>()(
       const { config, selectedItem } = get();
       const rootFields = config.root?.fields || defaultPageFields;
 
-      return type
+      return type && type !== "root"
         ? config.components[type]
         : selectedItem
         ? config.components[selectedItem.type]

@@ -76,7 +76,7 @@ export const useResolvedFields = () => {
           });
         }
       } else {
-        useResolvedFieldStore.setState({ loading: true });
+        useResolvedFieldStore.setState({ fields: defaultFields });
       }
     },
     [id]

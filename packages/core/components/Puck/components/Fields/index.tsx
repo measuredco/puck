@@ -186,7 +186,7 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
 
   useResolvedFields();
 
-  const fieldsLoading = false; //useResolvedFieldStore((s) => s.loading);
+  const fieldsLoading = useResolvedFieldStore((s) => s.loading);
   const fieldNames = useResolvedFieldStore(
     useShallow((s) => Object.keys(s.fields))
   );
