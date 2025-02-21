@@ -150,7 +150,7 @@ export const DraggableComponent = ({
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
 
-  const path = useNodeStore((s) => s.nodes[id]?.path || []);
+  const path = useNodeStore((s) => s.nodes[id]?.path);
 
   const item = useNodeStore((s) => s.nodes[id]?.data);
 
@@ -181,7 +181,7 @@ export const DraggableComponent = ({
       componentType,
       containsActiveZone,
       depth,
-      path,
+      path: path || [],
       inDroppableZone,
     },
     collisionPriority: isEnabled ? depth : 0,
