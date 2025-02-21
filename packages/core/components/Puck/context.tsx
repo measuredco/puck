@@ -19,9 +19,9 @@ import { Viewports } from "../../types";
 import {
   GetPermissions,
   RefreshPermissions,
-  useResolvedPermissions,
 } from "../../lib/use-resolved-permissions";
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 import { resolveData } from "../../lib/resolve-data";
 
 export const defaultAppState: AppState = {
@@ -78,10 +78,7 @@ export type AppContext<
   status: Status;
   setStatus: (status: Status) => void;
   iframe: IframeConfig;
-  globalPermissions?: Partial<Permissions>;
   selectedItem?: G["UserData"]["content"][0] | null;
-  getPermissions: GetPermissions<UserConfig>;
-  refreshPermissions: RefreshPermissions<UserConfig>;
   setUi: (ui: Partial<UiState>, recordHistory?: boolean) => void;
   getComponentConfig: (type?: string) => ComponentConfig | null | undefined;
 };
@@ -109,9 +106,6 @@ export const defaultContext: AppContext = {
   status: "LOADING",
   setStatus: () => null,
   iframe: {},
-  globalPermissions: {},
-  getPermissions: () => ({}),
-  refreshPermissions: () => null,
   setUi: () => null,
   getComponentConfig: () => null,
 };
@@ -214,90 +208,87 @@ const defaultPageFields: Record<string, Field> = {
   title: { type: "text" },
 };
 
-export const useAppStore = create<AppContext>((set, get) => ({
-  ...defaultContext,
-  getComponentConfig: (type?: string) => {
-    const { config, selectedItem } = get();
-    const rootFields = config.root?.fields || defaultPageFields;
+export const useAppStore = create<AppContext>()(
+  subscribeWithSelector((set, get) => ({
+    ...defaultContext,
+    getComponentConfig: (type?: string) => {
+      const { config, selectedItem } = get();
+      const rootFields = config.root?.fields || defaultPageFields;
 
-    return type
-      ? config.components[type]
-      : selectedItem
-      ? config.components[selectedItem.type]
-      : ({ ...config.root, fields: rootFields } as ComponentConfig);
-  },
-  dispatch: (action: PuckAction) =>
-    set((s) => {
-      const dispatch = createReducer({ config: s.config, record: () => {} });
+      return type
+        ? config.components[type]
+        : selectedItem
+        ? config.components[selectedItem.type]
+        : ({ ...config.root, fields: rootFields } as ComponentConfig);
+    },
+    dispatch: (action: PuckAction) =>
+      set((s) => {
+        const dispatch = createReducer({ config: s.config, record: () => {} });
 
-      const state = dispatch(s.state, action);
+        const state = dispatch(s.state, action);
 
-      const selectedItem = state.ui.itemSelector
-        ? getItem(state.ui.itemSelector, state.data)
-        : null;
+        const selectedItem = state.ui.itemSelector
+          ? getItem(state.ui.itemSelector, state.data)
+          : null;
 
-      console.log("store dispatch", action);
+        console.log("store dispatch", action);
 
-      return { ...s, state, selectedItem };
-    }),
-  setZoomConfig: (zoomConfig) => set({ zoomConfig }),
-  setStatus: (status) => set({ status }),
-  setComponentState: (componentState) => set({ componentState }),
-  setComponentLoading: (id: string) => {
-    const { setComponentState, componentState } = get();
+        return { ...s, state, selectedItem };
+      }),
+    setZoomConfig: (zoomConfig) => set({ zoomConfig }),
+    setStatus: (status) => set({ status }),
+    setComponentState: (componentState) => set({ componentState }),
+    setComponentLoading: (id: string) => {
+      const { setComponentState, componentState } = get();
 
-    setComponentState({
-      ...componentState,
-      [id]: {
-        ...componentState[id],
-        loadingCount: (componentState[id]?.loadingCount || 0) + 1,
-      },
-    });
-  },
-  unsetComponentLoading: (id: string) => {
-    const { setComponentState, componentState } = get();
-
-    setComponentState({
-      ...componentState,
-      [id]: {
-        ...componentState[id],
-        loadingCount: Math.max((componentState[id]?.loadingCount || 0) - 1, 0),
-      },
-    });
-  },
-  // Helper
-  setUi: (ui: Partial<UiState>, recordHistory?: boolean) =>
-    set((s) => {
-      const dispatch = createReducer({ config: s.config, record: () => {} });
-
-      const state = dispatch(s.state, {
-        type: "setUi",
-        ui,
-        recordHistory,
+      setComponentState({
+        ...componentState,
+        [id]: {
+          ...componentState[id],
+          loadingCount: (componentState[id]?.loadingCount || 0) + 1,
+        },
       });
+    },
+    unsetComponentLoading: (id: string) => {
+      const { setComponentState, componentState } = get();
 
-      const selectedItem = state.ui.itemSelector
-        ? getItem(state.ui.itemSelector, state.data)
-        : null;
+      setComponentState({
+        ...componentState,
+        [id]: {
+          ...componentState[id],
+          loadingCount: Math.max(
+            (componentState[id]?.loadingCount || 0) - 1,
+            0
+          ),
+        },
+      });
+    },
+    // Helper
+    setUi: (ui: Partial<UiState>, recordHistory?: boolean) =>
+      set((s) => {
+        const dispatch = createReducer({ config: s.config, record: () => {} });
 
-      return { ...s, state, selectedItem };
-    }),
-  // TODO reimplement
-  getPermissions: () => ({
-    drag: true,
-    edit: true,
-    delete: true,
-    duplicate: true,
-    insert: true,
-  }),
-  resolveDataRuns: 0,
-  resolveData: (newAppState) =>
-    set((s) => {
-      resolveData(newAppState);
+        const state = dispatch(s.state, {
+          type: "setUi",
+          ui,
+          recordHistory,
+        });
 
-      return { ...s, resolveDataRuns: s.resolveDataRuns + 1 };
-    }),
-}));
+        const selectedItem = state.ui.itemSelector
+          ? getItem(state.ui.itemSelector, state.data)
+          : null;
+
+        return { ...s, state, selectedItem };
+      }),
+    resolveDataRuns: 0,
+    resolveData: (newAppState) =>
+      set((s) => {
+        resolveData(newAppState);
+
+        return { ...s, resolveDataRuns: s.resolveDataRuns + 1 };
+      }),
+  }))
+);
 
 export function getAppStore<UserConfig extends Config = Config>() {
   return useAppStore.getState() as unknown as AppContext<UserConfig>;

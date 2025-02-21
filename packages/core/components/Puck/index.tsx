@@ -52,6 +52,7 @@ import { DefaultOverride } from "../DefaultOverride";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
 import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
 import { useMonitorNodeIndex } from "../../lib/use-monitor-node-index";
+import { useRegisterPermissionsStore } from "../../lib/use-resolved-permissions";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -420,18 +421,12 @@ export function Puck<
       history,
       viewports,
       iframe,
-      globalPermissions: {
-        delete: true,
-        drag: true,
-        duplicate: true,
-        insert: true,
-        edit: true,
-        ...permissions,
-      },
     });
   }, []);
 
   useMonitorNodeIndex();
+
+  useRegisterPermissionsStore(permissions);
 
   useEffect(() => {
     const { state, resolveData } = getAppStore();

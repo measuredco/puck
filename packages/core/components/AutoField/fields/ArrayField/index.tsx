@@ -10,6 +10,7 @@ import { ArrayState, ItemWithId } from "../../../../types";
 import { useAppContext } from "../../../Puck/context";
 import { Sortable, SortableProvider } from "../../../Sortable";
 import { NestedFieldProvider, useNestedFieldContext } from "../../context";
+import { usePermissionsStore } from "../../../../lib/use-resolved-permissions";
 
 const getClassName = getClassNameFactory("ArrayField", styles);
 const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);
@@ -24,7 +25,7 @@ export const ArrayField = ({
   id,
   Label = (props) => <div {...props} />,
 }: FieldPropsInternal) => {
-  const { state, setUi, selectedItem, getPermissions } = useAppContext();
+  const { state, setUi, selectedItem } = useAppContext();
   const { readOnlyFields, localName = name } = useNestedFieldContext();
 
   const value: object[] = _value;
@@ -102,7 +103,11 @@ export const ArrayField = ({
 
   const [isDragging, setIsDragging] = useState(false);
 
-  const forceReadOnly = getPermissions({ item: selectedItem }).edit === false;
+  const canEdit = usePermissionsStore(
+    (s) => s.getPermissions({ item: selectedItem }).edit
+  );
+
+  const forceReadOnly = !canEdit;
 
   if (field.type !== "array" || !field.arrayFields) {
     return null;

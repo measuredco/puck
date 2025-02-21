@@ -5,13 +5,13 @@ import { resolveRootData } from "./resolve-root-data";
 import { flattenData } from "./flatten-data";
 import { getAppStore } from "../components/Puck/context";
 import fdeq from "fast-deep-equal";
+import { usePermissionsStore } from "./use-resolved-permissions";
 
 export const resolveData = (newAppState: AppState) => {
   const {
     state: appState,
     config,
     dispatch,
-    refreshPermissions,
     resolveDataRuns,
     setComponentLoading,
     unsetComponentLoading,
@@ -96,7 +96,7 @@ export const resolveData = (newAppState: AppState) => {
       promises.push(
         (async () => {
           // Don't wait for resolver to complete to update permissions
-          refreshPermissions({ item });
+          usePermissionsStore.getState().resolvePermissions({ item }, true);
 
           const dynamicData: ComponentData = await resolveComponentData(
             item,

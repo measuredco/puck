@@ -29,6 +29,8 @@ import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
 import { useNodeStore } from "../../stores/node-store";
+import { usePermissionsStore } from "../../lib/use-resolved-permissions";
+import { useShallow } from "zustand/react/shallow";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -107,7 +109,6 @@ export const DraggableComponent = ({
   const selectedItem = useAppStore((s) =>
     s.selectedItem?.props.id === id ? s.selectedItem : null
   );
-  const getPermissions = useAppStore((s) => s.getPermissions);
   const dispatch = useAppStore((s) => s.dispatch);
   const iframe = useAppStore((s) => s.iframe);
 
@@ -151,14 +152,18 @@ export const DraggableComponent = ({
 
   const path = useNodeStore((s) => s.nodes[id]?.path || []);
 
-  const [canDrag, setCanDrag] = useState(false);
+  const item = useNodeStore((s) => s.nodes[id]?.data);
+
+  const permissions = usePermissionsStore(
+    useShallow((s) => s.getPermissions({ item }))
+  );
 
   const userIsDragging = useContextStore(
     ZoneStoreContext,
     (s) => !!s.draggedItem
   );
 
-  const canCollide = canDrag || userIsDragging;
+  const canCollide = permissions.drag || userIsDragging;
 
   const disabled = !isEnabled || !canCollide;
 
@@ -191,18 +196,6 @@ export const DraggableComponent = ({
   });
 
   const thisIsDragging = status === "dragging";
-
-  useEffect(() => {
-    const item = useNodeStore.getState().nodes[id]?.data;
-
-    if (item) {
-      const perms = getPermissions({
-        item,
-      });
-
-      setCanDrag(perms.drag ?? true);
-    }
-  }, [index, zoneCompound, getPermissions, thisIsDragging]);
 
   const ref = useRef<HTMLElement>(null);
 
@@ -295,10 +288,6 @@ export const DraggableComponent = ({
     () => overrides.actionBar || DefaultActionBar,
     [overrides.actionBar]
   );
-
-  const permissions = getPermissions({
-    item: selectedItem,
-  });
 
   const onClick = useCallback(
     (e: Event | SyntheticEvent) => {

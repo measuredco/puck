@@ -16,7 +16,7 @@ type PermissionsArgs<
 
 export type GetPermissions<UserConfig extends Config = Config> = (
   params?: PermissionsArgs<UserConfig>
-) => Partial<Permissions>;
+) => Permissions;
 
 type ResolvePermissions<UserConfig extends Config = Config> = (
   params?: PermissionsArgs<UserConfig>,
@@ -36,71 +36,81 @@ type Cache = Record<
   }
 >;
 
-const usePermissionsStore = create<{
-  // cache: Cache;
+export const usePermissionsStore = create<{
+  cache: Cache;
   globalPermissions: Permissions;
+  resolvedPermissions: Record<string, Partial<Permissions> | undefined>;
   getPermissions: GetPermissions<Config>;
-}>((s) => ({
-  globalPermissions: {},
-  // getPermissions: ({ item, type, root } = {}) => {
-  //   const { config } = getAppStore();
+  resolvePermissions: ResolvePermissions<Config>;
+}>((set, get) => ({
+  cache: {},
+  globalPermissions: {
+    drag: true,
+    edit: true,
+    delete: true,
+    duplicate: true,
+    insert: true,
+  },
+  resolvedPermissions: {},
+  getPermissions: ({ item, type, root } = {}) => {
+    const { config } = getAppStore();
+    const { globalPermissions, resolvedPermissions } = get();
 
-  //   if (item) {
-  //     const componentConfig = config.components[item.type];
+    if (item) {
+      const componentConfig = config.components[item.type];
 
-  //     const initialPermissions = {
-  //       ...globalPermissions,
-  //       ...componentConfig?.permissions,
-  //     };
+      const initialPermissions = {
+        ...globalPermissions,
+        ...componentConfig?.permissions,
+      };
 
-  //     const resolvedForItem = resolvedPermissions[item.props.id];
+      const resolvedForItem = resolvedPermissions[item.props.id];
 
-  //     return resolvedForItem
-  //       ? { ...globalPermissions, ...resolvedForItem }
-  //       : initialPermissions;
-  //   } else if (type) {
-  //     const componentConfig = config.components[type];
+      return (
+        resolvedForItem
+          ? { ...globalPermissions, ...resolvedForItem }
+          : initialPermissions
+      ) as Permissions;
+    } else if (type) {
+      const componentConfig = config.components[type];
 
-  //     return {
-  //       ...globalPermissions,
-  //       ...componentConfig?.permissions,
-  //     };
-  //   } else if (root) {
-  //     const rootConfig = config.root;
+      return {
+        ...globalPermissions,
+        ...componentConfig?.permissions,
+      } as Permissions;
+    } else if (root) {
+      const rootConfig = config.root;
 
-  //     const initialPermissions = {
-  //       ...globalPermissions,
-  //       ...rootConfig?.permissions,
-  //     };
+      const initialPermissions = {
+        ...globalPermissions,
+        ...rootConfig?.permissions,
+      } as Permissions;
 
-  //     const resolvedForItem = resolvedPermissions["puck-root"];
+      const resolvedForItem = resolvedPermissions["puck-root"];
 
-  //     return resolvedForItem
-  //       ? { ...globalPermissions, ...resolvedForItem }
-  //       : initialPermissions;
-  //   }
+      return (
+        resolvedForItem
+          ? { ...globalPermissions, ...resolvedForItem }
+          : initialPermissions
+      ) as Permissions;
+    }
 
-  //   return globalPermissions;
-  // },
-}));
+    return globalPermissions;
+  },
+  resolvePermissions: async (params = {}, force) => {
+    const { cache, globalPermissions } = get();
+    const { state } = getAppStore<Config>();
 
-export const useResolvedPermissions = <
-  UserConfig extends Config = Config,
-  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
->(
-  globalPermissions: Partial<Permissions>,
-  setComponentLoading?: (id: string) => void,
-  unsetComponentLoading?: (id: string) => void
-) => {
-  const [cache, setCache] = useState<Cache>({});
-
-  const [resolvedPermissions, setResolvedPermissions] = useState<
-    Record<string, Partial<Permissions>>
-  >({});
-
-  const resolveDataForItem = useCallback(
-    async (item: G["UserComponentData"], force: boolean = false) => {
-      const { config, state: appState } = getAppStore<UserConfig>();
+    const resolveDataForItem = async (
+      item: ComponentData,
+      force: boolean = false
+    ) => {
+      const {
+        config,
+        state: appState,
+        setComponentLoading,
+        unsetComponentLoading,
+      } = getAppStore<Config>();
       const componentConfig =
         item.type === "root" ? config.root : config.components[item.type];
 
@@ -117,7 +127,7 @@ export const useResolvedPermissions = <
         const changed = getChanged(item, cache[item.props.id]?.lastData);
 
         if (Object.values(changed).some((el) => el === true) || force) {
-          setComponentLoading?.(item.props.id);
+          setComponentLoading(item.props.id);
 
           const resolvedPermissions = await componentConfig.resolvePermissions(
             item,
@@ -130,126 +140,94 @@ export const useResolvedPermissions = <
             }
           );
 
-          setCache((_cache) => ({
-            ..._cache,
-            [item.props.id]: {
-              lastData: item,
-              lastPermissions: resolvedPermissions,
+          const latest = get();
+
+          set({
+            cache: {
+              ...latest.cache,
+              [item.props.id]: {
+                lastData: item,
+                lastPermissions: resolvedPermissions,
+              },
             },
-          }));
+            resolvedPermissions: {
+              ...latest.resolvedPermissions,
+              [item.props.id]: resolvedPermissions,
+            },
+          });
 
-          setResolvedPermissions((p) => ({
-            ...p,
-            [item.props.id]: resolvedPermissions,
-          }));
-
-          unsetComponentLoading?.(item.props.id);
+          unsetComponentLoading(item.props.id);
         }
       }
-    },
-    [globalPermissions, cache]
-  );
+    };
 
-  const resolveDataForRoot = (force = false) => {
-    const { state: appState } = getAppStore<UserConfig>();
+    const resolveDataForRoot = (force = false) => {
+      const { state: appState } = getAppStore();
 
-    resolveDataForItem(
-      // Shim the root data in by conforming to component data shape
-      {
-        type: "root",
-        props: { ...appState.data.root.props, id: "puck-root" },
-      } as G["UserComponentData"],
-      force
-    );
-  };
+      resolveDataForItem(
+        // Shim the root data in by conforming to component data shape
+        {
+          type: "root",
+          props: { ...appState.data.root.props, id: "puck-root" },
+        },
+        force
+      );
+    };
 
-  const resolvePermissions = useCallback<ResolvePermissions<UserConfig>>(
-    async ({ item, type, root } = {}, force = false) => {
-      const { state } = getAppStore<UserConfig>();
+    const { item, type, root } = params;
 
-      if (item) {
-        // Resolve specific item
-        await resolveDataForItem(item, force);
-      } else if (type) {
-        // Resolve specific type
-        flattenData<UserConfig>(state.data)
-          .filter((item) => item.type === type)
-          .map(async (item) => {
-            await resolveDataForItem(item, force);
-          });
-      } else if (root) {
-        resolveDataForRoot(force);
-      } else {
-        resolveDataForRoot(force);
-
-        // Resolve everything
-        flattenData<UserConfig>(state.data).map(async (item) => {
+    if (item) {
+      // Resolve specific item
+      await resolveDataForItem(item, force);
+    } else if (type) {
+      // Resolve specific type
+      flattenData(state.data)
+        .filter((item) => item.type === type)
+        .map(async (item) => {
           await resolveDataForItem(item, force);
         });
+    } else if (root) {
+      resolveDataForRoot(force);
+    } else {
+      resolveDataForRoot(force);
+
+      // Resolve everything
+      flattenData(state.data).map(async (item) => {
+        await resolveDataForItem(item, force);
+      });
+    }
+  },
+}));
+
+export const useRegisterPermissionsStore = (
+  globalPermissions: Partial<Permissions>
+) => {
+  useEffect(() => {
+    const { globalPermissions: existingGlobalPermissions } =
+      usePermissionsStore.getState();
+    usePermissionsStore.setState({
+      globalPermissions: {
+        ...existingGlobalPermissions,
+        ...globalPermissions,
+      } as Permissions,
+    });
+  }, [globalPermissions]);
+
+  useEffect(() => {
+    useAppStore.subscribe(
+      (s) => s.state.data,
+      () => {
+        usePermissionsStore.getState().resolvePermissions();
       }
-    },
-    []
-  );
+    );
+  }, []);
 
-  const refreshPermissions = useCallback<ResolvePermissions<UserConfig>>(
-    async (params) => {
-      resolvePermissions(params, true);
-    },
-    []
-  );
-
-  // useEffect(() => {
-  //   resolvePermissions();
-
-  //   // We only trigger this effect on appState.data to avoid triggering on all UI changes
-  // }, [config, appState.data]);
-
-  const getPermissions: GetPermissions = useCallback(
-    ({ item, type, root } = {}) => {
-      const { config } = getAppStore<UserConfig>();
-
-      if (item) {
-        const componentConfig = config.components[item.type];
-
-        const initialPermissions = {
-          ...globalPermissions,
-          ...componentConfig?.permissions,
-        };
-
-        const resolvedForItem = resolvedPermissions[item.props.id];
-
-        return resolvedForItem
-          ? { ...globalPermissions, ...resolvedForItem }
-          : initialPermissions;
-      } else if (type) {
-        const componentConfig = config.components[type];
-
-        return {
-          ...globalPermissions,
-          ...componentConfig?.permissions,
-        };
-      } else if (root) {
-        const rootConfig = config.root;
-
-        const initialPermissions = {
-          ...globalPermissions,
-          ...rootConfig?.permissions,
-        };
-
-        const resolvedForItem = resolvedPermissions["puck-root"];
-
-        return resolvedForItem
-          ? { ...globalPermissions, ...resolvedForItem }
-          : initialPermissions;
+  useEffect(() => {
+    useAppStore.subscribe(
+      (s) => s.config,
+      () => {
+        usePermissionsStore.getState().resolvePermissions();
       }
-
-      return globalPermissions;
-    },
-    [resolvedPermissions]
-  );
-
-  return {
-    getPermissions,
-    refreshPermissions,
-  };
+    );
+  }, []);
 };

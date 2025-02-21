@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { useAppStore } from "../Puck/context";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Drawer } from "../Drawer";
+import { usePermissionsStore } from "../../lib/use-resolved-permissions";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 
@@ -16,11 +17,12 @@ const ComponentListItem = ({
   index?: number; // TODO deprecate
 }) => {
   const overrides = useAppStore((s) => s.overrides);
-  const getPermissions = useAppStore((s) => s.getPermissions);
-
-  const canInsert = getPermissions({
-    type: name,
-  }).insert;
+  const canInsert = usePermissionsStore(
+    (s) =>
+      s.getPermissions({
+        type: name,
+      }).insert
+  );
 
   return (
     <Drawer.Item label={label} name={name} isDragDisabled={!canInsert}>

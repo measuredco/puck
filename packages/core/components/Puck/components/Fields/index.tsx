@@ -19,6 +19,7 @@ import {
   useResolvedFieldStore,
 } from "../../../../lib/use-resolved-fields";
 import { useShallow } from "zustand/react/shallow";
+import { usePermissionsStore } from "../../../../lib/use-resolved-permissions";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -144,18 +145,14 @@ const FieldsChild = ({ fieldName }: { fieldName: string }) => {
       : `root_${field.type}_${fieldName}`;
   });
 
-  const permissions = useAppStore(
-    useShallow((s) => {
-      if (s.selectedItem) {
-        return s.getPermissions({
-          item: s.selectedItem,
-        });
-      }
+  const selectedItem = useAppStore((s) => s.selectedItem);
 
-      return s.getPermissions({
-        root: true,
-      });
-    })
+  const permissions = usePermissionsStore(
+    useShallow((s) =>
+      selectedItem
+        ? s.getPermissions({ item: selectedItem })
+        : s.getPermissions({ root: true })
+    )
   );
 
   const onChange = useCallback(createOnChange(fieldName), [fieldName]);
