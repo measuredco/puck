@@ -85,7 +85,7 @@ const DropZoneChild = ({
   const ctx = useContext(dropZoneContext);
   const { depth } = ctx!;
 
-  let contentItem = useAppStore(
+  const contentItem = useAppStore(
     useShallow((s) => {
       let content: Content = s.state.data.content || [];
 
