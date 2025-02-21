@@ -6,15 +6,18 @@ import {
   replaceAction,
   setAction,
 } from "../../../../reducer";
-import { Field, UiState } from "../../../../types";
+import { UiState } from "../../../../types";
 import { AutoFieldPrivate } from "../../../AutoField";
 import { getAppStore, useAppStore } from "../../context";
 
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
-import { useResolvedFields } from "../../../../lib/use-resolved-fields";
+import {
+  useResolvedFields,
+  useResolvedFieldStore,
+} from "../../../../lib/use-resolved-fields";
 import { useShallow } from "zustand/react/shallow";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
@@ -29,15 +32,94 @@ const DefaultFields = ({
   return <>{children}</>;
 };
 
-const FieldsChild = ({
-  field,
-  fieldName,
-  onChange,
-}: {
-  field: Field;
-  fieldName: string;
-  onChange: (value: any) => void;
-}) => {
+const createOnChange =
+  (fieldName: string) => (value: any, updatedUi?: Partial<UiState>) => {
+    let currentProps;
+
+    const { dispatch, resolveData, config, state, selectedItem } =
+      getAppStore();
+
+    const { data, ui } = state;
+    const { itemSelector } = ui;
+
+    // DEPRECATED
+    const rootProps = data.root.props || data.root;
+
+    if (selectedItem) {
+      currentProps = selectedItem.props;
+    } else {
+      currentProps = rootProps;
+    }
+
+    const newProps = {
+      ...currentProps,
+      [fieldName]: value,
+    };
+
+    if (selectedItem && itemSelector) {
+      const replaceActionData: ReplaceAction = {
+        type: "replace",
+        destinationIndex: itemSelector.index,
+        destinationZone: itemSelector.zone || rootDroppableId,
+        data: { ...selectedItem, props: newProps },
+      };
+
+      // We use `replace` action, then feed into `set` action so we can also process any UI changes
+      const replacedData = replaceAction(data, replaceActionData);
+
+      const setActionData: SetAction = {
+        type: "set",
+        state: {
+          data: { ...data, ...replacedData },
+          ui: { ...ui, ...updatedUi },
+        },
+      };
+
+      // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
+      if (config.components[selectedItem.type]?.resolveData) {
+        resolveData(setAction(state, setActionData));
+      } else {
+        dispatch({
+          ...setActionData,
+          recordHistory: true,
+        });
+      }
+    } else {
+      if (data.root.props) {
+        // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
+        if (config.root?.resolveData) {
+          resolveData({
+            ui: { ...ui, ...updatedUi },
+            data: {
+              ...data,
+              root: { props: newProps },
+            },
+          });
+        } else {
+          dispatch({
+            type: "set",
+            state: {
+              ui: { ...ui, ...updatedUi },
+              data: {
+                ...data,
+                root: { props: newProps },
+              },
+            },
+            recordHistory: true,
+          });
+        }
+      } else {
+        // DEPRECATED
+        dispatch({
+          type: "setData",
+          data: { root: newProps },
+        });
+      }
+    }
+  };
+
+const FieldsChild = ({ fieldName }: { fieldName: string }) => {
+  const field = useResolvedFieldStore((s) => s.fields[fieldName]);
   const isReadOnly = useAppStore(
     (s) =>
       ((s.selectedItem
@@ -55,6 +137,8 @@ const FieldsChild = ({
   });
 
   const id = useAppStore((s) => {
+    if (!field) return null;
+
     return s.selectedItem
       ? `${s.selectedItem.props.id}_${field.type}_${fieldName}`
       : `root_${field.type}_${fieldName}`;
@@ -74,6 +158,10 @@ const FieldsChild = ({
     })
   );
 
+  const onChange = useCallback(createOnChange(fieldName), [fieldName]);
+
+  if (!field || !id) return null;
+
   return (
     <div key={id} className={getClassName("field")}>
       <AutoFieldPrivate
@@ -89,8 +177,6 @@ const FieldsChild = ({
 };
 
 export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
-  const dispatch = useAppStore((s) => s.dispatch);
-  const config = useAppStore((s) => s.config);
   const overrides = useAppStore((s) => s.overrides);
   const componentResolving = useAppStore((s) => {
     const loadingCount = s.selectedItem
@@ -99,12 +185,16 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
 
     return (loadingCount ?? 0) > 0;
   });
-  const resolveData = useAppStore((s) => s.resolveData);
   const itemSelector = useAppStore(useShallow((s) => s.state.ui.itemSelector));
 
-  const [fields, fieldsResolving] = useResolvedFields();
+  useResolvedFields();
 
-  const isLoading = fieldsResolving || componentResolving;
+  const fieldsLoading = false; //useResolvedFieldStore((s) => s.loading);
+  const fieldNames = useResolvedFieldStore(
+    useShallow((s) => Object.keys(s.fields))
+  );
+
+  const isLoading = fieldsLoading || componentResolving;
 
   const Wrapper = useMemo(() => overrides.fields || DefaultFields, [overrides]);
 
@@ -117,103 +207,9 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
     >
       Form {Math.random()}
       <Wrapper isLoading={isLoading} itemSelector={itemSelector}>
-        {Object.keys(fields).map((fieldName) => {
-          const field = fields[fieldName];
-
-          if (!field?.type) return null;
-
-          const onChange = (value: any, updatedUi?: Partial<UiState>) => {
-            let currentProps;
-
-            const { state, selectedItem } = getAppStore();
-            const { data, ui } = state;
-            const { itemSelector } = ui;
-
-            // DEPRECATED
-            const rootProps = data.root.props || data.root;
-
-            if (selectedItem) {
-              currentProps = selectedItem.props;
-            } else {
-              currentProps = rootProps;
-            }
-
-            const newProps = {
-              ...currentProps,
-              [fieldName]: value,
-            };
-
-            if (selectedItem && itemSelector) {
-              const replaceActionData: ReplaceAction = {
-                type: "replace",
-                destinationIndex: itemSelector.index,
-                destinationZone: itemSelector.zone || rootDroppableId,
-                data: { ...selectedItem, props: newProps },
-              };
-
-              // We use `replace` action, then feed into `set` action so we can also process any UI changes
-              const replacedData = replaceAction(data, replaceActionData);
-
-              const setActionData: SetAction = {
-                type: "set",
-                state: {
-                  data: { ...data, ...replacedData },
-                  ui: { ...ui, ...updatedUi },
-                },
-              };
-
-              // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-              if (config.components[selectedItem.type]?.resolveData) {
-                resolveData(setAction(state, setActionData));
-              } else {
-                dispatch({
-                  ...setActionData,
-                  recordHistory: true,
-                });
-              }
-            } else {
-              if (data.root.props) {
-                // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-                if (config.root?.resolveData) {
-                  resolveData({
-                    ui: { ...ui, ...updatedUi },
-                    data: {
-                      ...data,
-                      root: { props: newProps },
-                    },
-                  });
-                } else {
-                  dispatch({
-                    type: "set",
-                    state: {
-                      ui: { ...ui, ...updatedUi },
-                      data: {
-                        ...data,
-                        root: { props: newProps },
-                      },
-                    },
-                    recordHistory: true,
-                  });
-                }
-              } else {
-                // DEPRECATED
-                dispatch({
-                  type: "setData",
-                  data: { root: newProps },
-                });
-              }
-            }
-          };
-
-          return (
-            <FieldsChild
-              key={fieldName}
-              field={field}
-              fieldName={fieldName}
-              onChange={onChange}
-            />
-          );
-        })}
+        {fieldNames.map((fieldName) => (
+          <FieldsChild key={fieldName} fieldName={fieldName} />
+        ))}
       </Wrapper>
       {isLoading && (
         <div className={getClassName("loadingOverlay")}>

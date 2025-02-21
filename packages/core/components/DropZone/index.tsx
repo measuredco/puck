@@ -107,7 +107,9 @@ const DropZoneChild = ({
     item?.type ? s.config.components[item.type] : null
   );
   const overrides = useAppStore((s) => s.overrides);
-  const thisComponentState = useAppStore((s) => s.componentState[componentId]);
+  const isLoading = useAppStore(
+    (s) => s.componentState[componentId]?.loadingCount > 0
+  );
   const isSelected = useAppStore(
     (s) => s.selectedItem?.props.id === componentId || false
   );
@@ -159,7 +161,7 @@ const DropZoneChild = ({
       zoneCompound={zoneCompound}
       depth={depth + 1}
       index={index}
-      isLoading={thisComponentState?.loadingCount > 0}
+      isLoading={isLoading}
       isSelected={isSelected}
       label={label}
       isEnabled={isEnabled}

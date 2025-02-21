@@ -1,27 +1,30 @@
 import { ComponentData } from "../types";
 import type { Fields as FieldsType } from "../types";
 import { getAppStore, useAppStore } from "../components/Puck/context";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { getChanged } from "../lib/get-changed";
 import { useNodeStore } from "../stores/node-store";
+import { create } from "zustand";
 
 type ComponentOrRootData = Omit<ComponentData<any>, "type">;
 
-export const useResolvedFields = (): [FieldsType, boolean] => {
-  const defaultFields = useAppStore(
-    (s) => s.getComponentConfig()?.fields || {}
-  );
+export const useResolvedFieldStore = create<{
+  fields: FieldsType | Partial<FieldsType>;
+  loading: boolean;
+  lastResolvedData: Partial<ComponentOrRootData>;
+}>(() => ({
+  fields: {},
+  loading: false,
+  lastResolvedData: {},
+}));
 
+export const useResolvedFields = () => {
   const id = useAppStore((s) => s.selectedItem?.props.id as string | undefined);
-
-  const [lastResolvedData, setLastResolvedData] = useState<
-    Partial<ComponentOrRootData>
-  >({});
-  const [resolvedFields, setResolvedFields] = useState(defaultFields);
-  const [fieldsLoading, setFieldsLoading] = useState(false);
 
   const resolveFields = useCallback(
     async (reset?: boolean) => {
+      const { fields, lastResolvedData } = useResolvedFieldStore.getState();
+
       const nodeStore = useNodeStore.getState();
       const node = nodeStore.nodes[id || "root"];
       const componentData = node?.data;
@@ -36,15 +39,18 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
 
       const defaultFields = componentConfig.fields || {};
       const resolver = componentConfig.resolveFields;
-      let lastFields: FieldsType | null = resolvedFields;
+      let lastFields: FieldsType | null = fields as FieldsType;
 
       if (reset) {
-        setResolvedFields(defaultFields);
+        useResolvedFieldStore.setState({ fields: defaultFields });
+
         lastFields = defaultFields;
       }
 
       if (resolver) {
-        setFieldsLoading(true);
+        const timeout = setTimeout(() => {
+          useResolvedFieldStore.setState({ loading: true });
+        }, 50);
 
         const lastData =
           lastResolvedData.props?.id === id ? lastResolvedData : null;
@@ -61,15 +67,19 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
             parent,
           });
 
-          setLastResolvedData(componentData);
-          setResolvedFields(newFields || {});
-          setFieldsLoading(false);
+          clearTimeout(timeout);
+
+          useResolvedFieldStore.setState({
+            fields: newFields,
+            loading: false,
+            lastResolvedData: componentData,
+          });
         }
       } else {
-        setResolvedFields(defaultFields);
+        useResolvedFieldStore.setState({ loading: true });
       }
     },
-    [id, resolvedFields]
+    [id]
   );
 
   useEffect(() => {
@@ -79,6 +89,4 @@ export const useResolvedFields = (): [FieldsType, boolean] => {
       resolveFields();
     });
   }, [id]);
-
-  return [resolvedFields, fieldsLoading];
 };
