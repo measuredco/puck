@@ -41,8 +41,7 @@ import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
-import { usePuckHistory } from "../../lib/use-puck-history";
-import { useHistoryStore } from "../../lib/use-history-store";
+import { useRegisterHistoryStore } from "../../lib/use-history-store";
 import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";
@@ -230,7 +229,7 @@ export function Puck<
 
   const { appendData = true } = _initialHistory || {};
 
-  const histories = [
+  const blendedHistories = [
     ...(_initialHistory?.histories || []),
     ...(appendData ? [{ state: generatedAppState }] : []),
   ].map((history) => ({
@@ -238,26 +237,16 @@ export function Puck<
     // Inject default data to enable partial history injections
     state: { ...generatedAppState, ...history.state },
   }));
-  const initialHistoryIndex = _initialHistory?.index || histories.length - 1;
-  const initialAppState = histories[initialHistoryIndex].state;
+  const initialHistoryIndex =
+    _initialHistory?.index || blendedHistories.length - 1;
+  const initialAppState = blendedHistories[initialHistoryIndex].state;
 
-  const historyStore = useHistoryStore({
-    histories,
+  useRegisterHistoryStore({
+    histories: blendedHistories,
     index: initialHistoryIndex,
+    initialAppState,
+    iframeEnabled: _iframe?.enabled ?? true,
   });
-
-  const [reducer] = useState(() =>
-    createReducer<UserConfig, G["UserData"]>({
-      config,
-      record: historyStore.record,
-      onAction,
-    })
-  );
-
-  // const [appState, dispatch] = useReducer(
-  //   reducer,
-  //   flushZones<G["UserData"]>(initialAppState) as G["UserAppState"]
-  // );
 
   const dispatch = useAppStore((s) => s.dispatch);
 
@@ -265,15 +254,6 @@ export function Puck<
   const rightSideBarVisible = useAppStore(
     (s) => s.state.ui.rightSideBarVisible
   );
-
-  // const { data, ui } = appState;
-
-  const history = usePuckHistory({
-    dispatch,
-    initialAppState,
-    historyStore,
-    iframeEnabled: _iframe?.enabled ?? true,
-  });
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -418,7 +398,6 @@ export function Puck<
       config,
       plugins: plugins || [],
       overrides: loadedOverrides,
-      history,
       viewports,
       iframe,
     });

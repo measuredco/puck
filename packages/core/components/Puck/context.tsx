@@ -3,7 +3,6 @@ import {
   Config,
   IframeConfig,
   Overrides,
-  Permissions,
   AppState,
   UiState,
   Plugin,
@@ -13,16 +12,12 @@ import {
 } from "../../types";
 import { createReducer, PuckAction } from "../../reducer";
 import { getItem } from "../../lib/get-item";
-import { PuckHistory } from "../../lib/use-puck-history";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";
-import {
-  GetPermissions,
-  RefreshPermissions,
-} from "../../lib/use-resolved-permissions";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { resolveData } from "../../lib/resolve-data";
+import { useHistoryStore } from "../../lib/use-history-store";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {} },
@@ -71,7 +66,6 @@ export type AppContext<
   resolveData: (newAppState: AppState) => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
-  history: Partial<PuckHistory>;
   viewports: Viewports;
   zoomConfig: ZoomConfig;
   setZoomConfig: (zoomConfig: ZoomConfig) => void;
@@ -95,7 +89,6 @@ export const defaultContext: AppContext = {
   resolveData: () => {},
   plugins: [],
   overrides: {},
-  history: {},
   viewports: defaultViewports,
   zoomConfig: {
     autoZoom: 1,
@@ -223,7 +216,9 @@ export const useAppStore = create<AppContext>()(
     },
     dispatch: (action: PuckAction) =>
       set((s) => {
-        const dispatch = createReducer({ config: s.config, record: () => {} });
+        const { record } = useHistoryStore.getState();
+
+        const dispatch = createReducer({ config: s.config, record });
 
         const state = dispatch(s.state, action);
 

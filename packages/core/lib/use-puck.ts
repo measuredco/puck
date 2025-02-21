@@ -1,16 +1,47 @@
+import { useShallow } from "zustand/react/shallow";
 import { defaultContext, useAppContext } from "../components/Puck/context";
-import { Config, UserGenerics } from "../types";
+import { Config } from "../types";
+import { useHistoryStore } from "./use-history-store";
+import { useCallback } from "react";
+import {
+  GetPermissions,
+  RefreshPermissions,
+  usePermissionsStore,
+} from "./use-resolved-permissions";
 
 export const usePuck = <UserConfig extends Config = Config>() => {
   const {
     state: appState,
     config,
-    history,
     dispatch,
     selectedItem: currentItem,
-    getPermissions,
-    refreshPermissions,
   } = useAppContext<UserConfig>();
+
+  const historyApi = useHistoryStore(
+    useShallow((s) => ({
+      back: s.back,
+      forward: s.forward,
+      setHistories: s.setHistories,
+      setHistoryIndex: s.setHistoryIndex,
+      hasPast: s.hasPast(),
+      hasFuture: s.hasFuture(),
+      histories: s.histories,
+      index: s.index,
+    }))
+  );
+
+  const resolvedPermissions = usePermissionsStore((s) => s.resolvedPermissions);
+
+  const getPermissions: GetPermissions<UserConfig> = useCallback(
+    (params) => usePermissionsStore.getState().getPermissions(params as any),
+    [resolvedPermissions]
+  );
+
+  const refreshPermissions: RefreshPermissions<UserConfig> = useCallback(
+    (params) =>
+      usePermissionsStore.getState().resolvePermissions(params as any),
+    []
+  );
 
   if (dispatch === defaultContext.dispatch) {
     throw new Error(
@@ -24,17 +55,7 @@ export const usePuck = <UserConfig extends Config = Config>() => {
     dispatch,
     getPermissions,
     refreshPermissions,
-    history: {
-      back: history.back!,
-      forward: history.forward!,
-      setHistories: history.setHistories!,
-      setHistoryIndex: history.setHistoryIndex!,
-      hasPast: history.historyStore!.hasPast,
-      hasFuture: history.historyStore!.hasFuture,
-      histories: history.historyStore!.histories,
-      index: history.historyStore!.index,
-      historyStore: history.historyStore,
-    },
+    history: historyApi,
     selectedItem: currentItem || null,
   };
 };
