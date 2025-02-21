@@ -14,7 +14,7 @@ import styles from "./styles.module.css";
 import "./styles.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, CornerLeftUp, Trash } from "lucide-react";
-import { getAppStore, useAppStore } from "../Puck/context";
+import { useAppStore } from "../Puck/context";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
 
@@ -22,15 +22,13 @@ import { createPortal } from "react-dom";
 
 import { dropZoneContext, DropZoneProvider } from "../DropZone";
 import { createDynamicCollisionDetector } from "../../lib/dnd/collision/dynamic";
-import { ItemSelector } from "../../lib/get-item";
-import { Data, DragAxis } from "../../types";
+import { DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
 import { useNodeStore } from "../../stores/node-store";
-import { rootDroppableId } from "../../lib/root-droppable-id";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -59,24 +57,6 @@ const DefaultActionBar = ({
     <ActionBar.Group>{children}</ActionBar.Group>
   </ActionBar>
 );
-
-const convertIdToSelector = (
-  id: string,
-  zoneCompound: string | null,
-  data: Data
-): ItemSelector => {
-  const content =
-    zoneCompound && data.zones && zoneCompound !== rootDroppableId
-      ? data.zones[zoneCompound]
-      : data.content;
-
-  const index = content.findIndex((item) => item.props.id === id);
-
-  return {
-    zone: zoneCompound || "",
-    index,
-  };
-};
 
 export type ComponentDndData = {
   areaId?: string;
@@ -169,7 +149,7 @@ export const DraggableComponent = ({
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
 
-  const path = useNodeStore((s) => s.nodes[id]?.path);
+  const path = useNodeStore((s) => s.nodes[id]?.path || []);
 
   const [canDrag, setCanDrag] = useState(false);
 
@@ -200,7 +180,7 @@ export const DraggableComponent = ({
       inDroppableZone,
     },
     collisionPriority: isEnabled ? depth : 0,
-    collisionDetector: createDynamicCollisionDetector(dragAxis, 0, id),
+    collisionDetector: createDynamicCollisionDetector(dragAxis),
     disabled,
 
     // "Out of the way" transition from react-beautiful-dnd
@@ -335,25 +315,21 @@ export const DraggableComponent = ({
   );
 
   const onSelectParent = useCallback(() => {
-    if (!ctx?.areaId) {
+    const { nodes } = useNodeStore.getState();
+    const node = nodes[id];
+    const parentNode = node?.parentId ? nodes[node?.parentId] : null;
+
+    if (!parentNode) {
       return;
     }
-
-    const parentAreaId = ctx.areaId;
-    const parentZone = path[path.length - 3];
-
-    const { state } = getAppStore();
-
-    const parentItemSelector = convertIdToSelector(
-      parentAreaId,
-      parentZone,
-      state.data
-    );
 
     dispatch({
       type: "setUi",
       ui: {
-        itemSelector: parentItemSelector,
+        itemSelector: {
+          zone: `${parentNode.parentId}:${parentNode.zone}`,
+          index: parentNode.index,
+        },
       },
     });
   }, [ctx, path]);
