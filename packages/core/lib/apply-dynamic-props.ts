@@ -12,27 +12,28 @@ export const applyDynamicProps = (
   dynamicProps: Record<string, ComponentData>,
   rootData?: RootData
 ) => {
-  if (data.root.props && rootData) {
-    Object.assign(data.root.props, rootData.props);
-    Object.assign(data.root.readOnly || {}, rootData.readOnly);
-  }
-
-  Object.entries(dynamicProps).forEach(([id, item]) => {
-    const node = useNodeStore.getState().nodes[id];
-
-    const zoneCompound = `${node.parentId}:${node.zone}`;
-
-    if (zoneCompound === rootDroppableId) {
-      Object.assign(data.content[node.index].props, item.props);
-      Object.assign(data.content[node.index].readOnly || {}, item.readOnly);
-    } else if (data.zones) {
-      Object.assign(data.zones[zoneCompound][node.index].props, item.props);
-      Object.assign(
-        data.zones[zoneCompound][node.index].readOnly || {},
-        item.readOnly
-      );
-    }
-  });
-
-  return data;
+  return {
+    ...data,
+    root: rootData
+      ? {
+          ...data.root,
+          ...(rootData ? rootData : {}),
+        }
+      : data.root,
+    content: data.content.map((item) => {
+      return dynamicProps[item.props.id]
+        ? { ...item, ...dynamicProps[item.props.id] }
+        : item;
+    }),
+    zones: Object.keys(data.zones || {}).reduce((acc, zoneKey) => {
+      return {
+        ...acc,
+        [zoneKey]: data.zones![zoneKey].map((item) => {
+          return dynamicProps[item.props.id]
+            ? { ...item, ...dynamicProps[item.props.id] }
+            : item;
+        }),
+      };
+    }, {}),
+  };
 };
