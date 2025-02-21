@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { ComponentData } from "../types";
 import deepEqual from "fast-deep-equal";
+import { subscribeWithSelector } from "zustand/middleware";
 
 const partialDeepEqual = (
   newItem: Record<string, any>,
@@ -35,61 +36,63 @@ type NodeStore = {
   unregisterNode: (id: string, node?: Partial<PuckNode>) => void;
 };
 
-export const useNodeStore = create<NodeStore>((set) => ({
-  nodes: {},
-  registerNode: (id: string, node: Partial<PuckNode>) => {
-    set((s) => {
-      // Only update node if it changes
-      if (s.nodes[id] && partialDeepEqual(node, s.nodes[id])) {
-        return s;
-      }
+export const useNodeStore = create<NodeStore>()(
+  subscribeWithSelector((set) => ({
+    nodes: {},
+    registerNode: (id: string, node: Partial<PuckNode>) => {
+      set((s) => {
+        // Only update node if it changes
+        if (s.nodes[id] && partialDeepEqual(node, s.nodes[id])) {
+          return s;
+        }
 
-      const emptyNode: PuckNode = {
-        id,
-        methods: { sync: () => null },
-        data: { props: { id }, type: "unknown" },
-        parentId: "",
-        zone: "",
-        path: [],
-        element: null,
-        index: -1,
-      };
+        const emptyNode: PuckNode = {
+          id,
+          methods: { sync: () => null },
+          data: { props: { id }, type: "unknown" },
+          parentId: "",
+          zone: "",
+          path: [],
+          element: null,
+          index: -1,
+        };
 
-      const existingNode: PuckNode | undefined = s.nodes[id];
+        const existingNode: PuckNode | undefined = s.nodes[id];
 
-      return {
-        ...s,
-        nodes: {
-          ...s.nodes,
-          [id]: {
-            ...emptyNode,
-            ...existingNode,
-            ...node,
-            id,
-          },
-        },
-      };
-    });
-  },
-  unregisterNode: (id: string, node?: Partial<PuckNode>) => {
-    set((s) => {
-      const existingNode: PuckNode | undefined = s.nodes[id];
-
-      if (existingNode) {
         return {
           ...s,
           nodes: {
             ...s.nodes,
             [id]: {
+              ...emptyNode,
               ...existingNode,
               ...node,
               id,
             },
           },
         };
-      }
+      });
+    },
+    unregisterNode: (id: string, node?: Partial<PuckNode>) => {
+      set((s) => {
+        const existingNode: PuckNode | undefined = s.nodes[id];
 
-      return s;
-    });
-  },
-}));
+        if (existingNode) {
+          return {
+            ...s,
+            nodes: {
+              ...s.nodes,
+              [id]: {
+                ...existingNode,
+                ...node,
+                id,
+              },
+            },
+          };
+        }
+
+        return s;
+      });
+    },
+  }))
+);

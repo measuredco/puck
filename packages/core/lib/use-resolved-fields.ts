@@ -85,8 +85,11 @@ export const useResolvedFields = () => {
   useEffect(() => {
     resolveFields(true);
 
-    return useNodeStore.subscribe(() => {
-      resolveFields();
-    });
+    return useNodeStore.subscribe(
+      (s) => s.nodes[id || "root"],
+      () => {
+        resolveFields();
+      }
+    );
   }, [id]);
 };
