@@ -262,14 +262,6 @@ export function AutoFieldPrivate<
 
   const [localValue, setLocalValue] = useState(value);
 
-  // const onChangeDb = useDebouncedCallback(
-  //   (val, ui) => {
-  //     onChange(val, ui);
-  //   },
-  //   50,
-  //   { leading: true }
-  // );
-
   const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
     setLocalValue(val);
 
