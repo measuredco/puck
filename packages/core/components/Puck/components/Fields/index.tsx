@@ -145,14 +145,14 @@ const FieldsChild = ({ fieldName }: { fieldName: string }) => {
       : `root_${field.type}_${fieldName}`;
   });
 
-  const selectedItem = useAppStore((s) => s.selectedItem);
-
   const permissions = usePermissionsStore(
-    useShallow((s) =>
-      selectedItem
+    useShallow((s) => {
+      const { selectedItem } = getAppStore();
+
+      return selectedItem
         ? s.getPermissions({ item: selectedItem })
-        : s.getPermissions({ root: true })
-    )
+        : s.getPermissions({ root: true });
+    })
   );
 
   const onChange = useCallback(createOnChange(fieldName), [fieldName]);
