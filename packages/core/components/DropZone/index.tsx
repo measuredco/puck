@@ -9,7 +9,7 @@ import {
 } from "react";
 import { DraggableComponent } from "../DraggableComponent";
 import { setupZone } from "../../lib/setup-zone";
-import { rootDroppableId } from "../../lib/root-droppable-id";
+import { rootDroppableId, rootZone } from "../../lib/root-droppable-id";
 import { getClassNameFactory } from "../../lib";
 import styles from "./styles.module.css";
 import {
@@ -34,6 +34,7 @@ import { useDragAxis } from "./lib/use-drag-axis";
 import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
 import { useNodeStore } from "../../stores/node-store";
+import { renderContext } from "../Render";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -418,8 +419,8 @@ export const DropZoneRenderPure = (props: DropZoneProps) => (
 const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
   function DropZoneRenderInternal({ className, style, zone }, ref) {
     const ctx = useContext(dropZoneContext);
-
-    const { data, areaId = "root", config } = ctx || {};
+    const { areaId = "root" } = ctx || {};
+    const { config, data } = useContext(renderContext);
 
     let zoneCompound = rootDroppableId;
     let content = data?.content || [];
@@ -441,7 +442,7 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
       return null;
     }
 
-    if (areaId && zone && zone !== rootDroppableId) {
+    if (areaId && zone && zone !== rootZone) {
       zoneCompound = `${areaId}:${zone}`;
       content = setupZone(data, zoneCompound).zones[zoneCompound];
     }
@@ -456,11 +457,8 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
               <DropZoneProvider
                 key={item.props.id}
                 value={{
-                  data,
-                  config,
                   areaId: item.props.id,
                   depth: 1,
-                  path: [],
                 }}
               >
                 <Component.render
