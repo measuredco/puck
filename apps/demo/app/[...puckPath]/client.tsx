@@ -6,16 +6,17 @@ import config from "../../config";
 import { useDemoData } from "../../lib/use-demo-data";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { useMetadata } from "../../lib/use-metadata";
 
 export function Client({
   path,
   isEdit,
-  metadata = {},
 }: {
   path: string;
   isEdit: boolean;
-  metadata: Metadata;
 }) {
+  const { metadata } = useMetadata();
+
   const { data, resolvedData, key } = useDemoData({
     path,
     isEdit,
