@@ -57,24 +57,27 @@ export const useResolvedFields = () => {
 
         const changed = getChanged(componentData, lastData);
 
-        if (resolver) {
-          const newFields = await resolver(componentData, {
-            changed,
-            fields: defaultFields,
-            lastFields,
-            lastData: lastData as ComponentOrRootData,
-            appState: state,
-            parent,
-          });
+        const newFields = await resolver(componentData, {
+          changed,
+          fields: defaultFields,
+          lastFields,
+          lastData: lastData as ComponentOrRootData,
+          appState: state,
+          parent,
+        });
 
-          clearTimeout(timeout);
+        clearTimeout(timeout);
 
-          useResolvedFieldStore.setState({
-            fields: newFields,
-            loading: false,
-            lastResolvedData: componentData,
-          });
+        // Abort if item has changed during resolution (happens with history)
+        if (getAppStore().selectedItem?.props.id !== id) {
+          return;
         }
+
+        useResolvedFieldStore.setState({
+          fields: newFields,
+          loading: false,
+          lastResolvedData: componentData,
+        });
       } else {
         useResolvedFieldStore.setState({ fields: defaultFields });
       }
