@@ -59,6 +59,19 @@ const record = debounce((state: AppState) => {
   });
 }, 250);
 
+// Tidy the state before going back or forward
+const tidyState = (state: AppState): AppState => {
+  return {
+    ...state,
+    ui: {
+      ...state.ui,
+      field: {
+        focus: null,
+      },
+    },
+  };
+};
+
 export const useHistoryStore = create<HistoryStore<AppState>>((set, get) => ({
   initialAppState: {} as AppState,
   index: EMPTY_HISTORY_INDEX,
@@ -82,9 +95,13 @@ export const useHistoryStore = create<HistoryStore<AppState>>((set, get) => ({
     if (store.hasPast()) {
       const { dispatch } = getAppStore();
 
+      const state = tidyState(
+        store.prevHistory()?.state || store.initialAppState
+      );
+
       dispatch({
         type: "set",
-        state: store.prevHistory()?.state || store.initialAppState,
+        state,
       });
 
       set((s) => ({ index: s.index - 1 }));
@@ -96,7 +113,9 @@ export const useHistoryStore = create<HistoryStore<AppState>>((set, get) => ({
     if (store.hasFuture()) {
       const { dispatch } = getAppStore();
 
-      dispatch({ type: "set", state: store.nextHistory()?.state || {} });
+      const state = store.nextHistory()?.state;
+
+      dispatch({ type: "set", state: state ? tidyState(state) : {} });
 
       set((s) => ({ index: s.index + 1 }));
     }
