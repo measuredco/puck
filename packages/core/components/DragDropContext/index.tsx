@@ -1,5 +1,5 @@
 import { DragDropProvider } from "@dnd-kit/react";
-import { getAppStore, useAppStore } from "../Puck/context";
+import { getAppStore, useAppStore } from "../../stores/app-store";
 import {
   createContext,
   Dispatch,

@@ -1,6 +1,6 @@
 import { ComponentData } from "../types";
 import type { Fields as FieldsType } from "../types";
-import { getAppStore, useAppStore } from "../components/Puck/context";
+import { getAppStore, useAppStore } from "../stores/app-store";
 import { useCallback, useEffect } from "react";
 import { getChanged } from "../lib/get-changed";
 import { useNodeStore } from "../stores/node-store";

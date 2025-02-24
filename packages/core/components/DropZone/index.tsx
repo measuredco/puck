@@ -18,7 +18,7 @@ import {
   ZoneStoreContext,
   dropZoneContext,
 } from "./context";
-import { useAppStore } from "../Puck/context";
+import { useAppStore } from "../../stores/app-store";
 import { DropZoneProps } from "./types";
 import { Content, DragAxis, PuckContext } from "../../types";
 

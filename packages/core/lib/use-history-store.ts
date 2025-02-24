@@ -2,7 +2,7 @@ import { AppState, History } from "../types";
 import { generateId } from "./generate-id";
 import { create } from "zustand";
 import { getFrame } from "./get-frame";
-import { getAppStore, useAppStore } from "../components/Puck/context";
+import { getAppStore, useAppStore } from "../stores/app-store";
 import { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 

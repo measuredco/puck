@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAppStore } from "../components/Puck/context";
+import { useAppStore } from "../stores/app-store";
 import { ComponentData } from "../types";
 import { rootAreaId, rootDroppableId, rootZone } from "./root-droppable-id";
 import { useNodeStore } from "../stores/node-store";

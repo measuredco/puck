@@ -1,4 +1,4 @@
-import { useAppStore } from "../components/Puck/context";
+import { useAppStore } from "../stores/app-store";
 import { Data } from "../types";
 import { rootDroppableId } from "./root-droppable-id";
 import { setupZone } from "./setup-zone";

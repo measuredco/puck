@@ -8,15 +8,15 @@ import {
   UserGenerics,
   Field,
   ComponentConfig,
-} from "../../types";
-import { createReducer, PuckAction } from "../../reducer";
-import { getItem } from "../../lib/get-item";
-import { defaultViewports } from "../ViewportControls/default-viewports";
-import { Viewports } from "../../types";
+} from "../types";
+import { createReducer, PuckAction } from "../reducer";
+import { getItem } from "../lib/get-item";
+import { defaultViewports } from "../components/ViewportControls/default-viewports";
+import { Viewports } from "../types";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import { resolveData } from "../../lib/resolve-data";
-import { useHistoryStore } from "../../lib/use-history-store";
+import { resolveData } from "../lib/resolve-data";
+import { useHistoryStore } from "../lib/use-history-store";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {} },

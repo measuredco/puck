@@ -7,7 +7,7 @@ import { reorder, replace } from "../../../../lib";
 import { useCallback, useEffect, useState } from "react";
 import { DragIcon } from "../../../DragIcon";
 import { ArrayState, ItemWithId } from "../../../../types";
-import { getAppStore, useAppStore } from "../../../Puck/context";
+import { getAppStore, useAppStore } from "../../../../stores/app-store";
 import { Sortable, SortableProvider } from "../../../Sortable";
 import { NestedFieldProvider, useNestedFieldContext } from "../../context";
 import { usePermissionsStore } from "../../../../lib/use-resolved-permissions";

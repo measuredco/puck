@@ -14,7 +14,7 @@ import styles from "./styles.module.css";
 import "./styles.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, CornerLeftUp, Trash } from "lucide-react";
-import { useAppStore } from "../Puck/context";
+import { useAppStore } from "../../stores/app-store";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
 

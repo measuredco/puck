@@ -2,7 +2,7 @@ import { areaContainsZones } from "../../../../lib/area-contains-zones";
 import { findZonesForArea } from "../../../../lib/find-zones-for-area";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { LayerTree } from "../../../LayerTree";
-import { getAppStore, useAppStore } from "../../context";
+import { getAppStore, useAppStore } from "../../../../stores/app-store";
 import { dropZoneContext } from "../../../DropZone";
 import { useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";

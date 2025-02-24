@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useAppStore } from "../components/Puck/context";
+import { useAppStore } from "../stores/app-store";
 import { ItemSelector } from "./get-item";
 import { useNodeStore } from "../stores/node-store";
 

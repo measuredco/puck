@@ -3,7 +3,7 @@ import { flattenData } from "./flatten-data";
 import { ComponentData, Config, Permissions, UserGenerics } from "../types";
 import { getChanged } from "./get-changed";
 import { create } from "zustand";
-import { getAppStore, useAppStore } from "../components/Puck/context";
+import { getAppStore, useAppStore } from "../stores/app-store";
 
 type PermissionsArgs<
   UserConfig extends Config = Config,

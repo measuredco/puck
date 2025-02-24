@@ -1,7 +1,7 @@
 import { DropZonePure } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { RefObject, useCallback, useEffect, useRef, useMemo } from "react";
-import { useAppStore } from "../../context";
+import { useAppStore } from "../../../../stores/app-store";
 import AutoFrame, { autoFrameContext } from "../../../AutoFrame";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";

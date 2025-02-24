@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { useAppStore } from "../../context";
+import { useAppStore } from "../../../../stores/app-store";
 import { ViewportControls } from "../../../ViewportControls";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";

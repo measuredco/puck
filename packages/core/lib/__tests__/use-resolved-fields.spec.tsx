@@ -1,11 +1,11 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { useResolvedFields } from "../use-resolved-fields";
-import { useAppStore } from "../../components/Puck/context";
+import { useAppStore } from "../../stores/app-store";
 import { useParent } from "../use-parent";
 import { AppState, ComponentData, Data, Fields, UiState } from "../../types";
 import { rootDroppableId } from "../root-droppable-id";
 
-jest.mock("../../components/Puck/context", () => ({
+jest.mock("../../stores/app-store", () => ({
   useAppStore: jest.fn(),
 }));
 

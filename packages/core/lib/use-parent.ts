@@ -1,4 +1,4 @@
-import { getAppStore } from "../components/Puck/context";
+import { getAppStore } from "../stores/app-store";
 import { useNodeStore } from "../stores/node-store";
 
 export const useParent = () => {

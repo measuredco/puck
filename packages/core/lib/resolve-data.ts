@@ -3,7 +3,7 @@ import { resolveComponentData } from "./resolve-component-data";
 import { applyDynamicProps } from "./apply-dynamic-props";
 import { resolveRootData } from "./resolve-root-data";
 import { flattenData } from "./flatten-data";
-import { getAppStore } from "../components/Puck/context";
+import { getAppStore } from "../stores/app-store";
 import fdeq from "fast-deep-equal";
 import { usePermissionsStore } from "./use-resolved-permissions";
 

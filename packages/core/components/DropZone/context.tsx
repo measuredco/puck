@@ -8,7 +8,7 @@ import {
 } from "react";
 
 import type { Draggable } from "@dnd-kit/dom";
-import { useAppStore } from "../Puck/context";
+import { useAppStore } from "../../stores/app-store";
 import { createStore, StoreApi } from "zustand";
 
 export type PathData = Record<string, { path: string[]; label: string }>;

@@ -8,7 +8,7 @@ import {
 } from "../../../../reducer";
 import { UiState } from "../../../../types";
 import { AutoFieldPrivate } from "../../../AutoField";
-import { getAppStore, useAppStore } from "../../context";
+import { getAppStore, useAppStore } from "../../../../stores/app-store";
 
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";

@@ -1,5 +1,5 @@
 import { useComponentList } from "../../../../lib/use-component-list";
-import { useAppStore } from "../../context";
+import { useAppStore } from "../../../../stores/app-store";
 import { ComponentList } from "../../../ComponentList";
 import { useMemo } from "react";
 

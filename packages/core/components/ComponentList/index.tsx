@@ -1,7 +1,7 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ReactNode } from "react";
-import { useAppStore } from "../Puck/context";
+import { useAppStore } from "../../stores/app-store";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Drawer } from "../Drawer";
 import { usePermissionsStore } from "../../lib/use-resolved-permissions";

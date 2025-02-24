@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { ComponentList } from "../components/ComponentList";
-import { useAppStore } from "../components/Puck/context";
+import { useAppStore } from "../stores/app-store";
 
 export const useComponentList = () => {
   const [componentList, setComponentList] = useState<ReactNode[]>();
