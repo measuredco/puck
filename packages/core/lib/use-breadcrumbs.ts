@@ -28,8 +28,9 @@ export const useBreadcrumbs = (renderCount?: number) => {
 
         const node = useNodeStore.getState().nodes[componentId];
 
-        const label =
-          config.components[node.data.type]?.label ?? node.data.type;
+        const label = node
+          ? config.components[node.data.type]?.label ?? node.data.type
+          : "Component";
 
         return {
           label,
