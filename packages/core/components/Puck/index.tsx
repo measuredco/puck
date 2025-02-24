@@ -53,7 +53,7 @@ import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 import { DefaultOverride } from "../DefaultOverride";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
 import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
-import { useMonitorNodeIndex } from "../../lib/use-monitor-node-index";
+import { useRegisterNodeStore } from "../../stores/node-store";
 import { useRegisterPermissionsStore } from "../../lib/use-resolved-permissions";
 
 const getClassName = getClassNameFactory("Puck", styles);
@@ -405,7 +405,7 @@ export function Puck<
     });
   }, []);
 
-  useMonitorNodeIndex();
+  useRegisterNodeStore();
 
   useRegisterPermissionsStore(permissions);
 
