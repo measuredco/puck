@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
-import { useResolvedFields } from "../use-resolved-fields";
+import { useRegisterFieldStore } from "../../stores/field-store";
 import { useAppStore } from "../../stores/app-store";
 import { useParent } from "../use-parent";
 import { AppState, ComponentData, Data, Fields, UiState } from "../../types";
@@ -180,7 +180,7 @@ describe("use-resolved-fields", () => {
     useAppStoreMock.mockReturnValue(blankContext);
     useParentMock.mockReturnValue(null);
 
-    params = renderHook(() => useResolvedFields());
+    params = renderHook(() => useRegisterFieldStore());
     const { result } = params;
 
     expect(result.current[0]).toEqual({ title: { type: "text" } });
@@ -218,7 +218,7 @@ describe("use-resolved-fields", () => {
 
       await act(() => {
         params = renderHook(() =>
-          useResolvedFields({ _skipValueCheck: true, _skipIdCheck: true })
+          useRegisterFieldStore({ _skipValueCheck: true, _skipIdCheck: true })
         ); // we need to skip the value check, as this will cause a re-render and make test pass in any scenario
       });
 
@@ -241,7 +241,9 @@ describe("use-resolved-fields", () => {
       useParentMock.mockReturnValue(null);
 
       await act(() => {
-        params = renderHook(() => useResolvedFields({ _skipValueCheck: true })); // we need to skip the value check, as this will cause a re-render and make test pass in any scenario
+        params = renderHook(() =>
+          useRegisterFieldStore({ _skipValueCheck: true })
+        ); // we need to skip the value check, as this will cause a re-render and make test pass in any scenario
       });
 
       const { result, rerender } = params;
@@ -271,7 +273,7 @@ describe("use-resolved-fields", () => {
       useParentMock.mockReturnValue(null);
 
       await act(() => {
-        params = renderHook(() => useResolvedFields());
+        params = renderHook(() => useRegisterFieldStore());
       });
 
       const { result } = params;
@@ -315,7 +317,7 @@ describe("use-resolved-fields", () => {
       useParentMock.mockReturnValue(null);
 
       await act(() => {
-        params = renderHook(() => useResolvedFields());
+        params = renderHook(() => useRegisterFieldStore());
       });
 
       const { result } = params;
@@ -358,7 +360,7 @@ describe("use-resolved-fields", () => {
       useParentMock.mockReturnValue(null);
 
       await act(() => {
-        params = renderHook(() => useResolvedFields());
+        params = renderHook(() => useRegisterFieldStore());
       });
 
       // update state and trigger re-render
@@ -420,7 +422,7 @@ describe("use-resolved-fields", () => {
       useParentMock.mockReturnValue(null);
 
       await act(() => {
-        params = renderHook(() => useResolvedFields());
+        params = renderHook(() => useRegisterFieldStore());
       });
 
       const { result } = params;
@@ -452,7 +454,7 @@ describe("use-resolved-fields", () => {
       useParentMock.mockReturnValue(null);
 
       await act(() => {
-        params = renderHook(() => useResolvedFields());
+        params = renderHook(() => useRegisterFieldStore());
       });
 
       const { result, rerender } = params;
@@ -503,7 +505,7 @@ describe("use-resolved-fields", () => {
       useParentMock.mockReturnValue(null);
 
       await act(() => {
-        params = renderHook(() => useResolvedFields());
+        params = renderHook(() => useRegisterFieldStore());
       });
 
       expect(mockResolveFields).toHaveBeenCalledTimes(0);

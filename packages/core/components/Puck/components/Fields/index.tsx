@@ -15,9 +15,9 @@ import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
 import {
-  useResolvedFields,
-  useResolvedFieldStore,
-} from "../../../../lib/use-resolved-fields";
+  useRegisterFieldStore,
+  useFieldStore,
+} from "../../../../stores/field-store";
 import { useShallow } from "zustand/react/shallow";
 import { usePermissionsStore } from "../../../../stores/permissions-store";
 
@@ -120,7 +120,7 @@ const createOnChange =
   };
 
 const FieldsChild = ({ fieldName }: { fieldName: string }) => {
-  const field = useResolvedFieldStore((s) => s.fields[fieldName]);
+  const field = useFieldStore((s) => s.fields[fieldName]);
   const isReadOnly = useAppStore(
     (s) =>
       ((s.selectedItem
@@ -184,12 +184,10 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
   });
   const itemSelector = useAppStore(useShallow((s) => s.state.ui.itemSelector));
 
-  useResolvedFields();
+  useRegisterFieldStore();
 
-  const fieldsLoading = useResolvedFieldStore((s) => s.loading);
-  const fieldNames = useResolvedFieldStore(
-    useShallow((s) => Object.keys(s.fields))
-  );
+  const fieldsLoading = useFieldStore((s) => s.loading);
+  const fieldNames = useFieldStore(useShallow((s) => Object.keys(s.fields)));
 
   const isLoading = fieldsLoading || componentResolving;
 

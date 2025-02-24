@@ -8,7 +8,7 @@ import { create } from "zustand";
 
 type ComponentOrRootData = Omit<ComponentData<any>, "type">;
 
-export const useResolvedFieldStore = create<{
+export const useFieldStore = create<{
   fields: FieldsType | Partial<FieldsType>;
   loading: boolean;
   lastResolvedData: Partial<ComponentOrRootData>;
@@ -18,12 +18,12 @@ export const useResolvedFieldStore = create<{
   lastResolvedData: {},
 }));
 
-export const useResolvedFields = () => {
+export const useRegisterFieldStore = () => {
   const id = useAppStore((s) => s.selectedItem?.props.id as string | undefined);
 
   const resolveFields = useCallback(
     async (reset?: boolean) => {
-      const { fields, lastResolvedData } = useResolvedFieldStore.getState();
+      const { fields, lastResolvedData } = useFieldStore.getState();
 
       const nodeStore = useNodeStore.getState();
       const node = nodeStore.nodes[id || "root"];
@@ -42,14 +42,14 @@ export const useResolvedFields = () => {
       let lastFields: FieldsType | null = fields as FieldsType;
 
       if (reset) {
-        useResolvedFieldStore.setState({ fields: defaultFields });
+        useFieldStore.setState({ fields: defaultFields });
 
         lastFields = defaultFields;
       }
 
       if (resolver) {
         const timeout = setTimeout(() => {
-          useResolvedFieldStore.setState({ loading: true });
+          useFieldStore.setState({ loading: true });
         }, 50);
 
         const lastData =
@@ -73,13 +73,13 @@ export const useResolvedFields = () => {
           return;
         }
 
-        useResolvedFieldStore.setState({
+        useFieldStore.setState({
           fields: newFields,
           loading: false,
           lastResolvedData: componentData,
         });
       } else {
-        useResolvedFieldStore.setState({ fields: defaultFields });
+        useFieldStore.setState({ fields: defaultFields });
       }
     },
     [id]
