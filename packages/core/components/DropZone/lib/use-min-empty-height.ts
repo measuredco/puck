@@ -1,6 +1,7 @@
 import { RefObject, useEffect, useState } from "react";
 import { ZoneStoreContext } from "./../context";
 import { useContextStore } from "../../../lib/use-context-store";
+import { useNodeStore } from "../../../stores/node-store";
 
 export const useMinEmptyHeight = ({
   zoneCompound,
@@ -35,6 +36,12 @@ export const useMinEmptyHeight = ({
 
     setPrevHeight(0);
     setTimeout(() => {
+      const { nodes } = useNodeStore.getState();
+
+      Object.entries(nodes).forEach(([_, node]) => {
+        node?.methods.sync();
+      });
+
       setIsAnimating(false);
     }, 400);
   }, [ref.current, draggedItem, zoneCompound]);

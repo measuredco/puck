@@ -14,7 +14,7 @@ import styles from "./styles.module.css";
 import "./styles.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, CornerLeftUp, Trash } from "lucide-react";
-import { useAppContext } from "../Puck/context";
+import { useAppStore } from "../../stores/app-store";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
 
@@ -22,13 +22,15 @@ import { createPortal } from "react-dom";
 
 import { dropZoneContext, DropZoneProvider } from "../DropZone";
 import { createDynamicCollisionDetector } from "../../lib/dnd/collision/dynamic";
-import { getItem, ItemSelector } from "../../lib/get-item";
-import { Data, DragAxis } from "../../types";
+import { DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
+import { useNodeStore } from "../../stores/node-store";
+import { usePermissionsStore } from "../../stores/permissions-store";
+import { useShallow } from "zustand/react/shallow";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -57,24 +59,6 @@ const DefaultActionBar = ({
     <ActionBar.Group>{children}</ActionBar.Group>
   </ActionBar>
 );
-
-const convertIdToSelector = (
-  id: string,
-  zoneCompound: string | null,
-  data: Data
-): ItemSelector => {
-  const content =
-    zoneCompound && data.zones && zoneCompound !== "default-zone"
-      ? data.zones[zoneCompound]
-      : data.content;
-
-  const index = content.findIndex((item) => item.props.id === id);
-
-  return {
-    zone: zoneCompound || "",
-    index,
-  };
-};
 
 export type ComponentDndData = {
   areaId?: string;
@@ -118,15 +102,15 @@ export const DraggableComponent = ({
   userDragAxis?: DragAxis;
   inDroppableZone: boolean;
 }) => {
-  const {
-    zoomConfig,
-    overrides,
-    selectedItem,
-    getPermissions,
-    dispatch,
-    iframe,
-    state,
-  } = useAppContext();
+  const zoom = useAppStore((s) =>
+    s.selectedItem?.props.id === id ? s.zoomConfig.zoom : 1
+  );
+  const overrides = useAppStore((s) => s.overrides);
+  const selectedItem = useAppStore((s) =>
+    s.selectedItem?.props.id === id ? s.selectedItem : null
+  );
+  const dispatch = useAppStore((s) => s.dispatch);
+  const iframe = useAppStore((s) => s.iframe);
 
   const ctx = useContext(dropZoneContext);
 
@@ -166,28 +150,20 @@ export const DraggableComponent = ({
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
 
-  const { path = [] } = ctx || {};
+  const path = useNodeStore((s) => s.nodes[id]?.path);
 
-  const [canDrag, setCanDrag] = useState(false);
+  const item = useNodeStore((s) => s.nodes[id]?.data);
 
-  useEffect(() => {
-    const item = getItem({ index, zone: zoneCompound }, state.data);
-
-    if (item) {
-      const perms = getPermissions({
-        item,
-      });
-
-      setCanDrag(perms.drag ?? true);
-    }
-  }, [state, index, zoneCompound, getPermissions]);
+  const permissions = usePermissionsStore(
+    useShallow((s) => s.getPermissions({ item }))
+  );
 
   const userIsDragging = useContextStore(
     ZoneStoreContext,
     (s) => !!s.draggedItem
   );
 
-  const canCollide = canDrag || userIsDragging;
+  const canCollide = permissions.drag || userIsDragging;
 
   const disabled = !isEnabled || !canCollide;
 
@@ -205,7 +181,7 @@ export const DraggableComponent = ({
       componentType,
       containsActiveZone,
       depth,
-      path,
+      path: path || [],
       inDroppableZone,
     },
     collisionPriority: isEnabled ? depth : 0,
@@ -297,29 +273,20 @@ export const DraggableComponent = ({
     }
   }, [ref.current, userIsDragging]);
 
+  const registerNode = useNodeStore((s) => s.registerNode);
+
   useEffect(() => {
-    ctx?.registerPath!(
-      id,
-      {
-        index,
-        zone: zoneCompound,
-      },
-      componentType
-    );
+    registerNode(id, { methods: { sync }, element: ref.current ?? null });
 
     return () => {
-      ctx?.unregisterPath?.(id);
+      registerNode(id, { methods: { sync: () => null }, element: null });
     };
-  }, [id, zoneCompound, index, componentType]);
+  }, [id, zoneCompound, index, componentType, sync]);
 
   const CustomActionBar = useMemo(
     () => overrides.actionBar || DefaultActionBar,
     [overrides.actionBar]
   );
-
-  const permissions = getPermissions({
-    item: selectedItem,
-  });
 
   const onClick = useCallback(
     (e: Event | SyntheticEvent) => {
@@ -336,23 +303,21 @@ export const DraggableComponent = ({
   );
 
   const onSelectParent = useCallback(() => {
-    if (!ctx?.areaId) {
+    const { nodes } = useNodeStore.getState();
+    const node = nodes[id];
+    const parentNode = node?.parentId ? nodes[node?.parentId] : null;
+
+    if (!parentNode) {
       return;
     }
-
-    const parentAreaId = ctx.areaId;
-    const parentZone = path[path.length - 3];
-
-    const parentItemSelector = convertIdToSelector(
-      parentAreaId,
-      parentZone,
-      state.data
-    );
 
     dispatch({
       type: "setUi",
       ui: {
-        itemSelector: parentItemSelector,
+        itemSelector: {
+          zone: `${parentNode.parentId}:${parentNode.zone}`,
+          index: parentNode.index,
+        },
       },
     });
   }, [ctx, path]);
@@ -457,7 +422,7 @@ export const DraggableComponent = ({
     } else {
       setIsVisible(false);
     }
-  }, [isSelected, hover, indicativeHover, iframe, state.data, userIsDragging]);
+  }, [isSelected, hover, indicativeHover, iframe, userIsDragging]);
 
   const syncActionsPosition = useCallback(
     (el: HTMLDivElement | null | undefined) => {
@@ -478,7 +443,7 @@ export const DraggableComponent = ({
         }
       }
     },
-    [zoomConfig]
+    [zoom]
   );
 
   useEffect(() => {
@@ -519,7 +484,6 @@ export const DraggableComponent = ({
         depth: depth + 1,
         registerLocalZone,
         unregisterLocalZone,
-        path: [...path, id],
       }}
     >
       {isVisible &&
@@ -542,14 +506,14 @@ export const DraggableComponent = ({
             <div
               className={getClassName("actionsOverlay")}
               style={{
-                top: actionsOverlayTop / zoomConfig.zoom,
+                top: actionsOverlayTop / zoom,
               }}
             >
               <div
                 className={getClassName("actions")}
                 style={{
-                  transform: `scale(${1 / zoomConfig.zoom}`,
-                  top: actionsTop / zoomConfig.zoom,
+                  transform: `scale(${1 / zoom}`,
+                  top: actionsTop / zoom,
                   right: 0,
                   paddingLeft: actionsSide,
                   paddingRight: actionsSide,

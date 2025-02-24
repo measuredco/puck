@@ -1,5 +1,5 @@
 import { renderHook, act, type RenderHookResult } from "@testing-library/react";
-import { useHistoryStore } from "../use-history-store";
+import { useHistoryStore } from "../../stores/history-store";
 
 jest.mock("use-debounce", () => ({
   useDebouncedCallback: jest.fn((fn) => fn),
