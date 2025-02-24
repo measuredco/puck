@@ -29,7 +29,7 @@ import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
 import { useNodeStore } from "../../stores/node-store";
-import { usePermissionsStore } from "../../lib/use-resolved-permissions";
+import { usePermissionsStore } from "../../stores/permissions-store";
 import { useShallow } from "zustand/react/shallow";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);

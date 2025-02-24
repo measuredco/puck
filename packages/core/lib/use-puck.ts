@@ -7,7 +7,7 @@ import {
   GetPermissions,
   RefreshPermissions,
   usePermissionsStore,
-} from "./use-resolved-permissions";
+} from "../stores/permissions-store";
 
 export const usePuck = <
   UserConfig extends Config = Config,

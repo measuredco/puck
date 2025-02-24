@@ -19,7 +19,7 @@ import {
   useResolvedFieldStore,
 } from "../../../../lib/use-resolved-fields";
 import { useShallow } from "zustand/react/shallow";
-import { usePermissionsStore } from "../../../../lib/use-resolved-permissions";
+import { usePermissionsStore } from "../../../../stores/permissions-store";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 

@@ -5,7 +5,7 @@ import { resolveRootData } from "./resolve-root-data";
 import { flattenData } from "./flatten-data";
 import { getAppStore } from "../stores/app-store";
 import fdeq from "fast-deep-equal";
-import { usePermissionsStore } from "./use-resolved-permissions";
+import { usePermissionsStore } from "../stores/permissions-store";
 
 export const resolveData = (newAppState: AppState) => {
   const {

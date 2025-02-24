@@ -10,7 +10,7 @@ import { ArrayState, ItemWithId } from "../../../../types";
 import { getAppStore, useAppStore } from "../../../../stores/app-store";
 import { Sortable, SortableProvider } from "../../../Sortable";
 import { NestedFieldProvider, useNestedFieldContext } from "../../context";
-import { usePermissionsStore } from "../../../../lib/use-resolved-permissions";
+import { usePermissionsStore } from "../../../../stores/permissions-store";
 
 const getClassName = getClassNameFactory("ArrayField", styles);
 const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);

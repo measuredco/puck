@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { useAppStore } from "../../stores/app-store";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Drawer } from "../Drawer";
-import { usePermissionsStore } from "../../lib/use-resolved-permissions";
+import { usePermissionsStore } from "../../stores/permissions-store";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 
