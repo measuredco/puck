@@ -16,7 +16,7 @@ import { Viewports } from "../types";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { resolveData } from "../lib/resolve-data";
-import { useHistoryStore } from "../lib/use-history-store";
+import { useHistoryStore } from "./history-store";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {} },

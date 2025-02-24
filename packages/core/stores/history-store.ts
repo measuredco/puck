@@ -1,7 +1,7 @@
 import { AppState, History } from "../types";
-import { generateId } from "./generate-id";
+import { generateId } from "../lib/generate-id";
 import { create } from "zustand";
-import { getFrame } from "./get-frame";
+import { getFrame } from "../lib/get-frame";
 import { getAppStore, useAppStore } from "../stores/app-store";
 import { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";

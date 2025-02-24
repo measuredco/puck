@@ -7,7 +7,7 @@ import { PuckAction } from "../../reducer";
 import type { Data } from "../../types";
 
 import styles from "./styles.module.css";
-import { useHistoryStore } from "../../lib/use-history-store";
+import { useHistoryStore } from "../../stores/history-store";
 
 const getClassName = getClassNameFactory("MenuBar", styles);
 

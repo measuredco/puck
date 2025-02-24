@@ -44,7 +44,7 @@ import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
-import { useRegisterHistoryStore } from "../../lib/use-history-store";
+import { useRegisterHistoryStore } from "../../stores/history-store";
 import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";

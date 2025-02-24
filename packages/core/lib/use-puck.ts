@@ -1,7 +1,7 @@
 import { useShallow } from "zustand/react/shallow";
 import { defaultAppStore, useAppStore } from "../stores/app-store";
 import { Config, UserGenerics } from "../types";
-import { useHistoryStore } from "./use-history-store";
+import { useHistoryStore } from "../stores/history-store";
 import { useCallback } from "react";
 import {
   GetPermissions,
