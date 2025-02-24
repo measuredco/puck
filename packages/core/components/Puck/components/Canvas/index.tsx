@@ -157,7 +157,6 @@ export const Canvas = () => {
         })
       }
     >
-      {Math.random()}
       {viewports.controlsVisible && iframe.enabled && (
         <div className={getClassName("controls")}>
           <ViewportControls

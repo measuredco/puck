@@ -1,6 +1,4 @@
-import { useNodeStore } from "../stores/node-store";
 import { ComponentData, Data, RootData } from "../types";
-import { rootDroppableId } from "./root-droppable-id";
 
 /**
  * Apply the provided data to the Puck data payload.

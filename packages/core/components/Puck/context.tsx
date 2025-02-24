@@ -1,4 +1,3 @@
-import { createContext } from "react";
 import {
   Config,
   IframeConfig,
@@ -51,7 +50,7 @@ type ZoomConfig = {
 
 type ComponentState = Record<string, { loadingCount: number }>;
 
-export type AppContext<
+export type AppStore<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
 > = {
@@ -77,7 +76,7 @@ export type AppContext<
   getComponentConfig: (type?: string) => ComponentConfig | null | undefined;
 };
 
-export const defaultContext: AppContext = {
+export const defaultAppStore: AppStore = {
   state: defaultAppState,
   dispatch: () => null,
   config: { components: {} },
@@ -103,107 +102,13 @@ export const defaultContext: AppContext = {
   getComponentConfig: () => null,
 };
 
-export const appContext = createContext<AppContext>(defaultContext);
-
-// export const AppProvider = ({
-//   children,
-//   value,
-// }: {
-//   children: ReactNode;
-//   value: Omit<
-//     AppContext,
-//     | "zoomConfig"
-//     | "setZoomConfig"
-//     | "status"
-//     | "setStatus"
-//     | "componentState"
-//     | "setComponentState"
-//     | "resolveData"
-//   >;
-// }) => {
-//   const [zoomConfig, setZoomConfig] = useState(defaultContext.zoomConfig);
-
-//   const [status, setStatus] = useState<Status>("LOADING");
-
-//   // App is ready when client has loaded, after initial render
-//   // This triggers DropZones to activate
-//   useEffect(() => {
-//     setStatus("MOUNTED");
-//   }, []);
-
-//   const selectedItem = value.state.ui.itemSelector
-//     ? getItem(value.state.ui.itemSelector, value.state.data)
-//     : undefined;
-
-//   const [componentState, setComponentState] = useState<
-//     AppContext["componentState"]
-//   >({});
-
-//   const setComponentLoading = (id: string) => {
-//     setComponentState((prev) => ({
-//       ...prev,
-//       [id]: {
-//         ...prev[id],
-//         loadingCount: (prev[id]?.loadingCount || 0) + 1,
-//       },
-//     }));
-//   };
-
-//   const unsetComponentLoading = (id: string) => {
-//     setComponentState((prev) => ({
-//       ...prev,
-//       [id]: {
-//         ...prev[id],
-//         loadingCount: Math.max((prev[id]?.loadingCount || 0) - 1, 0),
-//       },
-//     }));
-//   };
-
-//   const { getPermissions, refreshPermissions } = useResolvedPermissions(
-//     value.config,
-//     value.state,
-//     value.globalPermissions || {},
-//     setComponentLoading,
-//     unsetComponentLoading
-//   );
-
-//   const { resolveData } = useResolvedData(
-//     value.state,
-//     value.config,
-//     value.dispatch,
-//     setComponentLoading,
-//     unsetComponentLoading,
-//     refreshPermissions
-//   );
-
-//   return (
-//     <appContext.Provider
-//       value={{
-//         ...value,
-//         selectedItem,
-//         zoomConfig,
-//         setZoomConfig,
-//         status,
-//         setStatus,
-//         getPermissions,
-//         refreshPermissions,
-//         componentState,
-//         setComponentState,
-//         resolveData,
-//       }}
-//     >
-//       {children}
-//     </appContext.Provider>
-//   );
-// };
-
 const defaultPageFields: Record<string, Field> = {
   title: { type: "text" },
 };
 
-export const useAppStore = create<AppContext>()(
+export const useAppStore = create<AppStore>()(
   subscribeWithSelector((set, get) => ({
-    ...defaultContext,
+    ...defaultAppStore,
     getComponentConfig: (type?: string) => {
       const { config, selectedItem } = get();
       const rootFields = config.root?.fields || defaultPageFields;
@@ -225,8 +130,6 @@ export const useAppStore = create<AppContext>()(
         const selectedItem = state.ui.itemSelector
           ? getItem(state.ui.itemSelector, state.data)
           : null;
-
-        console.log("store dispatch", action);
 
         return { ...s, state, selectedItem };
       }),
@@ -286,14 +189,5 @@ export const useAppStore = create<AppContext>()(
 );
 
 export function getAppStore<UserConfig extends Config = Config>() {
-  return useAppStore.getState() as unknown as AppContext<UserConfig>;
-}
-
-export function useAppContext<UserConfig extends Config = Config>() {
-  // const mainContext = useContext<AppContext<UserConfig>>(appContext as any);
-  const store = useAppStore() as unknown as AppContext<UserConfig>;
-
-  return {
-    ...store,
-  };
+  return useAppStore.getState() as unknown as AppStore<UserConfig>;
 }

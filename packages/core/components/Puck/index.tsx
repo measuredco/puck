@@ -4,7 +4,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useReducer,
   useState,
 } from "react";
 
@@ -66,7 +65,6 @@ const FieldSideBar = () => {
 
   return (
     <SidebarSection noPadding noBorderTop showBreadcrumbs title={title}>
-      sideBar {Math.random()}
       <Fields />
     </SidebarSection>
   );
@@ -415,29 +413,6 @@ export function Puck<
 
   return (
     <div className={`Puck ${getClassName()}`}>
-      {Math.random()}
-      {/* <AppProvider
-        value={{
-          state: appState,
-          dispatch,
-          config,
-          plugins: plugins || [],
-          overrides: loadedOverrides,
-          history,
-          viewports,
-          iframe,
-          globalPermissions: {
-            delete: true,
-            drag: true,
-            duplicate: true,
-            insert: true,
-            edit: true,
-            ...permissions,
-          },
-          getPermissions: () => ({}),
-          refreshPermissions: () => null,
-        }}
-      > */}
       <DragDropContext disableAutoScroll={dnd?.disableAutoScroll}>
         <CustomPuck>
           {children || (
@@ -566,7 +541,6 @@ export function Puck<
           )}
         </CustomPuck>
       </DragDropContext>
-      {/* </AppProvider> */}
       <div id="puck-portal-root" className={getClassName("portal")} />
     </div>
   );

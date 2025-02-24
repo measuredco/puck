@@ -70,7 +70,9 @@ export const LayerTree = ({
 
           const isHovering = hoveringComponent === item.props.id;
 
-          const path = selectedItem ? nodes[selectedItem?.props.id].path : [];
+          const path = selectedItem
+            ? nodes[selectedItem?.props.id]?.path ?? []
+            : [];
 
           const childIsSelected =
             path?.some((candidate) => {

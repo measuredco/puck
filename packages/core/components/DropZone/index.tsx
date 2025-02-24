@@ -390,7 +390,6 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
           } as CSSProperties
         }
       >
-        {/* {Math.random()} */}
         {contentIdsWithPreview.map((componentId, i) => {
           return (
             <DropZoneChild
@@ -487,7 +486,6 @@ export const DropZone = forwardRef<HTMLDivElement, DropZoneProps>(
     if (ctx?.mode === "edit") {
       return (
         <>
-          {/* dz: {Math.random()} */}
           <DropZoneEdit {...props} ref={ref} />
         </>
       );

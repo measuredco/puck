@@ -276,7 +276,6 @@ const DragDropContextClient = ({
 
   return (
     <div id={id}>
-      ddcontext {Math.random()}
       <dragListenerContext.Provider
         value={{
           dragListeners,

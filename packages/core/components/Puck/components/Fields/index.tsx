@@ -202,7 +202,6 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
         e.preventDefault();
       }}
     >
-      Form {Math.random()}
       <Wrapper isLoading={isLoading} itemSelector={itemSelector}>
         {fieldNames.map((fieldName) => (
           <FieldsChild key={fieldName} fieldName={fieldName} />

@@ -1,12 +1,12 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { useResolvedFields } from "../use-resolved-fields";
-import { useAppContext } from "../../components/Puck/context";
+import { useAppStore } from "../../components/Puck/context";
 import { useParent } from "../use-parent";
 import { AppState, ComponentData, Data, Fields, UiState } from "../../types";
 import { rootDroppableId } from "../root-droppable-id";
 
 jest.mock("../../components/Puck/context", () => ({
-  useAppContext: jest.fn(),
+  useAppStore: jest.fn(),
 }));
 
 jest.mock("../use-parent", () => ({
@@ -150,7 +150,7 @@ const contextWithDropZoneItemResolver = (resolveFields: any) => {
   };
 };
 
-const useAppContextMock = useAppContext as jest.Mock;
+const useAppStoreMock = useAppStore as jest.Mock;
 const useParentMock = useParent as jest.Mock;
 
 type RenderHookReturn = ReturnType<
@@ -172,12 +172,12 @@ describe("use-resolved-fields", () => {
 
   beforeEach(() => {
     params = defaultParams;
-    useAppContextMock.mockClear();
+    useAppStoreMock.mockClear();
     useParentMock.mockClear();
   });
 
   it("returns the default fields when no resolver is defined", async () => {
-    useAppContextMock.mockReturnValue(blankContext);
+    useAppStoreMock.mockReturnValue(blankContext);
     useParentMock.mockReturnValue(null);
 
     params = renderHook(() => useResolvedFields());
@@ -213,7 +213,7 @@ describe("use-resolved-fields", () => {
     };
 
     it("(failure case) returns the old fields, if NOT checking the id, with value check disabled", async () => {
-      useAppContextMock.mockReturnValue(contextWithSelectedItem);
+      useAppStoreMock.mockReturnValue(contextWithSelectedItem);
       useParentMock.mockReturnValue(null);
 
       await act(() => {
@@ -227,7 +227,7 @@ describe("use-resolved-fields", () => {
       expect(result.current[0]).toEqual({ title: { type: "text" } });
       expect(result.current[1]).toBe(false);
 
-      useAppContextMock.mockReturnValue(contextWithSelectedItemAlt);
+      useAppStoreMock.mockReturnValue(contextWithSelectedItemAlt);
 
       await act(() => {
         rerender();
@@ -237,7 +237,7 @@ describe("use-resolved-fields", () => {
     });
 
     it("returns the default fields, if checking the id, with value check disabled", async () => {
-      useAppContextMock.mockReturnValue(contextWithSelectedItem);
+      useAppStoreMock.mockReturnValue(contextWithSelectedItem);
       useParentMock.mockReturnValue(null);
 
       await act(() => {
@@ -249,7 +249,7 @@ describe("use-resolved-fields", () => {
       expect(result.current[0]).toEqual({ title: { type: "text" } });
       expect(result.current[1]).toBe(false);
 
-      useAppContextMock.mockReturnValue(contextWithSelectedItemAlt);
+      useAppStoreMock.mockReturnValue(contextWithSelectedItemAlt);
 
       await act(() => {
         rerender();
@@ -267,7 +267,7 @@ describe("use-resolved-fields", () => {
 
       const context = contextWithRootResolver(mockResolveFields);
 
-      useAppContextMock.mockReturnValue(context);
+      useAppStoreMock.mockReturnValue(context);
       useParentMock.mockReturnValue(null);
 
       await act(() => {
@@ -311,7 +311,7 @@ describe("use-resolved-fields", () => {
         });
       });
 
-      useAppContextMock.mockReturnValue(context);
+      useAppStoreMock.mockReturnValue(context);
       useParentMock.mockReturnValue(null);
 
       await act(() => {
@@ -354,7 +354,7 @@ describe("use-resolved-fields", () => {
 
       const context = contextWithRootResolver(mockResolveFields);
 
-      useAppContextMock.mockReturnValue(context);
+      useAppStoreMock.mockReturnValue(context);
       useParentMock.mockReturnValue(null);
 
       await act(() => {
@@ -362,7 +362,7 @@ describe("use-resolved-fields", () => {
       });
 
       // update state and trigger re-render
-      useAppContextMock.mockReturnValue({
+      useAppStoreMock.mockReturnValue({
         ...context,
         state: {
           ...context.state,
@@ -402,21 +402,21 @@ describe("use-resolved-fields", () => {
         title: { type: "textarea" },
       });
 
-      const defaultContext = contextWithItemResolver(mockResolveFields);
+      const defaultAppStore = contextWithItemResolver(mockResolveFields);
 
       const context = {
-        ...defaultContext,
+        ...defaultAppStore,
         state: {
-          ...defaultContext.state,
+          ...defaultAppStore.state,
           ui: {
-            ...defaultContext.state.ui,
+            ...defaultAppStore.state.ui,
             itemSelector: { zone: rootDroppableId, index: 0 },
           },
         },
-        selectedItem: defaultContext.state.data.content[0],
+        selectedItem: defaultAppStore.state.data.content[0],
       };
 
-      useAppContextMock.mockReturnValue(context);
+      useAppStoreMock.mockReturnValue(context);
       useParentMock.mockReturnValue(null);
 
       await act(() => {
@@ -446,9 +446,9 @@ describe("use-resolved-fields", () => {
         title: { type: "textarea" },
       });
 
-      const defaultContext = contextWithItemResolver(mockResolveFields);
+      const defaultAppStore = contextWithItemResolver(mockResolveFields);
 
-      useAppContextMock.mockReturnValue(defaultContext);
+      useAppStoreMock.mockReturnValue(defaultAppStore);
       useParentMock.mockReturnValue(null);
 
       await act(() => {
@@ -458,18 +458,18 @@ describe("use-resolved-fields", () => {
       const { result, rerender } = params;
 
       const context = {
-        ...defaultContext,
+        ...defaultAppStore,
         state: {
-          ...defaultContext.state,
+          ...defaultAppStore.state,
           ui: {
-            ...defaultContext.state.ui,
+            ...defaultAppStore.state.ui,
             itemSelector: { zone: rootDroppableId, index: 0 },
           },
         },
-        selectedItem: defaultContext.state.data.content[0],
+        selectedItem: defaultAppStore.state.data.content[0],
       };
 
-      useAppContextMock.mockReturnValue(context);
+      useAppStoreMock.mockReturnValue(context);
 
       await act(() => {
         rerender();
@@ -496,9 +496,10 @@ describe("use-resolved-fields", () => {
         title: { type: "textarea" },
       });
 
-      const defaultContext = contextWithDropZoneItemResolver(mockResolveFields);
+      const defaultAppStore =
+        contextWithDropZoneItemResolver(mockResolveFields);
 
-      useAppContextMock.mockReturnValue(defaultContext);
+      useAppStoreMock.mockReturnValue(defaultAppStore);
       useParentMock.mockReturnValue(null);
 
       await act(() => {
@@ -508,18 +509,18 @@ describe("use-resolved-fields", () => {
       expect(mockResolveFields).toHaveBeenCalledTimes(0);
 
       const context = {
-        ...defaultContext,
+        ...defaultAppStore,
         state: {
-          ...defaultContext.state,
+          ...defaultAppStore.state,
           ui: {
-            ...defaultContext.state.ui,
+            ...defaultAppStore.state.ui,
             itemSelector: { zone: "flex-1:zone", index: 0 },
           },
         },
-        selectedItem: defaultContext.state.data.zones?.["flex-1:zone"][0],
+        selectedItem: defaultAppStore.state.data.zones?.["flex-1:zone"][0],
       };
 
-      useAppContextMock.mockReturnValue(context);
+      useAppStoreMock.mockReturnValue(context);
       useParentMock.mockReturnValue(context.state.data.content[0]);
 
       await act(() => {
@@ -527,7 +528,7 @@ describe("use-resolved-fields", () => {
       });
 
       // Update values and render again to make sure resolver doesn't get called more than once
-      useAppContextMock.mockReturnValue({ ...context });
+      useAppStoreMock.mockReturnValue({ ...context });
       useParentMock.mockReturnValue({ ...context.state.data.content[0] });
 
       await act(() => {

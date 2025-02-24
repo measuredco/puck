@@ -4,7 +4,6 @@ import {
   RefObject,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import hash from "object-hash";

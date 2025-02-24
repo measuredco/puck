@@ -21,7 +21,6 @@ import {
   TextareaField,
 } from "./fields";
 import { Lock } from "lucide-react";
-import { useDebouncedCallback } from "use-debounce";
 import { ObjectField } from "./fields/ObjectField";
 import { useAppStore } from "../Puck/context";
 import { useSafeId } from "../../lib/use-safe-id";
@@ -280,12 +279,7 @@ export function AutoFieldPrivate<
     onChange: onChangeLocal,
   };
 
-  return (
-    <>
-      {Math.random()}
-      <AutoFieldInternal<ValueType, FieldType> {...props} {...localProps} />
-    </>
-  );
+  return <AutoFieldInternal<ValueType, FieldType> {...props} {...localProps} />;
 }
 
 export function AutoField<

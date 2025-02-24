@@ -1,6 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
-import { defaultContext, useAppContext } from "../components/Puck/context";
-import { Config } from "../types";
+import { defaultAppStore, useAppStore } from "../components/Puck/context";
+import { Config, UserGenerics } from "../types";
 import { useHistoryStore } from "./use-history-store";
 import { useCallback } from "react";
 import {
@@ -9,13 +9,18 @@ import {
   usePermissionsStore,
 } from "./use-resolved-permissions";
 
-export const usePuck = <UserConfig extends Config = Config>() => {
-  const {
-    state: appState,
-    config,
-    dispatch,
-    selectedItem: currentItem,
-  } = useAppContext<UserConfig>();
+export const usePuck = <
+  UserConfig extends Config = Config,
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
+>() => {
+  const appState = useAppStore<G["UserAppState"]>(
+    (s) => s.state as G["UserAppState"]
+  );
+  const config = useAppStore<G["UserConfig"]>(
+    (s) => s.config as G["UserConfig"]
+  );
+  const dispatch = useAppStore((s) => s.dispatch);
+  const currentItem = useAppStore((s) => s.selectedItem);
 
   const historyApi = useHistoryStore(
     useShallow((s) => ({
@@ -43,7 +48,7 @@ export const usePuck = <UserConfig extends Config = Config>() => {
     []
   );
 
-  if (dispatch === defaultContext.dispatch) {
+  if (dispatch === defaultAppStore.dispatch) {
     throw new Error(
       "usePuck was used outside of the <Puck> component. The usePuck hook must be rendered within the <Puck> context as children, overrides or plugins as described in https://puckeditor.com/docs/api-reference/functions/use-puck."
     );
