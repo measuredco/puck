@@ -177,4 +177,8 @@ export function useRegisterHistoryStore({
   useHotkey({ meta: true, z: true }, back);
   useHotkey({ meta: true, shift: true, z: true }, forward);
   useHotkey({ meta: true, y: true }, forward);
+
+  useHotkey({ ctrl: true, z: true }, back);
+  useHotkey({ ctrl: true, shift: true, z: true }, forward);
+  useHotkey({ ctrl: true, y: true }, forward);
 }
