@@ -8,13 +8,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useMetadata } from "../../lib/use-metadata";
 
-export function Client({
-  path,
-  isEdit,
-}: {
-  path: string;
-  isEdit: boolean;
-}) {
+export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const { metadata } = useMetadata();
 
   const { data, resolvedData, key } = useDemoData({
