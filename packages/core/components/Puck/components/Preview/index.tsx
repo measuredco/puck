@@ -54,15 +54,9 @@ const useBubbleIframeEvents = (ref: RefObject<HTMLIFrameElement | null>) => {
         );
       };
 
-      const onLoad = () => {
-        register();
-        iframe.removeEventListener("load", onLoad);
-      };
-
-      iframe.addEventListener("load", onLoad);
+      register();
 
       return () => {
-        iframe.removeEventListener("load", onLoad);
         unregister();
       };
     }
@@ -134,8 +128,11 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
           id="preview-frame"
           className={getClassName("frame")}
           data-rfd-iframe
-          onStylesLoaded={() => {
+          onReady={() => {
             setStatus("READY");
+          }}
+          onNotReady={() => {
+            setStatus("MOUNTED");
           }}
           frameRef={ref}
         >
