@@ -1,10 +1,9 @@
 import { AppState, History } from "../types";
 import { generateId } from "../lib/generate-id";
 import { create } from "zustand";
-import { getFrame } from "../lib/get-frame";
-import { getAppStore, useAppStore } from "../stores/app-store";
+import { getAppStore } from "./app-store";
 import { useEffect } from "react";
-import { useHotkeys } from "react-hotkeys-hook";
+import { useHotkey } from "../lib/use-hotkey";
 
 export type HistoryStore<D = any> = {
   index: number;
@@ -133,12 +132,10 @@ export function useRegisterHistoryStore({
   histories,
   index,
   initialAppState,
-  iframeEnabled,
 }: {
   histories: History<any>[];
   index: number;
   initialAppState: AppState;
-  iframeEnabled: boolean;
 }) {
   useEffect(
     () =>
@@ -158,41 +155,7 @@ export function useRegisterHistoryStore({
     useHistoryStore.getState().forward();
   };
 
-  const backIframe = () => {
-    if (iframeEnabled) {
-      back();
-    }
-  };
-
-  const forwardIframe = () => {
-    if (iframeEnabled) {
-      forward();
-    }
-  };
-
-  useAppStore((s) => s.status);
-
-  const frame = getFrame();
-  const resolvedFrame =
-    typeof window !== "undefined" && frame !== document ? frame : undefined;
-
-  // Host hotkeys
-  useHotkeys("meta+z", back, { preventDefault: true });
-  useHotkeys("meta+shift+z", forward, { preventDefault: true });
-  useHotkeys("meta+y", forward, { preventDefault: true });
-
-  // Iframe hotkeys
-  // TODO these aren't working now
-  useHotkeys("meta+z", backIframe, {
-    preventDefault: true,
-    document: resolvedFrame,
-  });
-  useHotkeys("meta+shift+z", forwardIframe, {
-    preventDefault: true,
-    document: resolvedFrame,
-  });
-  useHotkeys("meta+y", forwardIframe, {
-    preventDefault: true,
-    document: resolvedFrame,
-  });
+  useHotkey({ meta: true, z: true }, back);
+  useHotkey({ meta: true, shift: true, z: true }, forward);
+  useHotkey({ meta: true, y: true }, forward);
 }

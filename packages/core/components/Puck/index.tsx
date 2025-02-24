@@ -55,6 +55,8 @@ import { useInjectGlobalCss } from "../../lib/use-inject-css";
 import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
 import { useRegisterNodeStore } from "../../stores/node-store";
 import { useRegisterPermissionsStore } from "../../stores/permissions-store";
+import { monitorHotkeys, useMonitorHotkeys } from "../../lib/use-hotkey";
+import { getFrame } from "../../lib/get-frame";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -247,7 +249,6 @@ export function Puck<
     histories: blendedHistories,
     index: initialHistoryIndex,
     initialAppState,
-    iframeEnabled: _iframe?.enabled ?? true,
   });
 
   const dispatch = useAppStore((s) => s.dispatch);
@@ -392,8 +393,6 @@ export function Puck<
     setMounted(true);
   }, []);
 
-  usePreviewModeHotkeys(dispatch, iframe.enabled);
-
   useEffect(() => {
     useAppStore.setState({
       state: initialAppState,
@@ -408,6 +407,22 @@ export function Puck<
   useRegisterNodeStore();
 
   useRegisterPermissionsStore(permissions);
+
+  const ready = useAppStore((s) => s.status === "READY");
+
+  useMonitorHotkeys();
+
+  useEffect(() => {
+    if (ready && iframe.enabled) {
+      const frameDoc = getFrame();
+
+      if (frameDoc) {
+        return monitorHotkeys(frameDoc);
+      }
+    }
+  }, [ready, iframe.enabled]);
+
+  usePreviewModeHotkeys();
 
   useEffect(() => {
     const { state, resolveData } = getAppStore();
