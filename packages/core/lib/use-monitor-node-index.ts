@@ -50,7 +50,9 @@ export const useMonitorNodeIndex = () => {
           nodeIndex[data.props.id] = { data, parentId, zone, path: [], index };
         });
 
-        const registerNode = useNodeStore.getState().registerNode;
+        const nodeStore = useNodeStore.getState();
+
+        const registerNode = nodeStore.registerNode;
 
         Object.keys(nodeIndex).forEach((componentId) => {
           const details = nodeIndex[componentId];
@@ -75,6 +77,13 @@ export const useMonitorNodeIndex = () => {
 
         registerNode("root", {
           data: { type: "root", props: { id: "root", ...rootProps } },
+        });
+
+        // Remove old nodes
+        Object.keys(nodeStore.nodes).forEach((key) => {
+          if (!nodeIndex[key] && key !== "root") {
+            nodeStore.unregisterNode(key);
+          }
         });
       }
     );

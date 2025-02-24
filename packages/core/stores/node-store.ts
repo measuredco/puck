@@ -73,21 +73,18 @@ export const useNodeStore = create<NodeStore>()(
         };
       });
     },
-    unregisterNode: (id: string, node?: Partial<PuckNode>) => {
+    unregisterNode: (id: string) => {
       set((s) => {
         const existingNode: PuckNode | undefined = s.nodes[id];
 
         if (existingNode) {
+          const newNodes = { ...s.nodes };
+
+          delete newNodes[id];
+
           return {
             ...s,
-            nodes: {
-              ...s.nodes,
-              [id]: {
-                ...existingNode,
-                ...node,
-                id,
-              },
-            },
+            nodes: newNodes,
           };
         }
 

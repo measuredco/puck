@@ -274,13 +274,12 @@ export const DraggableComponent = ({
   }, [ref.current, userIsDragging]);
 
   const registerNode = useNodeStore((s) => s.registerNode);
-  const unregisterNode = useNodeStore((s) => s.unregisterNode);
 
   useEffect(() => {
     registerNode(id, { methods: { sync }, element: ref.current ?? null });
 
     return () => {
-      unregisterNode(id, { methods: { sync: () => null }, element: null });
+      registerNode(id, { methods: { sync: () => null }, element: null });
     };
   }, [id, zoneCompound, index, componentType, sync]);
 
