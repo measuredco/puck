@@ -37,6 +37,7 @@ const dropzoneContext: DropZoneContext = {
   },
   depth: 0,
   path: [],
+  metadata: {},
 };
 
 describe("use-breadcrumbs", () => {

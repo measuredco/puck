@@ -14,9 +14,11 @@ export type BaseField = {
 
 export type TextField = BaseField & {
   type: "text";
+  placeholder?: string;
 };
 export type NumberField = BaseField & {
   type: "number";
+  placeholder?: string;
   min?: number;
   max?: number;
   step?: number;
@@ -24,6 +26,7 @@ export type NumberField = BaseField & {
 
 export type TextareaField = BaseField & {
   type: "textarea";
+  placeholder?: string;
 };
 
 export type SelectField = BaseField & {

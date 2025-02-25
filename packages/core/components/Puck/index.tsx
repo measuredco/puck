@@ -19,6 +19,7 @@ import type {
   UserGenerics,
   Config,
   Data,
+  Metadata,
 } from "../../types";
 import { Button } from "../Button";
 
@@ -79,6 +80,7 @@ export function Puck<
   iframe: _iframe,
   dnd,
   initialHistory: _initialHistory,
+  metadata,
 }: {
   children?: ReactNode;
   config: UserConfig;
@@ -107,6 +109,7 @@ export function Puck<
     disableAutoScroll?: boolean;
   };
   initialHistory?: InitialHistory;
+  metadata?: Metadata;
 }) {
   const iframe: IframeConfig = {
     enabled: true,
@@ -412,6 +415,7 @@ export function Puck<
           },
           getPermissions: () => ({}),
           refreshPermissions: () => null,
+          metadata: metadata || {},
         }}
       >
         <DragDropContext disableAutoScroll={dnd?.disableAutoScroll}>
