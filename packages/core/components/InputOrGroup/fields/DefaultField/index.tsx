@@ -43,6 +43,7 @@ export const DefaultField = ({
         id={id}
         min={field.type === "number" ? field.min : undefined}
         max={field.type === "number" ? field.max : undefined}
+        step={field.type === "number" ? field.step : undefined}
       />
     </FieldLabelInternal>
   );

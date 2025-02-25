@@ -26,6 +26,7 @@ export type NumberField = BaseField & {
   type: "number";
   min?: number;
   max?: number;
+  step?: number;
 };
 
 export type TextareaField = BaseField & {

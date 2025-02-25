@@ -43,6 +43,7 @@ const config = {
 | [`type`](#type) | `type: "number"` | "number" | Required |
 | [`max`](#max)   | `max: 10`        | number   | -        |
 | [`min`](#min)   | `min: 0`         | number   | -        |
+| [`step`](#step) | `step: 0.1`      | number   | -        |
 
 ## Required params
 
@@ -130,6 +131,42 @@ const config = {
       myNumber: {
         type: "number",
         min: 0,
+      },
+    },
+    defaultProps: { myNumber: 5 },
+    render: ({ myNumber }) => {
+      return <div>{myNumber}</div>;
+    },
+  }}
+/>
+
+### `step`
+
+The stepping interval when interacting with the field.
+
+```tsx {7} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        myNumber: {
+          type: "number",
+          step: 0.1,
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      myNumber: {
+        type: "number",
+        step: 0.1,
       },
     },
     defaultProps: { myNumber: 5 },
