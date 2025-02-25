@@ -6,7 +6,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Config, Data } from "../../types";
+import { Config, Data, Metadata } from "../../types";
 import { ItemSelector } from "../../lib/get-item";
 
 import type { Draggable } from "@dnd-kit/dom";
@@ -39,6 +39,7 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
   unregisterLocalZone?: (zone: string) => void;
   path: string[];
+  metadata: Metadata;
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);

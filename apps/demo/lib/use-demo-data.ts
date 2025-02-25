@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import config, { initialData, Props, RootProps, UserData } from "../config";
-import { resolveAllData } from "@/core";
+import { Metadata, resolveAllData } from "@/core";
 
 const isBrowser = typeof window !== "undefined";
 
 export const useDemoData = ({
   path,
   isEdit,
+  metadata = {},
 }: {
   path: string;
   isEdit: boolean;
+  metadata?: Metadata;
 }) => {
   // unique b64 key that updates each time we add / remove components
   const componentKey = Buffer.from(
@@ -36,7 +38,9 @@ export const useDemoData = ({
 
   useEffect(() => {
     if (data && !isEdit) {
-      resolveAllData<Props, RootProps>(data, config).then(setResolvedData);
+      resolveAllData<Props, RootProps>(data, config, metadata).then(
+        setResolvedData
+      );
     }
   }, [data, isEdit]);
 

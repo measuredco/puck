@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { Fields } from "./Fields";
-import { ComponentData, RootData } from "./Data";
+import { ComponentData, Metadata, RootData } from "./Data";
 
 import { AsFieldProps, WithChildren, WithId, WithPuckProps } from "./Utils";
 import { AppState } from "./AppState";
@@ -38,6 +38,7 @@ export type ComponentConfig<
     params: {
       changed: Partial<Record<keyof FieldProps, boolean>>;
       lastData: DataShape | null;
+      metadata: Metadata;
     }
   ) =>
     | Promise<{

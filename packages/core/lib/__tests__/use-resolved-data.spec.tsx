@@ -1,5 +1,5 @@
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
-import { AppState, Config, Data } from "../../types";
+import { AppState, Config, Data, Metadata } from "../../types";
 import { useResolvedData } from "../use-resolved-data";
 import { SetAction, SetDataAction } from "../../reducer";
 import { cache } from "../resolve-component-data";
@@ -17,6 +17,10 @@ const data: Data = {
     "MyComponent-1:zone": [item2],
     "MyComponent-2:zone": [item3],
   },
+};
+
+const metadata: Metadata = {
+  prop: "Hello, world",
 };
 
 const state: AppState = {
@@ -37,11 +41,11 @@ const config: Config = {
   components: {
     MyComponent: {
       defaultProps: { prop: "example" },
-      resolveData: ({ props }) => {
+      resolveData: ({ props }, { metadata }) => {
         return {
           props: {
             ...props,
-            prop: "Hello, world",
+            prop: metadata.prop,
           },
           readOnly: {
             prop: true,
@@ -54,7 +58,7 @@ const config: Config = {
 };
 
 describe("use-resolved-data", () => {
-  describe("resolveData method", () => {
+  describe("resolveData method with metadata", () => {
     afterEach(() => {
       cleanup();
 
@@ -79,7 +83,8 @@ describe("use-resolved-data", () => {
           },
           () => {},
           () => {},
-          () => {}
+          () => {},
+          metadata
         );
       });
 
@@ -185,7 +190,8 @@ describe("use-resolved-data", () => {
           },
           () => {},
           () => {},
-          () => {}
+          () => {},
+          metadata
         );
       });
 
@@ -222,7 +228,8 @@ describe("use-resolved-data", () => {
           hookArgs[2],
           () => {},
           () => {},
-          () => {}
+          () => {},
+          metadata
         )
       );
 
@@ -235,7 +242,8 @@ describe("use-resolved-data", () => {
             hookArgs[2],
             () => {},
             () => {},
-            () => {}
+            () => {},
+            metadata
           )
         );
 
@@ -251,7 +259,8 @@ describe("use-resolved-data", () => {
             hookArgs[2],
             () => {},
             () => {},
-            () => {}
+            () => {},
+            metadata
           )
         );
       });
@@ -281,7 +290,8 @@ describe("use-resolved-data", () => {
           },
           () => {},
           () => {},
-          () => {}
+          () => {},
+          metadata
         )
       );
 
@@ -326,7 +336,8 @@ describe("use-resolved-data", () => {
           },
           setComponentLoading,
           unsetComponentLoading,
-          () => {}
+          () => {},
+          metadata
         )
       );
 
@@ -370,7 +381,8 @@ describe("use-resolved-data", () => {
           },
           () => {},
           () => {},
-          refreshPermissions
+          refreshPermissions,
+          {}
         )
       );
 

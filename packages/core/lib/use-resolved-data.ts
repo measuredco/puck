@@ -1,4 +1,4 @@
-import { AppState, ComponentData, Config, RootData } from "../types";
+import { AppState, ComponentData, Config, Metadata, RootData } from "../types";
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { PuckAction } from "../reducer";
 import { resolveComponentData } from "./resolve-component-data";
@@ -14,7 +14,8 @@ export const useResolvedData = (
   dispatch: Dispatch<PuckAction>,
   setComponentLoading: (id: string) => void,
   unsetComponentLoading: (id: string) => void,
-  refreshPermissions: RefreshPermissions
+  refreshPermissions: RefreshPermissions,
+  metadata: Metadata
 ) => {
   const [{ resolverKey, newAppState }, setResolverState] = useState({
     resolverKey: 0,
@@ -87,7 +88,7 @@ export const useResolvedData = (
       (async () => {
         _setComponentLoading("puck-root", true, 50);
 
-        const dynamicRoot = await resolveRootData(newData, config);
+        const dynamicRoot = await resolveRootData(newData, config, metadata);
 
         applyIfChange({}, dynamicRoot);
 
@@ -104,6 +105,7 @@ export const useResolvedData = (
           const dynamicData: ComponentData = await resolveComponentData(
             item,
             config,
+            metadata,
             (item) => {
               _setComponentLoading(item.props.id, true, 50);
             },
