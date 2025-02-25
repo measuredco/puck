@@ -1,4 +1,4 @@
-import type { AppState } from "../types/Config";
+import type { AppState, Data } from "../types";
 import { addToZoneCache } from "../reducer/data";
 
 /**
@@ -7,7 +7,9 @@ import { addToZoneCache } from "../reducer/data";
  * @param appState initial app state
  * @returns appState with zones removed from data
  */
-export const flushZones = (appState: AppState): AppState => {
+export const flushZones = <UserData extends Data>(
+  appState: AppState | AppState<UserData>
+): AppState | AppState<UserData> => {
   const containsZones = typeof appState.data.zones !== "undefined";
 
   if (containsZones) {

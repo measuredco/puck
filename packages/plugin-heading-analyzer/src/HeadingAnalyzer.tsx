@@ -1,34 +1,41 @@
 import { ReactElement, useEffect, useState } from "react";
 
+import styles from "./HeadingAnalyzer.module.css";
+
 import { usePuck } from "@measured/puck";
-import { Plugin } from "@/core/types/Plugin";
+import { Plugin } from "@/core/types";
 import { SidebarSection } from "@/core/components/SidebarSection";
 import { OutlineList } from "@/core/components/OutlineList";
 
 import { scrollIntoView } from "@/core/lib/scroll-into-view";
 import { getFrame } from "@/core/lib/get-frame";
 
-import ReactFromJSON from "react-from-json";
+import { getClassNameFactory } from "@/core/lib";
 
-const dataAttr = "data-puck-heading-analyzer-id";
+const getClassName = getClassNameFactory("HeadingAnalyzer", styles);
+const getClassNameItem = getClassNameFactory("HeadingAnalyzerItem", styles);
 
-const getOutline = ({
-  addDataAttr = false,
-  frame,
-}: { addDataAttr?: boolean; frame?: Element | Document } = {}) => {
+import ReactFromJSONModule from "react-from-json";
+
+// Synthetic import
+const ReactFromJSON =
+  (ReactFromJSONModule as unknown as { default: typeof ReactFromJSONModule })
+    .default || ReactFromJSONModule;
+
+const getOutline = ({ frame }: { frame?: Element | Document } = {}) => {
   const headings = frame?.querySelectorAll("h1,h2,h3,h4,h5,h6") || [];
 
-  const _outline: { rank: number; text: string; analyzeId: string }[] = [];
+  const _outline: {
+    rank: number;
+    text: string;
+    element: HTMLElement;
+  }[] = [];
 
   headings.forEach((item, i) => {
-    if (addDataAttr) {
-      item.setAttribute(dataAttr, i.toString());
-    }
-
     _outline.push({
       rank: parseInt(item.tagName.split("H")[1]),
       text: item.textContent!,
-      analyzeId: i.toString(),
+      element: item as HTMLElement,
     });
   });
 
@@ -41,10 +48,11 @@ type Block = {
   children?: Block[];
   missing?: boolean;
   analyzeId?: string;
+  element?: HTMLElement;
 };
 
 function buildHierarchy(frame: Element | Document): Block[] {
-  const headings = getOutline({ addDataAttr: true, frame });
+  const headings = getOutline({ frame });
 
   const root = { rank: 0, children: [], text: "" }; // Placeholder root node
   let path: Block[] = [root];
@@ -53,8 +61,8 @@ function buildHierarchy(frame: Element | Document): Block[] {
     const node: Block = {
       rank: heading.rank,
       text: heading.text,
-      analyzeId: heading.analyzeId,
       children: [],
+      element: heading.element,
     };
 
     // When encountering an h1, reset the path to only the root
@@ -90,33 +98,50 @@ function buildHierarchy(frame: Element | Document): Block[] {
 export const HeadingAnalyzer = () => {
   const { appState } = usePuck();
   const [hierarchy, setHierarchy] = useState<Block[]>([]);
-  const [firstRender, setFirstRender] = useState(true);
 
   // Re-render when content changes
   useEffect(() => {
     const frame = getFrame();
+    const entry = frame?.querySelector(`[data-puck-entry]`);
 
-    if (!frame) return;
+    if (!entry) return;
 
-    // We need to delay to allow remainder of page to render first
-    if (firstRender) {
-      setTimeout(() => {
-        setHierarchy(buildHierarchy(frame));
-        setFirstRender(false);
-      }, 100);
-    } else {
-      setHierarchy(buildHierarchy(frame));
-    }
+    setHierarchy(buildHierarchy(entry));
+
+    const observer = new MutationObserver(() => {
+      setHierarchy(buildHierarchy(entry));
+    });
+
+    observer.observe(entry, { subtree: true, childList: true });
+
+    return () => {
+      observer.disconnect();
+    };
   }, [appState.data]);
 
   return (
-    <>
+    <div className={getClassName()}>
+      <small
+        className={getClassName("cssWarning")}
+        style={{
+          color: "var(--puck-color-red-04)",
+          display: "block",
+          marginBottom: 16,
+        }}
+      >
+        Heading analyzer styles not loaded. Please review the{" "}
+        <a href="https://github.com/measuredco/puck/blob/main/packages/plugin-heading-analyzer/README.md">
+          README
+        </a>
+        .
+      </small>
+
       {hierarchy.length === 0 && <div>No headings.</div>}
 
       <OutlineList>
         <ReactFromJSON<{
-          Root: (any) => ReactElement;
-          OutlineListItem: (any) => ReactElement;
+          Root: (props: any) => ReactElement;
+          OutlineListItem: (props: any) => ReactElement;
         }>
           mapping={{
             Root: (props) => <>{props.children}</>,
@@ -124,17 +149,14 @@ export const HeadingAnalyzer = () => {
               <OutlineList.Item>
                 <OutlineList.Clickable>
                   <small
+                    className={getClassNameItem({ missing: props.missing })}
                     onClick={
-                      typeof props.analyzeId == "undefined"
+                      typeof props.element == "undefined"
                         ? undefined
                         : (e) => {
                             e.stopPropagation();
 
-                            const frame = getFrame();
-
-                            const el = frame?.querySelector(
-                              `[${dataAttr}="${props.analyzeId}"]`
-                            ) as HTMLElement;
+                            const el = props.element;
 
                             const oldStyle = { ...el.style };
 
@@ -155,13 +177,13 @@ export const HeadingAnalyzer = () => {
                     }
                   >
                     {props.missing ? (
-                      <span style={{ color: "var(--puck-color-red-04)" }}>
+                      <>
                         <b>H{props.rank}</b>: Missing
-                      </span>
+                      </>
                     ) : (
-                      <span>
+                      <>
                         <b>H{props.rank}</b>: {props.text}
-                      </span>
+                      </>
                     )}
                   </small>
                 </OutlineList.Clickable>
@@ -185,7 +207,7 @@ export const HeadingAnalyzer = () => {
           }}
         />
       </OutlineList>
-    </>
+    </div>
   );
 };
 

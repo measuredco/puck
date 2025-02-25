@@ -1,5 +1,5 @@
 import { DropZoneContext } from "../../components/DropZone/context";
-import { Config, Data } from "../../types/Config";
+import { Config, Data } from "../../types";
 import { convertPathDataToBreadcrumbs } from "../use-breadcrumbs";
 
 const item1 = { type: "MyComponent", props: { id: "MyComponent-1" } };
@@ -35,6 +35,8 @@ const dropzoneContext: DropZoneContext = {
       label: "MyComponent",
     },
   },
+  depth: 0,
+  path: [],
 };
 
 describe("use-breadcrumbs", () => {

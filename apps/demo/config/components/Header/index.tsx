@@ -27,15 +27,17 @@ const NavItem = ({ label, href }: { label: string; href: string }) => {
   );
 };
 
-const Header = ({ editMode }) => (
-  <header className={getClassName()}>
-    <div className={getClassName("logo")}>LOGO</div>
-    <nav className={getClassName("items")}>
-      <NavItem label="Home" href={`${editMode ? "" : "/"}`} />
-      <NavItem label="Pricing" href={editMode ? "" : "/pricing"} />
-      <NavItem label="About" href={editMode ? "" : "/about"} />
-    </nav>
-  </header>
+const Header = ({ editMode }: { editMode: boolean }) => (
+  <div className={getClassName()}>
+    <header className={getClassName("inner")}>
+      <div className={getClassName("logo")}>LOGO</div>
+      <nav className={getClassName("items")}>
+        <NavItem label="Home" href={`${editMode ? "" : "/"}`} />
+        <NavItem label="Pricing" href={editMode ? "" : "/pricing"} />
+        <NavItem label="About" href={editMode ? "" : "/about"} />
+      </nav>
+    </header>
+  </div>
 );
 
 export { Header };

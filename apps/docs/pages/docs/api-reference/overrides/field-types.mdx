@@ -8,9 +8,13 @@ Override each [field type](/docs/api-reference/fields).
 
 ```tsx copy
 const overrides = {
-  fieldType: {
-    number: ({ name }) => <input name={name} type="number" />,
-    text: ({ name }) => <input name={name} type="text" />,
+  fieldTypes: {
+    number: ({ onChange }) => (
+      <input type="number" onChange={(e) => onChange(e.currentTarget.value)} />
+    ),
+    text: ({ onChange }) => (
+      <input type="text" onChange={(e) => onChange(e.currentTarget.value)} />
+    ),
     // ...
   },
 };
@@ -20,50 +24,18 @@ You can specify a custom render method for each known [field type](/docs/api-ref
 
 ## Render Props
 
-| Prop                                | Example                      | Type                                |
-| ----------------------------------- | ---------------------------- | ----------------------------------- |
-| [`children`](#children)             | `<input />`                  | ReactNode                           |
-| [`field`](#field)                   | `{ type: "text" }`           | [Field](/docs/api-reference/fields) |
-| [`id`](#id)                         | `"my-input"`                 | String                              |
-| [`label`](#label)                   | `"Title"`                    | String                              |
-| [`name`](#name)                     | `"title"`                    | String                              |
-| [`onChange`](#onchange)             | `onChange("Goodbye, world")` | Function                            |
-| [`readOnly`](#readonly)             | `false`                      | Boolean                             |
-| [`readOnlyFields`](#readonlyfields) | `{ title: true }`            | Object                              |
-| [`value`](#value)                   | `"Hello, world"`             | Any                                 |
+Extends the [`<AutoField>` API](/docs/api-reference/components/auto-field).
+
+| Prop                    | Example     | Type                                                           |
+| ----------------------- | ----------- | -------------------------------------------------------------- |
+| [`children`](#children) | `<input />` | ReactNode                                                      |
+| [`name`](#name)         | `"title"`   | string                                                         |
+| `...`                   | `{}`        | [`<AutoField>` API](/docs/api-reference/components/auto-field) |
 
 ### `children`
 
 The default node for this field type.
 
-### `field`
-
-An object containing the user defined [Field](/docs/api-reference/fields) configuration.
-
-### `id`
-
-A unique ID for this field.
-
-### `label`
-
-The label for this field.
-
 ### `name`
 
 The name of the prop this field is rendering for.
-
-### `onChange`
-
-A callback to set a new value for this input.
-
-### `readOnly`
-
-A boolean describing whether or not this field is set to `readOnly` by [`resolveData`](/docs/api-reference/configuration/component-config#resolvedatadata-params).
-
-### `readOnlyFields`
-
-An object describing all fields that are currently set to `readOnly` by [`resolveData`](/docs/api-reference/configuration/component-config#resolvedatadata-params).
-
-### `value`
-
-The current value for the prop.

@@ -6,7 +6,7 @@ const getClassName = getClassNameFactory("Heading", styles);
 
 export type HeadingProps = {
   children: ReactNode;
-  rank?: 1 | 2 | 3 | 4 | 5 | 6;
+  rank?: "1" | "2" | "3" | "4" | "5" | "6";
   size?: "xxxxl" | "xxxl" | "xxl" | "xl" | "l" | "m" | "s" | "xs";
 };
 

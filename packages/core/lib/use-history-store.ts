@@ -1,31 +1,45 @@
 import { useState } from "react";
-import { generateId } from "./generate-id";
 import { useDebouncedCallback } from "use-debounce";
-
-export type History<D = any> = {
-  id: string;
-  data: D;
-};
+import { History } from "../types";
+import { generateId } from "./generate-id";
 
 export type HistoryStore<D = any> = {
+  // Exposed via usePuck
   index: number;
-  currentHistory: History;
   hasPast: boolean;
   hasFuture: boolean;
+  histories: History<D>[];
+
+  // Internal
   record: (data: D) => void;
   back: VoidFunction;
   forward: VoidFunction;
+  currentHistory: History;
   nextHistory: History<D> | null;
   prevHistory: History<D> | null;
-  histories: History<D>[];
+  setHistories: (histories: History[]) => void;
+  setHistoryIndex: (index: number) => void;
 };
 
-const EMPTY_HISTORY_INDEX = -1;
+const EMPTY_HISTORY_INDEX = 0;
 
-export function useHistoryStore<D = any>(): HistoryStore<D> {
-  const [histories, setHistories] = useState<History<D>[]>([]);
+export function useHistoryStore<D = any>(initialHistory: {
+  histories: History<any>[];
+  index: number;
+}): HistoryStore<D> {
+  const [histories, setHistories] = useState<History<D>[]>(
+    initialHistory?.histories ?? []
+  );
 
-  const [index, setIndex] = useState(EMPTY_HISTORY_INDEX);
+  // Exported as setHistories so that the index gets automatically updated.
+  const updateHistories = (histories: History<D>[]) => {
+    setHistories(histories);
+    setIndex(histories.length - 1);
+  };
+
+  const [index, setIndex] = useState(
+    initialHistory?.index ?? EMPTY_HISTORY_INDEX
+  );
 
   const hasPast = index > EMPTY_HISTORY_INDEX;
   const hasFuture = index < histories.length - 1;
@@ -34,19 +48,13 @@ export function useHistoryStore<D = any>(): HistoryStore<D> {
   const nextHistory = hasFuture ? histories[index + 1] : null;
   const prevHistory = hasPast ? histories[index - 1] : null;
 
-  const record = useDebouncedCallback((data: D) => {
+  const record = useDebouncedCallback((state: D) => {
     const history: History = {
-      data,
+      state,
       id: generateId("history"),
     };
 
-    setHistories((prev) => {
-      const newVal = [...prev.slice(0, index + 1), history];
-
-      setIndex(newVal.length - 1);
-
-      return newVal;
-    });
+    updateHistories([...histories.slice(0, index + 1), history]);
   }, 250);
 
   const back = () => {
@@ -68,5 +76,7 @@ export function useHistoryStore<D = any>(): HistoryStore<D> {
     nextHistory,
     prevHistory,
     histories,
+    setHistories: updateHistories,
+    setHistoryIndex: setIndex,
   };
 }

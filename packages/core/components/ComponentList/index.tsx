@@ -10,15 +10,19 @@ const getClassName = getClassNameFactory("ComponentList", styles);
 const ComponentListItem = ({
   name,
   label,
-  index,
 }: {
   name: string;
   label?: string;
-  index: number;
+  index?: number; // TODO deprecate
 }) => {
-  const { overrides } = useAppContext();
+  const { overrides, getPermissions } = useAppContext();
+
+  const canInsert = getPermissions({
+    type: name,
+  }).insert;
+
   return (
-    <Drawer.Item label={label} name={name} index={index}>
+    <Drawer.Item label={label} name={name} isDragDisabled={!canInsert}>
       {overrides.componentItem}
     </Drawer.Item>
   );
@@ -41,6 +45,7 @@ const ComponentList = ({
     <div className={getClassName({ isExpanded: expanded })}>
       {title && (
         <button
+          type="button"
           className={getClassName("title")}
           onClick={() =>
             setUi({
@@ -66,9 +71,9 @@ const ComponentList = ({
         </button>
       )}
       <div className={getClassName("content")}>
-        <Drawer droppableId={`component-list${title ? `:${title}` : ""}`}>
+        <Drawer>
           {children ||
-            Object.keys(config.components).map((componentKey, i) => {
+            Object.keys(config.components).map((componentKey) => {
               return (
                 <ComponentListItem
                   key={componentKey}
@@ -76,7 +81,6 @@ const ComponentList = ({
                     config.components[componentKey]["label"] ?? componentKey
                   }
                   name={componentKey}
-                  index={i}
                 />
               );
             })}

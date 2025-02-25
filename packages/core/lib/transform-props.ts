@@ -1,8 +1,9 @@
-import { Data, DefaultComponentProps, DefaultRootProps } from "../types/Config";
+import { Data, DefaultComponentProps, DefaultRootFieldProps } from "../types";
+import { defaultData } from "./default-data";
 
 type PropTransform<
   Props extends DefaultComponentProps = DefaultComponentProps,
-  RootProps extends DefaultRootProps = DefaultRootProps
+  RootProps extends DefaultComponentProps = DefaultRootFieldProps
 > = Partial<
   {
     [ComponentName in keyof Props]: (
@@ -13,9 +14,9 @@ type PropTransform<
 
 export function transformProps<
   Props extends DefaultComponentProps = DefaultComponentProps,
-  RootProps extends DefaultComponentProps = DefaultComponentProps
->(data: Data, propTransforms: PropTransform<Props, RootProps>): Data {
-  const mapItem = (item) => {
+  RootProps extends DefaultComponentProps = DefaultRootFieldProps
+>(data: Partial<Data>, propTransforms: PropTransform<Props, RootProps>): Data {
+  const mapItem = (item: any) => {
     if (propTransforms[item.type]) {
       return {
         ...item,
@@ -26,11 +27,13 @@ export function transformProps<
     return item;
   };
 
+  const defaultedData = defaultData(data);
+
   // DEPRECATED
-  const rootProps = data.root.props || data.root;
-  let newRoot = { ...data.root };
+  const rootProps = defaultedData.root.props || defaultedData.root;
+  let newRoot = { ...defaultedData.root };
   if (propTransforms["root"]) {
-    if (data.root.props) {
+    if (defaultedData.root.props) {
       newRoot.props = propTransforms["root"](rootProps as any);
     } else {
       newRoot = propTransforms["root"](rootProps as any);
@@ -38,9 +41,9 @@ export function transformProps<
   }
 
   const afterPropTransforms: Data = {
-    ...data,
+    ...defaultedData,
     root: newRoot,
-    content: data.content.map(mapItem),
+    content: defaultedData.content.map(mapItem),
     zones: Object.keys(data.zones || {}).reduce(
       (acc, zoneKey) => ({
         ...acc,

@@ -1,19 +1,19 @@
-import { Data } from "../types/Config";
+import { Data } from "../types";
 import { generateId } from "./generate-id";
 import { getZoneId } from "./get-zone-id";
 
-export const reduceRelatedZones = (
-  item: Data["content"][0],
-  data: Data,
+export function reduceRelatedZones<UserData extends Data>(
+  item: UserData["content"][0],
+  data: UserData,
   fn: (
-    zones: Required<Data>["zones"],
+    zones: Required<UserData>["zones"],
     key: string,
     zone: Required<Data>["zones"][0]
-  ) => Required<Data>["zones"]
-) => {
+  ) => Required<UserData>["zones"]
+) {
   return {
     ...data,
-    zones: Object.keys(data.zones || {}).reduce<Required<Data>["zones"]>(
+    zones: Object.keys(data.zones || {}).reduce<Required<UserData>["zones"]>(
       (acc, key) => {
         const [parentId] = getZoneId(key);
 
@@ -27,44 +27,56 @@ export const reduceRelatedZones = (
       {}
     ),
   };
-};
+}
 
-const findRelatedByZoneId = (zoneId: string, data: Data) => {
+const findRelatedByZoneId = (
+  zoneId: string,
+  data: Data
+): Record<string, any> => {
   const [zoneParentId] = getZoneId(zoneId);
 
-  return (data.zones![zoneId] || []).reduce((acc, zoneItem) => {
-    const related = findRelatedByItem(zoneItem, data);
+  return (data.zones![zoneId] || []).reduce<Record<string, any>>(
+    (acc, zoneItem) => {
+      const related = findRelatedByItem(zoneItem, data);
 
-    if (zoneItem.props.id === zoneParentId) {
-      return { ...acc, ...related, [zoneId]: zoneItem };
-    }
+      if (zoneItem.props.id === zoneParentId) {
+        return { ...acc, ...related, [zoneId]: zoneItem };
+      }
 
-    return { ...acc, ...related };
-  }, {});
+      return { ...acc, ...related };
+    },
+    {}
+  );
 };
 
 const findRelatedByItem = (item: Data["content"][0], data: Data) => {
-  return Object.keys(data.zones || {}).reduce((acc, zoneId) => {
-    const [zoneParentId] = getZoneId(zoneId);
+  return Object.keys(data.zones || {}).reduce<Record<string, any>>(
+    (acc, zoneId) => {
+      const [zoneParentId] = getZoneId(zoneId);
 
-    if (item.props.id === zoneParentId) {
-      const related = findRelatedByZoneId(zoneId, data);
+      if (item.props.id === zoneParentId) {
+        const related = findRelatedByZoneId(zoneId, data);
 
-      return {
-        ...acc,
-        ...related,
-        [zoneId]: data.zones![zoneId],
-      };
-    }
+        return {
+          ...acc,
+          ...related,
+          [zoneId]: data.zones![zoneId],
+        };
+      }
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {}
+  );
 };
 
 /**
  * Remove all related zones
  */
-export const removeRelatedZones = (item: Data["content"][0], data: Data) => {
+export const removeRelatedZones = <UserData extends Data>(
+  item: UserData["content"][0],
+  data: UserData
+) => {
   const newData = { ...data };
 
   const related = findRelatedByItem(item, data);
@@ -76,11 +88,11 @@ export const removeRelatedZones = (item: Data["content"][0], data: Data) => {
   return newData;
 };
 
-export const duplicateRelatedZones = (
-  item: Data["content"][0],
-  data: Data,
+export function duplicateRelatedZones<UserData extends Data>(
+  item: UserData["content"][0],
+  data: UserData,
   newId: string
-) => {
+): UserData {
   return reduceRelatedZones(item, data, (acc, key, zone) => {
     const dupedZone = zone.map((zoneItem) => ({
       ...zoneItem,
@@ -88,7 +100,7 @@ export const duplicateRelatedZones = (
     }));
 
     // We need to dupe any related items in our dupes
-    const dupeOfDupes = dupedZone.reduce(
+    const dupeOfDupes = dupedZone.reduce<any>(
       (dupeOfDupes, item, index) => ({
         ...dupeOfDupes,
         ...duplicateRelatedZones(zone[index], data, item.props.id).zones,
@@ -104,4 +116,4 @@ export const duplicateRelatedZones = (
       [`${newId}:${zoneId}`]: dupedZone,
     };
   });
-};
+}

@@ -2,20 +2,20 @@
   display: flex;
   background: var(--puck-color-grey-11);
   box-sizing: border-box;
-  border-left: 2px solid var(--puck-color-grey-11);
+  border-inline-start: 2px solid var(--puck-color-grey-11);
   justify-content: center;
   gap: 8px;
   min-width: 358px;
   padding-bottom: 16px;
-  padding-left: var(--puck-space-px);
-  padding-right: var(--puck-space-px);
+  padding-inline-start: var(--puck-space-px);
+  padding-inline-end: var(--puck-space-px);
   z-index: 1;
 }
 
 .ViewportControls-divider {
-  border-right: 1px solid var(--puck-color-grey-09);
-  margin-left: 8px;
-  margin-right: 8px;
+  border-inline-end: 1px solid var(--puck-color-grey-09);
+  margin-inline-start: 8px;
+  margin-inline-end: 8px;
 }
 
 .ViewportControls-zoomSelect {
@@ -27,7 +27,12 @@
   background-repeat: no-repeat;
   border: 0;
   font-size: var(--puck-font-size-xxxs);
+  padding: 0;
   width: 96px;
+}
+
+.ViewportControls-zoomSelect:dir(rtl) {
+  background-position: 12px calc(50% + 3px);
 }
 
 .ViewportButton--isActive .ViewportButton-inner {

@@ -1,0 +1,36 @@
+---
+title: iframe
+---
+
+# iframe
+
+Override the root of the iframe.
+
+```tsx copy
+const overrides = {
+  iframe: ({ children, document }) => {
+    useEffect(() => {
+      if (document) {
+        document.body.setAttribute("style", "background: hotpink;");
+      }
+    }, [document]);
+
+    return <>{children}</>;
+  },
+};
+```
+
+## Props
+
+| Prop                    | Example   | Type      |
+| ----------------------- | --------- | --------- |
+| [`document`](#document) | `{}`      | Document  |
+| [`children`](#children) | `<div />` | ReactNode |
+
+### `document`
+
+The document of the iframe window.
+
+### `children`
+
+The default node for the iframe.

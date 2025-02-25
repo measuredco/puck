@@ -1,9 +1,11 @@
 "use client";
 
-import { Button, Data, Puck, Render } from "@/core";
+import { Button, Puck, Render } from "@/core";
 import headingAnalyzer from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
-import config, { UserConfig } from "../../config";
+import config from "../../config";
 import { useDemoData } from "../../lib/use-demo-data";
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const { data, resolvedData, key } = useDemoData({
@@ -11,25 +13,40 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     isEdit,
   });
 
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
+
+  const params = new URL(window.location.href).searchParams;
+
   if (isEdit) {
     return (
       <div>
-        <Puck<UserConfig>
+        <Puck
           config={config}
           data={data}
-          onPublish={async (data: Data) => {
+          onPublish={async (data) => {
             localStorage.setItem(key, JSON.stringify(data));
           }}
           plugins={[headingAnalyzer]}
           headerPath={path}
+          iframe={{
+            enabled: params.get("disableIframe") === "true" ? false : true,
+          }}
           overrides={{
-            headerActions: () => (
+            headerActions: ({ children }) => (
               <>
                 <div>
                   <Button href={path} newTab variant="secondary">
                     View page
                   </Button>
                 </div>
+
+                {children}
               </>
             ),
           }}
@@ -38,8 +55,8 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     );
   }
 
-  if (data) {
-    return <Render<UserConfig> config={config} data={resolvedData} />;
+  if (data.content) {
+    return <Render config={config} data={resolvedData} />;
   }
 
   return (

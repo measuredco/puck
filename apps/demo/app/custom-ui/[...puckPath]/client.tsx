@@ -1,16 +1,28 @@
 "use client";
 
-import { Button, Data, Puck, Render } from "@/core";
+import { ActionBar, Button, Data, Puck, Render } from "@/core";
 import { HeadingAnalyzer } from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config, { UserConfig } from "../../../config";
 import { useDemoData } from "../../../lib/use-demo-data";
 import { IconButton, usePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Drawer } from "@/core/components/Drawer";
-import { ChevronUp, ChevronDown, Globe } from "lucide-react";
+import { ChevronUp, ChevronDown, Globe, Lock, Unlock } from "lucide-react";
 
 const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
   const { appState, dispatch } = usePuck();
+  const {
+    ui: { previewMode },
+  } = appState;
+
+  const toggleMode = () => {
+    dispatch({
+      type: "setUi",
+      ui: {
+        previewMode: previewMode === "edit" ? "interactive" : "edit",
+      },
+    });
+  };
 
   return (
     <header
@@ -28,7 +40,10 @@ const CustomHeader = ({ onPublish }: { onPublish: (data: Data) => void }) => {
     >
       <span style={{ fontWeight: 600 }}>Custom UI example </span>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
-        <div>
+        <div style={{ gap: 8, display: "flex" }}>
+          <Button onClick={toggleMode} variant="secondary">
+            Switch to {previewMode === "edit" ? "interactive" : "edit"}
+          </Button>
           <Button
             onClick={() => onPublish(appState.data)}
             icon={<Globe size="14" />}
@@ -102,6 +117,7 @@ const Tabs = ({
           return (
             <button
               key={idx}
+              type="button"
               onClick={() => {
                 if (currentTab === idx) {
                   setCurrentTab(-1);
@@ -111,7 +127,7 @@ const Tabs = ({
                     setTimeout(() => {
                       document
                         .querySelector("#action-bar")
-                        .scroll({ top: 128, behavior: "smooth" });
+                        ?.scroll({ top: 128, behavior: "smooth" });
                     }, 25);
                   }
                 }
@@ -153,7 +169,7 @@ const Tabs = ({
                   setTimeout(() => {
                     document
                       .querySelector("#action-bar")
-                      .scroll({ top: 128, behavior: "smooth" });
+                      ?.scroll({ top: 128, behavior: "smooth" });
                   }, 25);
                 }
               }}
@@ -276,57 +292,154 @@ const CustomPuck = ({ dataKey }: { dataKey: string }) => {
   );
 };
 
+const CustomDrawer = () => {
+  const { getPermissions } = usePuck();
+
+  return (
+    <Drawer>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(256px, 1fr))",
+          pointerEvents: "all",
+          padding: "16px",
+          background: "var(--puck-color-grey-12)",
+          gap: 8,
+        }}
+      >
+        {Object.keys(config.components).map((componentKey, componentIndex) => {
+          const canInsert = getPermissions({
+            type: componentKey,
+          }).insert;
+
+          return (
+            <Drawer.Item
+              key={componentKey}
+              name={componentKey}
+              isDragDisabled={!canInsert}
+            />
+          );
+        })}
+      </div>
+    </Drawer>
+  );
+};
+
 export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
   const { data, resolvedData, key } = useDemoData({
     path,
     isEdit,
   });
 
+  const [lockedComponents, setLockedComponents] = useState<
+    Record<string, boolean>
+  >({});
+
+  const configOverride: UserConfig = {
+    ...config,
+    components: {
+      ...Object.keys(config.components).reduce((acc, componentKey) => {
+        return {
+          ...acc,
+          [componentKey]: {
+            ...acc[componentKey as keyof UserConfig["components"]],
+            resolvePermissions: (data: any, { permissions }: any) => {
+              if (lockedComponents[data.props.id]) {
+                return {
+                  drag: false,
+                  edit: false,
+                  duplicate: false,
+                  delete: false,
+                };
+              }
+
+              return permissions;
+            },
+          },
+        };
+      }, config.components),
+    },
+  };
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
+
   if (isEdit) {
     return (
       <Puck<UserConfig>
-        config={config}
+        config={configOverride}
         data={data}
         iframe={{ enabled: false }}
         headerPath={path}
+        permissions={{
+          lockable: true,
+        }}
         overrides={{
           outline: ({ children }) => (
             <div style={{ padding: 16 }}>{children}</div>
           ),
-          components: () => {
+          actionBar: ({ children, label, parentAction }) => {
+            const { getPermissions, selectedItem, refreshPermissions } =
+              // Disable rules of hooks since this is a render function
+              // eslint-disable-next-line react-hooks/rules-of-hooks
+              usePuck<UserConfig>();
+
+            const globalPermissions = getPermissions();
+
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            useEffect(() => {
+              if (selectedItem) {
+                // We have to force refresh the permission resolver to refresh, since it relies on lockedComponents state
+                // Without this, the resolver won't trigger as no props will have changed
+                refreshPermissions({ item: selectedItem });
+              }
+              // eslint-disable-next-line react-hooks/exhaustive-deps
+            }, [lockedComponents, selectedItem?.props.id, refreshPermissions]);
+
+            if (!selectedItem)
+              return (
+                <ActionBar>
+                  <ActionBar.Group>
+                    {parentAction}
+                    {label && <ActionBar.Label label={label} />}
+                  </ActionBar.Group>
+                  <ActionBar.Group>{children}</ActionBar.Group>
+                </ActionBar>
+              );
+
+            const isLocked = !!lockedComponents[selectedItem.props.id];
+
             return (
-              <Drawer direction="horizontal">
-                <div
-                  style={{
-                    display: "flex",
-                    pointerEvents: "all",
-                    padding: "16px",
-                    background: "var(--puck-color-grey-12)",
-                  }}
-                >
-                  {Object.keys(config.components).map(
-                    (componentKey, componentIndex) => (
-                      <Drawer.Item
-                        key={componentKey}
-                        name={componentKey}
-                        index={componentIndex}
-                      >
-                        {({ children }) => (
-                          <div
-                            style={{
-                              marginRight: 8,
-                            }}
-                          >
-                            {children}
-                          </div>
-                        )}
-                      </Drawer.Item>
-                    )
+              <ActionBar>
+                <ActionBar.Group>
+                  {parentAction}
+                  {label && <ActionBar.Label label={label} />}
+                </ActionBar.Group>
+                <ActionBar.Group>
+                  {children}
+                  {globalPermissions.lockable && (
+                    <ActionBar.Action
+                      onClick={() => {
+                        setLockedComponents({
+                          ...lockedComponents,
+                          [selectedItem.props.id as string]: !isLocked,
+                        });
+                      }}
+                      label={isLocked ? "Unlock component" : "Lock component"}
+                    >
+                      {isLocked ? <Unlock size={16} /> : <Lock size={16} />}
+                    </ActionBar.Action>
                   )}
-                </div>
-              </Drawer>
+                </ActionBar.Group>
+              </ActionBar>
             );
           },
+          components: () => <CustomDrawer />,
           puck: () => <CustomPuck dataKey={key} />,
         }}
       />

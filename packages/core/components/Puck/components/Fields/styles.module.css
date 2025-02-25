@@ -3,17 +3,44 @@
   font-family: var(--puck-font-family);
 }
 
+.PuckFields--isLoading {
+  min-height: 48px; /* Ensure there is sufficient room for loader if no fields */
+}
+
 .PuckFields-loadingOverlay {
   background: var(--puck-color-white);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-start;
   height: 100%;
   width: 100%;
-  top: 0;
+  top: 0px;
   position: absolute;
   z-index: 1;
   pointer-events: all;
   box-sizing: border-box;
   opacity: 0.8;
+}
+
+.PuckFields-loadingOverlayInner {
+  display: flex;
+  padding: 16px;
+  position: sticky;
+  top: 0;
+}
+
+.PuckFields-field * {
+  box-sizing: border-box;
+}
+
+.PuckFields--wrapFields .PuckFields-field {
+  color: var(--puck-color-grey-04);
+  padding: 16px;
+  padding-bottom: 12px;
+  display: block;
+}
+
+.PuckFields--wrapFields .PuckFields-field + .PuckFields-field {
+  border-top: 1px solid var(--puck-color-grey-09);
+  margin-top: 8px;
 }

@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
-import { Config, Data } from "../../types/Config";
+import { Config, Data, UserGenerics } from "../../types";
 import { setupZone } from "../../lib/setup-zone";
 
 type DropZoneRenderProps = {
@@ -59,13 +59,10 @@ function DropZoneRender({
   );
 }
 
-export function Render<UserConfig extends Config = Config>({
-  config,
-  data,
-}: {
-  config: UserConfig;
-  data: Data;
-}) {
+export function Render<
+  UserConfig extends Config = Config,
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
+>({ config, data }: { config: UserConfig; data: G["UserData"] }) {
   if (config.root?.render) {
     // DEPRECATED
     const rootProps = data.root.props || data.root;
@@ -79,6 +76,8 @@ export function Render<UserConfig extends Config = Config>({
           renderDropZone: ({ zone }: { zone: string }) => (
             <DropZoneRender zone={zone} data={data} config={config} />
           ),
+          isEditing: false,
+          dragRef: null,
         }}
         title={title}
         editMode={false}

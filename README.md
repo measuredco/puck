@@ -60,10 +60,7 @@ const config = {
 };
 
 // Describe the initial data
-const initialData = {
-  content: [],
-  root: {},
-};
+const initialData = {};
 
 // Save the data to your database
 const save = (data) => {};
@@ -96,19 +93,19 @@ npx create-puck-app my-app
 
 Available recipes include:
 
-- [**next**](https://github.com/measuredco/puck/tree/main/recipes/next): Next.js 13 app example, using App Router and static page generation
-- [**remix**](https://github.com/measuredco/puck/tree/main/recipes/remix): Remix Run v2 app example, using dynamic routes at root-level
+- [**next**](https://github.com/measuredco/puck/tree/main/recipes/next): Next.js example, using App Router and static page generation
+- [**remix**](https://github.com/measuredco/puck/tree/main/recipes/remix): Remix Run v2 example, using dynamic routes at root-level
 
 ## Community
 
 - [Discord server](https://discord.gg/D9e4E3MQVZ) for discussions
 - [awesome-puck](https://github.com/measuredco/awesome-puck) community repo for plugins, custom fields & more
 
-## Hire the Puck team
+## Get support
 
-Puck is developed and maintained by **Measured**, a small group of industry veterans with decades of experience helping companies solve hard UI problems. We offer consultancy and development services for scale-ups, SMEs and enterprises.
+If you have any questions about Puck, please open a [GitHub issue](https://github.com/measuredco/puck/issues) or join us on [Discord](https://discord.gg/D9e4E3MQVZ).
 
-If you need support integrating Puck or creating a beautiful component library, please reach out via the [Measured](https://measured.co) website.
+Or [book a discovery call](https://app.cal.com/chrisvxd/puck-enquiry/) for hands-on support and consultancy.
 
 ## License
 

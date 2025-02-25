@@ -10,7 +10,7 @@ import {
   UnregisterZoneAction,
   createReducer,
 } from "../../reducer";
-import { AppState, Config, Data, UiState } from "../../types/Config";
+import { AppState, Config, Data, UiState } from "../../types";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 
 import { generateId } from "../../lib/generate-id";
@@ -25,6 +25,9 @@ type Props = {
     prop: string;
   };
 };
+
+type UserConfig = Config<Props>;
+
 const defaultData: Data = {
   root: { props: { title: "" } },
   content: [],
@@ -34,7 +37,7 @@ const defaultData: Data = {
 const defaultUi: UiState = defaultAppState.ui;
 
 describe("Data reducer", () => {
-  const config: Config<Props> = {
+  const config: UserConfig = {
     components: {
       Comp: {
         defaultProps: { prop: "example" },

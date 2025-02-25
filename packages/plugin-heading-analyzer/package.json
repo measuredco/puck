@@ -1,6 +1,6 @@
 {
   "name": "@measured/puck-plugin-heading-analyzer",
-  "version": "0.14.2",
+  "version": "0.18.2",
   "author": "Measured Corporation Ltd <hello@measured.co>",
   "repository": "measuredco/puck",
   "bugs": "https://github.com/measuredco/puck/issues",
@@ -8,6 +8,13 @@
   "private": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./dist/index.css": "./dist/index.css"
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts*\"",
@@ -18,20 +25,20 @@
     "dist"
   ],
   "devDependencies": {
-    "@measured/puck": "^0.14.2",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@measured/puck": "^0.18.2",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",
-    "tsup": "^6.7.0",
+    "tsup": "^8.2.4",
     "tsup-config": "*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "react-from-json": "^0.8.0"
   },
   "peerDependencies": {
-    "react": "^17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
   }
 }

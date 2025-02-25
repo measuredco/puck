@@ -1,5 +1,5 @@
 import { DropZoneContext } from "../../components/DropZone/context";
-import { Config, Data } from "../../types/Config";
+import { Config, Data } from "../../types";
 import { isChildOfZone } from "../is-child-of-zone";
 
 const item1 = { type: "MyComponent", props: { id: "MyComponent-1" } };
@@ -35,6 +35,8 @@ const dropzoneContext: DropZoneContext = {
       label: "MyComponent",
     },
   },
+  path: [],
+  depth: 0,
 };
 
 describe("is-child-of-zone", () => {

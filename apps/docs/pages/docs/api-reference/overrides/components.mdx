@@ -1,0 +1,23 @@
+---
+title: components
+---
+
+# components
+
+Override the component list.
+
+```tsx copy
+const overrides = {
+  components: ({ children }) => <div>{children}</div>,
+};
+```
+
+## Props
+
+| Prop                    | Example   | Type      |
+| ----------------------- | --------- | --------- |
+| [`children`](#children) | `<div />` | ReactNode |
+
+### `children`
+
+The default node for the component list.

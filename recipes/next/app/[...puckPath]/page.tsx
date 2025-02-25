@@ -16,22 +16,24 @@ import { Metadata } from "next";
 import { getPage } from "../../lib/get-page";
 
 export async function generateMetadata({
-  params: { puckPath = [] },
+  params,
 }: {
-  params: { puckPath: string[] };
+  params: Promise<{ puckPath: string[] }>;
 }): Promise<Metadata> {
+  const { puckPath = [] } = await params;
   const path = `/${puckPath.join("/")}`;
 
   return {
-    title: getPage(path)?.root.props.title,
+    title: getPage(path)?.root.props?.title,
   };
 }
 
 export default async function Page({
-  params: { puckPath = [] },
+  params,
 }: {
-  params: { puckPath: string[] };
+  params: Promise<{ puckPath: string[] }>;
 }) {
+  const { puckPath = [] } = await params;
   const path = `/${puckPath.join("/")}`;
   const data = getPage(path);
 

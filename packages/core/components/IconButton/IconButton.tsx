@@ -1,7 +1,7 @@
 import { ReactNode, SyntheticEvent, useState } from "react";
 import styles from "./IconButton.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { ClipLoader } from "react-spinners";
+import { Loader } from "../Loader";
 
 const getClassName = getClassNameFactory("IconButton", styles);
 
@@ -61,7 +61,7 @@ export const IconButton = ({
       {loading && (
         <>
           &nbsp;&nbsp;
-          <ClipLoader aria-label="Loading" color="inherit" size="14px" />
+          <Loader size={14} />
         </>
       )}
     </ElementType>

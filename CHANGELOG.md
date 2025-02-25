@@ -2,6 +2,276 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.18.2](https://github.com/measuredco/puck/compare/v0.18.0...v0.18.2) (2025-01-31)
+
+
+### Bug Fixes
+
+* add missing types for root render method ([0f52caf](https://github.com/measuredco/puck/commit/0f52caf0a3d77978d913b0915bbb23725fc94a3d))
+* address ownerDocument permission error in Firefox ([c22b3a9](https://github.com/measuredco/puck/commit/c22b3a9838fad6c65c71091eb89bb9104b6aabaf))
+* address prop name collision regression ([3a69ad4](https://github.com/measuredco/puck/commit/3a69ad4ac3e982340b3fcae6b5773240d88e7f92))
+* correctly infer types when using Render with RSC ([ad7fbf4](https://github.com/measuredco/puck/commit/ad7fbf4bc7534cfb348dd7fdbac56b84b03552e3))
+* don't jump to end of textarea fields during change ([36c27a9](https://github.com/measuredco/puck/commit/36c27a9c166affc83ecfd36f79974cb9990917c6))
+* don't trigger clicks when dropping array items ([29a7f1d](https://github.com/measuredco/puck/commit/29a7f1df55f1eff6bee55ee7984ec7974a4feaec))
+* don't trigger drag when interacting with array fields ([c7cd341](https://github.com/measuredco/puck/commit/c7cd34165cbde90ae0297ab79a1ea6852f9d9726))
+* ensure ctrl+i interactive toggle hotkey works on Windows ([5db6f4d](https://github.com/measuredco/puck/commit/5db6f4d5f90b222423df363e9964ec344b9a0a7e))
+* ensure renderDropZone provided correctly to root render ([b9ce5b7](https://github.com/measuredco/puck/commit/b9ce5b700056f985362d1f4a9125996badfcbdd7))
+* fix RTL drag-and-drop behaviour ([28f518a](https://github.com/measuredco/puck/commit/28f518aad9da211042e3b51e52369b6c126c75d8))
+* improve behaviour of array drag-and-drop ([565fabd](https://github.com/measuredco/puck/commit/565fabdaa78f92fdbb327d878d7142e0455f5e8a))
+* provide empty readOnly object instead of undefined to root resolveFields ([8992a94](https://github.com/measuredco/puck/commit/8992a9476ab2bc3837bb986bbd3e1042babd81a8))
+* provide updated props to resolveFields ([b7ff689](https://github.com/measuredco/puck/commit/b7ff6898618a1a30b07a85669f16e891db975ffd))
+* reinstate padding for external field filters ([28ccfda](https://github.com/measuredco/puck/commit/28ccfdaf8b6c546464df18f1a3ebb2b8b6363dc7))
+* tidy up stale items on drag cancellation ([de48691](https://github.com/measuredco/puck/commit/de48691b017a66c251616ba31861bd0b8816ef68))
+* update styles for RTL ([23c8dda](https://github.com/measuredco/puck/commit/23c8dda031b0f50e30eacdb15d3a774bd8045879))
+* use correct type for onChange args when overriding fieldTypes ([daff71e](https://github.com/measuredco/puck/commit/daff71ef726ad74d2b5628c466b2ddbaa1850160))
+
+
+
+
+## [0.18.1](https://github.com/measuredco/puck/compare/v0.18.0...v0.18.1) (2025-01-24)
+
+
+### Bug Fixes
+
+* address React 19 peer dependency issues ([7649086](https://github.com/measuredco/puck/commit/7649086009deb9b9ceb5c4790e9c356b107a20b6))
+* address ResizeObserver loop error ([d3e6b57](https://github.com/measuredco/puck/commit/d3e6b57190e3f6e8a4f857a45a51cbb060daf050))
+* don't access selectedItem if undefined right after drop ([0573b18](https://github.com/measuredco/puck/commit/0573b182452f1c614a15f4125fefa81a880e37a2))
+* ensure nested drag-and-drop works in Firefox ([f077a37](https://github.com/measuredco/puck/commit/f077a37158194867a10c1406252fe4a8f4f6974c))
+
+
+
+
+## [0.18.0](https://github.com/measuredco/puck/compare/v0.17.1...v0.18.0) (2025-01-21)
+
+
+### Features
+
+* add action to select parent component to ActionBar ([7c910d5](https://github.com/measuredco/puck/commit/7c910d5272e8d6d77819ccb3280dff143ea848fd))
+* add ActionBar.Label component for adding labels to action bars ([d2645fd](https://github.com/measuredco/puck/commit/d2645fd68a57b4c07bb8a3948ab6a845c2ce1988))
+* add DropZone collisionAxis API for forcing collision direction ([ba68732](https://github.com/measuredco/puck/commit/ba687329c6fac5085f78768bff6eb37bfd842f33))
+* add meta+i hotkey and previewMode state to toggle interactivity ([ec1eba5](https://github.com/measuredco/puck/commit/ec1eba58525e0245ee1214f8e401fa935c41fe23))
+* add wrapFields prop to control padding of fields in Puck.Fields ([30f9a92](https://github.com/measuredco/puck/commit/30f9a926d2640a5bf9f65d8f4c2b6018e73f8719))
+* control empty DropZone height with minEmptyHeight prop ([96f8340](https://github.com/measuredco/puck/commit/96f83408f4e6219dd35f5c29b204ef18e6d11d64))
+* deselect item on viewport change ([e35585d](https://github.com/measuredco/puck/commit/e35585d767c857413ed5560f311d64bcab1218c4))
+* forward the ref to the DropZone component ([676aa1c](https://github.com/measuredco/puck/commit/676aa1c974bd1260aaa687aa3edc2c54ef34e22b))
+* introduce new drag-and-drop engine ([6ebb3b8](https://github.com/measuredco/puck/commit/6ebb3b8724b8ed56cc76d3ce166b1dc87ed07dad))
+* reduce DropZone to height of items unless empty ([2b2595a](https://github.com/measuredco/puck/commit/2b2595a4e3e1c5ed8352cdfbec704290a1b396e8))
+* remove `position: fixed;` from Puck layout ([5deb774](https://github.com/measuredco/puck/commit/5deb7744c07fca12e6aa44d058b495f65b298eab))
+* support inline Drawers, deprecating unnecessary props ([f93b71e](https://github.com/measuredco/puck/commit/f93b71e1ad555184fc1a43f151ef1b161be148c6))
+
+
+### Bug Fixes
+
+* deselect item on delete ([f27871b](https://github.com/measuredco/puck/commit/f27871b5b63be8246cd281d93c49f7744d7e186f))
+* improve heading-analyzer reliability ([ab6c018](https://github.com/measuredco/puck/commit/ab6c01862c35e27929b249a6d4bc4d2e9065dc12))
+* never render FieldLabel with padding or borders ([a97b54f](https://github.com/measuredco/puck/commit/a97b54fd9427f3cd587951a0a30a95d56c5ff020))
+* prevent propagation of custom ActionBar actions by default ([14909bd](https://github.com/measuredco/puck/commit/14909bdc5a782330af661a32bc80ab387ab12897))
+* prevent user pollution of ActionBar styles ([e154cb7](https://github.com/measuredco/puck/commit/e154cb7c72c4fce735ccd60ccbdc862314f0ad26))
+* render DropZones the same in Puck and Render ([d975aaf](https://github.com/measuredco/puck/commit/d975aaf90bf7d0956ccf1d6c377a6e20ba224801))
+* reset resolveFields lastFields param when changing component ([7fead35](https://github.com/measuredco/puck/commit/7fead35fddf8fef49b41508a27c0e6be458ab2c4))
+* select new item when dispatching duplicate action ([e3d0025](https://github.com/measuredco/puck/commit/e3d0025d08408103940c2f84c4524266288f38fd))
+* set root DropZone to 100% height ([3d93f46](https://github.com/measuredco/puck/commit/3d93f46555372e83ead6f671e40970937802f5f4))
+* stop actions from overflowing outside left of frame ([c036b6d](https://github.com/measuredco/puck/commit/c036b6d2036cc759e0a2eda6154bdec5b8a7784e))
+* trigger iframe resize when closing devtools ([2c0b782](https://github.com/measuredco/puck/commit/2c0b782d41817caa2b6fae41fc52b1a7ccbb8d09))
+
+
+
+## [0.17.4](https://github.com/measuredco/puck/compare/v0.17.3...v0.17.4) (2025-01-19)
+
+
+### Bug Fixes
+
+* handle null when provided to text/textarea/number fields ([e778246](https://github.com/measuredco/puck/commit/e778246e4ae8925f3d04962369a33a9c1a4b6589))
+* improve stability of resolveFields API ([5c60d6a](https://github.com/measuredco/puck/commit/5c60d6a11512086f395ace352eec868fcd748f44))
+* respect allow prop for existing items ([e414e34](https://github.com/measuredco/puck/commit/e414e34680acb7259dcee1da081060f5be923c02))
+
+
+
+
+## [0.17.3](https://github.com/measuredco/puck/compare/v0.17.2...v0.17.3) (2025-01-13)
+
+
+### Bug Fixes
+
+* ensure items in root DropZone can be selected ([f61dd4a](https://github.com/measuredco/puck/commit/f61dd4a955e6c09d49f4fc1967e1cac5445697f7))
+
+
+
+
+## [0.17.2](https://github.com/measuredco/puck/compare/v0.17.1...v0.17.2) (2025-01-10)
+
+
+### Bug Fixes
+
+* always respect history hotkeys inside iframes ([1134e8b](https://github.com/measuredco/puck/commit/1134e8b893e6828ad6407d570d987d4206e71566))
+* clear old readOnly data when running resolveData ([3e91adc](https://github.com/measuredco/puck/commit/3e91adcf38a3a0f03537d592d15458f368048857))
+* don't trigger move action if source / destination the same ([8a0b811](https://github.com/measuredco/puck/commit/8a0b811c79d7ec91cd6cc0007f05048680e42997))
+* ensure parent is not null on first render in resolveFields ([773a81a](https://github.com/measuredco/puck/commit/773a81a330bc133b2d77b58d3ec99300cda1546e))
+* factor in border when setting viewport size ([cc3b3b8](https://github.com/measuredco/puck/commit/cc3b3b8685e63cccba2c5a59e349a9394445f1f6))
+* fix plugin-emotion-cache style sync when using initialData ([ac8679c](https://github.com/measuredco/puck/commit/ac8679c309a5b9b46670aa41b263b7369d155a46))
+* fix readOnly behaviour in nested fields ([f6ab512](https://github.com/measuredco/puck/commit/f6ab51269d6f2acfb3a366ac5c33337158ac30ba))
+* remove unnecessary transpile from next recipe ([a5f2d08](https://github.com/measuredco/puck/commit/a5f2d08efe6e3aec8c65ed1a1d59df26f45277be))
+* respect min/max for freeform input in number field ([715710a](https://github.com/measuredco/puck/commit/715710a37c06ec6f255036c3e1334cf4fb0b2549))
+* use correct label for array and object subfields ([c00ea00](https://github.com/measuredco/puck/commit/c00ea007f20242766786c57b915e43c65047a045))
+
+
+
+
+## [0.17.1](https://github.com/measuredco/puck/compare/v0.17.0...v0.17.1) (2024-12-18)
+
+
+### Bug Fixes
+
+* respect falsey booleans types in select/radio fields ([3406b01](https://github.com/measuredco/puck/commit/3406b01d5ce00e8f2b885a1f951b5c96aa7a7989))
+
+
+
+
+## [0.17.0](https://github.com/measuredco/puck/compare/v0.16.2...v0.17.0) (2024-12-18)
+
+### Features
+
+* add duplicate action to array field ([229cbdd](https://github.com/measuredco/puck/commit/229cbddb7eed513c8ac9a2e36e3af3b53ff28d7e))
+* add renderFooter API to external field ([ccec96e](https://github.com/measuredco/puck/commit/ccec96e5ddf831fcd89a2af335449ad4cff1ea81))
+* allow react elements in external field mapRow ([2f781de](https://github.com/measuredco/puck/commit/2f781de0a910a193f0a4bae795725119476f8e94))
+* enable resolveFields to access parent data ([196227b](https://github.com/measuredco/puck/commit/196227bdf33ee678ce47b68fc624804448008cc1))
+* list React 19 as supported peer dependency ([85e8cc1](https://github.com/measuredco/puck/commit/85e8cc1a6fcd29d9dd04e5e53c6e7f9a85f99959))
+* track focused field in app state ([91bc97a](https://github.com/measuredco/puck/commit/91bc97a760d1750d65dedbbffee962a6c6ee8d60))
+* upgrade next recipe to v15.1 ([8ef51c5](https://github.com/measuredco/puck/commit/8ef51c54e386528fca69be1e54b8a3ce69651bd0))
+* use React 19 in next recipe ([6b3d97f](https://github.com/measuredco/puck/commit/6b3d97f9f3d0cc2283178ba6f4bda3b23f1f718a))
+
+
+### Bug Fixes
+
+* always run field resolvers when item change ([159d819](https://github.com/measuredco/puck/commit/159d819e0263f4e91bff8a83adfa404601850aa5))
+* always update fields when resolveData runs ([39dd619](https://github.com/measuredco/puck/commit/39dd61934c15a452c59f26b0c6721802df0c1889))
+* ensure radio fields are functional inside arrays ([7736294](https://github.com/measuredco/puck/commit/7736294d201f432799c0854be14b35edbad156d8))
+* prevent field name collision causing hook render mismatch ([b51954a](https://github.com/measuredco/puck/commit/b51954a19875e1f3c87e0cdc03c10173e9786820))
+* prevent flicker when using resolveData with arrays ([1be9b88](https://github.com/measuredco/puck/commit/1be9b886325a1515434759011e9e3514c583bd2e))
+* provide better error when usePuck used inappropriately ([9991c07](https://github.com/measuredco/puck/commit/9991c079b2b7d8f18ecb42efc3ebc32e5d679b88))
+* remove leading zeros in Number field ([5ba9399](https://github.com/measuredco/puck/commit/5ba9399e6546919ae744d7a4986b59faa1cd7aef))
+* respect original value type in radio and select fields ([00ccd1d](https://github.com/measuredco/puck/commit/00ccd1df6513d2420c87cd136577e1df1ac9a9a3) and [6e5864a](https://github.com/measuredco/puck/commit/6e5864a5df01a52fb4e6b23132d68d4496f1e64e))
+
+
+
+
+## [0.16.2](https://github.com/measuredco/puck/compare/v0.16.1...v0.16.2) (2024-11-07)
+
+
+### Bug Fixes
+
+* always treat data as immutable, fixing Redux issues ([51154e9](https://github.com/measuredco/puck/commit/51154e92b9022311afa79d086f69b70b6b8beb77))
+* don't crash if component definition missing ([525b506](https://github.com/measuredco/puck/commit/525b5065563675d03d89cf090ce1f7fdf8ff0486))
+* don't crash when selecting component with no config ([cb90f5d](https://github.com/measuredco/puck/commit/cb90f5d9109b340407bc9828fcd9761183d83e68)), closes [#671](https://github.com/measuredco/puck/issues/671)
+* export missing resolveAllData lib in RSC bundle ([2f5fb7b](https://github.com/measuredco/puck/commit/2f5fb7ba69b61b857ad14720b93ceab026571aa7))
+* fix RTL styles in action bar overlay ([bf5c5a3](https://github.com/measuredco/puck/commit/bf5c5a33081599331049063c79c7859aea96d0da))
+* remove internal AutoField and FieldLabel components from bundle ([5df1597](https://github.com/measuredco/puck/commit/5df1597feede2f0ff922ad13297fd3acaf942da2))
+* remove unused label from AutoField type ([18b6f1a](https://github.com/measuredco/puck/commit/18b6f1acae0186245817f35d4a27e6fdf4153ea1))
+
+
+
+
+## [0.16.1](https://github.com/measuredco/puck/compare/v0.16.0...v0.16.1) (2024-10-07)
+
+
+### Bug Fixes
+
+* don't delete array field on click in FieldLabel ([ed282b9](https://github.com/measuredco/puck/commit/ed282b98ebe8574258444ba91716d8da7e8117d1))
+* don't overwrite user input when field recently changed ([6126040](https://github.com/measuredco/puck/commit/61260407c5c87cc8c5c4fe925835f2d0d2a6f9ff))
+* don't show field loader if no resolver defined ([8c706cd](https://github.com/measuredco/puck/commit/8c706cda92474114faffc7ed77f4b4024f75bf68))
+* hide ActionBar.Group border when empty ([4345165](https://github.com/measuredco/puck/commit/4345165ee71b9762e6bca9baaa53d0c53144d0c4))
+* prevent item click before iframe load ([61e1653](https://github.com/measuredco/puck/commit/61e1653020b9e272133c70fa9494f1a81782531e))
+* prevent flash of field loader when no data changed ([20d7309](https://github.com/measuredco/puck/commit/20d730924d2f235871bfec4f0467a6652a518704))
+* respect readOnly styles in AutoField ([9ffe817](https://github.com/measuredco/puck/commit/9ffe8176c1c437524fd9f7b2912f1a5846fc5e55))
+
+
+
+
+## [0.16.0](https://github.com/measuredco/puck/compare/v0.15.0...v0.16.0) (2024-09-16)
+
+
+### Features
+
+* add actionBar override for adding component controls ([48ec0d7](https://github.com/measuredco/puck/commit/48ec0d786c7c589efc8b97152a5e1a4c065c0312))
+* add automatic RSC export, replacing /rsc bundle ([d21eba6](https://github.com/measuredco/puck/commit/d21eba6185da8efcbcb5458eaaa5be6c321b3d1a))
+* add isDisabled prop to Drawer.Item ([cad95b8](https://github.com/measuredco/puck/commit/cad95b887c6b06a41a2bacf28792fd4dbc808d72))
+* add generic type to usePuck hook ([01703a9](https://github.com/measuredco/puck/commit/01703a95093413a57af1314b1f31cc34f85c38e0))
+* add iframe override for style injection ([7cac376](https://github.com/measuredco/puck/commit/7cac3764d1f9336776b97fa08cbd48bec95e6a10))
+* add initialHistory prop to Puck ([54b5a87](https://github.com/measuredco/puck/commit/54b5a871570120a3d0d55e96738746ec375dee0d))
+* add onAction API to track and react to state changes ([c7007ac](https://github.com/measuredco/puck/commit/c7007acab334ec2d08f95669d685edb8c3947bcc))
+* add permissions API ([a43914d](https://github.com/measuredco/puck/commit/a43914dc36e70c5596c186d3c63b9497949365a9))
+* add plugin for injecting Emotion cache ([f8a88b9](https://github.com/measuredco/puck/commit/f8a88b9c2447c76f2f7a00ce5705f8fae07be58c))
+* add resolvePermissions API ([f0655f0](https://github.com/measuredco/puck/commit/f0655f08a96b853cf18d681025f40e8d30df3013))
+* add waitForStyles option to iframe config ([bc81d9c](https://github.com/measuredco/puck/commit/bc81d9c7de671fea0bc155911ee11598a1b920c2))
+* call resolveData when new item inserted ([3298831](https://github.com/measuredco/puck/commit/329883165c9e428b9f291add7b6009ba29680146))
+* don't mandate fields for optional props ([5a219ef](https://github.com/measuredco/puck/commit/5a219eff0c2f4763ec1d9f48f45fe684e6482b8f))
+* export ActionBar component for use in overrides ([04fd6c5](https://github.com/measuredco/puck/commit/04fd6c5c7a65fc3ec9a05da277865341efe229af))
+* infer Data type from user config ([50045bb](https://github.com/measuredco/puck/commit/50045bbda2cf3b64e37e0e6bedcfce14f680cda1))
+* make ID optional in History type (BREAKING CHANGE) ([d917229](https://github.com/measuredco/puck/commit/d917229ae4f553bb54a420e1c708c1a509431106))
+* provide ES Module build ([ff9076b](https://github.com/measuredco/puck/commit/ff9076b9d24d030ad47619b6a359b1f120422d70))
+* rename history.data to history.state (BREAKING CHANGE) ([b09244c](https://github.com/measuredco/puck/commit/b09244c864fd049ceeda2b7eb20ec6cab9f40054))
+* show spinner if iframe load takes over 500ms ([cfecf54](https://github.com/measuredco/puck/commit/cfecf5499d06b8e90438dc151e5e915da06ccb87))
+* streamline usePuck history API ([c8b2807](https://github.com/measuredco/puck/commit/c8b28075fde0081b8ac824eb256114c9b8836f9e))
+* upgrade "next" recipe to typescript@5.5.4 ([60fe631](https://github.com/measuredco/puck/commit/60fe63113f8ad8bbce52d8457ee4372aa4b09509))
+
+
+### Bug Fixes
+
+* add favicon to next recipe to prevent Puck 404 ([2c52d27](https://github.com/measuredco/puck/commit/2c52d271c6c20e9368a59eb1f2a5df184cef72bc))
+* add missing readOnly state to External fields ([bf1449d](https://github.com/measuredco/puck/commit/bf1449dd8b299a4f469986d94f8986b02b79a688))
+* always record history on component insert ([88c5ab6](https://github.com/measuredco/puck/commit/88c5ab6b545ecbd045de3ee0d43801c48f50e8b0))
+* don't cache /edit route in Next recipe ([94f16b2](https://github.com/measuredco/puck/commit/94f16b25efea86ff475683d3a21f5937e07b201c))
+* don't submit buttons if Puck used in form ([f761e5f](https://github.com/measuredco/puck/commit/f761e5fed63fc698e3a9d6ba94607364ed46f31b))
+* ensure demo types are satisfied with TypeScript@5 ([958dc25](https://github.com/measuredco/puck/commit/958dc255ac5d285f98b6b592df677883b74e2830))
+* export missing Plugin type ([eb42734](https://github.com/measuredco/puck/commit/eb427343fd58752861cac850f59c1098cf473f50))
+* fix crash if component in data is missing from config ([0daf478](https://github.com/measuredco/puck/commit/0daf478d9ad8b14d2844ff6ae2db9bd72970d680))
+* improve resiliency of iframe CSS for some frameworks, like Mantine ([538cb05](https://github.com/measuredco/puck/commit/538cb05606126c338e97c047b97065463e618d36))
+* make Config and Data types more robust ([6bcf555](https://github.com/measuredco/puck/commit/6bcf555da74d54d70f00f37878d35fa166bb7e4c))
+* prevent infinite loop when using plugins with some frameworks ([3870871](https://github.com/measuredco/puck/commit/38708716f32d65a9131b87fe664ba96b32aead15))
+* prevent Tailwind from clashing with viewport zoom select ([9151255](https://github.com/measuredco/puck/commit/91512553430b295c37c80a935f0db929bb37870c))
+* remove body margin in remix recipe ([0898b26](https://github.com/measuredco/puck/commit/0898b26cd021680dfb77a439b04140ce2fb8cb2c))
+* resize viewport when changed via app state ([14419ec](https://github.com/measuredco/puck/commit/14419ecf1c606e6fa0d6d9c5198401eb01bc72dd))
+* resolve fields when switching between items of same type ([a3518ca](https://github.com/measuredco/puck/commit/a3518ca8560ba9fcdbe5086220490920ecf24fc0))
+* return lastData as null instead of empty object in resolvers (BREAKING CHANGE) ([648eb92](https://github.com/measuredco/puck/commit/648eb92b3d2c5be8f5fc99a22db5eff64cefb155))
+* show warning if heading-analyzer styles aren't loaded ([4e7110b](https://github.com/measuredco/puck/commit/4e7110b591a4a12e2b3c89eb1fa98faf5f9338d4))
+* use correct color in FieldLabel labels ([b0469a1](https://github.com/measuredco/puck/commit/b0469a1134ac8eafc9a3b16de4d7805241127947))
+
+
+
+
+## [0.15.0](https://github.com/measuredco/puck/compare/v0.14.2...v0.15.0) (2024-05-30)
+
+
+### Bug Fixes
+
+* align Drawer behaviour and docs with expectation ([e2cd445](https://github.com/measuredco/puck/commit/e2cd445f9d3abccca5b3daf95a4d92774a1dd47a))
+* animate loader in iframe ([151a267](https://github.com/measuredco/puck/commit/151a2675bf8e700368aad0652192bc7d9fd2bbd6))
+* don't inline link stylesheets for more predictable behaviour ([c0a331d](https://github.com/measuredco/puck/commit/c0a331de31c2d59e0e21ef342eb4c821850e10be))
+* don't overflow external inputs inside arrays/objects ([42ef582](https://github.com/measuredco/puck/commit/42ef582cac949f8a24f9cdad204baf24d808b410))
+* don't throw warning when user is correctly specifying root props ([46aa8ff](https://github.com/measuredco/puck/commit/46aa8ff3a68dcbd4aec4ebfef246d400469ca4d4))
+* don't unintentionally use read-only styles in external fields ([acaf727](https://github.com/measuredco/puck/commit/acaf72746c2c82881a753dab6350161c774cd13f))
+* fix defaultProps for root ([9a1cc7c](https://github.com/measuredco/puck/commit/9a1cc7c925f0b8a79b5f523fc7c8a6d6afdc2067))
+* infer correct value types in Custom fields ([5c8c0e1](https://github.com/measuredco/puck/commit/5c8c0e1bfa9ca4da04e1cfac83c7a3ab5883fc5c))
+* position field loader relative to sidebar, not fields ([2e8936e](https://github.com/measuredco/puck/commit/2e8936e4f416b0a04b273250cf3848447fb7e045))
+* show external field modal when using custom interfaces ([6e97a0e](https://github.com/measuredco/puck/commit/6e97a0e18aea72581ba466e8cf3f87e60f3a65f3))
+* show field loader when using field overrides ([8ccfa4c](https://github.com/measuredco/puck/commit/8ccfa4c0c3477b8e1d2db2fcc7a352b353643095))
+* still load iframe if styles fail to load ([3e56bc1](https://github.com/measuredco/puck/commit/3e56bc1816c40c555de2eb28148baf5dcdcacbea))
+
+
+### Features
+
+* add AutoField component for using Puck fields inside custom fields ([106028b](https://github.com/measuredco/puck/commit/106028b59bb1a02756645bb76ce400adc398430d))
+* add isEditing flag to `puck` object prop ([13bb1bd](https://github.com/measuredco/puck/commit/13bb1bdf03a62000c07a7d49a56ad09c1433fda0))
+* add resolveFields API for dynamic fields ([0a18bdb](https://github.com/measuredco/puck/commit/0a18bdb9387f302565f74fa30f09fd912ea0769b))
+* allow data prop to accept an empty object ([aedd401](https://github.com/measuredco/puck/commit/aedd401dd415e9d7dc1cbd6e33e59f5264180374))
+* bump next recipe to Next@14 ([47a27ed](https://github.com/measuredco/puck/commit/47a27ed2c6aee80d4093975c399d96b950cb6956))
+* enable override of publish button (breaking change) ([480467a](https://github.com/measuredco/puck/commit/480467ae2e06ae4d36c4fd67f75757557058f561))
+* expose previous data to resolveData via `lastData` param ([dd7051e](https://github.com/measuredco/puck/commit/dd7051e8fbb3770714100c92f7f5c69d0be5dab6))
+* replace history chevrons with undo/redo icons ([91dff22](https://github.com/measuredco/puck/commit/91dff227c382ddd5ad183cd69cb4d2fabd56f093))
+
+
+
+
 ## [0.14.2](https://github.com/measuredco/puck/compare/v0.14.0...v0.14.2) (2024-04-17)
 
 

@@ -1,9 +1,10 @@
 import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
-import { AppState, Config, Data } from "../../types/Config";
+import { AppState, Config, Data } from "../../types";
 import { useResolvedData } from "../use-resolved-data";
 import { SetAction, SetDataAction } from "../../reducer";
 import { cache } from "../resolve-component-data";
 import { defaultAppState } from "../../components/Puck/context";
+import { RefreshPermissions } from "../use-resolved-permissions";
 
 const item1 = { type: "MyComponent", props: { id: "MyComponent-1" } };
 const item2 = { type: "MyComponent", props: { id: "MyComponent-2" } };
@@ -65,14 +66,21 @@ describe("use-resolved-data", () => {
       let currentState: AppState = state;
 
       const renderedHook = renderHook(() => {
-        return useResolvedData(currentState, config, (args) => {
-          const action = args as SetAction;
-          const newState = action.state as any;
+        return useResolvedData(
+          currentState,
+          config,
+          (args) => {
+            const action = args as SetAction;
+            const newState = action.state as any;
 
-          dispatchedEvents.push(action);
+            dispatchedEvents.push(action);
 
-          currentState = { ...currentState, ...newState(currentState) };
-        });
+            currentState = { ...currentState, ...newState(currentState) };
+          },
+          () => {},
+          () => {},
+          () => {}
+        );
       });
 
       await act(async () => {
@@ -135,9 +143,13 @@ describe("use-resolved-data", () => {
           "ui": {
             "arrayState": {},
             "componentList": {},
+            "field": {
+              "focus": null,
+            },
             "isDragging": false,
             "itemSelector": null,
             "leftSideBarVisible": true,
+            "previewMode": "edit",
             "rightSideBarVisible": true,
             "viewports": {
               "controlsVisible": true,
@@ -170,7 +182,10 @@ describe("use-resolved-data", () => {
             dispatchedEvents.push(action);
 
             currentState = { ...currentState, ...newState(currentState) };
-          }
+          },
+          () => {},
+          () => {},
+          () => {}
         );
       });
 
@@ -191,7 +206,7 @@ describe("use-resolved-data", () => {
       const hookArgs: any = [
         currentState,
         config,
-        (args) => {
+        (args: any) => {
           const action = args as SetAction;
           const newState = action.state as any;
 
@@ -201,13 +216,27 @@ describe("use-resolved-data", () => {
       ];
 
       const renderedHook = renderHook(() =>
-        useResolvedData(hookArgs[0], hookArgs[1], hookArgs[2])
+        useResolvedData(
+          hookArgs[0],
+          hookArgs[1],
+          hookArgs[2],
+          () => {},
+          () => {},
+          () => {}
+        )
       );
 
       await act(async () => {
         // resolveData gets called on render
         renderedHook.rerender(() =>
-          useResolvedData(hookArgs[0], hookArgs[1], hookArgs[2])
+          useResolvedData(
+            hookArgs[0],
+            hookArgs[1],
+            hookArgs[2],
+            () => {},
+            () => {},
+            () => {}
+          )
         );
 
         renderedHook.result.current.resolveData({
@@ -216,7 +245,14 @@ describe("use-resolved-data", () => {
         });
 
         renderedHook.rerender(() =>
-          useResolvedData(hookArgs[0], hookArgs[1], hookArgs[2])
+          useResolvedData(
+            hookArgs[0],
+            hookArgs[1],
+            hookArgs[2],
+            () => {},
+            () => {},
+            () => {}
+          )
         );
       });
 
@@ -242,7 +278,10 @@ describe("use-resolved-data", () => {
           },
           (args) => {
             dispatchedEvent = args as any;
-          }
+          },
+          () => {},
+          () => {},
+          () => {}
         )
       );
 
@@ -254,11 +293,17 @@ describe("use-resolved-data", () => {
 
       expect(dispatchedEvent).toEqual({});
     });
-  });
 
-  describe("componentState", () => {
-    it("should state which components are loading", async () => {
+    it("should call componentLoading callbacks to reflect which components are loading", async () => {
       let dispatchedEvent: SetDataAction = {} as any;
+
+      const loadingState: Record<string, boolean> = {};
+      const setComponentLoading = (id: string) => {
+        loadingState[id] = true;
+      };
+      const unsetComponentLoading = (id: string) => {
+        loadingState[id] = false;
+      };
 
       const renderedHook = renderHook(() =>
         useResolvedData(
@@ -278,7 +323,10 @@ describe("use-resolved-data", () => {
           },
           (args) => {
             dispatchedEvent = args as any;
-          }
+          },
+          setComponentLoading,
+          unsetComponentLoading,
+          () => {}
         )
       );
 
@@ -286,19 +334,51 @@ describe("use-resolved-data", () => {
         renderedHook.result.current.resolveData();
       });
 
-      await waitFor(() =>
-        expect(
-          renderedHook.result.current.componentState["MyComponent-1"].loading
-        ).toBe(false)
-      );
+      await waitFor(() => expect(loadingState["MyComponent-1"]).toBe(false));
 
       renderedHook.rerender();
 
-      await waitFor(() =>
-        expect(
-          renderedHook.result.current.componentState["MyComponent-1"].loading
-        ).toBe(false)
+      await waitFor(() => expect(loadingState["MyComponent-1"]).toBe(false));
+    });
+
+    it("should call refreshPermission callback when loading an item", async () => {
+      let dispatchedEvent: SetDataAction = {} as any;
+
+      const calledFor: string[] = [];
+      const refreshPermissions: RefreshPermissions = ({ item } = {}) => {
+        calledFor.push(item?.props.id);
+      };
+
+      const renderedHook = renderHook(() =>
+        useResolvedData(
+          state,
+          {
+            ...config,
+            components: {
+              ...config.components,
+              MyComponent: {
+                ...config.components.MyComponent,
+                resolveData: async ({ props }) => {
+                  await new Promise<void>((resolve) => setTimeout(resolve, 10));
+                  return { props };
+                },
+              },
+            },
+          },
+          (args) => {
+            dispatchedEvent = args as any;
+          },
+          () => {},
+          () => {},
+          refreshPermissions
+        )
       );
+
+      await act(async () => {
+        renderedHook.result.current.resolveData();
+      });
+
+      await waitFor(() => expect(calledFor[0]).toBe("MyComponent-1"));
     });
   });
 });

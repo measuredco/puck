@@ -1,7 +1,7 @@
-import { UiState } from "../types/Config";
+import { UiState } from "../types";
 import { PuckAction } from "./actions";
 
-export const reduceUi = (ui: UiState, action: PuckAction) => {
+export const reduceUi = (ui: UiState, action: PuckAction): UiState => {
   if (action.type === "setUi") {
     if (typeof action.ui === "object") {
       return {
@@ -13,6 +13,20 @@ export const reduceUi = (ui: UiState, action: PuckAction) => {
     return {
       ...ui,
       ...action.ui(ui),
+    };
+  }
+
+  if (action.type === "duplicate") {
+    return {
+      ...ui,
+      itemSelector: { index: action.sourceIndex + 1, zone: action.sourceZone },
+    };
+  }
+
+  if (action.type === "remove") {
+    return {
+      ...ui,
+      itemSelector: null,
     };
   }
 

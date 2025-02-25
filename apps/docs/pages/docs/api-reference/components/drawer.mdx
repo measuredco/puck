@@ -4,14 +4,18 @@ title: <Drawer>
 
 import { PuckPreview } from "@/docs/components/Preview";
 import { Drawer } from "@/core/components/Drawer";
+import { Puck } from "@/core/components/Puck";
 
 # \<Drawer\>
 
-A reference list of items that can be dragged into a droppable area, normally [`<Puck.Preview>`](puck-preview). Used for composing custom Puck UIs.
+A list of items that can be dragged into a [`<Puck.Preview>`](puck-preview). Used for composing custom Puck UIs.
 
-<PuckPreview config={{}} data={{ root: { props: {} }, content: [] }}>
+<PuckPreview
+  config={{ components: { Orange: { render: () => <div>Orange</div> } } }}
+  data={{ root: { props: {} }, content: [] }}
+>
   <Drawer>
-    <Drawer.Item name="Orange" index={0} />
+    <Drawer.Item name="Orange" />
   </Drawer>
 </PuckPreview>
 
@@ -22,7 +26,7 @@ export function Editor() {
   return (
     <Puck>
       <Drawer>
-        <Drawer.Item name="Orange" index={0} />
+        <Drawer.Item name="Orange" />
       </Drawer>
     </Puck>
   );
@@ -31,25 +35,12 @@ export function Editor() {
 
 ## Props
 
-| Param                         | Example                     | Type                     | Status   |
-| ----------------------------- | --------------------------- | ------------------------ | -------- |
-| [`children`](#children)       | `children: <Drawer.Item />` | ReactNode                | Required |
-| [`droppableId`](#droppableId) | `droppableId: "my-drawer"`  | String                   | -        |
-| [`direction`](#direction)     | `direction: "horizontal"`   | `horizontal`, `vertical` | -        |
+| Param                   | Example                     | Type      | Status   |
+| ----------------------- | --------------------------- | --------- | -------- |
+| [`children`](#children) | `children: <Drawer.Item />` | ReactNode | Required |
 
 ## Required props
 
 ### `children`
 
 A React node representing the contents of the `<Drawer>`. Will likely contain [`<Drawer.Item>`](drawer-item) nodes.
-
-## Optional props
-
-### `id`
-
-Set a custom ID for the underlying [Droppable](https://github.com/hello-pangea/dnd/blob/main/docs/api/droppable.md).
-
-- Must be unique.
-- When this id starts with `component-list`, its children can be dragged into a [`<Puck.Preview>`](puck-preview).
-
-Defaults to `component-list`.

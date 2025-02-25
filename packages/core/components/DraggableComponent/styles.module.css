@@ -1,5 +1,6 @@
 .DraggableComponent {
-  pointer-events: auto;
+  position: absolute;
+  pointer-events: none;
 
   --overlay-background: color-mix(
     in srgb,
@@ -8,29 +9,12 @@
   );
 }
 
-.DraggableComponent--isDragging {
-  background: color-mix(in srgb, var(--puck-color-azure-08) 10%, transparent);
-  overflow: hidden;
-}
-
-.DraggableComponent-contents {
-  position: relative; /* Reset stacking context */
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Prevent margin collapsing  */
-.DraggableComponent-contents::before,
-.DraggableComponent-contents::after {
-  content: " ";
-  display: table;
-}
-
 .DraggableComponent-overlay {
   cursor: pointer;
   height: 100%;
   width: 100%;
   top: 0;
+  outline: 2px var(--puck-color-azure-09) solid;
   outline-offset: -2px;
   position: absolute;
   pointer-events: none;
@@ -40,10 +24,6 @@
 
 .DraggableComponent:focus-visible > .DraggableComponent-overlay {
   outline: 1px solid var(--puck-color-azure-05);
-}
-
-.DraggableComponent--isDragging > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-09) solid !important;
 }
 
 .DraggableComponent-loadingOverlay {
@@ -62,110 +42,44 @@
   z-index: 1;
 }
 
-.DraggableComponent:hover:not(.DraggableComponent--isLocked)
+.DraggableComponent--hover:not(.DraggableComponent--isLocked)
   > .DraggableComponent-overlay {
   background: var(--overlay-background);
-  pointer-events: none;
 }
 
-.DraggableComponent--forceHover > .DraggableComponent-overlay {
-  background: var(--overlay-background);
-  pointer-events: none;
+.DraggableComponent--hover > .DraggableComponent-overlay {
+  outline: 2px var(--puck-color-azure-09) solid;
 }
 
-.DraggableComponent:not(.DraggableComponent--isSelected):hover
-  > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-09) solid !important;
-}
-
-.DraggableComponent--indicativeHover > .DraggableComponent-overlay {
-  pointer-events: none;
+.DraggableComponent--isSelected > .DraggableComponent-overlay {
+  outline-color: var(--puck-color-azure-07);
 }
 
 /* Won't work in FF */
-.DraggableComponent:not(.DraggableComponent--isSelected):has(
-    .DraggableComponent:hover > .DraggableComponent-overlay
+.DraggableComponent:has(
+    .DraggableComponent--hover > .DraggableComponent-overlay
   )
   > .DraggableComponent-overlay {
   display: none;
 }
 
-.DraggableComponent--isSelected > .DraggableComponent-overlay {
-  outline: 2px var(--puck-color-azure-07) solid !important;
+.DraggableComponent-actionsOverlay {
+  position: sticky;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
 }
 
-.DraggableComponent--isSelected > .DraggableComponent-actionsOverlay {
-  display: block;
-  position: sticky;
-  z-index: 2;
+.DraggableComponent--isSelected .DraggableComponent-actionsOverlay {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .DraggableComponent-actions {
   position: absolute;
   width: auto;
-  padding: 4px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border-radius: 8px;
-  background: var(--puck-color-grey-01);
-  color: var(--puck-color-white);
   cursor: grab;
-  display: none;
-  font-family: var(--puck-font-family);
-  gap: 4px;
-  pointer-events: auto;
+  display: flex;
   box-sizing: border-box;
   transform-origin: right top;
-}
-
-.DraggableComponent--isSelected
-  > .DraggableComponent-actionsOverlay
-  > .DraggableComponent-actions {
-  display: flex;
-}
-
-.DraggableComponent-actionsLabel {
-  color: var(--puck-color-grey-08);
-  display: flex;
-  font-size: var(--puck-font-size-xxxs);
-  font-weight: 500;
-  justify-content: center;
-  align-items: center;
-  padding-left: 8px;
-  padding-right: 16px;
-  margin-right: 8px;
-  border-right: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.DraggableComponent-action {
-  background: transparent;
-  border: none;
-  color: var(--puck-color-grey-08);
-  cursor: pointer;
-  padding: 6px 8px;
-  border-radius: 4px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 50ms ease-in;
-}
-
-.DraggableComponent-action:focus-visible {
-  outline: 2px solid var(--puck-color-azure-05);
-  outline-offset: -2px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .DraggableComponent-action:hover {
-    color: var(--puck-color-azure-06);
-    transition: none;
-  }
-}
-
-.DraggableComponent-action:active {
-  color: var(--puck-color-azure-07);
-  transition: none;
 }

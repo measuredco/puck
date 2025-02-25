@@ -1,17 +1,17 @@
 import {
-  CSSProperties,
+  PropsWithChildren,
   ReactNode,
   createContext,
   useCallback,
+  useMemo,
   useState,
 } from "react";
-import { Config, Data } from "../../types/Config";
-import { DragStart, DragUpdate } from "@measured/dnd";
-import { ItemSelector, getItem } from "../../lib/get-item";
-import { PuckAction } from "../../reducer";
-import { rootDroppableId } from "../../lib/root-droppable-id";
-import { useDebounce } from "use-debounce";
-import { getZoneId } from "../../lib/get-zone-id";
+import { Config, Data } from "../../types";
+import { ItemSelector } from "../../lib/get-item";
+
+import type { Draggable } from "@dnd-kit/dom";
+import { useAppContext } from "../Puck/context";
+import { createStore, StoreApi } from "zustand";
 
 export type PathData = Record<string, { path: string[]; label: string }>;
 
@@ -21,14 +21,9 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   componentState?: Record<string, any>;
   itemSelector?: ItemSelector | null;
   setItemSelector?: (newIndex: ItemSelector | null) => void;
-  dispatch?: (action: PuckAction) => void;
   areaId?: string;
-  draggedItem?: DragStart & Partial<DragUpdate>;
-  placeholderStyle?: CSSProperties;
-  hoveringArea?: string | null;
-  setHoveringArea?: (area: string | null) => void;
-  hoveringZone?: string | null;
-  setHoveringZone?: (zone: string | null) => void;
+  zoneCompound?: string;
+  index?: number;
   hoveringComponent?: string | null;
   setHoveringComponent?: (id: string | null) => void;
   registerZoneArea?: (areaId: string) => void;
@@ -37,13 +32,55 @@ export type DropZoneContext<UserConfig extends Config = Config> = {
   unregisterZone?: (zoneCompound: string) => void;
   activeZones?: Record<string, boolean>;
   pathData?: PathData;
-  registerPath?: (selector: ItemSelector) => void;
+  registerPath?: (id: string, selector: ItemSelector, label: string) => void;
+  unregisterPath?: (id: string) => void;
   mode?: "edit" | "render";
-  zoneWillDrag?: string;
-  setZoneWillDrag?: (zone: string) => void;
+  depth: number;
+  registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
+  unregisterLocalZone?: (zone: string) => void;
+  path: string[];
 } | null;
 
 export const dropZoneContext = createContext<DropZoneContext>(null);
+
+export type Preview = {
+  componentType: string;
+  index: number;
+  zone: string;
+  props: Record<string, any>;
+  type: "insert" | "move";
+} | null;
+
+export type ZoneStore = {
+  zoneDepthIndex: Record<string, boolean>;
+  areaDepthIndex: Record<string, boolean>;
+  nextZoneDepthIndex: Record<string, boolean>;
+  nextAreaDepthIndex: Record<string, boolean>;
+  previewIndex: Record<string, Preview>;
+  draggedItem?: Draggable | null;
+};
+
+export const ZoneStoreContext = createContext<StoreApi<ZoneStore>>(
+  createStore(() => ({
+    zoneDepthIndex: {},
+    nextZoneDepthIndex: {},
+    areaDepthIndex: {},
+    nextAreaDepthIndex: {},
+    draggedItem: null,
+    previewIndex: {},
+  }))
+);
+
+export const ZoneStoreProvider = ({
+  children,
+  store,
+}: PropsWithChildren<{ store: StoreApi<ZoneStore> }>) => {
+  return (
+    <ZoneStoreContext.Provider value={store}>
+      {children}
+    </ZoneStoreContext.Provider>
+  );
+};
 
 export const DropZoneProvider = ({
   children,
@@ -52,15 +89,8 @@ export const DropZoneProvider = ({
   children: ReactNode;
   value: DropZoneContext;
 }) => {
-  const [hoveringArea, setHoveringArea] = useState<string | null>(null);
-  const [hoveringZone, setHoveringZone] = useState<string | null>(
-    rootDroppableId
-  );
-
   // Hovering component may match area, but areas must always contain zones
   const [hoveringComponent, setHoveringComponent] = useState<string | null>();
-
-  const [hoveringAreaDb] = useDebounce(hoveringArea, 75, { leading: false });
 
   const [areasWithZones, setAreasWithZones] = useState<Record<string, boolean>>(
     {}
@@ -68,7 +98,7 @@ export const DropZoneProvider = ({
 
   const [activeZones, setActiveZones] = useState<Record<string, boolean>>({});
 
-  const { dispatch = null } = value ? value : {};
+  const { dispatch } = useAppContext();
 
   const registerZoneArea = useCallback(
     (area: string) => {
@@ -112,65 +142,25 @@ export const DropZoneProvider = ({
     [setActiveZones, dispatch]
   );
 
-  const [pathData, setPathData] = useState<PathData>();
-
-  const registerPath = useCallback(
-    (selector: ItemSelector) => {
-      if (!value?.data) {
-        return;
-      }
-
-      const item = getItem(selector, value.data);
-
-      if (!item) {
-        return;
-      }
-
-      const [area] = getZoneId(selector.zone);
-
-      setPathData((latestPathData = {}) => {
-        const parentPathData = latestPathData[area] || { path: [] };
-
-        return {
-          ...latestPathData,
-          [item.props.id]: {
-            path: [
-              ...parentPathData.path,
-              ...(selector.zone ? [selector.zone] : []),
-            ],
-            label: item.type as string,
-          },
-        };
-      });
-    },
-    [value, setPathData]
+  const memoValue = useMemo(
+    () =>
+      ({
+        hoveringComponent,
+        setHoveringComponent,
+        registerZoneArea,
+        areasWithZones,
+        registerZone,
+        unregisterZone,
+        activeZones,
+        ...value,
+      } as DropZoneContext),
+    [value, hoveringComponent, areasWithZones, activeZones]
   );
-
-  const [zoneWillDrag, setZoneWillDrag] = useState("");
 
   return (
     <>
-      {value && (
-        <dropZoneContext.Provider
-          value={{
-            hoveringArea: value.draggedItem ? hoveringAreaDb : hoveringArea,
-            setHoveringArea,
-            hoveringZone,
-            setHoveringZone,
-            hoveringComponent,
-            setHoveringComponent,
-            registerZoneArea,
-            areasWithZones,
-            registerZone,
-            unregisterZone,
-            activeZones,
-            registerPath,
-            pathData,
-            zoneWillDrag,
-            setZoneWillDrag,
-            ...value,
-          }}
-        >
+      {memoValue && (
+        <dropZoneContext.Provider value={memoValue}>
           {children}
         </dropZoneContext.Provider>
       )}

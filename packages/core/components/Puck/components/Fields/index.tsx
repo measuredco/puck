@@ -1,4 +1,4 @@
-import { ClipLoader } from "react-spinners";
+import { Loader } from "../../../Loader";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import {
   ReplaceAction,
@@ -6,42 +6,29 @@ import {
   replaceAction,
   setAction,
 } from "../../../../reducer";
-import { Field, UiState } from "../../../../types/Config";
-import { InputOrGroup } from "../../../InputOrGroup";
+import { UiState } from "../../../../types";
+import { AutoFieldPrivate } from "../../../AutoField";
 import { useAppContext } from "../../context";
 
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
+import { useResolvedFields } from "../../../../lib/use-resolved-fields";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
-const defaultPageFields: Record<string, Field> = {
-  title: { type: "text" },
-};
-
 const DefaultFields = ({
   children,
-  isLoading,
 }: {
   children: ReactNode;
   isLoading: boolean;
   itemSelector?: ItemSelector | null;
 }) => {
-  return (
-    <div className={getClassName()}>
-      {children}
-      {isLoading && (
-        <div className={getClassName("loadingOverlay")}>
-          <ClipLoader aria-label="loading" />
-        </div>
-      )}
-    </div>
-  );
+  return <>{children}</>;
 };
 
-export const Fields = () => {
+export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
   const {
     selectedItem,
     state,
@@ -54,18 +41,15 @@ export const Fields = () => {
   const { data, ui } = state;
   const { itemSelector } = ui;
 
-  const rootFields = config.root?.fields || defaultPageFields;
+  const [fields, fieldsResolving] = useResolvedFields();
 
-  const fields = selectedItem
-    ? (config.components[selectedItem.type]?.fields as Record<
-        string,
-        Field<any>
-      >) || {}
-    : rootFields;
+  const { getPermissions } = useAppContext();
 
-  const isLoading = selectedItem
-    ? componentState[selectedItem?.props.id]?.loading
-    : componentState["puck-root"]?.loading;
+  const componentResolving = selectedItem
+    ? componentState[selectedItem?.props.id]?.loadingCount > 0
+    : componentState["puck-root"]?.loadingCount > 0;
+
+  const isLoading = fieldsResolving || componentResolving;
 
   // DEPRECATED
   const rootProps = data.root.props || data.root;
@@ -74,7 +58,7 @@ export const Fields = () => {
 
   return (
     <form
-      className={getClassName()}
+      className={getClassName({ wrapFields })}
       onSubmit={(e) => {
         e.preventDefault();
       }}
@@ -82,6 +66,8 @@ export const Fields = () => {
       <Wrapper isLoading={isLoading} itemSelector={itemSelector}>
         {Object.keys(fields).map((fieldName) => {
           const field = fields[fieldName];
+
+          if (!field?.type) return null;
 
           const onChange = (value: any, updatedUi?: Partial<UiState>) => {
             let currentProps;
@@ -97,7 +83,7 @@ export const Fields = () => {
               [fieldName]: value,
             };
 
-            if (itemSelector) {
+            if (selectedItem && itemSelector) {
               const replaceActionData: ReplaceAction = {
                 type: "replace",
                 destinationIndex: itemSelector.index,
@@ -117,7 +103,7 @@ export const Fields = () => {
               };
 
               // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-              if (config.components[selectedItem!.type]?.resolveData) {
+              if (config.components[selectedItem.type]?.resolveData) {
                 resolveData(setAction(state, setActionData));
               } else {
                 dispatch({
@@ -161,39 +147,57 @@ export const Fields = () => {
 
           if (selectedItem && itemSelector) {
             const { readOnly = {} } = selectedItem;
+            const { edit } = getPermissions({
+              item: selectedItem,
+            });
+
+            const id = `${selectedItem.props.id}_${field.type}_${fieldName}`;
 
             return (
-              <InputOrGroup
-                key={`${selectedItem.props.id}_${fieldName}`}
-                field={field}
-                name={fieldName}
-                id={`${selectedItem.props.id}_${fieldName}`}
-                label={field.label}
-                readOnly={readOnly[fieldName]}
-                readOnlyFields={readOnly}
-                value={selectedItem.props[fieldName]}
-                onChange={onChange}
-              />
+              <div key={id} className={getClassName("field")}>
+                <AutoFieldPrivate
+                  field={field}
+                  name={fieldName}
+                  id={id}
+                  readOnly={!edit || readOnly[fieldName]}
+                  value={selectedItem.props[fieldName]}
+                  onChange={onChange}
+                />
+              </div>
             );
           } else {
-            const { readOnly = {} } = data.root;
+            const readOnly = (data.root.readOnly || {}) as Record<
+              string,
+              boolean
+            >;
+            const { edit } = getPermissions({
+              root: true,
+            });
+
+            const id = `root_${field.type}_${fieldName}`;
 
             return (
-              <InputOrGroup
-                key={`page_${fieldName}`}
-                field={field}
-                name={fieldName}
-                id={`root_${fieldName}`}
-                label={field.label}
-                readOnly={readOnly[fieldName]}
-                readOnlyFields={readOnly}
-                value={rootProps[fieldName]}
-                onChange={onChange}
-              />
+              <div key={id} className={getClassName("field")}>
+                <AutoFieldPrivate
+                  field={field}
+                  name={fieldName}
+                  id={id}
+                  readOnly={!edit || readOnly[fieldName]}
+                  value={(rootProps as Record<string, any>)[fieldName]}
+                  onChange={onChange}
+                />
+              </div>
             );
           }
         })}
       </Wrapper>
+      {isLoading && (
+        <div className={getClassName("loadingOverlay")}>
+          <div className={getClassName("loadingOverlayInner")}>
+            <Loader size={16} />
+          </div>
+        </div>
+      )}
     </form>
   );
 };
