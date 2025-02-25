@@ -1,5 +1,5 @@
 import { getBox } from "css-box-model";
-import { AppState } from "../types/Config";
+import { AppState } from "../types";
 
 const RESET_ZOOM_SMALLER_THAN_FRAME = true;
 

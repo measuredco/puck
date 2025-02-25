@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { loadOverrides } from "../load-overrides";
 
 describe("load-overrides", () => {

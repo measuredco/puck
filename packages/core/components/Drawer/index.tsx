@@ -1,72 +1,44 @@
-import { Droppable } from "../Droppable";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Draggable } from "../Draggable";
 import { DragIcon } from "../DragIcon";
-import {
-  ReactElement,
-  ReactNode,
-  createContext,
-  useContext,
-  useMemo,
-} from "react";
+import { ReactElement, ReactNode, Ref, useId, useMemo, useState } from "react";
+import { generateId } from "../../lib/generate-id";
+import { useDragListener } from "../DragDropContext";
+import { useDraggableSafe, useDroppableSafe } from "../../lib/dnd/dnd-kit/safe";
 
 const getClassName = getClassNameFactory("Drawer", styles);
 const getClassNameItem = getClassNameFactory("DrawerItem", styles);
 
-const drawerContext = createContext<{ droppableId: string }>({
-  droppableId: "",
-});
-
-const DrawerDraggable = ({
+export const DrawerItemInner = ({
   children,
-  id,
-  index,
-}: {
-  children: ReactNode;
-  id: string;
-  index: number;
-}) => (
-  <Draggable
-    key={id}
-    id={id}
-    index={index}
-    showShadow
-    disableAnimations
-    className={() => getClassNameItem()}
-  >
-    {() => children}
-  </Draggable>
-);
-
-const DrawerItem = ({
   name,
-  children,
-  id,
   label,
-  index,
+  dragRef,
+  isDragDisabled,
 }: {
-  name: string;
   children?: (props: { children: ReactNode; name: string }) => ReactElement;
-  id?: string;
+  name: string;
   label?: string;
-  index: number;
+  dragRef?: Ref<any>;
+  isDragDisabled?: boolean;
 }) => {
-  const ctx = useContext(drawerContext);
-
-  const resolvedId = `${ctx.droppableId}::${id || name}`;
-
   const CustomInner = useMemo(
     () =>
       children ||
-      (({ children, name }: { children: ReactNode; name: string }) => (
+      (({ children }: { children: ReactNode; name: string }) => (
         <div className={getClassNameItem("default")}>{children}</div>
       )),
     [children]
   );
 
   return (
-    <DrawerDraggable id={resolvedId} index={index}>
+    <div
+      className={getClassNameItem({ disabled: isDragDisabled })}
+      ref={dragRef}
+      onMouseDown={(e) => e.preventDefault()}
+      data-testid={dragRef ? `drawer-item:${name}` : ""}
+      data-puck-drawer-item
+    >
       <CustomInner name={name}>
         <div className={getClassNameItem("draggableWrapper")}>
           <div className={getClassNameItem("draggable")}>
@@ -77,38 +49,139 @@ const DrawerItem = ({
           </div>
         </div>
       </CustomInner>
-    </DrawerDraggable>
+    </div>
+  );
+};
+
+/**
+ * Wrap `useDraggable`, remounting it when the `id` changes.
+ *
+ * Could be removed by remounting `useDraggable` upstream in dndkit on `id` changes.
+ */
+const DrawerItemDraggable = ({
+  children,
+  name,
+  label,
+  id,
+  isDragDisabled,
+}: {
+  children?: (props: { children: ReactNode; name: string }) => ReactElement;
+  name: string;
+  label?: string;
+  id: string;
+  isDragDisabled?: boolean;
+}) => {
+  const { ref } = useDraggableSafe({
+    id,
+    data: { type: "drawer", componentType: name },
+    disabled: isDragDisabled,
+  });
+
+  return (
+    <div className={getClassName("draggable")}>
+      <div className={getClassName("draggableBg")}>
+        <DrawerItemInner name={name} label={label}>
+          {children}
+        </DrawerItemInner>
+      </div>
+      <div className={getClassName("draggableFg")}>
+        <DrawerItemInner
+          name={name}
+          label={label}
+          dragRef={ref}
+          isDragDisabled={isDragDisabled}
+        >
+          {children}
+        </DrawerItemInner>
+      </div>
+    </div>
+  );
+};
+
+const DrawerItem = ({
+  name,
+  children,
+  id,
+  label,
+  index,
+  isDragDisabled,
+}: {
+  name: string;
+  children?: (props: { children: ReactNode; name: string }) => ReactElement;
+  id?: string;
+  label?: string;
+  index?: number; // TODO deprecate
+  isDragDisabled?: boolean;
+}) => {
+  const resolvedId = id || name;
+  const [dynamicId, setDynamicId] = useState(generateId(resolvedId));
+
+  if (typeof index !== "undefined") {
+    console.error(
+      "Warning: The `index` prop on Drawer.Item is deprecated and no longer required."
+    );
+  }
+
+  useDragListener(
+    "dragend",
+    () => {
+      setDynamicId(generateId(resolvedId));
+    },
+    [resolvedId]
+  );
+
+  return (
+    <div key={dynamicId}>
+      <DrawerItemDraggable
+        name={name}
+        label={label}
+        id={dynamicId}
+        isDragDisabled={isDragDisabled}
+      >
+        {children}
+      </DrawerItemDraggable>
+    </div>
   );
 };
 
 export const Drawer = ({
   children,
-  droppableId = "component-list",
-  direction = "vertical",
+  droppableId,
+  direction,
 }: {
   children: ReactNode;
-  droppableId?: string;
-  direction?: "vertical" | "horizontal";
+  droppableId?: string; // TODO deprecate
+  direction?: "vertical" | "horizontal"; // TODO deprecate
 }) => {
-  return (
-    <drawerContext.Provider value={{ droppableId }}>
-      <Droppable droppableId={droppableId} isDropDisabled direction={direction}>
-        {(provided, snapshot) => (
-          <div
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            className={getClassName({
-              isDraggingFrom: !!snapshot.draggingFromThisWith,
-            })}
-          >
-            {children}
+  if (droppableId) {
+    console.error(
+      "Warning: The `droppableId` prop on Drawer is deprecated and no longer required."
+    );
+  }
 
-            {/* Use different element so we don't clash with :last-of-type */}
-            <span style={{ display: "none" }}>{provided.placeholder}</span>
-          </div>
-        )}
-      </Droppable>
-    </drawerContext.Provider>
+  if (direction) {
+    console.error(
+      "Warning: The `direction` prop on Drawer is deprecated and no longer required to achieve multi-directional dragging."
+    );
+  }
+
+  const id = useId();
+
+  const { ref } = useDroppableSafe({
+    id,
+    type: "void",
+    collisionPriority: 0, // Never collide with this, but we use it so NestedDroppablePlugin respects the Drawer
+  });
+
+  return (
+    <div
+      className={getClassName()}
+      ref={ref}
+      data-puck-dnd={id}
+      data-puck-drawer
+    >
+      {children}
+    </div>
   );
 };
 

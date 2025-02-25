@@ -2,17 +2,18 @@ import React from "react";
 
 import { ComponentConfig } from "@/core";
 import { Section } from "../../components/Section";
+import { WithLayout, withLayout } from "../../components/Layout";
 
-export type TextProps = {
+export type TextProps = WithLayout<{
   align: "left" | "center" | "right";
   text?: string;
   padding?: string;
   size?: "s" | "m";
   color: "default" | "muted";
   maxWidth?: string;
-};
+}>;
 
-export const Text: ComponentConfig<TextProps> = {
+const TextInner: ComponentConfig<TextProps> = {
   fields: {
     text: { type: "textarea" },
     size: {
@@ -37,19 +38,17 @@ export const Text: ComponentConfig<TextProps> = {
         { label: "Muted", value: "muted" },
       ],
     },
-    padding: { type: "text" },
     maxWidth: { type: "text" },
   },
   defaultProps: {
     align: "left",
     text: "Text",
-    padding: "24px",
     size: "m",
     color: "default",
   },
-  render: ({ align, color, text, size, padding, maxWidth }) => {
+  render: ({ align, color, text, size, maxWidth }) => {
     return (
-      <Section padding={padding} maxWidth={maxWidth}>
+      <Section maxWidth={maxWidth}>
         <span
           style={{
             color:
@@ -60,8 +59,6 @@ export const Text: ComponentConfig<TextProps> = {
             fontSize: size === "m" ? "20px" : "16px",
             fontWeight: 300,
             maxWidth,
-            marginLeft: "auto",
-            marginRight: "auto",
             justifyContent:
               align === "center"
                 ? "center"
@@ -76,3 +73,5 @@ export const Text: ComponentConfig<TextProps> = {
     );
   },
 };
+
+export const Text = withLayout(TextInner);

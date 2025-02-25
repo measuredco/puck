@@ -1,9 +1,10 @@
 .PuckPreview {
+  position: relative;
   height: 100%;
 }
 
 .PuckPreview-frame {
   border: none;
-  min-height: 100%;
+  height: 100%;
   width: 100%;
 }

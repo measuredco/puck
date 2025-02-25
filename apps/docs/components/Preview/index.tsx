@@ -1,16 +1,17 @@
 import React, { CSSProperties } from "react";
 
-export { InputOrGroup } from "@/core/components/InputOrGroup";
+export { AutoField } from "@/core/components/AutoField";
 
 import { ReactNode } from "react";
 import "@/core/styles.css";
 import { Puck } from "@/core/components/Puck";
 
-import { ComponentConfig } from "@/core/types/Config";
+import { ComponentConfig } from "@/core/types";
 import { getClassNameFactory } from "@/core/lib";
 
 import styles from "./styles.module.css";
 import { usePuck } from "@/core/lib/use-puck";
+import { FieldLabel } from "@/core/components/AutoField";
 
 const getClassNamePreview = getClassNameFactory("PreviewFrame", styles);
 const getClassNameConfigPreview = getClassNameFactory("ConfigPreview", styles);
@@ -61,7 +62,7 @@ export const PuckPreview = ({
   style?: CSSProperties;
 }) => {
   return (
-    <Puck {...puckProps} iframe={{ enabled: false }}>
+    <Puck config={{}} data={{}} {...puckProps} iframe={{ enabled: false }}>
       <PreviewFrame label={label} style={style}>
         {children}
       </PreviewFrame>
@@ -86,7 +87,7 @@ const ConfigPreviewInner = ({
         <div className={getClassNameConfigPreview("preview")}>
           {componentConfig.render({
             ...appState.data["content"][0].props,
-            puck: { renderDropZone: () => <div /> },
+            puck: { renderDropZone: () => <div />, isEditing: false },
           })}
         </div>
       )}

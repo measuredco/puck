@@ -3,11 +3,11 @@ import { ComponentConfig } from "@/core";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 
-const getClassName = getClassNameFactory("Hero", styles);
+const getClassName = getClassNameFactory("Blank", styles);
 
-export type HeroProps = {};
+export type BlankProps = {};
 
-export const Hero: ComponentConfig<HeroProps> = {
+export const Blank: ComponentConfig<BlankProps> = {
   fields: {},
   defaultProps: {},
   render: () => {

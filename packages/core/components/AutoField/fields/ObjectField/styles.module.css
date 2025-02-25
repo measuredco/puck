@@ -1,0 +1,18 @@
+/**
+ * ObjectField
+ */
+
+.ObjectField {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--puck-color-white);
+  border: 1px solid var(--puck-color-grey-09);
+  border-radius: 4px;
+}
+
+.ObjectField-fieldset {
+  border: none;
+  margin: 0;
+  min-width: 0; /* Needed to ensure External input doesn't overflow, see https://stackoverflow.com/a/53784508 */
+  padding: 16px 15px;
+}

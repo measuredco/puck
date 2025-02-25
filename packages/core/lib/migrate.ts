@@ -1,4 +1,4 @@
-import { Data } from "../types/Config";
+import { Data } from "../types";
 
 type Migration = (props: Data & { [key: string]: any }) => Data;
 

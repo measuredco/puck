@@ -5,7 +5,7 @@ import { ReactNode, useEffect, useMemo, useState } from "react";
 import { getClassNameFactory } from "../../lib";
 
 import styles from "./styles.module.css";
-import { Viewport } from "../../types/Viewports";
+import { Viewport } from "../../types";
 
 const icons = {
   Smartphone: <Smartphone size={16} />,
@@ -115,7 +115,7 @@ export const ViewportControls = ({
           onClick={onViewportChange}
         >
           {typeof viewport.icon === "string"
-            ? icons[viewport.icon] || viewport.icon
+            ? icons[viewport.icon as keyof typeof icons] || viewport.icon
             : viewport.icon || icons.Smartphone}
         </ViewportButton>
       ))}

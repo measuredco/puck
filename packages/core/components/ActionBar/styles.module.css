@@ -1,0 +1,94 @@
+.ActionBar {
+  align-items: center;
+  cursor: default;
+  display: flex;
+  width: auto;
+  padding: 4px;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-radius: 8px;
+  background: var(--puck-color-grey-01);
+  color: var(--puck-color-white);
+  font-family: var(--puck-font-family);
+  min-height: 26px;
+}
+
+.ActionBar-label {
+  color: var(--puck-color-grey-08);
+  font-size: var(--puck-font-size-xxxs);
+  font-weight: 500;
+  padding-inline-start: 8px;
+  padding-inline-end: 8px;
+  margin-inline-start: 4px;
+  margin-inline-end: 4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ActionBar-action + .ActionBar-label {
+  padding-inline-start: 0;
+}
+
+.ActionBar-label + .ActionBar-action {
+  margin-inline-start: -4px;
+}
+
+.ActionBar-group {
+  align-items: center;
+  border-inline-start: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
+  display: flex;
+  height: 100%;
+  padding-inline-start: 4px;
+  padding-inline-end: 4px;
+}
+
+.ActionBar-group:first-of-type {
+  border-inline-start: 0;
+}
+
+.ActionBar-group:empty {
+  display: none;
+}
+
+.ActionBar-action {
+  background: transparent;
+  border: none;
+  color: var(--puck-color-grey-08);
+  cursor: pointer;
+  padding: 6px 8px;
+  margin-inline-start: 4px;
+  margin-inline-end: 4px;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 50ms ease-in;
+}
+
+.ActionBar-action svg {
+  max-width: none !important; /* Explicit definition to prevent some SVG style pollution */
+}
+
+.ActionBar-action:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ActionBar-action:hover {
+    color: var(--puck-color-azure-06);
+    transition: none;
+  }
+}
+
+.ActionBar-action:active {
+  color: var(--puck-color-azure-07);
+  transition: none;
+}
+
+.ActionBar-group * {
+  margin: 0;
+}

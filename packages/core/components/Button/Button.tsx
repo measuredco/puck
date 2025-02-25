@@ -1,7 +1,8 @@
 import { ReactNode, useEffect, useState } from "react";
 import styles from "./Button.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { ClipLoader } from "react-spinners";
+import { Loader } from "../Loader";
+import { filterDataAttrs } from "../../lib/filter-data-attrs";
 
 const getClassName = getClassNameFactory("Button", styles);
 
@@ -18,6 +19,7 @@ export const Button = ({
   icon,
   size = "medium",
   loading: loadingProp = false,
+  ...props
 }: {
   children: ReactNode;
   href?: string;
@@ -37,6 +39,7 @@ export const Button = ({
   useEffect(() => setLoading(loadingProp), [loadingProp]);
 
   const ElementType = href ? "a" : type ? "button" : "span";
+  const dataAttrs = filterDataAttrs(props);
 
   const el = (
     <ElementType
@@ -61,12 +64,13 @@ export const Button = ({
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noreferrer" : undefined}
       href={href}
+      {...dataAttrs}
     >
       {icon && <div className={getClassName("icon")}>{icon}</div>}
       {children}
       {loading && (
         <div className={getClassName("spinner")}>
-          <ClipLoader aria-label="loading" color="inherit" size="14px" />
+          <Loader size={14} />
         </div>
       )}
     </ElementType>

@@ -1,4 +1,4 @@
-import { Config, Content, Data } from "../types/Config";
+import { Config, Content, Data } from "../types";
 import { reorder } from "../lib/reorder";
 import { rootDroppableId } from "../lib/root-droppable-id";
 import { insert } from "../lib/insert";
@@ -11,16 +11,25 @@ import {
   removeRelatedZones,
 } from "../lib/reduce-related-zones";
 import { generateId } from "../lib/generate-id";
-import { PuckAction, ReplaceAction } from "./actions";
+import {
+  InsertAction,
+  PuckAction,
+  ReplaceAction,
+  ReorderAction,
+} from "./actions";
+import {} from "./actions";
 
 // Restore unregistered zones when re-registering in same session
-export const zoneCache = {};
+export const zoneCache: Record<string, Content> = {};
 
 export const addToZoneCache = (key: string, data: Content) => {
   zoneCache[key] = data;
 };
 
-export const replaceAction = (data: Data, action: ReplaceAction) => {
+export const replaceAction = <UserData extends Data>(
+  data: UserData,
+  action: ReplaceAction
+) => {
   if (action.destinationZone === rootDroppableId) {
     return {
       ...data,
@@ -43,40 +52,82 @@ export const replaceAction = (data: Data, action: ReplaceAction) => {
   };
 };
 
-export const reduceData = (data: Data, action: PuckAction, config: Config) => {
-  if (action.type === "insert") {
-    const emptyComponentData = {
-      type: action.componentType,
-      props: {
-        ...(config.components[action.componentType].defaultProps || {}),
-        id: generateId(action.componentType),
-      },
-    };
+export function insertAction<UserData extends Data>(
+  data: UserData,
+  action: InsertAction,
+  config: Config
+) {
+  const emptyComponentData = {
+    type: action.componentType,
+    props: {
+      ...(config.components[action.componentType].defaultProps || {}),
+      id: action.id || generateId(action.componentType),
+    },
+  };
 
-    if (action.destinationZone === rootDroppableId) {
-      return {
-        ...data,
-        content: insert(
-          data.content,
-          action.destinationIndex,
-          emptyComponentData
-        ),
-      };
-    }
-
-    const newData = setupZone(data, action.destinationZone);
-
+  if (action.destinationZone === rootDroppableId) {
     return {
       ...data,
-      zones: {
-        ...newData.zones,
-        [action.destinationZone]: insert(
-          newData.zones[action.destinationZone],
-          action.destinationIndex,
-          emptyComponentData
-        ),
-      },
+      content: insert(
+        data.content,
+        action.destinationIndex,
+        emptyComponentData
+      ),
     };
+  }
+
+  const newData = setupZone(data, action.destinationZone);
+
+  return {
+    ...data,
+    zones: {
+      ...newData.zones,
+      [action.destinationZone]: insert(
+        newData.zones[action.destinationZone],
+        action.destinationIndex,
+        emptyComponentData
+      ),
+    },
+  };
+}
+
+const reorderAction = <UserData extends Data>(
+  data: UserData,
+  action: ReorderAction
+) => {
+  if (action.destinationZone === rootDroppableId) {
+    return {
+      ...data,
+      content: reorder(
+        data.content,
+        action.sourceIndex,
+        action.destinationIndex
+      ),
+    };
+  }
+
+  const newData = setupZone(data, action.destinationZone);
+
+  return {
+    ...data,
+    zones: {
+      ...newData.zones,
+      [action.destinationZone]: reorder(
+        newData.zones[action.destinationZone],
+        action.sourceIndex,
+        action.destinationIndex
+      ),
+    },
+  };
+};
+
+export function reduceData<UserData extends Data>(
+  data: UserData,
+  action: PuckAction,
+  config: Config
+): UserData {
+  if (action.type === "insert") {
+    return insertAction(data, action, config);
   }
 
   if (action.type === "duplicate") {
@@ -93,7 +144,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
       },
     };
 
-    const dataWithRelatedDuplicated = duplicateRelatedZones(
+    const dataWithRelatedDuplicated = duplicateRelatedZones<UserData>(
       item,
       data,
       newItem.props.id
@@ -111,7 +162,7 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
       zones: {
         ...dataWithRelatedDuplicated.zones,
         [action.sourceZone]: insert(
-          dataWithRelatedDuplicated.zones[action.sourceZone],
+          dataWithRelatedDuplicated.zones![action.sourceZone],
           action.sourceIndex + 1,
           newItem
         ),
@@ -120,33 +171,17 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   }
 
   if (action.type === "reorder") {
-    if (action.destinationZone === rootDroppableId) {
-      return {
-        ...data,
-        content: reorder(
-          data.content,
-          action.sourceIndex,
-          action.destinationIndex
-        ),
-      };
-    }
-
-    const newData = setupZone(data, action.destinationZone);
-
-    return {
-      ...data,
-      zones: {
-        ...newData.zones,
-        [action.destinationZone]: reorder(
-          newData.zones[action.destinationZone],
-          action.sourceIndex,
-          action.destinationIndex
-        ),
-      },
-    };
+    return reorderAction(data, action);
   }
 
   if (action.type === "move") {
+    if (
+      action.sourceZone === action.destinationZone &&
+      action.sourceIndex === action.destinationIndex
+    ) {
+      return data;
+    }
+
     const newData = setupZone(
       setupZone(data, action.sourceZone),
       action.destinationZone
@@ -156,6 +191,10 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
       { zone: action.sourceZone, index: action.sourceIndex },
       newData
     );
+
+    if (action.sourceZone === action.destinationZone) {
+      return reorderAction(data, { ...action, type: "reorder" });
+    }
 
     if (action.sourceZone === rootDroppableId) {
       return {
@@ -274,4 +313,4 @@ export const reduceData = (data: Data, action: PuckAction, config: Config) => {
   }
 
   return data;
-};
+}

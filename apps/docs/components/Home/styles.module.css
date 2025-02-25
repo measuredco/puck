@@ -4,15 +4,18 @@
   padding-top: 48px;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  height: 100%;
+  max-height: 1280px;
 }
 
 @media (min-width: 768px) {
   .Home {
-    padding-bottom: 156px;
-    padding-top: 156px;
+    padding-bottom: 96px;
+    padding-top: 96px;
   }
 }
 
@@ -40,4 +43,40 @@
   display: flex;
   justify-content: center;
   gap: 16px;
+}
+
+.Home-builtBy {
+  color: currentColor;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
+.Home-builtBy a {
+  color: #0158ad;
+}
+
+:global(html.dark) .Home-builtBy a {
+  color: currentColor;
+}
+
+.Home-builtBy a:hover {
+  opacity: 0.8;
+}
+
+.Home-dot {
+  border-radius: 8px;
+  background-color: currentColor;
+  padding: 2px;
+  margin: 28px;
+  opacity: 0.5;
+}
+
+.Home-peakWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 96px;
+  text-align: center;
+  width: 100%;
 }

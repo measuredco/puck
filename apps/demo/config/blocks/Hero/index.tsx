@@ -1,11 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
-import { ComponentConfig } from "@/core/types/Config";
+import { ComponentConfig } from "@/core/types";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { Button } from "@/core/components/Button";
 import { Section } from "../../components/Section";
 import { quotes } from "./quotes";
+import { AutoField, FieldLabel } from "@/core";
+import { Link2 } from "lucide-react";
 
 const getClassName = getClassNameFactory("Hero", styles);
 
@@ -23,7 +25,6 @@ export type HeroProps = {
     label: string;
     href: string;
     variant?: "primary" | "secondary";
-    more?: { text: string }[];
   }[];
 };
 
@@ -32,7 +33,14 @@ export const Hero: ComponentConfig<HeroProps> = {
     quote: {
       type: "external",
       placeholder: "Select a quote",
-      showSearch: true,
+      showSearch: false,
+      renderFooter: ({ items }) => {
+        return (
+          <div>
+            {items.length} result{items.length === 1 ? "" : "s"}
+          </div>
+        );
+      },
       filterFields: {
         author: {
           type: "select",
@@ -77,7 +85,10 @@ export const Hero: ComponentConfig<HeroProps> = {
             }
           });
       },
-      mapRow: (item) => ({ title: item.title, description: item.description }),
+      mapRow: (item) => ({
+        title: item.title,
+        description: <span>{item.description}</span>,
+      }),
       mapProp: (result) => {
         return { index: result.index, label: result.description };
       },
@@ -116,7 +127,23 @@ export const Hero: ComponentConfig<HeroProps> = {
     image: {
       type: "object",
       objectFields: {
-        url: { type: "text" },
+        url: {
+          type: "custom",
+          render: ({ value, field, name, onChange, readOnly }) => (
+            <FieldLabel
+              label={field.label || name}
+              readOnly={readOnly}
+              icon={<Link2 size="16" />}
+            >
+              <AutoField
+                field={{ type: "text" }}
+                value={value}
+                onChange={onChange}
+                readOnly={readOnly}
+              />
+            </FieldLabel>
+          ),
+        },
         mode: {
           type: "radio",
           options: [
@@ -164,19 +191,41 @@ export const Hero: ComponentConfig<HeroProps> = {
       readOnly: { title: true, description: true },
     };
   },
-  render: ({ align, title, description, buttons, padding, image }) => {
+  resolveFields: async (data, { fields }) => {
+    if (data.props.align === "center") {
+      return {
+        ...fields,
+        image: undefined,
+      };
+    }
+
+    return fields;
+  },
+  resolvePermissions: async (data, params) => {
+    if (!params.changed.quote) return params.lastPermissions;
+
+    // Simulate delay
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    return {
+      ...params.permissions,
+      // Disable delete if quote 7 is selected
+      delete: data.props.quote?.index !== 7,
+    };
+  },
+  render: ({ align, title, description, buttons, padding, image, puck }) => {
     // Empty state allows us to test that components support hooks
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [_] = useState(0);
 
     return (
       <Section
-        padding={padding}
         className={getClassName({
           left: align === "left",
           center: align === "center",
           hasImageBackground: image?.mode === "background",
         })}
+        style={{ paddingTop: padding, paddingBottom: padding }}
       >
         {image?.mode === "background" && (
           <>
@@ -202,6 +251,7 @@ export const Hero: ComponentConfig<HeroProps> = {
                   href={button.href}
                   variant={button.variant}
                   size="large"
+                  tabIndex={puck.isEditing ? -1 : undefined}
                 >
                   {button.label}
                 </Button>

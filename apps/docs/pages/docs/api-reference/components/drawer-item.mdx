@@ -16,7 +16,7 @@ export function Editor() {
   return (
     <Puck>
       <Drawer>
-        <Drawer.Item name="Orange" index={0} />
+        <Drawer.Item name="Orange" />
       </Drawer>
     </Puck>
   );
@@ -25,12 +25,12 @@ export function Editor() {
 
 ## Props
 
-| Prop                    | Example                   | Type     | Status   |
-| ----------------------- | ------------------------- | -------- | -------- |
-| [`name`](#name)         | `name: "Orange"`          | String   | Required |
-| [`index`](#index)       | `index: 0`                | Number   | Required |
-| [`children`](#children) | `children: () => <div />` | Function | -        |
-| [`id`](#id)             | `id: "OrangeComponent"`   | String   | -        |
+| Prop                                | Example                   | Type     | Status   |
+| ----------------------------------- | ------------------------- | -------- | -------- |
+| [`name`](#name)                     | `name: "Orange"`          | String   | Required |
+| [`children`](#children)             | `children: () => <div />` | Function | -        |
+| [`id`](#id)                         | `id: "OrangeComponent"`   | String   | -        |
+| [`isDragDisabled`](#isdragdisabled) | `isDragDisabled: false`   | Boolean  | -        |
 
 ## Required props
 
@@ -40,13 +40,6 @@ The name of this drawer item.
 
 - This will be rendered on the item by default.
 - Will be used as the `id`, unless otherwise specified
-
-### `index`
-
-A numerical index for each item in the drawer.
-
-- Must be sequential, i.e. `0`, `1`, `2`.
-- Must start at `0`.
 
 ## Optional props
 
@@ -61,9 +54,7 @@ export function Editor() {
   return (
     <Puck>
       <Drawer>
-        <Drawer.Item name="Orange" index={0}>
-          {() => <div>Orange 🍊</div>}
-        </Drawer.Item>
+        <Drawer.Item name="Orange">{() => <div>Orange 🍊</div>}</Drawer.Item>
       </Drawer>
     </Puck>
   );
@@ -72,9 +63,7 @@ export function Editor() {
 
 <PuckPreview config={{}} data={{ root: { props: {} }, content: [] }}>
   <Drawer>
-    <Drawer.Item name="Orange" index={0}>
-      {() => <div>Orange 🍊</div>}
-    </Drawer.Item>
+    <Drawer.Item name="Orange">{() => <div>Orange 🍊</div>}</Drawer.Item>
   </Drawer>
 </PuckPreview>
 
@@ -93,3 +82,7 @@ The original node for the drawer item.
 A unique id for this drawer item. Defaults to the value of [`name`](#name).
 
 If using the `<Drawer>` as a component list to be dragged into `<Puck.Preview>`, this should be the key of a component defined in the [Config](/docs/api-reference/configuration/config).
+
+### `isDragDisabled`
+
+Whether or not this item is disabled.

@@ -4,6 +4,8 @@ import styles from "./styles.module.css";
 import getClassNameFactory from "@/core/lib/get-class-name-factory";
 import { Button } from "@/core/components/Button";
 import Link from "next/link";
+import { MeasuredCard } from "../MeasuredCard";
+import { MeasuredLogo } from "../MeasuredLogo";
 
 const getClassName = getClassNameFactory("Home", styles);
 
@@ -39,6 +41,24 @@ export const Home = () => {
           <span style={{ userSelect: "none" }}>~ </span>npm i @measured/puck
           --save
         </pre>
+      </div>
+      <div className={getClassName("peakWrapper")}>
+        <div className={getClassName("builtBy")}>
+          <p>Built by</p>
+          <Link href="https://measured.co" target="_blank">
+            <MeasuredLogo />
+          </Link>
+        </div>
+
+        <div>
+          <div className={getClassName("dot")} />
+          <div className={getClassName("dot")} />
+          <div className={getClassName("dot")} />
+        </div>
+
+        <div className={getClassName("peak")}>
+          <MeasuredCard />
+        </div>
       </div>
     </div>
   );

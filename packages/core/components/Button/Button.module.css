@@ -29,15 +29,15 @@
 .Button--medium {
   min-height: 34px;
   padding-bottom: 7px;
-  padding-left: 19px;
-  padding-right: 19px;
+  padding-inline-start: 19px;
+  padding-inline-end: 19px;
   padding-top: 7px;
 }
 
 .Button--large {
   padding-bottom: 11px;
-  padding-left: 19px;
-  padding-right: 19px;
+  padding-inline-start: 19px;
+  padding-inline-end: 19px;
   padding-top: 11px;
 }
 
@@ -98,5 +98,5 @@
 }
 
 .Button-spinner {
-  padding-left: 8px;
+  padding-inline-start: 8px;
 }

@@ -1,14 +1,21 @@
 .Header {
+  background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.Header-inner {
   align-items: center;
   display: flex;
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
   max-width: 1280px;
   padding: 24px 16px;
 }
 
 @media (min-width: 768px) {
-  .Header {
+  .Header-inner {
     padding: 24px;
   }
 }
@@ -23,11 +30,11 @@
 .Header-items {
   display: flex;
   gap: 24px;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 @media (min-width: 1024px) {
-  .Header-items  {
+  .Header-items {
     gap: 32px;
   }
 }

@@ -1,0 +1,21 @@
+@keyframes loader-animation {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(0.8);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.Loader {
+  background: transparent;
+  border-radius: 100%;
+  border: 2px solid currentColor;
+  border-bottom-color: transparent;
+  display: inline-block;
+  animation: loader-animation 1s 0s infinite linear;
+  animation-fill-mode: both;
+}

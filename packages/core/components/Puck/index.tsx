@@ -7,13 +7,20 @@ import {
   useReducer,
   useState,
 } from "react";
-import { DragStart, DragUpdate } from "@measured/dnd";
 
-import type { AppState, Config, Data, UiState } from "../../types/Config";
+import type {
+  UiState,
+  IframeConfig,
+  OnAction,
+  Overrides,
+  Permissions,
+  Plugin,
+  InitialHistory,
+  UserGenerics,
+  Config,
+  Data,
+} from "../../types";
 import { Button } from "../Button";
-
-import { Plugin } from "../../types/Plugin";
-import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
 import {
@@ -25,65 +32,71 @@ import {
 } from "lucide-react";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
-import { DropZoneProvider } from "../DropZone";
-import { ItemSelector, getItem } from "../../lib/get-item";
-import { PuckAction, StateReducer, createReducer } from "../../reducer";
+import { getItem } from "../../lib/get-item";
+import { PuckAction, createReducer } from "../../reducer";
 import { flushZones } from "../../lib/flush-zones";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { AppProvider, defaultAppState } from "./context";
-import { useResolvedData } from "../../lib/use-resolved-data";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
-import { Overrides } from "../../types/Overrides";
-import { loadOverrides } from "../../lib/load-overrides";
 import { usePuckHistory } from "../../lib/use-puck-history";
 import { useHistoryStore } from "../../lib/use-history-store";
 import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
-import { Viewports } from "../../types/Viewports";
+import { Viewports } from "../../types";
 import { DragDropContext } from "../DragDropContext";
-import { IframeConfig } from "../../types/IframeConfig";
+import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
+import { DefaultOverride } from "../DefaultOverride";
+import { useInjectGlobalCss } from "../../lib/use-inject-css";
+import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
 
 const getClassName = getClassNameFactory("Puck", styles);
+const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
 
-export function Puck<UserConfig extends Config = Config>({
+export function Puck<
+  UserConfig extends Config = Config,
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
+>({
   children,
   config,
-  data: initialData = { content: [], root: {} },
+  data: initialData,
   ui: initialUi,
   onChange,
   onPublish,
-  plugins = [],
-  overrides = {},
+  onAction,
+  permissions = {},
+  plugins,
+  overrides,
   renderHeader,
   renderHeaderActions,
   headerTitle,
   headerPath,
   viewports = defaultViewports,
-  iframe = {
-    enabled: true,
-  },
+  iframe: _iframe,
   dnd,
+  initialHistory: _initialHistory,
 }: {
   children?: ReactNode;
   config: UserConfig;
-  data: Data;
+  data: Partial<G["UserData"] | Data>;
   ui?: Partial<UiState>;
-  onChange?: (data: Data) => void;
-  onPublish?: (data: Data) => void;
+  onChange?: (data: G["UserData"]) => void;
+  onPublish?: (data: G["UserData"]) => void;
+  onAction?: OnAction<G["UserData"]>;
+  permissions?: Partial<Permissions>;
   plugins?: Plugin[];
   overrides?: Partial<Overrides>;
   renderHeader?: (props: {
     children: ReactNode;
     dispatch: (action: PuckAction) => void;
-    state: AppState;
+    state: G["UserAppState"];
   }) => ReactElement;
   renderHeaderActions?: (props: {
-    state: AppState;
+    state: G["UserAppState"];
     dispatch: (action: PuckAction) => void;
   }) => ReactElement;
   headerTitle?: string;
@@ -93,17 +106,20 @@ export function Puck<UserConfig extends Config = Config>({
   dnd?: {
     disableAutoScroll?: boolean;
   };
+  initialHistory?: InitialHistory;
 }) {
-  const historyStore = useHistoryStore();
+  const iframe: IframeConfig = {
+    enabled: true,
+    waitForStyles: true,
+    ..._iframe,
+  };
 
-  const [reducer] = useState(() =>
-    createReducer<UserConfig>({ config, record: historyStore.record })
-  );
+  useInjectGlobalCss(iframe.enabled);
 
-  const [initialAppState] = useState<AppState>(() => {
+  const [generatedAppState] = useState<G["UserAppState"]>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
 
-    let clientUiState: Partial<AppState["ui"]> = {};
+    let clientUiState: Partial<G["UserAppState"]["ui"]> = {};
 
     if (typeof window !== "undefined") {
       // Hide side bars on mobile
@@ -124,10 +140,11 @@ export function Puck<UserConfig extends Config = Config>({
         }))
         .sort((a, b) => (a.diff > b.diff ? 1 : -1));
 
-      const closestViewport = viewportDifferences[0].key;
+      const closestViewport = viewportDifferences[0].key as any;
 
       if (iframe.enabled) {
         clientUiState = {
+          ...clientUiState,
           viewports: {
             ...initial.viewports,
 
@@ -135,11 +152,11 @@ export function Puck<UserConfig extends Config = Config>({
               ...initial.viewports.current,
               height:
                 initialUi?.viewports?.current?.height ||
-                viewports[closestViewport].height ||
+                viewports[closestViewport]?.height ||
                 "auto",
               width:
                 initialUi?.viewports?.current?.width ||
-                viewports[closestViewport].width,
+                viewports[closestViewport]?.width,
             },
           },
         };
@@ -147,7 +164,17 @@ export function Puck<UserConfig extends Config = Config>({
     }
 
     // DEPRECATED
-    const rootProps = initialData.root.props || initialData.root;
+    if (
+      Object.keys(initialData?.root || {}).length > 0 &&
+      !initialData?.root?.props
+    ) {
+      console.error(
+        "Warning: Defining props on `root` is deprecated. Please use `root.props`, or republish this page to migrate automatically."
+      );
+    }
+
+    // Deprecated
+    const rootProps = initialData?.root?.props || initialData?.root || {};
 
     const defaultedRootProps = {
       ...config.root?.defaultProps,
@@ -158,7 +185,8 @@ export function Puck<UserConfig extends Config = Config>({
       ...defaultAppState,
       data: {
         ...initialData,
-        root: defaultedRootProps,
+        root: { ...initialData?.root, props: defaultedRootProps },
+        content: initialData.content || [],
       },
       ui: {
         ...initial,
@@ -181,64 +209,61 @@ export function Puck<UserConfig extends Config = Config>({
             )
           : {},
       },
-    };
+    } as G["UserAppState"];
   });
 
-  const [appState, dispatch] = useReducer<StateReducer>(
+  const { appendData = true } = _initialHistory || {};
+
+  const histories = [
+    ...(_initialHistory?.histories || []),
+    ...(appendData ? [{ state: generatedAppState }] : []),
+  ].map((history) => ({
+    ...history,
+    // Inject default data to enable partial history injections
+    state: { ...generatedAppState, ...history.state },
+  }));
+  const initialHistoryIndex = _initialHistory?.index || histories.length - 1;
+  const initialAppState = histories[initialHistoryIndex].state;
+
+  const historyStore = useHistoryStore({
+    histories,
+    index: initialHistoryIndex,
+  });
+
+  const [reducer] = useState(() =>
+    createReducer<UserConfig, G["UserData"]>({
+      config,
+      record: historyStore.record,
+      onAction,
+    })
+  );
+
+  const [appState, dispatch] = useReducer(
     reducer,
-    flushZones(initialAppState)
+    flushZones<G["UserData"]>(initialAppState) as G["UserAppState"]
   );
 
   const { data, ui } = appState;
 
-  const history = usePuckHistory({ dispatch, initialAppState, historyStore });
-
-  const { resolveData, componentState } = useResolvedData(
-    appState,
-    config,
-    dispatch
-  );
+  const history = usePuckHistory({
+    dispatch,
+    initialAppState,
+    historyStore,
+    iframeEnabled: _iframe?.enabled ?? true,
+  });
 
   const [menuOpen, setMenuOpen] = useState(false);
 
   const { itemSelector, leftSideBarVisible, rightSideBarVisible } = ui;
 
-  const setItemSelector = useCallback(
-    (newItemSelector: ItemSelector | null) => {
-      if (newItemSelector === itemSelector) return;
-
-      dispatch({
-        type: "setUi",
-        ui: { itemSelector: newItemSelector },
-        recordHistory: true,
-      });
-    },
-    [itemSelector]
-  );
-
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
 
   useEffect(() => {
-    if (onChange) onChange(data);
+    if (onChange) onChange(data as G["UserData"]);
   }, [data]);
-
-  const { onDragStartOrUpdate, placeholderStyle } = usePlaceholderStyle();
-
-  const [draggedItem, setDraggedItem] = useState<
-    DragStart & Partial<DragUpdate>
-  >();
 
   // DEPRECATED
   const rootProps = data.root.props || data.root;
-
-  // DEPRECATED
-  useEffect(() => {
-    if (Object.keys(data.root).length > 0 && !data.root.props) {
-      console.error(
-        "Warning: Defining props on `root` is deprecated. Please use `root.props`. This will be a breaking change in a future release."
-      );
-    }
-  }, []);
 
   const toggleSidebars = useCallback(
     (sidebar: "left" | "right") => {
@@ -274,7 +299,7 @@ export function Puck<UserConfig extends Config = Config>({
       if (!window.matchMedia("(min-width: 638px)").matches) {
         dispatch({
           type: "setUi",
-          ui: (ui) => ({
+          ui: (ui: UiState) => ({
             ...ui,
             ...(ui.rightSideBarVisible ? { leftSideBarVisible: false } : {}),
           }),
@@ -289,24 +314,14 @@ export function Puck<UserConfig extends Config = Config>({
     };
   }, []);
 
-  const defaultRender = useMemo<
-    React.FunctionComponent<{ children?: ReactNode }>
-  >(() => {
-    const PuckDefault = ({ children }: { children?: ReactNode }) => (
-      <>{children}</>
-    );
-
-    return PuckDefault;
-  }, []);
-
   // DEPRECATED
-  const defaultHeaderRender = useMemo(() => {
+  const defaultHeaderRender = useMemo((): Overrides["header"] => {
     if (renderHeader) {
       console.warn(
         "`renderHeader` is deprecated. Please use `overrides.header` and the `usePuck` hook instead"
       );
 
-      const RenderHeader = ({ actions, ...props }) => {
+      const RenderHeader = ({ actions, ...props }: any) => {
         const Comp = renderHeader!;
 
         return (
@@ -319,17 +334,17 @@ export function Puck<UserConfig extends Config = Config>({
       return RenderHeader;
     }
 
-    return defaultRender;
+    return DefaultOverride;
   }, [renderHeader]);
 
   // DEPRECATED
-  const defaultHeaderActionsRender = useMemo(() => {
+  const defaultHeaderActionsRender = useMemo((): Overrides["headerActions"] => {
     if (renderHeaderActions) {
       console.warn(
         "`renderHeaderActions` is deprecated. Please use `overrides.headerActions` and the `usePuck` hook instead."
       );
 
-      const RenderHeader = (props) => {
+      const RenderHeader = (props: any) => {
         const Comp = renderHeaderActions!;
 
         return <Comp {...props} dispatch={dispatch} state={appState}></Comp>;
@@ -338,16 +353,17 @@ export function Puck<UserConfig extends Config = Config>({
       return RenderHeader;
     }
 
-    return defaultRender;
+    return DefaultOverride;
   }, [renderHeader]);
 
   // Load all plugins into the overrides
-  const loadedOverrides = useMemo(() => {
-    return loadOverrides({ overrides, plugins });
-  }, [plugins]);
+  const loadedOverrides = useLoadedOverrides({
+    overrides: overrides,
+    plugins: plugins,
+  });
 
   const CustomPuck = useMemo(
-    () => loadedOverrides.puck || defaultRender,
+    () => loadedOverrides.puck || DefaultOverride,
     [loadedOverrides]
   );
 
@@ -366,230 +382,173 @@ export function Puck<UserConfig extends Config = Config>({
     setMounted(true);
   }, []);
 
+  const selectedComponentConfig =
+    selectedItem && config.components[selectedItem.type];
+  const selectedComponentLabel = selectedItem
+    ? selectedComponentConfig?.["label"] ?? selectedItem.type.toString()
+    : "";
+
+  usePreviewModeHotkeys(dispatch, iframe.enabled);
+
   return (
-    <div className="Puck">
+    <div className={`Puck ${getClassName()}`}>
       <AppProvider
         value={{
           state: appState,
           dispatch,
           config,
-          componentState,
-          resolveData,
-          plugins,
+          plugins: plugins || [],
           overrides: loadedOverrides,
           history,
           viewports,
           iframe,
+          globalPermissions: {
+            delete: true,
+            drag: true,
+            duplicate: true,
+            insert: true,
+            edit: true,
+            ...permissions,
+          },
+          getPermissions: () => ({}),
+          refreshPermissions: () => null,
         }}
       >
-        <DragDropContext
-          autoScrollerOptions={{ disabled: dnd?.disableAutoScroll }}
-          onDragUpdate={(update) => {
-            setDraggedItem({ ...draggedItem, ...update });
-            onDragStartOrUpdate(update);
-          }}
-          onBeforeDragStart={(start) => {
-            onDragStartOrUpdate(start);
-            setItemSelector(null);
-            dispatch({ type: "setUi", ui: { isDragging: true } });
-          }}
-          onDragEnd={(droppedItem) => {
-            setDraggedItem(undefined);
-            dispatch({ type: "setUi", ui: { isDragging: false } });
-
-            // User cancel drag
-            if (!droppedItem.destination) {
-              return;
-            }
-
-            // New component
-            if (
-              droppedItem.source.droppableId.startsWith("component-list") &&
-              droppedItem.destination
-            ) {
-              const [_, componentType] = droppedItem.draggableId.split("::");
-
-              dispatch({
-                type: "insert",
-                componentType: componentType || droppedItem.draggableId,
-                destinationIndex: droppedItem.destination!.index,
-                destinationZone: droppedItem.destination.droppableId,
-              });
-
-              setItemSelector({
-                index: droppedItem.destination!.index,
-                zone: droppedItem.destination.droppableId,
-              });
-
-              return;
-            } else {
-              const { source, destination } = droppedItem;
-
-              if (source.droppableId === destination.droppableId) {
-                dispatch({
-                  type: "reorder",
-                  sourceIndex: source.index,
-                  destinationIndex: destination.index,
-                  destinationZone: destination.droppableId,
-                });
-              } else {
-                dispatch({
-                  type: "move",
-                  sourceZone: source.droppableId,
-                  sourceIndex: source.index,
-                  destinationIndex: destination.index,
-                  destinationZone: destination.droppableId,
-                });
-              }
-
-              setItemSelector({
-                index: destination.index,
-                zone: destination.droppableId,
-              });
-            }
-          }}
-        >
-          <DropZoneProvider
-            value={{
-              data,
-              itemSelector,
-              setItemSelector,
-              config,
-              dispatch,
-              draggedItem,
-              placeholderStyle,
-              mode: "edit",
-              areaId: "root",
-            }}
-          >
-            <CustomPuck>
-              {children || (
-                <div
-                  className={getClassName({
-                    leftSideBarVisible,
-                    menuOpen,
-                    mounted,
-                    rightSideBarVisible,
-                  })}
-                >
-                  <div className={getClassName("layout")}>
-                    <CustomHeader
-                      actions={
-                        <>
-                          <CustomHeaderActions />
+        <DragDropContext disableAutoScroll={dnd?.disableAutoScroll}>
+          <CustomPuck>
+            {children || (
+              <div
+                className={getLayoutClassName({
+                  leftSideBarVisible,
+                  menuOpen,
+                  mounted,
+                  rightSideBarVisible,
+                })}
+              >
+                <div className={getLayoutClassName("inner")}>
+                  <CustomHeader
+                    actions={
+                      <>
+                        <CustomHeaderActions>
                           <Button
                             onClick={() => {
-                              onPublish && onPublish(data);
+                              onPublish && onPublish(data as G["UserData"]);
                             }}
                             icon={<Globe size="14px" />}
                           >
                             Publish
                           </Button>
-                        </>
-                      }
-                    >
-                      <header className={getClassName("header")}>
-                        <div className={getClassName("headerInner")}>
-                          <div className={getClassName("headerToggle")}>
-                            <div className={getClassName("leftSideBarToggle")}>
-                              <IconButton
-                                onClick={() => {
-                                  toggleSidebars("left");
-                                }}
-                                title="Toggle left sidebar"
-                              >
-                                <PanelLeft focusable="false" />
-                              </IconButton>
-                            </div>
-                            <div className={getClassName("rightSideBarToggle")}>
-                              <IconButton
-                                onClick={() => {
-                                  toggleSidebars("right");
-                                }}
-                                title="Toggle right sidebar"
-                              >
-                                <PanelRight focusable="false" />
-                              </IconButton>
-                            </div>
+                        </CustomHeaderActions>
+                      </>
+                    }
+                  >
+                    <header className={getLayoutClassName("header")}>
+                      <div className={getLayoutClassName("headerInner")}>
+                        <div className={getLayoutClassName("headerToggle")}>
+                          <div
+                            className={getLayoutClassName("leftSideBarToggle")}
+                          >
+                            <IconButton
+                              onClick={() => {
+                                toggleSidebars("left");
+                              }}
+                              title="Toggle left sidebar"
+                            >
+                              <PanelLeft focusable="false" />
+                            </IconButton>
                           </div>
-                          <div className={getClassName("headerTitle")}>
-                            <Heading rank={2} size="xs">
-                              {headerTitle || rootProps.title || "Page"}
-                              {headerPath && (
-                                <>
-                                  {" "}
-                                  <code className={getClassName("headerPath")}>
-                                    {headerPath}
-                                  </code>
-                                </>
-                              )}
-                            </Heading>
-                          </div>
-                          <div className={getClassName("headerTools")}>
-                            <div className={getClassName("menuButton")}>
-                              <IconButton
-                                onClick={() => {
-                                  return setMenuOpen(!menuOpen);
-                                }}
-                                title="Toggle menu bar"
-                              >
-                                {menuOpen ? (
-                                  <ChevronUp focusable="false" />
-                                ) : (
-                                  <ChevronDown focusable="false" />
-                                )}
-                              </IconButton>
-                            </div>
-                            <MenuBar
-                              appState={appState}
-                              data={data}
-                              dispatch={dispatch}
-                              onPublish={onPublish}
-                              menuOpen={menuOpen}
-                              renderHeaderActions={() => (
-                                <CustomHeaderActions />
-                              )}
-                              setMenuOpen={setMenuOpen}
-                            />
+                          <div
+                            className={getLayoutClassName("rightSideBarToggle")}
+                          >
+                            <IconButton
+                              onClick={() => {
+                                toggleSidebars("right");
+                              }}
+                              title="Toggle right sidebar"
+                            >
+                              <PanelRight focusable="false" />
+                            </IconButton>
                           </div>
                         </div>
-                      </header>
-                    </CustomHeader>
-                    <div className={getClassName("leftSideBar")}>
-                      <SidebarSection title="Components" noBorderTop>
-                        <Components />
-                      </SidebarSection>
-                      <SidebarSection title="Outline">
-                        <Outline />
-                      </SidebarSection>
-                    </div>
-                    <Canvas />
-                    <div className={getClassName("rightSideBar")}>
-                      <SidebarSection
-                        noPadding
-                        noBorderTop
-                        showBreadcrumbs
-                        title={
-                          selectedItem
-                            ? config.components[selectedItem.type]["label"] ??
-                              selectedItem.type
-                            : "Page"
-                        }
-                      >
-                        <Fields />
-                      </SidebarSection>
-                    </div>
+                        <div className={getLayoutClassName("headerTitle")}>
+                          <Heading rank="2" size="xs">
+                            {headerTitle || rootProps.title || "Page"}
+                            {headerPath && (
+                              <>
+                                {" "}
+                                <code
+                                  className={getLayoutClassName("headerPath")}
+                                >
+                                  {headerPath}
+                                </code>
+                              </>
+                            )}
+                          </Heading>
+                        </div>
+                        <div className={getLayoutClassName("headerTools")}>
+                          <div className={getLayoutClassName("menuButton")}>
+                            <IconButton
+                              onClick={() => {
+                                return setMenuOpen(!menuOpen);
+                              }}
+                              title="Toggle menu bar"
+                            >
+                              {menuOpen ? (
+                                <ChevronUp focusable="false" />
+                              ) : (
+                                <ChevronDown focusable="false" />
+                              )}
+                            </IconButton>
+                          </div>
+                          <MenuBar<G["UserData"]>
+                            appState={appState}
+                            dispatch={dispatch}
+                            onPublish={onPublish}
+                            menuOpen={menuOpen}
+                            renderHeaderActions={() => (
+                              <CustomHeaderActions>
+                                <Button
+                                  onClick={() => {
+                                    onPublish && onPublish(data);
+                                  }}
+                                  icon={<Globe size="14px" />}
+                                >
+                                  Publish
+                                </Button>
+                              </CustomHeaderActions>
+                            )}
+                            setMenuOpen={setMenuOpen}
+                          />
+                        </div>
+                      </div>
+                    </header>
+                  </CustomHeader>
+                  <div className={getLayoutClassName("leftSideBar")}>
+                    <SidebarSection title="Components" noBorderTop>
+                      <Components />
+                    </SidebarSection>
+                    <SidebarSection title="Outline">
+                      <Outline />
+                    </SidebarSection>
                   </div>
-                  <div
-                    id="puck-portal-root"
-                    className={getClassName("portal")}
-                  />
+                  <Canvas />
+                  <div className={getLayoutClassName("rightSideBar")}>
+                    <SidebarSection
+                      noPadding
+                      noBorderTop
+                      showBreadcrumbs
+                      title={selectedItem ? selectedComponentLabel : "Page"}
+                    >
+                      <Fields />
+                    </SidebarSection>
+                  </div>
                 </div>
-              )}
-            </CustomPuck>
-          </DropZoneProvider>
+              </div>
+            )}
+          </CustomPuck>
         </DragDropContext>
       </AppProvider>
+      <div id="puck-portal-root" className={getClassName("portal")} />
     </div>
   );
 }

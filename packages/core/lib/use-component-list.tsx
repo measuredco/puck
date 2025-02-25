@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Config, UiState } from "../types/Config";
+import { Config, UiState } from "../types";
 import { ComponentList } from "../components/ComponentList";
 
 export const useComponentList = (config: Config, ui: UiState) => {

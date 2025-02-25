@@ -1,5 +1,5 @@
 import { DropZoneContext } from "../components/DropZone/context";
-import { Content } from "../types/Config";
+import { Content } from "../types";
 import { getItem } from "./get-item";
 import { getZoneId } from "./get-zone-id";
 

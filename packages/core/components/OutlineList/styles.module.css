@@ -2,7 +2,7 @@
   color: var(--puck-color-grey-03);
   font-family: var(--puck-font-family);
   margin: 0;
-  padding-left: 16px;
+  padding-inline-start: 16px;
   position: relative;
   list-style: none;
 }
@@ -15,6 +15,11 @@
   width: 1px;
   height: calc(100% - 9px);
   content: "";
+}
+
+.OutlineList:dir(rtl)::before {
+  left: unset;
+  right: -1px;
 }
 
 .OutlineListItem {
@@ -30,6 +35,11 @@
   width: 13px;
   height: 1px;
   content: "";
+}
+
+.OutlineListItem:dir(rtl)::before {
+  left: unset;
+  right: -17px;
 }
 
 .OutlineListItem--clickable {

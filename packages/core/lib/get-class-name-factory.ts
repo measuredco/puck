@@ -1,10 +1,13 @@
 import classnames from "classnames";
 
-export const getGlobalClassName = (rootClass, options) => {
+type OptionsObj = Record<string, any>;
+type Options = string | OptionsObj;
+
+export const getGlobalClassName = (rootClass: string, options: Options) => {
   if (typeof options === "string") {
     return `${rootClass}-${options}`;
   } else {
-    const mappedOptions = {};
+    const mappedOptions: Options = {};
     for (let option in options) {
       mappedOptions[`${rootClass}--${option}`] = options[option];
     }
@@ -17,27 +20,26 @@ export const getGlobalClassName = (rootClass, options) => {
 };
 
 const getClassNameFactory =
-  (rootClass, styles, { baseClass = "" } = {}) =>
-  (options = {}) => {
-    let descendant: any = false;
-    let modifiers: any = false;
-
+  (
+    rootClass: string,
+    styles: Record<string, string>,
+    config: { baseClass?: string } = { baseClass: "" }
+  ) =>
+  (options: Options = {}) => {
     if (typeof options === "string") {
-      descendant = options;
-    } else if (typeof options === "object") {
-      modifiers = options;
-    }
+      const descendant = options;
 
-    if (descendant) {
       const style = styles[`${rootClass}-${descendant}`];
 
       if (style) {
-        return baseClass + styles[`${rootClass}-${descendant}`] || "";
+        return config.baseClass + styles[`${rootClass}-${descendant}`] || "";
       }
 
       return "";
-    } else if (modifiers) {
-      const prefixedModifiers = {};
+    } else if (typeof options === "object") {
+      const modifiers = options;
+
+      const prefixedModifiers: OptionsObj = {};
 
       for (let modifier in modifiers) {
         prefixedModifiers[styles[`${rootClass}--${modifier}`]] =
@@ -47,14 +49,14 @@ const getClassNameFactory =
       const c = styles[rootClass];
 
       return (
-        baseClass +
+        config.baseClass +
         classnames({
           [c]: !!c, // only apply the class if it exists
           ...prefixedModifiers,
         })
       );
     } else {
-      return baseClass + styles[rootClass] || "";
+      return config.baseClass + styles[rootClass] || "";
     }
   };
 

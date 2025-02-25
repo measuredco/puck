@@ -1,5 +1,5 @@
 import { ConfigPreview } from "@/docs/components/Preview";
-import { FieldLabel } from "@/core/components/InputOrGroup";
+import { AutoField, FieldLabel } from "@/core/components/AutoField";
 
 # Custom Fields
 
@@ -71,7 +71,7 @@ The [`onChange` function](/docs/api-reference/fields/custom#onchangevalue-ui) up
 
 You can add your own label, but it's recommended to use the [`<FieldLabel>` component](/docs/api-reference/components/field-label) provided by Puck to seamlessly integrate into the Puck field UI.
 
-```tsx copy showLineNumbers {1, 9-14}
+```tsx copy showLineNumbers {1, 11-13}
 import { FieldLabel } from "@measured/puck";
 
 const config = {
@@ -80,7 +80,7 @@ const config = {
       fields: {
         title: {
           type: "custom",
-          label: "Label Example"
+          label: "Label Example",
           render: ({ field }) => (
             <FieldLabel label={field.label}>
               <input {/*...*/} />
@@ -113,6 +113,66 @@ const config = {
                   border: "1px solid black",
                   padding: 4,
                 }}
+              />
+            </FieldLabel>
+          );
+        },
+      },
+    },
+    defaultProps: {
+      title: "Hello, world",
+    },
+    render: ({ title }) => {
+      return <p style={{ margin: 0 }}>{title}</p>;
+    },
+  }}
+/>
+
+## Rendering Puck fields internally
+
+Use the [`<AutoField>` component](/docs/api-reference/components/auto-field) to render Puck fields within your custom field.
+
+```tsx copy showLineNumbers {1, 12-16}
+import { AutoField } from "@measured/puck";
+
+const config = {
+  components: {
+    Example: {
+      fields: {
+        title: {
+          type: "custom",
+          label: "Label Example",
+          render: ({ field, value, onChange }) => (
+            <FieldLabel label={field.label}>
+              <AutoField
+                field={{ type: "text" }}
+                onChange={(value) => onChange(value)}
+                value={value}
+              />
+            </FieldLabel>
+          ),
+        },
+        // ...
+      },
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      title: {
+        type: "custom",
+        label: "AutoField Example",
+        render: ({ field, value, onChange }) => {
+          return (
+            <FieldLabel label={field.label}>
+              <AutoField
+                field={{ type: "text" }}
+                value={value}
+                onChange={onChange}
               />
             </FieldLabel>
           );
@@ -165,4 +225,6 @@ const config = {
 
 ## Further reading
 
+- [The `<AutoField>` API reference](/docs/api-reference/components/auto-field)
+- [The `<FieldLabel>` API reference](/docs/api-reference/components/field-label)
 - [The `custom` field API reference](/docs/api-reference/fields/custom)

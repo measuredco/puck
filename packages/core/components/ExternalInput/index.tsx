@@ -1,13 +1,19 @@
-import { useMemo, useEffect, useState, useCallback } from "react";
+import {
+  useMemo,
+  useEffect,
+  useState,
+  useCallback,
+  isValidElement,
+} from "react";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { ExternalField } from "../../types/Config";
+import { ExternalField } from "../../types";
 import { Link, Search, SlidersHorizontal, Unlock } from "lucide-react";
 import { Modal } from "../Modal";
 import { Heading } from "../Heading";
-import { ClipLoader } from "react-spinners";
+import { Loader } from "../Loader";
 import { Button } from "../Button";
-import { InputOrGroup } from "../InputOrGroup";
+import { AutoFieldPrivate } from "../AutoField";
 import { IconButton } from "../IconButton";
 
 const getClassName = getClassNameFactory("ExternalInput", styles);
@@ -21,16 +27,18 @@ export const ExternalInput = ({
   value = null,
   name,
   id,
+  readOnly,
 }: {
   field: ExternalField;
   onChange: (value: any) => void;
   value: any;
-  name: string;
+  name?: string;
   id: string;
+  readOnly?: boolean;
 }) => {
   const {
-    mapProp = (val) => val,
-    mapRow = (val) => val,
+    mapProp = (val: any) => val,
+    mapRow = (val: any) => val,
     filterFields,
   } = field || {};
 
@@ -52,7 +60,11 @@ export const ExternalInput = ({
 
     for (const item of mappedData) {
       for (const key of Object.keys(item)) {
-        if (typeof item[key] === "string" || typeof item[key] === "number") {
+        if (
+          typeof item[key] === "string" ||
+          typeof item[key] === "number" ||
+          isValidElement(item[key])
+        ) {
           validKeys.add(key);
         }
       }
@@ -64,7 +76,7 @@ export const ExternalInput = ({
   const [searchQuery, setSearchQuery] = useState(field.initialQuery || "");
 
   const search = useCallback(
-    async (query, filters) => {
+    async (query: string, filters: object) => {
       setIsLoading(true);
 
       const cacheKey = `${id}-${query}-${JSON.stringify(filters)}`;
@@ -79,7 +91,19 @@ export const ExternalInput = ({
         dataCache[cacheKey] = listData;
       }
     },
-    [name, field]
+    [id, field]
+  );
+
+  const Footer = useCallback(
+    (props: { items: any[] }) =>
+      field.renderFooter ? (
+        field.renderFooter(props)
+      ) : (
+        <span className={getClassNameModal("footer")}>
+          {props.items.length} result{props.items.length === 1 ? "" : "s"}
+        </span>
+      ),
+    [field.renderFooter]
   );
 
   useEffect(() => {
@@ -91,6 +115,7 @@ export const ExternalInput = ({
       className={getClassName({
         dataSelected: !!value,
         modalVisible: isOpen,
+        readOnly,
       })}
       id={id}
     >
@@ -99,6 +124,7 @@ export const ExternalInput = ({
           type="button"
           onClick={() => setOpen(true)}
           className={getClassName("button")}
+          disabled={readOnly}
         >
           {/* NB this is hardcoded to strapi for now */}
           {value ? (
@@ -116,10 +142,12 @@ export const ExternalInput = ({
         </button>
         {value && (
           <button
+            type="button"
             className={getClassName("detachButton")}
             onClick={() => {
               onChange(null);
             }}
+            disabled={readOnly}
           >
             <Unlock size={16} />
           </button>
@@ -182,7 +210,7 @@ export const ExternalInput = ({
                 </div>
               </div>
             ) : (
-              <Heading rank={2} size="xs">
+              <Heading rank="2" size="xs">
                 {field.placeholder || "Select data"}
               </Heading>
             )}
@@ -195,21 +223,28 @@ export const ExternalInput = ({
                   Object.keys(filterFields).map((fieldName) => {
                     const filterField = filterFields[fieldName];
                     return (
-                      <InputOrGroup
+                      <div
+                        className={getClassNameModal("field")}
                         key={fieldName}
-                        field={filterField}
-                        name={fieldName}
-                        id={`external_field_${fieldName}_filter`}
-                        label={filterField.label || fieldName}
-                        value={filters[fieldName]}
-                        onChange={(value) => {
-                          const newFilters = { ...filters, [fieldName]: value };
+                      >
+                        <AutoFieldPrivate
+                          field={filterField}
+                          name={fieldName}
+                          id={`external_field_${fieldName}_filter`}
+                          label={filterField.label || fieldName}
+                          value={filters[fieldName]}
+                          onChange={(value) => {
+                            const newFilters = {
+                              ...filters,
+                              [fieldName]: value,
+                            };
 
-                          setFilters(newFilters);
+                            setFilters(newFilters);
 
-                          search(searchQuery, newFilters);
-                        }}
-                      />
+                            search(searchQuery, newFilters);
+                          }}
+                        />
+                      </div>
                     );
                   })}
               </div>
@@ -255,13 +290,12 @@ export const ExternalInput = ({
               </table>
 
               <div className={getClassNameModal("loadingBanner")}>
-                <ClipLoader size={24} aria-label="Loading" />
+                <Loader size={24} />
               </div>
             </div>
           </div>
-
-          <div className={getClassNameModal("footer")}>
-            {mappedData.length} result{mappedData.length === 1 ? "" : "s"}
+          <div className={getClassNameModal("footerContainer")}>
+            <Footer items={mappedData} />
           </div>
         </form>
       </Modal>

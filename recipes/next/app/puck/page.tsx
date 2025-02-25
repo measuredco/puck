@@ -1,1 +1,1 @@
-export { default, generateMetadata } from "./[...puckPath]/page";
+export { default, generateMetadata, dynamic } from "./[...puckPath]/page";

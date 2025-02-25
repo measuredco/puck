@@ -13,7 +13,8 @@ import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { Preview } from "../Preview";
 import { getZoomConfig } from "../../../../lib/get-zoom-config";
-import { AppState } from "../../../../types/Config";
+import { AppState, UiState } from "../../../../types";
+import { Loader } from "../../../Loader";
 
 const getClassName = getClassNameFactory("PuckCanvas", styles);
 
@@ -84,26 +85,41 @@ export const Canvas = () => {
     }
   }, [zoomConfig.zoom]);
 
+  // Zoom whenever state changes, even if external driver
+  useEffect(() => {
+    if (ZOOM_ON_CHANGE) {
+      setShowTransition(true);
+      resetAutoZoom(ui);
+    }
+  }, [ui.viewports.current.width]);
+
   // Resize based on window size
   useEffect(() => {
-    const observer = new ResizeObserver(() => {
+    const cb = () => {
       setShowTransition(false);
       resetAutoZoom();
-    });
+    };
 
-    if (document.body) {
-      observer.observe(document.body);
-    }
+    window.addEventListener("resize", cb);
 
     return () => {
-      observer.disconnect();
+      window.removeEventListener("resize", cb);
     };
+  }, []);
+
+  const [showLoader, setShowLoader] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowLoader(true);
+    }, 500);
   }, []);
 
   return (
     <div
       className={getClassName({
-        ready: status === "READY" || !iframe.enabled,
+        ready: status === "READY" || !iframe.enabled || !iframe.waitForStyles,
+        showLoader,
       })}
       onClick={() =>
         dispatch({
@@ -127,9 +143,10 @@ export const Canvas = () => {
                 zoom: zoomConfig.zoom,
               };
 
-              const newUi = {
+              const newUi: UiState = {
                 ...ui,
                 viewports: { ...ui.viewports, current: uiViewport },
+                itemSelector: null,
               };
 
               setUi(newUi);
@@ -159,10 +176,22 @@ export const Canvas = () => {
             overflow: iframe.enabled ? undefined : "auto",
           }}
           suppressHydrationWarning // Suppress hydration warning as frame is not visible until after load
+          id="puck-canvas-root"
+          onTransitionEnd={() => {
+            window.dispatchEvent(
+              new CustomEvent("viewportchange", {
+                bubbles: true,
+                cancelable: false,
+              })
+            );
+          }}
         >
           <CustomPreview>
             <Preview />
           </CustomPreview>
+        </div>
+        <div className={getClassName("loader")}>
+          <Loader size={24} />
         </div>
       </div>
     </div>

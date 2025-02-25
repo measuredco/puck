@@ -26,7 +26,7 @@
 }
 
 .PreviewFrame-label {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .PreviewFrame-body {
@@ -43,9 +43,16 @@
 .ConfigPreview-field {
   flex-grow: 1;
   flex-basis: 49%;
-  min-width: 1;
-  padding: 8px;
+  min-width: 1px;
   background: white;
+}
+
+.ConfigPreview-fieldLabel {
+  padding: 24px;
+}
+
+.ConfigPreview-fieldLabel + .ConfigPreview-fieldLabel {
+  border-top: 1px solid var(--puck-color-grey-09);
 }
 
 .ConfigPreview-preview {

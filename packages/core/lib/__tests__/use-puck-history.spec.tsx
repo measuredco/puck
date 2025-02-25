@@ -12,6 +12,8 @@ const historyStore = {
   nextHistory: { data: null },
   back: jest.fn(),
   forward: jest.fn(),
+  setHistories: jest.fn(),
+  setHistoryIndex: jest.fn(),
 } as unknown as HistoryStore;
 
 const initialAppState = defaultAppState;
@@ -24,7 +26,12 @@ beforeEach(() => {
 describe("use-puck-history", () => {
   test("back function does not call dispatch when there is no history", () => {
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     act(() => {
@@ -38,15 +45,19 @@ describe("use-puck-history", () => {
   test("back function calls dispatch when there is a history", () => {
     historyStore.hasPast = true;
     historyStore.prevHistory = {
-      id: "",
-      data: {
+      state: {
         ...defaultAppState,
         ui: { ...defaultAppState.ui, leftSideBarVisible: false },
       },
     };
 
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     act(() => {
@@ -56,7 +67,7 @@ describe("use-puck-history", () => {
     expect(historyStore.back).toHaveBeenCalled();
     expect(dispatch).toHaveBeenCalledWith({
       type: "set",
-      state: historyStore.prevHistory?.data || initialAppState,
+      state: historyStore.prevHistory?.state || initialAppState,
     });
   });
 
@@ -65,7 +76,12 @@ describe("use-puck-history", () => {
     historyStore.nextHistory = null;
 
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     act(() => {
@@ -78,15 +94,19 @@ describe("use-puck-history", () => {
 
   test("forward function calls dispatch when there is a future", () => {
     historyStore.nextHistory = {
-      id: "",
-      data: {
+      state: {
         ...defaultAppState,
         ui: { ...defaultAppState.ui, leftSideBarVisible: false },
       },
     };
 
     const { result } = renderHook(() =>
-      usePuckHistory({ dispatch, initialAppState, historyStore })
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
     );
 
     act(() => {
@@ -96,7 +116,102 @@ describe("use-puck-history", () => {
     expect(historyStore.forward).toHaveBeenCalled();
     expect(dispatch).toHaveBeenCalledWith({
       type: "set",
-      state: historyStore.nextHistory?.data,
+      state: historyStore.nextHistory?.state,
     });
+  });
+
+  test("setHistories calls dispatch to last history item", () => {
+    const { result } = renderHook(() =>
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
+    );
+
+    const updatedHistories = [
+      {
+        id: "1",
+        state: {
+          one: "foo 1",
+          two: "bar 1",
+        },
+      },
+      {
+        id: "2",
+        state: {
+          one: "foo 2",
+          two: "bar 2",
+        },
+      },
+    ];
+
+    act(() => {
+      result.current.setHistories(updatedHistories);
+    });
+
+    expect(historyStore.setHistories).toHaveBeenCalled();
+    expect(dispatch).toHaveBeenCalledWith({
+      type: "set",
+      state: updatedHistories[1].state,
+    });
+  });
+
+  test("setHistoryIndex calls dispatch on the history at that index", () => {
+    const updatedHistories = [
+      {
+        id: "1",
+        state: {
+          one: "foo 1",
+          two: "bar 1",
+        },
+      },
+      {
+        id: "2",
+        state: {
+          one: "foo 2",
+          two: "bar 2",
+        },
+      },
+    ];
+    historyStore.histories = updatedHistories;
+
+    const { result } = renderHook(() =>
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
+    );
+
+    act(() => {
+      result.current.setHistoryIndex(0);
+    });
+
+    expect(historyStore.setHistoryIndex).toHaveBeenCalled();
+    expect(dispatch).toHaveBeenCalledWith({
+      type: "set",
+      state: updatedHistories[0].state,
+    });
+  });
+
+  test("setHistoryIndex does not call dispatch when index out of bounds", () => {
+    const { result } = renderHook(() =>
+      usePuckHistory({
+        dispatch,
+        initialAppState,
+        historyStore,
+        iframeEnabled: false,
+      })
+    );
+
+    act(() => {
+      result.current.setHistoryIndex(5);
+    });
+
+    expect(historyStore.setHistoryIndex).not.toHaveBeenCalled();
+    expect(dispatch).not.toHaveBeenCalled();
   });
 });

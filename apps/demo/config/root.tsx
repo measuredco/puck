@@ -1,46 +1,43 @@
-import { ReactNode } from "react";
-
-import { DefaultRootProps } from "@/core";
+import { DefaultRootProps, DropZone } from "@/core";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 
-export type RootProps = {
-  children: ReactNode;
-  title: string;
-} & DefaultRootProps;
+export type RootProps = DefaultRootProps;
 
-function Root({ children, editMode }: RootProps) {
+function Root({ puck }: RootProps) {
   return (
-    <>
-      <Header editMode={editMode} />
-      {children}
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
+      <Header editMode={puck.isEditing} />
+      <DropZone zone="default-zone" style={{ flexGrow: 1 }} />
       <Footer>
         <Footer.List title="Section">
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
         </Footer.List>
         <Footer.List title="Section">
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
         </Footer.List>
         <Footer.List title="Section">
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
         </Footer.List>
         <Footer.List title="Section">
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
-          <Footer.Link href="">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
+          <Footer.Link href="#">Label</Footer.Link>
         </Footer.List>
       </Footer>
-    </>
+    </div>
   );
 }
 

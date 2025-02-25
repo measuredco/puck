@@ -1,27 +1,29 @@
-import { AppState, ComponentData, Config, RootData } from "../types/Config";
+import { AppState, ComponentData, Config, RootData } from "../types";
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { PuckAction } from "../reducer";
 import { resolveComponentData } from "./resolve-component-data";
 import { applyDynamicProps } from "./apply-dynamic-props";
 import { resolveRootData } from "./resolve-root-data";
+import { flattenData } from "./flatten-data";
+import { AppContext } from "../components/Puck/context";
+import { RefreshPermissions } from "./use-resolved-permissions";
 
 export const useResolvedData = (
   appState: AppState,
   config: Config,
-  dispatch: Dispatch<PuckAction>
+  dispatch: Dispatch<PuckAction>,
+  setComponentLoading: (id: string) => void,
+  unsetComponentLoading: (id: string) => void,
+  refreshPermissions: RefreshPermissions
 ) => {
   const [{ resolverKey, newAppState }, setResolverState] = useState({
     resolverKey: 0,
     newAppState: appState,
   });
 
-  const [componentState, setComponentState] = useState<
-    Record<string, { loading: boolean }>
-  >({});
-
   const deferredSetStates: Record<string, NodeJS.Timeout> = {};
 
-  const setComponentLoading = useCallback(
+  const _setComponentLoading = useCallback(
     (id: string, loading: boolean, defer: number = 0) => {
       if (deferredSetStates[id]) {
         clearTimeout(deferredSetStates[id]);
@@ -30,10 +32,11 @@ export const useResolvedData = (
       }
 
       deferredSetStates[id] = setTimeout(() => {
-        setComponentState((prev) => ({
-          ...prev,
-          [id]: { ...prev[id], loading },
-        }));
+        if (loading) {
+          setComponentLoading(id);
+        } else {
+          unsetComponentLoading(id);
+        }
 
         delete deferredSetStates[id];
       }, defer);
@@ -45,9 +48,9 @@ export const useResolvedData = (
     // Flatten zones
     const newData = newAppState.data;
 
-    const flatContent = Object.keys(newData.zones || {})
-      .reduce((acc, zone) => [...acc, ...newData.zones![zone]], newData.content)
-      .filter((item) => !!config.components[item.type]?.resolveData);
+    const flatContent = flattenData(newData).filter(
+      (item) => !!config.components[item.type]?.resolveData
+    );
 
     const applyIfChange = (
       dynamicDataMap: Record<string, ComponentData>,
@@ -82,29 +85,32 @@ export const useResolvedData = (
 
     promises.push(
       (async () => {
-        setComponentLoading("puck-root", true, 50);
+        _setComponentLoading("puck-root", true, 50);
 
         const dynamicRoot = await resolveRootData(newData, config);
 
         applyIfChange({}, dynamicRoot);
 
-        setComponentLoading("puck-root", false);
+        _setComponentLoading("puck-root", false);
       })()
     );
 
     flatContent.forEach((item) => {
       promises.push(
         (async () => {
+          // Don't wait for resolver to complete to update permissions
+          refreshPermissions({ item });
+
           const dynamicData: ComponentData = await resolveComponentData(
             item,
             config,
             (item) => {
-              setComponentLoading(item.props.id, true, 50);
+              _setComponentLoading(item.props.id, true, 50);
             },
             (item) => {
               deferredSetStates[item.props.id];
 
-              setComponentLoading(item.props.id, false);
+              _setComponentLoading(item.props.id, false);
             }
           );
 
@@ -131,6 +137,5 @@ export const useResolvedData = (
 
   return {
     resolveData,
-    componentState,
   };
 };
