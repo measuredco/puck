@@ -20,7 +20,7 @@ import { resolveData } from "../lib/resolve-data";
 import { useHistoryStore } from "./history-store";
 
 export const defaultAppState: AppState = {
-  data: { content: [], root: {} },
+  data: { content: [], root: {}, zones: {} },
   ui: {
     leftSideBarVisible: true,
     rightSideBarVisible: true,
