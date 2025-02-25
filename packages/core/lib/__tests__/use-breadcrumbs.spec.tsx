@@ -1,70 +1,220 @@
-import { DropZoneContext } from "../../components/DropZone/context";
-import { Config, Data } from "../../types";
-import { convertPathDataToBreadcrumbs } from "../use-breadcrumbs";
+// lib/__tests__/use-breadcrumbs.spec.ts
+import { renderHook, act } from "@testing-library/react";
+import { useBreadcrumbs } from "../use-breadcrumbs";
+import { useAppStore } from "../../stores/app-store";
+import { useNodeStore } from "../../stores/node-store";
+import { ComponentData, Config } from "../../types";
 
-const item1 = { type: "MyComponent", props: { id: "MyComponent-1" } };
-const item2 = { type: "MyComponent", props: { id: "MyComponent-2" } };
-const item3 = { type: "MyComponent", props: { id: "MyComponent-3" } };
-
-const data: Data = {
-  root: { props: { title: "" } },
-  content: [item1],
-  zones: {
-    "MyComponent-1:zone": [item2],
-    "MyComponent-2:zone": [item3],
-  },
-};
-
-const config: Config = {
-  components: {
-    MyComponent: {
-      defaultProps: { prop: "example" },
-      render: () => <div />,
+function resetStores() {
+  // Reset the main app store
+  useAppStore.setState(
+    {
+      ...useAppStore.getInitialState(),
     },
-  },
-};
+    true
+  );
 
-const dropzoneContext: DropZoneContext = {
-  data,
-  config,
-  pathData: {
-    "MyComponent-1": { path: [], label: "MyComponent" },
-    "MyComponent-2": { path: ["MyComponent-1:zone"], label: "MyComponent" },
-    "MyComponent-3": {
-      path: ["MyComponent-1:zone", "MyComponent-2:zone"],
-      label: "MyComponent",
+  // Reset node store
+  useNodeStore.setState(
+    {
+      ...useNodeStore.getInitialState(),
     },
-  },
-  depth: 0,
-  path: [],
-  metadata: {},
-};
+    true
+  );
+}
 
-describe("use-breadcrumbs", () => {
-  describe("convert-path-data-to-breadcrumbs", () => {
-    it("should convert path data to breadcrumbs", () => {
-      expect(
-        convertPathDataToBreadcrumbs(item3, dropzoneContext.pathData, data)
-      ).toMatchInlineSnapshot(`
-        [
-          {
-            "label": "MyComponent",
-            "selector": {
-              "index": 0,
-              "zone": "root:default-zone",
-            },
-            "zoneCompound": "MyComponent-1:zone",
-          },
-          {
-            "label": "MyComponent",
-            "selector": {
-              "index": 0,
-              "zone": "MyComponent-1:zone",
-            },
-            "zoneCompound": "MyComponent-2:zone",
-          },
-        ]
-      `);
+describe("useBreadcrumbs", () => {
+  beforeEach(() => {
+    resetStores();
+  });
+
+  it("returns an empty array if no path is found", () => {
+    // No nodes, no selectedItem => path is undefined
+    const { result } = renderHook(() => useBreadcrumbs());
+    expect(result.current).toEqual([]);
+  });
+
+  it("returns a breadcrumb path including 'Page' for root", () => {
+    // 1) Set up the config & selected item in the app store
+    const config: Config = {
+      components: {
+        MyComponent: {
+          label: "My Component Label",
+          render: () => <div />,
+        },
+      },
+    };
+
+    const testItem: ComponentData = {
+      type: "MyComponent",
+      props: { id: "item-1" },
+    };
+
+    const testItem2: ComponentData = {
+      type: "MyComponent",
+      props: { id: "item-2" },
+    };
+
+    // 2) Assign config & selected item to the app store
+    useAppStore.setState({
+      config,
+      selectedItem: testItem2,
     });
+
+    // 3) We'll manually populate the node store with path info
+    // Typical usage would be from generateNodeStore, but we can do it inline for this test
+    act(() => {
+      useNodeStore.getState().registerNode("root", {
+        data: { type: "root", props: { id: "root" } },
+      });
+      useNodeStore.getState().registerNode("item-1", {
+        data: testItem,
+        parentId: "root",
+        zone: "default-zone",
+        path: ["root"],
+        index: 0,
+      });
+      useNodeStore.getState().registerNode("item-2", {
+        data: testItem2,
+        parentId: "item-1",
+        zone: "zone",
+        path: ["root", "item-1:zone"],
+        index: 0,
+      });
+    });
+
+    // 4) Now call the hook
+    const { result } = renderHook(() => useBreadcrumbs());
+
+    // 5) Expect the result to include the "Page" crumb plus the item crumb
+    expect(result.current).toEqual([
+      { label: "Page", selector: null },
+      {
+        label: "My Component Label",
+        selector: { index: 0, zone: "root" },
+      },
+    ]);
+  });
+
+  it("truncates the breadcrumb list to renderCount if provided", () => {
+    // 1) Set up the config & selected item in the app store
+    const config: Config = {
+      components: {
+        MyComponent: {
+          label: "My Component Label",
+          render: () => <div />,
+        },
+      },
+    };
+
+    const testItem: ComponentData = {
+      type: "MyComponent",
+      props: { id: "item-1" },
+    };
+
+    const testItem2: ComponentData = {
+      type: "MyComponent",
+      props: { id: "item-2" },
+    };
+
+    // 2) Assign config & selected item to the app store
+    useAppStore.setState({
+      config,
+      selectedItem: testItem2,
+    });
+
+    // 3) We'll manually populate the node store with path info
+    // Typical usage would be from generateNodeStore, but we can do it inline for this test
+    act(() => {
+      useNodeStore.getState().registerNode("root", {
+        data: { type: "root", props: { id: "root" } },
+      });
+      useNodeStore.getState().registerNode("item-1", {
+        data: testItem,
+        parentId: "root",
+        zone: "default-zone",
+        path: ["root"],
+        index: 0,
+      });
+      useNodeStore.getState().registerNode("item-2", {
+        data: testItem2,
+        parentId: "item-1",
+        zone: "zone",
+        path: ["root", "item-1:zone"],
+        index: 0,
+      });
+    });
+
+    // 4) Now call the hook
+    const { result } = renderHook(() => useBreadcrumbs(1));
+
+    // 5) Expect the result to include the "Page" crumb plus the item crumb
+    expect(result.current).toEqual([
+      {
+        label: "My Component Label",
+        selector: { index: 0, zone: "root" },
+      },
+    ]);
+  });
+
+  it("defaults to using the type name if config.components[type].label is missing", () => {
+    // 1) Set up the config & selected item in the app store
+    const config: Config = {
+      components: {
+        MyComponent: {
+          render: () => <div />,
+        },
+      },
+    };
+
+    const testItem: ComponentData = {
+      type: "MyComponent",
+      props: { id: "item-1" },
+    };
+
+    const testItem2: ComponentData = {
+      type: "MyComponent",
+      props: { id: "item-2" },
+    };
+
+    // 2) Assign config & selected item to the app store
+    useAppStore.setState({
+      config,
+      selectedItem: testItem2,
+    });
+
+    // 3) We'll manually populate the node store with path info
+    // Typical usage would be from generateNodeStore, but we can do it inline for this test
+    act(() => {
+      useNodeStore.getState().registerNode("root", {
+        data: { type: "root", props: { id: "root" } },
+      });
+      useNodeStore.getState().registerNode("item-1", {
+        data: testItem,
+        parentId: "root",
+        zone: "default-zone",
+        path: ["root"],
+        index: 0,
+      });
+      useNodeStore.getState().registerNode("item-2", {
+        data: testItem2,
+        parentId: "item-1",
+        zone: "zone",
+        path: ["root", "item-1:zone"],
+        index: 0,
+      });
+    });
+
+    // 4) Now call the hook
+    const { result } = renderHook(() => useBreadcrumbs());
+
+    // 5) Expect the result to include the "Page" crumb plus the item crumb
+    expect(result.current).toEqual([
+      { label: "Page", selector: null },
+      {
+        label: "MyComponent", // Fall back to type name
+        selector: { index: 0, zone: "root" },
+      },
+    ]);
   });
 });
