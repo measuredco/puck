@@ -1,13 +1,11 @@
 import { useShallow } from "zustand/react/shallow";
-import { defaultAppStore, useAppStore } from "../stores/app-store";
+import { defaultAppStore, useAppStore, useAppStoreApi } from "../store";
 import { Config, UserGenerics } from "../types";
-import { useHistoryStore } from "../stores/history-store";
 import { useCallback } from "react";
 import {
   GetPermissions,
   RefreshPermissions,
-  usePermissionsStore,
-} from "../stores/permissions-store";
+} from "../store/slices/permissions";
 
 export const usePuck = <
   UserConfig extends Config = Config,
@@ -20,31 +18,37 @@ export const usePuck = <
     (s) => s.config as G["UserConfig"]
   );
   const dispatch = useAppStore((s) => s.dispatch);
-  const currentItem = useAppStore((s) => s.selectedItem);
+  const currentItem = useAppStore<G["UserComponentData"]>(
+    (s) => s.selectedItem as G["UserComponentData"]
+  );
 
-  const historyApi = useHistoryStore(
+  const appStore = useAppStoreApi();
+
+  const historyApi = useAppStore(
     useShallow((s) => ({
-      back: s.back,
-      forward: s.forward,
-      setHistories: s.setHistories,
-      setHistoryIndex: s.setHistoryIndex,
-      hasPast: s.hasPast(),
-      hasFuture: s.hasFuture(),
-      histories: s.histories,
-      index: s.index,
+      back: s.history.back,
+      forward: s.history.forward,
+      setHistories: s.history.setHistories,
+      setHistoryIndex: s.history.setHistoryIndex,
+      hasPast: s.history.hasPast(),
+      hasFuture: s.history.hasFuture(),
+      histories: s.history.histories,
+      index: s.history.index,
     }))
   );
 
-  const resolvedPermissions = usePermissionsStore((s) => s.resolvedPermissions);
+  const resolvedPermissions = useAppStore(
+    (s) => s.permissions.resolvedPermissions
+  );
 
   const getPermissions: GetPermissions<UserConfig> = useCallback(
-    (params) => usePermissionsStore.getState().getPermissions(params as any),
+    (params) => appStore.getState().permissions.getPermissions(params as any),
     [resolvedPermissions]
   );
 
   const refreshPermissions: RefreshPermissions<UserConfig> = useCallback(
     (params) =>
-      usePermissionsStore.getState().resolvePermissions(params as any),
+      appStore.getState().permissions.resolvePermissions(params as any),
     []
   );
 

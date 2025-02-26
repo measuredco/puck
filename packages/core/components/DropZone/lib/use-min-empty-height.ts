@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useState } from "react";
 import { ZoneStoreContext } from "./../context";
 import { useContextStore } from "../../../lib/use-context-store";
-import { useNodeStore } from "../../../stores/node-store";
+import { useAppStoreApi } from "../../../store";
 
 export const useMinEmptyHeight = ({
   zoneCompound,
@@ -12,6 +12,7 @@ export const useMinEmptyHeight = ({
   userMinEmptyHeight: number;
   ref: RefObject<HTMLDivElement | null>;
 }) => {
+  const appStore = useAppStoreApi();
   const [prevHeight, setPrevHeight] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const { draggedItem, isZone } = useContextStore(ZoneStoreContext, (s) => {
@@ -36,7 +37,7 @@ export const useMinEmptyHeight = ({
 
     setPrevHeight(0);
     setTimeout(() => {
-      const { nodes } = useNodeStore.getState();
+      const { nodes } = appStore.getState().nodes;
 
       Object.entries(nodes).forEach(([_, node]) => {
         node?.methods.sync();

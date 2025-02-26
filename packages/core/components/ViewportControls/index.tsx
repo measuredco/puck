@@ -1,6 +1,6 @@
 import { Monitor, Smartphone, Tablet, ZoomIn, ZoomOut } from "lucide-react";
 import { IconButton } from "../IconButton";
-import { useAppStore } from "../../stores/app-store";
+import { useAppStore } from "../../store";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { getClassNameFactory } from "../../lib";
 

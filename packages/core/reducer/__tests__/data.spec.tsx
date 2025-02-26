@@ -14,7 +14,7 @@ import { AppState, Config, Data, UiState } from "../../types";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 
 import { generateId } from "../../lib/generate-id";
-import { defaultAppState } from "../../stores/app-store";
+import { defaultAppState } from "../../store";
 
 jest.mock("../../lib/generate-id");
 

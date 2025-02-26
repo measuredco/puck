@@ -1,12 +1,13 @@
 import { resolveData } from "../resolve-data";
-import { useAppStore, defaultAppStore } from "../../stores/app-store";
-import { usePermissionsStore } from "../../stores/permissions-store";
+import { createAppStore, defaultAppStore } from "../../store";
 import { Config, AppState, Data } from "../../types";
 import { waitFor } from "@testing-library/react";
 
 const item1 = { type: "MyComponent", props: { id: "MyComponent-1" } };
 const item2 = { type: "MyComponent", props: { id: "MyComponent-2" } };
 const item3 = { type: "MyComponent", props: { id: "MyComponent-3" } };
+
+const appStore = createAppStore();
 
 const data: Data = {
   root: { props: { title: "" } },
@@ -46,32 +47,32 @@ const config: Config = {
 
 describe("resolveData", () => {
   beforeEach(() => {
-    useAppStore.setState({ ...useAppStore.getInitialState() }, true);
+    appStore.setState({ ...appStore.getInitialState() }, true);
   });
 
   it("should update store state with resolved data", async () => {
     let dispatchCount = 0;
 
-    useAppStore.setState({
+    appStore.setState({
       state: baseState,
       config,
       dispatch: (action: any) => {
         dispatchCount += 1;
 
-        useAppStore.getInitialState().dispatch(action);
+        appStore.getInitialState().dispatch(action);
       },
     });
 
     expect(dispatchCount).toBe(0);
 
-    await resolveData(useAppStore.getState().state);
+    await resolveData(appStore.getState().state, appStore.getState());
     expect(dispatchCount).toBe(4);
 
-    await resolveData(useAppStore.getState().state);
+    await resolveData(appStore.getState().state, appStore.getState());
     expect(dispatchCount).toBe(4); // Check we don't run again
 
     // Assert
-    const finalAppState = useAppStore.getState().state;
+    const finalAppState = appStore.getState().state;
 
     // We expect all MyComponent props to be "Hello, world", etc.
     // Snapshot or normal expect checks
@@ -85,50 +86,56 @@ describe("resolveData", () => {
   });
 
   it("should NOT set updated UI on the first resolveData call", async () => {
-    useAppStore.setState({
+    appStore.setState({
       state: baseState,
       config,
     });
 
     // Pretend new UI has changed, but this is the first run
-    const initialState = useAppStore.getState().state;
-    await resolveData({
-      ...initialState,
-      ui: { ...initialState.ui, leftSideBarVisible: false },
-    });
+    const initialState = appStore.getState().state;
+    await resolveData(
+      {
+        ...initialState,
+        ui: { ...initialState.ui, leftSideBarVisible: false },
+      },
+      appStore.getState()
+    );
 
-    const finalAppState = useAppStore.getState().state;
+    const finalAppState = appStore.getState().state;
     // The new UI should NOT have been merged on the first call
     expect(finalAppState.ui.leftSideBarVisible).toBe(true);
   });
 
   it("should set updated UI on subsequent calls", async () => {
-    useAppStore.setState({
+    appStore.setState({
       state: baseState,
       config,
     });
 
     // Counter is outside of lib, so modify manually
-    useAppStore.setState({ resolveDataRuns: 1 });
+    appStore.setState({ resolveDataRuns: 1 });
 
     // Now call again with changed UI
-    await resolveData({
-      ...useAppStore.getState().state,
-      ui: { ...useAppStore.getState().state.ui, leftSideBarVisible: false },
-    });
+    await resolveData(
+      {
+        ...appStore.getState().state,
+        ui: { ...appStore.getState().state.ui, leftSideBarVisible: false },
+      },
+      appStore.getState()
+    );
 
-    const finalAppState = useAppStore.getState().state;
+    const finalAppState = appStore.getState().state;
     expect(finalAppState.ui.leftSideBarVisible).toBe(false);
   });
 
   it("should skip dispatch if there are no resolvers", async () => {
     const mockDispatch = jest.fn();
 
-    useAppStore.setState({
+    appStore.setState({
       dispatch: mockDispatch,
     });
 
-    await resolveData(useAppStore.getState().state);
+    await resolveData(appStore.getState().state, appStore.getState());
 
     // Because data won't change, no dispatch is expected
     expect(mockDispatch).not.toHaveBeenCalled();
@@ -136,7 +143,7 @@ describe("resolveData", () => {
 
   it("should call set/unset componentLoading when data is resolved, after a delay", async () => {
     const loadingCalls: Record<string, boolean> = {};
-    useAppStore.setState({
+    appStore.setState({
       state: baseState,
       config,
       setComponentLoading: (id) => {
@@ -147,7 +154,7 @@ describe("resolveData", () => {
       },
     });
 
-    await resolveData(useAppStore.getState().state);
+    await resolveData(appStore.getState().state, appStore.getState());
 
     expect(loadingCalls["MyComponent-1"]).toBeUndefined();
 
@@ -160,19 +167,22 @@ describe("resolveData", () => {
   });
 
   it("should resolve permissions for each item", async () => {
-    useAppStore.setState({
+    appStore.setState({
       state: baseState,
       config,
     });
 
     const calledFor: string[] = [];
-    usePermissionsStore.setState({
-      resolvePermissions: ({ item }: any) => {
-        if (item) calledFor.push(item.props.id);
+    appStore.setState({
+      permissions: {
+        ...appStore.getState().permissions,
+        resolvePermissions: ({ item }: any) => {
+          if (item) calledFor.push(item.props.id);
+        },
       },
-    } as any);
+    });
 
-    await resolveData(useAppStore.getState().state);
+    await resolveData(appStore.getState().state, appStore.getState());
     expect(calledFor).toContain("MyComponent-1");
     expect(calledFor).toContain("MyComponent-2");
     expect(calledFor).toContain("MyComponent-3");

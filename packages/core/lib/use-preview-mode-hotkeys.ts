@@ -1,12 +1,11 @@
 import { useCallback } from "react";
 import { useHotkey } from "./use-hotkey";
-import { getAppStore } from "../stores/app-store";
+import { useAppStoreApi } from "../store";
 
 export const usePreviewModeHotkeys = () => {
+  const appStore = useAppStoreApi();
   const toggleInteractive = useCallback(() => {
-    console.log("toggle preview", getAppStore().state.ui.previewMode);
-
-    const dispatch = getAppStore().dispatch;
+    const dispatch = appStore.getState().dispatch;
 
     dispatch({
       type: "setUi",
@@ -14,7 +13,7 @@ export const usePreviewModeHotkeys = () => {
         previewMode: ui.previewMode === "edit" ? "interactive" : "edit",
       }),
     });
-  }, []);
+  }, [appStore]);
 
   useHotkey({ meta: true, i: true }, toggleInteractive);
   useHotkey({ ctrl: true, i: true }, toggleInteractive); // Windows

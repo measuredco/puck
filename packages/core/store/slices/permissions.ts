@@ -1,9 +1,8 @@
 import { useEffect } from "react";
-import { flattenData } from "../lib/flatten-data";
-import { ComponentData, Config, Permissions, UserGenerics } from "../types";
-import { getChanged } from "../lib/get-changed";
-import { create } from "zustand";
-import { getAppStore, useAppStore } from "../stores/app-store";
+import { flattenData } from "../../lib/flatten-data";
+import { ComponentData, Config, Permissions, UserGenerics } from "../../types";
+import { getChanged } from "../../lib/get-changed";
+import { AppStore, useAppStoreApi } from "../";
 
 type PermissionsArgs<
   UserConfig extends Config = Config,
@@ -36,13 +35,18 @@ type Cache = Record<
   }
 >;
 
-export const usePermissionsStore = create<{
+export type PermissionsSlice = {
   cache: Cache;
   globalPermissions: Permissions;
   resolvedPermissions: Record<string, Partial<Permissions> | undefined>;
   getPermissions: GetPermissions<Config>;
   resolvePermissions: ResolvePermissions<Config>;
-}>((set, get) => ({
+};
+
+export const createPermissionsSlice = (
+  set: (newState: Partial<AppStore>) => void,
+  get: () => AppStore
+): PermissionsSlice => ({
   cache: {},
   globalPermissions: {
     drag: true,
@@ -53,8 +57,8 @@ export const usePermissionsStore = create<{
   },
   resolvedPermissions: {},
   getPermissions: ({ item, type, root } = {}) => {
-    const { config } = getAppStore();
-    const { globalPermissions, resolvedPermissions } = get();
+    const { config, permissions } = get();
+    const { globalPermissions, resolvedPermissions } = permissions;
 
     if (item) {
       const componentConfig = config.components[item.type];
@@ -98,8 +102,8 @@ export const usePermissionsStore = create<{
     return globalPermissions;
   },
   resolvePermissions: async (params = {}, force) => {
-    const { cache, globalPermissions } = get();
-    const { state } = getAppStore<Config>();
+    const { state, permissions } = get();
+    const { cache, globalPermissions } = permissions;
 
     const resolveDataForItem = async (
       item: ComponentData,
@@ -110,7 +114,7 @@ export const usePermissionsStore = create<{
         state: appState,
         setComponentLoading,
         unsetComponentLoading,
-      } = getAppStore<Config>();
+      } = get();
       const componentConfig =
         item.type === "root" ? config.root : config.components[item.type];
 
@@ -140,19 +144,22 @@ export const usePermissionsStore = create<{
             }
           );
 
-          const latest = get();
+          const latest = get().permissions;
 
           set({
-            cache: {
-              ...latest.cache,
-              [item.props.id]: {
-                lastData: item,
-                lastPermissions: resolvedPermissions,
+            permissions: {
+              ...latest,
+              cache: {
+                ...latest.cache,
+                [item.props.id]: {
+                  lastData: item,
+                  lastPermissions: resolvedPermissions,
+                },
               },
-            },
-            resolvedPermissions: {
-              ...latest.resolvedPermissions,
-              [item.props.id]: resolvedPermissions,
+              resolvedPermissions: {
+                ...latest.resolvedPermissions,
+                [item.props.id]: resolvedPermissions,
+              },
             },
           });
 
@@ -162,7 +169,7 @@ export const usePermissionsStore = create<{
     };
 
     const resolveDataForRoot = (force = false) => {
-      const { state: appState } = getAppStore();
+      const { state: appState } = get();
 
       resolveDataForItem(
         // Shim the root data in by conforming to component data shape
@@ -197,38 +204,42 @@ export const usePermissionsStore = create<{
       });
     }
   },
-}));
+});
 
-export const useRegisterPermissionsStore = (
+export const useRegisterPermissionsSlice = (
+  appStore: ReturnType<typeof useAppStoreApi>,
   globalPermissions: Partial<Permissions>
 ) => {
   useEffect(() => {
-    const { globalPermissions: existingGlobalPermissions } =
-      usePermissionsStore.getState();
-    usePermissionsStore.setState({
-      globalPermissions: {
-        ...existingGlobalPermissions,
-        ...globalPermissions,
-      } as Permissions,
+    const { permissions } = appStore.getState();
+    const { globalPermissions: existingGlobalPermissions } = permissions;
+    appStore.setState({
+      permissions: {
+        ...permissions,
+        globalPermissions: {
+          ...existingGlobalPermissions,
+          ...globalPermissions,
+        } as Permissions,
+      },
     });
 
-    usePermissionsStore.getState().resolvePermissions();
+    permissions.resolvePermissions();
   }, [globalPermissions]);
 
   useEffect(() => {
-    return useAppStore.subscribe(
+    return appStore.subscribe(
       (s) => s.state.data,
       () => {
-        usePermissionsStore.getState().resolvePermissions();
+        appStore.getState().permissions.resolvePermissions();
       }
     );
   }, []);
 
   useEffect(() => {
-    return useAppStore.subscribe(
+    return appStore.subscribe(
       (s) => s.config,
       () => {
-        usePermissionsStore.getState().resolvePermissions();
+        appStore.getState().permissions.resolvePermissions();
       }
     );
   }, []);

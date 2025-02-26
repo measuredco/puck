@@ -22,7 +22,7 @@ import {
 } from "./fields";
 import { Lock } from "lucide-react";
 import { ObjectField } from "./fields/ObjectField";
-import { useAppStore } from "../../stores/app-store";
+import { useAppStore } from "../../store";
 import { useSafeId } from "../../lib/use-safe-id";
 import { NestedFieldContext } from "./context";
 

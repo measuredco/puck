@@ -1,7 +1,6 @@
 import { useMemo } from "react";
-import { useAppStore } from "../stores/app-store";
+import { useAppStore, useAppStoreApi } from "../store";
 import { ItemSelector } from "./get-item";
-import { useNodeStore } from "../stores/node-store";
 
 export type Breadcrumb = {
   label: string;
@@ -12,7 +11,8 @@ export type Breadcrumb = {
 export const useBreadcrumbs = (renderCount?: number) => {
   const selectedId = useAppStore((s) => s.selectedItem?.props.id);
   const config = useAppStore((s) => s.config);
-  const path = useNodeStore((s) => s.nodes[selectedId]?.path);
+  const path = useAppStore((s) => s.nodes.nodes[selectedId]?.path);
+  const appStore = useAppStoreApi();
 
   return useMemo<Breadcrumb[]>(() => {
     const breadcrumbs =
@@ -26,7 +26,7 @@ export const useBreadcrumbs = (renderCount?: number) => {
           };
         }
 
-        const node = useNodeStore.getState().nodes[componentId];
+        const node = appStore.getState().nodes.nodes[componentId];
 
         const label = node
           ? config.components[node.data.type]?.label ?? node.data.type

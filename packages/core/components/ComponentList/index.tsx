@@ -1,10 +1,9 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ReactNode } from "react";
-import { useAppStore } from "../../stores/app-store";
+import { useAppStore } from "../../store";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Drawer } from "../Drawer";
-import { usePermissionsStore } from "../../stores/permissions-store";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 
@@ -17,9 +16,9 @@ const ComponentListItem = ({
   index?: number; // TODO deprecate
 }) => {
   const overrides = useAppStore((s) => s.overrides);
-  const canInsert = usePermissionsStore(
+  const canInsert = useAppStore(
     (s) =>
-      s.getPermissions({
+      s.permissions.getPermissions({
         type: name,
       }).insert
   );

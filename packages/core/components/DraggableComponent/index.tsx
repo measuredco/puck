@@ -14,7 +14,7 @@ import styles from "./styles.module.css";
 import "./styles.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Copy, CornerLeftUp, Trash } from "lucide-react";
-import { useAppStore } from "../../stores/app-store";
+import { useAppStore, useAppStoreApi } from "../../store";
 import { Loader } from "../Loader";
 import { ActionBar } from "../ActionBar";
 
@@ -28,8 +28,6 @@ import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
-import { useNodeStore } from "../../stores/node-store";
-import { usePermissionsStore } from "../../stores/permissions-store";
 import { useShallow } from "zustand/react/shallow";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
@@ -150,12 +148,12 @@ export const DraggableComponent = ({
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
 
-  const path = useNodeStore((s) => s.nodes[id]?.path);
+  const path = useAppStore((s) => s.nodes.nodes[id]?.path);
 
-  const item = useNodeStore((s) => s.nodes[id]?.data);
+  const item = useAppStore((s) => s.nodes.nodes[id]?.data);
 
-  const permissions = usePermissionsStore(
-    useShallow((s) => s.getPermissions({ item }))
+  const permissions = useAppStore(
+    useShallow((s) => s.permissions.getPermissions({ item }))
   );
 
   const userIsDragging = useContextStore(
@@ -273,7 +271,7 @@ export const DraggableComponent = ({
     }
   }, [ref.current, userIsDragging]);
 
-  const registerNode = useNodeStore((s) => s.registerNode);
+  const registerNode = useAppStore((s) => s.nodes.registerNode);
 
   useEffect(() => {
     registerNode(id, { methods: { sync }, element: ref.current ?? null });
@@ -302,8 +300,10 @@ export const DraggableComponent = ({
     [index, zoneCompound, id]
   );
 
+  const appStore = useAppStoreApi();
+
   const onSelectParent = useCallback(() => {
-    const { nodes } = useNodeStore.getState();
+    const { nodes } = appStore.getState().nodes;
     const node = nodes[id];
     const parentNode = node?.parentId ? nodes[node?.parentId] : null;
 

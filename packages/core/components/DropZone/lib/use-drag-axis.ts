@@ -1,6 +1,6 @@
 import { RefObject, useCallback, useEffect, useState } from "react";
 import { DragAxis } from "../../../types";
-import { useAppStore } from "../../../stores/app-store";
+import { useAppStore } from "../../../store";
 
 const GRID_DRAG_AXIS: DragAxis = "dynamic";
 const FLEX_ROW_DRAG_AXIS: DragAxis = "x";

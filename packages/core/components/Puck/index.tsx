@@ -1,7 +1,11 @@
 import {
+  Context,
+  createContext,
+  PropsWithChildren,
   ReactElement,
   ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useState,
@@ -35,17 +39,18 @@ import { IconButton } from "../IconButton/IconButton";
 import { PuckAction } from "../../reducer";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import {
+  createAppStore,
   defaultAppState,
-  getAppStore,
   useAppStore,
-} from "../../stores/app-store";
+  useAppStoreApi,
+  appStoreContext,
+} from "../../store";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
 import { Preview } from "./components/Preview";
 import { Outline } from "./components/Outline";
-import { useRegisterHistoryStore } from "../../stores/history-store";
 import { Canvas } from "./components/Canvas";
 import { defaultViewports } from "../ViewportControls/default-viewports";
 import { Viewports } from "../../types";
@@ -54,8 +59,9 @@ import { useLoadedOverrides } from "../../lib/use-loaded-overrides";
 import { DefaultOverride } from "../DefaultOverride";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
 import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
-import { useRegisterNodeStore } from "../../stores/node-store";
-import { useRegisterPermissionsStore } from "../../stores/permissions-store";
+import { useRegisterHistorySlice } from "../../store/slices/history";
+import { useRegisterNodesSlice } from "../../store/slices/nodes";
+import { useRegisterPermissionsSlice } from "../../store/slices/permissions";
 import { monitorHotkeys, useMonitorHotkeys } from "../../lib/use-hotkey";
 import { getFrame } from "../../lib/get-frame";
 
@@ -77,30 +83,10 @@ const FieldSideBar = () => {
   );
 };
 
-export function Puck<
+type PuckProps<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
->({
-  children,
-  config,
-  data: initialData,
-  ui: initialUi,
-  onChange,
-  onPublish,
-  onAction,
-  permissions = {},
-  plugins,
-  overrides,
-  renderHeader,
-  renderHeaderActions,
-  headerTitle,
-  headerPath,
-  viewports = defaultViewports,
-  iframe: _iframe,
-  dnd,
-  initialHistory: _initialHistory,
-  metadata,
-}: {
+> = {
   children?: ReactNode;
   config: UserConfig;
   data: Partial<G["UserData"] | Data>;
@@ -129,14 +115,47 @@ export function Puck<
   };
   initialHistory?: InitialHistory;
   metadata?: Metadata;
-}) {
+};
+
+const propsContext = createContext<Partial<PuckProps>>({});
+
+function PropsProvider<UserConfig extends Config = Config>(
+  props: PuckProps<UserConfig>
+) {
+  return (
+    <propsContext.Provider value={props as PuckProps}>
+      {props.children}
+    </propsContext.Provider>
+  );
+}
+
+const usePropsContext = () =>
+  useContext<PuckProps>(propsContext as Context<PuckProps>);
+
+function PuckProvider<
+  UserConfig extends Config = Config,
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
+>({ children }: PropsWithChildren) {
+  const {
+    config,
+    data: initialData,
+    ui: initialUi,
+    onChange,
+    permissions = {},
+    plugins,
+    overrides,
+    viewports = defaultViewports,
+    iframe: _iframe,
+    initialHistory: _initialHistory,
+    metadata,
+    onAction,
+  } = usePropsContext();
+
   const iframe: IframeConfig = {
     enabled: true,
     waitForStyles: true,
     ..._iframe,
   };
-
-  useInjectGlobalCss(iframe.enabled);
 
   const [generatedAppState] = useState<G["UserAppState"]>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
@@ -248,13 +267,102 @@ export function Puck<
     _initialHistory?.index || blendedHistories.length - 1;
   const initialAppState = blendedHistories[initialHistoryIndex].state;
 
-  useRegisterHistoryStore({
+  // Load all plugins into the overrides
+  const loadedOverrides = useLoadedOverrides({
+    overrides: overrides,
+    plugins: plugins,
+  });
+
+  const generateAppStore = useCallback(() => {
+    return {
+      state: initialAppState,
+      config,
+      plugins: plugins || [],
+      overrides: loadedOverrides,
+      viewports,
+      iframe,
+      onAction,
+      metadata,
+    };
+  }, [
+    initialAppState,
+    config,
+    plugins,
+    loadedOverrides,
+    viewports,
+    iframe,
+    onAction,
+    metadata,
+  ]);
+
+  const [appStore] = useState(() => createAppStore(generateAppStore()));
+
+  useEffect(() => {
+    appStore.setState({
+      ...generateAppStore(),
+    });
+  }, [
+    initialAppState,
+    config,
+    plugins,
+    loadedOverrides,
+    viewports,
+    iframe,
+    onAction,
+    metadata,
+  ]);
+
+  useRegisterHistorySlice(appStore, {
     histories: blendedHistories,
     index: initialHistoryIndex,
     initialAppState,
   });
 
-  const dispatch = useAppStore((s) => s.dispatch);
+  useEffect(() => {
+    appStore.subscribe((s) => {
+      if (onChange) onChange(s.state.data as G["UserData"]);
+    });
+  }, []);
+
+  useRegisterNodesSlice(appStore);
+  useRegisterPermissionsSlice(appStore, permissions);
+
+  useEffect(() => {
+    const { state, resolveData } = appStore.getState();
+
+    resolveData(state);
+  }, []);
+
+  return (
+    <appStoreContext.Provider value={appStore}>
+      {children}
+    </appStoreContext.Provider>
+  );
+}
+
+function PuckLayout<
+  UserConfig extends Config = Config,
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
+>({ children }: PropsWithChildren) {
+  const {
+    onChange,
+    onPublish,
+    renderHeader,
+    renderHeaderActions,
+    headerTitle,
+    headerPath,
+    iframe: _iframe,
+    dnd,
+    initialHistory: _initialHistory,
+  } = usePropsContext();
+
+  const iframe: IframeConfig = {
+    enabled: true,
+    waitForStyles: true,
+    ..._iframe,
+  };
+
+  useInjectGlobalCss(iframe.enabled);
 
   const leftSideBarVisible = useAppStore((s) => s.state.ui.leftSideBarVisible);
   const rightSideBarVisible = useAppStore(
@@ -263,17 +371,21 @@ export function Puck<
 
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const appStore = useAppStoreApi();
+
   useEffect(() => {
     // TODO use selector
-    useAppStore.subscribe((s) => {
+    return appStore.subscribe((s) => {
       if (onChange) onChange(s.state.data as G["UserData"]);
     });
-  }, []);
+  }, [appStore]);
 
   // DEPRECATED
   const rootProps = useAppStore(
     (s) => s.state.data.root.props || s.state.data.root.props
   );
+
+  const dispatch = useAppStore((s) => s.dispatch);
 
   const toggleSidebars = useCallback(
     (sidebar: "left" | "right") => {
@@ -370,24 +482,20 @@ export function Puck<
     return DefaultOverride;
   }, [renderHeader]);
 
-  // Load all plugins into the overrides
-  const loadedOverrides = useLoadedOverrides({
-    overrides: overrides,
-    plugins: plugins,
-  });
+  const overrides = useAppStore((s) => s.overrides);
 
   const CustomPuck = useMemo(
-    () => loadedOverrides.puck || DefaultOverride,
-    [loadedOverrides]
+    () => overrides.puck || DefaultOverride,
+    [overrides]
   );
 
   const CustomHeader = useMemo(
-    () => loadedOverrides.header || defaultHeaderRender,
-    [loadedOverrides]
+    () => overrides.header || defaultHeaderRender,
+    [overrides]
   );
   const CustomHeaderActions = useMemo(
-    () => loadedOverrides.headerActions || defaultHeaderActionsRender,
-    [loadedOverrides]
+    () => overrides.headerActions || defaultHeaderActionsRender,
+    [overrides]
   );
 
   const [mounted, setMounted] = useState(false);
@@ -395,21 +503,6 @@ export function Puck<
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    useAppStore.setState({
-      state: initialAppState,
-      config,
-      plugins: plugins || [],
-      overrides: loadedOverrides,
-      viewports,
-      iframe,
-    });
-  }, []);
-
-  useRegisterNodeStore();
-
-  useRegisterPermissionsStore(permissions);
 
   const ready = useAppStore((s) => s.status === "READY");
 
@@ -426,12 +519,6 @@ export function Puck<
   }, [ready, iframe.enabled]);
 
   usePreviewModeHotkeys();
-
-  useEffect(() => {
-    const { state, resolveData } = getAppStore();
-
-    resolveData(state);
-  }, []);
 
   return (
     <div className={`Puck ${getClassName()}`}>
@@ -453,7 +540,7 @@ export function Puck<
                       <CustomHeaderActions>
                         <Button
                           onClick={() => {
-                            const data = useAppStore.getState().state.data;
+                            const data = appStore.getState().state.data;
                             onPublish && onPublish(data as G["UserData"]);
                           }}
                           icon={<Globe size="14px" />}
@@ -530,7 +617,7 @@ export function Puck<
                             <CustomHeaderActions>
                               <Button
                                 onClick={() => {
-                                  const data = useAppStore.getState().state
+                                  const data = appStore.getState().state
                                     .data as G["UserData"];
                                   onPublish && onPublish(data);
                                 }}
@@ -565,6 +652,19 @@ export function Puck<
       </DragDropContext>
       <div id="puck-portal-root" className={getClassName("portal")} />
     </div>
+  );
+}
+
+export function Puck<
+  UserConfig extends Config = Config,
+  G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
+>(props: PuckProps<UserConfig>) {
+  return (
+    <PropsProvider {...props}>
+      <PuckProvider {...props}>
+        <PuckLayout {...props} />
+      </PuckProvider>
+    </PropsProvider>
   );
 }
 

@@ -1,37 +1,42 @@
-import { ComponentData } from "../types";
-import type { Fields as FieldsType } from "../types";
-import { getAppStore, useAppStore } from "../stores/app-store";
+import { ComponentData } from "../../types";
+import type { Fields } from "../../types";
+import { AppStore, useAppStoreApi } from "../";
 import { useCallback, useEffect } from "react";
-import { getChanged } from "../lib/get-changed";
-import { useNodeStore } from "../stores/node-store";
-import { create } from "zustand";
+import { getChanged } from "../../lib/get-changed";
 
 type ComponentOrRootData = Omit<ComponentData<any>, "type">;
 
-export const useFieldStore = create<{
-  fields: FieldsType | Partial<FieldsType>;
+export type FieldsSlice = {
+  fields: Fields | Partial<Fields>;
   loading: boolean;
   lastResolvedData: Partial<ComponentOrRootData>;
-}>(() => ({
-  fields: {},
-  loading: false,
-  lastResolvedData: {},
-}));
+};
 
-export const useRegisterFieldStore = () => {
-  const id = useAppStore((s) => s.selectedItem?.props.id as string | undefined);
+export const createFieldsStore = (
+  _set: (newState: Partial<AppStore>) => void,
+  _get: () => AppStore
+): FieldsSlice => {
+  return {
+    fields: {},
+    loading: false,
+    lastResolvedData: {},
+  };
+};
 
+export const useRegisterFieldsSlice = (
+  appStore: ReturnType<typeof useAppStoreApi>,
+  id?: string
+) => {
   const resolveFields = useCallback(
     async (reset?: boolean) => {
-      const { fields, lastResolvedData } = useFieldStore.getState();
-
-      const nodeStore = useNodeStore.getState();
+      const { fields, lastResolvedData } = appStore.getState().fields;
+      const nodeStore = appStore.getState().nodes;
       const node = nodeStore.nodes[id || "root"];
       const componentData = node?.data;
       const parentNode = node?.parentId ? nodeStore.nodes[node.parentId] : null;
       const parent = parentNode?.data || null;
 
-      const { getComponentConfig, state } = getAppStore();
+      const { getComponentConfig, state } = appStore.getState();
 
       const componentConfig = getComponentConfig(componentData?.type);
 
@@ -39,17 +44,21 @@ export const useRegisterFieldStore = () => {
 
       const defaultFields = componentConfig.fields || {};
       const resolver = componentConfig.resolveFields;
-      let lastFields: FieldsType | null = fields as FieldsType;
+      let lastFields: Fields | null = fields as Fields;
 
       if (reset) {
-        useFieldStore.setState({ fields: defaultFields });
+        appStore.setState((s) => ({
+          fields: { ...s.fields, fields: defaultFields },
+        }));
 
         lastFields = defaultFields;
       }
 
       if (resolver) {
         const timeout = setTimeout(() => {
-          useFieldStore.setState({ loading: true });
+          appStore.setState((s) => ({
+            fields: { ...s.fields, loading: true },
+          }));
         }, 50);
 
         const lastData =
@@ -69,17 +78,21 @@ export const useRegisterFieldStore = () => {
         clearTimeout(timeout);
 
         // Abort if item has changed during resolution (happens with history)
-        if (getAppStore().selectedItem?.props.id !== id) {
+        if (appStore.getState().selectedItem?.props.id !== id) {
           return;
         }
 
-        useFieldStore.setState({
-          fields: newFields,
-          loading: false,
-          lastResolvedData: componentData,
+        appStore.setState({
+          fields: {
+            fields: newFields,
+            loading: false,
+            lastResolvedData: componentData,
+          },
         });
       } else {
-        useFieldStore.setState({ fields: defaultFields });
+        appStore.setState((s) => ({
+          fields: { ...s.fields, fields: defaultFields },
+        }));
       }
     },
     [id]
@@ -88,11 +101,9 @@ export const useRegisterFieldStore = () => {
   useEffect(() => {
     resolveFields(true);
 
-    return useNodeStore.subscribe(
-      (s) => s.nodes[id || "root"],
-      () => {
-        resolveFields();
-      }
+    return appStore.subscribe(
+      (s) => s.nodes.nodes[id || "root"],
+      () => resolveFields()
     );
   }, [id]);
 };

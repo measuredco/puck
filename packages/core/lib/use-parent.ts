@@ -1,11 +1,12 @@
-import { getAppStore } from "../stores/app-store";
-import { useNodeStore } from "../stores/node-store";
+import { useAppStore, useAppStoreApi } from "../store";
 
 export const useParent = () => {
-  const selectedItem = getAppStore().selectedItem;
-  const parent = useNodeStore((s) => {
-    const node = s.nodes[selectedItem?.props.id];
-    return node ? s.nodes[node.parentId] : null;
+  const appStore = useAppStoreApi();
+
+  const selectedItem = appStore.getState().selectedItem;
+  const parent = useAppStore((s) => {
+    const node = s.nodes.nodes[selectedItem?.props.id];
+    return node?.parentId ? s.nodes.nodes[node.parentId] : null;
   });
 
   return parent?.data ?? null;

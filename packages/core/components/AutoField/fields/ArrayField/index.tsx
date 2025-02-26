@@ -7,10 +7,9 @@ import { reorder, replace } from "../../../../lib";
 import { useCallback, useEffect, useState } from "react";
 import { DragIcon } from "../../../DragIcon";
 import { ArrayState, ItemWithId } from "../../../../types";
-import { getAppStore, useAppStore } from "../../../../stores/app-store";
+import { useAppStore, useAppStoreApi } from "../../../../store";
 import { Sortable, SortableProvider } from "../../../Sortable";
 import { NestedFieldProvider, useNestedFieldContext } from "../../context";
-import { usePermissionsStore } from "../../../../stores/permissions-store";
 
 const getClassName = getClassNameFactory("ArrayField", styles);
 const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);
@@ -47,9 +46,11 @@ export const ArrayField = ({
     setLocalState({ arrayState, value });
   }, [value, thisArrayState]);
 
+  const appStore = useAppStoreApi();
+
   const mapArrayStateToUi = useCallback(
     (partialArrayState: Partial<ArrayState>) => {
-      const state = getAppStore().state;
+      const state = appStore.getState().state;
       return {
         arrayState: {
           ...state.ui.arrayState,
@@ -57,7 +58,7 @@ export const ArrayField = ({
         },
       };
     },
-    [arrayState]
+    [arrayState, appStore]
   );
 
   const getHighestIndex = useCallback(() => {
@@ -105,8 +106,8 @@ export const ArrayField = ({
 
   const [isDragging, setIsDragging] = useState(false);
 
-  const canEdit = usePermissionsStore(
-    (s) => s.getPermissions({ item: getAppStore().selectedItem }).edit
+  const canEdit = useAppStore(
+    (s) => s.permissions.getPermissions({ item: s.selectedItem }).edit
   );
 
   const forceReadOnly = !canEdit;
@@ -138,7 +139,7 @@ export const ArrayField = ({
             move.target
           );
 
-          const state = getAppStore().state;
+          const state = appStore.getState().state;
 
           const newUi = {
             arrayState: {
