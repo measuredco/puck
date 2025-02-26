@@ -211,10 +211,12 @@ export const useRegisterPermissionsStore = (
         ...globalPermissions,
       } as Permissions,
     });
+
+    usePermissionsStore.getState().resolvePermissions();
   }, [globalPermissions]);
 
   useEffect(() => {
-    useAppStore.subscribe(
+    return useAppStore.subscribe(
       (s) => s.state.data,
       () => {
         usePermissionsStore.getState().resolvePermissions();
@@ -223,7 +225,7 @@ export const useRegisterPermissionsStore = (
   }, []);
 
   useEffect(() => {
-    useAppStore.subscribe(
+    return useAppStore.subscribe(
       (s) => s.config,
       () => {
         usePermissionsStore.getState().resolvePermissions();
