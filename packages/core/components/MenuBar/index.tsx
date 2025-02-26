@@ -7,7 +7,7 @@ import { PuckAction } from "../../reducer";
 import type { Data } from "../../types";
 
 import styles from "./styles.module.css";
-import { useHistoryStore } from "../../stores/history-store";
+import { useAppStore } from "../../store";
 
 const getClassName = getClassNameFactory("MenuBar", styles);
 
@@ -22,10 +22,10 @@ export function MenuBar<UserData extends Data>({
   renderHeaderActions?: () => ReactElement;
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const back = useHistoryStore((s) => s.back);
-  const forward = useHistoryStore((s) => s.forward);
-  const hasFuture = useHistoryStore((s) => s.hasFuture());
-  const hasPast = useHistoryStore((s) => s.hasPast());
+  const back = useAppStore((s) => s.history.back);
+  const forward = useAppStore((s) => s.history.forward);
+  const hasFuture = useAppStore((s) => s.history.hasFuture());
+  const hasPast = useAppStore((s) => s.history.hasPast());
 
   return (
     <div

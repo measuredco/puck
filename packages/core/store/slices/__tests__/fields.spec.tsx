@@ -1,8 +1,8 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
-import { useFieldStore, useRegisterFieldStore } from "../field-store";
-import { generateNodeStore, useNodeStore } from "../node-store";
-import { defaultAppState, useAppStore } from "../app-store";
-import { Config, ComponentData, AppState } from "../../types";
+import { useRegisterFieldsSlice } from "../fields";
+import { generateNodesSlice } from "../nodes";
+import { createAppStore, defaultAppState } from "../..";
+import { Config, ComponentData, AppState } from "../../../types";
 
 const baseState: AppState = {
   ...defaultAppState,
@@ -18,32 +18,34 @@ const baseState: AppState = {
   },
 };
 
+const appStore = createAppStore();
+
 function resetStores() {
   // Reset main app store:
-  useAppStore.setState(
-    { ...useAppStore.getInitialState(), state: baseState },
-    true
-  );
-
-  // Reset node store:
-  useNodeStore.setState(useNodeStore.getInitialState());
-
-  // Reset field store:
-  useFieldStore.setState(useFieldStore.getInitialState());
+  appStore.setState({ ...appStore.getInitialState(), state: baseState }, true);
 }
 
 const selectFirst = (config: Config) => {
-  useAppStore.setState({
-    ...useAppStore.getState(),
+  appStore.setState({
+    ...appStore.getState(),
     config,
-    selectedItem: useAppStore.getState().state.data.content[0],
+    selectedItem: appStore.getState().state.data.content[0],
+    state: {
+      ...appStore.getState().state,
+      ui: {
+        ...appStore.getState().state.ui,
+        itemSelector: {
+          index: 0,
+        },
+      },
+    },
   });
 };
 
-describe("field-store", () => {
+describe("fields slice", () => {
   beforeEach(() => {
     resetStores();
-    generateNodeStore(useAppStore.getState().state.data);
+    generateNodesSlice(appStore.getState().state.data, appStore);
   });
 
   it("returns default fields if no resolver is defined", async () => {
@@ -58,9 +60,9 @@ describe("field-store", () => {
 
     selectFirst(config);
 
-    renderHook(() => useRegisterFieldStore());
+    renderHook(() => useRegisterFieldsSlice(appStore, "heading-1"));
 
-    const { fields, loading } = useFieldStore.getState();
+    const { fields, loading } = appStore.getState().fields;
 
     expect(fields).toEqual({ title: { type: "text" } });
     expect(loading).toBe(false);
@@ -83,11 +85,11 @@ describe("field-store", () => {
       },
     };
 
-    useAppStore.setState({
+    appStore.setState({
       config,
     });
 
-    renderHook(() => useRegisterFieldStore());
+    renderHook(() => useRegisterFieldsSlice(appStore));
     expect(mockResolveFields).toHaveBeenCalledTimes(1);
     expect(mockResolveFields).toHaveBeenCalledWith(
       {
@@ -95,7 +97,7 @@ describe("field-store", () => {
         type: "root",
       },
       {
-        appState: useAppStore.getState().state,
+        appState: appStore.getState().state,
         changed: {
           id: true,
         },
@@ -107,7 +109,7 @@ describe("field-store", () => {
     );
 
     await waitFor(() => {
-      const { fields, loading } = useFieldStore.getState();
+      const { fields, loading } = appStore.getState().fields;
       expect(fields).toEqual({ title: { type: "textarea" } });
       expect(loading).toBe(false);
     });
@@ -118,18 +120,20 @@ describe("field-store", () => {
       title: { type: "textarea" },
     });
 
-    selectFirst({
+    const config: Config = {
       components: {
         Heading: {
           fields: { title: { type: "text" } },
           render: () => <div />,
-          // Our test resolver:
           resolveFields: mockResolveFields,
         },
       },
-    });
+    };
 
-    renderHook(() => useRegisterFieldStore());
+    selectFirst(config);
+
+    renderHook(() => useRegisterFieldsSlice(appStore, "heading-1"));
+
     expect(mockResolveFields).toHaveBeenCalledTimes(1);
     expect(mockResolveFields).toHaveBeenCalledWith(
       {
@@ -137,7 +141,7 @@ describe("field-store", () => {
         type: "Heading",
       },
       {
-        appState: useAppStore.getState().state,
+        appState: appStore.getState().state,
         changed: {
           id: true,
           title: true,
@@ -152,7 +156,7 @@ describe("field-store", () => {
     // We set a short timeout in the store (50 ms) before loading = true,
     // so let's wait for that plus the async resolution:
     await waitFor(() => {
-      const { fields, loading } = useFieldStore.getState();
+      const { fields, loading } = appStore.getState().fields;
       // Once resolved, we expect the store to hold the new fields:
       expect(fields).toEqual({ title: { type: "textarea" } });
       expect(loading).toBe(false);
@@ -164,45 +168,45 @@ describe("field-store", () => {
       title: { type: "textarea" },
     });
 
-    selectFirst({
+    const config: Config = {
       components: {
         Heading: {
           fields: { title: { type: "text" } },
           render: () => <div />,
-          // Our test resolver:
           resolveFields: mockResolveFields,
         },
       },
-    });
+    };
 
-    renderHook(() => useRegisterFieldStore());
+    selectFirst(config);
+
+    renderHook(() => useRegisterFieldsSlice(appStore, "heading-1"));
+
+    expect(mockResolveFields).toHaveBeenCalledTimes(1);
 
     // We set a short timeout in the store (50 ms) before loading = true,
     // so let's wait for that plus the async resolution:
     await waitFor(() => {
-      const { fields } = useFieldStore.getState();
+      const { fields } = appStore.getState().fields;
       expect(fields).toEqual({ title: { type: "textarea" } });
     });
 
     mockResolveFields.mockReset();
 
-    // Change data and check result
-    act(() => {
-      useAppStore.getState().dispatch({
-        type: "replace",
-        data: {
-          ...useAppStore.getState().selectedItem,
-          props: {
-            ...useAppStore.getState().selectedItem?.props,
-            title: "Hello, world",
-          },
+    appStore.getState().dispatch({
+      type: "replace",
+      data: {
+        ...appStore.getState().selectedItem,
+        props: {
+          ...appStore.getState().selectedItem?.props,
+          title: "Hello, world",
         },
-        destinationIndex: 0,
-        destinationZone: "root:default-zone",
-      });
-
-      generateNodeStore(useAppStore.getState().state.data);
+      },
+      destinationIndex: 0,
+      destinationZone: "root:default-zone",
     });
+
+    generateNodesSlice(appStore.getState().state.data, appStore);
 
     expect(mockResolveFields).toHaveBeenCalledTimes(1);
     expect(mockResolveFields).toHaveBeenCalledWith(
@@ -211,7 +215,7 @@ describe("field-store", () => {
         type: "Heading",
       },
       {
-        appState: useAppStore.getState().state,
+        appState: appStore.getState().state,
         changed: {
           id: false,
           title: true,
@@ -232,29 +236,32 @@ describe("field-store", () => {
       title: { type: "textarea" },
     });
 
-    selectFirst({
+    const config: Config = {
       components: {
         Heading: {
           fields: { title: { type: "text" } },
           render: () => <div />,
-          // Our test resolver:
           resolveFields: mockResolveFields,
         },
         Block: {
           fields: { title: { type: "number" } },
           render: () => <div />,
-          // Our test resolver:
           resolveFields: mockResolveFields,
         },
       },
-    });
+    };
 
-    renderHook(() => useRegisterFieldStore());
+    selectFirst(config);
+
+    const { rerender } = renderHook(
+      ({ id }: { id: string }) => useRegisterFieldsSlice(appStore, id),
+      { initialProps: { id: "heading-1" } }
+    );
 
     // We set a short timeout in the store (50 ms) before loading = true,
     // so let's wait for that plus the async resolution:
     await waitFor(() => {
-      const { fields } = useFieldStore.getState();
+      const { fields } = appStore.getState().fields;
       expect(fields).toEqual({ title: { type: "textarea" } });
     });
 
@@ -267,19 +274,21 @@ describe("field-store", () => {
         type: "Block",
       };
 
-      useAppStore.setState({
+      appStore.setState({
         state: {
-          ...useAppStore.getState().state,
+          ...appStore.getState().state,
           data: {
-            ...useAppStore.getState().state.data,
-            content: [...useAppStore.getState().state.data.content, newItem],
+            ...appStore.getState().state.data,
+            content: [...appStore.getState().state.data.content, newItem],
           },
         },
         selectedItem: newItem,
       });
 
-      generateNodeStore(useAppStore.getState().state.data);
+      generateNodesSlice(appStore.getState().state.data, appStore);
     });
+
+    rerender({ id: "block-1" });
 
     expect(mockResolveFields).toHaveBeenCalledTimes(1);
     expect(mockResolveFields).toHaveBeenCalledWith(
@@ -288,7 +297,7 @@ describe("field-store", () => {
         type: "Block",
       },
       {
-        appState: useAppStore.getState().state,
+        appState: appStore.getState().state,
         changed: {
           id: true,
           title: true,
@@ -328,16 +337,16 @@ describe("field-store", () => {
 
     selectFirst(config);
 
-    renderHook(() => useRegisterFieldStore());
+    renderHook(() => useRegisterFieldsSlice(appStore, "heading-1"));
 
     // After 50ms, loading should become true:
     await waitFor(() => {
-      expect(useFieldStore.getState().loading).toBe(true);
+      expect(appStore.getState().fields.loading).toBe(true);
     });
 
     // After 100ms total, the resolver finishes:
     await waitFor(() => {
-      const { fields, loading } = useFieldStore.getState();
+      const { fields, loading } = appStore.getState().fields;
       expect(fields).toEqual({
         title: { type: "text" },
         body: { type: "textarea" },
@@ -364,27 +373,27 @@ describe("field-store", () => {
 
     selectFirst(config);
 
-    renderHook(() => useRegisterFieldStore());
+    renderHook(() => useRegisterFieldsSlice(appStore, "heading-1"));
 
     // First call
     expect(mockResolveFields).toHaveBeenCalledTimes(1);
 
     // Now let's simulate a data change
-    const selectedItem = useAppStore.getState().selectedItem;
+    const selectedItem = appStore.getState().selectedItem;
     const updatedItem = {
       ...selectedItem,
       props: { ...selectedItem?.props, title: "Newly changed" },
     };
 
     act(() => {
-      useAppStore.getState().dispatch({
+      appStore.getState().dispatch({
         type: "replace",
         data: updatedItem,
         destinationIndex: 0,
         destinationZone: "root:default-zone",
       });
 
-      generateNodeStore(useAppStore.getState().state.data);
+      generateNodesSlice(appStore.getState().state.data, appStore);
     });
 
     // The subscription should trigger a second resolve:

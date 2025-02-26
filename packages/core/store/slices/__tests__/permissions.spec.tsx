@@ -1,33 +1,20 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
-import {
-  usePermissionsStore,
-  useRegisterPermissionsStore,
-} from "../permissions-store";
-import { useAppStore, defaultAppState } from "../app-store";
-import { rootDroppableId } from "../../lib/root-droppable-id";
+import { useRegisterPermissionsSlice } from "../permissions";
+import { defaultAppState, createAppStore } from "../../";
+import { rootDroppableId } from "../../../lib/root-droppable-id";
+
+const appStore = createAppStore();
 
 function resetStores() {
-  useAppStore.setState(
+  appStore.setState(
     {
-      ...useAppStore.getInitialState(),
+      ...appStore.getInitialState(),
     },
     true
   );
-
-  usePermissionsStore.setState({
-    cache: {},
-    globalPermissions: {
-      drag: true,
-      edit: true,
-      delete: true,
-      duplicate: true,
-      insert: true,
-    },
-    resolvedPermissions: {},
-  });
 }
 
-describe("permissions-store", () => {
+describe("permissions slice", () => {
   beforeEach(() => {
     resetStores();
   });
@@ -35,7 +22,7 @@ describe("permissions-store", () => {
   it("resolves on load", async () => {
     const mockResolvePermissions = jest.fn().mockReturnValue({});
 
-    useAppStore.setState({
+    appStore.setState({
       config: {
         root: {
           render: () => <div />,
@@ -53,7 +40,7 @@ describe("permissions-store", () => {
       },
     });
 
-    renderHook(() => useRegisterPermissionsStore({ foo: true }));
+    renderHook(() => useRegisterPermissionsSlice(appStore, { foo: true }));
 
     expect(mockResolvePermissions).toHaveBeenCalledTimes(1);
   });
@@ -61,7 +48,7 @@ describe("permissions-store", () => {
   it("auto-resolves when appStore data changes", async () => {
     const mockResolvePermissions = jest.fn().mockReturnValue({});
 
-    useAppStore.setState({
+    appStore.setState({
       config: {
         root: {
           render: () => <div />,
@@ -79,15 +66,15 @@ describe("permissions-store", () => {
       },
     });
 
-    renderHook(() => useRegisterPermissionsStore({ foo: true }));
+    renderHook(() => useRegisterPermissionsSlice(appStore, { foo: true }));
 
     expect(mockResolvePermissions).toHaveBeenCalledTimes(1);
 
-    useAppStore.setState({
+    appStore.setState({
       state: {
         ...defaultAppState,
         data: {
-          ...useAppStore.getState().state.data,
+          ...appStore.getState().state.data,
           root: {
             props: {
               title: "Goodbye, world",
@@ -105,7 +92,7 @@ describe("permissions-store", () => {
     let unloadingCalled = false;
 
     // Mock to see if they are called
-    useAppStore.setState({
+    appStore.setState({
       setComponentLoading: () => {
         loadingCalled = true;
       },
@@ -114,10 +101,12 @@ describe("permissions-store", () => {
       },
     });
 
-    renderHook(() => useRegisterPermissionsStore({ globalTest: true }));
+    renderHook(() =>
+      useRegisterPermissionsSlice(appStore, { globalTest: true })
+    );
 
     await act(async () => {
-      usePermissionsStore.getState().resolvePermissions();
+      appStore.getState().permissions.resolvePermissions();
     });
 
     expect(loadingCalled).toBe(false);
@@ -127,7 +116,7 @@ describe("permissions-store", () => {
     loadingCalled = false;
     unloadingCalled = false;
 
-    useAppStore.setState({
+    appStore.setState({
       config: {
         components: {
           MyComponent: {
@@ -151,10 +140,12 @@ describe("permissions-store", () => {
       },
     });
 
-    renderHook(() => useRegisterPermissionsStore({ globalTest: true }));
+    renderHook(() =>
+      useRegisterPermissionsSlice(appStore, { globalTest: true })
+    );
 
     await act(async () => {
-      usePermissionsStore.getState().resolvePermissions();
+      appStore.getState().permissions.resolvePermissions();
     });
 
     // Now we expect calls
@@ -164,15 +155,17 @@ describe("permissions-store", () => {
 
   describe("getPermissions()", () => {
     it("returns global permissions by default", () => {
-      renderHook(() => useRegisterPermissionsStore({ testGlobal: true }));
+      renderHook(() =>
+        useRegisterPermissionsSlice(appStore, { testGlobal: true })
+      );
 
-      const perms = usePermissionsStore.getState().getPermissions();
+      const perms = appStore.getState().permissions.getPermissions();
       expect(perms.testGlobal).toBe(true);
       expect(perms.drag).toBe(true); // default
     });
 
     it("returns merged component permissions if present", () => {
-      useAppStore.setState({
+      appStore.setState({
         config: {
           components: {
             MyComponent: {
@@ -183,9 +176,11 @@ describe("permissions-store", () => {
         },
       });
 
-      renderHook(() => useRegisterPermissionsStore({ fromGlobal: true }));
+      renderHook(() =>
+        useRegisterPermissionsSlice(appStore, { fromGlobal: true })
+      );
 
-      const perms = usePermissionsStore.getState().getPermissions({
+      const perms = appStore.getState().permissions.getPermissions({
         item: { type: "MyComponent", props: { id: "component-1" } },
       });
       expect(perms.fromGlobal).toBe(true);
@@ -193,7 +188,7 @@ describe("permissions-store", () => {
     });
 
     it("returns merged root permissions if present", () => {
-      useAppStore.setState({
+      appStore.setState({
         config: {
           root: {
             permissions: { rootPerm: true },
@@ -202,11 +197,13 @@ describe("permissions-store", () => {
         },
       });
 
-      renderHook(() => useRegisterPermissionsStore({ fromGlobal: true }));
+      renderHook(() =>
+        useRegisterPermissionsSlice(appStore, { fromGlobal: true })
+      );
 
-      const perms = usePermissionsStore
+      const perms = appStore
         .getState()
-        .getPermissions({ root: true });
+        .permissions.getPermissions({ root: true });
       expect(perms.fromGlobal).toBe(true);
       expect(perms.rootPerm).toBe(true);
     });
@@ -218,8 +215,8 @@ describe("permissions-store", () => {
         resolved: true,
       });
 
-      useAppStore.setState({
-        ...useAppStore.getInitialState(),
+      appStore.setState({
+        ...appStore.getInitialState(),
         config: {
           components: {
             MyComponent: {
@@ -238,11 +235,13 @@ describe("permissions-store", () => {
         },
       });
 
-      renderHook(() => useRegisterPermissionsStore({ globalTest: true }));
+      renderHook(() =>
+        useRegisterPermissionsSlice(appStore, { globalTest: true })
+      );
 
       await act(async () => {
-        await usePermissionsStore.getState().resolvePermissions();
-        await usePermissionsStore.getState().resolvePermissions(); // Double calls shouldn't run resolvers if data hasn't changed
+        await appStore.getState().permissions.resolvePermissions();
+        await appStore.getState().permissions.resolvePermissions(); // Double calls shouldn't run resolvers if data hasn't changed
       });
 
       expect(resolvePermissions).toHaveBeenCalledTimes(2);
@@ -252,7 +251,7 @@ describe("permissions-store", () => {
           type: "MyComponent",
         },
         {
-          appState: useAppStore.getState().state,
+          appState: appStore.getState().state,
           changed: { id: true },
           lastData: null,
           lastPermissions: null,
@@ -269,7 +268,7 @@ describe("permissions-store", () => {
       );
 
       // Confirm that getPermissions merges in resolved perms
-      const perms = usePermissionsStore.getState().getPermissions({
+      const perms = appStore.getState().permissions.getPermissions({
         item: { type: "MyComponent", props: { id: "comp-1" } },
       });
       expect(perms.resolved).toBe(true);
@@ -281,7 +280,7 @@ describe("permissions-store", () => {
         resolved: true,
       });
 
-      useAppStore.setState({
+      appStore.setState({
         config: {
           components: {
             MyComponent: {
@@ -300,12 +299,14 @@ describe("permissions-store", () => {
         },
       });
 
-      renderHook(() => useRegisterPermissionsStore({ globalTest: true }));
+      renderHook(() =>
+        useRegisterPermissionsSlice(appStore, { globalTest: true })
+      );
 
       await act(async () => {
-        await usePermissionsStore.getState().resolvePermissions();
+        await appStore.getState().permissions.resolvePermissions();
 
-        const { dispatch } = useAppStore.getState();
+        const { dispatch } = appStore.getState();
 
         // Will auto trigger an update
         dispatch({
@@ -326,7 +327,7 @@ describe("permissions-store", () => {
           type: "MyComponent",
         },
         {
-          appState: useAppStore.getState().state,
+          appState: appStore.getState().state,
           changed: { id: false, title: true },
           lastData: {
             props: { id: "comp-1" },
@@ -346,7 +347,7 @@ describe("permissions-store", () => {
       );
 
       // Confirm that getPermissions merges in resolved perms
-      const perms = usePermissionsStore.getState().getPermissions({
+      const perms = appStore.getState().permissions.getPermissions({
         item: { type: "MyComponent", props: { id: "comp-1" } },
       });
       expect(perms.resolved).toBe(true);
@@ -355,7 +356,7 @@ describe("permissions-store", () => {
 
     it("updates if item changes or if force = true", async () => {
       let resolveCalls = 0;
-      useAppStore.setState({
+      appStore.setState({
         config: {
           components: {
             MyComponent: {
@@ -379,28 +380,30 @@ describe("permissions-store", () => {
         },
       });
 
-      renderHook(() => useRegisterPermissionsStore({ testGlobal: true }));
+      renderHook(() =>
+        useRegisterPermissionsSlice(appStore, { testGlobal: true })
+      );
 
       // Initial
       await act(async () => {
-        await usePermissionsStore.getState().resolvePermissions();
+        await appStore.getState().permissions.resolvePermissions();
       });
       expect(resolveCalls).toBe(2);
 
       // If nothing changed, calling again won't re-resolve
       await act(async () => {
-        await usePermissionsStore.getState().resolvePermissions();
+        await appStore.getState().permissions.resolvePermissions();
       });
       expect(resolveCalls).toBe(2);
 
       // Force => resolves again
       await act(async () => {
-        await usePermissionsStore.getState().resolvePermissions({}, true);
+        await appStore.getState().permissions.resolvePermissions({}, true);
       });
       expect(resolveCalls).toBe(3);
 
       // Change item => triggers new resolution
-      useAppStore.setState({
+      appStore.setState({
         state: {
           ...defaultAppState,
           data: {
@@ -419,7 +422,7 @@ describe("permissions-store", () => {
   describe("integration with useAppStore subscriptions", () => {
     it("auto-resolves when appStore config changes", async () => {
       let resolveCalled = false;
-      useAppStore.setState({
+      appStore.setState({
         config: {
           components: {
             MyComponent: {
@@ -441,11 +444,13 @@ describe("permissions-store", () => {
         },
       });
 
-      renderHook(() => useRegisterPermissionsStore({ fromGlobal: true }));
+      renderHook(() =>
+        useRegisterPermissionsSlice(appStore, { fromGlobal: true })
+      );
 
       // config is already set before hooking, so do a manual "change" to trigger subscription
       await act(async () => {
-        useAppStore.setState({
+        appStore.setState({
           config: {
             components: {
               MyComponent: {

@@ -4,7 +4,7 @@ import getClassNameFactory from "../../lib/get-class-name-factory";
 import { Heading } from "../Heading";
 import { ChevronRight } from "lucide-react";
 import { useBreadcrumbs } from "../../lib/use-breadcrumbs";
-import { useAppStore } from "../../stores/app-store";
+import { useAppStore } from "../../store";
 import { Loader } from "../Loader";
 
 const getClassName = getClassNameFactory("SidebarSection", styles);

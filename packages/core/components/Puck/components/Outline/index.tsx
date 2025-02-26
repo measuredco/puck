@@ -2,7 +2,7 @@ import { areaContainsZones } from "../../../../lib/area-contains-zones";
 import { findZonesForArea } from "../../../../lib/find-zones-for-area";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { LayerTree } from "../../../LayerTree";
-import { getAppStore, useAppStore } from "../../../../stores/app-store";
+import { useAppStore, useAppStoreApi } from "../../../../store";
 import { dropZoneContext } from "../../../DropZone";
 import { useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
@@ -13,17 +13,18 @@ export const Outline = () => {
   const outlineOverride = useAppStore((s) => s.overrides.outline);
   const { data, ui } = state;
   const { itemSelector } = ui;
+  const appStore = useAppStoreApi();
 
   const setItemSelector = useCallback(
     (newItemSelector: ItemSelector | null) => {
-      const { dispatch } = getAppStore();
+      const { dispatch } = appStore.getState();
 
       dispatch({
         type: "setUi",
         ui: { itemSelector: newItemSelector },
       });
     },
-    []
+    [appStore]
   );
 
   const Wrapper = useMemo(() => outlineOverride || "div", [outlineOverride]);

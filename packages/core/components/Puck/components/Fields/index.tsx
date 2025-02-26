@@ -8,18 +8,15 @@ import {
 } from "../../../../reducer";
 import { UiState } from "../../../../types";
 import { AutoFieldPrivate } from "../../../AutoField";
-import { getAppStore, useAppStore } from "../../../../stores/app-store";
+import { AppStore, useAppStore, useAppStoreApi } from "../../../../store";
 
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/get-item";
-import {
-  useRegisterFieldStore,
-  useFieldStore,
-} from "../../../../stores/field-store";
+import { useRegisterFieldsSlice } from "../../../../store/slices/fields";
 import { useShallow } from "zustand/react/shallow";
-import { usePermissionsStore } from "../../../../stores/permissions-store";
+import { StoreApi } from "zustand";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -34,11 +31,12 @@ const DefaultFields = ({
 };
 
 const createOnChange =
-  (fieldName: string) => (value: any, updatedUi?: Partial<UiState>) => {
+  (fieldName: string, appStore: StoreApi<AppStore>) =>
+  (value: any, updatedUi?: Partial<UiState>) => {
     let currentProps;
 
     const { dispatch, resolveData, config, state, selectedItem } =
-      getAppStore();
+      appStore.getState();
 
     const { data, ui } = state;
     const { itemSelector } = ui;
@@ -120,7 +118,7 @@ const createOnChange =
   };
 
 const FieldsChild = ({ fieldName }: { fieldName: string }) => {
-  const field = useFieldStore((s) => s.fields[fieldName]);
+  const field = useAppStore((s) => s.fields.fields[fieldName]);
   const isReadOnly = useAppStore(
     (s) =>
       ((s.selectedItem
@@ -145,17 +143,21 @@ const FieldsChild = ({ fieldName }: { fieldName: string }) => {
       : `root_${field.type}_${fieldName}`;
   });
 
-  const permissions = usePermissionsStore(
+  const permissions = useAppStore(
     useShallow((s) => {
-      const { selectedItem } = getAppStore();
+      const { selectedItem, permissions } = s;
 
       return selectedItem
-        ? s.getPermissions({ item: selectedItem })
-        : s.getPermissions({ root: true });
+        ? permissions.getPermissions({ item: selectedItem })
+        : permissions.getPermissions({ root: true });
     })
   );
 
-  const onChange = useCallback(createOnChange(fieldName), [fieldName]);
+  const appStore = useAppStoreApi();
+
+  const onChange = useCallback(createOnChange(fieldName, appStore), [
+    fieldName,
+  ]);
 
   if (!field || !id) return null;
 
@@ -183,11 +185,14 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
     return (loadingCount ?? 0) > 0;
   });
   const itemSelector = useAppStore(useShallow((s) => s.state.ui.itemSelector));
+  const id = useAppStore((s) => s.selectedItem?.props.id);
+  const appStore = useAppStoreApi();
+  useRegisterFieldsSlice(appStore, id);
 
-  useRegisterFieldStore();
-
-  const fieldsLoading = useFieldStore((s) => s.loading);
-  const fieldNames = useFieldStore(useShallow((s) => Object.keys(s.fields)));
+  const fieldsLoading = useAppStore((s) => s.fields.loading);
+  const fieldNames = useAppStore(
+    useShallow((s) => Object.keys(s.fields.fields))
+  );
 
   const isLoading = fieldsLoading || componentResolving;
 

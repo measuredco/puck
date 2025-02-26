@@ -11,7 +11,7 @@ import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { getZoneId } from "../../lib/get-zone-id";
 import { getFrame } from "../../lib/get-frame";
 import { onScrollEnd } from "../../lib/on-scroll-end";
-import { useNodeStore } from "../../stores/node-store";
+import { useAppStore } from "../../store";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -37,7 +37,7 @@ export const LayerTree = ({
   const ctx = useContext(dropZoneContext);
 
   // TODO change this for performance
-  const nodes = useNodeStore((s) => s.nodes);
+  const nodes = useAppStore((s) => s.nodes.nodes);
 
   return (
     <>

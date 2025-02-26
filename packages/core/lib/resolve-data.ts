@@ -3,11 +3,10 @@ import { resolveComponentData } from "./resolve-component-data";
 import { applyDynamicProps } from "./apply-dynamic-props";
 import { resolveRootData } from "./resolve-root-data";
 import { flattenData } from "./flatten-data";
-import { getAppStore } from "../stores/app-store";
+import { AppStore } from "../store";
 import fdeq from "fast-deep-equal";
-import { usePermissionsStore } from "../stores/permissions-store";
 
-export const resolveData = (newAppState: AppState) => {
+export const resolveData = (newAppState: AppState, appStoreData: AppStore) => {
   const {
     state: appState,
     config,
@@ -16,7 +15,8 @@ export const resolveData = (newAppState: AppState) => {
     setComponentLoading,
     unsetComponentLoading,
     metadata,
-  } = getAppStore();
+    permissions,
+  } = appStoreData;
 
   const deferredSetStates: Record<string, NodeJS.Timeout> = {};
 
@@ -97,7 +97,7 @@ export const resolveData = (newAppState: AppState) => {
       promises.push(
         (async () => {
           // Don't wait for resolver to complete to update permissions
-          usePermissionsStore.getState().resolvePermissions({ item }, true);
+          permissions.resolvePermissions({ item }, true);
 
           const dynamicData: ComponentData = await resolveComponentData(
             item,

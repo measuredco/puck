@@ -1,6 +1,6 @@
 "use client";
 
-import { rootDroppableId } from "../../lib/root-droppable-id";
+import { rootZone } from "../../lib/root-droppable-id";
 import { Config, Data, Metadata, UserGenerics } from "../../types";
 import {
   DropZonePure,
@@ -61,7 +61,7 @@ export function Render<
             editMode={false}
             id={"puck-root"}
           >
-            <DropZoneRenderPure zone={rootDroppableId} />
+            <DropZoneRenderPure zone={rootZone} />
           </config.root.render>
         </DropZoneProvider>
       </renderContext.Provider>
@@ -76,7 +76,7 @@ export function Render<
           depth: 0,
         }}
       >
-        <DropZoneRenderPure zone={rootDroppableId} />
+        <DropZoneRenderPure zone={rootZone} />
       </DropZoneProvider>
     </renderContext.Provider>
   );

@@ -4,7 +4,7 @@ import { useRenderedCallback } from "../../../lib/dnd/use-rendered-callback";
 import { insert } from "../../../lib/insert";
 import { ZoneStoreContext } from "../context";
 import { useContextStore } from "../../../lib/use-context-store";
-import { useAppStore } from "../../../stores/app-store";
+import { useAppStore } from "../../../store";
 
 export const useContentIdsWithPreview = (
   contentIds: string[],

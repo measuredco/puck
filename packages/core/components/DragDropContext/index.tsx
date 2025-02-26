@@ -1,5 +1,5 @@
 import { DragDropProvider } from "@dnd-kit/react";
-import { getAppStore, useAppStore } from "../../stores/app-store";
+import { useAppStore, useAppStoreApi } from "../../store";
 import {
   createContext,
   Dispatch,
@@ -29,7 +29,6 @@ import { generateId } from "../../lib/generate-id";
 import { createStore } from "zustand";
 import { getDeepDir } from "../../lib/get-deep-dir";
 import { useSensors } from "../../lib/dnd/use-sensors";
-import { useNodeStore } from "../../stores/node-store";
 
 const DEBUG = false;
 
@@ -108,6 +107,7 @@ const DragDropContextClient = ({
   const dispatch = useAppStore((s) => s.dispatch);
   const resolveData = useAppStore((s) => s.resolveData);
   const metadata = useAppStore((s) => s.metadata);
+  const appStore = useAppStoreApi();
 
   const id = useId();
 
@@ -331,7 +331,7 @@ const DragDropContextClient = ({
               if (thisPreview) {
                 zoneStore.setState({ previewIndex: {} });
 
-                const state = getAppStore().state;
+                const state = appStore.getState().state;
 
                 if (thisPreview.type === "insert") {
                   insertComponent(
@@ -427,7 +427,7 @@ const DragDropContextClient = ({
               targetIndex = 0;
             }
 
-            const path = useNodeStore.getState().nodes[target.id]?.path || [];
+            const path = appStore.getState().nodes.nodes[target.id]?.path || [];
 
             // Abort if dragging over self or descendant
             if (
@@ -464,7 +464,8 @@ const DragDropContextClient = ({
 
               const item = getItem(
                 initialSelector.current,
-                getAppStore().state.data
+                appStore.getState().state.data,
+                {}
               );
 
               if (item) {
@@ -496,7 +497,7 @@ const DragDropContextClient = ({
 
             if (source && source.type !== "void") {
               const sourceData = source.data as ComponentDndData;
-              const { data } = getAppStore().state;
+              const { data } = appStore.getState().state;
 
               const item = getItem(
                 {
@@ -541,7 +542,6 @@ const DragDropContextClient = ({
                 mode: "edit",
                 areaId: "root",
                 depth: 0,
-                metadata,
               }}
             >
               {children}

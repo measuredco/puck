@@ -1,31 +1,26 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
-import { useHistoryStore, useRegisterHistoryStore } from "../history-store";
-import { useAppStore, defaultAppState } from "../app-store";
-import { AppState } from "../../types";
+import { useRegisterHistorySlice } from "../history";
+import { defaultAppState, createAppStore } from "../../";
+
+const appStore = createAppStore();
 
 function resetStores() {
-  useAppStore.setState(
+  appStore.setState(
     {
-      ...useAppStore.getInitialState(),
+      ...appStore.getInitialState(),
     },
     true
   );
-
-  useHistoryStore.setState({
-    initialAppState: defaultAppState,
-    index: 0,
-    histories: [],
-  });
 }
 
-describe("history-store", () => {
+describe("history slice", () => {
   beforeEach(() => {
     resetStores();
   });
 
   it("initializes with given histories and index", () => {
     renderHook(() =>
-      useRegisterHistoryStore({
+      useRegisterHistorySlice(appStore, {
         histories: [
           { id: "initial", state: { ...defaultAppState, data: "foo" } },
           { id: "second", state: { ...defaultAppState, data: "bar" } },
@@ -35,7 +30,8 @@ describe("history-store", () => {
       })
     );
 
-    const { histories, index, hasPast, hasFuture } = useHistoryStore.getState();
+    const { histories, index, hasPast, hasFuture } =
+      appStore.getState().history;
 
     expect(histories.length).toBe(2);
     expect(index).toBe(1);
@@ -45,10 +41,10 @@ describe("history-store", () => {
 
   describe("record()", () => {
     it("tracks the history", () => {
-      jest.spyOn(useAppStore.getState(), "dispatch");
+      jest.spyOn(appStore.getState(), "dispatch");
       // register an initial set of histories
       renderHook(() =>
-        useRegisterHistoryStore({
+        useRegisterHistorySlice(appStore, {
           histories: [{ id: "initial", state: defaultAppState }],
           index: 0,
           initialAppState: defaultAppState,
@@ -57,14 +53,14 @@ describe("history-store", () => {
 
       act(() => {
         // call record with some data
-        useHistoryStore.getState().record({
+        appStore.getState().history.record({
           ...defaultAppState,
           data: { content: [], root: { props: { title: "Hello, world" } } },
         });
       });
 
       waitFor(() => {
-        const { histories } = useHistoryStore.getState();
+        const { histories } = appStore.getState().history;
         expect(histories.length).toBe(2);
         expect(histories[1].state.data.root.props?.title).toBe("Hello, world");
       });
@@ -74,26 +70,26 @@ describe("history-store", () => {
   describe("back()", () => {
     it("does nothing if no past", () => {
       renderHook(() =>
-        useRegisterHistoryStore({
+        useRegisterHistorySlice(appStore, {
           histories: [{ id: "init", state: defaultAppState }],
           index: 0,
           initialAppState: defaultAppState,
         })
       );
 
-      jest.spyOn(useAppStore.getState(), "dispatch");
+      jest.spyOn(appStore.getState(), "dispatch");
 
       act(() => {
-        useHistoryStore.getState().back();
+        appStore.getState().history.back();
       });
 
-      expect(useHistoryStore.getState().index).toBe(0);
-      expect(useAppStore.getState().dispatch).not.toHaveBeenCalled();
+      expect(appStore.getState().history.index).toBe(0);
+      expect(appStore.getState().dispatch).not.toHaveBeenCalled();
     });
 
     it("rewinds if hasPast", () => {
       renderHook(() =>
-        useRegisterHistoryStore({
+        useRegisterHistorySlice(appStore, {
           histories: [
             { id: "0", state: { ...defaultAppState, data: "A" } },
             { id: "1", state: { ...defaultAppState, data: "B" } },
@@ -103,16 +99,16 @@ describe("history-store", () => {
         })
       );
 
-      jest.spyOn(useAppStore.getState(), "dispatch");
+      jest.spyOn(appStore.getState(), "dispatch");
 
       act(() => {
-        useHistoryStore.getState().back();
+        appStore.getState().history.back();
       });
 
-      expect(useHistoryStore.getState().index).toBe(0);
-      expect(useHistoryStore.getState().hasPast()).toBe(false);
-      expect(useHistoryStore.getState().hasFuture()).toBe(true);
-      expect(useAppStore.getState().dispatch).toHaveBeenCalledWith({
+      expect(appStore.getState().history.index).toBe(0);
+      expect(appStore.getState().history.hasPast()).toBe(false);
+      expect(appStore.getState().history.hasFuture()).toBe(true);
+      expect(appStore.getState().dispatch).toHaveBeenCalledWith({
         type: "set",
         state: {
           ...defaultAppState,
@@ -125,26 +121,26 @@ describe("history-store", () => {
   describe("forward()", () => {
     it("does nothing if no future", () => {
       renderHook(() =>
-        useRegisterHistoryStore({
+        useRegisterHistorySlice(appStore, {
           histories: [{ id: "0", state: { ...defaultAppState, data: "A" } }],
           index: 0,
           initialAppState: defaultAppState,
         })
       );
 
-      jest.spyOn(useAppStore.getState(), "dispatch");
+      jest.spyOn(appStore.getState(), "dispatch");
 
       act(() => {
-        useHistoryStore.getState().forward();
+        appStore.getState().history.forward();
       });
 
-      expect(useHistoryStore.getState().index).toBe(0);
-      expect(useAppStore.getState().dispatch).not.toHaveBeenCalled();
+      expect(appStore.getState().history.index).toBe(0);
+      expect(appStore.getState().dispatch).not.toHaveBeenCalled();
     });
 
     it("fast-forwards if hasFuture", () => {
       renderHook(() =>
-        useRegisterHistoryStore({
+        useRegisterHistorySlice(appStore, {
           histories: [
             { id: "0", state: { ...defaultAppState, data: "A" } },
             { id: "1", state: { ...defaultAppState, data: "B" } },
@@ -154,16 +150,16 @@ describe("history-store", () => {
         })
       );
 
-      jest.spyOn(useAppStore.getState(), "dispatch");
+      jest.spyOn(appStore.getState(), "dispatch");
 
       act(() => {
-        useHistoryStore.getState().forward();
+        appStore.getState().history.forward();
       });
 
-      expect(useHistoryStore.getState().index).toBe(1);
-      expect(useHistoryStore.getState().hasPast()).toBe(true);
-      expect(useHistoryStore.getState().hasFuture()).toBe(false);
-      expect(useAppStore.getState().dispatch).toHaveBeenCalledWith({
+      expect(appStore.getState().history.index).toBe(1);
+      expect(appStore.getState().history.hasPast()).toBe(true);
+      expect(appStore.getState().history.hasFuture()).toBe(false);
+      expect(appStore.getState().dispatch).toHaveBeenCalledWith({
         type: "set",
         state: {
           ...defaultAppState,
@@ -176,17 +172,17 @@ describe("history-store", () => {
   describe("setHistories()", () => {
     it("updates the state appropriately", () => {
       renderHook(() =>
-        useRegisterHistoryStore({
+        useRegisterHistorySlice(appStore, {
           histories: [{ id: "init", state: defaultAppState }],
           index: 0,
           initialAppState: defaultAppState,
         })
       );
 
-      jest.spyOn(useAppStore.getState(), "dispatch");
+      jest.spyOn(appStore.getState(), "dispatch");
 
       act(() => {
-        useHistoryStore.getState().setHistories([
+        appStore.getState().history.setHistories([
           {
             id: "1",
             state: { ...defaultAppState, data: "One" },
@@ -198,11 +194,11 @@ describe("history-store", () => {
         ]);
       });
 
-      const { histories, index } = useHistoryStore.getState();
+      const { histories, index } = appStore.getState().history;
       expect(histories.length).toBe(2);
       expect(histories[1].state.data).toBe("Two");
       expect(index).toBe(1);
-      expect(useAppStore.getState().dispatch).toHaveBeenCalledWith({
+      expect(appStore.getState().dispatch).toHaveBeenCalledWith({
         type: "set",
         state: defaultAppState, // from the old store’s last item or initialAppState
       });
@@ -212,7 +208,7 @@ describe("history-store", () => {
   describe("setHistoryIndex()", () => {
     it("sets the store index and dispatches that state's data", () => {
       renderHook(() =>
-        useRegisterHistoryStore({
+        useRegisterHistorySlice(appStore, {
           histories: [
             { id: "0", state: { ...defaultAppState, data: "A" } },
             { id: "1", state: { ...defaultAppState, data: "B" } },
@@ -222,14 +218,14 @@ describe("history-store", () => {
         })
       );
 
-      jest.spyOn(useAppStore.getState(), "dispatch");
+      jest.spyOn(appStore.getState(), "dispatch");
 
       act(() => {
-        useHistoryStore.getState().setHistoryIndex(0);
+        appStore.getState().history.setHistoryIndex(0);
       });
 
-      expect(useHistoryStore.getState().index).toBe(0);
-      expect(useAppStore.getState().dispatch).toHaveBeenCalledWith({
+      expect(appStore.getState().history.index).toBe(0);
+      expect(appStore.getState().dispatch).toHaveBeenCalledWith({
         type: "set",
         state: { ...defaultAppState, data: "B" }, // The code sets with store.histories[store.index] before it changes index
       });
@@ -238,24 +234,24 @@ describe("history-store", () => {
     it("does nothing if out of bounds", () => {
       // By default no histories, or just one:
       renderHook(() =>
-        useRegisterHistoryStore({
+        useRegisterHistorySlice(appStore, {
           histories: [{ id: "0", state: defaultAppState }],
           index: 0,
           initialAppState: defaultAppState,
         })
       );
 
-      jest.spyOn(useAppStore.getState(), "dispatch");
+      jest.spyOn(appStore.getState(), "dispatch");
 
       act(() => {
-        useHistoryStore.getState().setHistoryIndex(5);
+        appStore.getState().history.setHistoryIndex(5);
       });
 
       // The new code always calls dispatch with the "current" index's state before setting the new index,
       // so if the store doesn't check bounds, it might still dispatch once.
       // If your final code checks bounds, you'd expect no dispatch. Adjust the check as needed:
-      expect(useAppStore.getState().dispatch).toHaveBeenCalledTimes(1); // or 0 if you disallow out-of-bounds fully
-      expect(useHistoryStore.getState().index).toBe(5);
+      expect(appStore.getState().dispatch).toHaveBeenCalledTimes(1); // or 0 if you disallow out-of-bounds fully
+      expect(appStore.getState().history.index).toBe(5);
     });
   });
 });

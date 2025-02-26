@@ -1,14 +1,13 @@
-import { create } from "zustand";
-import { ComponentData, Data } from "../types";
+import { StoreApi } from "zustand";
+import { ComponentData, Data } from "../../types";
 import deepEqual from "fast-deep-equal";
-import { subscribeWithSelector } from "zustand/middleware";
 import { useEffect } from "react";
-import { useAppStore } from "../stores/app-store";
+import { AppStore, useAppStoreApi } from "../";
 import {
   rootAreaId,
   rootDroppableId,
   rootZone,
-} from "../lib/root-droppable-id";
+} from "../../lib/root-droppable-id";
 
 const partialDeepEqual = (
   newItem: Record<string, any>,
@@ -37,7 +36,10 @@ type PuckNode = {
   element: HTMLElement | null;
 };
 
-export const generateNodeStore = (data: Data) => {
+export const generateNodesSlice = (
+  data: Data,
+  appStore: StoreApi<AppStore>
+) => {
   const nodeIndex: Record<
     string,
     {
@@ -74,9 +76,9 @@ export const generateNodeStore = (data: Data) => {
     nodeIndex[data.props.id] = { data, parentId, zone, path: [], index };
   });
 
-  const nodeStore = useNodeStore.getState();
+  const nodes = appStore.getState().nodes;
 
-  const registerNode = nodeStore.registerNode;
+  const registerNode = nodes.registerNode;
 
   Object.keys(nodeIndex).forEach((componentId) => {
     const details = nodeIndex[componentId];
@@ -104,82 +106,89 @@ export const generateNodeStore = (data: Data) => {
   });
 
   // Remove old nodes
-  Object.keys(nodeStore.nodes).forEach((key) => {
+  Object.keys(nodes.nodes).forEach((key) => {
     if (!nodeIndex[key] && key !== "root") {
-      nodeStore.unregisterNode(key);
+      nodes.unregisterNode(key);
     }
   });
 };
 
-type NodeStore = {
+export type NodesSlice = {
   nodes: Record<string, PuckNode | undefined>;
   registerNode: (id: string, node: Partial<PuckNode>) => void;
   unregisterNode: (id: string, node?: Partial<PuckNode>) => void;
 };
 
-export const useNodeStore = create<NodeStore>()(
-  subscribeWithSelector((set) => ({
-    nodes: {},
-    registerNode: (id: string, node: Partial<PuckNode>) => {
-      set((s) => {
-        // Only update node if it changes
-        if (s.nodes[id] && partialDeepEqual(node, s.nodes[id])) {
-          return s;
-        }
+export const createNodesSlice = (
+  set: (newState: Partial<AppStore>) => void,
+  get: () => AppStore
+): NodesSlice => ({
+  nodes: {},
+  registerNode: (id: string, node: Partial<PuckNode>) => {
+    const s = get().nodes;
 
-        const emptyNode: PuckNode = {
-          id,
-          methods: { sync: () => null },
-          data: { props: { id }, type: "unknown" },
-          parentId: "",
-          zone: "",
-          path: [],
-          element: null,
-          index: -1,
-        };
+    // Only update node if it changes
+    if (s.nodes[id] && partialDeepEqual(node, s.nodes[id])) {
+      return;
+    }
 
-        const existingNode: PuckNode | undefined = s.nodes[id];
+    const emptyNode: PuckNode = {
+      id,
+      methods: { sync: () => null },
+      data: { props: { id }, type: "unknown" },
+      parentId: "",
+      zone: "",
+      path: [],
+      element: null,
+      index: -1,
+    };
 
-        return {
-          ...s,
-          nodes: {
-            ...s.nodes,
-            [id]: {
-              ...emptyNode,
-              ...existingNode,
-              ...node,
-              id,
-            },
+    const existingNode: PuckNode | undefined = s.nodes[id];
+
+    set({
+      nodes: {
+        ...s,
+        nodes: {
+          ...s.nodes,
+          [id]: {
+            ...emptyNode,
+            ...existingNode,
+            ...node,
+            id,
           },
-        };
+        },
+      },
+    });
+  },
+  unregisterNode: (id) => {
+    const s = get().nodes;
+    const existingNode: PuckNode | undefined = s.nodes[id];
+
+    if (existingNode) {
+      const newNodes = { ...s.nodes };
+
+      delete newNodes[id];
+
+      set({
+        nodes: {
+          ...s,
+          nodes: newNodes,
+        },
       });
-    },
-    unregisterNode: (id: string) => {
-      set((s) => {
-        const existingNode: PuckNode | undefined = s.nodes[id];
-
-        if (existingNode) {
-          const newNodes = { ...s.nodes };
-
-          delete newNodes[id];
-
-          return {
-            ...s,
-            nodes: newNodes,
-          };
-        }
-
-        return s;
-      });
-    },
-  }))
-);
+    }
+  },
+});
 
 /**
  * Reindex the entire tree whenever the state changes
  */
-export const useRegisterNodeStore = () => {
+export const useRegisterNodesSlice = (
+  appStore: ReturnType<typeof useAppStoreApi>
+) => {
   useEffect(() => {
-    return useAppStore.subscribe((s) => s.state.data, generateNodeStore);
+    return appStore.subscribe(
+      (s) => s.state.data,
+      (data) => generateNodesSlice(data, appStore)
+    );
   }, []);
 };

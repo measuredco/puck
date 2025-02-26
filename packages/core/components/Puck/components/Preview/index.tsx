@@ -1,7 +1,7 @@
 import { DropZonePure } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { RefObject, useCallback, useEffect, useRef, useMemo } from "react";
-import { useAppStore } from "../../../../stores/app-store";
+import { useAppStore } from "../../../../store";
 import AutoFrame, { autoFrameContext } from "../../../AutoFrame";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
@@ -113,6 +113,12 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   ) : (
     <Render data={renderData} config={config} />
   );
+
+  useEffect(() => {
+    if (!iframe.enabled) {
+      setStatus("READY");
+    }
+  }, [iframe.enabled]);
 
   return (
     <div
