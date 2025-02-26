@@ -62,6 +62,7 @@ export const DefaultField = ({
             ? field.placeholder
             : undefined
         }
+        step={field.type === "number" ? field.step : undefined}
       />
     </Label>
   );

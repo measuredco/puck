@@ -174,3 +174,39 @@ const config = {
     },
   }}
 />
+
+### `step`
+
+The stepping interval when interacting with the field.
+
+```tsx {7} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        myNumber: {
+          type: "number",
+          step: 0.1,
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+<ConfigPreview
+  label="Example"
+  componentConfig={{
+    fields: {
+      myNumber: {
+        type: "number",
+        step: 0.1,
+      },
+    },
+    defaultProps: { myNumber: 5 },
+    render: ({ myNumber }) => {
+      return <div>{myNumber}</div>;
+    },
+  }}
+/>
