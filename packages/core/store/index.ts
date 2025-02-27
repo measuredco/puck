@@ -90,77 +90,6 @@ export type AppStore<
   permissions: PermissionsSlice;
 };
 
-export const defaultAppStore: AppStore = {
-  state: defaultAppState,
-  dispatch: () => null,
-  config: { components: {} },
-  componentState: {},
-  setComponentState: () => {},
-  setComponentLoading: () => {},
-  unsetComponentLoading: () => {},
-  resolveDataRuns: 0,
-  resolveData: () => {},
-  plugins: [],
-  overrides: {},
-  viewports: defaultViewports,
-  zoomConfig: {
-    autoZoom: 1,
-    rootHeight: 0,
-    zoom: 1,
-  },
-  setZoomConfig: () => null,
-  status: "LOADING",
-  setStatus: () => null,
-  iframe: {},
-  setUi: () => null,
-  getComponentConfig: () => null,
-  metadata: {},
-  fields: {
-    fields: {},
-    loading: false,
-    lastResolvedData: {},
-  },
-  history: {
-    index: -1,
-    hasPast: () => false,
-    hasFuture: () => false,
-    histories: [],
-    record: () => {},
-    back: () => {},
-    forward: () => {},
-    currentHistory: () => ({ id: "", state: {} }),
-    nextHistory: () => null,
-    prevHistory: () => null,
-    setHistories: () => null,
-    setHistoryIndex: () => null,
-    initialAppState: defaultAppState,
-  },
-  nodes: {
-    nodes: {},
-    registerNode: () => {},
-    unregisterNode: () => {},
-  },
-  permissions: {
-    cache: {},
-    globalPermissions: {
-      drag: true,
-      edit: true,
-      delete: true,
-      duplicate: true,
-      insert: true,
-    },
-    getPermissions: () => ({
-      drag: true,
-      edit: true,
-      delete: true,
-      duplicate: true,
-      insert: true,
-    }),
-    resolvePermissions: () => {},
-    resolvedPermissions: {},
-  },
-};
-
 const defaultPageFields: Record<string, Field> = {
   title: { type: "text" },
 };
@@ -168,7 +97,20 @@ const defaultPageFields: Record<string, Field> = {
 export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
   create<AppStore>()(
     subscribeWithSelector((set, get) => ({
-      ...defaultAppStore,
+      state: defaultAppState,
+      config: { components: {} },
+      componentState: {},
+      plugins: [],
+      overrides: {},
+      viewports: defaultViewports,
+      zoomConfig: {
+        autoZoom: 1,
+        rootHeight: 0,
+        zoom: 1,
+      },
+      status: "LOADING",
+      iframe: {},
+      metadata: {},
       ...initialAppStore,
       fields: createFieldsStore(set, get),
       history: createHistorySlice(set, get),

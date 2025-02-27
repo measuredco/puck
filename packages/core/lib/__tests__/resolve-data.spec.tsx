@@ -1,5 +1,5 @@
 import { resolveData } from "../resolve-data";
-import { createAppStore, defaultAppStore } from "../../store";
+import { createAppStore } from "../../store";
 import { Config, AppState, Data } from "../../types";
 import { waitFor } from "@testing-library/react";
 
@@ -19,7 +19,7 @@ const data: Data = {
 };
 
 const baseState: AppState = {
-  ...defaultAppStore.state,
+  ...appStore.getInitialState().state,
   data,
 };
 
