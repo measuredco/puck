@@ -1,5 +1,5 @@
 import { useShallow } from "zustand/react/shallow";
-import { defaultAppStore, useAppStore, useAppStoreApi } from "../store";
+import { useAppStore, useAppStoreApi } from "../store";
 import { Config, UserGenerics } from "../types";
 import { useCallback } from "react";
 import {
