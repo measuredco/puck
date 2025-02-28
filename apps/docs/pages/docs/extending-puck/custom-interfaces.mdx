@@ -83,10 +83,12 @@ Puck also exposes helper components for even deeper customization:
 Access the Puck [`AppState`](/docs/api-reference/app-state) via the [`usePuck`](/docs/api-reference/functions/use-puck) hook to integrate with Puck with custom editor components:
 
 ```tsx showLineNumbers copy /usePuck/1 {3-7, 12}
-import { Puck, usePuck } from "@measured/puck";
+import { Puck, createUsePuck } from "@measured/puck";
+
+const usePuck = createUsePuck();
 
 const JSONRenderer = () => {
-  const { appState } = usePuck();
+  const appState = usePuck((s) => s.appState);
 
   return <div>{JSON.stringify(appState.data)}</div>;
 };
@@ -133,7 +135,9 @@ A common use case is to override the Puck header. You can either use the [`heade
 Here's an example that replaces the default publish button with a custom one:
 
 ```tsx showLineNumbers copy {10-26}
-import { Puck, usePuck } from "@measured/puck";
+import { Puck, createUsePuck } from "@measured/puck";
+
+const usePuck = createUsePuck();
 
 const save = () => {};
 
@@ -143,7 +147,7 @@ export function Editor() {
       // ...
       overrides={{
         headerActions: ({ children }) => {
-          const { appState } = usePuck();
+          const appState = usePuck((s) => s.appState);
 
           return (
             <>
