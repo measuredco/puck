@@ -12,11 +12,16 @@ export const TextareaField = ({
   value,
   name,
   label,
+  labelIcon,
   Label,
   id,
 }: FieldPropsInternal) => {
   return (
-    <Label label={label || name} icon={<Type size={16} />} readOnly={readOnly}>
+    <Label
+      label={label || name}
+      icon={labelIcon || <Type size={16} />}
+      readOnly={readOnly}
+    >
       <textarea
         id={id}
         className={getClassName("input")}
