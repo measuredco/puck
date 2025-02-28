@@ -7,7 +7,7 @@ import { reorder, replace } from "../../../../lib";
 import { useCallback, useEffect, useState } from "react";
 import { DragIcon } from "../../../DragIcon";
 import { ArrayState, ItemWithId } from "../../../../types";
-import { useAppContext } from "../../../Puck/context";
+import { useAppStore, useAppStoreApi } from "../../../../store";
 import { Sortable, SortableProvider } from "../../../Sortable";
 import { NestedFieldProvider, useNestedFieldContext } from "../../context";
 
@@ -24,12 +24,13 @@ export const ArrayField = ({
   id,
   Label = (props) => <div {...props} />,
 }: FieldPropsInternal) => {
-  const { state, setUi, selectedItem, getPermissions } = useAppContext();
+  const thisArrayState = useAppStore((s) => s.state.ui.arrayState[id]);
+  const setUi = useAppStore((s) => s.setUi);
   const { readOnlyFields, localName = name } = useNestedFieldContext();
 
   const value: object[] = _value;
 
-  const arrayState = state.ui.arrayState[id] || {
+  const arrayState = thisArrayState || {
     items: Array.from(value || []).map((item, idx) => {
       return {
         _originalIndex: idx,
@@ -43,10 +44,13 @@ export const ArrayField = ({
 
   useEffect(() => {
     setLocalState({ arrayState, value });
-  }, [value, state.ui.arrayState[id]]);
+  }, [value, thisArrayState]);
+
+  const appStore = useAppStoreApi();
 
   const mapArrayStateToUi = useCallback(
     (partialArrayState: Partial<ArrayState>) => {
+      const state = appStore.getState().state;
       return {
         arrayState: {
           ...state.ui.arrayState,
@@ -54,7 +58,7 @@ export const ArrayField = ({
         },
       };
     },
-    [arrayState]
+    [arrayState, appStore]
   );
 
   const getHighestIndex = useCallback(() => {
@@ -102,7 +106,11 @@ export const ArrayField = ({
 
   const [isDragging, setIsDragging] = useState(false);
 
-  const forceReadOnly = getPermissions({ item: selectedItem }).edit === false;
+  const canEdit = useAppStore(
+    (s) => s.permissions.getPermissions({ item: s.selectedItem }).edit
+  );
+
+  const forceReadOnly = !canEdit;
 
   if (field.type !== "array" || !field.arrayFields) {
     return null;
@@ -130,6 +138,9 @@ export const ArrayField = ({
             move.source,
             move.target
           );
+
+          const state = appStore.getState().state;
+
           const newUi = {
             arrayState: {
               ...state.ui.arrayState,

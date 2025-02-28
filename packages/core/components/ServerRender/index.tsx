@@ -1,7 +1,11 @@
 import { CSSProperties } from "react";
-import { rootDroppableId } from "../../lib/root-droppable-id";
+import {
+  rootAreaId,
+  rootDroppableId,
+  rootZone,
+} from "../../lib/root-droppable-id";
 import { setupZone } from "../../lib/setup-zone";
-import { Config, Data, FieldProps, Metadata, UserGenerics } from "../../types";
+import { Config, Data, Metadata, UserGenerics } from "../../types";
 
 type DropZoneRenderProps = {
   zone: string;
@@ -9,7 +13,7 @@ type DropZoneRenderProps = {
   config: Config;
   areaId?: string;
   style?: CSSProperties;
-  metadata: Metadata;
+  metadata?: Metadata;
 };
 
 function DropZoneRender({
@@ -26,7 +30,7 @@ function DropZoneRender({
     return null;
   }
 
-  if (areaId && zone && zone !== rootDroppableId) {
+  if (areaId !== rootAreaId && zone !== rootZone) {
     zoneCompound = `${areaId}:${zone}`;
     content = setupZone(data, zoneCompound).zones[zoneCompound];
   }
@@ -73,7 +77,7 @@ export function Render<
 }: {
   config: UserConfig;
   data: G["UserData"];
-  metadata: Metadata;
+  metadata?: Metadata;
 }) {
   if (config.root?.render) {
     // DEPRECATED
@@ -103,7 +107,7 @@ export function Render<
         <DropZoneRender
           config={config}
           data={data}
-          zone={rootDroppableId}
+          zone={rootZone}
           metadata={metadata}
         />
       </config.root.render>
@@ -114,7 +118,7 @@ export function Render<
     <DropZoneRender
       config={config}
       data={data}
-      zone={rootDroppableId}
+      zone={rootZone}
       metadata={metadata}
     />
   );

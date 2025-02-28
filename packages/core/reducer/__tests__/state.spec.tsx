@@ -1,4 +1,4 @@
-import { defaultAppState } from "../../components/Puck/context";
+import { defaultAppState } from "../../store";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import {
   DuplicateAction,
