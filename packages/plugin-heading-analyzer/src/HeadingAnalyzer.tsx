@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState } from "react";
 
 import styles from "./HeadingAnalyzer.module.css";
 
-import { usePuck } from "@measured/puck";
+import { createUsePuck } from "@measured/puck";
 import { Plugin } from "@/core/types";
 import { SidebarSection } from "@/core/components/SidebarSection";
 import { OutlineList } from "@/core/components/OutlineList";
@@ -99,8 +99,10 @@ function buildHierarchy(frame: Element | Document): Block[] {
   return root.children;
 }
 
+const usePuck = createUsePuck();
+
 export const HeadingAnalyzer = () => {
-  const { appState } = usePuck();
+  const data = usePuck((s) => s.appState.data);
   const [hierarchy, setHierarchy] = useState<Block[]>([]);
 
   // Re-render when content changes
@@ -121,7 +123,7 @@ export const HeadingAnalyzer = () => {
     return () => {
       observer.disconnect();
     };
-  }, [appState.data]);
+  }, [data]);
 
   return (
     <div className={getClassName()}>

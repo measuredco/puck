@@ -4,29 +4,51 @@ title: usePuck
 
 # usePuck
 
-A hook for building custom components that can interact with Puck.
+A hook for building custom components that can interact with Puck. The best way to access `usePuck` is via the `createUsePuck()` factory.
 
-```tsx copy /usePuck/1 {4}
-import { Puck, usePuck } from "@measured/puck";
+```tsx copy
+import { createUsePuck } from "@measured/puck";
 
-const JSONRenderer = () => {
-  const { appState } = usePuck();
+const usePuck = createUsePuck();
 
-  return <div>{JSON.stringify(appState.data)}</div>;
+const Example = () => {
+  const type = usePuck((s) => s.selectedItem?.type || "Nothing");
+
+  return <h2>{type} selected</h2>;
 };
-
-export function Editor() {
-  return (
-    <Puck>
-      <JSONRenderer />
-    </Puck>
-  );
-}
 ```
+
+You can also access `usePuck` as a direct export, but you won't be able to use [selectors](#selector), resulting in unwanted re-renders and degraded performance.
 
 **Components using the `usePuck` hook must be rendered within the [`<Puck>`](/docs/api-reference/components/puck) context as [`children`](/docs/api-reference/components/puck#children), [`overrides`](/docs/api-reference/components/puck#overrides) or [`plugins`](/docs/api-reference/components/puck#plugins).**
 
+## Args
+
+| Param                             | Example                          | Type     |
+| --------------------------------- | -------------------------------- | -------- |
+| [`selector(data)`](#selectordata) | `(s: UsePuckData) => s.appState` | Function |
+
+### `selector(data)`
+
+A selector function that describes what `usePuck` returns. Receives [`UsePuckData`](#usepuckdata) and returns anything. Be as granular as possible to minimize re-renders.
+
+```tsx
+// Good: only re-render when the `selectedItem` changes
+const selectedItem = usePuck((s) => s.selectedItem);
+
+// Bad: re-render when anything changes
+const { selectedItem } = usePuck();
+const { selectedItem } = usePuck((s) => s);
+
+// Bad: selector creates a new object reference, causing an infinite comparison loop
+const { selectedItem } = usePuck((s) => ({ ...s.selectedItem }));
+```
+
 ## Returns
+
+Whatever is returned by the [`selector`](#selectordata).
+
+## UsePuckData
 
 | Param                                             | Example                                          | Type                                                |
 | ------------------------------------------------- | ------------------------------------------------ | --------------------------------------------------- |
@@ -174,7 +196,6 @@ The index of the currently selected history in [`history.histories`](#historyhis
 A function to set the history state.
 
 ```tsx
-const { setHistories } = usePuck();
 setHistories([]); // clears all history
 ```
 
@@ -183,7 +204,6 @@ setHistories([]); // clears all history
 A function to set current history index.
 
 ```tsx
-const { setHistoryIndex } = usePuck();
 setHistoryIndex(2);
 ```
 

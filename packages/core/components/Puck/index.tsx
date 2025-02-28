@@ -64,6 +64,10 @@ import { useRegisterNodesSlice } from "../../store/slices/nodes";
 import { useRegisterPermissionsSlice } from "../../store/slices/permissions";
 import { monitorHotkeys, useMonitorHotkeys } from "../../lib/use-hotkey";
 import { getFrame } from "../../lib/get-frame";
+import {
+  UsePuckStoreContext,
+  useRegisterUsePuckStore,
+} from "../../lib/use-puck";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -327,6 +331,8 @@ function PuckProvider<
   useRegisterNodesSlice(appStore);
   useRegisterPermissionsSlice(appStore, permissions);
 
+  const uPuckStore = useRegisterUsePuckStore(appStore);
+
   useEffect(() => {
     const { state, resolveData } = appStore.getState();
 
@@ -335,7 +341,7 @@ function PuckProvider<
 
   return (
     <appStoreContext.Provider value={appStore}>
-      {children}
+      <UsePuckStoreContext value={uPuckStore}>{children}</UsePuckStoreContext>
     </appStoreContext.Provider>
   );
 }
