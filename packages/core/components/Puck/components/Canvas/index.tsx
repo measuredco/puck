@@ -168,7 +168,8 @@ export const Canvas = () => {
           className={getClassName("root")}
           style={{
             width: iframe.enabled ? ui.viewports.current.width : "100%",
-            height: zoomConfig.rootHeight,
+            maxWidth: "100%",
+            height: zoomConfig.rootHeight || "auto",
             transform: iframe.enabled ? `scale(${zoomConfig.zoom})` : undefined,
             transition: showTransition
               ? "width 150ms ease-out, height 150ms ease-out, transform 150ms ease-out"
