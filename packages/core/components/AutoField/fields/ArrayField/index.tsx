@@ -273,7 +273,11 @@ export const ArrayField = ({
                         <fieldset
                           className={getClassNameItem("fieldset")}
                           onPointerDownCapture={(e) => {
-                            e.stopPropagation();
+                            // Don't stop propagation here, as it prevents nested sortables from working
+                            // Only stop propagation if the target is the fieldset itself (not a child)
+                            if (e.currentTarget === e.target) {
+                              e.stopPropagation();
+                            }
                           }}
                         >
                           {Object.keys(field.arrayFields!).map((subName) => {
