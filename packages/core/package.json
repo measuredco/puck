@@ -27,7 +27,8 @@
       "require": "./dist/rsc.js"
     },
     "./puck.css": "./dist/index.css",
-    "./dist/index.css": "./dist/index.css"
+    "./dist/index.css": "./dist/index.css",
+    "./package.json": "./package.json"
   },
   "typesVersions": {
     "*": {
