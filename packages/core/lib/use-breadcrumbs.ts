@@ -1,10 +1,10 @@
 import { useContext, useMemo } from "react";
-import { dropZoneContext, PathData } from "../components/DropZone/context";
+import { DropZoneContext, dropZoneContext, PathData } from "../components/DropZone/context";
 import { useAppContext } from "../components/Puck/context";
 import { getZoneId } from "./get-zone-id";
 import { rootDroppableId } from "./root-droppable-id";
 import { ItemSelector } from "./get-item";
-import { Data, MappedItem } from "../types";
+import { Config, Data, MappedItem } from "../types";
 
 export type Breadcrumb = {
   label: string;
@@ -14,10 +14,12 @@ export type Breadcrumb = {
 
 export const convertPathDataToBreadcrumbs = (
   selectedItem: MappedItem | undefined,
-  pathData: PathData | undefined,
-  data: Data
+  context: DropZoneContext<Config>  | undefined,
+  data: Data,
 ) => {
   const id = selectedItem ? selectedItem?.props.id : "";
+
+  const { pathData, config } = context || {};
 
   const currentPathData =
     pathData && id && pathData[id]
@@ -63,10 +65,12 @@ export const convertPathDataToBreadcrumbs = (
       return acc;
     }
 
+    const label = config?.components?.[item.type]?.label || item.type.toString();
+
     return [
       ...acc,
       {
-        label: item.type.toString(),
+        label,
         selector: {
           index: itemIndex,
           zone: parentZoneCompound,
@@ -87,8 +91,8 @@ export const useBreadcrumbs = (renderCount?: number) => {
   return useMemo<Breadcrumb[]>(() => {
     const breadcrumbs = convertPathDataToBreadcrumbs(
       selectedItem,
-      dzContext?.pathData,
-      data
+      dzContext,
+      data,
     );
 
     if (renderCount) {
