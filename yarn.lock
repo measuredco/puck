@@ -528,65 +528,65 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@dnd-kit/abstract@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/abstract/-/abstract-0.0.7-beta-20250130032138.tgz#3d888a741e7861faebcc0cb7f559a4459c58178c"
-  integrity sha512-CFprqfJTtvSqq6ST7AEu41M1CIMk3lko5JNggTsx9seuqodJ0kCqBDul92BBWoAxPiRuQPm+TrK5vijj1tO7rg==
+"@dnd-kit/abstract@0.0.10-beta-20250212025300":
+  version "0.0.10-beta-20250212025300"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/abstract/-/abstract-0.0.10-beta-20250212025300.tgz#36be38c9352a7805e5c352d6fa501813739e387a"
+  integrity sha512-NgF5LU3XCpr8l5PHKjogsnE5LwFIoCMBlAqJbpfRpVsBecCmxU9I36LLThlzfLUw6Tn36Amm/JeupUPQi8bR7w==
   dependencies:
-    "@dnd-kit/geometry" "0.0.7-beta-20250130032138"
-    "@dnd-kit/state" "0.0.7-beta-20250130032138"
+    "@dnd-kit/geometry" "0.0.10-beta-20250212025300"
+    "@dnd-kit/state" "0.0.10-beta-20250212025300"
     tslib "^2.6.2"
 
-"@dnd-kit/collision@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/collision/-/collision-0.0.7-beta-20250130032138.tgz#46986adec7f61a3b08c06176d11679854e2f9f52"
-  integrity sha512-IlR3Qi1Fwc+DFDIdxHCcuolv7+l+M/0KAXdW5gd8m4y5sfW1do1pogAcRA6qNHcUvlUtbsdINf/CzFoztMJ5Bw==
+"@dnd-kit/collision@0.0.10-beta-20250212025300":
+  version "0.0.10-beta-20250212025300"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/collision/-/collision-0.0.10-beta-20250212025300.tgz#cc5041f1ff43d4b3c24e0f1d73c72a7fcf2126e3"
+  integrity sha512-CQTK5oyZN1cUxxpjRl+XcIvZAjkJS9hAveoPHb2MLmu8r9PvMKvBjoejVHo0SJtHvcsySUOXU5Y0IcAKXBmy5Q==
   dependencies:
-    "@dnd-kit/abstract" "0.0.7-beta-20250130032138"
-    "@dnd-kit/geometry" "0.0.7-beta-20250130032138"
+    "@dnd-kit/abstract" "0.0.10-beta-20250212025300"
+    "@dnd-kit/geometry" "0.0.10-beta-20250212025300"
     tslib "^2.6.2"
 
-"@dnd-kit/dom@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/dom/-/dom-0.0.7-beta-20250130032138.tgz#46897d1b96ee1be32adb36fea36e5628c8d12045"
-  integrity sha512-LuySH+UkuvlNgMGDfRPe00cSbRMxyE9PbVNfUEmsnXUmltSW9ht5jVZrkQYAI8kZB3y7ry8h1fZtK/dOI3QFBg==
+"@dnd-kit/dom@0.0.10-beta-20250212025300":
+  version "0.0.10-beta-20250212025300"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/dom/-/dom-0.0.10-beta-20250212025300.tgz#07165d7d91156738e551bd0f065347f015a3a1f3"
+  integrity sha512-0SCE/sknYLgKTMImwaHZijsem+6BYiVSBEI6KWSEBegSAtZC+5fjhnjpNq2ac4BBgFUDlRSSDC0iGx//XgK1bA==
   dependencies:
-    "@dnd-kit/abstract" "0.0.7-beta-20250130032138"
-    "@dnd-kit/collision" "0.0.7-beta-20250130032138"
-    "@dnd-kit/geometry" "0.0.7-beta-20250130032138"
-    "@dnd-kit/state" "0.0.7-beta-20250130032138"
+    "@dnd-kit/abstract" "0.0.10-beta-20250212025300"
+    "@dnd-kit/collision" "0.0.10-beta-20250212025300"
+    "@dnd-kit/geometry" "0.0.10-beta-20250212025300"
+    "@dnd-kit/state" "0.0.10-beta-20250212025300"
     tslib "^2.6.2"
 
-"@dnd-kit/geometry@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/geometry/-/geometry-0.0.7-beta-20250130032138.tgz#67ce0f2ff0245deee8bbdf1bacc37565f26eddc8"
-  integrity sha512-XfXqVq+LdMt5VKTjiyhvCcc68xRvD9xZilA52mdODN1qM3wh5ezpe17MyjlqefqH+sratpjmZwifHk2CONRWeg==
+"@dnd-kit/geometry@0.0.10-beta-20250212025300":
+  version "0.0.10-beta-20250212025300"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/geometry/-/geometry-0.0.10-beta-20250212025300.tgz#db01602ebda30f1a8079b7d3db05a0981ad529d7"
+  integrity sha512-cst28SP/fqG0ySOWZoxltREK/buIFuGLFjo77XWaCs7kSnODzQvX5aa/Y5napvMwsF8ZIbOLPwpDru1aHEirDg==
   dependencies:
-    "@dnd-kit/state" "0.0.7-beta-20250130032138"
+    "@dnd-kit/state" "0.0.10-beta-20250212025300"
     tslib "^2.6.2"
 
-"@dnd-kit/helpers@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/helpers/-/helpers-0.0.7-beta-20250130032138.tgz#2b92aa5ba003b6d5cafc6ff1eac5be198dc8b149"
-  integrity sha512-KzZhgi3zoSJMSEwSL+6d/8GS2FfvY1s5wpIUPxEAgJM9ati+iU8uFL4T5qgxeTt8LVxobyFRzI5rVisUGgSICA==
+"@dnd-kit/helpers@0.0.10-beta-20250212025300":
+  version "0.0.10-beta-20250212025300"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/helpers/-/helpers-0.0.10-beta-20250212025300.tgz#9435a56b5b0fb0f82311ee90d8bc3c0b17570583"
+  integrity sha512-wILc+X50S9xJdtduW+4BxXB9ygOCApSqru82XlECiLAcxM95xYre/C1VBFeIWtHmCfoy/LQ1PXY1mRbkJHljPw==
   dependencies:
-    "@dnd-kit/abstract" "0.0.7-beta-20250130032138"
+    "@dnd-kit/abstract" "0.0.10-beta-20250212025300"
     tslib "^2.6.2"
 
-"@dnd-kit/react@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/react/-/react-0.0.7-beta-20250130032138.tgz#b74839fd64b5688aa7f4fd20d766e478fd97701f"
-  integrity sha512-JsBHxVGoJlmFMt0mo6/7mwasrvq09Iz/uFUXcX/M7ob8UjdthNjL5y9vk8VGnJlka7yMHQxEGHJvQs6yh+FWow==
+"@dnd-kit/react@0.0.10-beta-20250212025300":
+  version "0.0.10-beta-20250212025300"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/react/-/react-0.0.10-beta-20250212025300.tgz#c30a2a19f7680b0fc42889fd7d5149022d030baa"
+  integrity sha512-O/2CKhGba1QtZQwQurD4AXQE47NDztKG37xiIP5jVwddE8Qqm0CiNVmmyC7/0aHrop6OUpiGOJgRxm8BuiuSQQ==
   dependencies:
-    "@dnd-kit/abstract" "0.0.7-beta-20250130032138"
-    "@dnd-kit/dom" "0.0.7-beta-20250130032138"
-    "@dnd-kit/state" "0.0.7-beta-20250130032138"
+    "@dnd-kit/abstract" "0.0.10-beta-20250212025300"
+    "@dnd-kit/dom" "0.0.10-beta-20250212025300"
+    "@dnd-kit/state" "0.0.10-beta-20250212025300"
     tslib "^2.6.2"
 
-"@dnd-kit/state@0.0.7-beta-20250130032138":
-  version "0.0.7-beta-20250130032138"
-  resolved "https://registry.yarnpkg.com/@dnd-kit/state/-/state-0.0.7-beta-20250130032138.tgz#16d947a2468a5e8fe668c4bfa276b55b2d6a60a6"
-  integrity sha512-xBW0LTG+jzXbdeha35uAlvZhO4M6F81fq7vpA54nodIu/RkBIB38NhnReMv/UrVRHxaZlwILDpW/3oHGu5h2jg==
+"@dnd-kit/state@0.0.10-beta-20250212025300":
+  version "0.0.10-beta-20250212025300"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/state/-/state-0.0.10-beta-20250212025300.tgz#c0031e806438e44fbcb2970db0f1363cc0344dda"
+  integrity sha512-fTfY0LHAlfTVVilTQx6mI6Aj/rcJZrIA20PA96uhN19sBrSzDY17rs/+AKMs7h2EyORCjp3KuhKji2qy3Kh17w==
   dependencies:
     "@preact/signals-core" "^1.6.0"
     tslib "^2.6.2"
