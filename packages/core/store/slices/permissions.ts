@@ -41,67 +41,14 @@ export type PermissionsSlice = {
   resolvedPermissions: Record<string, Partial<Permissions> | undefined>;
   getPermissions: GetPermissions<Config>;
   resolvePermissions: ResolvePermissions<Config>;
+  refreshPermissions: RefreshPermissions<Config>;
 };
 
 export const createPermissionsSlice = (
   set: (newState: Partial<AppStore>) => void,
   get: () => AppStore
-): PermissionsSlice => ({
-  cache: {},
-  globalPermissions: {
-    drag: true,
-    edit: true,
-    delete: true,
-    duplicate: true,
-    insert: true,
-  },
-  resolvedPermissions: {},
-  getPermissions: ({ item, type, root } = {}) => {
-    const { config, permissions } = get();
-    const { globalPermissions, resolvedPermissions } = permissions;
-
-    if (item) {
-      const componentConfig = config.components[item.type];
-
-      const initialPermissions = {
-        ...globalPermissions,
-        ...componentConfig?.permissions,
-      };
-
-      const resolvedForItem = resolvedPermissions[item.props.id];
-
-      return (
-        resolvedForItem
-          ? { ...globalPermissions, ...resolvedForItem }
-          : initialPermissions
-      ) as Permissions;
-    } else if (type) {
-      const componentConfig = config.components[type];
-
-      return {
-        ...globalPermissions,
-        ...componentConfig?.permissions,
-      } as Permissions;
-    } else if (root) {
-      const rootConfig = config.root;
-
-      const initialPermissions = {
-        ...globalPermissions,
-        ...rootConfig?.permissions,
-      } as Permissions;
-
-      const resolvedForItem = resolvedPermissions["puck-root"];
-
-      return (
-        resolvedForItem
-          ? { ...globalPermissions, ...resolvedForItem }
-          : initialPermissions
-      ) as Permissions;
-    }
-
-    return globalPermissions;
-  },
-  resolvePermissions: async (params = {}, force) => {
+): PermissionsSlice => {
+  const resolvePermissions: ResolvePermissions = async (params = {}, force) => {
     const { state, permissions } = get();
     const { cache, globalPermissions } = permissions;
 
@@ -203,8 +150,70 @@ export const createPermissionsSlice = (
         await resolveDataForItem(item, force);
       });
     }
-  },
-});
+  };
+
+  const refreshPermissions: RefreshPermissions = (params) =>
+    resolvePermissions(params, true);
+
+  return {
+    cache: {},
+    globalPermissions: {
+      drag: true,
+      edit: true,
+      delete: true,
+      duplicate: true,
+      insert: true,
+    },
+    resolvedPermissions: {},
+    getPermissions: ({ item, type, root } = {}) => {
+      const { config, permissions } = get();
+      const { globalPermissions, resolvedPermissions } = permissions;
+
+      if (item) {
+        const componentConfig = config.components[item.type];
+
+        const initialPermissions = {
+          ...globalPermissions,
+          ...componentConfig?.permissions,
+        };
+
+        const resolvedForItem = resolvedPermissions[item.props.id];
+
+        return (
+          resolvedForItem
+            ? { ...globalPermissions, ...resolvedForItem }
+            : initialPermissions
+        ) as Permissions;
+      } else if (type) {
+        const componentConfig = config.components[type];
+
+        return {
+          ...globalPermissions,
+          ...componentConfig?.permissions,
+        } as Permissions;
+      } else if (root) {
+        const rootConfig = config.root;
+
+        const initialPermissions = {
+          ...globalPermissions,
+          ...rootConfig?.permissions,
+        } as Permissions;
+
+        const resolvedForItem = resolvedPermissions["puck-root"];
+
+        return (
+          resolvedForItem
+            ? { ...globalPermissions, ...resolvedForItem }
+            : initialPermissions
+        ) as Permissions;
+      }
+
+      return globalPermissions;
+    },
+    resolvePermissions,
+    refreshPermissions,
+  };
+};
 
 export const useRegisterPermissionsSlice = (
   appStore: ReturnType<typeof useAppStoreApi>,

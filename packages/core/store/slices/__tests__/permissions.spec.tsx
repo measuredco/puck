@@ -419,6 +419,50 @@ describe("permissions slice", () => {
     });
   });
 
+  describe("refreshPermissions()", () => {
+    it("force updates if item changes", async () => {
+      let resolveCalls = 0;
+      appStore.setState({
+        config: {
+          components: {
+            MyComponent: {
+              render: () => <div />,
+              resolvePermissions: async (item) => {
+                resolveCalls += 1;
+                if (item.props.id === "changed-1") {
+                  return { changed: true };
+                }
+                return { notChanged: true };
+              },
+            },
+          },
+        },
+        state: {
+          ...defaultAppState,
+          data: {
+            ...defaultAppState.data,
+            content: [{ type: "MyComponent", props: { id: "comp-1" } }],
+          },
+        },
+      });
+
+      renderHook(() =>
+        useRegisterPermissionsSlice(appStore, { testGlobal: true })
+      );
+
+      // Initial
+      await act(async () => {
+        await appStore.getState().permissions.resolvePermissions();
+      });
+      expect(resolveCalls).toBe(2);
+
+      await act(async () => {
+        await appStore.getState().permissions.refreshPermissions();
+      });
+      expect(resolveCalls).toBe(3);
+    });
+  });
+
   describe("integration with useAppStore subscriptions", () => {
     it("auto-resolves when appStore config changes", async () => {
       let resolveCalled = false;
