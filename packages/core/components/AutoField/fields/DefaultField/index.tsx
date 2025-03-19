@@ -12,6 +12,7 @@ export const DefaultField = ({
   value: _value,
   name,
   label,
+  labelIcon,
   Label,
   id,
 }: FieldPropsInternal) => {
@@ -21,10 +22,12 @@ export const DefaultField = ({
     <Label
       label={label || name}
       icon={
-        <>
-          {field.type === "text" && <Type size={16} />}
-          {field.type === "number" && <Hash size={16} />}
-        </>
+        labelIcon || (
+          <>
+            {field.type === "text" && <Type size={16} />}
+            {field.type === "number" && <Hash size={16} />}
+          </>
+        )
       }
       readOnly={readOnly}
     >
