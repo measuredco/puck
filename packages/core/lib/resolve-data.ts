@@ -103,6 +103,7 @@ export const resolveData = (newAppState: AppState, appStoreData: AppStore) => {
             item,
             config,
             metadata,
+            appState.data.zones,
             (item) => {
               _setComponentLoading(item.props.id, true, 50);
             },

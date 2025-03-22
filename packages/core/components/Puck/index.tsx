@@ -232,6 +232,9 @@ function PuckProvider<
         ...initialData,
         root: { ...initialData?.root, props: defaultedRootProps },
         content: initialData.content || [],
+        zones: {
+          ...initialData.zones,
+        },
       },
       ui: {
         ...initial,

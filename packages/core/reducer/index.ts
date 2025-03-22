@@ -3,7 +3,9 @@ import { AppState, Config, Data } from "../types";
 import { reduceData } from "./data";
 import { PuckAction, SetAction } from "./actions";
 import { reduceUi } from "./state";
-import type { OnAction } from "../types";
+import type { Content, OnAction } from "../types";
+import { dataMap } from "../lib/data-map";
+import { flattenSlots } from "../lib/flatten-slots";
 
 export * from "./actions";
 export * from "./data";
@@ -76,14 +78,79 @@ export function createReducer<
 }): StateReducer<UserData> {
   return storeInterceptor(
     (state, action) => {
-      const data = reduceData(state.data, action, config);
-      const ui = reduceUi(state.ui, action);
+      let data = reduceData(state.data, action, config);
+      let ui = reduceUi(state.ui, action);
 
       if (action.type === "set") {
-        return setAction<UserData>(state, action as SetAction<UserData>);
+        const setValue = setAction<UserData>(
+          state,
+          action as SetAction<UserData>
+        );
+
+        data = setValue.data;
+        ui = setValue.ui;
       }
 
-      return { data, ui };
+      // Synchonize slots and zones
+      const oldSlots = flattenSlots(config, state.data);
+      const newSlots = flattenSlots(config, data);
+
+      const slotZones: Record<string, Content> = {};
+
+      Object.keys(newSlots).forEach((slotKey) => {
+        const newSlot = newSlots[slotKey];
+        const oldSlot = oldSlots[slotKey];
+
+        // When duplicating, we don't merge slots to enable new IDs to propagate
+        if (newSlot !== oldSlot && action.type !== "duplicate") {
+          // Write change to zones
+          slotZones[slotKey] = newSlot;
+        } else {
+          // Write change to slot
+        }
+      });
+
+      const zones = data.zones || {};
+
+      const dataWithZones = dataMap(
+        {
+          ...data,
+          zones: { ...data.zones, ...slotZones },
+        },
+        (item) => {
+          const componentType = "type" in item ? item.type : "root";
+
+          const configForComponent =
+            componentType === "root"
+              ? config.root
+              : config.components[componentType];
+
+          if (!configForComponent?.fields) return item;
+
+          const propKeys = Object.keys(configForComponent.fields || {});
+
+          return propKeys.reduce((acc, propKey) => {
+            const field = configForComponent.fields![propKey];
+
+            if (field.type === "slot") {
+              const id =
+                item.props && "id" in item.props ? item.props.id : "root";
+
+              return {
+                ...acc,
+                props: {
+                  ...acc.props,
+                  [propKey]: zones[`${id}:${propKey}`],
+                },
+              };
+            }
+
+            return acc;
+          }, item);
+        }
+      ) as UserData;
+
+      return { data: dataWithZones, ui };
     },
     record,
     onAction

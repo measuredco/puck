@@ -202,6 +202,10 @@ function AutoFieldInternal<
     }
   }, []);
 
+  if (field.type === "slot") {
+    return null;
+  }
+
   if (field.type === "custom") {
     if (!field.render) {
       return null;
@@ -296,6 +300,10 @@ export function AutoField<
 
     return DefaultLabel;
   }, [props.readOnly]);
+
+  if (props.field.type === "slot") {
+    return null;
+  }
 
   return (
     <AutoFieldInternal<ValueType, FieldType> {...props} Label={DefaultLabel} />

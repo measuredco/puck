@@ -18,6 +18,7 @@ import {
   ReorderAction,
 } from "./actions";
 import {} from "./actions";
+import { AppStore } from "../store";
 
 // Restore unregistered zones when re-registering in same session
 export const zoneCache: Record<string, Content> = {};
@@ -124,7 +125,8 @@ const reorderAction = <UserData extends Data>(
 export function reduceData<UserData extends Data>(
   data: UserData,
   action: PuckAction,
-  config: Config
+  config: Config,
+  appStore?: AppStore
 ): UserData {
   if (action.type === "insert") {
     return insertAction(data, action, config);
