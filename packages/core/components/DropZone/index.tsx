@@ -24,7 +24,15 @@ import {
 } from "./context";
 import { useAppStore } from "../../store";
 import { DropZoneProps } from "./types";
-import { Content, DragAxis, PuckContext } from "../../types";
+import {
+  ComponentConfig,
+  Content,
+  DefaultComponentProps,
+  DragAxis,
+  PuckContext,
+  WithId,
+  WithPuckProps,
+} from "../../types";
 
 import { UseDroppableInput } from "@dnd-kit/react";
 import { DrawerItemInner } from "../Drawer";
@@ -59,8 +67,32 @@ export const DropZoneEditPure = (props: DropZoneProps) => (
   <DropZoneEdit {...props} />
 );
 
+function useSlots(
+  config: ComponentConfig | null,
+  props: WithPuckProps<WithId<DefaultComponentProps>>
+): any {
+  return useMemo(() => {
+    if (!config?.fields) return props;
+
+    const newProps: DefaultComponentProps = { ...props };
+    const propKeys = Object.keys(props);
+
+    for (let i = 0; i < propKeys.length; i++) {
+      const propKey = propKeys[i];
+      const field = config.fields[propKey];
+
+      if (field?.type === "slot") {
+        newProps[propKey] = (dzProps: DropZoneProps) => {
+          return <DropZone {...dzProps} zone={propKey} />;
+        };
+      }
+    }
+
+    return newProps;
+  }, [config, props]);
+}
+
 const DropZoneChild = ({
-  zone,
   zoneCompound,
   componentId,
   preview,
@@ -70,7 +102,6 @@ const DropZoneChild = ({
   collisionAxis,
   inDroppableZone,
 }: {
-  zone: string;
   zoneCompound: string;
   componentId: string;
   preview?: Preview;
@@ -134,14 +165,19 @@ const DropZoneChild = ({
     [componentId, label, overrides]
   );
 
-  if (!item) return;
+  const defaultsProps = useMemo(
+    () => ({
+      ...componentConfig?.defaultProps,
+      ...item?.props,
+      puck: puckProps,
+      editMode: true, // DEPRECATED
+    }),
+    [componentConfig?.defaultProps, item?.props, puckProps]
+  );
 
-  const defaultedProps = {
-    ...componentConfig?.defaultProps,
-    ...item.props,
-    puck: puckProps,
-    editMode: true, // DEPRECATED
-  };
+  const defaultedPropsWithSlots = useSlots(componentConfig, defaultsProps);
+
+  if (!item) return;
 
   let Render = componentConfig
     ? componentConfig.render
@@ -179,16 +215,16 @@ const DropZoneChild = ({
         componentConfig?.inline && !isPreview ? (
           <>
             <Render
-              {...defaultedProps}
+              {...defaultedPropsWithSlots}
               puck={{
-                ...defaultedProps.puck,
+                ...defaultedPropsWithSlots.puck,
                 dragRef,
               }}
             />
           </>
         ) : (
           <div ref={dragRef}>
-            <Render {...defaultedProps} />
+            <Render {...defaultedPropsWithSlots} />
           </div>
         )
       }
@@ -401,7 +437,6 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
           return (
             <DropZoneChild
               key={componentId}
-              zone={zone}
               zoneCompound={zoneCompound}
               componentId={componentId}
               preview={preview}
@@ -458,16 +493,18 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
         {content.map((item) => {
           const Component = config.components[item.type];
           if (Component) {
+            const props = useSlots(Component, item.props);
+
             return (
               <DropZoneProvider
-                key={item.props.id}
+                key={props.id}
                 value={{
-                  areaId: item.props.id,
+                  areaId: props.id,
                   depth: 1,
                 }}
               >
                 <Component.render
-                  {...item.props}
+                  {...props}
                   puck={{
                     renderDropZone: DropZoneRenderPure,
                     metadata: metadata || {},

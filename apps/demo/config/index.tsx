@@ -7,6 +7,7 @@ import { Heading, HeadingProps } from "./blocks/Heading";
 import { Flex, FlexProps } from "./blocks/Flex";
 import { Logos, LogosProps } from "./blocks/Logos";
 import { Stats, StatsProps } from "./blocks/Stats";
+import { Template, TemplateProps } from "./blocks/Template";
 import { Text, TextProps } from "./blocks/Text";
 import { Space, SpaceProps } from "./blocks/Space";
 
@@ -23,6 +24,7 @@ export type Props = {
   Flex: FlexProps;
   Logos: LogosProps;
   Stats: StatsProps;
+  Template: TemplateProps;
   Text: TextProps;
   Space: SpaceProps;
 };
@@ -56,7 +58,7 @@ export const conf: UserConfig = {
     },
     other: {
       title: "Other",
-      components: ["Card", "Hero", "Logos", "Stats"],
+      components: ["Card", "Hero", "Logos", "Stats", "Template"],
     },
   },
   components: {
@@ -68,6 +70,7 @@ export const conf: UserConfig = {
     Flex,
     Logos,
     Stats,
+    Template,
     Text,
     Space,
   },

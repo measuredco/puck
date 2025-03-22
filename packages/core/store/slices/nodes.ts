@@ -1,13 +1,10 @@
 import { StoreApi } from "zustand";
-import { ComponentData, Data } from "../../types";
+import { ComponentData, Content, Data } from "../../types";
 import deepEqual from "fast-deep-equal";
 import { useEffect } from "react";
 import { AppStore, useAppStoreApi } from "../";
-import {
-  rootAreaId,
-  rootDroppableId,
-  rootZone,
-} from "../../lib/root-droppable-id";
+import { rootAreaId, rootDroppableId } from "../../lib/root-droppable-id";
+import { forAllData } from "../../lib/for-all-data";
 
 const partialDeepEqual = (
   newItem: Record<string, any>,
@@ -51,28 +48,7 @@ export const generateNodesSlice = (
     }
   > = {};
 
-  const forAllData = (
-    cb: (
-      data: ComponentData,
-      parentId: string,
-      zone: string,
-      index: number
-    ) => void
-  ) => {
-    data.content.forEach((data, index) => {
-      cb(data, rootAreaId, rootZone, index);
-    });
-
-    Object.entries(data.zones || {}).forEach(([zoneCompound, content]) => {
-      const [parentId, zone] = zoneCompound.split(":");
-
-      content.forEach((data, index) => {
-        cb(data, parentId, zone, index);
-      });
-    });
-  };
-
-  forAllData((data, parentId, zone, index) => {
+  forAllData(data, (data, parentId, zone, index) => {
     nodeIndex[data.props.id] = { data, parentId, zone, path: [], index };
   });
 
@@ -86,7 +62,7 @@ export const generateNodesSlice = (
     let currentDetails = details;
     let path = [];
 
-    while (currentDetails?.parentId !== rootAreaId) {
+    while (currentDetails && currentDetails?.parentId !== rootAreaId) {
       path.unshift(`${currentDetails.parentId}:${currentDetails.zone}`);
       currentDetails = nodeIndex[currentDetails.parentId];
     }

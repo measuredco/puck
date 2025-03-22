@@ -161,6 +161,8 @@ const FieldsChild = ({ fieldName }: { fieldName: string }) => {
 
   if (!field || !id) return null;
 
+  if (field.type === "slot") return null;
+
   return (
     <div key={id} className={getClassName("field")}>
       <AutoFieldPrivate
