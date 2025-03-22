@@ -12,7 +12,7 @@ export type FieldsSlice = {
   lastResolvedData: Partial<ComponentOrRootData>;
 };
 
-export const createFieldsStore = (
+export const createFieldsSlice = (
   _set: (newState: Partial<AppStore>) => void,
   _get: () => AppStore
 ): FieldsSlice => {

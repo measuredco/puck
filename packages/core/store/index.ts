@@ -24,7 +24,8 @@ import {
   createPermissionsSlice,
   type PermissionsSlice,
 } from "./slices/permissions";
-import { createFieldsStore, type FieldsSlice } from "./slices/fields";
+import { createFieldsSlice, type FieldsSlice } from "./slices/fields";
+import { createSlotsSlice, SlotsSlice } from "./slices/slots";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {}, zones: {} },
@@ -112,7 +113,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
       iframe: {},
       metadata: {},
       ...initialAppStore,
-      fields: createFieldsStore(set, get),
+      fields: createFieldsSlice(set, get),
       history: createHistorySlice(set, get),
       nodes: createNodesSlice(set, get),
       permissions: createPermissionsSlice(set, get),
