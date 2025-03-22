@@ -37,7 +37,8 @@ export const LayerTree = ({
   const ctx = useContext(dropZoneContext);
 
   // TODO change this for performance
-  const nodes = useAppStore((s) => s.nodes.nodes);
+  const nodes = useAppStore((s) => s.state.indexes.nodes);
+  const selectedItem = useAppStore((s) => s.selectedItem);
 
   return (
     <>
@@ -64,9 +65,6 @@ export const LayerTree = ({
 
           const { setHoveringComponent = () => {}, hoveringComponent } =
             ctx || {};
-
-          const selectedItem =
-            itemSelector && data ? getItem(itemSelector, data) : null;
 
           const isHovering = hoveringComponent === item.props.id;
 

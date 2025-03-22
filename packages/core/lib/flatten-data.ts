@@ -1,13 +1,24 @@
-import { Config, UserGenerics } from "../types";
+import { ComponentData, Config, UserGenerics } from "../types";
+import { PrivateAppState } from "../types/Internal";
+import { walkTree } from "./walk-tree";
 
 export const flattenData = <
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
 >(
-  data: G["UserData"]
+  state: PrivateAppState<G["UserData"]>
 ) => {
-  return Object.keys(data.zones || {}).reduce<G["UserComponentData"][]>(
-    (acc, zone) => [...acc, ...data.zones![zone]],
-    data.content
+  const data: ComponentData[] = [];
+
+  walkTree(
+    state,
+    (content) => content,
+    (item) => {
+      data.push(item);
+
+      return null;
+    }
   );
+
+  return data;
 };

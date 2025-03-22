@@ -3,19 +3,16 @@
 
   position: relative;
   height: 100%;
+  min-height: var(--min-empty-height);
   outline-offset: -2px;
   width: 100%;
-}
-
-.DropZone--isActive {
-  min-height: var(--min-empty-height);
 }
 
 .DropZone--hasChildren {
   min-height: 0;
 }
 
-.DropZone--isActive.DropZone:empty {
+.DropZone:empty {
   min-height: var(--min-empty-height);
 }
 

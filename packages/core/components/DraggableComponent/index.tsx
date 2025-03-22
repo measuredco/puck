@@ -104,9 +104,6 @@ export const DraggableComponent = ({
     s.selectedItem?.props.id === id ? s.zoomConfig.zoom : 1
   );
   const overrides = useAppStore((s) => s.overrides);
-  const selectedItem = useAppStore((s) =>
-    s.selectedItem?.props.id === id ? s.selectedItem : null
-  );
   const dispatch = useAppStore((s) => s.dispatch);
   const iframe = useAppStore((s) => s.iframe);
 
@@ -148,9 +145,8 @@ export const DraggableComponent = ({
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
 
-  const path = useAppStore((s) => s.nodes.nodes[id]?.path);
-
-  const item = useAppStore((s) => s.nodes.nodes[id]?.data);
+  const path = useAppStore((s) => s.state.indexes.nodes[id]?.path);
+  const item = useAppStore((s) => s.state.indexes.nodes[id]?.data);
 
   const permissions = useAppStore(
     useShallow((s) => s.permissions.getPermissions({ item }))
@@ -303,20 +299,27 @@ export const DraggableComponent = ({
   const appStore = useAppStoreApi();
 
   const onSelectParent = useCallback(() => {
-    const { nodes } = appStore.getState().nodes;
+    const { nodes, zones } = appStore.getState().state.indexes;
     const node = nodes[id];
+
     const parentNode = node?.parentId ? nodes[node?.parentId] : null;
 
-    if (!parentNode) {
+    if (!parentNode || !node.parentId) {
       return;
     }
+
+    const parentZoneCompound = `${parentNode.parentId}:${parentNode.zone}`;
+
+    const parentIndex = zones[parentZoneCompound].contentIds.indexOf(
+      node.parentId
+    );
 
     dispatch({
       type: "setUi",
       ui: {
         itemSelector: {
-          zone: `${parentNode.parentId}:${parentNode.zone}`,
-          index: parentNode.index,
+          zone: parentZoneCompound,
+          index: parentIndex,
         },
       },
     });
