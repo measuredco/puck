@@ -5,8 +5,8 @@ export const useParent = () => {
 
   const selectedItem = appStore.getState().selectedItem;
   const parent = useAppStore((s) => {
-    const node = s.nodes.nodes[selectedItem?.props.id];
-    return node?.parentId ? s.nodes.nodes[node.parentId] : null;
+    const node = s.state.indexes.nodes[selectedItem?.props.id];
+    return node?.parentId ? s.state.indexes.nodes[node.parentId] : null;
   });
 
   return parent?.data ?? null;

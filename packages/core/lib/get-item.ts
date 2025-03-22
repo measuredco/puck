@@ -1,7 +1,6 @@
-import { useAppStore } from "../store";
 import { Data } from "../types";
+import { PrivateAppState } from "../types/Internal";
 import { rootDroppableId } from "./root-droppable-id";
-import { setupZone } from "./setup-zone";
 
 export type ItemSelector = {
   index: number;
@@ -10,22 +9,11 @@ export type ItemSelector = {
 
 export function getItem<UserData extends Data>(
   selector: ItemSelector,
-  data: UserData,
-  dynamicProps: Record<string, any> = {}
+  state: PrivateAppState
 ): UserData["content"][0] | undefined {
-  if (!selector.zone || selector.zone === rootDroppableId) {
-    const item = data.content[selector.index];
+  const zone = state.indexes.zones?.[selector.zone || rootDroppableId];
 
-    return item?.props
-      ? { ...item, props: dynamicProps[item.props.id] || item.props }
-      : undefined;
-  }
-
-  const item = setupZone(data, selector.zone).zones[selector.zone][
-    selector.index
-  ];
-
-  return item?.props
-    ? { ...item, props: dynamicProps[item.props.id] || item.props }
+  return zone
+    ? state.indexes.nodes[zone.contentIds[selector.index]]?.data
     : undefined;
 }

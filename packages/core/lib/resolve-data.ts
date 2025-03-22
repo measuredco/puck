@@ -6,17 +6,18 @@ import { flattenData } from "./flatten-data";
 import { AppStore } from "../store";
 import fdeq from "fast-deep-equal";
 
-export const resolveData = (newAppState: AppState, appStoreData: AppStore) => {
+export const resolveData = (
+  newAppState: AppState,
+  getAppStore: () => AppStore
+) => {
   const {
-    state: appState,
     config,
     dispatch,
     resolveDataRuns,
     setComponentLoading,
     unsetComponentLoading,
     metadata,
-    permissions,
-  } = appStoreData;
+  } = getAppStore();
 
   const deferredSetStates: Record<string, NodeJS.Timeout> = {};
 
@@ -46,7 +47,7 @@ export const resolveData = (newAppState: AppState, appStoreData: AppStore) => {
     // Flatten zones
     const newData = newAppState.data;
 
-    const flatContent = flattenData(newData).filter(
+    const flatContent = flattenData(newAppState).filter(
       (item) => !!config.components[item.type]?.resolveData
     );
 
@@ -56,14 +57,12 @@ export const resolveData = (newAppState: AppState, appStoreData: AppStore) => {
     ) => {
       // Apply the dynamic content to `data`, not `newData`, in case `data` has been changed by the user
       const processed = applyDynamicProps(
-        { ...appState.data },
+        getAppStore().state.data,
         dynamicDataMap,
         dynamicRoot
       );
 
-      const processedAppState = { ...appState, data: processed };
-
-      const containsChanges = !fdeq(appState, processedAppState);
+      const containsChanges = !fdeq(getAppStore().state.data, processed);
 
       if (containsChanges) {
         dispatch({
@@ -79,48 +78,77 @@ export const resolveData = (newAppState: AppState, appStoreData: AppStore) => {
       }
     };
 
+    let latestState = newAppState;
+
     const promises: Promise<void>[] = [];
 
-    promises.push(
-      (async () => {
-        _setComponentLoading("puck-root", true, 50);
+    // promises.push(
+    //   (async () => {
+    //     _setComponentLoading("puck-root", true, 50);
 
-        const dynamicRoot = await resolveRootData(newData, config, metadata);
+    //     const dynamicRoot = await resolveRootData(newData, config, metadata);
 
-        applyIfChange({}, dynamicRoot);
+    //     applyIfChange({}, dynamicRoot);
 
-        _setComponentLoading("puck-root", false);
-      })()
-    );
+    //     _setComponentLoading("puck-root", false);
 
-    flatContent.forEach((item) => {
-      promises.push(
-        (async () => {
-          // Don't wait for resolver to complete to update permissions
-          permissions.resolvePermissions({ item }, true);
+    //     latestState = getAppStore().state;
+    //   })()
+    // );
 
-          const dynamicData: ComponentData = await resolveComponentData(
-            item,
-            config,
-            metadata,
-            (item) => {
-              _setComponentLoading(item.props.id, true, 50);
-            },
-            (item) => {
-              deferredSetStates[item.props.id];
+    const changes: Record<string, ComponentData> = {};
 
-              _setComponentLoading(item.props.id, false);
-            }
-          );
+    for (let i = flatContent.length - 1; i >= 0; i--) {
+      const item = flatContent[i];
 
-          const dynamicDataMap = { [item.props.id]: dynamicData };
+      const latestFlatContent = flattenData(latestState);
 
-          applyIfChange(dynamicDataMap);
-        })()
+      const latestItem = latestFlatContent.find(
+        (candidate) => candidate.props.id === item.props.id
       );
-    });
 
-    await Promise.all(promises);
+      const configForItem = config.components[item.type];
+
+      const mergedProps = Object.keys(configForItem.fields || {}).reduce(
+        (acc, fieldKey) => {
+          const field = configForItem.fields![fieldKey];
+
+          if (field.type === "slot") {
+            return { ...acc, [fieldKey]: latestItem?.props[fieldKey] };
+          }
+
+          return acc;
+        },
+        item.props
+      );
+
+      const mergedItem = {
+        ...item,
+        props: mergedProps,
+      };
+
+      if (item) {
+        const dynamicData: ComponentData = await resolveComponentData(
+          mergedItem,
+          config,
+          metadata,
+          (item) => {
+            _setComponentLoading(item.props.id, true, 50);
+          },
+          (item) => {
+            deferredSetStates[item.props.id];
+
+            _setComponentLoading(item.props.id, false);
+          }
+        );
+
+        changes[item.props.id] = dynamicData;
+
+        applyIfChange({ [item.props.id]: dynamicData });
+
+        latestState = getAppStore().state;
+      }
+    }
   };
 
   return runResolvers();

@@ -1,29 +1,11 @@
 import { ComponentData, Config, MappedItem, Metadata } from "../types";
+import { mapSlots } from "./map-slots";
+import { forEachSlot } from "./for-each-slot";
 import { getChanged } from "./get-changed";
 
 export const cache: {
   lastChange: Record<string, any>;
 } = { lastChange: {} };
-
-export const resolveAllComponentData = async (
-  content: MappedItem[],
-  config: Config,
-  metadata: Metadata = {},
-  onResolveStart?: (item: MappedItem) => void,
-  onResolveEnd?: (item: MappedItem) => void
-) => {
-  return await Promise.all(
-    content.map(async (item) => {
-      return await resolveComponentData(
-        item,
-        config,
-        metadata,
-        onResolveStart,
-        onResolveEnd
-      );
-    })
-  );
-};
 
 export const resolveComponentData = async (
   item: ComponentData,

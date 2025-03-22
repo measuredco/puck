@@ -10,28 +10,18 @@ export const applyDynamicProps = (
   dynamicProps: Record<string, ComponentData>,
   rootData?: RootData
 ) => {
-  return {
-    ...data,
-    root: rootData
-      ? {
-          ...data.root,
-          ...(rootData ? rootData : {}),
-        }
-      : data.root,
-    content: data.content.map((item) => {
-      return dynamicProps[item.props.id]
-        ? { ...item, ...dynamicProps[item.props.id] }
-        : item;
-    }),
-    zones: Object.keys(data.zones || {}).reduce((acc, zoneKey) => {
+  return dataMap(data, (item) => {
+    if (!item.props) {
+      return item;
+    }
+
+    if ("id" in item.props) {
       return {
-        ...acc,
-        [zoneKey]: data.zones![zoneKey].map((item) => {
-          return dynamicProps[item.props.id]
-            ? { ...item, ...dynamicProps[item.props.id] }
-            : item;
-        }),
+        ...item,
+        ...dynamicProps[item.props.id],
       };
-    }, {}),
-  };
+    } else {
+      return { ...item, ...rootData };
+    }
+  });
 };

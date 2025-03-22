@@ -1,11 +1,6 @@
 import { Loader } from "../../../Loader";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
-import {
-  ReplaceAction,
-  SetAction,
-  replaceAction,
-  setAction,
-} from "../../../../reducer";
+import { ReplaceAction, SetAction } from "../../../../reducer";
 import { UiState } from "../../../../types";
 import { AutoFieldPrivate } from "../../../AutoField";
 import { AppStore, useAppStore, useAppStoreApi } from "../../../../store";
@@ -17,6 +12,9 @@ import { ItemSelector } from "../../../../lib/get-item";
 import { useRegisterFieldsSlice } from "../../../../store/slices/fields";
 import { useShallow } from "zustand/react/shallow";
 import { StoreApi } from "zustand";
+import { resolveComponentData } from "../../../../lib/resolve-component-data";
+import { replaceAction } from "../../../../reducer/reduce";
+import { resolveRootData } from "../../../../lib/resolve-root-data";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -32,11 +30,16 @@ const DefaultFields = ({
 
 const createOnChange =
   (fieldName: string, appStore: StoreApi<AppStore>) =>
-  (value: any, updatedUi?: Partial<UiState>) => {
+  async (value: any, updatedUi?: Partial<UiState>) => {
     let currentProps;
 
-    const { dispatch, resolveData, config, state, selectedItem } =
-      appStore.getState();
+    const {
+      dispatch,
+      state,
+      selectedItem,
+      resolveComponentData,
+      resolveRootData,
+    } = appStore.getState();
 
     const { data, ui } = state;
     const { itemSelector } = ui;
@@ -56,57 +59,26 @@ const createOnChange =
     };
 
     if (selectedItem && itemSelector) {
-      const replaceActionData: ReplaceAction = {
+      dispatch({
         type: "replace",
         destinationIndex: itemSelector.index,
         destinationZone: itemSelector.zone || rootDroppableId,
-        data: { ...selectedItem, props: newProps },
-      };
-
-      // We use `replace` action, then feed into `set` action so we can also process any UI changes
-      const replacedData = replaceAction(data, replaceActionData);
-
-      const setActionData: SetAction = {
-        type: "set",
-        state: {
-          data: { ...data, ...replacedData },
-          ui: { ...ui, ...updatedUi },
-        },
-      };
-
-      // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-      if (config.components[selectedItem.type]?.resolveData) {
-        resolveData(setAction(state, setActionData));
-      } else {
-        dispatch({
-          ...setActionData,
-          recordHistory: true,
-        });
-      }
+        data: await resolveComponentData({ ...selectedItem, props: newProps }),
+        ui: updatedUi,
+      });
     } else {
       if (data.root.props) {
-        // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-        if (config.root?.resolveData) {
-          resolveData({
+        dispatch({
+          type: "set",
+          state: {
             ui: { ...ui, ...updatedUi },
             data: {
               ...data,
-              root: { props: newProps },
+              root: await resolveRootData({ ...data.root, props: newProps }),
             },
-          });
-        } else {
-          dispatch({
-            type: "set",
-            state: {
-              ui: { ...ui, ...updatedUi },
-              data: {
-                ...data,
-                root: { props: newProps },
-              },
-            },
-            recordHistory: true,
-          });
-        }
+          },
+          recordHistory: true,
+        });
       } else {
         // DEPRECATED
         dispatch({
@@ -160,6 +132,8 @@ const FieldsChild = ({ fieldName }: { fieldName: string }) => {
   ]);
 
   if (!field || !id) return null;
+
+  if (field.type === "slot") return null;
 
   return (
     <div key={id} className={getClassName("field")}>

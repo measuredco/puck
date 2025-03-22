@@ -1,13 +1,12 @@
 import {
   ComponentData,
   Config,
-  Content,
   Data,
   DefaultComponentProps,
   DefaultRootFieldProps,
   Metadata,
 } from "../types";
-import { resolveAllComponentData } from "./resolve-component-data";
+import { resolveComponentData } from "./resolve-component-data";
 import { resolveRootData } from "./resolve-root-data";
 import { defaultData } from "./default-data";
 
@@ -24,37 +23,46 @@ export async function resolveAllData<
   const defaultedData = defaultData(data);
 
   const dynamicRoot = await resolveRootData<RootProps>(
-    defaultedData,
+    defaultedData.root,
     config,
-    metadata
+    metadata,
+    onResolveStart
+      ? (item) =>
+          onResolveStart({
+            ...item,
+            props: { ...item.props, id: "puck-root" },
+            type: "puck-root",
+          })
+      : undefined,
+    onResolveEnd
+      ? (item) =>
+          onResolveEnd({
+            ...item,
+            props: { ...item.props, id: "puck-root" },
+            type: "puck-root",
+          })
+      : undefined
   );
 
-  const { zones = {} } = data;
+  // TODO add async support to dataMap this
+  // const updatedData = dataMap(data, async (item) => {
+  //   if (item.props && "id" in item.props) {
+  //     return await resolveComponentData(
+  //       item as ComponentData,
+  //       config,
+  //       metadata,
+  //       onResolveStart,
+  //       onResolveEnd
+  //     );
+  //   }
 
-  const zoneKeys = Object.keys(zones);
-  const resolvedZones: Record<string, Content<Props>> = {};
+  //   return item;
+  // });
 
-  for (let i = 0; i < zoneKeys.length; i++) {
-    const zoneKey = zoneKeys[i];
-    resolvedZones[zoneKey] = (await resolveAllComponentData(
-      zones[zoneKey],
-      config,
-      metadata,
-      onResolveStart,
-      onResolveEnd
-    )) as Content<Props>;
-  }
+  return data;
 
-  return {
-    ...defaultedData,
-    root: dynamicRoot,
-    content: (await resolveAllComponentData(
-      defaultedData.content,
-      config,
-      metadata,
-      onResolveStart,
-      onResolveEnd
-    )) as Content<Props>,
-    zones: resolvedZones,
-  } as Data<Props, RootProps>;
+  // return {
+  //   ...updatedData,
+  //   root: dynamicRoot,
+  // } as Data<Props, RootProps>;
 }
