@@ -83,7 +83,13 @@ function useSlots(
 
       if (field?.type === "slot") {
         newProps[propKey] = (dzProps: DropZoneProps) => {
-          return <DropZone {...dzProps} zone={propKey} />;
+          return (
+            <DropZoneEdit
+              {...dzProps}
+              content={props[propKey]}
+              zone={propKey}
+            />
+          );
         };
       }
     }
@@ -94,6 +100,7 @@ function useSlots(
 
 const DropZoneChild = ({
   zoneCompound,
+  content,
   componentId,
   preview,
   index,
@@ -103,6 +110,7 @@ const DropZoneChild = ({
   inDroppableZone,
 }: {
   zoneCompound: string;
+  content?: Content;
   componentId: string;
   preview?: Preview;
   index: number;
@@ -122,7 +130,7 @@ const DropZoneChild = ({
   const ctx = useContext(dropZoneContext);
   const { depth } = ctx!;
 
-  const contentItem = useAppStore(
+  const zoneContentItem = useAppStore(
     useShallow((s) => {
       let content: Content = s.state.data.content || [];
 
@@ -133,6 +141,14 @@ const DropZoneChild = ({
       return content.find((item) => item.props.id === componentId);
     })
   );
+  const slotContentItem = useMemo(
+    () => content?.find((item) => item.props.id === componentId),
+    [content]
+  );
+
+  const contentItem = slotContentItem ?? zoneContentItem;
+
+  // console.log(zoneCompound, "contentItem", contentItem, content);
 
   const item =
     contentItem ??
@@ -235,6 +251,7 @@ const DropZoneChild = ({
 const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
   function DropZoneEditInternal(
     {
+      content,
       zone,
       allow,
       disallow,
@@ -301,7 +318,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       };
     }, []);
 
-    const contentIds = useAppStore(
+    const zoneContentIds = useAppStore(
       useShallow((s) => {
         let content: Content = s.state.data.content || [];
 
@@ -312,6 +329,13 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
         return content.map(({ props }) => props.id as string);
       })
     );
+
+    const slotContentIds = useMemo(
+      () => content?.map((item) => item.props.id),
+      [content]
+    );
+
+    const contentIds = slotContentIds ?? zoneContentIds;
 
     const ref = useRef<HTMLDivElement | null>(null);
 
@@ -438,6 +462,7 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
             <DropZoneChild
               key={componentId}
               zoneCompound={zoneCompound}
+              content={content}
               componentId={componentId}
               preview={preview}
               dragAxis={dragAxis}
@@ -468,16 +493,19 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
 
     // Register zones if running Render mode inside editor (i.e. previewMode === "interactive")
     useEffect(() => {
-      if (ctx?.registerZone) {
-        ctx?.registerZone(zoneCompound);
-      }
-
-      return () => {
-        if (ctx?.unregisterZone) {
-          ctx?.unregisterZone(zoneCompound);
+      // Only register zones, not slots
+      if (!content) {
+        if (ctx?.registerZone) {
+          ctx?.registerZone(zoneCompound);
         }
-      };
-    }, []);
+
+        return () => {
+          if (ctx?.unregisterZone) {
+            ctx?.unregisterZone(zoneCompound);
+          }
+        };
+      }
+    }, [content]);
 
     if (!data || !config) {
       return null;

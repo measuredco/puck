@@ -1,4 +1,4 @@
-import { useAppStore } from "../store";
+import { AppStore } from "../store";
 import { Data } from "../types";
 import { rootDroppableId } from "./root-droppable-id";
 import { setupZone } from "./setup-zone";
@@ -10,22 +10,11 @@ export type ItemSelector = {
 
 export function getItem<UserData extends Data>(
   selector: ItemSelector,
-  data: UserData,
-  dynamicProps: Record<string, any> = {}
+  appStore: AppStore
 ): UserData["content"][0] | undefined {
-  if (!selector.zone || selector.zone === rootDroppableId) {
-    const item = data.content[selector.index];
+  const zone = appStore.zones.zones?.[selector.zone || rootDroppableId];
 
-    return item?.props
-      ? { ...item, props: dynamicProps[item.props.id] || item.props }
-      : undefined;
-  }
-
-  const item = setupZone(data, selector.zone).zones[selector.zone][
-    selector.index
-  ];
-
-  return item?.props
-    ? { ...item, props: dynamicProps[item.props.id] || item.props }
+  return zone
+    ? appStore.nodes.nodes[zone.contentIds[selector.index]]?.data
     : undefined;
 }

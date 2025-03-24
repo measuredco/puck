@@ -64,7 +64,11 @@ const createOnChange =
       };
 
       // We use `replace` action, then feed into `set` action so we can also process any UI changes
-      const replacedData = replaceAction(data, replaceActionData);
+      const replacedData = replaceAction(
+        data,
+        replaceActionData,
+        appStore.getState()
+      );
 
       const setActionData: SetAction = {
         type: "set",

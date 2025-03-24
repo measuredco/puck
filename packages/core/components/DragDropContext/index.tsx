@@ -464,8 +464,7 @@ const DragDropContextClient = ({
 
               const item = getItem(
                 initialSelector.current,
-                appStore.getState().state.data,
-                {}
+                appStore.getState()
               );
 
               if (item) {
@@ -497,14 +496,13 @@ const DragDropContextClient = ({
 
             if (source && source.type !== "void") {
               const sourceData = source.data as ComponentDndData;
-              const { data } = appStore.getState().state;
 
               const item = getItem(
                 {
                   zone: sourceData.zone,
                   index: sourceData.index,
                 },
-                data
+                appStore.getState()
               );
 
               if (item) {

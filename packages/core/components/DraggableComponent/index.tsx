@@ -104,9 +104,6 @@ export const DraggableComponent = ({
     s.selectedItem?.props.id === id ? s.zoomConfig.zoom : 1
   );
   const overrides = useAppStore((s) => s.overrides);
-  const selectedItem = useAppStore((s) =>
-    s.selectedItem?.props.id === id ? s.selectedItem : null
-  );
   const dispatch = useAppStore((s) => s.dispatch);
   const iframe = useAppStore((s) => s.iframe);
 
