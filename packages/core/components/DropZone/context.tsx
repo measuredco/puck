@@ -88,10 +88,10 @@ export const DropZoneProvider = ({
         return;
       }
 
-      dispatch({
-        type: "registerZone",
-        zone: zoneCompound,
-      });
+      // dispatch({
+      //   type: "registerZone",
+      //   zone: zoneCompound,
+      // });
 
       setActiveZones((latest) => ({ ...latest, [zoneCompound]: true }));
     },
@@ -104,10 +104,10 @@ export const DropZoneProvider = ({
         return;
       }
 
-      dispatch({
-        type: "unregisterZone",
-        zone: zoneCompound,
-      });
+      // dispatch({
+      //   type: "unregisterZone",
+      //   zone: zoneCompound,
+      // });
 
       setActiveZones((latest) => ({
         ...latest,

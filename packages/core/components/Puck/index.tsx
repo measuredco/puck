@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   Context,
   createContext,
@@ -68,6 +69,7 @@ import {
   UsePuckStoreContext,
   useRegisterUsePuckStore,
 } from "../../lib/use-puck";
+import { useRegisterZonesSlice } from "../../store/slices/zones";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -86,6 +88,8 @@ const FieldSideBar = () => {
     </SidebarSection>
   );
 };
+
+const DEBUG = true;
 
 type PuckProps<
   UserConfig extends Config = Config,
@@ -136,6 +140,33 @@ function PropsProvider<UserConfig extends Config = Config>(
 const usePropsContext = () =>
   useContext<PuckProps>(propsContext as Context<PuckProps>);
 
+const debugPlugin: Plugin = {
+  overrides: {
+    fields: ({ children }) => {
+      const state = useAppStore((s) => s.state);
+      const selectedItem = useAppStore((s) => s.selectedItem);
+
+      return (
+        <>
+          {children}
+
+          <SidebarSection title="Debug: Data">
+            {JSON.stringify(state.data)}
+          </SidebarSection>
+          <SidebarSection title="Debug: UI">
+            {JSON.stringify(state.ui)}
+          </SidebarSection>
+          <SidebarSection title="Debug: Other">
+            <ul>
+              <li>Selected Item: {JSON.stringify(selectedItem)}</li>
+            </ul>
+          </SidebarSection>
+        </>
+      );
+    },
+  },
+};
+
 function PuckProvider<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
@@ -146,7 +177,7 @@ function PuckProvider<
     ui: initialUi,
     onChange,
     permissions = {},
-    plugins,
+    plugins: _plugins,
     overrides,
     viewports = defaultViewports,
     iframe: _iframe,
@@ -274,6 +305,8 @@ function PuckProvider<
     _initialHistory?.index || blendedHistories.length - 1;
   const initialAppState = blendedHistories[initialHistoryIndex].state;
 
+  const plugins = useMemo(() => [...(_plugins || []), debugPlugin], [_plugins]);
+
   // Load all plugins into the overrides
   const loadedOverrides = useLoadedOverrides({
     overrides: overrides,
@@ -332,6 +365,7 @@ function PuckProvider<
   }, []);
 
   useRegisterNodesSlice(appStore);
+  useRegisterZonesSlice(appStore);
   useRegisterPermissionsSlice(appStore, permissions);
 
   const uPuckStore = useRegisterUsePuckStore(appStore);

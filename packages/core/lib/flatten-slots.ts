@@ -26,6 +26,8 @@ export const flattenSlots = (
       if (field.type === "slot") {
         const childContent = (props[propKey] || []) as Content;
 
+        if (!childContent.map) continue;
+
         childContent.map(map);
 
         slots = {
@@ -38,7 +40,7 @@ export const flattenSlots = (
     return item;
   };
 
-  dataMap(data, map);
+  dataMap(data, map, config);
 
   return slots;
 };

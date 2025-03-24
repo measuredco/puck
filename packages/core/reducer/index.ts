@@ -6,6 +6,7 @@ import { reduceUi } from "./state";
 import type { Content, OnAction } from "../types";
 import { dataMap } from "../lib/data-map";
 import { flattenSlots } from "../lib/flatten-slots";
+import { AppStore, AppStoreApi } from "../store";
 
 export * from "./actions";
 export * from "./data";
@@ -71,14 +72,16 @@ export function createReducer<
   config,
   record,
   onAction,
+  appStore,
 }: {
   config: UserConfig;
   record?: (appState: AppState<UserData>) => void;
   onAction?: OnAction<UserData>;
+  appStore: AppStore;
 }): StateReducer<UserData> {
   return storeInterceptor(
     (state, action) => {
-      let data = reduceData(state.data, action, config);
+      let data = reduceData(state.data, action, appStore);
       let ui = reduceUi(state.ui, action);
 
       if (action.type === "set") {
@@ -92,65 +95,70 @@ export function createReducer<
       }
 
       // Synchonize slots and zones
-      const oldSlots = flattenSlots(config, state.data);
-      const newSlots = flattenSlots(config, data);
+      // const oldSlots = flattenSlots(config, state.data);
+      // const newSlots = flattenSlots(config, data);
 
-      const slotZones: Record<string, Content> = {};
+      // const slotZones: Record<string, Content> = {};
 
-      Object.keys(newSlots).forEach((slotKey) => {
-        const newSlot = newSlots[slotKey];
-        const oldSlot = oldSlots[slotKey];
+      // Object.keys(newSlots).forEach((slotKey) => {
+      //   const newSlot = newSlots[slotKey];
+      //   const oldSlot = oldSlots[slotKey];
 
-        // When duplicating, we don't merge slots to enable new IDs to propagate
-        if (newSlot !== oldSlot && action.type !== "duplicate") {
-          // Write change to zones
-          slotZones[slotKey] = newSlot;
-        } else {
-          // Write change to slot
-        }
-      });
+      //   // When duplicating, we don't merge slots to enable new IDs to propagate
+      //   if (newSlot !== oldSlot && action.type !== "duplicate") {
+      //     // Write change to zones
+      //     slotZones[slotKey] = newSlot;
+      //   } else {
+      //     // Write change to slot
+      //   }
+      // });
 
-      const zones = data.zones || {};
+      // const zones = data.zones || {};
 
-      const dataWithZones = dataMap(
-        {
-          ...data,
-          zones: { ...data.zones, ...slotZones },
-        },
-        (item) => {
-          const componentType = "type" in item ? item.type : "root";
+      // const dataWithZones = dataMap(
+      //   {
+      //     ...data,
+      //     zones: { ...data.zones, ...slotZones },
+      //   },
+      //   (item) => {
+      //     const componentType = "type" in item ? item.type : "root";
 
-          const configForComponent =
-            componentType === "root"
-              ? config.root
-              : config.components[componentType];
+      //     const configForComponent =
+      //       componentType === "root"
+      //         ? config.root
+      //         : config.components[componentType];
 
-          if (!configForComponent?.fields) return item;
+      //     if (!configForComponent?.fields) return item;
 
-          const propKeys = Object.keys(configForComponent.fields || {});
+      //     const propKeys = Object.keys(configForComponent.fields || {});
 
-          return propKeys.reduce((acc, propKey) => {
-            const field = configForComponent.fields![propKey];
+      //     return propKeys.reduce((acc, propKey) => {
+      //       const field = configForComponent.fields![propKey];
 
-            if (field.type === "slot") {
-              const id =
-                item.props && "id" in item.props ? item.props.id : "root";
+      //       if (field.type === "slot") {
+      //         const id =
+      //           item.props && "id" in item.props ? item.props.id : "root";
 
-              return {
-                ...acc,
-                props: {
-                  ...acc.props,
-                  [propKey]: zones[`${id}:${propKey}`],
-                },
-              };
-            }
+      //         return {
+      //           ...acc,
+      //           props: {
+      //             ...acc.props,
+      //             [propKey]: zones[`${id}:${propKey}`],
+      //           },
+      //         };
+      //       }
 
-            return acc;
-          }, item);
-        }
-      ) as UserData;
+      //       return acc;
+      //     }, item);
+      //   },
+      //   config
+      // ) as UserData;
 
-      return { data: dataWithZones, ui };
+      appStore.zones.regenerate(data);
+
+      console.log(action, state, { data, ui });
+
+      return { data, ui };
     },
     record,
     onAction

@@ -1,10 +1,11 @@
 import { StoreApi } from "zustand";
-import { ComponentData, Content, Data } from "../../types";
+import { ComponentData, Data } from "../../types";
 import deepEqual from "fast-deep-equal";
 import { useEffect } from "react";
 import { AppStore, useAppStoreApi } from "../";
 import { rootAreaId, rootDroppableId } from "../../lib/root-droppable-id";
 import { forAllData } from "../../lib/for-all-data";
+import { ZoneType } from "./zones";
 
 const partialDeepEqual = (
   newItem: Record<string, any>,
@@ -31,6 +32,7 @@ type PuckNode = {
   path: string[];
   index: number;
   element: HTMLElement | null;
+  zoneType: ZoneType;
 };
 
 export const generateNodesSlice = (
@@ -45,12 +47,26 @@ export const generateNodesSlice = (
       zone: string;
       path: string[];
       index: number;
+      zoneType: ZoneType;
     }
   > = {};
 
-  forAllData(data, (data, parentId, zone, index) => {
-    nodeIndex[data.props.id] = { data, parentId, zone, path: [], index };
-  });
+  const config = appStore.getState().config;
+
+  forAllData(
+    data,
+    (data, parentId, zone, index, zoneType) => {
+      nodeIndex[data.props.id] = {
+        data,
+        parentId,
+        zone,
+        path: [],
+        index,
+        zoneType,
+      };
+    },
+    config
+  );
 
   const nodes = appStore.getState().nodes;
 
@@ -117,6 +133,7 @@ export const createNodesSlice = (
       path: [],
       element: null,
       index: -1,
+      zoneType: "root",
     };
 
     const existingNode: PuckNode | undefined = s.nodes[id];

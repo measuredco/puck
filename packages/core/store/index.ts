@@ -14,7 +14,7 @@ import { createReducer, PuckAction } from "../reducer";
 import { getItem } from "../lib/get-item";
 import { defaultViewports } from "../components/ViewportControls/default-viewports";
 import { Viewports } from "../types";
-import { create, useStore } from "zustand";
+import { create, StoreApi, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { resolveData } from "../lib/resolve-data";
 import { createContext, useContext } from "react";
@@ -25,7 +25,7 @@ import {
   type PermissionsSlice,
 } from "./slices/permissions";
 import { createFieldsSlice, type FieldsSlice } from "./slices/fields";
-import { createSlotsSlice, SlotsSlice } from "./slices/slots";
+import { createZonesSlice, ZonesSlice } from "./slices/zones";
 
 export const defaultAppState: AppState = {
   data: { content: [], root: {}, zones: {} },
@@ -88,8 +88,11 @@ export type AppStore<
   fields: FieldsSlice;
   history: HistorySlice;
   nodes: NodesSlice;
+  zones: ZonesSlice;
   permissions: PermissionsSlice;
 };
+
+export type AppStoreApi = StoreApi<AppStore>;
 
 const defaultPageFields: Record<string, Field> = {
   title: { type: "text" },
@@ -116,6 +119,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
       fields: createFieldsSlice(set, get),
       history: createHistorySlice(set, get),
       nodes: createNodesSlice(set, get),
+      zones: createZonesSlice(set, get),
       permissions: createPermissionsSlice(set, get),
       getComponentConfig: (type?: string) => {
         const { config, selectedItem } = get();
@@ -131,12 +135,16 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
         set((s) => {
           const { record } = get().history;
 
-          const dispatch = createReducer({ config: s.config, record });
+          const dispatch = createReducer({
+            config: s.config,
+            record,
+            appStore: s,
+          });
 
           const state = dispatch(s.state, action);
 
           const selectedItem = state.ui.itemSelector
-            ? getItem(state.ui.itemSelector, state.data)
+            ? getItem(state.ui.itemSelector, get())
             : null;
 
           get().onAction?.(action, state, get().state);
@@ -177,6 +185,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           const dispatch = createReducer({
             config: s.config,
             record: () => {},
+            appStore: s,
           });
 
           const state = dispatch(s.state, {
@@ -186,7 +195,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           });
 
           const selectedItem = state.ui.itemSelector
-            ? getItem(state.ui.itemSelector, state.data)
+            ? getItem(state.ui.itemSelector, get())
             : null;
 
           return { ...s, state, selectedItem };
