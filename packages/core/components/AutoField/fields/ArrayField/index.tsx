@@ -160,9 +160,6 @@ export const ArrayField = ({
             hasItems: Array.isArray(value) && value.length > 0,
             addDisabled,
           })}
-          onClick={(e) => {
-            e.preventDefault();
-          }}
         >
           <div className={getClassName("inner")} data-dnd-container>
             {localState.arrayState.items.map((item, i) => {
