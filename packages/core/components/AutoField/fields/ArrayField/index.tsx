@@ -4,7 +4,7 @@ import { Copy, List, Plus, Trash } from "lucide-react";
 import { AutoFieldPrivate, FieldPropsInternal } from "../..";
 import { IconButton } from "../../../IconButton";
 import { reorder, replace } from "../../../../lib";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { DragIcon } from "../../../DragIcon";
 import { ArrayState, ItemWithId } from "../../../../types";
 import { useAppStore, useAppStoreApi } from "../../../../store";
@@ -105,6 +105,7 @@ export const ArrayField = ({
   }, []);
 
   const [isDragging, setIsDragging] = useState(false);
+  const dndContainerRef = useRef<HTMLDivElement>(null);
 
   const canEdit = useAppStore(
     (s) => s.permissions.getPermissions({ item: s.selectedItem }).edit
@@ -129,6 +130,7 @@ export const ArrayField = ({
       readOnly={readOnly}
     >
       <SortableProvider
+        container={dndContainerRef}
         onDragStart={() => setIsDragging(true)}
         onDragEnd={() => setIsDragging(false)}
         onMove={(move) => {
@@ -164,7 +166,11 @@ export const ArrayField = ({
             e.preventDefault();
           }}
         >
-          <div className={getClassName("inner")} data-dnd-container>
+          <div
+            ref={dndContainerRef}
+            className={getClassName("inner")}
+            data-dnd-container
+          >
             {localState.arrayState.items.map((item, i) => {
               const { _arrayId = `${id}-${i}`, _originalIndex = i } = item;
               const data: any = Array.from(localState.value || [])[i] || {};

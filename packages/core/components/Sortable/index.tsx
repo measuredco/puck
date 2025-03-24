@@ -9,11 +9,13 @@ import {
 import { RestrictToElement } from "@dnd-kit/dom/modifiers";
 
 export const SortableProvider = ({
+  container,
   children,
   onDragStart,
   onDragEnd,
   onMove,
 }: PropsWithChildren<{
+  container: React.RefObject<Element | null>;
   onDragStart: () => void;
   onDragEnd: () => void;
   onMove: (moveData: { source: number; target: number }) => void;
@@ -28,7 +30,7 @@ export const SortableProvider = ({
       modifiers={[
         RestrictToElement.configure({
           element() {
-            return document.querySelector("[data-dnd-container]");
+            return container.current;
           },
         }),
       ]}
