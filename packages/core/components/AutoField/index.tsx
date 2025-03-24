@@ -265,7 +265,7 @@ export function AutoFieldPrivate<
     setLocalValue(val);
 
     onChange(val, ui);
-  }, []);
+  }, [onChange]);
 
   useEffect(() => {
     // Prevent global state from setting local state if this field is focused
