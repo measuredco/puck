@@ -4,7 +4,11 @@ import deepEqual from "fast-deep-equal";
 import { useEffect } from "react";
 import { AppStore, useAppStoreApi } from "../";
 import { rootDroppableId } from "../../lib/root-droppable-id";
-import { flattenSlots, forEachSlot } from "../../lib/flatten-slots";
+import {
+  flattenAllSlots,
+  flattenSlots,
+  forEachSlot,
+} from "../../lib/flatten-slots";
 import { dataMap } from "../../lib/data-map";
 
 const partialDeepEqual = (
@@ -50,19 +54,7 @@ export const generateZonesSlice = (data: Data, appStore: AppStore) => {
     });
   });
 
-  const allSlots: Record<string, Content> = {};
-
-  dataMap(
-    data,
-    (item) => {
-      forEachSlot(item, config, (parentId, propName, content) => {
-        allSlots[`${parentId}:${propName}`] = content;
-      });
-
-      return item;
-    },
-    config
-  );
+  const allSlots = flattenAllSlots(data);
 
   Object.entries(allSlots).forEach(([zoneCompound, content]) => {
     zones.registerZone(zoneCompound, {
@@ -155,5 +147,10 @@ export const useRegisterZonesSlice = (
 ) => {
   useEffect(() => {
     generateZonesSlice(appStore.getState().state.data, appStore.getState());
+
+    return appStore.subscribe(
+      (s) => s.state.data,
+      (data) => generateZonesSlice(data, appStore.getState())
+    );
   }, []);
 };

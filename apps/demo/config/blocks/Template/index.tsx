@@ -1,8 +1,7 @@
-import React, { PropsWithChildren, ReactElement, ReactNode } from "react";
+import React from "react";
 import { ComponentConfig, ComponentData, Content } from "@/core/types";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
-import { DropZone } from "@/core/components/DropZone";
 import { Section } from "../../components/Section";
 import { withLayout } from "../../components/Layout";
 import { generateId } from "@/core/lib/generate-id";
@@ -53,98 +52,96 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
     template: "template_1",
     children: [],
   },
-  // resolveData: async (data, { changed }) => {
-  //   if (!changed.template) return data;
+  resolveData: async (data, { changed }) => {
+    if (!changed.template) return data;
 
-  //   const templates: Record<string, Content> = {
-  //     template_1: [
-  //       await createComponent("Grid", {
-  //         numColumns: 2,
-  //         children: [
-  //           await createComponent("Card", { title: "A card", mode: "card" }),
-  //           await createComponent("Flex", {
-  //             direction: "column",
-  //             gap: 0,
-  //             children: [
-  //               await createComponent("Space", {
-  //                 size: "32px",
-  //               }),
-  //               await createComponent("Heading", {
-  //                 text: "Template example",
-  //                 size: "xl",
-  //               }),
-  //               await createComponent("Text", {
-  //                 text: "Dynamically create components using the new slots API.",
-  //               }),
-  //               await createComponent("Space", {
-  //                 size: "16px",
-  //               }),
-  //               await createComponent("Button", {
-  //                 variant: "secondary",
-  //                 label: "Learn more",
-  //               }),
-  //               await createComponent("Space", {
-  //                 size: "32px",
-  //               }),
-  //             ],
-  //           }),
-  //         ],
-  //       }),
-  //     ],
-  //     template_2: [
-  //       await createComponent("Grid", {
-  //         numColumns: 3,
-  //         children: [
-  //           await createComponent("Space", {
-  //             size: "32px",
-  //           }),
-  //           await createComponent("Flex", {
-  //             direction: "column",
-  //             gap: 0,
-  //             justifyContent: "center",
-  //             children: [
-  //               await createComponent("Space", {
-  //                 size: "32px",
-  //               }),
-  //               await createComponent("Heading", {
-  //                 text: "Template example",
-  //                 size: "xl",
-  //               }),
-  //               await createComponent("Text", {
-  //                 text: "Dynamically create components using the new slots API.",
-  //               }),
-  //               await createComponent("Space", {
-  //                 size: "16px",
-  //               }),
-  //               await createComponent("Button", {
-  //                 variant: "secondary",
-  //                 label: "Learn more",
-  //               }),
-  //               await createComponent("Space", {
-  //                 size: "32px",
-  //               }),
-  //             ],
-  //           }),
-  //           await createComponent("Space", {
-  //             size: "32px",
-  //           }),
-  //         ],
-  //       }),
-  //     ],
-  //   };
+    const templates: Record<string, Content> = {
+      template_1: [
+        await createComponent("Grid", {
+          numColumns: 2,
+          children: [
+            await createComponent("Card", { title: "A card", mode: "card" }),
+            await createComponent("Flex", {
+              direction: "column",
+              gap: 0,
+              children: [
+                await createComponent("Space", {
+                  size: "32px",
+                }),
+                await createComponent("Heading", {
+                  text: "Template example",
+                  size: "xl",
+                }),
+                await createComponent("Text", {
+                  text: "Dynamically create components using the new slots API.",
+                }),
+                await createComponent("Space", {
+                  size: "16px",
+                }),
+                await createComponent("Button", {
+                  variant: "secondary",
+                  label: "Learn more",
+                }),
+                await createComponent("Space", {
+                  size: "32px",
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+      template_2: [
+        await createComponent("Grid", {
+          numColumns: 3,
+          children: [
+            await createComponent("Space", {
+              size: "32px",
+            }),
+            await createComponent("Flex", {
+              direction: "column",
+              gap: 0,
+              justifyContent: "center",
+              children: [
+                await createComponent("Space", {
+                  size: "32px",
+                }),
+                await createComponent("Heading", {
+                  text: "Template example",
+                  size: "xl",
+                }),
+                await createComponent("Text", {
+                  text: "Dynamically create components using the new slots API.",
+                }),
+                await createComponent("Space", {
+                  size: "16px",
+                }),
+                await createComponent("Button", {
+                  variant: "secondary",
+                  label: "Learn more",
+                }),
+                await createComponent("Space", {
+                  size: "32px",
+                }),
+              ],
+            }),
+            await createComponent("Space", {
+              size: "32px",
+            }),
+          ],
+        }),
+      ],
+    };
 
-  //   const children = templates[data.props.template];
+    const children = templates[data.props.template];
 
-  //   console.log("children", children);
-
-  //   return {
-  //     ...data,
-  //     props: {
-  //       ...data.props,
-  //       children,
-  //     },
-  //   };
-  // },
+    return {
+      ...data,
+      props: {
+        ...data.props,
+        children,
+      },
+    };
+  },
   // TODO the `children` field is now broken. Fix it. Using DropZone instead.
   render: ({ children, children: Children }) => {
     return (
