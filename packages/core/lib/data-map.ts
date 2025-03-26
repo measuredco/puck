@@ -1,5 +1,6 @@
 import { ZoneType } from "../store/slices/zones";
 import { ComponentData, Config, Content, Data, RootData } from "../types";
+import { forEachSlot } from "./flatten-slots";
 
 export function dataMap<UserData extends Data>(
   data: Partial<UserData>,
@@ -8,7 +9,8 @@ export function dataMap<UserData extends Data>(
     index: number,
     zoneType: ZoneType
   ) => T,
-  config: Config
+  config: Config,
+  deep: boolean = true
 ): UserData {
   const content = data.content || [];
   const zones: UserData["zones"] = data.zones || {};
@@ -20,31 +22,13 @@ export function dataMap<UserData extends Data>(
   ): T {
     if (!item) return item;
 
-    const componentType = "type" in item ? item.type : "root";
     const props: Record<string, any> = { ...item.props };
 
-    const configForComponent =
-      componentType === "root" ? config.root : config.components[componentType];
-
-    if (!configForComponent?.fields) return map(item, index, zoneType);
-
-    const propKeys = Object.keys(configForComponent.fields || {});
-
-    for (let i = 0; i < propKeys.length; i++) {
-      const propKey = propKeys[i];
-
-      const field = configForComponent.fields[propKey];
-
-      if (field.type === "slot") {
-        const childContent = (props[propKey] || []) as Content;
-
-        if (!childContent.map) continue;
-
-        props[propKey] = childContent.map((item, index) =>
-          mapSlots(item, index, "slot")
-        );
-      }
-    }
+    forEachSlot(item, config, (parentId, propName, content) => {
+      props[propName] = content.map((item, index) =>
+        mapSlots(item, index, "slot")
+      );
+    });
 
     return map({ ...item, props }, index, zoneType);
   }

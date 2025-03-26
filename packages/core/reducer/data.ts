@@ -1,4 +1,4 @@
-import { ComponentData, Config, Content, Data, RootData } from "../types";
+import { Config, Content, Data } from "../types";
 import { reorder } from "../lib/reorder";
 import { rootDroppableId } from "../lib/root-droppable-id";
 import { insert } from "../lib/insert";
@@ -19,7 +19,6 @@ import {
 } from "./actions";
 import {} from "./actions";
 import { AppStore } from "../store";
-import { dataMap } from "../lib/data-map";
 
 // Restore unregistered zones when re-registering in same session
 export const zoneCache: Record<string, Content> = {};
@@ -30,29 +29,28 @@ export const addToZoneCache = (key: string, data: Content) => {
 
 export const replaceAction = <UserData extends Data>(
   data: UserData,
-  action: ReplaceAction,
-  appStore: AppStore
+  action: ReplaceAction
 ) => {
-  const id =
-    appStore.zones.zones[action.destinationZone]?.contentIds[
-      action.destinationIndex
-    ];
+  if (action.destinationZone === rootDroppableId) {
+    return {
+      ...data,
+      content: replace(data.content, action.destinationIndex, action.data),
+    };
+  }
 
-  return dataMap(
-    data,
-    (item) => {
-      if (!item.props) return item;
+  const newData = setupZone(data, action.destinationZone);
 
-      if ("id" in item.props) {
-        if (id === item.props.id) {
-          return action.data;
-        }
-      }
-
-      return item;
+  return {
+    ...newData,
+    zones: {
+      ...newData.zones,
+      [action.destinationZone]: replace(
+        newData.zones[action.destinationZone],
+        action.destinationIndex,
+        action.data
+      ),
     },
-    appStore.config
-  );
+  };
 };
 
 export function insertAction<UserData extends Data>(
@@ -77,72 +75,27 @@ export function insertAction<UserData extends Data>(
         emptyComponentData
       ),
     };
-    // DEPRECATED
-  } else if (data.zones?.[action.destinationZone]) {
-    return {
-      ...data,
-      zones: {
-        ...data.zones,
-        [action.destinationZone]: insert(
-          data.zones[action.destinationZone],
-          action.destinationIndex,
-          emptyComponentData
-        ),
-      },
-    };
   }
 
-  const [parentId, zoneId] = action.destinationZone.split(":");
+  const newData = setupZone(data, action.destinationZone);
 
-  return dataMap(
-    data,
-    (item) => {
-      if (item.props && "id" in item.props && parentId === item.props.id) {
-        return {
-          ...item,
-          props: {
-            ...item.props,
-            [zoneId]: insert(
-              item.props[zoneId],
-              action.destinationIndex,
-              emptyComponentData
-            ),
-          },
-        };
-      }
-
-      return item;
+  return {
+    ...data,
+    zones: {
+      ...newData.zones,
+      [action.destinationZone]: insert(
+        newData.zones[action.destinationZone],
+        action.destinationIndex,
+        emptyComponentData
+      ),
     },
-    config
-  );
+  };
 }
-
-const mapItem = (
-  data: Data,
-  config: Config,
-  id: string,
-  map: <T extends ComponentData | RootData>(item: T) => T
-) => {
-  return dataMap(
-    data,
-    (item) => {
-      if (item.props && "id" in item.props && id === item.props.id) {
-        return map(item);
-      }
-
-      return item;
-    },
-    config
-  );
-};
 
 const reorderAction = <UserData extends Data>(
   data: UserData,
-  action: ReorderAction,
-  config: Config
+  action: ReorderAction
 ) => {
-  console.log("reordering", action, data);
-
   if (action.destinationZone === rootDroppableId) {
     return {
       ...data,
@@ -152,61 +105,21 @@ const reorderAction = <UserData extends Data>(
         action.destinationIndex
       ),
     };
-  } else if (data.zones?.[action.destinationZone]) {
-    return {
-      ...data,
-      zones: {
-        ...data.zones,
-        [action.destinationZone]: reorder(
-          data.zones[action.destinationZone],
-          action.sourceIndex,
-          action.destinationIndex
-        ),
-      },
-    };
   }
 
-  console.log("here");
+  const newData = setupZone(data, action.destinationZone);
 
-  const [parentId, zoneId] = action.destinationZone.split(":");
-
-  // return mapItem(data, config, parentId, (item) => ({
-  //   ...item,
-  //   props: {
-  //     ...item.props,
-  //     [zoneId]: reorder(
-  //       item.props[zoneId],
-  //       action.sourceIndex,
-  //       action.destinationIndex
-  //     ),
-  //   },
-  // }));
-
-  const mapped = dataMap<UserData>(
-    data,
-    (item) => {
-      if (item.props && "id" in item.props && parentId === item.props.id) {
-        return {
-          ...item,
-          props: {
-            ...item.props,
-            [zoneId]: reorder(
-              item.props[zoneId],
-              action.sourceIndex,
-              action.destinationIndex
-            ),
-          },
-        };
-      }
-
-      return item;
+  return {
+    ...data,
+    zones: {
+      ...newData.zones,
+      [action.destinationZone]: reorder(
+        newData.zones[action.destinationZone],
+        action.sourceIndex,
+        action.destinationIndex
+      ),
     },
-    config
-  );
-
-  console.log("mapped", mapped);
-
-  return mapped;
+  };
 };
 
 export function reduceData<UserData extends Data>(
@@ -215,7 +128,7 @@ export function reduceData<UserData extends Data>(
   appStore: AppStore
 ): UserData {
   if (action.type === "insert") {
-    return insertAction(data, action, appStore.config) as UserData;
+    return insertAction(data, action, appStore.config);
   }
 
   if (action.type === "duplicate") {
@@ -259,7 +172,7 @@ export function reduceData<UserData extends Data>(
   }
 
   if (action.type === "reorder") {
-    return reorderAction(data, action, appStore.config);
+    return reorderAction(data, action);
   }
 
   if (action.type === "move") {
@@ -270,16 +183,6 @@ export function reduceData<UserData extends Data>(
       return data;
     }
 
-    if (action.sourceZone === action.destinationZone) {
-      return reorderAction(
-        data,
-        { ...action, type: "reorder" },
-        appStore.config
-      );
-    }
-
-    return data;
-
     const newData = setupZone(
       setupZone(data, action.sourceZone),
       action.destinationZone
@@ -289,6 +192,10 @@ export function reduceData<UserData extends Data>(
       { zone: action.sourceZone, index: action.sourceIndex },
       appStore
     );
+
+    if (action.sourceZone === action.destinationZone) {
+      return reorderAction(data, { ...action, type: "reorder" });
+    }
 
     if (action.sourceZone === rootDroppableId) {
       return {
@@ -338,7 +245,7 @@ export function reduceData<UserData extends Data>(
   }
 
   if (action.type === "replace") {
-    return replaceAction(data, action, appStore);
+    return replaceAction(data, action);
   }
 
   if (action.type === "remove") {

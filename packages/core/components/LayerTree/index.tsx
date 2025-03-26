@@ -38,6 +38,7 @@ export const LayerTree = ({
 
   // TODO change this for performance
   const nodes = useAppStore((s) => s.nodes.nodes);
+  const selectedItem = useAppStore((s) => s.selectedItem);
 
   return (
     <>
@@ -64,9 +65,6 @@ export const LayerTree = ({
 
           const { setHoveringComponent = () => {}, hoveringComponent } =
             ctx || {};
-
-          const selectedItem =
-            itemSelector && data ? getItem(itemSelector, data) : null;
 
           const isHovering = hoveringComponent === item.props.id;
 
