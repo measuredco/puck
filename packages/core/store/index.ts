@@ -203,7 +203,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
       resolveDataRuns: 0,
       resolveData: (newAppState) =>
         set((s) => {
-          resolveData(newAppState, get());
+          resolveData(newAppState, get);
 
           return { ...s, resolveDataRuns: s.resolveDataRuns + 1 };
         }),

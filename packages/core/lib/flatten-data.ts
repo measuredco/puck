@@ -1,4 +1,5 @@
 import { Config, UserGenerics } from "../types";
+import { flattenAllSlots } from "./flatten-slots";
 
 export const flattenData = <
   UserConfig extends Config = Config,
@@ -6,8 +7,14 @@ export const flattenData = <
 >(
   data: G["UserData"]
 ) => {
-  return Object.keys(data.zones || {}).reduce<G["UserComponentData"][]>(
-    (acc, zone) => [...acc, ...data.zones![zone]],
+  const slots = flattenAllSlots(data);
+  const slotsAndZones = {
+    ...(data.zones || {}),
+    ...slots,
+  } as Record<string, G["UserData"]["content"]>;
+
+  return Object.keys(slotsAndZones).reduce<G["UserComponentData"][]>(
+    (acc, zone) => [...acc, ...slotsAndZones[zone]],
     data.content
   );
 };

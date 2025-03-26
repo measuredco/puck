@@ -85,15 +85,7 @@ export function createReducer<
 }): StateReducer<UserData> {
   return storeInterceptor(
     (state, action) => {
-      // Flatten slots into zones
-      const zonesAndSlots = flattenAllSlots(appStore.config, state.data);
-
-      const existingDataWithSlots: UserData = {
-        ...state.data,
-        zones: { ...state.data.zones, ...zonesAndSlots },
-      };
-
-      let data = reduceData(existingDataWithSlots, action, appStore);
+      let data = reduceData(state.data, action, appStore);
       let ui = reduceUi(state.ui, action);
 
       if (action.type === "set") {
@@ -105,73 +97,6 @@ export function createReducer<
         data = setValue.data;
         ui = setValue.ui;
       }
-
-      // Synchonize slots and zones
-      // const oldSlots = flattenSlots(config, state.data);
-      // const newSlots = flattenSlots(config, data);
-
-      // const slotZones: Record<string, Content> = {};
-
-      // Object.keys(newSlots).forEach((slotKey) => {
-      //   const newSlot = newSlots[slotKey];
-      //   const oldSlot = oldSlots[slotKey];
-
-      //   // When duplicating, we don't merge slots to enable new IDs to propagate
-      //   if (newSlot !== oldSlot && action.type !== "duplicate") {
-      //     // Write change to zones
-      //     slotZones[slotKey] = newSlot;
-      //   } else {
-      //     // Write change to slot
-      //   }
-      // });
-
-      // const zones = data.zones || {};
-
-      // const dataWithZones = dataMap(
-      //   {
-      //     ...data,
-      //     zones: { ...data.zones, ...slotZones },
-      //   },
-      //   (item) => {
-      //     const componentType = "type" in item ? item.type : "root";
-
-      //     const configForComponent =
-      //       componentType === "root"
-      //         ? config.root
-      //         : config.components[componentType];
-
-      //     if (!configForComponent?.fields) return item;
-
-      //     const propKeys = Object.keys(configForComponent.fields || {});
-
-      //     return propKeys.reduce((acc, propKey) => {
-      //       const field = configForComponent.fields![propKey];
-
-      //       if (field.type === "slot") {
-      //         const id =
-      //           item.props && "id" in item.props ? item.props.id : "root";
-
-      //         return {
-      //           ...acc,
-      //           props: {
-      //             ...acc.props,
-      //             [propKey]: zones[`${id}:${propKey}`],
-      //           },
-      //         };
-      //       }
-
-      //       return acc;
-      //     }, item);
-      //   },
-      //   config
-      // ) as UserData;
-
-      // Merge zone slots back into slots
-      data = mergeSlots(config, data) as UserData;
-
-      appStore.zones.regenerate(data);
-
-      console.log(action, state.data, existingDataWithSlots, data);
 
       return { data, ui };
     },

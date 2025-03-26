@@ -34,6 +34,7 @@ export async function resolveAllData<
   const zoneKeys = Object.keys(zones);
   const resolvedZones: Record<string, Content<Props>> = {};
 
+  // TODO fix this
   for (let i = 0; i < zoneKeys.length; i++) {
     const zoneKey = zoneKeys[i];
     resolvedZones[zoneKey] = (await resolveAllComponentData(

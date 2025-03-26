@@ -1,7 +1,6 @@
 import { AppStore } from "../store";
 import { Data } from "../types";
 import { rootDroppableId } from "./root-droppable-id";
-import { setupZone } from "./setup-zone";
 
 export type ItemSelector = {
   index: number;

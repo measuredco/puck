@@ -1,40 +1,48 @@
-import { ComponentData, Config, Content, Data, RootData } from "../types";
+import { ComponentData, Content, Data, RootData } from "../types";
 import { dataMap } from "./data-map";
+
+const isSlot = (prop: any) =>
+  Array.isArray(prop) &&
+  typeof prop[0]?.type === "string" &&
+  typeof prop[0]?.props === "object";
 
 export const forEachSlot = <T extends ComponentData | RootData>(
   item: T,
-  config: Config,
   cb: (parentId: string, slotId: string, content: Content) => void
 ) => {
-  const componentType = "type" in item ? item.type : "root";
   const props: Record<string, any> = item.props || {};
 
-  const configForComponent =
-    componentType === "root" ? config.root : config.components[componentType];
-
-  if (!configForComponent?.fields) return item;
-
-  const propKeys = Object.keys(configForComponent.fields || {});
+  const propKeys = Object.keys(props);
 
   for (let i = 0; i < propKeys.length; i++) {
     const propKey = propKeys[i];
 
-    const field = configForComponent.fields[propKey];
-
-    if (field.type === "slot") {
+    if (isSlot(props[propKey])) {
       cb(props.id, propKey, props[propKey]);
     }
   }
 };
 
+export const reduceSlots = <T extends ComponentData | RootData>(
+  item: T,
+  map: (parentId: string, slotId: string, content: Content) => ComponentData
+) => {
+  const props: Record<string, any> = item.props || {};
+
+  forEachSlot(item, (parentId, slotId, content) => {
+    props[slotId] = map(parentId, slotId, content);
+  });
+
+  return { ...item, props };
+};
+
 export const flattenSlots = <UserData extends Data = Data>(
-  config: Config,
   data: Partial<UserData>
 ): Record<string, Content> => {
   let slots: Record<string, Content> = {};
 
   const map = <T extends ComponentData | RootData>(item: T) => {
-    forEachSlot(item, config, (parentId, propName, content) => {
+    forEachSlot(item, (parentId, propName, content) => {
       slots = {
         ...slots,
         [`${parentId}:${propName}`]: content,
@@ -52,58 +60,46 @@ export const flattenSlots = <UserData extends Data = Data>(
 };
 
 export const flattenAllSlots = <UserData extends Data = Data>(
-  config: Config,
   data: Partial<UserData>
 ): Record<string, Content> => {
   const allSlots: Record<string, Content> = {};
 
-  dataMap(
-    data,
-    (item) => {
-      forEachSlot(item, config, (parentId, propName, content) => {
-        allSlots[`${parentId}:${propName}`] = content;
-      });
+  dataMap(data, (item) => {
+    forEachSlot(item, (parentId, propName, content) => {
+      allSlots[`${parentId}:${propName}`] = content;
+    });
 
-      return item;
-    },
-    config
-  );
+    return item;
+  });
 
   return allSlots;
 };
 
 export const mergeSlots = <UserData extends Data = Data>(
-  config: Config,
   data: Partial<UserData>
 ): UserData => {
   const zones: Record<string, Content> = { ...data.zones };
 
-  const mapped = dataMap(
-    data,
-    (item) => {
-      if (!item?.props) return item;
+  const mapped = dataMap(data, (item) => {
+    if (!item?.props) return item;
 
-      const id = "id" in item.props ? item.props.id : "root";
+    const newProps: Record<string, any> = {};
 
-      const newProps: Record<string, any> = {};
+    forEachSlot(item, (parentId, propName, content) => {
+      const zoneCompound = `${parentId}:${propName}`;
+      newProps[propName] = zones[zoneCompound] ?? content;
 
-      forEachSlot(item, config, (parentId, propName, content) => {
-        const zoneCompound = `${parentId}:${propName}`;
-        newProps[propName] = zones[zoneCompound] ?? content;
+      delete zones[zoneCompound];
+    });
 
-        delete zones[zoneCompound];
-      });
-
-      return {
-        ...item,
-        props: {
-          ...item.props,
-          ...newProps,
-        },
-      };
-    },
-    config
-  );
+    return {
+      ...item,
+      props: {
+        ...item.props,
+        ...newProps,
+      },
+    };
+  });
 
   return {
     ...mapped,

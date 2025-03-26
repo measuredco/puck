@@ -148,8 +148,6 @@ const DropZoneChild = ({
 
   const contentItem = slotContentItem ?? zoneContentItem;
 
-  // console.log(zoneCompound, "contentItem", contentItem, content);
-
   const item =
     contentItem ??
     (preview?.componentType
