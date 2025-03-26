@@ -5,7 +5,11 @@ import { PuckAction, SetAction } from "./actions";
 import { reduceUi } from "./state";
 import type { Content, OnAction } from "../types";
 import { dataMap } from "../lib/data-map";
-import { flattenSlots } from "../lib/flatten-slots";
+import {
+  flattenAllSlots,
+  flattenSlots,
+  mergeSlots,
+} from "../lib/flatten-slots";
 import { AppStore, AppStoreApi } from "../store";
 
 export * from "./actions";
@@ -81,7 +85,15 @@ export function createReducer<
 }): StateReducer<UserData> {
   return storeInterceptor(
     (state, action) => {
-      let data = reduceData(state.data, action, appStore);
+      // Flatten slots into zones
+      const zonesAndSlots = flattenAllSlots(appStore.config, state.data);
+
+      const existingDataWithSlots: UserData = {
+        ...state.data,
+        zones: { ...state.data.zones, ...zonesAndSlots },
+      };
+
+      let data = reduceData(existingDataWithSlots, action, appStore);
       let ui = reduceUi(state.ui, action);
 
       if (action.type === "set") {
@@ -154,9 +166,12 @@ export function createReducer<
       //   config
       // ) as UserData;
 
+      // Merge zone slots back into slots
+      data = mergeSlots(config, data) as UserData;
+
       appStore.zones.regenerate(data);
 
-      console.log(action, state, { data, ui });
+      console.log(action, state.data, existingDataWithSlots, data);
 
       return { data, ui };
     },
