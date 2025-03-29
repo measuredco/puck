@@ -70,6 +70,7 @@ import {
   useRegisterUsePuckStore,
 } from "../../lib/use-puck";
 import { useRegisterZonesSlice } from "../../store/slices/zones";
+import { flattenAllSlots } from "../../lib/flatten-slots";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -265,6 +266,7 @@ function PuckProvider<
         content: initialData.content || [],
         zones: {
           ...initialData.zones,
+          ...flattenAllSlots(initialData),
         },
       },
       ui: {

@@ -41,6 +41,7 @@ export async function resolveAllData<
       zones[zoneKey],
       config,
       metadata,
+      zones,
       onResolveStart,
       onResolveEnd
     )) as Content<Props>;
@@ -53,6 +54,7 @@ export async function resolveAllData<
       defaultedData.content,
       config,
       metadata,
+      zones,
       onResolveStart,
       onResolveEnd
     )) as Content<Props>,

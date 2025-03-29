@@ -9,6 +9,7 @@ export const resolveAllComponentData = async (
   content: MappedItem[],
   config: Config,
   metadata: Metadata = {},
+  zones: Record<string, Content> | undefined,
   onResolveStart?: (item: MappedItem) => void,
   onResolveEnd?: (item: MappedItem) => void
 ) => {
@@ -18,6 +19,7 @@ export const resolveAllComponentData = async (
         item,
         config,
         metadata,
+        zones,
         onResolveStart,
         onResolveEnd
       );
@@ -29,6 +31,7 @@ export const resolveComponentData = async (
   item: ComponentData,
   config: Config,
   metadata: Metadata = {},
+  zones: Record<string, Content> | undefined,
   onResolveStart?: (item: MappedItem) => void,
   onResolveEnd?: (item: MappedItem) => void
 ) => {
@@ -37,25 +40,39 @@ export const resolveComponentData = async (
     const { item: oldItem = null, resolved = {} } =
       cache.lastChange[item.props.id] || {};
 
-    if (item && item === oldItem) {
+    const itemWithSlots = {
+      ...item,
+      props: Object.keys(item.props).reduce(
+        (acc, propKey) => ({
+          ...acc,
+          [propKey]:
+            configForItem.fields?.[propKey]?.type === "slot"
+              ? zones?.[`${item.props.id}:${propKey}`] ?? {}
+              : item.props[propKey],
+        }),
+        {}
+      ),
+    } as ComponentData;
+
+    if (itemWithSlots && itemWithSlots === oldItem) {
       return resolved;
     }
 
-    const changed = getChanged(item, oldItem);
+    const changed = getChanged(itemWithSlots, oldItem);
 
     if (onResolveStart) {
-      onResolveStart(item);
+      onResolveStart(itemWithSlots);
     }
 
     const { props: resolvedProps, readOnly = {} } =
-      await configForItem.resolveData(item, {
+      await configForItem.resolveData(itemWithSlots, {
         changed,
         lastData: oldItem,
         metadata,
       });
 
     const resolvedItem = {
-      ...item,
+      ...itemWithSlots,
       props: {
         ...item.props,
         ...resolvedProps,

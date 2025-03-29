@@ -54,6 +54,8 @@ const updateContent = <UserData extends Data>(
     };
   }
 
+  return data;
+
   const [parentId, zoneId] = zoneCompound.split(":");
 
   return dataMap(data, (item) => {

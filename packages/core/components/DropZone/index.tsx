@@ -86,7 +86,7 @@ function useSlots(
           return (
             <DropZoneEdit
               {...dzProps}
-              content={props[propKey]}
+              // content={props[propKey]}
               zone={propKey}
             />
           );

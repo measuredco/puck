@@ -5,12 +5,7 @@ import { PuckAction, SetAction } from "./actions";
 import { reduceUi } from "./state";
 import type { Content, OnAction } from "../types";
 import { dataMap } from "../lib/data-map";
-import {
-  flattenAllSlots,
-  flattenSlots,
-  mergeSlots,
-} from "../lib/flatten-slots";
-import { AppStore, AppStoreApi } from "../store";
+import { flattenSlots } from "../lib/flatten-slots";
 
 export * from "./actions";
 export * from "./data";
@@ -76,16 +71,14 @@ export function createReducer<
   config,
   record,
   onAction,
-  appStore,
 }: {
   config: UserConfig;
   record?: (appState: AppState<UserData>) => void;
   onAction?: OnAction<UserData>;
-  appStore: AppStore;
 }): StateReducer<UserData> {
   return storeInterceptor(
     (state, action) => {
-      let data = reduceData(state.data, action, appStore);
+      let data = reduceData(state.data, action, config);
       let ui = reduceUi(state.ui, action);
 
       if (action.type === "set") {
@@ -98,7 +91,69 @@ export function createReducer<
         ui = setValue.ui;
       }
 
-      return { data, ui };
+      // Synchonize slots and zones
+      const oldSlots = flattenSlots(state.data);
+      const newSlots = flattenSlots(data);
+
+      const slotZones: Record<string, Content> = {};
+
+      Object.keys(newSlots).forEach((slotKey) => {
+        const newSlot = newSlots[slotKey];
+        const oldSlot = oldSlots[slotKey];
+
+        // When duplicating, we don't merge slots to enable new IDs to propagate
+        if (newSlot !== oldSlot && action.type !== "duplicate") {
+          // Write change to zones
+          slotZones[slotKey] = newSlot;
+        } else {
+          // Write change to slot
+        }
+      });
+
+      // const zones = data.zones || {};
+
+      const dataWithZones = { ...data, zones: { ...data.zones, ...slotZones } };
+
+      // Will cause re-rendering, which defeats the point of reusing zones
+      // const dataWithZones = dataMap(
+      //   {
+      //     ...data,
+      //     zones: { ...data.zones, ...slotZones },
+      //   },
+      //   (item) => {
+      //     const componentType = "type" in item ? item.type : "root";
+
+      //     const configForComponent =
+      //       componentType === "root"
+      //         ? config.root
+      //         : config.components[componentType];
+
+      //     if (!configForComponent?.fields) return item;
+
+      //     const propKeys = Object.keys(configForComponent.fields || {});
+
+      //     return propKeys.reduce((acc, propKey) => {
+      //       const field = configForComponent.fields![propKey];
+
+      //       if (field.type === "slot") {
+      //         const id =
+      //           item.props && "id" in item.props ? item.props.id : "root";
+
+      //         return {
+      //           ...acc,
+      //           props: {
+      //             ...acc.props,
+      //             [propKey]: zones[`${id}:${propKey}`],
+      //           },
+      //         };
+      //       }
+
+      //       return acc;
+      //     }, item);
+      //   }
+      // ) as UserData;
+
+      return { data: dataWithZones, ui };
     },
     record,
     onAction
