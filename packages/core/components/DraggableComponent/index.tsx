@@ -445,6 +445,7 @@ export const DraggableComponent = ({
 
           // Modify position if it spills over frame vertically
           if (exceedsBoundsTop) {
+            el.style.transformOrigin = "left top";
             el.style.top = "0px";
           }
         }
