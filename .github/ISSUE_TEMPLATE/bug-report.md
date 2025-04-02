@@ -1,11 +1,11 @@
 ---
 name: "Bug Report 🐛"
-about: Report a problem with Puck. Please provide enough information to reproduce
+about:
+  Report a problem with Puck. Please provide enough information to reproduce
   the problem.
-title: 'Bug: '
-labels: ''
-assignees: ''
-
+title: "Bug: "
+labels: ""
+assignees: ""
 ---
 
 ## Description
@@ -36,9 +36,11 @@ assignees: ''
 ## Steps to reproduce
 
 1. Render the `<X />` component in a grid layout...
-  ```tsx
-  //... your code example
-  ```
+
+```tsx
+//... your code example
+```
+
 2. Run in the application in development mode...
 3. Navigate to the page where the component is rendered...
 
@@ -46,7 +48,7 @@ assignees: ''
   Provide clear steps with code examples so that we can verify the bug.
   Avoid adding dependencies other than Puck.
 
-  Issues without reproduction steps or code examples may be immediately 
+  Issues without reproduction steps or code examples may be immediately
   closed as not actionable.
 -->
 
@@ -55,7 +57,7 @@ Link to code example: [Your link here]
 <!--
   If possible, provide a CodeSandbox (https://codesandbox.io/s/new), a link to a
   repository on GitHub, or provide a minimal code example that demonstrates the
-  problem. 
+  problem.
 
   Screenshots or recordings are welcome if they help clarify the problem.
 
@@ -67,7 +69,7 @@ Link to code example: [Your link here]
 [Example: "A white screen appears and the editor does not load..."]
 
 <!--
-  State what is the result of the steps above. 
+  State what is the result of the steps above.
   Keep the explanation short and clear.
 -->
 
@@ -83,6 +85,6 @@ Link to code example: [Your link here]
 ## Additional Media
 
 <!--
-  Include any screenshots, videos, or other relevant media that may help 
+  Include any screenshots, videos, or other relevant media that may help
   visualize the issue or demonstrate the behavior.
 -->
