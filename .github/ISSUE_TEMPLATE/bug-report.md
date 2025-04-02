@@ -1,5 +1,5 @@
 ---
-name: "Bug report 🐛"
+name: "Bug Report 🐛"
 about: Report a problem with Puck. Please provide enough information to reproduce
   the problem.
 title: 'Bug: '
