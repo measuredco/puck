@@ -8,7 +8,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useId,
   useRef,
   useState,
 } from "react";
@@ -29,6 +28,7 @@ import { generateId } from "../../lib/generate-id";
 import { createStore } from "zustand";
 import { getDeepDir } from "../../lib/get-deep-dir";
 import { useSensors } from "../../lib/dnd/use-sensors";
+import { useSafeId } from "../../lib/use-safe-id";
 
 const DEBUG = false;
 
@@ -109,7 +109,7 @@ const DragDropContextClient = ({
   const metadata = useAppStore((s) => s.metadata);
   const appStore = useAppStoreApi();
 
-  const id = useId();
+  const id = useSafeId();
 
   const debouncedParamsRef = useRef<DeepestParams | null>(null);
 
