@@ -20,6 +20,7 @@ export const ArrayField = ({
   value: _value,
   name,
   label,
+  labelIcon,
   readOnly,
   id,
   Label = (props) => <div {...props} />,
@@ -125,7 +126,7 @@ export const ArrayField = ({
   return (
     <Label
       label={label || name}
-      icon={<List size={16} />}
+      icon={labelIcon || <List size={16} />}
       el="div"
       readOnly={readOnly}
     >

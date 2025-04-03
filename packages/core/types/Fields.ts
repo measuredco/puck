@@ -10,6 +10,7 @@ type FieldOptions = Array<FieldOption> | ReadonlyArray<FieldOption>;
 
 export type BaseField = {
   label?: string;
+  labelIcon?: ReactElement;
 };
 
 export type TextField = BaseField & {
