@@ -5,6 +5,8 @@ import { ReactElement, ReactNode, Ref, useId, useMemo, useState } from "react";
 import { generateId } from "../../lib/generate-id";
 import { useDragListener } from "../DragDropContext";
 import { useDraggableSafe, useDroppableSafe } from "../../lib/dnd/dnd-kit/safe";
+import { DragOverlay, useDragDropManager } from "@dnd-kit/react";
+import { useAppContext } from "../Puck/context";
 
 const getClassName = getClassNameFactory("Drawer", styles);
 const getClassNameItem = getClassNameFactory("DrawerItem", styles);
@@ -75,6 +77,7 @@ const DrawerItemDraggable = ({
     id,
     data: { type: "drawer", componentType: name },
     disabled: isDragDisabled,
+    type: "new",
   });
 
   return (
@@ -153,6 +156,8 @@ export const Drawer = ({
   droppableId?: string; // TODO deprecate
   direction?: "vertical" | "horizontal"; // TODO deprecate
 }) => {
+  const appContext = useAppContext();
+
   if (droppableId) {
     console.error(
       "Warning: The `droppableId` prop on Drawer is deprecated and no longer required."
@@ -173,15 +178,28 @@ export const Drawer = ({
     collisionPriority: 0, // Never collide with this, but we use it so NestedDroppablePlugin respects the Drawer
   });
 
+  const manager = useDragDropManager();
+
   return (
-    <div
-      className={getClassName()}
-      ref={ref}
-      data-puck-dnd={id}
-      data-puck-drawer
-    >
-      {children}
-    </div>
+    <>
+      <div
+        className={getClassName()}
+        ref={ref}
+        data-puck-dnd={id}
+        data-puck-drawer
+      >
+        {children}
+      </div>
+      {manager?.dragOperation.source?.type === "new" && (
+        <DragOverlay>
+          {(source) => (
+            <DrawerItemInner name={source.data.componentType}>
+              {appContext.overrides.componentItem}
+            </DrawerItemInner>
+          )}
+        </DragOverlay>
+      )}
+    </>
   );
 };
 
