@@ -269,11 +269,14 @@ export function AutoFieldPrivate<
     { leading: true }
   );
 
-  const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
-    setLocalValue(val);
+  const onChangeLocal = useCallback(
+    (val: any, ui?: Partial<UiState>) => {
+      setLocalValue(val);
 
-    onChangeDb(val, ui);
-  }, []);
+      onChangeDb(val, ui);
+    },
+    [onChange]
+  );
 
   useEffect(() => {
     // Prevent global state from setting local state if this field is focused
