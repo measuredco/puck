@@ -152,191 +152,193 @@ export const ArrayField = ({
             addDisabled,
           })}
         >
-          <div
-            ref={dndContainerRef}
-            className={getClassName("inner")}
-            data-dnd-container
-          >
-            {localState.arrayState.items.map((item, i) => {
-              const { _arrayId = `${id}-${i}`, _originalIndex = i } = item;
-              const data: any = Array.from(localState.value || [])[i] || {};
+          {localState.arrayState.items.length > 0 && (
+            <div
+              ref={dndContainerRef}
+              className={getClassName("inner")}
+              data-dnd-container
+            >
+              {localState.arrayState.items.map((item, i) => {
+                const { _arrayId = `${id}-${i}`, _originalIndex = i } = item;
+                const data: any = Array.from(localState.value || [])[i] || {};
 
-              return (
-                <Sortable
-                  key={_arrayId}
-                  id={_arrayId}
-                  index={i}
-                  disabled={readOnly}
-                >
-                  {({ status, ref }) => (
-                    <div
-                      ref={ref}
-                      className={getClassNameItem({
-                        isExpanded: arrayState.openId === _arrayId,
-                        isDragging: status === "dragging",
-                        readOnly,
-                      })}
-                    >
+                return (
+                  <Sortable
+                    key={_arrayId}
+                    id={_arrayId}
+                    index={i}
+                    disabled={readOnly}
+                  >
+                    {({ status, ref }) => (
                       <div
-                        onClick={(e) => {
-                          if (isDragging) return;
-
-                          e.preventDefault();
-                          e.stopPropagation();
-
-                          if (arrayState.openId === _arrayId) {
-                            setUi(
-                              mapArrayStateToUi({
-                                openId: "",
-                              })
-                            );
-                          } else {
-                            setUi(
-                              mapArrayStateToUi({
-                                openId: _arrayId,
-                              })
-                            );
-                          }
-                        }}
-                        className={getClassNameItem("summary")}
+                        ref={ref}
+                        className={getClassNameItem({
+                          isExpanded: arrayState.openId === _arrayId,
+                          isDragging: status === "dragging",
+                          readOnly,
+                        })}
                       >
-                        {field.getItemSummary
-                          ? field.getItemSummary(data, i)
-                          : `Item #${_originalIndex}`}
-                        <div className={getClassNameItem("rhs")}>
-                          {!readOnly && (
-                            <div className={getClassNameItem("actions")}>
-                              <div className={getClassNameItem("action")}>
-                                <IconButton
-                                  type="button"
-                                  disabled={!!addDisabled}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
+                        <div
+                          onClick={(e) => {
+                            if (isDragging) return;
 
-                                    const existingValue = [...(value || [])];
+                            e.preventDefault();
+                            e.stopPropagation();
 
-                                    existingValue.splice(
-                                      i,
-                                      0,
-                                      existingValue[i]
-                                    );
+                            if (arrayState.openId === _arrayId) {
+                              setUi(
+                                mapArrayStateToUi({
+                                  openId: "",
+                                })
+                              );
+                            } else {
+                              setUi(
+                                mapArrayStateToUi({
+                                  openId: _arrayId,
+                                })
+                              );
+                            }
+                          }}
+                          className={getClassNameItem("summary")}
+                        >
+                          {field.getItemSummary
+                            ? field.getItemSummary(data, i)
+                            : `Item #${_originalIndex}`}
+                          <div className={getClassNameItem("rhs")}>
+                            {!readOnly && (
+                              <div className={getClassNameItem("actions")}>
+                                <div className={getClassNameItem("action")}>
+                                  <IconButton
+                                    type="button"
+                                    disabled={!!addDisabled}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
 
-                                    onChange(
-                                      existingValue,
-                                      mapArrayStateToUi(
-                                        regenerateArrayState(existingValue)
-                                      )
-                                    );
-                                  }}
-                                  title="Duplicate"
-                                >
-                                  <Copy size={16} />
-                                </IconButton>
+                                      const existingValue = [...(value || [])];
+
+                                      existingValue.splice(
+                                        i,
+                                        0,
+                                        existingValue[i]
+                                      );
+
+                                      onChange(
+                                        existingValue,
+                                        mapArrayStateToUi(
+                                          regenerateArrayState(existingValue)
+                                        )
+                                      );
+                                    }}
+                                    title="Duplicate"
+                                  >
+                                    <Copy size={16} />
+                                  </IconButton>
+                                </div>
+                                <div className={getClassNameItem("action")}>
+                                  <IconButton
+                                    type="button"
+                                    disabled={
+                                      field.min !== undefined &&
+                                      field.min >=
+                                        localState.arrayState.items.length
+                                    }
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+
+                                      const existingValue = [...(value || [])];
+
+                                      const existingItems = [
+                                        ...(arrayState.items || []),
+                                      ];
+
+                                      existingValue.splice(i, 1);
+                                      existingItems.splice(i, 1);
+
+                                      onChange(
+                                        existingValue,
+                                        mapArrayStateToUi({
+                                          items: existingItems,
+                                        })
+                                      );
+                                    }}
+                                    title="Delete"
+                                  >
+                                    <Trash size={16} />
+                                  </IconButton>
+                                </div>
                               </div>
-                              <div className={getClassNameItem("action")}>
-                                <IconButton
-                                  type="button"
-                                  disabled={
-                                    field.min !== undefined &&
-                                    field.min >=
-                                      localState.arrayState.items.length
-                                  }
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-
-                                    const existingValue = [...(value || [])];
-
-                                    const existingItems = [
-                                      ...(arrayState.items || []),
-                                    ];
-
-                                    existingValue.splice(i, 1);
-                                    existingItems.splice(i, 1);
-
-                                    onChange(
-                                      existingValue,
-                                      mapArrayStateToUi({
-                                        items: existingItems,
-                                      })
-                                    );
-                                  }}
-                                  title="Delete"
-                                >
-                                  <Trash size={16} />
-                                </IconButton>
-                              </div>
+                            )}
+                            <div>
+                              <DragIcon />
                             </div>
-                          )}
-                          <div>
-                            <DragIcon />
                           </div>
                         </div>
+                        <div className={getClassNameItem("body")}>
+                          <fieldset
+                            className={getClassNameItem("fieldset")}
+                            onPointerDownCapture={(e) => {
+                              e.stopPropagation();
+                            }}
+                          >
+                            {Object.keys(field.arrayFields!).map((subName) => {
+                              const subField = field.arrayFields![subName];
+
+                              const indexName = `${name}[${i}]`;
+                              const subPath = `${indexName}.${subName}`;
+
+                              const localIndexName = `${localName}[${i}]`;
+                              const localWildcardName = `${localName}[*]`;
+                              const localSubPath = `${localIndexName}.${subName}`;
+                              const localWildcardSubPath = `${localWildcardName}.${subName}`;
+
+                              const subReadOnly = forceReadOnly
+                                ? forceReadOnly
+                                : typeof readOnlyFields[subPath] !== "undefined"
+                                ? readOnlyFields[localSubPath]
+                                : readOnlyFields[localWildcardSubPath];
+
+                              const label = subField.label || subName;
+
+                              return (
+                                <NestedFieldProvider
+                                  key={subPath}
+                                  name={localIndexName}
+                                  wildcardName={localWildcardName}
+                                  subName={subName}
+                                  readOnlyFields={readOnlyFields}
+                                >
+                                  <AutoFieldPrivate
+                                    name={subPath}
+                                    label={label}
+                                    id={`${_arrayId}_${subName}`}
+                                    readOnly={subReadOnly}
+                                    field={{
+                                      ...subField,
+                                      label, // May be used by custom fields
+                                    }}
+                                    value={data[subName]}
+                                    onChange={(val, ui) => {
+                                      onChange(
+                                        replace(value, i, {
+                                          ...data,
+                                          [subName]: val,
+                                        }),
+                                        ui
+                                      );
+                                    }}
+                                  />
+                                </NestedFieldProvider>
+                              );
+                            })}
+                          </fieldset>
+                        </div>
                       </div>
-                      <div className={getClassNameItem("body")}>
-                        <fieldset
-                          className={getClassNameItem("fieldset")}
-                          onPointerDownCapture={(e) => {
-                            e.stopPropagation();
-                          }}
-                        >
-                          {Object.keys(field.arrayFields!).map((subName) => {
-                            const subField = field.arrayFields![subName];
-
-                            const indexName = `${name}[${i}]`;
-                            const subPath = `${indexName}.${subName}`;
-
-                            const localIndexName = `${localName}[${i}]`;
-                            const localWildcardName = `${localName}[*]`;
-                            const localSubPath = `${localIndexName}.${subName}`;
-                            const localWildcardSubPath = `${localWildcardName}.${subName}`;
-
-                            const subReadOnly = forceReadOnly
-                              ? forceReadOnly
-                              : typeof readOnlyFields[subPath] !== "undefined"
-                              ? readOnlyFields[localSubPath]
-                              : readOnlyFields[localWildcardSubPath];
-
-                            const label = subField.label || subName;
-
-                            return (
-                              <NestedFieldProvider
-                                key={subPath}
-                                name={localIndexName}
-                                wildcardName={localWildcardName}
-                                subName={subName}
-                                readOnlyFields={readOnlyFields}
-                              >
-                                <AutoFieldPrivate
-                                  name={subPath}
-                                  label={label}
-                                  id={`${_arrayId}_${subName}`}
-                                  readOnly={subReadOnly}
-                                  field={{
-                                    ...subField,
-                                    label, // May be used by custom fields
-                                  }}
-                                  value={data[subName]}
-                                  onChange={(val, ui) => {
-                                    onChange(
-                                      replace(value, i, {
-                                        ...data,
-                                        [subName]: val,
-                                      }),
-                                      ui
-                                    );
-                                  }}
-                                />
-                              </NestedFieldProvider>
-                            );
-                          })}
-                        </fieldset>
-                      </div>
-                    </div>
-                  )}
-                </Sortable>
-              );
-            })}
-          </div>
+                    )}
+                  </Sortable>
+                );
+              })}
+            </div>
+          )}
 
           {!addDisabled && (
             <button
