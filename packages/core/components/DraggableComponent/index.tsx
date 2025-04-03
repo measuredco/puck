@@ -442,14 +442,13 @@ export const DraggableComponent = ({
             el.style.transformOrigin = "left top";
             el.style.left = "0px";
           }
-          
+
           if (exceedsBoundsTop) {
             el.style.top = "0px";
             if (!exceedsBoundsLeft) {
               el.style.transformOrigin = "right top";
             }
           }
-
         }
       }
     },
