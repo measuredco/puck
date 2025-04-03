@@ -169,7 +169,7 @@ export const ArrayField = ({
                     index={i}
                     disabled={readOnly}
                   >
-                    {({ status, ref }) => (
+                    {({ status, ref, handleRef }) => (
                       <div
                         ref={ref}
                         className={getClassNameItem({
@@ -179,6 +179,7 @@ export const ArrayField = ({
                         })}
                       >
                         <div
+                          ref={handleRef}
                           onClick={(e) => {
                             if (isDragging) return;
 
@@ -274,12 +275,7 @@ export const ArrayField = ({
                           </div>
                         </div>
                         <div className={getClassNameItem("body")}>
-                          <fieldset
-                            className={getClassNameItem("fieldset")}
-                            onPointerDownCapture={(e) => {
-                              e.stopPropagation();
-                            }}
-                          >
+                          <fieldset className={getClassNameItem("fieldset")}>
                             {Object.keys(field.arrayFields!).map((subName) => {
                               const subField = field.arrayFields![subName];
 
