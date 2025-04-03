@@ -31,9 +31,9 @@ export function useDraggableSafe<T extends Data>(
 
 export function useSortableSafe<T extends Data>(
   input: UseSortableInput<T>
-): Pick<ReturnType<typeof useSortable<T>>, "ref" | "status"> {
+): Pick<ReturnType<typeof useSortable<T>>, "ref" | "status" | "handleRef"> {
   if (typeof window === "undefined") {
-    return { ref: () => {}, status: "idle" };
+    return { ref: () => {}, status: "idle", handleRef: () => {} };
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks

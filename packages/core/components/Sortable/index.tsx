@@ -22,7 +22,9 @@ export const SortableProvider = ({
 }>) => {
   const [move, setMove] = useState({ source: -1, target: -1 });
 
-  const sensors = useSensors();
+  const sensors = useSensors({
+    mouse: { distance: { value: 5 } },
+  });
 
   return (
     <DragDropProvider
@@ -98,10 +100,15 @@ export const Sortable = ({
   children: (props: {
     status: "idle" | "dragging" | "dropping";
     ref: (element: Element | null) => void;
+    handleRef: (element: Element | null) => void;
   }) => ReactNode;
   type?: string;
 }) => {
-  const { ref: sortableRef, status } = useSortableSafe({
+  const {
+    ref: sortableRef,
+    status,
+    handleRef,
+  } = useSortableSafe({
     id,
     type,
     index,
@@ -110,5 +117,5 @@ export const Sortable = ({
     collisionDetector: createDynamicCollisionDetector("y"),
   });
 
-  return children({ status, ref: sortableRef });
+  return children({ status, ref: sortableRef, handleRef });
 };
