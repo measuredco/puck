@@ -261,11 +261,14 @@ export function AutoFieldPrivate<
 
   const [localValue, setLocalValue] = useState(value);
 
-  const onChangeLocal = useCallback((val: any, ui?: Partial<UiState>) => {
-    setLocalValue(val);
+  const onChangeLocal = useCallback(
+    (val: any, ui?: Partial<UiState>) => {
+      setLocalValue(val);
 
-    onChange(val, ui);
-  }, []);
+      onChange(val, ui);
+    },
+    [onChange]
+  );
 
   useEffect(() => {
     // Prevent global state from setting local state if this field is focused
