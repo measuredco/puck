@@ -1,7 +1,8 @@
-import type { Config } from "@measured/puck";
+import { type Config } from "@measured/puck";
 
 type Props = {
   HeadingBlock: { title: string };
+  Flex: {};
 };
 
 export const config: Config<Props> = {
@@ -17,6 +18,11 @@ export const config: Config<Props> = {
         <div style={{ padding: 64 }}>
           <h1>{title}</h1>
         </div>
+      ),
+    },
+    Flex: {
+      render: ({ puck: { renderDropZone: DropZone } }) => (
+        <DropZone zone="flex" />
       ),
     },
   },

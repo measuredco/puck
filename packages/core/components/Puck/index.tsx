@@ -61,7 +61,6 @@ import { DefaultOverride } from "../DefaultOverride";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
 import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
 import { useRegisterHistorySlice } from "../../store/slices/history";
-import { useRegisterNodesSlice } from "../../store/slices/nodes";
 import { useRegisterPermissionsSlice } from "../../store/slices/permissions";
 import { monitorHotkeys, useMonitorHotkeys } from "../../lib/use-hotkey";
 import { getFrame } from "../../lib/get-frame";
@@ -69,7 +68,7 @@ import {
   UsePuckStoreContext,
   useRegisterUsePuckStore,
 } from "../../lib/use-puck";
-import { useRegisterZonesSlice } from "../../store/slices/zones";
+import { generateNodeIndex, generateZonesIndex } from "../../reducer/indexes";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -257,15 +256,12 @@ function PuckProvider<
       ...rootProps,
     };
 
-    return {
+    const newAppState = {
       ...defaultAppState,
       data: {
         ...initialData,
         root: { ...initialData?.root, props: defaultedRootProps },
         content: initialData.content || [],
-        zones: {
-          ...initialData.zones,
-        },
       },
       ui: {
         ...initial,
@@ -289,6 +285,16 @@ function PuckProvider<
           : {},
       },
     } as G["UserAppState"];
+
+    const indexes = {
+      nodes: generateNodeIndex(newAppState, config),
+      zones: generateZonesIndex(newAppState),
+    };
+
+    return {
+      ...newAppState,
+      indexes,
+    };
   });
 
   const { appendData = true } = _initialHistory || {};
@@ -352,6 +358,11 @@ function PuckProvider<
     metadata,
   ]);
 
+  // useEffect(() => {
+  //   appStore.getState().nodes.regenerate(initialAppState.data);
+  //   appStore.getState().zones.regenerate(initialAppState.data);
+  // }, [initialAppState, appStore]);
+
   useRegisterHistorySlice(appStore, {
     histories: blendedHistories,
     index: initialHistoryIndex,
@@ -364,8 +375,6 @@ function PuckProvider<
     });
   }, []);
 
-  useRegisterNodesSlice(appStore);
-  useRegisterZonesSlice(appStore);
   useRegisterPermissionsSlice(appStore, permissions);
 
   const uPuckStore = useRegisterUsePuckStore(appStore);

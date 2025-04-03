@@ -1,5 +1,5 @@
-import { AppStore } from "../store";
 import { Data } from "../types";
+import { PrivateAppState } from "../types/Internal";
 import { rootDroppableId } from "./root-droppable-id";
 
 export type ItemSelector = {
@@ -9,11 +9,12 @@ export type ItemSelector = {
 
 export function getItem<UserData extends Data>(
   selector: ItemSelector,
-  appStore: AppStore
+  state: PrivateAppState
 ): UserData["content"][0] | undefined {
-  const zone = appStore.zones.zones?.[selector.zone || rootDroppableId];
+  console.log(state);
+  const zone = state.indexes.zones?.[selector.zone || rootDroppableId];
 
   return zone
-    ? appStore.nodes.nodes[zone.contentIds[selector.index]]?.data
+    ? state.indexes.nodes[zone.contentIds[selector.index]]?.data
     : undefined;
 }

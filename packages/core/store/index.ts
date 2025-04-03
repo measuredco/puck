@@ -9,6 +9,7 @@ import {
   Field,
   ComponentConfig,
   Metadata,
+  ComponentData,
 } from "../types";
 import { createReducer, PuckAction } from "../reducer";
 import { getItem } from "../lib/get-item";
@@ -25,9 +26,10 @@ import {
   type PermissionsSlice,
 } from "./slices/permissions";
 import { createFieldsSlice, type FieldsSlice } from "./slices/fields";
-import { createZonesSlice, ZonesSlice } from "./slices/zones";
+import { PrivateAppState } from "../types/Internal";
+import { resolveComponentData } from "../lib/resolve-component-data";
 
-export const defaultAppState: AppState = {
+export const defaultAppState: PrivateAppState = {
   data: { content: [], root: {}, zones: {} },
   ui: {
     leftSideBarVisible: true,
@@ -46,6 +48,10 @@ export const defaultAppState: AppState = {
       controlsVisible: true,
     },
     field: { focus: null },
+  },
+  indexes: {
+    nodes: {},
+    zones: {},
   },
 };
 
@@ -71,7 +77,8 @@ export type AppStore<
   setComponentLoading: (id: string) => void;
   unsetComponentLoading: (id: string) => void;
   resolveDataRuns: number;
-  resolveData: (newAppState: AppState) => void;
+  resolveData: (newAppState: PrivateAppState) => void;
+  resolveComponentData: (componentData: ComponentData) => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
   viewports: Viewports;
@@ -88,7 +95,6 @@ export type AppStore<
   fields: FieldsSlice;
   history: HistorySlice;
   nodes: NodesSlice;
-  zones: ZonesSlice;
   permissions: PermissionsSlice;
 };
 
@@ -119,7 +125,6 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
       fields: createFieldsSlice(set, get),
       history: createHistorySlice(set, get),
       nodes: createNodesSlice(set, get),
-      zones: createZonesSlice(set, get),
       permissions: createPermissionsSlice(set, get),
       getComponentConfig: (type?: string) => {
         const { config, selectedItem } = get();
@@ -144,7 +149,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           const state = dispatch(s.state, action);
 
           const selectedItem = state.ui.itemSelector
-            ? getItem(state.ui.itemSelector, get())
+            ? getItem(state.ui.itemSelector, state)
             : null;
 
           get().onAction?.(action, state, get().state);
@@ -195,7 +200,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           });
 
           const selectedItem = state.ui.itemSelector
-            ? getItem(state.ui.itemSelector, get())
+            ? getItem(state.ui.itemSelector, state)
             : null;
 
           return { ...s, state, selectedItem };
@@ -205,6 +210,50 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
         set((s) => {
           resolveData(newAppState, get);
 
+          return { ...s, resolveDataRuns: s.resolveDataRuns + 1 };
+        }),
+      resolveComponentData: (componentData) =>
+        set((s) => {
+          const {
+            config,
+            metadata,
+            setComponentLoading,
+            unsetComponentLoading,
+          } = get();
+
+          const deferredSetStates: Record<string, NodeJS.Timeout> = {};
+
+          const _setComponentLoading = (
+            id: string,
+            loading: boolean,
+            defer: number = 0
+          ) => {
+            if (deferredSetStates[id]) {
+              clearTimeout(deferredSetStates[id]);
+
+              delete deferredSetStates[id];
+            }
+
+            deferredSetStates[id] = setTimeout(() => {
+              if (loading) {
+                setComponentLoading(id);
+              } else {
+                unsetComponentLoading(id);
+              }
+
+              delete deferredSetStates[id];
+            }, defer);
+          };
+
+          resolveComponentData(
+            componentData,
+            config,
+            metadata,
+            (item) => _setComponentLoading(item.props.id, true, 50),
+            (item) => _setComponentLoading(item.props.id, true, 0)
+          );
+
+          return s;
           return { ...s, resolveDataRuns: s.resolveDataRuns + 1 };
         }),
     }))

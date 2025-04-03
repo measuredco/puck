@@ -14,6 +14,8 @@ import { Client } from "./client";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getPage } from "../../lib/get-page";
+import { Render } from "@measured/puck";
+import config from "../../puck.config";
 
 export async function generateMetadata({
   params,
@@ -41,7 +43,7 @@ export default async function Page({
     return notFound();
   }
 
-  return <Client data={data} />;
+  return <Render config={config} data={data} />;
 }
 
 // Force Next.js to produce static pages: https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic

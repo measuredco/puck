@@ -63,6 +63,9 @@ const HeadingInternal: ComponentConfig<HeadingProps> = {
       padding: "8px",
     },
   },
+  resolveData: (data) => {
+    return { ...data, props: { ...data.props, size: "xxl" } };
+  },
   render: ({ align, text, size, level }) => {
     return (
       <Section>

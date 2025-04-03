@@ -43,8 +43,8 @@ export const Canvas = () => {
   );
   const { leftSideBarVisible, rightSideBarVisible, viewports } = useAppStore(
     useShallow((s) => ({
-      leftSideBarVisible: s.state.ui.leftSideBarVisible,
-      rightSideBarVisible: s.state.ui.rightSideBarVisible,
+      leftSideBarVisible: true, //s.state.ui.leftSideBarVisible,
+      rightSideBarVisible: true, //s.state.ui.rightSideBarVisible,
       viewports: s.state.ui.viewports,
     }))
   );

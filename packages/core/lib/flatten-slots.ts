@@ -1,7 +1,7 @@
 import { ComponentData, Content, Data, RootData } from "../types";
 import { dataMap } from "./data-map";
 
-const isSlot = (prop: any) =>
+export const isSlot = (prop: any) =>
   Array.isArray(prop) &&
   typeof prop[0]?.type === "string" &&
   typeof prop[0]?.props === "object";
@@ -23,86 +23,93 @@ export const forEachSlot = <T extends ComponentData | RootData>(
   }
 };
 
-export const reduceSlots = <T extends ComponentData | RootData>(
-  item: T,
-  map: (parentId: string, slotId: string, content: Content) => ComponentData
-) => {
-  const props: Record<string, any> = item.props || {};
+// export const reduceSlots = <T extends ComponentData | RootData>(
+//   item: T,
+//   map: (parentId: string, slotId: string, content: Content) => ComponentData
+// ) => {
+//   const props: Record<string, any> = item.props || {};
 
-  forEachSlot(item, (parentId, slotId, content) => {
-    props[slotId] = map(parentId, slotId, content);
-  });
+//   forEachSlot(item, (parentId, slotId, content) => {
+//     props[slotId] = map(parentId, slotId, content);
+//   });
 
-  return { ...item, props };
-};
+//   return { ...item, props };
+// };
 
-export const flattenSlots = <UserData extends Data = Data>(
+/**
+ * Collects every slot into a record keyed by `parentId:propKey`.
+ */
+export function flattenSlots<UserData extends Data = Data>(
   data: Partial<UserData>
-): Record<string, Content> => {
-  let slots: Record<string, Content> = {};
+): Record<string, Content> {
+  const slots: Record<string, Content> = {};
 
-  const map = <T extends ComponentData | RootData>(item: T) => {
-    forEachSlot(item, (parentId, propName, content) => {
-      slots = {
-        ...slots,
-        [`${parentId}:${propName}`]: content,
-      };
-    });
+  const gather = (item: ComponentData | RootData<Record<string, any>>) => {
+    if (!item?.props) return;
+    for (const propKey in item.props) {
+      const val = item.props[propKey];
+      if (isSlot(val)) {
+        slots[`${item.props.id}:${propKey}`] = val;
+      }
+    }
   };
 
-  map(data.root || {});
-  data.content?.forEach(map);
-  Object.keys(data.zones || {}).forEach((zoneId) => {
-    data.zones?.[zoneId].forEach(map);
-  });
+  // Root
+  if (data.root) gather(data.root);
+  data.content?.forEach(gather);
+  for (const zoneId in data.zones || {}) {
+    data.zones?.[zoneId].forEach(gather);
+  }
 
   return slots;
-};
+}
 
-export const flattenAllSlots = <UserData extends Data = Data>(
+/**
+ * Collects all slots by running dataMap once, which also visits everything.
+ */
+export function flattenAllSlots<UserData extends Data = Data>(
   data: Partial<UserData>
-): Record<string, Content> => {
+): Record<string, Content> {
   const allSlots: Record<string, Content> = {};
 
   dataMap(data, (item) => {
-    forEachSlot(item, (parentId, propName, content) => {
-      allSlots[`${parentId}:${propName}`] = content;
-    });
-
+    if (!item?.props) return item;
+    for (const propKey in item.props) {
+      const val = item.props[propKey];
+      if (isSlot(val)) {
+        allSlots[`${item.props.id}:${propKey}`] = val;
+      }
+    }
     return item;
   });
 
   return allSlots;
-};
+}
 
-export const mergeSlots = <UserData extends Data = Data>(
+/**
+ * Merges slot data from `data.zones` if present, otherwise uses existing slot content.
+ * Leaves any leftover zones in place.
+ */
+export function mergeSlots<UserData extends Data = Data>(
   data: Partial<UserData>
-): UserData => {
-  const zones: Record<string, Content> = { ...data.zones };
+): UserData {
+  const zones: Record<string, Content> = { ...(data.zones ?? {}) };
 
-  const mapped = dataMap(data, (item) => {
+  // We do an in-place map, updating slot props if a matching zone key exists
+  dataMap(data, (item) => {
     if (!item?.props) return item;
-
-    const newProps: Record<string, any> = {};
-
-    forEachSlot(item, (parentId, propName, content) => {
-      const zoneCompound = `${parentId}:${propName}`;
-      newProps[propName] = zones[zoneCompound] ?? content;
-
-      delete zones[zoneCompound];
-    });
-
-    return {
-      ...item,
-      props: {
-        ...item.props,
-        ...newProps,
-      },
-    };
+    for (const propKey in item.props) {
+      if (isSlot(item.props[propKey])) {
+        const zoneId = `${item.props.id}:${propKey}`;
+        if (zones.hasOwnProperty(zoneId)) {
+          item.props[propKey] = zones[zoneId];
+          delete zones[zoneId];
+        }
+      }
+    }
+    return item;
   });
 
-  return {
-    ...mapped,
-    zones,
-  };
-};
+  // Keep leftover zones
+  return { ...data, zones } as UserData;
+}

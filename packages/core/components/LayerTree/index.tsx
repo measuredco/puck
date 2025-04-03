@@ -37,7 +37,7 @@ export const LayerTree = ({
   const ctx = useContext(dropZoneContext);
 
   // TODO change this for performance
-  const nodes = useAppStore((s) => s.nodes.nodes);
+  const nodes = useAppStore((s) => s.state.indexes.nodes);
   const selectedItem = useAppStore((s) => s.selectedItem);
 
   return (

@@ -30,10 +30,10 @@ export const useRegisterFieldsSlice = (
   const resolveFields = useCallback(
     async (reset?: boolean) => {
       const { fields, lastResolvedData } = appStore.getState().fields;
-      const nodeStore = appStore.getState().nodes;
-      const node = nodeStore.nodes[id || "root"];
+      const nodes = appStore.getState().state.indexes.nodes;
+      const node = nodes[id || "root"];
       const componentData = node?.data;
-      const parentNode = node?.parentId ? nodeStore.nodes[node.parentId] : null;
+      const parentNode = node?.parentId ? nodes[node.parentId] : null;
       const parent = parentNode?.data || null;
 
       const { getComponentConfig, state } = appStore.getState();
@@ -102,7 +102,7 @@ export const useRegisterFieldsSlice = (
     resolveFields(true);
 
     return appStore.subscribe(
-      (s) => s.nodes.nodes[id || "root"],
+      (s) => s.state.indexes.nodes[id || "root"],
       () => resolveFields()
     );
   }, [id]);

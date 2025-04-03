@@ -129,6 +129,8 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         dispatch({ type: "setUi", ui: { itemSelector: null } });
       }}
     >
+      {Math.random()}
+
       {iframe.enabled ? (
         <AutoFrame
           id="preview-frame"

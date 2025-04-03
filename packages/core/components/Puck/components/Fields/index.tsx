@@ -1,11 +1,6 @@
 import { Loader } from "../../../Loader";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
-import {
-  ReplaceAction,
-  SetAction,
-  replaceAction,
-  setAction,
-} from "../../../../reducer";
+import { ReplaceAction, SetAction } from "../../../../reducer";
 import { UiState } from "../../../../types";
 import { AutoFieldPrivate } from "../../../AutoField";
 import { AppStore, useAppStore, useAppStoreApi } from "../../../../store";
@@ -17,6 +12,8 @@ import { ItemSelector } from "../../../../lib/get-item";
 import { useRegisterFieldsSlice } from "../../../../store/slices/fields";
 import { useShallow } from "zustand/react/shallow";
 import { StoreApi } from "zustand";
+import { resolveComponentData } from "../../../../lib/resolve-component-data";
+import { replaceAction } from "../../../../reducer/reduce";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -35,8 +32,16 @@ const createOnChange =
   (value: any, updatedUi?: Partial<UiState>) => {
     let currentProps;
 
-    const { dispatch, resolveData, config, state, selectedItem } =
-      appStore.getState();
+    const {
+      dispatch,
+      resolveData,
+      config,
+      state,
+      selectedItem,
+      nodes,
+      metadata,
+      resolveComponentData,
+    } = appStore.getState();
 
     const { data, ui } = state;
     const { itemSelector } = ui;
@@ -56,42 +61,69 @@ const createOnChange =
     };
 
     if (selectedItem && itemSelector) {
+      // Optimistic render
+      // nodes.registerNode(selectedItem.props.id, {
+      //   data: { ...selectedItem, props: newProps },
+      // });
+
+      // resolveComponentData(
+      //   { ...selectedItem, props: newProps },
+      //   config,
+      //   metadata
+      // ).then((data) => {
+      //   nodes.registerNode(selectedItem.props.id, {
+      //     data,
+      //   });
+      // });
+
+      const newData = { ...selectedItem, props: newProps };
+
       const replaceActionData: ReplaceAction = {
         type: "replace",
         destinationIndex: itemSelector.index,
         destinationZone: itemSelector.zone || rootDroppableId,
-        data: { ...selectedItem, props: newProps },
+        data: newData,
+        ui: updatedUi,
       };
 
       // We use `replace` action, then feed into `set` action so we can also process any UI changes
-      const replacedData = replaceAction(
-        data,
-        replaceActionData,
-        appStore.getState()
-      );
-
-      const setActionData: SetAction = {
-        type: "set",
-        state: {
-          data: { ...data, ...replacedData },
-          ui: { ...ui, ...updatedUi },
-        },
-      };
+      const replacedData = replaceAction(state, replaceActionData);
 
       // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
       if (config.components[selectedItem.type]?.resolveData) {
-        resolveData(setAction(state, setActionData));
+        console.log("resolving");
+        dispatch({
+          type: "replace",
+          destinationIndex: itemSelector.index,
+          destinationZone: itemSelector.zone || rootDroppableId,
+          data: { ...selectedItem, props: newProps },
+          ui: updatedUi,
+        });
+
+        // TODO only resolve specific component, not all components
+
+        resolveComponentData(newData);
+        // resolveData(replacedData);
+        console.log("resolved");
       } else {
         dispatch({
-          ...setActionData,
-          recordHistory: true,
+          type: "replace",
+          destinationIndex: itemSelector.index,
+          destinationZone: itemSelector.zone || rootDroppableId,
+          data: { ...selectedItem, props: newProps },
+          ui: updatedUi,
         });
+        // dispatch({
+        //   ...setActionData,
+        //   recordHistory: true,
+        // });
       }
     } else {
       if (data.root.props) {
         // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
         if (config.root?.resolveData) {
           resolveData({
+            ...state,
             ui: { ...ui, ...updatedUi },
             data: {
               ...data,

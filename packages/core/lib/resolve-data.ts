@@ -64,6 +64,13 @@ export const resolveData = (
 
       const containsChanges = !fdeq(getAppStore().state.data, processed);
 
+      console.log(
+        "contains changes",
+        getAppStore().state.data,
+        dynamicDataMap,
+        containsChanges
+      );
+
       if (containsChanges) {
         dispatch({
           type: "set",
@@ -82,19 +89,21 @@ export const resolveData = (
 
     const promises: Promise<void>[] = [];
 
-    promises.push(
-      (async () => {
-        _setComponentLoading("puck-root", true, 50);
+    // promises.push(
+    //   (async () => {
+    //     _setComponentLoading("puck-root", true, 50);
 
-        const dynamicRoot = await resolveRootData(newData, config, metadata);
+    //     const dynamicRoot = await resolveRootData(newData, config, metadata);
 
-        applyIfChange({}, dynamicRoot);
+    //     applyIfChange({}, dynamicRoot);
 
-        _setComponentLoading("puck-root", false);
+    //     _setComponentLoading("puck-root", false);
 
-        latestState = getAppStore().state;
-      })()
-    );
+    //     latestState = getAppStore().state;
+    //   })()
+    // );
+
+    const changes: Record<string, ComponentData> = {};
 
     for (let i = flatContent.length - 1; i >= 0; i--) {
       const item = flatContent[i];
@@ -140,11 +149,18 @@ export const resolveData = (
           }
         );
 
+        changes[item.props.id] = dynamicData;
+
         applyIfChange({ [item.props.id]: dynamicData });
 
         latestState = getAppStore().state;
       }
     }
+
+    // nodes.regenerate(latestState.data);
+    // zones.regenerate(latestState.data);
+
+    // applyIfChange(changes);
   };
 
   return runResolvers();

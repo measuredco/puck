@@ -20,7 +20,6 @@ import {
 import {} from "./actions";
 import { AppStore } from "../store";
 import { dataMap, mapSlots } from "../lib/data-map";
-import { reduceSlots } from "../lib/flatten-slots";
 
 // Restore unregistered zones when re-registering in same session
 export const zoneCache: Record<string, Content> = {};
@@ -29,15 +28,17 @@ export const addToZoneCache = (key: string, data: Content) => {
   zoneCache[key] = data;
 };
 
-const updateContent = <UserData extends Data>(
+export const updateContent = <UserData extends Data>(
   data: UserData,
   zoneCompound: string,
   map: (content: Content) => Content
 ) => {
   if (zoneCompound === rootDroppableId) {
+    const content = map(data.content);
+
     return {
       ...data,
-      content: map(data.content),
+      content: content,
     };
   }
 
@@ -45,11 +46,13 @@ const updateContent = <UserData extends Data>(
   const zone = zones[zoneCompound];
 
   if (zone) {
+    const content = map(zone);
+
     return {
       ...data,
       zones: {
         ...data.zones,
-        [zoneCompound]: map(zone),
+        [zoneCompound]: content,
       },
     };
   }
@@ -60,26 +63,19 @@ const updateContent = <UserData extends Data>(
     if (!item.props) return item;
 
     if ("id" in item.props && item.props.id === parentId) {
+      const content = map(item.props[zoneId]);
+
       return {
         ...item,
         props: {
           ...item.props,
-          [zoneId]: map(item.props[zoneId]),
+          [zoneId]: content,
         },
       };
     }
 
     return item;
   }) as UserData;
-};
-
-export const replaceAction = <UserData extends Data>(
-  data: UserData,
-  action: ReplaceAction
-) => {
-  return updateContent(data, action.destinationZone, (content) =>
-    replace(content, action.destinationIndex, action.data)
-  );
 };
 
 export function insertAction<UserData extends Data>(
@@ -121,7 +117,7 @@ export function reduceData<UserData extends Data>(
   if (action.type === "duplicate") {
     const item = getItem(
       { index: action.sourceIndex, zone: action.sourceZone },
-      appStore
+      appStore.state
     )!;
 
     const newItem = mapSlots(
@@ -165,7 +161,7 @@ export function reduceData<UserData extends Data>(
 
     const item = getItem(
       { zone: action.sourceZone, index: action.sourceIndex },
-      appStore
+      appStore.state
     );
 
     const dataWithRemoved = updateContent(data, action.sourceZone, (content) =>
@@ -177,12 +173,11 @@ export function reduceData<UserData extends Data>(
     );
   }
 
-  if (action.type === "replace") {
-    return replaceAction(data, action);
-  }
-
   if (action.type === "remove") {
-    const item = getItem({ index: action.index, zone: action.zone }, appStore)!;
+    const item = getItem(
+      { index: action.index, zone: action.zone },
+      appStore.state
+    )!;
 
     return updateContent(
       removeRelatedZones(item, data),

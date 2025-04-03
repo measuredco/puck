@@ -41,6 +41,7 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
           iframe={{
             enabled: params.get("disableIframe") === "true" ? false : true,
           }}
+          // ui={{ leftSideBarVisible: false }}
           overrides={{
             headerActions: ({ children }) => (
               <>
