@@ -437,17 +437,19 @@ export const DraggableComponent = ({
           const diffTop = rect.y;
           const exceedsBoundsTop = diffTop < 0;
 
-          // Modify position if it spills over frame horizontally
+          // Modify position if it spills over frame
           if (exceedsBoundsLeft) {
-            el.style.transformOrigin = "left top";
             el.style.left = "0px";
+            el.style.transformOrigin = "left top";
+          }
+          
+          if (exceedsBoundsTop) {
+            el.style.top = "0px";
+            if (!exceedsBoundsLeft) {
+              el.style.transformOrigin = "right top";
+            }
           }
 
-          // Modify position if it spills over frame vertically
-          if (exceedsBoundsTop) {
-            el.style.transformOrigin = "left top";
-            el.style.top = "0px";
-          }
         }
       }
     },
