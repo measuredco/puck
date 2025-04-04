@@ -41,9 +41,16 @@ export const ArrayField = ({
 
   const [localState, setLocalState] = useState({ arrayState, value });
 
+  const updateLocalState = useCallback(
+    (value: object[]) => {
+      setLocalState({ arrayState, value });
+    },
+    [arrayState]
+  );
+
   useEffect(() => {
-    setLocalState({ arrayState, value });
-  }, [value, state.ui.arrayState[id]]);
+    updateLocalState(value);
+  }, [value]);
 
   const mapArrayStateToUi = useCallback(
     (partialArrayState: Partial<ArrayState>) => {
@@ -124,9 +131,13 @@ export const ArrayField = ({
       <SortableProvider
         container={dndContainerRef}
         onDragStart={() => setIsDragging(true)}
-        onDragEnd={() => setIsDragging(false)}
+        onDragEnd={() => {
+          setIsDragging(false);
+
+          onChange(localState.value);
+        }}
         onMove={(move) => {
-          const newValue = reorder(value, move.source, move.target);
+          const newValue = reorder(localState.value, move.source, move.target);
           const newArrayStateItems: ItemWithId[] = reorder(
             arrayState.items,
             move.source,
@@ -138,8 +149,8 @@ export const ArrayField = ({
               [id]: { ...arrayState, items: newArrayStateItems },
             },
           };
+
           setUi(newUi, false);
-          onChange(newValue, newUi);
           setLocalState({
             value: newValue,
             arrayState: { ...arrayState, items: newArrayStateItems },
@@ -223,12 +234,12 @@ export const ArrayField = ({
                                         existingValue[i]
                                       );
 
-                                      onChange(
-                                        existingValue,
-                                        mapArrayStateToUi(
-                                          regenerateArrayState(existingValue)
-                                        )
+                                      const newUi = mapArrayStateToUi(
+                                        regenerateArrayState(existingValue)
                                       );
+
+                                      setUi(newUi, false);
+                                      onChange(existingValue);
                                     }}
                                     title="Duplicate"
                                   >
@@ -255,12 +266,14 @@ export const ArrayField = ({
                                       existingValue.splice(i, 1);
                                       existingItems.splice(i, 1);
 
-                                      onChange(
-                                        existingValue,
+                                      setUi(
                                         mapArrayStateToUi({
                                           items: existingItems,
-                                        })
+                                        }),
+                                        false
                                       );
+
+                                      onChange(existingValue);
                                     }}
                                     title="Delete"
                                   >
@@ -352,7 +365,8 @@ export const ArrayField = ({
 
                 const newArrayState = regenerateArrayState(newValue);
 
-                onChange(newValue, mapArrayStateToUi(newArrayState));
+                setUi(mapArrayStateToUi(newArrayState), false);
+                onChange(newValue);
               }}
             >
               <Plus size={21} />

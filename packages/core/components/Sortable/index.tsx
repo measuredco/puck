@@ -20,8 +20,6 @@ export const SortableProvider = ({
   onDragEnd: () => void;
   onMove: (moveData: { source: number; target: number }) => void;
 }>) => {
-  const [move, setMove] = useState({ source: -1, target: -1 });
-
   const sensors = useSensors({
     mouse: { distance: { value: 5 } },
   });
@@ -38,6 +36,8 @@ export const SortableProvider = ({
       ]}
       onDragStart={onDragStart}
       onDragOver={(event, manager) => {
+        event.preventDefault();
+
         const { operation } = event;
         const { source, target } = operation;
 
@@ -46,13 +46,15 @@ export const SortableProvider = ({
         let sourceIndex = source.data.index;
         let targetIndex = target.data.index;
 
+        // NB drag operation can come out of sync with collision
+        // Would be better for event itself to contain collision data
         const collisionData = (
           manager.dragOperation.data?.collisionMap as CollisionMap
         )?.[target.id];
 
         if (sourceIndex !== targetIndex && source.id !== target.id) {
           const collisionPosition =
-            collisionData?.direction === "up" ? "before" : "after";
+            collisionData.direction === "up" ? "before" : "after";
 
           if (targetIndex >= sourceIndex) {
             targetIndex = targetIndex - 1;
@@ -62,7 +64,7 @@ export const SortableProvider = ({
             targetIndex = targetIndex + 1;
           }
 
-          setMove({
+          onMove({
             source: sourceIndex,
             target: targetIndex,
           });
@@ -70,16 +72,9 @@ export const SortableProvider = ({
       }}
       onDragEnd={() => {
         setTimeout(() => {
-          if (move.source !== -1 && move.target !== -1) {
-            // Delay until animation finished
-            // TODO use this in onDragOver instead of optimistic rendering once re-renders reduced to polish out edge cases
-            onMove(move);
-          }
-
+          // Delay until animation finished
           onDragEnd();
         }, 250);
-
-        setMove({ source: -1, target: -1 });
       }}
     >
       {children}
