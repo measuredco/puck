@@ -112,6 +112,8 @@ export const ArrayField = ({
 
   const forceReadOnly = getPermissions({ item: selectedItem }).edit === false;
 
+  const valueRef = useRef<object[]>(value);
+
   if (field.type !== "array" || !field.arrayFields) {
     return null;
   }
@@ -133,7 +135,7 @@ export const ArrayField = ({
         onDragEnd={() => {
           setDraggedItem("");
 
-          onChange(localState.value);
+          onChange(valueRef.current);
         }}
         onMove={(move) => {
           // A race condition means we can sometimes have the wrong source element
@@ -161,6 +163,8 @@ export const ArrayField = ({
             value: newValue,
             arrayState: { ...arrayState, items: newArrayStateItems },
           });
+
+          valueRef.current = newValue;
         }}
       >
         <div
