@@ -138,7 +138,7 @@ export const ArrayField = ({
         onMove={(move) => {
           // A race condition means we can sometimes have the wrong source element
           // so we double double check before proceeding
-          if (arrayState.items[move.source]._arrayId !== draggedItem) {
+          if (arrayState.items[move.source]?._arrayId !== draggedItem) {
             return;
           }
 
@@ -241,7 +241,8 @@ export const ArrayField = ({
                                       );
 
                                       setUi(newUi, false);
-                                      onChange(existingValue);
+
+                                      onChange(existingValue, newUi);
                                     }}
                                     title="Duplicate"
                                   >
@@ -268,14 +269,13 @@ export const ArrayField = ({
                                       existingValue.splice(i, 1);
                                       existingItems.splice(i, 1);
 
-                                      setUi(
-                                        mapArrayStateToUi({
-                                          items: existingItems,
-                                        }),
-                                        false
-                                      );
+                                      const newUi = mapArrayStateToUi({
+                                        items: existingItems,
+                                      });
 
-                                      onChange(existingValue);
+                                      setUi(newUi, false);
+
+                                      onChange(existingValue, newUi);
                                     }}
                                     title="Delete"
                                   >
@@ -367,8 +367,10 @@ export const ArrayField = ({
 
                 const newArrayState = regenerateArrayState(newValue);
 
-                setUi(mapArrayStateToUi(newArrayState), false);
-                onChange(newValue);
+                const newUi = mapArrayStateToUi(newArrayState);
+
+                setUi(newUi, false);
+                onChange(newValue, newUi);
               }}
             >
               <Plus size={21} />
