@@ -341,7 +341,9 @@ function PuckProvider<
 
   return (
     <appStoreContext.Provider value={appStore}>
-      <UsePuckStoreContext value={uPuckStore}>{children}</UsePuckStoreContext>
+      <UsePuckStoreContext.Provider value={uPuckStore}>
+        {children}
+      </UsePuckStoreContext.Provider>
     </appStoreContext.Provider>
   );
 }
