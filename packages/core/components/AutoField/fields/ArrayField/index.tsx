@@ -116,6 +116,8 @@ export const ArrayField = ({
 
   const forceReadOnly = !canEdit;
 
+  const valueRef = useRef<object[]>(value);
+
   if (field.type !== "array" || !field.arrayFields) {
     return null;
   }
@@ -137,7 +139,7 @@ export const ArrayField = ({
         onDragEnd={() => {
           setIsDragging(false);
 
-          onChange(localState.value);
+          onChange(valueRef.current);
         }}
         onMove={(move) => {
           const newValue = reorder(localState.value, move.source, move.target);
@@ -161,6 +163,8 @@ export const ArrayField = ({
             value: newValue,
             arrayState: { ...arrayState, items: newArrayStateItems },
           });
+
+          valueRef.current = newValue;
         }}
       >
         <div
