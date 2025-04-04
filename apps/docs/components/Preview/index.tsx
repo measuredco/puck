@@ -11,7 +11,6 @@ import { getClassNameFactory } from "@/core/lib";
 
 import styles from "./styles.module.css";
 import { usePuck } from "@/core/lib/use-puck";
-import { FieldLabel } from "@/core/components/AutoField";
 
 const getClassNamePreview = getClassNameFactory("PreviewFrame", styles);
 const getClassNameConfigPreview = getClassNameFactory("ConfigPreview", styles);
