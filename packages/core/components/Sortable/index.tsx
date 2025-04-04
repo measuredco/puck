@@ -7,6 +7,7 @@ import {
   createDynamicCollisionDetector,
 } from "../../lib/dnd/collision/dynamic";
 import { RestrictToElement } from "@dnd-kit/dom/modifiers";
+import "./styles.css";
 
 export const SortableProvider = ({
   container,
