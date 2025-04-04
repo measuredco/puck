@@ -444,7 +444,7 @@ export const DraggableComponent = ({
           }
 
           if (exceedsBoundsTop) {
-            el.style.top = "0px";
+            el.style.top = "12px";
             if (!exceedsBoundsLeft) {
               el.style.transformOrigin = "right top";
             }
