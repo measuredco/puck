@@ -14,7 +14,7 @@ export const SortableProvider = ({
   onDragEnd,
   onMove,
 }: PropsWithChildren<{
-  onDragStart: () => void;
+  onDragStart: (id: string) => void;
   onDragEnd: () => void;
   onMove: (moveData: { source: number; target: number }) => void;
 }>) => {
@@ -25,7 +25,9 @@ export const SortableProvider = ({
   return (
     <DragDropProvider
       sensors={sensors}
-      onDragStart={onDragStart}
+      onDragStart={(event) =>
+        onDragStart(event.operation.source?.id.toString() ?? "")
+      }
       onDragOver={(event, manager) => {
         event.preventDefault();
 
