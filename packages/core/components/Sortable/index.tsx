@@ -6,17 +6,14 @@ import {
   CollisionMap,
   createDynamicCollisionDetector,
 } from "../../lib/dnd/collision/dynamic";
-import { RestrictToElement } from "@dnd-kit/dom/modifiers";
 import "./styles.css";
 
 export const SortableProvider = ({
-  container,
   children,
   onDragStart,
   onDragEnd,
   onMove,
 }: PropsWithChildren<{
-  container: React.RefObject<Element | null>;
   onDragStart: () => void;
   onDragEnd: () => void;
   onMove: (moveData: { source: number; target: number }) => void;
@@ -28,13 +25,6 @@ export const SortableProvider = ({
   return (
     <DragDropProvider
       sensors={sensors}
-      modifiers={[
-        RestrictToElement.configure({
-          element() {
-            return container.current;
-          },
-        }),
-      ]}
       onDragStart={onDragStart}
       onDragOver={(event, manager) => {
         event.preventDefault();

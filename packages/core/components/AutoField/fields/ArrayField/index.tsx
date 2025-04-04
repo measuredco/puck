@@ -109,7 +109,6 @@ export const ArrayField = ({
   }, []);
 
   const [isDragging, setIsDragging] = useState(false);
-  const dndContainerRef = useRef<HTMLDivElement>(null);
 
   const canEdit = useAppStore(
     (s) => s.permissions.getPermissions({ item: s.selectedItem }).edit
@@ -134,7 +133,6 @@ export const ArrayField = ({
       readOnly={readOnly}
     >
       <SortableProvider
-        container={dndContainerRef}
         onDragStart={() => setIsDragging(true)}
         onDragEnd={() => {
           setIsDragging(false);
@@ -172,11 +170,7 @@ export const ArrayField = ({
           })}
         >
           {localState.arrayState.items.length > 0 && (
-            <div
-              ref={dndContainerRef}
-              className={getClassName("inner")}
-              data-dnd-container
-            >
+            <div className={getClassName("inner")} data-dnd-container>
               {localState.arrayState.items.map((item, i) => {
                 const { _arrayId = `${id}-${i}`, _originalIndex = i } = item;
                 const data: any = Array.from(localState.value || [])[i] || {};
