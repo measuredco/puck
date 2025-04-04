@@ -107,7 +107,8 @@ export const ArrayField = ({
     }
   }, []);
 
-  const [isDragging, setIsDragging] = useState(false);
+  const [draggedItem, setDraggedItem] = useState("");
+  const isDragging = !!draggedItem;
 
   const forceReadOnly = getPermissions({ item: selectedItem }).edit === false;
 
@@ -128,14 +129,21 @@ export const ArrayField = ({
       readOnly={readOnly}
     >
       <SortableProvider
-        onDragStart={() => setIsDragging(true)}
+        onDragStart={(id) => setDraggedItem(id)}
         onDragEnd={() => {
-          setIsDragging(false);
+          setDraggedItem("");
 
           onChange(localState.value);
         }}
         onMove={(move) => {
+          // A race condition means we can sometimes have the wrong source element
+          // so we double double check before proceeding
+          if (arrayState.items[move.source]._arrayId !== draggedItem) {
+            return;
+          }
+
           const newValue = reorder(localState.value, move.source, move.target);
+
           const newArrayStateItems: ItemWithId[] = reorder(
             arrayState.items,
             move.source,
