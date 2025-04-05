@@ -2,6 +2,27 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.18.3](https://github.com/measuredco/puck/compare/v0.18.2...v0.18.3) (2025-04-05)
+
+
+### Bug Fixes
+
+* bind array item to correct field when using multiple arrays ([934cfae](https://github.com/measuredco/puck/commit/934cfaeed36b9737cd51c0d400b4e7ec8686ae35))
+* don't artificially constrain array items to container ([648a235](https://github.com/measuredco/puck/commit/648a235f5bb20b276f7fc307e81842b1215838f9))
+* don't render array item until dropped ([94f5e23](https://github.com/measuredco/puck/commit/94f5e238e2a8dd2ec5b3eba211d1160a2faa739a))
+* don't reset old values when modifying fields in other array items ([73c17b3](https://github.com/measuredco/puck/commit/73c17b30d1c13a8971731942f690c44ddc1794cc))
+* don't track dragged headings in heading-outline-analyzer ([3c16391](https://github.com/measuredco/puck/commit/3c16391bc8085cbddc910f70657e440471216995))
+* ensure file inputs work inside array fields ([746033f](https://github.com/measuredco/puck/commit/746033f53623b1824f31e987339737fd92ce38dc))
+* ensure nested array fields are draggable ([0bdd243](https://github.com/measuredco/puck/commit/0bdd2434a254151cfbe636840ed1294fef5c0c26))
+* expose transformProps in server bundle ([d234345](https://github.com/measuredco/puck/commit/d234345c73d530803f3effb1c8a458353ac006e2))
+* prevent ActionBar clipping if it exceeds top bounds ([e8355f0](https://github.com/measuredco/puck/commit/e8355f09c668baa044629d923076c59817d43072))
+* remove erroneous React 17 from supported peer dependencies ([98ad734](https://github.com/measuredco/puck/commit/98ad73412c1addb9214a3d953d962f401f044a3f))
+* reorder array items more predictably ([659f2d8](https://github.com/measuredco/puck/commit/659f2d8fc0c3c4511211a4933e0337ab771b29dd))
+* show top border on array button when array empty ([7442118](https://github.com/measuredco/puck/commit/7442118598793d808c80535428dd21de9315daa1))
+
+
+
+
 ## [0.18.2](https://github.com/measuredco/puck/compare/v0.18.0...v0.18.2) (2025-01-31)
 
 
