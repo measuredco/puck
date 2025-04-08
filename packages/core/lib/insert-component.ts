@@ -1,23 +1,17 @@
 import { insertAction, InsertAction, PuckAction } from "../reducer";
+import { AppStore } from "../store";
 import { AppState, Config } from "../types";
+import { PrivateAppState } from "../types/Internal";
 import { generateId } from "./generate-id";
+import { getItem } from "./get-item";
+import { resolveComponentData } from "./resolve-component-data";
 
 // Makes testing easier without mocks
-export const insertComponent = (
+export const insertComponent = async (
   componentType: string,
   zone: string,
   index: number,
-  {
-    config,
-    dispatch,
-    resolveData,
-    state,
-  }: {
-    config: Config;
-    dispatch: (action: PuckAction) => void;
-    resolveData: (newAppState: AppState) => void;
-    state: AppState;
-  }
+  appStore: AppStore
 ) => {
   // Reuse newData so ID retains parity between dispatch and resolver
   const id = generateId(componentType);
@@ -30,7 +24,9 @@ export const insertComponent = (
     id,
   };
 
-  const insertedData = insertAction(state.data, insertActionData, config);
+  const { state, config, dispatch, resolveComponentData } = appStore;
+
+  const insertedState = insertAction(state, insertActionData, config);
 
   // Dispatch the insert, immediately
   dispatch({
@@ -50,9 +46,17 @@ export const insertComponent = (
   // Select the item, immediately
   dispatch({ type: "setUi", ui: { itemSelector } });
 
-  // Run any resolvers, async
-  resolveData({
-    data: insertedData,
-    ui: { ...state.ui, itemSelector },
-  });
+  const itemData = getItem(itemSelector, insertedState);
+
+  if (itemData) {
+    // Run any resolvers, async
+    const resolvedData = await resolveComponentData(itemData);
+
+    dispatch({
+      type: "replace",
+      destinationZone: itemSelector.zone,
+      destinationIndex: itemSelector.index,
+      data: resolvedData,
+    });
+  }
 };

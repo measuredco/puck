@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentConfig, ComponentData, Content } from "@/core/types";
+import { ComponentConfig, Slot } from "@/core/types";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { Section } from "../../components/Section";
@@ -28,11 +28,9 @@ async function createComponent<T extends keyof Props>(
 
 const getClassName = getClassNameFactory("Template", styles);
 
-type Slot = ComponentData[];
-
 export type TemplateProps = {
   template: string;
-  children: Content;
+  children: Slot;
 };
 
 export const TemplateInternal: ComponentConfig<TemplateProps> = {
@@ -55,7 +53,7 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
   resolveData: async (data, { changed }) => {
     if (!changed.template) return data;
 
-    const templates: Record<string, Content> = {
+    const templates: Record<string, Slot> = {
       template_1: [
         await createComponent("Grid", {
           numColumns: 2,
@@ -142,34 +140,12 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
       },
     };
   },
-  // TODO the `children` field is now broken. Fix it. Using DropZone instead.
-  render: ({ children, children: Children }) => {
+  render: ({ children }) => {
     return (
       <Section>
-        {/* <Slot
-          initialData={[createHeading("Slot")]}
-        /> */}
-
-        {/* <DropZone
-          zone="children"
-          disallow={["Hero", "Stats"]}
-          className={getClassName()}
-          style={{
-            gap,
-            gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
-          }}
-        /> */}
         {children({
           className: getClassName(),
         })}
-        {/* <Children
-          disallow={["Hero", "Stats"]}
-          className={getClassName()}
-          style={{
-            gap,
-            gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
-          }}
-        /> */}
       </Section>
     );
   },

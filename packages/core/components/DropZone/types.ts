@@ -2,8 +2,7 @@ import { CSSProperties } from "react";
 import { Content, DragAxis } from "../../types";
 
 export type DropZoneProps = {
-  zone?: string;
-  content?: Content;
+  zone: string;
   allow?: string[];
   disallow?: string[];
   style?: CSSProperties;

@@ -3,6 +3,7 @@ import {
   Data,
   DefaultRootFieldProps,
   Metadata,
+  RootData,
   RootDataWithProps,
 } from "../types";
 import { getChanged } from "./get-changed";
@@ -13,15 +14,25 @@ export const cache: {
 
 export async function resolveRootData<
   RootProps extends Record<string, any> = DefaultRootFieldProps
->(data: Data, config: Config, metadata: Metadata) {
-  if (config.root?.resolveData && data.root.props) {
-    if (cache.lastChange?.original === data.root) {
+>(
+  rootData: RootData,
+  config: Config,
+  metadata: Metadata,
+  onResolveStart?: (rootData: RootData) => void,
+  onResolveEnd?: (rootData: RootData) => void
+) {
+  if (config.root?.resolveData && rootData.props) {
+    if (cache.lastChange?.original === rootData) {
       return cache.lastChange.resolved;
     }
 
-    const changed = getChanged(data.root, cache.lastChange?.original);
+    if (onResolveStart) {
+      onResolveStart(rootData);
+    }
 
-    const rootWithProps = data.root as RootDataWithProps;
+    const changed = getChanged(rootData, cache.lastChange?.original);
+
+    const rootWithProps = rootData as RootDataWithProps;
 
     const resolvedRoot = await config.root?.resolveData(rootWithProps, {
       changed,
@@ -30,19 +41,23 @@ export async function resolveRootData<
     });
 
     cache.lastChange = {
-      original: data.root as RootDataWithProps<RootProps>,
+      original: rootData as RootDataWithProps<RootProps>,
       resolved: resolvedRoot as RootDataWithProps<RootProps>,
     };
 
+    if (onResolveEnd) {
+      onResolveEnd(resolvedRoot);
+    }
+
     return {
-      ...data.root,
+      ...rootData,
       ...resolvedRoot,
       props: {
-        ...data.root.props,
+        ...rootData.props,
         ...resolvedRoot.props,
       },
     };
   }
 
-  return data.root;
+  return rootData;
 }

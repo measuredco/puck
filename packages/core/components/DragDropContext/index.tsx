@@ -103,10 +103,7 @@ const DragDropContextClient = ({
   children,
   disableAutoScroll,
 }: DragDropContextProps) => {
-  const config = useAppStore((s) => s.config);
   const dispatch = useAppStore((s) => s.dispatch);
-  const resolveData = useAppStore((s) => s.resolveData);
-  const metadata = useAppStore((s) => s.metadata);
   const appStore = useAppStoreApi();
 
   const id = useSafeId();
@@ -338,7 +335,7 @@ const DragDropContextClient = ({
                     thisPreview.componentType,
                     thisPreview.zone,
                     thisPreview.index,
-                    { config, dispatch, resolveData, state }
+                    appStore.getState()
                   );
                 } else if (initialSelector.current) {
                   dispatch({
@@ -427,7 +424,8 @@ const DragDropContextClient = ({
               targetIndex = 0;
             }
 
-            const path = appStore.getState().nodes.nodes[target.id]?.path || [];
+            const path =
+              appStore.getState().state.indexes.nodes[target.id]?.path || [];
 
             // Abort if dragging over self or descendant
             if (
@@ -464,7 +462,7 @@ const DragDropContextClient = ({
 
               const item = getItem(
                 initialSelector.current,
-                appStore.getState()
+                appStore.getState().state
               );
 
               if (item) {
@@ -502,7 +500,7 @@ const DragDropContextClient = ({
                   zone: sourceData.zone,
                   index: sourceData.index,
                 },
-                appStore.getState()
+                appStore.getState().state
               );
 
               if (item) {

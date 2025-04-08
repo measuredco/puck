@@ -1,24 +1,18 @@
 import { Reducer } from "react";
 import { AppState, Config, Data } from "../types";
-import { reduceData } from "./data";
-import { PuckAction, SetAction } from "./actions";
-import { reduceUi } from "./state";
-import type { Content, OnAction } from "../types";
-import { dataMap } from "../lib/data-map";
-import {
-  flattenAllSlots,
-  flattenSlots,
-  mergeSlots,
-} from "../lib/flatten-slots";
-import { AppStore, AppStoreApi } from "../store";
+import { PuckAction } from "./actions";
+import type { OnAction } from "../types";
+import { AppStore } from "../store";
+import { PrivateAppState } from "../types/Internal";
+import { reduce } from "./reduce";
 
 export * from "./actions";
-export * from "./data";
+export * from "./reduce";
 
 export type ActionType = "insert" | "reorder";
 
 export type StateReducer<UserData extends Data = Data> = Reducer<
-  AppState<UserData>,
+  PrivateAppState<UserData>,
   PuckAction
 >;
 
@@ -28,9 +22,9 @@ function storeInterceptor<UserData extends Data = Data>(
   onAction?: OnAction<UserData>
 ) {
   return (
-    state: AppState<UserData>,
+    state: PrivateAppState<UserData>,
     action: PuckAction
-  ): AppState<UserData> => {
+  ): PrivateAppState<UserData> => {
     const newAppState = reducer(state, action);
 
     const isValidType = ![
@@ -55,20 +49,6 @@ function storeInterceptor<UserData extends Data = Data>(
   };
 }
 
-export const setAction = <UserData extends Data>(
-  state: AppState<UserData>,
-  action: SetAction<UserData>
-): AppState<UserData> => {
-  if (typeof action.state === "object") {
-    return {
-      ...state,
-      ...action.state,
-    };
-  }
-
-  return { ...state, ...action.state(state) };
-};
-
 export function createReducer<
   UserConfig extends Config,
   UserData extends Data
@@ -85,20 +65,11 @@ export function createReducer<
 }): StateReducer<UserData> {
   return storeInterceptor(
     (state, action) => {
-      let data = reduceData(state.data, action, appStore);
-      let ui = reduceUi(state.ui, action);
+      const result = reduce(state, action, appStore);
 
-      if (action.type === "set") {
-        const setValue = setAction<UserData>(
-          state,
-          action as SetAction<UserData>
-        );
+      console.log(action.type, state, result);
 
-        data = setValue.data;
-        ui = setValue.ui;
-      }
-
-      return { data, ui };
+      return result;
     },
     record,
     onAction

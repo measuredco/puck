@@ -1,4 +1,3 @@
-import { ZoneType } from "../store/slices/zones";
 import { ComponentData, Config, Content, Data } from "../types";
 import { rootAreaId, rootZone } from "./root-droppable-id";
 
@@ -8,17 +7,11 @@ export const forAllData = (
     data: ComponentData,
     parentId: string,
     zone: string,
-    index: number,
-    zoneType: ZoneType
+    index: number
   ) => void,
   config?: Config
 ) => {
-  const processContent = (
-    content: Content,
-    parentId: string,
-    zone: string,
-    metadata: { type: ZoneType }
-  ) => {
+  const processContent = (content: Content, parentId: string, zone: string) => {
     content?.forEach((data, index) => {
       // console.log("Processing", parentId, data);
       const configForComponent = config?.components[data.type];
@@ -28,22 +21,20 @@ export const forAllData = (
           const field = configForComponent.fields![propKey];
 
           if (field.type === "slot") {
-            processContent(data.props[propKey], data.props.id, propKey, {
-              type: "slot",
-            });
+            processContent(data.props[propKey], data.props.id, propKey);
           }
         });
       }
 
-      cb(data, parentId, zone, index, metadata.type);
+      cb(data, parentId, zone, index);
     });
   };
 
-  processContent(data.content || [], rootAreaId, rootZone, { type: "root" });
+  processContent(data.content || [], rootAreaId, rootZone);
 
   Object.entries(data.zones || {}).forEach(([zoneCompound, content]) => {
     const [parentId, zone] = zoneCompound.split(":");
 
-    processContent(content, parentId, zone, { type: "dropzone" });
+    processContent(content, parentId, zone);
   });
 };

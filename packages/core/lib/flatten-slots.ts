@@ -1,14 +1,15 @@
 import { ComponentData, Content, Data, RootData } from "../types";
 import { dataMap } from "./data-map";
 
-const isSlot = (prop: any) =>
+export const isSlot = (prop: any) =>
   Array.isArray(prop) &&
   typeof prop[0]?.type === "string" &&
   typeof prop[0]?.props === "object";
 
 export const forEachSlot = <T extends ComponentData | RootData>(
   item: T,
-  cb: (parentId: string, slotId: string, content: Content) => void
+  cb: (parentId: string, slotId: string, content: Content) => void,
+  recursive: boolean = false
 ) => {
   const props: Record<string, any> = item.props || {};
 

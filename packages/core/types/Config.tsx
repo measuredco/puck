@@ -19,7 +19,7 @@ export type ComponentConfig<
 > = {
   render: PuckComponent<{
     [PropName in keyof RenderProps]: RenderProps[PropName] extends Content
-      ? (props: DropZoneProps) => ReactNode
+      ? (props: Omit<DropZoneProps, "zone">) => ReactNode
       : RenderProps[PropName];
   }>;
   label?: string;

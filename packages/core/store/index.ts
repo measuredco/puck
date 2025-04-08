@@ -9,6 +9,9 @@ import {
   Field,
   ComponentConfig,
   Metadata,
+  ComponentData,
+  RootData,
+  Data,
 } from "../types";
 import { createReducer, PuckAction } from "../reducer";
 import { getItem } from "../lib/get-item";
@@ -16,7 +19,6 @@ import { defaultViewports } from "../components/ViewportControls/default-viewpor
 import { Viewports } from "../types";
 import { create, StoreApi, useStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import { resolveData } from "../lib/resolve-data";
 import { createContext, useContext } from "react";
 import { createHistorySlice, type HistorySlice } from "./slices/history";
 import { createNodesSlice, type NodesSlice } from "./slices/nodes";
@@ -25,9 +27,12 @@ import {
   type PermissionsSlice,
 } from "./slices/permissions";
 import { createFieldsSlice, type FieldsSlice } from "./slices/fields";
-import { createZonesSlice, ZonesSlice } from "./slices/zones";
+import { PrivateAppState } from "../types/Internal";
+import { resolveComponentData } from "../lib/resolve-component-data";
+import { resolveRootData } from "../lib/resolve-root-data";
+import { resolveAllData } from "../lib/resolve-all-data";
 
-export const defaultAppState: AppState = {
+export const defaultAppState: PrivateAppState = {
   data: { content: [], root: {}, zones: {} },
   ui: {
     leftSideBarVisible: true,
@@ -46,6 +51,10 @@ export const defaultAppState: AppState = {
       controlsVisible: true,
     },
     field: { focus: null },
+  },
+  indexes: {
+    nodes: {},
+    zones: {},
   },
 };
 
@@ -68,10 +77,14 @@ export type AppStore<
   config: UserConfig;
   componentState: ComponentState;
   setComponentState: (componentState: ComponentState) => void;
-  setComponentLoading: (id: string) => void;
+  setComponentLoading: (id: string, loading?: boolean, defer?: number) => void;
   unsetComponentLoading: (id: string) => void;
-  resolveDataRuns: number;
-  resolveData: (newAppState: AppState) => void;
+  pendingComponentLoads: Record<string, NodeJS.Timeout>;
+  resolveComponentData: (
+    componentData: ComponentData
+  ) => Promise<ComponentData>;
+  resolveRootData: (rootData: RootData) => Promise<RootData>;
+  resolveAndCommitData: () => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
   viewports: Viewports;
@@ -88,7 +101,6 @@ export type AppStore<
   fields: FieldsSlice;
   history: HistorySlice;
   nodes: NodesSlice;
-  zones: ZonesSlice;
   permissions: PermissionsSlice;
 };
 
@@ -119,7 +131,6 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
       fields: createFieldsSlice(set, get),
       history: createHistorySlice(set, get),
       nodes: createNodesSlice(set, get),
-      zones: createZonesSlice(set, get),
       permissions: createPermissionsSlice(set, get),
       getComponentConfig: (type?: string) => {
         const { config, selectedItem } = get();
@@ -144,7 +155,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           const state = dispatch(s.state, action);
 
           const selectedItem = state.ui.itemSelector
-            ? getItem(state.ui.itemSelector, get())
+            ? getItem(state.ui.itemSelector, state)
             : null;
 
           get().onAction?.(action, state, get().state);
@@ -154,30 +165,69 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
       setZoomConfig: (zoomConfig) => set({ zoomConfig }),
       setStatus: (status) => set({ status }),
       setComponentState: (componentState) => set({ componentState }),
-      setComponentLoading: (id: string) => {
-        const { setComponentState, componentState } = get();
+      pendingComponentLoads: {},
+      setComponentLoading: (
+        id: string,
+        loading: boolean = true,
+        defer: number = 0
+      ) => {
+        const { setComponentState, componentState, pendingComponentLoads } =
+          get();
 
-        setComponentState({
-          ...componentState,
-          [id]: {
-            ...componentState[id],
-            loadingCount: (componentState[id]?.loadingCount || 0) + 1,
+        const thisPendingComponentLoads = { ...pendingComponentLoads };
+
+        const setLoading = () =>
+          setComponentState({
+            ...componentState,
+            [id]: {
+              ...componentState[id],
+              loadingCount: (componentState[id]?.loadingCount || 0) + 1,
+            },
+          });
+
+        const unsetLoading = () =>
+          setComponentState({
+            ...componentState,
+            [id]: {
+              ...componentState[id],
+              loadingCount: Math.max(
+                (componentState[id]?.loadingCount || 0) - 1,
+                0
+              ),
+            },
+          });
+
+        if (thisPendingComponentLoads[id]) {
+          clearTimeout(thisPendingComponentLoads[id]);
+
+          delete thisPendingComponentLoads[id];
+
+          set({ pendingComponentLoads: thisPendingComponentLoads });
+        }
+
+        const timeout = setTimeout(() => {
+          if (loading) {
+            setLoading();
+          } else {
+            unsetLoading();
+          }
+
+          delete thisPendingComponentLoads[id];
+
+          set({ pendingComponentLoads: thisPendingComponentLoads });
+        }, defer);
+
+        set({
+          pendingComponentLoads: {
+            ...thisPendingComponentLoads,
+            [id]: timeout,
           },
         });
       },
       unsetComponentLoading: (id: string) => {
-        const { setComponentState, componentState } = get();
+        const { setComponentLoading } = get();
 
-        setComponentState({
-          ...componentState,
-          [id]: {
-            ...componentState[id],
-            loadingCount: Math.max(
-              (componentState[id]?.loadingCount || 0) - 1,
-              0
-            ),
-          },
-        });
+        setComponentLoading(id, false);
       },
       // Helper
       setUi: (ui: Partial<UiState>, recordHistory?: boolean) =>
@@ -195,18 +245,53 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           });
 
           const selectedItem = state.ui.itemSelector
-            ? getItem(state.ui.itemSelector, get())
+            ? getItem(state.ui.itemSelector, state)
             : null;
 
           return { ...s, state, selectedItem };
         }),
-      resolveDataRuns: 0,
-      resolveData: (newAppState) =>
-        set((s) => {
-          resolveData(newAppState, get);
+      // resolveDataRuns: 0,
+      // resolveData: (newAppState) =>
+      //   set((s) => {
+      //     resolveData(newAppState, get);
 
-          return { ...s, resolveDataRuns: s.resolveDataRuns + 1 };
-        }),
+      //     return { ...s, resolveDataRuns: s.resolveDataRuns + 1 };
+      //   }),
+      resolveComponentData: async (componentData) => {
+        const { config, metadata, setComponentLoading } = get();
+
+        return await resolveComponentData(
+          componentData,
+          config,
+          metadata,
+          (item) => setComponentLoading(item.props.id, true, 50),
+          (item) => setComponentLoading(item.props.id, false, 0)
+        );
+      },
+      resolveRootData: async (rootData) => {
+        const { config, metadata, setComponentLoading } = get();
+
+        return await resolveRootData(
+          rootData,
+          config,
+          metadata,
+          () => setComponentLoading("puck-root", true, 50),
+          () => setComponentLoading("puck-root", false, 0)
+        );
+      },
+      resolveAndCommitData: async () => {
+        // TODO implement
+        // TODO
+        // const { state, config, metadata, setComponentLoading } = get();
+        // const newData = await resolveAllData(
+        //   state.data,
+        //   config,
+        //   metadata,
+        //   (item) => setComponentLoading(item.props.id, true, 50),
+        //   (item) => setComponentLoading(item.props.id, false, 0)
+        // );
+        // return newData;
+      },
     }))
   );
 
