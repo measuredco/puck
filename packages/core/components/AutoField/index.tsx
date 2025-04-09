@@ -281,6 +281,14 @@ export function AutoFieldPrivate<
     }
   }, [value]);
 
+  useEffect(() => {
+    if (!isFocused) {
+      if (value !== localValue) {
+        setLocalValue(value);
+      }
+    }
+  }, [isFocused, value, localValue]);
+
   const localProps = {
     value: localValue,
     onChange: onChangeLocal,
