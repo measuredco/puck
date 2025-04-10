@@ -26,6 +26,7 @@ const config = {
 | [`components`](#components) | `components: { HeadingBlock: {{ render: () => <h1 /> } }`      | Object                                                                  | Required |
 | [`root`](#root)             | `root: { render: () => <div /> }`                              | [`ComponentConfig`](/docs/api-reference/configuration/component-config) | -        |
 | [`categories`](#categories) | `categories: { typography: { components: ["HeadingBlock"] } }` | Object                                                                  | -        |
+| [`context`](#context)       | `context: { package: "@measured/puck" }`                       | Any                                                                     | -        |
 
 ## Required params
 
@@ -46,6 +47,31 @@ const config = {
         return <h1>{children}</h1>;
       },
     },
+  },
+};
+```
+
+Alternatively, a component can be defined as a function that returns a [`ComponentConfig` API](/docs/api-reference/configuration/component-config).
+This approach enables access to the [`context`](#context) provided during initialization.
+
+```tsx {6-18} copy showLineNumbers
+const config = {
+  context: {
+    package: "@measured/puck",
+    version: "x.x.x",
+  },
+  components: {
+    HeadingBlock: (context) => ({
+      fields: {
+        title: {
+          type: "text",
+        },
+      },
+      defaultProps: {
+        title: `${context.package} v${context.version}`,
+      },
+      render: ({ title }) => <h1>{title}</h1>,
+    }),
   },
 };
 ```
@@ -106,3 +132,17 @@ A boolean describing whether or not the category should be expanded by default i
 #### `categories["other"]`
 
 The default category for all uncategorized components. Receives all other categories params.
+
+### `context`
+
+Allows you to define any type of data that can be passed to create a [`component`](#components).
+
+```tsx {2-6} copy showLineNumbers
+const config = {
+  context: {
+    package: "@measured/puck",
+    version: "x.x.x",
+  },
+  // ...
+};
+```
