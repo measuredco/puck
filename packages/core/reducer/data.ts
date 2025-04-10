@@ -17,7 +17,7 @@ import {
   ReplaceAction,
   ReorderAction,
 } from "./actions";
-import {} from "./actions";
+import { getComponentConfig } from "../lib/get-component-config";
 
 // Restore unregistered zones when re-registering in same session
 export const zoneCache: Record<string, Content> = {};
@@ -60,7 +60,7 @@ export function insertAction<UserData extends Data>(
   const emptyComponentData = {
     type: action.componentType,
     props: {
-      ...(config.components[action.componentType].defaultProps || {}),
+      ...(getComponentConfig(config, action.componentType).defaultProps || {}),
       id: action.id || generateId(action.componentType),
     },
   };

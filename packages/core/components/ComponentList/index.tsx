@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { useAppStore } from "../../store";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Drawer } from "../Drawer";
+import { getComponentConfig } from "../../lib/get-component-config";
 
 const getClassName = getClassNameFactory("ComponentList", styles);
 
@@ -82,7 +83,8 @@ const ComponentList = ({
                 <ComponentListItem
                   key={componentKey}
                   label={
-                    config.components[componentKey]["label"] ?? componentKey
+                    getComponentConfig(config, componentKey)["label"] ??
+                    componentKey
                   }
                   name={componentKey}
                 />

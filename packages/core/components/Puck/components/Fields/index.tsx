@@ -17,6 +17,7 @@ import { ItemSelector } from "../../../../lib/get-item";
 import { useRegisterFieldsSlice } from "../../../../store/slices/fields";
 import { useShallow } from "zustand/react/shallow";
 import { StoreApi } from "zustand";
+import { getComponentConfig } from "../../../../lib/get-component-config";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 
@@ -75,7 +76,7 @@ const createOnChange =
       };
 
       // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-      if (config.components[selectedItem.type]?.resolveData) {
+      if (getComponentConfig(config, selectedItem.type)?.resolveData) {
         resolveData(setAction(state, setActionData));
       } else {
         dispatch({

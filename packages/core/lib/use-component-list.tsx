@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { ComponentList } from "../components/ComponentList";
 import { useAppStore } from "../store";
+import { getComponentConfig } from "./get-component-config";
 
 export const useComponentList = () => {
   const [componentList, setComponentList] = useState<ReactNode[]>();
@@ -28,7 +29,8 @@ export const useComponentList = () => {
               {category.components.map((componentName, i) => {
                 matchedComponents.push(componentName as string);
 
-                const componentConf = config.components[componentName] || {};
+                const componentConf =
+                  getComponentConfig(config, componentName) || {};
 
                 return (
                   <ComponentList.Item
@@ -60,7 +62,8 @@ export const useComponentList = () => {
             title={uiComponentList.other?.title || "Other"}
           >
             {remainingComponents.map((componentName, i) => {
-              const componentConf = config.components[componentName] || {};
+              const componentConf =
+                getComponentConfig(config, componentName) || {};
 
               return (
                 <ComponentList.Item

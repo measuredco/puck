@@ -38,6 +38,7 @@ import { useDragAxis } from "./lib/use-drag-axis";
 import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
 import { renderContext } from "../Render";
+import { getComponentConfig } from "../../lib/get-component-config";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -109,9 +110,7 @@ const DropZoneChild = ({
       ? { type: preview.componentType, props: preview.props }
       : null);
 
-  const componentConfig = useAppStore((s) =>
-    item?.type ? s.config.components[item.type] : null
-  );
+  const config = useAppStore((s) => s.config);
   const overrides = useAppStore((s) => s.overrides);
   const isLoading = useAppStore(
     (s) => s.componentState[componentId]?.loadingCount > 0
@@ -119,6 +118,10 @@ const DropZoneChild = ({
   const isSelected = useAppStore(
     (s) => s.selectedItem?.props.id === componentId || false
   );
+
+  const componentConfig = item?.type
+    ? getComponentConfig(config, item.type)
+    : null;
 
   let label = componentConfig?.label ?? item?.type.toString() ?? "Component";
 
@@ -456,7 +459,7 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
     return (
       <div className={className} style={style} ref={ref}>
         {content.map((item) => {
-          const Component = config.components[item.type];
+          const Component = getComponentConfig(config, item.type);
           if (Component) {
             return (
               <DropZoneProvider

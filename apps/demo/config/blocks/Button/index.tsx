@@ -1,6 +1,7 @@
 import React from "react";
-import { ComponentConfig } from "@/core/types";
+import { ComponentConfigFunction } from "@/core/types";
 import { Button as _Button } from "@/core/components/Button";
+import { Context } from "../../index";
 
 export type ButtonProps = {
   label: string;
@@ -8,7 +9,9 @@ export type ButtonProps = {
   variant: "primary" | "secondary";
 };
 
-export const Button: ComponentConfig<ButtonProps> = {
+export const Button: ComponentConfigFunction<ButtonProps, Context> = (
+  context
+) => ({
   label: "Button",
   fields: {
     label: { type: "text", placeholder: "Lorem ipsum..." },
@@ -22,7 +25,7 @@ export const Button: ComponentConfig<ButtonProps> = {
     },
   },
   defaultProps: {
-    label: "Button",
+    label: context?.package ?? "Button",
     href: "#",
     variant: "primary",
   },
@@ -40,4 +43,4 @@ export const Button: ComponentConfig<ButtonProps> = {
       </div>
     );
   },
-};
+});

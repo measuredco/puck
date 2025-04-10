@@ -1,12 +1,12 @@
 import {
   AppState,
-  ComponentData,
   Config,
   Data,
   ExtractPropsFromConfig,
   ExtractRootPropsFromConfig,
   Permissions,
 } from "../types";
+import { getComponentConfig } from "./get-component-config";
 
 export const resolvePermissions = <
   UserConfig extends Config = Config,
@@ -33,7 +33,7 @@ export const resolvePermissions = <
   permissions: Partial<Permissions>;
   appState: AppState<UserData>;
 }) => {
-  const componentConfig = data ? config.components[data.type] : null;
+  const componentConfig = data ? getComponentConfig(config, data.type) : null;
 
   if (data && lastData && componentConfig?.resolvePermissions) {
     return componentConfig.resolvePermissions(data, {

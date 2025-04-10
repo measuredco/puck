@@ -1,5 +1,6 @@
 import { ComponentData, Config, MappedItem, Metadata } from "../types";
 import { getChanged } from "./get-changed";
+import { getComponentConfig } from "./get-component-config";
 
 export const cache: {
   lastChange: Record<string, any>;
@@ -32,7 +33,7 @@ export const resolveComponentData = async (
   onResolveStart?: (item: MappedItem) => void,
   onResolveEnd?: (item: MappedItem) => void
 ) => {
-  const configForItem = config.components[item.type];
+  const configForItem = getComponentConfig(config, item.type);
   if (configForItem.resolveData) {
     const { item: oldItem = null, resolved = {} } =
       cache.lastChange[item.props.id] || {};

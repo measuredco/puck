@@ -6,6 +6,7 @@ import {
 } from "../../lib/root-droppable-id";
 import { setupZone } from "../../lib/setup-zone";
 import { Config, Data, Metadata, UserGenerics } from "../../types";
+import { getComponentConfig } from "../../lib/get-component-config";
 
 type DropZoneRenderProps = {
   zone: string;
@@ -38,7 +39,7 @@ function DropZoneRender({
   return (
     <>
       {content.map((item) => {
-        const Component = config.components[item.type];
+        const Component = getComponentConfig(config, item.type);
 
         if (Component) {
           return (
