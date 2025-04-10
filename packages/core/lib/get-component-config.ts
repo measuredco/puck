@@ -1,6 +1,8 @@
-import { Config } from "../types";
+import { Config, DefaultComponentProps } from "../types";
 
-export const getComponentConfig = (config: Config, type: string | number) => {
+export const getComponentConfig = <
+  Props extends DefaultComponentProps = DefaultComponentProps
+>(config: Config<Props>, type: string | number) => {
   const component = config.components[type];
 
   return typeof component === "function"
