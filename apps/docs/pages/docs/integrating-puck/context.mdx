@@ -1,0 +1,54 @@
+# Context
+
+`context` is a property that can be defined in [`Config`](/docs/api-reference/configuration/config).
+
+## Passing the context
+
+```tsx {2-6} copy showLineNumbers
+const config = {
+  context: {
+    package: "@measured/puck",
+    version: "x.x.x",
+  },
+  // ...
+};
+```
+
+## Usage
+
+Once defined, the `context` can be accessed by components during their creation.
+
+```tsx
+const config = {
+  context: {
+    package: "@measured/puck",
+    version: "x.x.x",
+  },
+  components: {
+    HeadingBlock: (context) => ({
+      fields: {
+        title: {
+          type: "text",
+        },
+      },
+      defaultProps: {
+        title: `${context.package} v${context.version}`,
+      },
+      render: ({ title }) => <h1>{title}</h1>,
+    }),
+  },
+};
+```
+
+## TypeScript
+
+You can specify the type of `context` in `Config` when using TypeScript. It can accept any type based on your needs, such as `string`, `number`, `object`, and more.
+
+```tsx copy {3}
+import type { Config } from "@measured/puck";
+
+const config: Config<{}, {}, string, string[]> = {
+  context: ["Hello", "World"],
+  // ...
+};
+```

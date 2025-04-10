@@ -1,6 +1,7 @@
 const menu = {
   "component-configuration": {},
   "root-configuration": {},
+  context: {},
   "multi-column-layouts": {},
   categories: {},
   "dynamic-props": {},
