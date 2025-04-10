@@ -10,6 +10,7 @@ import { useDemoData } from "../../../lib/use-demo-data";
 import { IconButton, createUsePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Drawer } from "@/core/components/Drawer";
+import { getComponentConfig } from "@/core/lib/get-component-config";
 import { ChevronUp, ChevronDown, Globe, Lock, Unlock } from "lucide-react";
 
 const usePuck = createUsePuck<UserConfig>();
@@ -312,7 +313,7 @@ const CustomDrawer = () => {
           gap: 8,
         }}
       >
-        {Object.keys(config.components).map((componentKey, componentIndex) => {
+        {Object.keys(config.components).map((componentKey) => {
           const canInsert = getPermissions({
             type: componentKey as keyof UserConfig["components"],
           }).insert;
@@ -344,10 +345,12 @@ export function Client({ path, isEdit }: { path: string; isEdit: boolean }) {
     ...config,
     components: {
       ...Object.keys(config.components).reduce((acc, componentKey) => {
+        const componentConfig = getComponentConfig(config, componentKey);
+
         return {
           ...acc,
           [componentKey]: {
-            ...acc[componentKey as keyof UserConfig["components"]],
+            ...componentConfig,
             resolvePermissions: (data: any, { permissions }: any) => {
               if (lockedComponents[data.props.id]) {
                 return {

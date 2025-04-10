@@ -3,6 +3,7 @@ import { flattenData } from "../../lib/flatten-data";
 import { ComponentData, Config, Permissions, UserGenerics } from "../../types";
 import { getChanged } from "../../lib/get-changed";
 import { AppStore, useAppStoreApi } from "../";
+import { getComponentConfig } from "../../lib/get-component-config";
 
 type PermissionsArgs<
   UserConfig extends Config = Config,
@@ -63,7 +64,9 @@ export const createPermissionsSlice = (
         unsetComponentLoading,
       } = get();
       const componentConfig =
-        item.type === "root" ? config.root : config.components[item.type];
+        item.type === "root"
+          ? config.root
+          : getComponentConfig(config, item.type);
 
       if (!componentConfig) {
         return;
@@ -170,7 +173,7 @@ export const createPermissionsSlice = (
       const { globalPermissions, resolvedPermissions } = permissions;
 
       if (item) {
-        const componentConfig = config.components[item.type];
+        const componentConfig = getComponentConfig(config, item.type);
 
         const initialPermissions = {
           ...globalPermissions,
@@ -185,7 +188,7 @@ export const createPermissionsSlice = (
             : initialPermissions
         ) as Permissions;
       } else if (type) {
-        const componentConfig = config.components[type];
+        const componentConfig = getComponentConfig(config, type);
 
         return {
           ...globalPermissions,

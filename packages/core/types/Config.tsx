@@ -61,6 +61,11 @@ export type ComponentConfig<
   ) => Promise<Partial<Permissions>> | Partial<Permissions>;
 };
 
+export type ComponentConfigFunction<
+  Props extends DefaultComponentProps = DefaultComponentProps,
+  Context = any
+> = (context?: Context) => ComponentConfig<Props>;
+
 type Category<ComponentName> = {
   components?: ComponentName[];
   title?: string;
@@ -71,16 +76,19 @@ type Category<ComponentName> = {
 export type Config<
   Props extends DefaultComponentProps = DefaultComponentProps,
   RootProps extends DefaultComponentProps = any,
-  CategoryName extends string = string
+  CategoryName extends string = string,
+  Context = any
 > = {
+  context?: Context;
   categories?: Record<CategoryName, Category<keyof Props>> & {
     other?: Category<keyof Props>;
   };
   components: {
-    [ComponentName in keyof Props]: Omit<
-      ComponentConfig<Props[ComponentName], Props[ComponentName]>,
-      "type"
-    >;
+    [ComponentName in keyof Props]:
+      | Omit<ComponentConfig<Props[ComponentName]>, "type">
+      | ((
+          context?: Context
+        ) => Omit<ComponentConfig<Props[ComponentName]>, "type">);
   };
   root?: Partial<
     ComponentConfig<

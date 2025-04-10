@@ -12,6 +12,7 @@ import { getZoneId } from "../../lib/get-zone-id";
 import { getFrame } from "../../lib/get-frame";
 import { onScrollEnd } from "../../lib/on-scroll-end";
 import { useAppStore } from "../../store";
+import { getComponentConfig } from "../../lib/get-component-config";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -82,7 +83,7 @@ export const LayerTree = ({
             }) ?? false;
 
           const componentConfig: ComponentConfig | undefined =
-            config.components[item.type];
+            getComponentConfig(config, item.type);
           const label = componentConfig?.["label"] ?? item.type.toString();
 
           return (

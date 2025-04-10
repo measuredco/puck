@@ -27,16 +27,24 @@ export type Props = {
   Space: SpaceProps;
 };
 
+export type Context = {
+  package: string;
+};
+
 export type UserConfig = Config<
   Props,
   RootProps,
-  "layout" | "typography" | "interactive"
+  "layout" | "typography" | "interactive",
+  Context
 >;
 
 export type UserData = Data<Props, RootProps>;
 
 // We avoid the name config as next gets confused
 export const conf: UserConfig = {
+  context: {
+    package: "@measured/puck",
+  },
   root: {
     defaultProps: {
       title: "My Page",

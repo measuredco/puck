@@ -5,6 +5,7 @@ import { resolveRootData } from "./resolve-root-data";
 import { flattenData } from "./flatten-data";
 import { AppStore } from "../store";
 import fdeq from "fast-deep-equal";
+import { getComponentConfig } from "./get-component-config";
 
 export const resolveData = (newAppState: AppState, appStoreData: AppStore) => {
   const {
@@ -47,7 +48,7 @@ export const resolveData = (newAppState: AppState, appStoreData: AppStore) => {
     const newData = newAppState.data;
 
     const flatContent = flattenData(newData).filter(
-      (item) => !!config.components[item.type]?.resolveData
+      (item) => !!getComponentConfig(config, item.type)?.resolveData
     );
 
     const applyIfChange = (

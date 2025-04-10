@@ -68,6 +68,7 @@ import {
   UsePuckStoreContext,
   useRegisterUsePuckStore,
 } from "../../lib/use-puck";
+import { getComponentConfig } from "../../lib/get-component-config";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -75,7 +76,7 @@ const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
 const FieldSideBar = () => {
   const title = useAppStore((s) =>
     s.selectedItem
-      ? s.config.components[s.selectedItem.type]?.["label"] ??
+      ? getComponentConfig(s.config, s.selectedItem.type)?.["label"] ??
         s.selectedItem.type.toString()
       : "Page"
   );

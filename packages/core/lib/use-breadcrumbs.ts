@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useAppStore, useAppStoreApi } from "../store";
 import { ItemSelector } from "./get-item";
+import { getComponentConfig } from "./get-component-config";
 
 export type Breadcrumb = {
   label: string;
@@ -29,7 +30,7 @@ export const useBreadcrumbs = (renderCount?: number) => {
         const node = appStore.getState().nodes.nodes[componentId];
 
         const label = node
-          ? config.components[node.data.type]?.label ?? node.data.type
+          ? getComponentConfig(config, node.data.type)?.label ?? node.data.type
           : "Component";
 
         return {
