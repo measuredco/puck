@@ -56,6 +56,7 @@ export function Render<
               renderDropZone: DropZonePure,
               isEditing: false,
               dragRef: null,
+              metadata: metadata,
             }}
             title={title}
             editMode={false}

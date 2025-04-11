@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   Context,
   createContext,
@@ -60,7 +61,6 @@ import { DefaultOverride } from "../DefaultOverride";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
 import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
 import { useRegisterHistorySlice } from "../../store/slices/history";
-import { useRegisterNodesSlice } from "../../store/slices/nodes";
 import { useRegisterPermissionsSlice } from "../../store/slices/permissions";
 import { monitorHotkeys, useMonitorHotkeys } from "../../lib/use-hotkey";
 import { getFrame } from "../../lib/get-frame";
@@ -68,6 +68,7 @@ import {
   UsePuckStoreContext,
   useRegisterUsePuckStore,
 } from "../../lib/use-puck";
+import { walkTree } from "../../lib/walk-tree";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -86,6 +87,8 @@ const FieldSideBar = () => {
     </SidebarSection>
   );
 };
+
+const DEBUG = true;
 
 type PuckProps<
   UserConfig extends Config = Config,
@@ -136,6 +139,33 @@ function PropsProvider<UserConfig extends Config = Config>(
 const usePropsContext = () =>
   useContext<PuckProps>(propsContext as Context<PuckProps>);
 
+const debugPlugin: Plugin = {
+  overrides: {
+    fields: ({ children }) => {
+      const state = useAppStore((s) => s.state);
+      const selectedItem = useAppStore((s) => s.selectedItem);
+
+      return (
+        <>
+          {children}
+
+          <SidebarSection title="Debug: Data">
+            {JSON.stringify(state.data)}
+          </SidebarSection>
+          <SidebarSection title="Debug: UI">
+            {JSON.stringify(state.ui)}
+          </SidebarSection>
+          <SidebarSection title="Debug: Other">
+            <ul>
+              <li>Selected Item: {JSON.stringify(selectedItem)}</li>
+            </ul>
+          </SidebarSection>
+        </>
+      );
+    },
+  },
+};
+
 function PuckProvider<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
@@ -146,7 +176,7 @@ function PuckProvider<
     ui: initialUi,
     onChange,
     permissions = {},
-    plugins,
+    plugins: _plugins,
     overrides,
     viewports = defaultViewports,
     iframe: _iframe,
@@ -226,7 +256,7 @@ function PuckProvider<
       ...rootProps,
     };
 
-    return {
+    const newAppState = {
       ...defaultAppState,
       data: {
         ...initialData,
@@ -255,6 +285,8 @@ function PuckProvider<
           : {},
       },
     } as G["UserAppState"];
+
+    return walkTree(newAppState);
   });
 
   const { appendData = true } = _initialHistory || {};
@@ -270,6 +302,8 @@ function PuckProvider<
   const initialHistoryIndex =
     _initialHistory?.index || blendedHistories.length - 1;
   const initialAppState = blendedHistories[initialHistoryIndex].state;
+
+  const plugins = useMemo(() => [...(_plugins || []), debugPlugin], [_plugins]);
 
   // Load all plugins into the overrides
   const loadedOverrides = useLoadedOverrides({
@@ -328,15 +362,14 @@ function PuckProvider<
     });
   }, []);
 
-  useRegisterNodesSlice(appStore);
   useRegisterPermissionsSlice(appStore, permissions);
 
   const uPuckStore = useRegisterUsePuckStore(appStore);
 
   useEffect(() => {
-    const { state, resolveData } = appStore.getState();
-
-    resolveData(state);
+    // TODO implement
+    // const { state, resolveAllData } = appStore.getState();
+    // resolveAllData();
   }, []);
 
   return (

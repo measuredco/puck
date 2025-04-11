@@ -84,35 +84,35 @@ export const DropZoneProvider = ({
 
   const registerZone = useCallback(
     (zoneCompound: string) => {
-      if (!dispatch) {
-        return;
-      }
+      // if (!dispatch) {
+      //   return;
+      // }
 
       dispatch({
         type: "registerZone",
         zone: zoneCompound,
       });
 
-      setActiveZones((latest) => ({ ...latest, [zoneCompound]: true }));
+      // setActiveZones((latest) => ({ ...latest, [zoneCompound]: true }));
     },
     [setActiveZones, dispatch]
   );
 
   const unregisterZone = useCallback(
     (zoneCompound: string) => {
-      if (!dispatch) {
-        return;
-      }
+      // if (!dispatch) {
+      //   return;
+      // }
 
       dispatch({
         type: "unregisterZone",
         zone: zoneCompound,
       });
 
-      setActiveZones((latest) => ({
-        ...latest,
-        [zoneCompound]: false,
-      }));
+      // setActiveZones((latest) => ({
+      //   ...latest,
+      //   [zoneCompound]: false,
+      // }));
     },
     [setActiveZones, dispatch]
   );

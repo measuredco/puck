@@ -37,11 +37,20 @@ export const useMinEmptyHeight = ({
 
     setPrevHeight(0);
     setTimeout(() => {
-      const { nodes } = appStore.getState().nodes;
+      const zones = appStore.getState().state.indexes.zones;
+      const nodes = appStore.getState().nodes;
+      const selectedItem = appStore.getState().selectedItem;
 
-      Object.entries(nodes).forEach(([_, node]) => {
+      const contentIds = zones[zoneCompound]?.contentIds || [];
+
+      contentIds.forEach((contentId) => {
+        const node = nodes.nodes[contentId];
         node?.methods.sync();
       });
+
+      if (selectedItem) {
+        nodes.nodes[selectedItem.props.id]?.methods.sync();
+      }
 
       setIsAnimating(false);
     }, 400);
