@@ -156,9 +156,6 @@ export function walkTree<UserData extends Data = Data>(
     newZones[zoneCompound] = newContent;
   }, newZones);
 
-  let oldNodeIndex = { ...state.indexes.nodes };
-  let oldZoneIndex = { ...state.indexes.zones };
-
   return {
     ...state,
     data: {
@@ -170,8 +167,8 @@ export function walkTree<UserData extends Data = Data>(
       },
     } as UserData,
     indexes: {
-      nodes: { ...oldNodeIndex, ...newNodeIndex },
-      zones: { ...oldZoneIndex, ...newZoneIndex },
+      nodes: { ...state.indexes.nodes, ...newNodeIndex },
+      zones: { ...state.indexes.zones, ...newZoneIndex },
     },
   };
 }
