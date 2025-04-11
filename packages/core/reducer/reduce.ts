@@ -103,6 +103,8 @@ export const replaceAction = <UserData extends Data>(
   action: ReplaceAction<UserData>
 ): PrivateAppState<UserData> => {
   const [parentId] = action.destinationZone.split(":");
+  const node = state.indexes.nodes[action.data.props.id];
+  const idsInPath = node.path.map((p) => p.split(":")[0]);
 
   return walkTree<UserData>(
     state,
@@ -111,6 +113,9 @@ export const replaceAction = <UserData extends Data>(
       if (childItem.props.id === action.data.props.id) {
         return action.data;
       } else if (childItem.props.id === parentId) {
+        return childItem;
+      } else if (idsInPath.indexOf(childItem.props.id) > -1) {
+        // This node is in the path of the target node
         return childItem;
       }
 
