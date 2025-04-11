@@ -25,6 +25,13 @@ export const addToZoneCache = (key: string, data: Content) => {
   zoneCache[key] = data;
 };
 
+const getIdsForParent = (zoneCompound: string, state: PrivateAppState) => {
+  const [parentId] = zoneCompound.split(":");
+  const node = state.indexes.nodes[parentId];
+
+  return (node?.path || []).map((p) => p.split(":")[0]);
+};
+
 export function insertAction<UserData extends Data>(
   state: PrivateAppState<UserData>,
   action: InsertAction,
@@ -103,8 +110,7 @@ export const replaceAction = <UserData extends Data>(
   action: ReplaceAction<UserData>
 ): PrivateAppState<UserData> => {
   const [parentId] = action.destinationZone.split(":");
-  const node = state.indexes.nodes[action.data.props.id];
-  const idsInPath = node.path.map((p) => p.split(":")[0]);
+  const idsInPath = getIdsForParent(action.destinationZone, state);
 
   return walkTree<UserData>(
     state,
@@ -171,6 +177,8 @@ export function reduce<UserData extends Data>(
       state
     )!;
 
+    const idsInPath = getIdsForParent(action.sourceZone, state);
+
     const newItem = {
       ...item,
       props: {
@@ -212,7 +220,10 @@ export function reduce<UserData extends Data>(
 
         const [sourceZoneParent] = action.sourceZone.split(":");
 
-        if (sourceZoneParent === childItem.props.id) {
+        if (
+          sourceZoneParent === childItem.props.id ||
+          idsInPath.indexOf(childItem.props.id) > -1
+        ) {
           return childItem;
         }
 
@@ -251,17 +262,8 @@ export function reduce<UserData extends Data>(
 
     if (!item) return state;
 
-    const sourceParentId = action.sourceZone.split(":")[0];
-    const destinationParentId = action.destinationZone.split(":")[0];
-    const sourceNode = state.indexes.nodes[sourceParentId];
-    const destinationNode = state.indexes.nodes[destinationParentId];
-
-    const idsInSourcePath = (sourceNode?.path || []).map(
-      (p) => p.split(":")[0]
-    );
-    const idsInDestinationPath = (destinationNode?.path || []).map(
-      (p) => p.split(":")[0]
-    );
+    const idsInSourcePath = getIdsForParent(action.sourceZone, state);
+    const idsInDestinationPath = getIdsForParent(action.destinationZone, state);
 
     return walkTree<UserData>(
       state,
