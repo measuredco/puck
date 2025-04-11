@@ -122,17 +122,23 @@ const DropZoneChild = ({
   const ctx = useContext(dropZoneContext);
   const { depth } = ctx!;
 
-  const contentItem = useAppStore(
+  const nodeProps = useAppStore(
     useShallow((s) => {
-      return s.state.indexes.nodes[componentId]?.flatData;
+      return s.state.indexes.nodes[componentId]?.flatData.props;
     })
   );
 
-  const item =
-    contentItem ??
-    (preview?.componentType
-      ? { type: preview.componentType, props: preview.props }
-      : null);
+  const nodeType = useAppStore(
+    (s) => s.state.indexes.nodes[componentId]?.data.type
+  );
+
+  const node = { type: nodeType, props: nodeProps };
+
+  const item = nodeProps
+    ? node
+    : preview?.componentType
+    ? { type: preview.componentType, props: preview.props }
+    : null;
 
   const componentConfig = useAppStore((s) =>
     item?.type ? s.config.components[item.type] : null
@@ -249,8 +255,8 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       unregisterLocalZone,
     } = ctx!;
 
-    const path = useAppStore((s) =>
-      areaId ? s.state.indexes.nodes[areaId]?.path : null
+    const path = useAppStore(
+      useShallow((s) => (areaId ? s.state.indexes.nodes[areaId]?.path : null))
     );
 
     let zoneCompound = rootDroppableId;
