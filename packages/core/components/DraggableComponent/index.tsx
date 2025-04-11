@@ -145,11 +145,9 @@ export const DraggableComponent = ({
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
 
-  const path = useAppStore((s) => s.state.indexes.nodes[id]?.path);
-  const item = useAppStore((s) => s.state.indexes.nodes[id]?.data);
-
+  const path = useAppStore(useShallow((s) => s.state.indexes.nodes[id]?.path));
   const permissions = useAppStore(
-    useShallow((s) => s.permissions.getPermissions({ item }))
+    useShallow((s) => s.permissions.getPermissions()) // TODO call using id
   );
 
   const userIsDragging = useContextStore(
