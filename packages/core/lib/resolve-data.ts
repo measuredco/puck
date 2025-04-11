@@ -47,7 +47,7 @@ export const resolveData = (
     // Flatten zones
     const newData = newAppState.data;
 
-    const flatContent = flattenData(newData).filter(
+    const flatContent = flattenData(newAppState).filter(
       (item) => !!config.components[item.type]?.resolveData
     );
 
@@ -82,24 +82,26 @@ export const resolveData = (
 
     const promises: Promise<void>[] = [];
 
-    promises.push(
-      (async () => {
-        _setComponentLoading("puck-root", true, 50);
+    // promises.push(
+    //   (async () => {
+    //     _setComponentLoading("puck-root", true, 50);
 
-        const dynamicRoot = await resolveRootData(newData, config, metadata);
+    //     const dynamicRoot = await resolveRootData(newData, config, metadata);
 
-        applyIfChange({}, dynamicRoot);
+    //     applyIfChange({}, dynamicRoot);
 
-        _setComponentLoading("puck-root", false);
+    //     _setComponentLoading("puck-root", false);
 
-        latestState = getAppStore().state;
-      })()
-    );
+    //     latestState = getAppStore().state;
+    //   })()
+    // );
+
+    const changes: Record<string, ComponentData> = {};
 
     for (let i = flatContent.length - 1; i >= 0; i--) {
       const item = flatContent[i];
 
-      const latestFlatContent = flattenData(latestState.data);
+      const latestFlatContent = flattenData(latestState);
 
       const latestItem = latestFlatContent.find(
         (candidate) => candidate.props.id === item.props.id
@@ -139,6 +141,8 @@ export const resolveData = (
             _setComponentLoading(item.props.id, false);
           }
         );
+
+        changes[item.props.id] = dynamicData;
 
         applyIfChange({ [item.props.id]: dynamicData });
 

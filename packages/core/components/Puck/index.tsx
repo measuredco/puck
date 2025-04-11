@@ -68,7 +68,7 @@ import {
   UsePuckStoreContext,
   useRegisterUsePuckStore,
 } from "../../lib/use-puck";
-import { generateNodeIndex, generateZonesIndex } from "../../reducer/indexes";
+import { walkTree } from "../../lib/walk-tree";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -286,15 +286,7 @@ function PuckProvider<
       },
     } as G["UserAppState"];
 
-    const indexes = {
-      nodes: generateNodeIndex(newAppState, config),
-      zones: generateZonesIndex(newAppState),
-    };
-
-    return {
-      ...newAppState,
-      indexes,
-    };
+    return walkTree(newAppState);
   });
 
   const { appendData = true } = _initialHistory || {};

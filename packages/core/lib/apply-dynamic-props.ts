@@ -1,5 +1,4 @@
 import { ComponentData, Data, RootData } from "../types";
-import { dataMap } from "./data-map";
 
 /**
  * Apply the provided data to the Puck data payload.

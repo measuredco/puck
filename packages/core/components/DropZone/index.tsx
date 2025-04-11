@@ -124,7 +124,7 @@ const DropZoneChild = ({
 
   const contentItem = useAppStore(
     useShallow((s) => {
-      return s.state.indexes.nodes[componentId]?.data;
+      return s.state.indexes.nodes[componentId]?.flatData;
     })
   );
 
@@ -275,31 +275,36 @@ const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       return {
         isDeepestZone: s.zoneDepthIndex[zoneCompound] ?? false,
         inNextDeepestArea: s.nextAreaDepthIndex[areaId || ""],
-        draggedItemId: s.draggedItem?.id,
         draggedComponentType: s.draggedItem?.data.componentType,
         userIsDragging: !!s.draggedItem,
       };
     });
-
-    // Register and unregister zone on mount
-    // TODO cause re-render
-    // useEffect(() => {
-    //   if (ctx?.registerZone) {
-    //     ctx?.registerZone(zoneCompound);
-    //   }
-
-    //   return () => {
-    //     if (ctx?.unregisterZone) {
-    //       ctx?.unregisterZone(zoneCompound);
-    //     }
-    //   };
-    // }, []);
 
     const zoneContentIds = useAppStore(
       useShallow((s) => {
         return s.state.indexes.zones[zoneCompound]?.contentIds;
       })
     );
+    const zoneType = useAppStore(
+      useShallow((s) => {
+        return s.state.indexes.zones[zoneCompound]?.type;
+      })
+    );
+
+    // Register and unregister zone on mount
+    useEffect(() => {
+      if (!zoneType || zoneType === "dropzone") {
+        if (ctx?.registerZone) {
+          ctx?.registerZone(zoneCompound);
+        }
+
+        return () => {
+          if (ctx?.unregisterZone) {
+            ctx?.unregisterZone(zoneCompound);
+          }
+        };
+      }
+    }, [zoneType]);
 
     const contentIds = useMemo(() => {
       return zoneContentIds || [];

@@ -9,7 +9,6 @@ import {
 import { resolveComponentData } from "./resolve-component-data";
 import { resolveRootData } from "./resolve-root-data";
 import { defaultData } from "./default-data";
-import { dataMap } from "./data-map";
 
 export async function resolveAllData<
   Props extends DefaultComponentProps = DefaultComponentProps,
@@ -46,22 +45,24 @@ export async function resolveAllData<
   );
 
   // TODO add async support to dataMap this
-  const updatedData = dataMap(data, async (item) => {
-    if (item.props && "id" in item.props) {
-      return await resolveComponentData(
-        item as ComponentData,
-        config,
-        metadata,
-        onResolveStart,
-        onResolveEnd
-      );
-    }
+  // const updatedData = dataMap(data, async (item) => {
+  //   if (item.props && "id" in item.props) {
+  //     return await resolveComponentData(
+  //       item as ComponentData,
+  //       config,
+  //       metadata,
+  //       onResolveStart,
+  //       onResolveEnd
+  //     );
+  //   }
 
-    return item;
-  });
+  //   return item;
+  // });
 
-  return {
-    ...updatedData,
-    root: dynamicRoot,
-  } as Data<Props, RootProps>;
+  return data;
+
+  // return {
+  //   ...updatedData,
+  //   root: dynamicRoot,
+  // } as Data<Props, RootProps>;
 }

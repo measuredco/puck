@@ -1,4 +1,6 @@
 import { ComponentData, Config, MappedItem, Metadata } from "../types";
+import { mapSlots } from "./map-slots";
+import { forEachSlot } from "./for-each-slot";
 import { getChanged } from "./get-changed";
 
 export const cache: {
