@@ -251,6 +251,18 @@ export function reduce<UserData extends Data>(
 
     if (!item) return state;
 
+    const sourceParentId = action.sourceZone.split(":")[0];
+    const destinationParentId = action.destinationZone.split(":")[0];
+    const sourceNode = state.indexes.nodes[sourceParentId];
+    const destinationNode = state.indexes.nodes[destinationParentId];
+
+    const idsInSourcePath = (sourceNode?.path || []).map(
+      (p) => p.split(":")[0]
+    );
+    const idsInDestinationPath = (destinationNode?.path || []).map(
+      (p) => p.split(":")[0]
+    );
+
     return walkTree<UserData>(
       state,
       (content, zoneCompound) => {
@@ -275,10 +287,14 @@ export function reduce<UserData extends Data>(
         const [sourceZoneParent] = action.sourceZone.split(":");
         const [destinationZoneParent] = action.destinationZone.split(":");
 
+        const childId = childItem.props.id;
+
         if (
-          sourceZoneParent === childItem.props.id ||
-          destinationZoneParent === childItem.props.id ||
-          childItem.props.id === item.props.id
+          sourceZoneParent === childId ||
+          destinationZoneParent === childId ||
+          item.props.id === childId ||
+          idsInSourcePath.indexOf(childId) > -1 ||
+          idsInDestinationPath.indexOf(childId) > -1
         ) {
           return childItem;
         }
