@@ -10,8 +10,7 @@ import {
   ComponentConfig,
   Metadata,
   ComponentData,
-  RootData,
-  Data,
+  RootDataWithProps,
 } from "../types";
 import { createReducer, PuckAction } from "../reducer";
 import { getItem } from "../lib/get-item";
@@ -29,8 +28,6 @@ import {
 import { createFieldsSlice, type FieldsSlice } from "./slices/fields";
 import { PrivateAppState } from "../types/Internal";
 import { resolveComponentData } from "../lib/resolve-component-data";
-import { resolveRootData } from "../lib/resolve-root-data";
-import { resolveAllData } from "../lib/resolve-all-data";
 
 export const defaultAppState: PrivateAppState = {
   data: { content: [], root: {}, zones: {} },
@@ -80,10 +77,9 @@ export type AppStore<
   setComponentLoading: (id: string, loading?: boolean, defer?: number) => void;
   unsetComponentLoading: (id: string) => void;
   pendingComponentLoads: Record<string, NodeJS.Timeout>;
-  resolveComponentData: (
-    componentData: ComponentData
-  ) => Promise<ComponentData>;
-  resolveRootData: (rootData: RootData) => Promise<RootData>;
+  resolveComponentData: <T extends ComponentData | RootDataWithProps>(
+    componentData: T
+  ) => Promise<T>;
   resolveAndCommitData: () => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
@@ -269,19 +265,18 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           componentData,
           config,
           metadata,
-          (item) => setComponentLoading(item.props.id, true, 50),
-          (item) => setComponentLoading(item.props.id, false, 0)
-        );
-      },
-      resolveRootData: async (rootData) => {
-        const { config, metadata, setComponentLoading } = get();
-
-        return await resolveRootData(
-          rootData,
-          config,
-          metadata,
-          () => setComponentLoading("puck-root", true, 50),
-          () => setComponentLoading("puck-root", false, 0)
+          (item) =>
+            setComponentLoading(
+              "id" in item.props ? item.props.id : "root",
+              true,
+              50
+            ),
+          (item) =>
+            setComponentLoading(
+              "id" in item.props ? item.props.id : "root",
+              false,
+              0
+            )
         );
       },
       resolveAndCommitData: async () => {
