@@ -1,4 +1,4 @@
-import { AppState, ComponentData, Data, UiState } from "../types";
+import { AppState, ComponentData, Data, RootData, UiState } from "../types";
 import { PrivateAppState } from "../types/Internal";
 
 export type InsertAction = {
@@ -20,6 +20,12 @@ export type ReplaceAction<UserData extends Data = Data> = {
   destinationIndex: number;
   destinationZone: string;
   data: ComponentData;
+  ui?: Partial<AppState<UserData>["ui"]>;
+};
+
+export type ReplaceRootAction<UserData extends Data = Data> = {
+  type: "replaceRoot";
+  root: RootData;
   ui?: Partial<AppState<UserData>["ui"]>;
 };
 
@@ -78,6 +84,7 @@ export type PuckAction = { recordHistory?: boolean } & (
   | InsertAction
   | MoveAction
   | ReplaceAction
+  | ReplaceRootAction
   | RemoveAction
   | DuplicateAction
   | SetAction
