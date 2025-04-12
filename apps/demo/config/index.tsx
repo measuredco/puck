@@ -487,4 +487,8 @@ export const initialData: Record<string, UserData> = {
   },
 };
 
+export const componentKey = Buffer.from(
+  `${Object.keys(conf.components).join("-")}-${JSON.stringify(initialData)}`
+).toString("base64");
+
 export default conf;
