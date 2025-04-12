@@ -1,6 +1,5 @@
 import { ComponentData, Config, MappedItem, Metadata } from "../types";
 import { mapSlots } from "./map-slots";
-import { forEachSlot } from "./for-each-slot";
 import { getChanged } from "./get-changed";
 
 export const cache: {
@@ -12,7 +11,8 @@ export const resolveComponentData = async (
   config: Config,
   metadata: Metadata = {},
   onResolveStart?: (item: MappedItem) => void,
-  onResolveEnd?: (item: MappedItem) => void
+  onResolveEnd?: (item: MappedItem) => void,
+  recursive: boolean = true
 ) => {
   const configForItem = config.components[item.type];
   if (configForItem.resolveData) {
@@ -36,13 +36,30 @@ export const resolveComponentData = async (
         metadata,
       });
 
-    const resolvedItem = {
+    let resolvedItem = {
       ...item,
       props: {
         ...item.props,
         ...resolvedProps,
       },
     };
+
+    if (recursive) {
+      resolvedItem = await mapSlots(resolvedItem, async (content) => {
+        return Promise.all(
+          content.map(async (childItem) =>
+            resolveComponentData(
+              childItem,
+              config,
+              metadata,
+              onResolveStart,
+              onResolveEnd,
+              false
+            )
+          )
+        );
+      });
+    }
 
     if (Object.keys(readOnly).length) {
       resolvedItem.readOnly = readOnly;

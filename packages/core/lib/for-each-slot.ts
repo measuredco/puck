@@ -1,9 +1,13 @@
-import { ComponentData, Config, Content, RootData } from "../types";
+import { ComponentData, Content, RootData } from "../types";
 import { isSlot } from "./is-slot";
 
-export const forEachSlot = <T extends ComponentData | RootData>(
+export const forEachSlot = async <T extends ComponentData | RootData>(
   item: T,
-  cb: (parentId: string, slotId: string, content: Content) => void,
+  cb: (
+    parentId: string,
+    slotId: string,
+    content: Content
+  ) => Promise<void> | void,
   recursive: boolean = false
 ) => {
   const props: Record<string, any> = item.props || {};
@@ -16,10 +20,12 @@ export const forEachSlot = <T extends ComponentData | RootData>(
     if (isSlot(props[propKey])) {
       const content = props[propKey] as Content;
 
-      cb(props.id, propKey, content);
+      await cb(props.id, propKey, content);
 
       if (recursive) {
-        content.forEach((childItem) => forEachSlot(childItem, cb, true));
+        content.forEach(
+          async (childItem) => await forEachSlot(childItem, cb, true)
+        );
       }
     }
   }
