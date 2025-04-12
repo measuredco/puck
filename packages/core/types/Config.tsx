@@ -30,7 +30,7 @@ export type ComponentConfig<
   resolveFields?: (
     data: DataShape,
     params: {
-      changed: Partial<Record<keyof FieldProps, boolean>>;
+      changed: Partial<Record<keyof FieldProps, boolean> & { id: string }>;
       fields: Fields<FieldProps>;
       lastFields: Fields<FieldProps>;
       lastData: DataShape | null;
@@ -41,7 +41,7 @@ export type ComponentConfig<
   resolveData?: (
     data: DataShape,
     params: {
-      changed: Partial<Record<keyof FieldProps, boolean>>;
+      changed: Partial<Record<keyof FieldProps, boolean> & { id: string }>;
       lastData: DataShape | null;
       metadata: Metadata;
     }
@@ -57,7 +57,7 @@ export type ComponentConfig<
   resolvePermissions?: (
     data: DataShape,
     params: {
-      changed: Partial<Record<keyof FieldProps, boolean>>;
+      changed: Partial<Record<keyof FieldProps, boolean> & { id: string }>;
       lastPermissions: Partial<Permissions>;
       permissions: Partial<Permissions>;
       appState: AppState;
