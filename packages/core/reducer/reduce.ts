@@ -176,6 +176,25 @@ export function reduce<UserData extends Data>(
     return replaceAction(state, action);
   }
 
+  if (action.type === "replaceRoot") {
+    return walkTree<UserData>(
+      state,
+      (content) => content,
+      (childItem) => {
+        if (childItem.props.id === "root") {
+          return {
+            ...childItem,
+            props: { ...childItem.props, ...action.root.props },
+            readOnly: action.root.readOnly,
+          };
+        }
+
+        // Everything in inside root, so everything needs re-indexing
+        return childItem;
+      }
+    );
+  }
+
   if (action.type === "duplicate") {
     const item = getItem(
       { index: action.sourceIndex, zone: action.sourceZone },
