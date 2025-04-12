@@ -340,7 +340,10 @@ export const DraggableComponent = ({
 
   const [hover, setHover] = useState(false);
 
-  const indicativeHover = ctx?.hoveringComponent === id;
+  const indicativeHover = useContextStore(
+    ZoneStoreContext,
+    (s) => s.hoveringComponent === id
+  );
 
   useEffect(() => {
     if (!ref.current) {

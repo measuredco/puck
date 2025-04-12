@@ -6,12 +6,13 @@ import { scrollIntoView } from "../../lib/scroll-into-view";
 import { ChevronDown, LayoutGrid, Layers, Type } from "lucide-react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { useContext } from "react";
-import { dropZoneContext } from "../DropZone/context";
+import { ZoneStoreContext } from "../DropZone/context";
 import { findZonesForArea } from "../../lib/find-zones-for-area";
 import { getZoneId } from "../../lib/get-zone-id";
 import { getFrame } from "../../lib/get-frame";
 import { onScrollEnd } from "../../lib/on-scroll-end";
 import { useAppStore } from "../../store";
+import { useContextStore } from "../../lib/use-context-store";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -34,7 +35,13 @@ export const LayerTree = ({
   label?: string;
 }) => {
   const zones = data.zones || {};
-  const ctx = useContext(dropZoneContext);
+
+  const hoveringComponent = useContextStore(
+    ZoneStoreContext,
+    (s) => s.hoveringComponent
+  );
+
+  const store = useContext(ZoneStoreContext);
 
   // TODO change this for performance
   const nodes = useAppStore((s) => s.nodes.nodes);
@@ -61,9 +68,6 @@ export const LayerTree = ({
 
           const zonesForItem = findZonesForArea(data, item.props.id);
           const containsZone = Object.keys(zonesForItem).length > 0;
-
-          const { setHoveringComponent = () => {}, hoveringComponent } =
-            ctx || {};
 
           const selectedItem =
             itemSelector && data ? getItem(itemSelector, data) : null;
@@ -133,11 +137,11 @@ export const LayerTree = ({
                   }}
                   onMouseOver={(e) => {
                     e.stopPropagation();
-                    setHoveringComponent(item.props.id);
+                    store.setState({ hoveringComponent: item.props.id });
                   }}
                   onMouseOut={(e) => {
                     e.stopPropagation();
-                    setHoveringComponent(null);
+                    store.setState({ hoveringComponent: null });
                   }}
                 >
                   {containsZone && (
