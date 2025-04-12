@@ -39,12 +39,7 @@ export type UserData = Data<Props, RootProps>;
 
 // We avoid the name config as next gets confused
 export const conf: UserConfig = {
-  root: {
-    defaultProps: {
-      title: "My Page",
-    },
-    render: Root,
-  },
+  root: Root,
   categories: {
     layout: {
       components: ["Grid", "Flex", "Space"],
