@@ -115,13 +115,18 @@ export const replaceAction = <UserData extends Data>(
   return walkTree<UserData>(
     state,
     (content) => content,
-    (childItem) => {
+    (childItem, path) => {
+      const pathIds = path.map((p) => p.split(":")[0]);
+
       if (childItem.props.id === action.data.props.id) {
         return action.data;
       } else if (childItem.props.id === parentId) {
         return childItem;
       } else if (idsInPath.indexOf(childItem.props.id) > -1) {
-        // This node is in the path of the target node
+        // Node is parent of target
+        return childItem;
+      } else if (pathIds.indexOf(action.data.props.id) > -1) {
+        // Node is child target
         return childItem;
       }
 
