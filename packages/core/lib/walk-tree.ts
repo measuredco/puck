@@ -1,7 +1,7 @@
 import { forEachSlot } from "../lib/for-each-slot";
 import { forRelatedZones } from "../lib/for-related-zones";
 import { rootDroppableId } from "../lib/root-droppable-id";
-import { ComponentData, Content, Data } from "../types";
+import { ComponentData, Content, Data, RootDataWithProps } from "../types";
 import {
   NodeIndex,
   PrivateAppState,
@@ -117,16 +117,18 @@ export function walkTree<UserData extends Data = Data>(
 
     const newItem = { ...item, props: newProps };
 
-    const thisZoneCompound = path[path.length - 1];
-    const [parentId, zone] = thisZoneCompound.split(":");
+    if (item.props.id !== "root") {
+      const thisZoneCompound = path[path.length - 1];
+      const [parentId, zone] = thisZoneCompound.split(":");
 
-    newNodeIndex[id] = {
-      data: newItem,
-      flatData: stripSlots(newItem),
-      path,
-      parentId,
-      zone,
-    };
+      newNodeIndex[id] = {
+        data: newItem,
+        flatData: stripSlots(newItem),
+        path,
+        parentId,
+        zone,
+      };
+    }
 
     return newItem;
   };
@@ -156,10 +158,25 @@ export function walkTree<UserData extends Data = Data>(
     newZones[zoneCompound] = newContent;
   }, newZones);
 
+  const processedRoot = processItem(
+    {
+      type: "root",
+      props: { ...(state.data.root.props ?? state.data.root), id: "root" },
+    },
+    [],
+    -1
+  );
+
+  const root = {
+    ...state.data.root,
+    props: processedRoot.props,
+  } as RootDataWithProps;
+
   return {
     ...state,
     data: {
-      root: state.data.root, // TODO
+      root: root,
+      // root: state.data.root, // TODO changing root causes it's entire subtree to re-render. Let's keep this disabled until the performance issues are resolved in #644.
       content: processedContent,
       zones: {
         ...state.data.zones,

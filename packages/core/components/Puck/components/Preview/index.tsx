@@ -8,6 +8,7 @@ import { getClassNameFactory } from "../../../../lib";
 import { DefaultRootRenderProps } from "../../../../types";
 import { Render } from "../../../Render";
 import { BubbledPointerEvent } from "../../../../lib/bubble-pointer-event";
+import { useSlots } from "../../../../lib/use-slots";
 
 const getClassName = getClassNameFactory("PuckPreview", styles);
 
@@ -76,15 +77,19 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   );
 
   const Page = useCallback<React.FC<PageProps>>(
-    (pageProps) =>
-      config.root?.render ? (
+    (pageProps) => {
+      const rootConfig = config.root;
+      const propsWithSlots = useSlots(rootConfig, pageProps);
+
+      return config.root?.render ? (
         config.root?.render({
           id: "puck-root",
-          ...pageProps,
+          ...propsWithSlots,
         })
       ) : (
-        <>{pageProps.children}</>
-      ),
+        <>{propsWithSlots.children}</>
+      );
+    },
     [config.root]
   );
 
