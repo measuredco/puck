@@ -171,12 +171,13 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
         loading: boolean = true,
         defer: number = 0
       ) => {
-        const { setComponentState, componentState, pendingComponentLoads } =
-          get();
+        const { setComponentState, pendingComponentLoads } = get();
 
         const thisPendingComponentLoads = { ...pendingComponentLoads };
 
-        const setLoading = () =>
+        const setLoading = () => {
+          const { componentState } = get();
+
           setComponentState({
             ...componentState,
             [id]: {
@@ -184,8 +185,11 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
               loadingCount: (componentState[id]?.loadingCount || 0) + 1,
             },
           });
+        };
 
-        const unsetLoading = () =>
+        const unsetLoading = () => {
+          const { componentState } = get();
+
           setComponentState({
             ...componentState,
             [id]: {
@@ -196,6 +200,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
               ),
             },
           });
+        };
 
         if (thisPendingComponentLoads[id]) {
           clearTimeout(thisPendingComponentLoads[id]);
