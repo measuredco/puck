@@ -1,4 +1,4 @@
-import {
+import React, {
   CSSProperties,
   forwardRef,
   useCallback,
@@ -55,146 +55,148 @@ export type DropZoneDndData = {
   isDroppableTarget: boolean;
 };
 
-export const DropZoneEditPure = (props: DropZoneProps) => (
+export const DropZoneEditPure = React.memo((props: DropZoneProps) => (
   <DropZoneEdit {...props} />
-);
+));
 
-const DropZoneChild = ({
-  zone,
-  zoneCompound,
-  componentId,
-  preview,
-  index,
-  isEnabled,
-  dragAxis,
-  collisionAxis,
-  inDroppableZone,
-}: {
-  zone: string;
-  zoneCompound: string;
-  componentId: string;
-  preview?: Preview;
-  index: number;
-  isEnabled: boolean;
-  dragAxis: DragAxis;
-  collisionAxis?: DragAxis;
-  inDroppableZone: boolean;
-}) => {
-  const metadata = useAppStore((s) => s.metadata);
-  const puckProps: PuckContext = {
-    renderDropZone: DropZoneEditPure,
-    isEditing: true,
-    dragRef: null,
-    metadata,
-  };
+const DropZoneChild = React.memo(
+  ({
+    zone,
+    zoneCompound,
+    componentId,
+    preview,
+    index,
+    isEnabled,
+    dragAxis,
+    collisionAxis,
+    inDroppableZone,
+  }: {
+    zone: string;
+    zoneCompound: string;
+    componentId: string;
+    preview?: Preview;
+    index: number;
+    isEnabled: boolean;
+    dragAxis: DragAxis;
+    collisionAxis?: DragAxis;
+    inDroppableZone: boolean;
+  }) => {
+    const metadata = useAppStore((s) => s.metadata);
+    const puckProps: PuckContext = {
+      renderDropZone: DropZoneEditPure,
+      isEditing: true,
+      dragRef: null,
+      metadata,
+    };
 
-  const ctx = useContext(dropZoneContext);
-  const { depth } = ctx!;
+    const ctx = useContext(dropZoneContext);
+    const { depth } = ctx!;
 
-  const contentItem = useAppStore(
-    useShallow((s) => {
-      let content: Content = s.state.data.content || [];
+    const contentItem = useAppStore(
+      useShallow((s) => {
+        let content: Content = s.state.data.content || [];
 
-      if (zoneCompound !== rootDroppableId) {
-        content = setupZone(s.state.data, zoneCompound).zones[zoneCompound];
-      }
+        if (zoneCompound !== rootDroppableId) {
+          content = setupZone(s.state.data, zoneCompound).zones[zoneCompound];
+        }
 
-      return content.find((item) => item.props.id === componentId);
-    })
-  );
+        return content.find((item) => item.props.id === componentId);
+      })
+    );
 
-  const item =
-    contentItem ??
-    (preview?.componentType
-      ? { type: preview.componentType, props: preview.props }
-      : null);
+    const item =
+      contentItem ??
+      (preview?.componentType
+        ? { type: preview.componentType, props: preview.props }
+        : null);
 
-  const componentConfig = useAppStore((s) =>
-    item?.type ? s.config.components[item.type] : null
-  );
-  const overrides = useAppStore((s) => s.overrides);
-  const isLoading = useAppStore(
-    (s) => s.componentState[componentId]?.loadingCount > 0
-  );
-  const isSelected = useAppStore(
-    (s) => s.selectedItem?.props.id === componentId || false
-  );
+    const componentConfig = useAppStore((s) =>
+      item?.type ? s.config.components[item.type] : null
+    );
+    const overrides = useAppStore((s) => s.overrides);
+    const isLoading = useAppStore(
+      (s) => s.componentState[componentId]?.loadingCount > 0
+    );
+    const isSelected = useAppStore(
+      (s) => s.selectedItem?.props.id === componentId || false
+    );
 
-  let label = componentConfig?.label ?? item?.type.toString() ?? "Component";
+    let label = componentConfig?.label ?? item?.type.toString() ?? "Component";
 
-  const renderPreview = useMemo(
-    () =>
-      function Preview() {
-        return (
-          <DrawerItemInner name={label}>
-            {overrides.componentItem}
-          </DrawerItemInner>
-        );
-      },
-    [componentId, label, overrides]
-  );
+    const renderPreview = useMemo(
+      () =>
+        function Preview() {
+          return (
+            <DrawerItemInner name={label}>
+              {overrides.componentItem}
+            </DrawerItemInner>
+          );
+        },
+      [componentId, label, overrides]
+    );
 
-  if (!item) return;
+    if (!item) return;
 
-  const defaultedProps = {
-    ...componentConfig?.defaultProps,
-    ...item.props,
-    puck: puckProps,
-    editMode: true, // DEPRECATED
-  };
+    const defaultedProps = {
+      ...componentConfig?.defaultProps,
+      ...item.props,
+      puck: puckProps,
+      editMode: true, // DEPRECATED
+    };
 
-  let Render = componentConfig
-    ? componentConfig.render
-    : () => (
-        <div style={{ padding: 48, textAlign: "center" }}>
-          No configuration for {item.type}
-        </div>
-      );
-
-  let componentType = item.type as string;
-
-  const isPreview =
-    componentId === preview?.props.id && preview.type === "insert";
-
-  if (isPreview) {
-    Render = renderPreview;
-  }
-
-  return (
-    <DraggableComponent
-      id={componentId}
-      componentType={componentType}
-      zoneCompound={zoneCompound}
-      depth={depth + 1}
-      index={index}
-      isLoading={isLoading}
-      isSelected={isSelected}
-      label={label}
-      isEnabled={isEnabled}
-      autoDragAxis={dragAxis}
-      userDragAxis={collisionAxis}
-      inDroppableZone={inDroppableZone}
-    >
-      {(dragRef) =>
-        componentConfig?.inline && !isPreview ? (
-          <>
-            <Render
-              {...defaultedProps}
-              puck={{
-                ...defaultedProps.puck,
-                dragRef,
-              }}
-            />
-          </>
-        ) : (
-          <div ref={dragRef}>
-            <Render {...defaultedProps} />
+    let Render = componentConfig
+      ? componentConfig.render
+      : () => (
+          <div style={{ padding: 48, textAlign: "center" }}>
+            No configuration for {item.type}
           </div>
-        )
-      }
-    </DraggableComponent>
-  );
-};
+        );
+
+    let componentType = item.type as string;
+
+    const isPreview =
+      componentId === preview?.props.id && preview.type === "insert";
+
+    if (isPreview) {
+      Render = renderPreview;
+    }
+
+    return (
+      <DraggableComponent
+        id={componentId}
+        componentType={componentType}
+        zoneCompound={zoneCompound}
+        depth={depth + 1}
+        index={index}
+        isLoading={isLoading}
+        isSelected={isSelected}
+        label={label}
+        isEnabled={isEnabled}
+        autoDragAxis={dragAxis}
+        userDragAxis={collisionAxis}
+        inDroppableZone={inDroppableZone}
+      >
+        {(dragRef) =>
+          componentConfig?.inline && !isPreview ? (
+            <>
+              <Render
+                {...defaultedProps}
+                puck={{
+                  ...defaultedProps.puck,
+                  dragRef,
+                }}
+              />
+            </>
+          ) : (
+            <div ref={dragRef}>
+              <Render {...defaultedProps} />
+            </div>
+          )
+        }
+      </DraggableComponent>
+    );
+  }
+);
 
 const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
   function DropZoneEditInternal(
