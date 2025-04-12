@@ -1,6 +1,5 @@
 import { Loader } from "../../../Loader";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
-import { ReplaceAction, SetAction } from "../../../../reducer";
 import { UiState } from "../../../../types";
 import { AutoFieldPrivate } from "../../../AutoField";
 import { AppStore, useAppStore, useAppStoreApi } from "../../../../store";
@@ -12,9 +11,6 @@ import { ItemSelector } from "../../../../lib/get-item";
 import { useRegisterFieldsSlice } from "../../../../store/slices/fields";
 import { useShallow } from "zustand/react/shallow";
 import { StoreApi } from "zustand";
-import { resolveComponentData } from "../../../../lib/resolve-component-data";
-import { replaceAction } from "../../../../reducer/reduce";
-import { resolveRootData } from "../../../../lib/resolve-root-data";
 
 const getClassName = getClassNameFactory("PuckFields", styles);
 

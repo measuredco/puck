@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from "react";
 import { ComponentConfig, Slot } from "@/core/types";
 import styles from "./styles.module.css";
