@@ -11,16 +11,7 @@ import {
 import { resolveComponentData } from "./resolve-component-data";
 import { defaultData } from "./default-data";
 import { mapSlots } from "./map-slots";
-
-const toComponent = (item: ComponentData | RootData): ComponentData => {
-  return "type" in item
-    ? item
-    : {
-        ...item,
-        props: { ...item.props, id: "root" },
-        type: "root",
-      };
-};
+import { toComponent } from "./to-component";
 
 export async function resolveAllData<
   Props extends DefaultComponentProps = DefaultComponentProps,

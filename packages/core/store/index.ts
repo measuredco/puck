@@ -28,6 +28,8 @@ import {
 import { createFieldsSlice, type FieldsSlice } from "./slices/fields";
 import { PrivateAppState } from "../types/Internal";
 import { resolveComponentData } from "../lib/resolve-component-data";
+import { walkTree } from "../lib/walk-tree";
+import { toRoot } from "../lib/to-root";
 
 export const defaultAppState: PrivateAppState = {
   data: { content: [], root: {}, zones: {} },
@@ -280,17 +282,43 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
         );
       },
       resolveAndCommitData: async () => {
-        // TODO implement
-        // TODO
-        // const { state, config, metadata, setComponentLoading } = get();
-        // const newData = await resolveAllData(
-        //   state.data,
-        //   config,
-        //   metadata,
-        //   (item) => setComponentLoading(item.props.id, true, 50),
-        //   (item) => setComponentLoading(item.props.id, false, 0)
-        // );
-        // return newData;
+        const { state, dispatch, resolveComponentData } = get();
+
+        walkTree(
+          state,
+          (content) => content,
+          (childItem) => {
+            resolveComponentData(childItem).then((resolved) => {
+              const { state } = get();
+
+              const node = state.indexes.nodes[resolved.props.id];
+
+              // Ensure item hasn't been deleted in the mean time
+              if (node) {
+                if (resolved.props.id === "root") {
+                  dispatch({ type: "replaceRoot", root: toRoot(resolved) });
+                } else {
+                  // Use latest position, in case it's moved
+                  const zoneCompound = `${node.parentId}:${node.zone}`;
+                  const parentZone = state.indexes.zones[zoneCompound];
+
+                  const index = parentZone.contentIds.indexOf(
+                    resolved.props.id
+                  );
+
+                  dispatch({
+                    type: "replace",
+                    data: resolved,
+                    destinationIndex: index,
+                    destinationZone: zoneCompound,
+                  });
+                }
+              }
+            });
+
+            return childItem;
+          }
+        );
       },
     }))
   );
