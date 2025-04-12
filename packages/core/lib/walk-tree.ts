@@ -117,20 +117,28 @@ export function walkTree<UserData extends Data = Data>(
 
     const newItem = { ...item, props: newProps };
 
-    if (item.props.id !== "root") {
-      const thisZoneCompound = path[path.length - 1];
-      const [parentId, zone] = thisZoneCompound.split(":");
+    const thisZoneCompound = path[path.length - 1];
+    const [parentId, zone] = thisZoneCompound
+      ? thisZoneCompound.split(":")
+      : [null, ""];
 
-      newNodeIndex[id] = {
-        data: newItem,
-        flatData: stripSlots(newItem),
-        path,
-        parentId,
-        zone,
-      };
+    newNodeIndex[id] = {
+      data: newItem,
+      flatData: stripSlots(newItem),
+      path,
+      parentId,
+      zone,
+    };
+
+    // For now, we strip type and id from root. This may change in future.
+    const finalData: any = newItem;
+
+    if (newProps.id === "root") {
+      delete finalData["type"];
+      delete finalData.props["id"];
     }
 
-    return newItem;
+    return finalData;
   };
 
   const zones = state.data.zones || {};

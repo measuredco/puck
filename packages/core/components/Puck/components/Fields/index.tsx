@@ -33,13 +33,8 @@ const createOnChange =
   async (value: any, updatedUi?: Partial<UiState>) => {
     let currentProps;
 
-    const {
-      dispatch,
-      state,
-      selectedItem,
-      resolveComponentData,
-      resolveRootData,
-    } = appStore.getState();
+    const { dispatch, state, selectedItem, resolveComponentData } =
+      appStore.getState();
 
     const { data, ui } = state;
     const { itemSelector } = ui;
@@ -69,14 +64,9 @@ const createOnChange =
     } else {
       if (data.root.props) {
         dispatch({
-          type: "set",
-          state: {
-            ui: { ...ui, ...updatedUi },
-            data: {
-              ...data,
-              root: await resolveRootData({ ...data.root, props: newProps }),
-            },
-          },
+          type: "replaceRoot",
+          root: await resolveComponentData({ ...data.root, props: newProps }),
+          ui: { ...ui, ...updatedUi },
           recordHistory: true,
         });
       } else {
@@ -154,7 +144,7 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
   const componentResolving = useAppStore((s) => {
     const loadingCount = s.selectedItem
       ? s.componentState[s.selectedItem.props.id]?.loadingCount
-      : s.componentState["puck-root"]?.loadingCount;
+      : s.componentState["root"]?.loadingCount;
 
     return (loadingCount ?? 0) > 0;
   });
