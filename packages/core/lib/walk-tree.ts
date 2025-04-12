@@ -45,7 +45,7 @@ export function walkTree<UserData extends Data = Data>(
   ): [string, Content] => {
     const [parentId] = zoneCompound.split(":");
     const mappedContent =
-      mapContent(content, zoneCompound, zoneType) ?? content;
+      (mapContent(content, zoneCompound, zoneType) ?? content) || [];
 
     const [_, zone] = zoneCompound.split(":");
     const newZoneCompound = `${newId || parentId}:${zone}`;

@@ -61,5 +61,5 @@ export async function resolveAllData<
     dynamic.zones![zoneKey] = await processContent(content);
   }, {});
 
-  return dynamic;
+  return dynamic as Data<Props, RootProps>;
 }
