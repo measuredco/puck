@@ -24,15 +24,7 @@ import {
 } from "./context";
 import { useAppStore } from "../../store";
 import { DropZoneProps } from "./types";
-import {
-  ComponentConfig,
-  Content,
-  DefaultComponentProps,
-  DragAxis,
-  PuckContext,
-  WithId,
-  WithPuckProps,
-} from "../../types";
+import { DragAxis, PuckContext } from "../../types";
 
 import { UseDroppableInput } from "@dnd-kit/react";
 import { DrawerItemInner } from "../Drawer";
@@ -46,6 +38,7 @@ import { useDragAxis } from "./lib/use-drag-axis";
 import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
 import { renderContext } from "../Render";
+import { useSlots } from "../../lib/use-slots";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -66,31 +59,6 @@ export type DropZoneDndData = {
 export const DropZoneEditPure = (props: DropZoneProps) => (
   <DropZoneEdit {...props} />
 );
-
-function useSlots(
-  config: ComponentConfig | null,
-  props: WithPuckProps<WithId<DefaultComponentProps>>
-): any {
-  return useMemo(() => {
-    if (!config?.fields) return props;
-
-    const newProps: DefaultComponentProps = { ...props };
-    const fieldKeys = Object.keys(config.fields);
-
-    for (let i = 0; i < fieldKeys.length; i++) {
-      const fieldKey = fieldKeys[i];
-      const field = config.fields[fieldKey];
-
-      if (field?.type === "slot") {
-        newProps[fieldKey] = (dzProps: DropZoneProps) => {
-          return <DropZoneEdit {...dzProps} zone={fieldKey} />;
-        };
-      }
-    }
-
-    return newProps;
-  }, [config, props]);
-}
 
 const DropZoneChild = ({
   zoneCompound,
@@ -232,7 +200,7 @@ const DropZoneChild = ({
   );
 };
 
-const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
+export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
   function DropZoneEditInternal(
     {
       zone,
