@@ -1,17 +1,17 @@
-import { useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 import {
   ComponentConfig,
+  Content,
   DefaultComponentProps,
   RootConfig,
-  WithId,
   WithPuckProps,
 } from "../types";
 import { DropZoneProps } from "../components/DropZone/types";
-import { DropZoneEdit } from "../components/DropZone";
 
 export function useSlots(
   config: ComponentConfig | RootConfig | null | undefined,
-  props: WithPuckProps<DefaultComponentProps>
+  props: WithPuckProps<DefaultComponentProps>,
+  renderSlot: (dzProps: DropZoneProps & { content: Content }) => ReactNode
 ): any {
   return useMemo(() => {
     if (!config?.fields) return props;
@@ -24,9 +24,12 @@ export function useSlots(
       const field = config.fields[fieldKey];
 
       if (field?.type === "slot") {
-        newProps[fieldKey] = (dzProps: DropZoneProps) => {
-          return <DropZoneEdit {...dzProps} zone={fieldKey} />;
-        };
+        newProps[fieldKey] = (dzProps: DropZoneProps) =>
+          renderSlot({
+            ...dzProps,
+            zone: fieldKey,
+            content: props[fieldKey] || [],
+          });
       }
     }
 
