@@ -66,6 +66,14 @@ export type ComponentConfig<
   ) => Promise<Partial<Permissions>> | Partial<Permissions>;
 };
 
+export type RootConfig<RootProps extends DefaultComponentProps = any> = Partial<
+  ComponentConfig<
+    WithChildren<RootProps>,
+    AsFieldProps<RootProps>,
+    RootData<AsFieldProps<RootProps>>
+  >
+>;
+
 type Category<ComponentName> = {
   components?: ComponentName[];
   title?: string;
@@ -87,11 +95,5 @@ export type Config<
       "type"
     >;
   };
-  root?: Partial<
-    ComponentConfig<
-      WithChildren<RootProps>,
-      AsFieldProps<RootProps>,
-      RootData<AsFieldProps<RootProps>>
-    >
-  >;
+  root?: RootConfig<RootProps>;
 };
