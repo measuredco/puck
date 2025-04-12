@@ -19,7 +19,7 @@ export const resolveComponentData = async <
   const configForItem =
     "type" in item ? config.components[item.type] : config.root;
 
-  if (configForItem?.resolveData) {
+  if (configForItem?.resolveData && item.props) {
     const id = "id" in item.props ? item.props.id : "root";
 
     const { item: oldItem = null, resolved = {} } = cache.lastChange[id] || {};
