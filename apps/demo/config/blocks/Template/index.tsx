@@ -1,20 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { ComponentConfig, Slot } from "@/core/types";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { Section } from "../../components/Section";
 import { withLayout } from "../../components/Layout";
 import { generateId } from "@/core/lib/generate-id";
-import { type Props } from "../../index";
+import { componentKey, type Props } from "../../index";
+import { AutoField, Button, createUsePuck, FieldLabel } from "@/core";
+
+const usePuck = createUsePuck();
 
 async function createComponent<T extends keyof Props>(
   component: T,
   props?: Partial<Props[T]>
 ) {
-  // const test = dynamic(() => import("../../index"));
   const { conf: config } = await import("../../index");
-
-  // "a-arrow-down": () => import('./dist/esm/icons/a-arrow-down.js'),
 
   return {
     type: component,
@@ -33,104 +33,148 @@ export type TemplateProps = {
   children: Slot;
 };
 
+type TemplateData = Record<string, { label: string; data: Slot }>;
+
 export const TemplateInternal: ComponentConfig<TemplateProps> = {
   fields: {
     template: {
-      type: "select",
-      options: [
-        { label: "Template 1", value: "template_1" },
-        { label: "Template 2", value: "template_2" },
-      ],
+      type: "custom",
+      render: ({ name, value, onChange }) => {
+        const templateKey = `puck-demo-templates:${componentKey}`;
+
+        const props: TemplateProps | undefined = usePuck(
+          (s) => s.selectedItem?.props
+        );
+
+        const [templates, setTemplates] = useState<TemplateData>(
+          JSON.parse(localStorage.getItem(templateKey) ?? "{}")
+        );
+
+        return (
+          <FieldLabel label={name}>
+            <AutoField
+              value={value}
+              onChange={onChange}
+              field={{
+                type: "select",
+                options: [
+                  { label: "Blank", value: "blank" },
+                  { label: "Example 1", value: "example_1" },
+                  { label: "Example 2", value: "example_2" },
+                  ...Object.entries(templates).map(([key, template]) => ({
+                    value: key,
+                    label: template.label,
+                  })),
+                ],
+              }}
+            />
+            <div style={{ marginLeft: "auto", marginTop: 16 }}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  if (!props?.children) {
+                    return;
+                  }
+
+                  const templateId = generateId();
+
+                  const templateData = {
+                    ...templates,
+                    [templateId]: {
+                      label: new Date().toLocaleString(),
+                      data: props.children,
+                    },
+                  };
+
+                  localStorage.setItem(
+                    templateKey,
+                    JSON.stringify(templateData)
+                  );
+
+                  setTemplates(templateData);
+
+                  onChange(templateId);
+                }}
+              >
+                Save new template
+              </Button>
+            </div>
+          </FieldLabel>
+        );
+      },
     },
     children: {
       type: "slot",
     },
   },
   defaultProps: {
-    template: "template_1",
+    template: "example_1",
     children: [],
   },
   resolveData: async (data, { changed }) => {
     if (!changed.template) return data;
 
-    const templates: Record<string, Slot> = {
-      template_1: [
-        await createComponent("Grid", {
-          numColumns: 2,
-          children: [
-            await createComponent("Card", { title: "A card", mode: "card" }),
-            await createComponent("Flex", {
-              direction: "column",
-              gap: 0,
-              children: [
-                await createComponent("Space", {
-                  size: "32px",
-                }),
-                await createComponent("Heading", {
-                  text: "Template example",
-                  size: "xl",
-                }),
-                await createComponent("Text", {
-                  text: "Dynamically create components using the new slots API.",
-                }),
-                await createComponent("Space", {
-                  size: "16px",
-                }),
-                await createComponent("Button", {
-                  variant: "secondary",
-                  label: "Learn more",
-                }),
-                await createComponent("Space", {
-                  size: "32px",
-                }),
-              ],
-            }),
-          ],
-        }),
-      ],
-      template_2: [
-        await createComponent("Grid", {
-          numColumns: 3,
-          children: [
-            await createComponent("Space", {
-              size: "32px",
-            }),
-            await createComponent("Flex", {
-              direction: "column",
-              gap: 0,
-              justifyContent: "center",
-              children: [
-                await createComponent("Space", {
-                  size: "32px",
-                }),
-                await createComponent("Heading", {
-                  text: "Template example",
-                  size: "xl",
-                }),
-                await createComponent("Text", {
-                  text: "Dynamically create components using the new slots API.",
-                }),
-                await createComponent("Space", {
-                  size: "16px",
-                }),
-                await createComponent("Button", {
-                  variant: "secondary",
-                  label: "Learn more",
-                }),
-                await createComponent("Space", {
-                  size: "32px",
-                }),
-              ],
-            }),
-            await createComponent("Space", {
-              size: "32px",
-            }),
-          ],
-        }),
-      ],
+    const templateKey = `puck-demo-templates:${componentKey}`;
+
+    const templates: TemplateData = {
+      ...JSON.parse(localStorage.getItem(templateKey) ?? "{}"),
+      blank: {
+        label: "Blank",
+        data: [],
+      },
+      example_1: {
+        label: "Example 1",
+        data: [
+          await createComponent("Heading", {
+            text: "Template example.",
+            size: "xl",
+          }),
+          await createComponent("Text", {
+            text: "This component uses the slots API. Try changing template, or saving a new one via the template field.",
+          }),
+        ],
+      },
+      example_2: {
+        label: "Example 2",
+        data: [
+          await createComponent("Grid", {
+            numColumns: 2,
+            children: [
+              await createComponent("Card", { title: "A card", mode: "card" }),
+              await createComponent("Flex", {
+                direction: "column",
+                gap: 0,
+                children: [
+                  await createComponent("Space", {
+                    size: "32px",
+                  }),
+                  await createComponent("Heading", {
+                    text: "Template example",
+                    size: "xl",
+                  }),
+                  await createComponent("Text", {
+                    text: "Dynamically create components using the new slots API.",
+                  }),
+                  await createComponent("Space", {
+                    size: "16px",
+                  }),
+                  await createComponent("Button", {
+                    variant: "secondary",
+                    label: "Learn more",
+                  }),
+                  await createComponent("Space", {
+                    size: "32px",
+                  }),
+                ],
+              }),
+            ],
+          }),
+        ],
+      },
     };
 
-    const children = templates[data.props.template];
+    const children =
+      templates[data.props.template]?.data || templates["example_1"].data;
 
     return {
       ...data,
