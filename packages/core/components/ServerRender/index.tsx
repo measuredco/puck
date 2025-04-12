@@ -73,7 +73,7 @@ export function Render<
 >({
   config,
   data,
-  metadata,
+  metadata = {},
 }: {
   config: UserConfig;
   data: G["UserData"];
@@ -99,6 +99,7 @@ export function Render<
           ),
           isEditing: false,
           dragRef: null,
+          metadata,
         }}
         title={title}
         editMode={false}
