@@ -123,6 +123,7 @@ const DragDropContextClient = ({
       nextAreaDepthIndex: {},
       draggedItem: null,
       previewIndex: {},
+      hoveringComponent: null,
     }))
   );
 
