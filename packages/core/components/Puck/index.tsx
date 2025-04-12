@@ -367,9 +367,9 @@ function PuckProvider<
   const uPuckStore = useRegisterUsePuckStore(appStore);
 
   useEffect(() => {
-    // TODO implement
-    // const { state, resolveAllData } = appStore.getState();
-    // resolveAllData();
+    const { resolveAndCommitData } = appStore.getState();
+
+    resolveAndCommitData();
   }, []);
 
   return (
