@@ -293,7 +293,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
 
               const node = state.indexes.nodes[resolved.props.id];
 
-              // Ensure item hasn't been deleted in the mean time
+              // Ensure item hasn't been deleted whilst resolution happens
               if (node) {
                 if (resolved.props.id === "root") {
                   dispatch({ type: "replaceRoot", root: toRoot(resolved) });

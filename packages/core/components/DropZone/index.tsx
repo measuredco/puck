@@ -39,6 +39,7 @@ import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
 import { renderContext } from "../Render";
 import { useSlots } from "../../lib/use-slots";
+import { SlotRenderPure } from "../SlotRender";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -143,7 +144,11 @@ const DropZoneChild = ({
     [componentConfig?.defaultProps, item?.props, puckProps]
   );
 
-  const defaultedPropsWithSlots = useSlots(componentConfig, defaultsProps);
+  const defaultedPropsWithSlots = useSlots(
+    componentConfig,
+    defaultsProps,
+    DropZoneEditPure
+  );
 
   if (!item) return;
 
@@ -466,7 +471,14 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
         {content.map((item) => {
           const Component = config.components[item.type];
           if (Component) {
-            const props = useSlots(Component, item.props);
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const props = useSlots(Component, item.props, (slotProps) => (
+              <SlotRenderPure
+                {...slotProps}
+                config={config}
+                metadata={metadata}
+              />
+            ));
 
             return (
               <DropZoneProvider

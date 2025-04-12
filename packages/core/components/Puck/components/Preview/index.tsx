@@ -1,4 +1,4 @@
-import { DropZonePure } from "../../../DropZone";
+import { DropZoneEditPure, DropZonePure } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { RefObject, useCallback, useEffect, useRef, useMemo } from "react";
 import { useAppStore } from "../../../../store";
@@ -79,7 +79,8 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   const Page = useCallback<React.FC<PageProps>>(
     (pageProps) => {
       const rootConfig = config.root;
-      const propsWithSlots = useSlots(rootConfig, pageProps);
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const propsWithSlots = useSlots(rootConfig, pageProps, DropZoneEditPure);
 
       return config.root?.render ? (
         config.root?.render({
