@@ -1,6 +1,7 @@
 "use client";
 
 import { rootZone } from "../../lib/root-droppable-id";
+import { useSlots } from "../../lib/use-slots";
 import { Config, Data, Metadata, UserGenerics } from "../../types";
 import {
   DropZonePure,
@@ -8,6 +9,7 @@ import {
   DropZoneRenderPure,
 } from "../DropZone";
 import React from "react";
+import { SlotRender } from "../SlotRender";
 
 export const renderContext = React.createContext<{
   config: Config;
@@ -41,6 +43,23 @@ export function Render<
   const rootProps = defaultedData.root.props || defaultedData.root;
   const title = rootProps?.title || "";
 
+  const pageProps = {
+    ...rootProps,
+    puck: {
+      renderDropZone: DropZonePure,
+      isEditing: false,
+      dragRef: null,
+      metadata: metadata,
+    },
+    title,
+    editMode: false,
+    id: "puck-root",
+  };
+
+  const propsWithSlots = useSlots(config.root, pageProps, (props) => (
+    <SlotRender {...props} config={config} metadata={metadata} />
+  ));
+
   if (config.root?.render) {
     return (
       <renderContext.Provider value={{ config, data: defaultedData, metadata }}>
@@ -50,18 +69,7 @@ export function Render<
             depth: 0,
           }}
         >
-          <config.root.render
-            {...rootProps}
-            puck={{
-              renderDropZone: DropZonePure,
-              isEditing: false,
-              dragRef: null,
-              metadata: metadata,
-            }}
-            title={title}
-            editMode={false}
-            id={"puck-root"}
-          >
+          <config.root.render {...propsWithSlots}>
             <DropZoneRenderPure zone={rootZone} />
           </config.root.render>
         </DropZoneProvider>
