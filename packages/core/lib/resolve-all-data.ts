@@ -30,15 +30,17 @@ export async function resolveAllData<
 
     onResolveStart?.(node);
 
-    const resolved = (await resolveComponentData(
-      node,
-      config,
-      metadata,
-      () => {},
-      () => {},
-      "force",
-      false
-    )) as T;
+    const resolved = (
+      await resolveComponentData(
+        node,
+        config,
+        metadata,
+        () => {},
+        () => {},
+        "force",
+        false
+      )
+    ).node as T;
 
     const resolvedDeep = (await mapSlots(resolved, processContent, false)) as T;
 

@@ -54,20 +54,24 @@ const createOnChange =
         type: "replace",
         destinationIndex: itemSelector.index,
         destinationZone: itemSelector.zone || rootDroppableId,
-        data: await resolveComponentData(
-          { ...selectedItem, props: newProps },
-          "replace"
-        ),
+        data: (
+          await resolveComponentData(
+            { ...selectedItem, props: newProps },
+            "replace"
+          )
+        ).node,
         ui: updatedUi,
       });
     } else {
       if (data.root.props) {
         dispatch({
           type: "replaceRoot",
-          root: await resolveComponentData(
-            { ...data.root, props: newProps },
-            "replace"
-          ),
+          root: (
+            await resolveComponentData(
+              { ...data.root, props: newProps },
+              "replace"
+            )
+          ).node,
           ui: { ...ui, ...updatedUi },
           recordHistory: true,
         });
