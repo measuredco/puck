@@ -113,8 +113,8 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
     template: "example_1",
     children: [],
   },
-  resolveData: async (data, { changed }) => {
-    if (!changed.template) return data;
+  resolveData: async (data, { changed, trigger }) => {
+    if (!changed.template || trigger === "load") return data;
 
     const templateKey = `puck-demo-templates:${componentKey}`;
 
