@@ -5,7 +5,6 @@ import { Header } from "./components/Header";
 export type RootProps = DefaultRootProps;
 
 export const Root: RootConfig<RootProps> = {
-  fields: {},
   defaultProps: {
     title: "My Page",
   },
