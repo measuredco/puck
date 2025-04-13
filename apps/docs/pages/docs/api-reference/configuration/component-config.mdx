@@ -388,7 +388,14 @@ const resolveData = async ({ props }, { metadata }) => {
 };
 ```
 
-Note that returning metadata in the resolveData API will overwrite the prop values. For non-destructive use of metadata, refer to the [`render(puck.metadata)` docs](#puckmetadata).
+##### `params.trigger`
+
+The event that triggered this resolveData call. One of:
+
+- `insert` - the component was inserted
+- `replace` - the component was replaced, such as when a field value is changed
+- `load` - the Puck editor was loaded
+- `force` - an execution was forced via the [`resolveAllData` function](/docs/api-reference/functions/resolve-all-data)
 
 #### Returns
 
