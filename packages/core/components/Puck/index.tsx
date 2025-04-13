@@ -88,7 +88,7 @@ const FieldSideBar = () => {
   );
 };
 
-const DEBUG = true;
+const DEBUG = false;
 
 type PuckProps<
   UserConfig extends Config = Config,
@@ -303,7 +303,10 @@ function PuckProvider<
     _initialHistory?.index || blendedHistories.length - 1;
   const initialAppState = blendedHistories[initialHistoryIndex].state;
 
-  const plugins = useMemo(() => [...(_plugins || []), debugPlugin], [_plugins]);
+  const plugins = useMemo(
+    () => (DEBUG ? [...(_plugins || []), debugPlugin] : _plugins),
+    [_plugins]
+  );
 
   // Load all plugins into the overrides
   const loadedOverrides = useLoadedOverrides({
