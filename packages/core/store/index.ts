@@ -11,6 +11,7 @@ import {
   Metadata,
   ComponentData,
   RootDataWithProps,
+  ResolveDataTrigger,
 } from "../types";
 import { createReducer, PuckAction } from "../reducer";
 import { getItem } from "../lib/get-item";
@@ -80,7 +81,8 @@ export type AppStore<
   unsetComponentLoading: (id: string) => void;
   pendingComponentLoads: Record<string, NodeJS.Timeout>;
   resolveComponentData: <T extends ComponentData | RootDataWithProps>(
-    componentData: T
+    componentData: T,
+    trigger: ResolveDataTrigger
   ) => Promise<T>;
   resolveAndCommitData: () => void;
   plugins: Plugin[];
@@ -260,7 +262,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
 
       //     return { ...s, resolveDataRuns: s.resolveDataRuns + 1 };
       //   }),
-      resolveComponentData: async (componentData) => {
+      resolveComponentData: async (componentData, trigger) => {
         const { config, metadata, setComponentLoading } = get();
 
         return await resolveComponentData(
@@ -278,7 +280,8 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
               "id" in item.props ? item.props.id : "root",
               false,
               0
-            )
+            ),
+          trigger
         );
       },
       resolveAndCommitData: async () => {
@@ -288,7 +291,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           state,
           (content) => content,
           (childItem) => {
-            resolveComponentData(childItem).then((resolved) => {
+            resolveComponentData(childItem, "load").then((resolved) => {
               const { state } = get();
 
               const node = state.indexes.nodes[resolved.props.id];
