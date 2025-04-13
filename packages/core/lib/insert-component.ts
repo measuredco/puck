@@ -50,13 +50,15 @@ export const insertComponent = async (
 
   if (itemData) {
     // Run any resolvers, async
-    const resolvedData = await resolveComponentData(itemData, "insert");
+    const resolved = await resolveComponentData(itemData, "insert");
 
-    dispatch({
-      type: "replace",
-      destinationZone: itemSelector.zone,
-      destinationIndex: itemSelector.index,
-      data: resolvedData,
-    });
+    if (resolved.didChange) {
+      dispatch({
+        type: "replace",
+        destinationZone: itemSelector.zone,
+        destinationIndex: itemSelector.index,
+        data: resolved.node,
+      });
+    }
   }
 };
