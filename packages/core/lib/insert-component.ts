@@ -50,7 +50,7 @@ export const insertComponent = async (
 
   if (itemData) {
     // Run any resolvers, async
-    const resolvedData = await resolveComponentData(itemData);
+    const resolvedData = await resolveComponentData(itemData, "insert");
 
     dispatch({
       type: "replace",

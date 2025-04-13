@@ -1,4 +1,10 @@
-import { ComponentData, Config, Metadata, RootDataWithProps } from "../types";
+import {
+  ComponentData,
+  Config,
+  Metadata,
+  ResolveDataTrigger,
+  RootDataWithProps,
+} from "../types";
 import { mapSlots } from "./map-slots";
 import { getChanged } from "./get-changed";
 
@@ -14,6 +20,7 @@ export const resolveComponentData = async <
   metadata: Metadata = {},
   onResolveStart?: (item: T) => void,
   onResolveEnd?: (item: T) => void,
+  trigger: ResolveDataTrigger = "replace",
   recursive: boolean = true
 ) => {
   const configForItem =
@@ -39,6 +46,7 @@ export const resolveComponentData = async <
         changed,
         lastData: oldItem,
         metadata,
+        trigger,
       });
 
     let resolvedItem = {
@@ -59,6 +67,7 @@ export const resolveComponentData = async <
               metadata,
               onResolveStart,
               onResolveEnd,
+              trigger,
               false
             )
           )

@@ -12,6 +12,8 @@ export type PuckComponent<Props> = (
   props: WithId<WithPuckProps<Props>>
 ) => JSX.Element;
 
+export type ResolveDataTrigger = "insert" | "replace" | "load" | "force";
+
 export type ComponentConfig<
   RenderProps extends DefaultComponentProps = DefaultComponentProps,
   FieldProps extends DefaultComponentProps = RenderProps,
@@ -44,6 +46,7 @@ export type ComponentConfig<
       changed: Partial<Record<keyof FieldProps, boolean> & { id: string }>;
       lastData: DataShape | null;
       metadata: Metadata;
+      trigger: ResolveDataTrigger;
     }
   ) =>
     | Promise<{
