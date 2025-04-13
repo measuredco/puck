@@ -83,7 +83,7 @@ export type AppStore<
   resolveComponentData: <T extends ComponentData | RootDataWithProps>(
     componentData: T,
     trigger: ResolveDataTrigger
-  ) => Promise<T>;
+  ) => Promise<{ node: T; didChange: boolean }>;
   resolveAndCommitData: () => void;
   plugins: Plugin[];
   overrides: Partial<Overrides>;
@@ -294,24 +294,27 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
             resolveComponentData(childItem, "load").then((resolved) => {
               const { state } = get();
 
-              const node = state.indexes.nodes[resolved.props.id];
+              const node = state.indexes.nodes[resolved.node.props.id];
 
-              // Ensure item hasn't been deleted whilst resolution happens
-              if (node) {
-                if (resolved.props.id === "root") {
-                  dispatch({ type: "replaceRoot", root: toRoot(resolved) });
+              // Ensure node hasn't been deleted whilst resolution happens
+              if (node && resolved.didChange) {
+                if (resolved.node.props.id === "root") {
+                  dispatch({
+                    type: "replaceRoot",
+                    root: toRoot(resolved.node),
+                  });
                 } else {
                   // Use latest position, in case it's moved
                   const zoneCompound = `${node.parentId}:${node.zone}`;
                   const parentZone = state.indexes.zones[zoneCompound];
 
                   const index = parentZone.contentIds.indexOf(
-                    resolved.props.id
+                    resolved.node.props.id
                   );
 
                   dispatch({
                     type: "replace",
-                    data: resolved,
+                    data: resolved.node,
                     destinationIndex: index,
                     destinationZone: zoneCompound,
                   });

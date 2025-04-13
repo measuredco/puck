@@ -7,6 +7,7 @@ import {
 } from "../types";
 import { mapSlots } from "./map-slots";
 import { getChanged } from "./get-changed";
+import fdeq from "fast-deep-equal";
 
 export const cache: {
   lastChange: Record<string, any>;
@@ -60,16 +61,19 @@ export const resolveComponentData = async <
     if (recursive) {
       resolvedItem = (await mapSlots(resolvedItem, async (content) => {
         return Promise.all(
-          content.map(async (childItem) =>
-            resolveComponentData(
-              childItem as T,
-              config,
-              metadata,
-              onResolveStart,
-              onResolveEnd,
-              trigger,
-              false
-            )
+          content.map(
+            async (childItem) =>
+              (
+                await resolveComponentData(
+                  childItem as T,
+                  config,
+                  metadata,
+                  onResolveStart,
+                  onResolveEnd,
+                  trigger,
+                  false
+                )
+              ).node
           )
         );
       })) as T;
@@ -88,8 +92,8 @@ export const resolveComponentData = async <
       onResolveEnd(resolvedItem);
     }
 
-    return resolvedItem;
+    return { node: resolvedItem, didChange: !fdeq(item, resolvedItem) };
   }
 
-  return item;
+  return { node: item, didChange: false };
 };
