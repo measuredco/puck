@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from "react";
-import { ComponentConfig, Slot } from "@/core/types";
+import { ComponentConfig, ComponentData, Slot } from "@/core/types";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { Section } from "../../components/Section";
@@ -8,6 +8,7 @@ import { withLayout } from "../../components/Layout";
 import { generateId } from "@/core/lib/generate-id";
 import { componentKey, type Props } from "../../index";
 import { AutoField, Button, createUsePuck, FieldLabel } from "@/core";
+import { mapSlots } from "@/core/lib/map-slots";
 
 const usePuck = createUsePuck();
 
@@ -174,8 +175,19 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
       },
     };
 
-    const children =
+    let children =
       templates[data.props.template]?.data || templates["example_1"].data;
+
+    const randomizeId = (item: ComponentData) => ({
+      ...item,
+      props: { ...item.props, id: generateId(item.type) },
+    });
+
+    children = await Promise.all(
+      children.map((item) =>
+        mapSlots(randomizeId(item), async (content) => content.map(randomizeId))
+      )
+    );
 
     return {
       ...data,
