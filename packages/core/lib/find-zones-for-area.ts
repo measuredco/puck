@@ -1,17 +1,7 @@
-import { Content, Data } from "../types";
-import { getZoneId } from "./get-zone-id";
+import { PrivateAppState } from "../types/Internal";
 
-export const findZonesForArea = (
-  data: Data,
-  area: string
-): Record<string, Content> => {
-  const { zones = {} } = data;
-
-  const result = Object.keys(zones).filter(
-    (zoneId) => getZoneId(zoneId)[0] === area
+export const findZonesForArea = (state: PrivateAppState, area: string) => {
+  return Object.keys(state.indexes.zones).filter(
+    (zone) => zone.split(":")[0] === area
   );
-
-  return result.reduce((acc, key) => {
-    return { ...acc, [key]: zones[key] };
-  }, {});
 };
