@@ -6,12 +6,14 @@ export const flattenData = <
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
 >(
-  state: PrivateAppState<G["UserData"]>
+  state: PrivateAppState<G["UserData"]>,
+  config: UserConfig
 ) => {
   const data: ComponentData[] = [];
 
   walkTree(
     state,
+    config,
     (content) => content,
     (item) => {
       data.push(item);

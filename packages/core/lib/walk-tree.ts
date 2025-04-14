@@ -1,13 +1,20 @@
 import { forEachSlot } from "../lib/for-each-slot";
 import { forRelatedZones } from "../lib/for-related-zones";
 import { rootDroppableId } from "../lib/root-droppable-id";
-import { ComponentData, Content, Data, RootDataWithProps } from "../types";
+import {
+  ComponentData,
+  Config,
+  Content,
+  Data,
+  RootDataWithProps,
+} from "../types";
 import {
   NodeIndex,
   PrivateAppState,
   ZoneIndex,
   ZoneType,
 } from "../types/Internal";
+import { isSlot } from "./is-slot";
 import { stripSlots } from "./strip-slots";
 
 /**
@@ -21,6 +28,7 @@ import { stripSlots } from "./strip-slots";
  */
 export function walkTree<UserData extends Data = Data>(
   state: PrivateAppState<UserData>,
+  config: Config,
   mapContent: (
     content: Content,
     zoneCompound: string,
@@ -101,19 +109,31 @@ export function walkTree<UserData extends Data = Data>(
 
     const newProps: ComponentData["props"] = { ...mappedItem.props };
 
-    forEachSlot(mappedItem, (parentId, slotId, content) => {
-      const zoneCompound = `${parentId}:${slotId}`;
+    forEachSlot(
+      mappedItem,
+      (parentId, slotId, content) => {
+        const zoneCompound = `${parentId}:${slotId}`;
 
-      const [_, newContent] = processContent(
-        path,
-        zoneCompound,
-        content,
-        "slot",
-        parentId
-      );
+        const [_, newContent] = processContent(
+          path,
+          zoneCompound,
+          content,
+          "slot",
+          parentId
+        );
 
-      newProps[slotId] = newContent;
-    });
+        newProps[slotId] = newContent;
+      },
+      false,
+      (itemType, propName, propValue) => {
+        const configForComponent =
+          itemType === "root" ? config?.root : config?.components[itemType];
+
+        if (!configForComponent) return isSlot(propValue);
+
+        return configForComponent.fields?.[propName]?.type === "slot";
+      }
+    );
 
     const newItem = { ...item, props: newProps };
 
