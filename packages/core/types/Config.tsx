@@ -1,11 +1,11 @@
-import type { JSX, ReactElement, ReactNode } from "react";
+import type { JSX, ReactNode } from "react";
 import { Fields } from "./Fields";
-import { ComponentData, Content, Metadata, RootData } from "./Data";
+import { ComponentData, Metadata, RootData } from "./Data";
 
 import { AsFieldProps, WithChildren, WithId, WithPuckProps } from "./Utils";
 import { AppState } from "./AppState";
 import { DefaultComponentProps } from "./Props";
-import { Permissions } from "./API";
+import { Permissions, Slot } from "./API";
 import { DropZoneProps } from "../components/DropZone/types";
 
 export type PuckComponent<Props> = (
@@ -20,7 +20,7 @@ export type ComponentConfig<
   DataShape = Omit<ComponentData<FieldProps>, "type">
 > = {
   render: PuckComponent<{
-    [PropName in keyof RenderProps]: RenderProps[PropName] extends Content
+    [PropName in keyof RenderProps]: RenderProps[PropName] extends Slot
       ? (props?: Omit<DropZoneProps, "zone">) => ReactNode
       : RenderProps[PropName];
   }>;
