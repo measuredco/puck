@@ -285,10 +285,11 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
         );
       },
       resolveAndCommitData: async () => {
-        const { state, dispatch, resolveComponentData } = get();
+        const { config, state, dispatch, resolveComponentData } = get();
 
         walkTree(
           state,
+          config,
           (content) => content,
           (childItem) => {
             resolveComponentData(childItem, "load").then((resolved) => {
