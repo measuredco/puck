@@ -286,7 +286,7 @@ function PuckProvider<
       },
     } as G["UserAppState"];
 
-    return walkTree(newAppState);
+    return walkTree(newAppState, config);
   });
 
   const { appendData = true } = _initialHistory || {};

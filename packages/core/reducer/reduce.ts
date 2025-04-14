@@ -50,6 +50,7 @@ export function insertAction<UserData extends Data>(
 
   return walkTree<UserData>(
     state,
+    config,
     (content, zoneCompound) => {
       if (zoneCompound === action.destinationZone) {
         return insert(
@@ -73,10 +74,12 @@ export function insertAction<UserData extends Data>(
 
 const reorderAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,
-  action: ReorderAction
+  action: ReorderAction,
+  appStore: AppStore
 ): PrivateAppState<UserData> => {
   return walkTree<UserData>(
     state,
+    appStore.config,
     (content, zoneCompound) => {
       if (zoneCompound === action.destinationZone) {
         return reorder(
@@ -107,13 +110,15 @@ const reorderAction = <UserData extends Data>(
 
 export const replaceAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,
-  action: ReplaceAction<UserData>
+  action: ReplaceAction<UserData>,
+  appStore: AppStore
 ): PrivateAppState<UserData> => {
   const [parentId] = action.destinationZone.split(":");
   const idsInPath = getIdsForParent(action.destinationZone, state);
 
   return walkTree<UserData>(
     state,
+    appStore.config,
     (content) => content,
     (childItem, path) => {
       const pathIds = path.map((p) => p.split(":")[0]);
@@ -137,7 +142,8 @@ export const replaceAction = <UserData extends Data>(
 
 export const setAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,
-  action: SetAction<UserData>
+  action: SetAction<UserData>,
+  appStore: AppStore
 ): PrivateAppState<UserData> => {
   if (typeof action.state === "object") {
     const newState = {
@@ -153,7 +159,7 @@ export const setAction = <UserData extends Data>(
       return newState;
     }
 
-    return walkTree(newState);
+    return walkTree(newState, appStore.config);
   }
 
   return { ...state, ...action.state(state) };
@@ -165,7 +171,7 @@ export function reduce<UserData extends Data>(
   appStore: AppStore
 ): PrivateAppState<UserData> {
   if (action.type === "set") {
-    return setAction<UserData>(state, action as SetAction<UserData>);
+    return setAction<UserData>(state, action as SetAction<UserData>, appStore);
   }
 
   if (action.type === "insert") {
@@ -173,12 +179,13 @@ export function reduce<UserData extends Data>(
   }
 
   if (action.type === "replace") {
-    return replaceAction(state, action);
+    return replaceAction(state, action, appStore);
   }
 
   if (action.type === "replaceRoot") {
     return walkTree<UserData>(
       state,
+      appStore.config,
       (content) => content,
       (childItem) => {
         if (childItem.props.id === "root") {
@@ -213,6 +220,7 @@ export function reduce<UserData extends Data>(
 
     const modified = walkTree<UserData>(
       state,
+      appStore.config,
       (content, zoneCompound) => {
         if (zoneCompound === action.sourceZone) {
           return insert(content, action.sourceIndex + 1, item);
@@ -268,7 +276,7 @@ export function reduce<UserData extends Data>(
   }
 
   if (action.type === "reorder") {
-    return reorderAction(state, action);
+    return reorderAction(state, action, appStore);
   }
 
   if (action.type === "move") {
@@ -291,6 +299,7 @@ export function reduce<UserData extends Data>(
 
     return walkTree<UserData>(
       state,
+      appStore.config,
       (content, zoneCompound) => {
         if (
           zoneCompound === action.sourceZone &&
@@ -340,6 +349,7 @@ export function reduce<UserData extends Data>(
 
     return walkTree<UserData>(
       { ...state, indexes: deindexed },
+      appStore.config,
       (content, zoneCompound) => {
         if (zoneCompound === action.zone) {
           return remove(content, action.index);
@@ -422,22 +432,28 @@ export function reduce<UserData extends Data>(
         "`setData` is expensive and may cause unnecessary re-renders. Consider using a more atomic action instead."
       );
 
-      return walkTree({
+      return walkTree(
+        {
+          ...state,
+          data: {
+            ...state.data,
+            ...action.data,
+          },
+        },
+        appStore.config
+      );
+    }
+
+    return walkTree(
+      {
         ...state,
         data: {
           ...state.data,
-          ...action.data,
+          ...action.data(state.data),
         },
-      });
-    }
-
-    return walkTree({
-      ...state,
-      data: {
-        ...state.data,
-        ...action.data(state.data),
       },
-    });
+      appStore.config
+    );
   }
 
   if (action.type === "setUi") {

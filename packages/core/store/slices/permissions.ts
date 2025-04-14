@@ -49,7 +49,7 @@ export const createPermissionsSlice = (
   get: () => AppStore
 ): PermissionsSlice => {
   const resolvePermissions: ResolvePermissions = async (params = {}, force) => {
-    const { state, permissions } = get();
+    const { state, permissions, config } = get();
     const { cache, globalPermissions } = permissions;
 
     const resolveDataForItem = async (
@@ -135,7 +135,7 @@ export const createPermissionsSlice = (
       await resolveDataForItem(item, force);
     } else if (type) {
       // Resolve specific type
-      flattenData(state)
+      flattenData(state, config)
         .filter((item) => item.type === type)
         .map(async (item) => {
           await resolveDataForItem(item, force);
@@ -146,7 +146,7 @@ export const createPermissionsSlice = (
       resolveDataForRoot(force);
 
       // Resolve everything
-      flattenData(state).map(async (item) => {
+      flattenData(state, config).map(async (item) => {
         await resolveDataForItem(item, force);
       });
     }
