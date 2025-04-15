@@ -47,6 +47,7 @@ export function insertAction<UserData extends Data>(
   };
 
   const [parentId] = action.destinationZone.split(":");
+  const idsInPath = getIdsForParent(action.destinationZone, state);
 
   return walkTree<UserData>(
     state,
@@ -62,8 +63,10 @@ export function insertAction<UserData extends Data>(
 
       return content;
     },
-    (childItem) => {
+    (childItem, path) => {
       if (childItem.props.id === id || childItem.props.id === parentId) {
+        return childItem;
+      } else if (idsInPath.indexOf(childItem.props.id) > -1) {
         return childItem;
       }
 
