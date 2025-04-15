@@ -5,7 +5,6 @@ import {
   PuckAction,
   RegisterZoneAction,
   RemoveAction,
-  ReorderAction,
   ReplaceAction,
   SetDataAction,
   SetUiAction,
@@ -59,6 +58,8 @@ const defaultIndexes: PrivateAppState<UserData>["indexes"] = {
     [dzZoneCompound]: { contentIds: [], type: "dropzone" },
   },
 };
+
+type UserAppState = PrivateAppState<UserData>;
 
 const defaultState = {
   data: defaultData,
@@ -136,7 +137,7 @@ describe("Reducer", () => {
     return currentState;
   };
 
-  describe.only("insert action", () => {
+  describe("insert action", () => {
     describe("with DropZones", () => {
       it("should insert into rootDroppableId", () => {
         const action: InsertAction = {
@@ -246,54 +247,118 @@ describe("Reducer", () => {
   });
 
   describe("reorder action", () => {
-    it("should reorder within rootDroppableId", () => {
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          content: [
-            { type: "Comp", props: { id: "1" } },
-            { type: "Comp", props: { id: "2" } },
-          ],
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-      const action: ReorderAction = {
-        type: "reorder",
-        sourceIndex: 0,
-        destinationIndex: 1,
-        destinationZone: rootDroppableId,
-      };
+    describe("with DropZones", () => {
+      it("should reorder within rootDroppableId", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: rootDroppableId,
+            destinationIndex: 0,
+            id: "1",
+          }),
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: rootDroppableId,
+            destinationIndex: 1,
+            id: "2",
+          }),
+          () => ({
+            type: "reorder",
+            sourceIndex: 0,
+            destinationIndex: 1,
+            destinationZone: rootDroppableId,
+          }),
+        ]);
 
-      const newState = reducer(state, action);
-      expect(newState.data.content[0].props.id).toBe("2");
-      expect(newState.data.content[1].props.id).toBe("1");
+        expect(newState.data.content[0].props.id).toBe("2");
+        expect(newState.data.content[1].props.id).toBe("1");
+        expectIndexed(newState, newState.data.content[0], [rootDroppableId], 0);
+        expectIndexed(newState, newState.data.content[1], [rootDroppableId], 1);
+      });
+
+      it("should reorder within a different zone", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: dzZoneCompound,
+            destinationIndex: 0,
+            id: "1",
+          }),
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: dzZoneCompound,
+            destinationIndex: 1,
+            id: "2",
+          }),
+          () => ({
+            type: "reorder",
+            sourceIndex: 0,
+            destinationIndex: 1,
+            destinationZone: dzZoneCompound,
+          }),
+        ]);
+
+        expect(newState.data.zones?.[dzZoneCompound][0].props.id).toBe("2");
+        expect(newState.data.zones?.[dzZoneCompound][1].props.id).toBe("1");
+        expectIndexed(
+          newState,
+          newState.data.content[0],
+          [rootDroppableId, dzZoneCompound],
+          0
+        );
+        expectIndexed(
+          newState,
+          newState.data.content[1],
+          [rootDroppableId, dzZoneCompound],
+          1
+        );
+      });
     });
 
-    it("should reorder within a different zone", () => {
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          zones: {
-            zone1: [
-              { type: "A", props: { id: "1" } },
-              { type: "B", props: { id: "2" } },
-            ],
-          },
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-      const action: ReorderAction = {
-        type: "reorder",
-        sourceIndex: 0,
-        destinationIndex: 1,
-        destinationZone: "zone1",
-      };
+    describe("with slots", () => {
+      it("should reorder within a slot", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "root:slot",
+            destinationIndex: 0,
+            id: "1",
+          }),
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "root:slot",
+            destinationIndex: 1,
+            id: "2",
+          }),
+          () => ({
+            type: "reorder",
+            sourceIndex: 0,
+            destinationIndex: 1,
+            destinationZone: "root:slot",
+          }),
+        ]);
 
-      const newState = reducer(state, action);
-      expect(newState.data.zones?.zone1[0].props.id).toBe("2");
-      expect(newState.data.zones?.zone1[1].props.id).toBe("1");
+        expect(newState.data.root.props?.slot[0].props.id).toBe("2");
+        expect(newState.data.root.props?.slot[1].props.id).toBe("1");
+        expectIndexed(
+          newState,
+          newState.data.root.props?.slot[0],
+          ["root:slot"],
+          0
+        );
+        expectIndexed(
+          newState,
+          newState.data.root.props?.slot[1],
+          ["root:slot"],
+          1
+        );
+      });
     });
   });
 
