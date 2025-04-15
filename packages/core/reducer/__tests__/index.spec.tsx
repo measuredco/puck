@@ -940,48 +940,94 @@ describe("Reducer", () => {
   });
 
   describe("replace action", () => {
-    const replacement = { type: "Comp", props: { id: "3" } };
+    describe("with DropZones", () => {
+      it("should replace in content", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: rootDroppableId,
+            destinationIndex: 0,
+            id: "1",
+          }),
+          () => ({
+            type: "replace",
+            destinationZone: rootDroppableId,
+            destinationIndex: 0,
+            data: {
+              type: "Comp",
+              props: {
+                id: "1",
+                prop: "Changed",
+              },
+            },
+          }),
+        ]);
 
-    it("should replace in content", () => {
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          content: [{ type: "Comp", props: { id: "1" } }],
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-      const action: ReplaceAction = {
-        type: "replace",
-        destinationIndex: 0,
-        destinationZone: rootDroppableId,
-        data: replacement,
-      };
+        expect(newState.data.content.length).toBe(1);
+        expect(newState.data.content[0].props.prop).toBe("Changed");
+        expectIndexed(newState, newState.data.content[0], [rootDroppableId], 0);
+      });
 
-      const newState = reducer(state, action);
-      expect(newState.data.content.length).toBe(1);
-      expect(newState.data.content[0].props.id).toBe("3");
+      it("should replace in a zone", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: dzZoneCompound,
+            destinationIndex: 0,
+            id: "1",
+          }),
+          () => ({
+            type: "replace",
+            destinationZone: dzZoneCompound,
+            destinationIndex: 0,
+            data: {
+              type: "Comp",
+              props: {
+                id: "1",
+                prop: "Changed",
+              },
+            },
+          }),
+        ]);
+
+        expect(newState.data.zones?.[dzZoneCompound].length).toBe(1);
+        expect(newState.data.zones?.[dzZoneCompound][0].props.prop).toBe(
+          "Changed"
+        );
+        expectIndexed(newState, newState.data.content[0], [rootDroppableId], 0);
+      });
     });
 
-    it("should replace in a zone", () => {
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-      const action: ReplaceAction = {
-        type: "replace",
-        destinationIndex: 0,
-        destinationZone: "zone1",
-        data: replacement,
-      };
+    describe("with slots", () => {
+      it("should replace in deep slots", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "root:slot",
+            destinationIndex: 0,
+            id: "1",
+          }),
+          () => ({
+            type: "replace",
+            destinationZone: "root:slot",
+            destinationIndex: 0,
+            data: {
+              type: "CompWithDefaults",
+              props: { id: "1", slot: [{ type: "Comp", props: { id: "3" } }] },
+            },
+          }),
+        ]);
 
-      const newState = reducer(state, action);
-      expect(newState.data.zones?.zone1.length).toBe(1);
-      expect(newState.data.zones?.zone1[0].props.id).toBe("3");
+        const item = newState.data.root.props?.slot[0];
+
+        expect(newState.data.root.props?.slot.length).toBe(1);
+        expect(item?.props.id).toBe("1");
+        expect(item?.props.slot[0].props.id).toBe("3");
+        expectIndexed(newState, item, ["root:slot"], 0);
+      });
     });
   });
 
