@@ -49,16 +49,11 @@ function storeInterceptor<UserData extends Data = Data>(
   };
 }
 
-export function createReducer<
-  UserConfig extends Config,
-  UserData extends Data
->({
-  config,
+export function createReducer<UserData extends Data>({
   record,
   onAction,
   appStore,
 }: {
-  config: UserConfig;
   record?: (appState: AppState<UserData>) => void;
   onAction?: OnAction<UserData>;
   appStore: AppStore;
@@ -66,8 +61,6 @@ export function createReducer<
   return storeInterceptor(
     (state, action) => {
       const result = reduce(state, action, appStore);
-
-      console.log(action.type, state, result);
 
       return result;
     },

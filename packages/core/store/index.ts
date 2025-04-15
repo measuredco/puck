@@ -147,7 +147,6 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           const { record } = get().history;
 
           const dispatch = createReducer({
-            config: s.config,
             record,
             appStore: s,
           });
@@ -238,7 +237,6 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
       setUi: (ui: Partial<UiState>, recordHistory?: boolean) =>
         set((s) => {
           const dispatch = createReducer({
-            config: s.config,
             record: () => {},
             appStore: s,
           });
