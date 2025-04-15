@@ -9,6 +9,7 @@ import {
   InsertAction,
   MoveAction,
   PuckAction,
+  RemoveAction,
   ReorderAction,
   ReplaceAction,
   SetAction,
@@ -221,6 +222,44 @@ export const setAction = <UserData extends Data>(
   return { ...state, ...action.state(state) };
 };
 
+const removeAction = <UserData extends Data>(
+  state: PrivateAppState<UserData>,
+  action: RemoveAction,
+  appStore: AppStore
+) => {
+  const item = getItem({ index: action.index, zone: action.zone }, state)!;
+
+  // Cleaner to handle here than in walkTree
+  let deindexed = deindex(state, item);
+
+  const [parentId] = action.zone.split(":");
+
+  return walkTree<UserData>(
+    { ...state, indexes: deindexed },
+    appStore.config,
+    (content, zoneCompound) => {
+      if (zoneCompound === action.zone) {
+        return remove(content, action.index);
+      }
+
+      return content;
+    },
+    (childItem, path) => {
+      const parentIds = path.map((p) => p.split(":")[0]);
+
+      if (
+        childItem.props.id === parentId ||
+        childItem.props.id === item.props.id ||
+        parentIds.indexOf(item.props.id) > -1
+      ) {
+        return childItem;
+      }
+
+      return null;
+    }
+  );
+};
+
 export function reduce<UserData extends Data>(
   state: PrivateAppState<UserData>,
   action: PuckAction,
@@ -350,37 +389,7 @@ export function reduce<UserData extends Data>(
   }
 
   if (action.type === "remove") {
-    const item = getItem({ index: action.index, zone: action.zone }, state)!;
-
-    // Cleaner to handle here than in walkTree
-    let deindexed = deindex(state, item);
-
-    const [parentId] = action.zone.split(":");
-
-    return walkTree<UserData>(
-      { ...state, indexes: deindexed },
-      appStore.config,
-      (content, zoneCompound) => {
-        if (zoneCompound === action.zone) {
-          return remove(content, action.index);
-        }
-
-        return content;
-      },
-      (childItem, path) => {
-        const parentIds = path.map((p) => p.split(":")[0]);
-
-        if (
-          childItem.props.id === parentId ||
-          childItem.props.id === item.props.id ||
-          parentIds.indexOf(item.props.id) > -1
-        ) {
-          return childItem;
-        }
-
-        return null;
-      }
-    );
+    return removeAction(state, action, appStore);
   }
 
   if (action.type === "registerZone") {
