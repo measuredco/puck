@@ -38,6 +38,10 @@ type Props = {
     prop: string;
     slot: Slot;
   };
+  CompWithDefault: {
+    prop: string;
+    slot: Slot;
+  };
 };
 
 type RootProps = {
@@ -65,8 +69,6 @@ const defaultIndexes: PrivateAppState<UserData>["indexes"] = {
     [dzZoneCompound]: { contentIds: [], type: "dropzone" },
   },
 };
-
-type UserAppState = PrivateAppState<UserData>;
 
 const defaultState = {
   data: defaultData,
@@ -106,6 +108,26 @@ describe("Reducer", () => {
           slot: { type: "slot" },
         },
         defaultProps: { prop: "example", slot: [] },
+        render: () => <div />,
+      },
+      CompWithDefault: {
+        fields: {
+          prop: { type: "text" },
+          slot: { type: "slot" },
+        },
+        defaultProps: {
+          prop: "example",
+          slot: [
+            {
+              type: "Comp",
+              props: {
+                id: "defaulted-item",
+                prop: "Defaulted item",
+                slots: [],
+              },
+            },
+          ],
+        },
         render: () => <div />,
       },
     },
@@ -198,6 +220,27 @@ describe("Reducer", () => {
         expect(item).toHaveProperty("type", "Comp");
         expect(item?.props).toHaveProperty("prop", "example");
         expectIndexed(newState, item, ["root:slot"], 0);
+      });
+
+      it("should load components defined in defaultProps", () => {
+        const state: PrivateAppState<UserData> = defaultState;
+
+        const action: InsertAction = {
+          type: "insert",
+          componentType: "CompWithDefault",
+          destinationIndex: 0,
+          destinationZone: "root:slot",
+          id: "first",
+        };
+
+        const newState = reducer(state, action) as PrivateAppState<UserData>;
+
+        const item = newState.data.root.props?.slot[0];
+        const defaultedItem = newState.data.root.props?.slot[0].props.slot[0];
+
+        expect(item).toHaveProperty("type", "CompWithDefault");
+        expect(defaultedItem?.props).toHaveProperty("prop", "Defaulted item");
+        expectIndexed(newState, defaultedItem, ["root:slot", "first:slot"], 0);
       });
 
       it("should insert into a slot within a slot", () => {
