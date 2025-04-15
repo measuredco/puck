@@ -121,7 +121,7 @@ const moveAction = <UserData extends Data>(
 
       return content;
     },
-    (childItem) => {
+    (childItem, path) => {
       const [sourceZoneParent] = action.sourceZone.split(":");
       const [destinationZoneParent] = action.destinationZone.split(":");
 
@@ -132,7 +132,8 @@ const moveAction = <UserData extends Data>(
         destinationZoneParent === childId ||
         item.props.id === childId ||
         idsInSourcePath.indexOf(childId) > -1 ||
-        idsInDestinationPath.indexOf(childId) > -1
+        idsInDestinationPath.indexOf(childId) > -1 ||
+        path.includes(action.destinationZone)
       ) {
         return childItem;
       }
