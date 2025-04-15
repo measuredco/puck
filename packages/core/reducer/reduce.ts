@@ -64,10 +64,12 @@ export function insertAction<UserData extends Data>(
 
       return content;
     },
-    (childItem) => {
+    (childItem, path) => {
       if (childItem.props.id === id || childItem.props.id === parentId) {
         return childItem;
-      } else if (idsInPath.indexOf(childItem.props.id) > -1) {
+      } else if (idsInPath.includes(childItem.props.id)) {
+        return childItem;
+      } else if (path.includes(action.destinationZone)) {
         return childItem;
       }
 
