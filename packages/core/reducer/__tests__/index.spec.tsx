@@ -1,5 +1,4 @@
 import {
-  DuplicateAction,
   InsertAction,
   MoveAction,
   PuckAction,
@@ -11,7 +10,14 @@ import {
   UnregisterZoneAction,
   createReducer,
 } from "../../reducer";
-import { ComponentData, Config, Data, Slot, UiState } from "../../types";
+import {
+  ComponentData,
+  Config,
+  Content,
+  Data,
+  Slot,
+  UiState,
+} from "../../types";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 
 import { generateId } from "../../lib/generate-id";
@@ -21,6 +27,7 @@ import {
 } from "../../store";
 import { PrivateAppState } from "../../types/Internal";
 import { stripSlots } from "../../lib/strip-slots";
+import { walkTree } from "../../lib/walk-tree";
 
 jest.mock("../../lib/generate-id");
 
@@ -363,168 +370,364 @@ describe("Reducer", () => {
   });
 
   describe("duplicate action", () => {
-    it("should duplicate in content", () => {
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          content: [
-            {
-              type: "Comp",
-              props: { id: "sampleId", prop: "Some example data" },
+    describe("with DropZones", () => {
+      it("should duplicate in content", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: rootDroppableId,
+            destinationIndex: 0,
+            id: "sampleId",
+          }),
+          (state) => ({
+            type: "replace",
+            destinationZone: rootDroppableId,
+            destinationIndex: 0,
+            data: {
+              ...state.indexes.nodes["sampleId"].data,
+              props: {
+                ...state.indexes.nodes["sampleId"].data.props,
+                prop: "Some example data",
+              },
             },
-          ],
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-      const action: DuplicateAction = {
-        type: "duplicate",
-        sourceIndex: 0,
-        sourceZone: rootDroppableId,
-      };
+          }),
+          () => ({
+            type: "duplicate",
+            sourceZone: rootDroppableId,
+            sourceIndex: 0,
+          }),
+        ]);
 
-      const newState = reducer(state, action);
-      expect(newState.data.content).toHaveLength(2);
-      expect(newState.data.content[1].props.id).not.toBe("sampleId");
-      expect(newState.data.content[1].props.prop).toBe("Some example data");
-    });
+        expect(newState.data.content).toHaveLength(2);
+        expect(newState.data.content[1].props.id).not.toBe("sampleId");
+        expect(newState.data.content[1].props.prop).toBe("Some example data");
+        expectIndexed(newState, newState.data.content[1], [rootDroppableId], 1);
+      });
 
-    it("should duplicate in a different zone", () => {
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          zones: {
-            zone1: [
-              {
-                type: "Comp",
-                props: { id: "sampleId", prop: "Some example data" },
+      it("should duplicate in a different zone", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: dzZoneCompound,
+            destinationIndex: 0,
+            id: "sampleId",
+          }),
+          (state) => ({
+            type: "replace",
+            destinationZone: dzZoneCompound,
+            destinationIndex: 0,
+            data: {
+              ...state.indexes.nodes["sampleId"].data,
+              props: {
+                ...state.indexes.nodes["sampleId"].data.props,
+                prop: "Some example data",
               },
-            ],
-          },
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-      const action: DuplicateAction = {
-        type: "duplicate",
-        sourceIndex: 0,
-        sourceZone: "zone1",
-      };
+            },
+          }),
+          () => ({
+            type: "duplicate",
+            sourceZone: dzZoneCompound,
+            sourceIndex: 0,
+          }),
+        ]);
 
-      const newState = reducer(state, action);
-      expect(newState.data.zones?.zone1).toHaveLength(2);
-      expect(newState.data.zones?.zone1[1].props.id).not.toBe("sampleId");
-      expect(newState.data.zones?.zone1[1].props.prop).toBe(
-        "Some example data"
-      );
-    });
+        const zone = newState.data.zones?.[dzZoneCompound] ?? [];
 
-    it("should recursively duplicate items", () => {
-      let counter = 0;
+        expect(zone).toHaveLength(2);
+        expect(zone[1].props.id).not.toBe("sampleId");
+        expect(zone[1].props.prop).toBe("Some example data");
+        expectIndexed(newState, zone[1], [rootDroppableId, dzZoneCompound], 1);
+      });
 
-      mockedGenerateId.mockImplementation(() => `mockId-${counter++}`);
-
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          zones: {
-            zone1: [
-              {
-                type: "Comp",
-                props: { id: "mycomponent", prop: "Some example data" },
+      it("should recursively duplicate related items and zones", () => {
+        const state: PrivateAppState = walkTree(
+          {
+            ...defaultState,
+            data: {
+              ...defaultData,
+              content: [
+                {
+                  type: "Comp",
+                  props: { id: "my-component", prop: "Data" },
+                },
+              ],
+              zones: {
+                "my-component:zone": [
+                  {
+                    type: "Comp",
+                    props: { id: "other-component", prop: "More example data" },
+                  },
+                ],
+                "other-component:zone": [
+                  {
+                    type: "Comp",
+                    props: { id: "final-id", prop: "Even more example data" },
+                  },
+                ],
               },
-            ],
-            "mycomponent:zone1": [
-              {
-                type: "Comp",
-                props: { id: "sampleId", prop: "More example data" },
-              },
-            ],
-          },
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-
-      const action: DuplicateAction = {
-        type: "duplicate",
-        sourceIndex: 0,
-        sourceZone: "zone1",
-      };
-
-      const newState = reducer(state, action);
-
-      expect(newState.data).toMatchInlineSnapshot(`
-        {
-          "content": [],
-          "root": {
-            "props": {
-              "title": "",
             },
           },
-          "zones": {
-            "mockId-0:zone1": [
-              {
-                "props": {
-                  "id": "mockId-1",
-                  "prop": "More example data",
-                },
-                "type": "Comp",
-              },
-            ],
-            "mycomponent:zone1": [
-              {
-                "props": {
-                  "id": "sampleId",
-                  "prop": "More example data",
-                },
-                "type": "Comp",
-              },
-            ],
-            "zone1": [
-              {
-                "props": {
-                  "id": "mycomponent",
-                  "prop": "Some example data",
-                },
-                "type": "Comp",
-              },
-              {
-                "props": {
-                  "id": "mockId-0",
-                  "prop": "Some example data",
-                },
-                "type": "Comp",
-              },
-            ],
-          },
-        }
-      `);
+          config
+        );
+
+        const newState = reducer(state, {
+          type: "duplicate",
+          sourceIndex: 0,
+          sourceZone: rootDroppableId,
+        });
+
+        const zone1 = newState.data.content ?? [];
+
+        expect(zone1).toHaveLength(2);
+        expect(zone1[1].props.id).not.toBe("my-component");
+        expect(zone1[1].props.prop).toBe("Data");
+        expectIndexed(newState, zone1[1], [rootDroppableId], 1);
+
+        const zone2ZoneCompound = `${zone1[1].props.id}:zone`;
+        const zone2 = newState.data.zones?.[zone2ZoneCompound] ?? [];
+
+        expect(zone2).toHaveLength(1);
+        expect(zone2[0].props.id).not.toBe("other-component");
+        expect(zone2[0].props.prop).toBe("More example data");
+        expectIndexed(
+          newState,
+          zone2[0],
+          [rootDroppableId, zone2ZoneCompound],
+          0
+        );
+
+        const zone3ZoneCompound = `${zone2[0].props.id}:zone`;
+        const zone3 = newState.data.zones?.[zone3ZoneCompound] ?? [];
+
+        expect(zone3).toHaveLength(1);
+        expect(zone3[0].props.id).not.toBe("final-id");
+        expect(zone3[0].props.prop).toBe("Even more example data");
+        expectIndexed(
+          newState,
+          zone3[0],
+          [rootDroppableId, zone2ZoneCompound, zone3ZoneCompound],
+          0
+        );
+      });
+
+      it("should select the duplicated item", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: rootDroppableId,
+            destinationIndex: 0,
+            id: "sampleId",
+          }),
+          () => ({
+            type: "duplicate",
+            sourceZone: rootDroppableId,
+            sourceIndex: 0,
+          }),
+        ]);
+
+        expect(newState.ui.itemSelector?.index).toBe(1);
+        expect(newState.ui.itemSelector?.zone).toBe(rootDroppableId);
+      });
     });
-
-    it("should select the duplicated item", () => {
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          content: [
-            {
-              type: "Comp",
-              props: { id: "sampleId", prop: "Some example data" },
+    describe("with slots", () => {
+      it("should duplicate within a slot", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "root:slot",
+            destinationIndex: 0,
+            id: "sampleId",
+          }),
+          (state) => ({
+            type: "replace",
+            destinationZone: "root:slot",
+            destinationIndex: 0,
+            data: {
+              ...state.indexes.nodes["sampleId"].data,
+              props: {
+                ...state.indexes.nodes["sampleId"].data.props,
+                prop: "Some example data",
+              },
             },
-          ],
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-      const action: DuplicateAction = {
-        type: "duplicate",
-        sourceIndex: 0,
-        sourceZone: rootDroppableId,
-      };
+          }),
+          () => ({
+            type: "duplicate",
+            sourceZone: "root:slot",
+            sourceIndex: 0,
+          }),
+        ]);
 
-      const newState = reducer(state, action);
-      expect(newState.ui.itemSelector?.index).toBe(1);
-      expect(newState.ui.itemSelector?.zone).toBe(rootDroppableId);
+        const content = newState.data.root.props?.slot ?? [];
+        expect(content).toHaveLength(2);
+        expect(content[1].props.id).not.toBe("sampleId");
+        expect(content[1].props.prop).toBe("Some example data");
+        expectIndexed(newState, content[1], ["root:slot"], 1);
+      });
+
+      it("should duplicate within a slot, within a slot", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "root:slot",
+            destinationIndex: 0,
+            id: "first",
+          }),
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "first:slot",
+            destinationIndex: 0,
+            id: "second",
+          }),
+          (state) => ({
+            type: "replace",
+            destinationZone: "first:slot",
+            destinationIndex: 0,
+            data: {
+              ...state.indexes.nodes["second"].data,
+              props: {
+                ...state.indexes.nodes["second"].data.props,
+                prop: "Some example data",
+              },
+            },
+          }),
+          () => ({
+            type: "duplicate",
+            sourceZone: "first:slot",
+            sourceIndex: 0,
+          }),
+        ]);
+
+        const content = (newState.data.root.props?.slot ?? [])[0].props
+          .slot as Content;
+        expect(content).toHaveLength(2);
+        expect(content[1].props.id).not.toBe("second");
+        expect(content[1].props.prop).toBe("Some example data");
+        expectIndexed(newState, content[1], ["root:slot", "first:slot"], 1);
+      });
+
+      it("should duplicate within a slot, within a DropZone", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: dzZoneCompound,
+            destinationIndex: 0,
+            id: "first",
+          }),
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "first:slot",
+            destinationIndex: 0,
+            id: "second",
+          }),
+          (state) => ({
+            type: "replace",
+            destinationZone: "first:slot",
+            destinationIndex: 0,
+            data: {
+              ...state.indexes.nodes["second"].data,
+              props: {
+                ...state.indexes.nodes["second"].data.props,
+                prop: "Some example data",
+              },
+            },
+          }),
+          () => ({
+            type: "duplicate",
+            sourceZone: "first:slot",
+            sourceIndex: 0,
+          }),
+        ]);
+
+        const content =
+          newState.data.zones?.[dzZoneCompound][0].props.slot || [];
+
+        expect(content).toHaveLength(2);
+        expect(content[1].props.id).not.toBe("second");
+        expect(content[1].props.prop).toBe("Some example data");
+        expectIndexed(
+          newState,
+          content[1],
+          [rootDroppableId, dzZoneCompound, "first:slot"],
+          1
+        );
+      });
+
+      it("should recursively duplicate related items", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "root:slot",
+            destinationIndex: 0,
+            id: "first",
+          }),
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "first:slot",
+            destinationIndex: 0,
+            id: "second",
+          }),
+          (state) => ({
+            type: "replace",
+            destinationZone: "first:slot",
+            destinationIndex: 0,
+            data: {
+              ...state.indexes.nodes["second"].data,
+              props: {
+                ...state.indexes.nodes["second"].data.props,
+                prop: "Some example data",
+              },
+            },
+          }),
+          () => ({
+            type: "duplicate",
+            sourceZone: "root:slot",
+            sourceIndex: 0,
+          }),
+        ]);
+
+        const zone1 = newState.data.root.props?.slot ?? [];
+        expect(zone1).toHaveLength(2);
+        expect(zone1[1].props.id).not.toBe("second");
+        expectIndexed(newState, zone1[1], ["root:slot"], 1);
+
+        const zone2ZoneCompound = `${zone1[1].props.id}:slot`;
+        const zone2 = zone1[1].props.slot ?? [];
+
+        expect(zone2).toHaveLength(1);
+        expect(zone2[0].props.id).not.toBe("second");
+        expect(zone2[0].props.prop).toBe("Some example data");
+        expectIndexed(newState, zone2[0], ["root:slot", zone2ZoneCompound], 0);
+      });
+
+      it("should select the duplicated item", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "root:slot",
+            destinationIndex: 0,
+            id: "sampleId",
+          }),
+          () => ({
+            type: "duplicate",
+            sourceZone: "root:slot",
+            sourceIndex: 0,
+          }),
+        ]);
+
+        expect(newState.ui.itemSelector?.index).toBe(1);
+        expect(newState.ui.itemSelector?.zone).toBe("root:slot");
+      });
     });
   });
 
