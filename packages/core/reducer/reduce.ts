@@ -7,6 +7,7 @@ import { getItem } from "../lib/get-item";
 import { generateId } from "../lib/generate-id";
 import {
   InsertAction,
+  MoveAction,
   PuckAction,
   ReorderAction,
   ReplaceAction,
@@ -63,7 +64,7 @@ export function insertAction<UserData extends Data>(
 
       return content;
     },
-    (childItem, path) => {
+    (childItem) => {
       if (childItem.props.id === id || childItem.props.id === parentId) {
         return childItem;
       } else if (idsInPath.indexOf(childItem.props.id) > -1) {
@@ -75,33 +76,61 @@ export function insertAction<UserData extends Data>(
   );
 }
 
-const reorderAction = <UserData extends Data>(
+const moveAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,
-  action: ReorderAction,
+  action: MoveAction,
   appStore: AppStore
 ): PrivateAppState<UserData> => {
+  if (
+    action.sourceZone === action.destinationZone &&
+    action.sourceIndex === action.destinationIndex
+  ) {
+    return state;
+  }
+
+  const item = getItem(
+    { zone: action.sourceZone, index: action.sourceIndex },
+    state
+  );
+
+  if (!item) return state;
+
+  const idsInSourcePath = getIdsForParent(action.sourceZone, state);
+  const idsInDestinationPath = getIdsForParent(action.destinationZone, state);
+
   return walkTree<UserData>(
     state,
     appStore.config,
     (content, zoneCompound) => {
-      if (zoneCompound === action.destinationZone) {
-        return reorder(
-          content || [],
-          action.sourceIndex,
-          action.destinationIndex
+      if (
+        zoneCompound === action.sourceZone &&
+        zoneCompound === action.destinationZone
+      ) {
+        return insert(
+          remove(content, action.sourceIndex),
+          action.destinationIndex,
+          item
         );
+      } else if (zoneCompound === action.sourceZone) {
+        return remove(content, action.sourceIndex);
+      } else if (zoneCompound === action.destinationZone) {
+        return insert(content, action.destinationIndex, item);
       }
 
       return content;
     },
-    (childItem, path, index) => {
-      const zoneCompound = path[path.length - 1];
+    (childItem) => {
+      const [sourceZoneParent] = action.sourceZone.split(":");
+      const [destinationZoneParent] = action.destinationZone.split(":");
+
+      const childId = childItem.props.id;
 
       if (
-        (index === action.sourceIndex &&
-          zoneCompound === action.destinationZone) ||
-        (index === action.destinationIndex &&
-          zoneCompound === action.destinationZone)
+        sourceZoneParent === childId ||
+        destinationZoneParent === childId ||
+        item.props.id === childId ||
+        idsInSourcePath.indexOf(childId) > -1 ||
+        idsInDestinationPath.indexOf(childId) > -1
       ) {
         return childItem;
       }
@@ -279,67 +308,21 @@ export function reduce<UserData extends Data>(
   }
 
   if (action.type === "reorder") {
-    return reorderAction(state, action, appStore);
+    return moveAction(
+      state,
+      {
+        type: "move",
+        sourceIndex: action.sourceIndex,
+        sourceZone: action.destinationZone,
+        destinationIndex: action.destinationIndex,
+        destinationZone: action.destinationZone,
+      },
+      appStore
+    );
   }
 
   if (action.type === "move") {
-    if (
-      action.sourceZone === action.destinationZone &&
-      action.sourceIndex === action.destinationIndex
-    ) {
-      return state;
-    }
-
-    const item = getItem(
-      { zone: action.sourceZone, index: action.sourceIndex },
-      state
-    );
-
-    if (!item) return state;
-
-    const idsInSourcePath = getIdsForParent(action.sourceZone, state);
-    const idsInDestinationPath = getIdsForParent(action.destinationZone, state);
-
-    return walkTree<UserData>(
-      state,
-      appStore.config,
-      (content, zoneCompound) => {
-        if (
-          zoneCompound === action.sourceZone &&
-          zoneCompound === action.destinationZone
-        ) {
-          return insert(
-            remove(content, action.sourceIndex),
-            action.destinationIndex,
-            item
-          );
-        } else if (zoneCompound === action.sourceZone) {
-          return remove(content, action.sourceIndex);
-        } else if (zoneCompound === action.destinationZone) {
-          return insert(content, action.destinationIndex, item);
-        }
-
-        return content;
-      },
-      (childItem) => {
-        const [sourceZoneParent] = action.sourceZone.split(":");
-        const [destinationZoneParent] = action.destinationZone.split(":");
-
-        const childId = childItem.props.id;
-
-        if (
-          sourceZoneParent === childId ||
-          destinationZoneParent === childId ||
-          item.props.id === childId ||
-          idsInSourcePath.indexOf(childId) > -1 ||
-          idsInDestinationPath.indexOf(childId) > -1
-        ) {
-          return childItem;
-        }
-
-        return null;
-      }
-    );
+    return moveAction(state, action, appStore);
   }
 
   if (action.type === "remove") {
