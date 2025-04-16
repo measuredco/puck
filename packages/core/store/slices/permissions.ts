@@ -122,7 +122,7 @@ export const createPermissionsSlice = (
         // Shim the root data in by conforming to component data shape
         {
           type: "root",
-          props: { ...appState.data.root.props, id: "puck-root" },
+          props: { ...appState.data.root.props, id: "root" },
         },
         force
       );
@@ -143,8 +143,6 @@ export const createPermissionsSlice = (
     } else if (root) {
       resolveDataForRoot(force);
     } else {
-      resolveDataForRoot(force);
-
       // Resolve everything
       flattenData(state, config).map(async (item) => {
         await resolveDataForItem(item, force);
@@ -199,7 +197,7 @@ export const createPermissionsSlice = (
           ...rootConfig?.permissions,
         } as Permissions;
 
-        const resolvedForItem = resolvedPermissions["puck-root"];
+        const resolvedForItem = resolvedPermissions["root"];
 
         return (
           resolvedForItem
