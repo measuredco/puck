@@ -18,7 +18,6 @@ import {} from "./actions";
 import { AppStore } from "../store";
 import { PrivateAppState } from "../types/Internal";
 import { walkTree } from "../lib/walk-tree";
-import { deindex } from "../lib/deindex";
 
 // Restore unregistered zones when re-registering in same session
 export const zoneCache: Record<string, Content> = {};
@@ -229,13 +228,23 @@ const removeAction = <UserData extends Data>(
 ) => {
   const item = getItem({ index: action.index, zone: action.zone }, state)!;
 
-  // Cleaner to handle here than in walkTree
-  let deindexed = deindex(state, item);
-
   const [parentId] = action.zone.split(":");
 
-  return walkTree<UserData>(
-    { ...state, indexes: deindexed },
+  // Gather related
+  const nodesToDelete = Object.entries(state.indexes.nodes).reduce<string[]>(
+    (acc, [nodeId, nodeData]) => {
+      const pathIds = nodeData.path.map((p) => p.split(":")[0]);
+      if (pathIds.includes(item.props.id)) {
+        return [...acc, nodeId];
+      }
+
+      return acc;
+    },
+    [item.props.id]
+  );
+
+  const newState = walkTree<UserData>(
+    state,
     appStore.config,
     (content, zoneCompound) => {
       if (zoneCompound === action.zone) {
@@ -258,6 +267,28 @@ const removeAction = <UserData extends Data>(
       return null;
     }
   );
+
+  Object.keys(newState.data.zones || {}).forEach((zoneCompound) => {
+    const parentId = zoneCompound.split(":")[0];
+
+    if (nodesToDelete.includes(parentId) && newState.data.zones) {
+      delete newState.data.zones[zoneCompound];
+    }
+  });
+
+  Object.keys(newState.indexes.zones).forEach((zoneCompound) => {
+    const parentId = zoneCompound.split(":")[0];
+
+    if (nodesToDelete.includes(parentId)) {
+      delete newState.indexes.zones[zoneCompound];
+    }
+  });
+
+  nodesToDelete.forEach((id) => {
+    delete newState.indexes.nodes[id];
+  });
+
+  return newState;
 };
 
 export function reduce<UserData extends Data>(
