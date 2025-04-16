@@ -29,6 +29,7 @@ import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
+import { getItem } from "../../lib/get-item";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -147,7 +148,11 @@ export const DraggableComponent = ({
 
   const path = useAppStore(useShallow((s) => s.state.indexes.nodes[id]?.path));
   const permissions = useAppStore(
-    useShallow((s) => s.permissions.getPermissions()) // TODO call using id
+    useShallow((s) => {
+      const item = getItem({ index, zone: zoneCompound }, s.state);
+
+      return s.permissions.getPermissions({ item });
+    })
   );
 
   const userIsDragging = useContextStore(

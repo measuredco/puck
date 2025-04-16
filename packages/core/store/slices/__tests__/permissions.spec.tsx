@@ -2,6 +2,7 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import { useRegisterPermissionsSlice } from "../permissions";
 import { defaultAppState, createAppStore } from "../../";
 import { rootDroppableId } from "../../../lib/root-droppable-id";
+import { walkTree } from "../../../lib/walk-tree";
 
 const appStore = createAppStore();
 
@@ -95,6 +96,7 @@ describe("permissions slice", () => {
     appStore.setState({
       setComponentLoading: () => {
         loadingCalled = true;
+        return () => {};
       },
       unsetComponentLoading: () => {
         unloadingCalled = true;
@@ -280,23 +282,28 @@ describe("permissions slice", () => {
         resolved: true,
       });
 
+      const config = {
+        components: {
+          MyComponent: {
+            render: () => <div />,
+            permissions: { base: true },
+            resolvePermissions,
+          },
+        },
+      };
+
       appStore.setState({
-        config: {
-          components: {
-            MyComponent: {
-              render: () => <div />,
-              permissions: { base: true },
-              resolvePermissions,
+        config,
+        state: walkTree(
+          {
+            ...defaultAppState,
+            data: {
+              ...defaultAppState.data,
+              content: [{ type: "MyComponent", props: { id: "comp-1" } }],
             },
           },
-        },
-        state: {
-          ...defaultAppState,
-          data: {
-            ...defaultAppState.data,
-            content: [{ type: "MyComponent", props: { id: "comp-1" } }],
-          },
-        },
+          config
+        ),
       });
 
       renderHook(() =>
