@@ -14,7 +14,7 @@ import {
   ZoneIndex,
   ZoneType,
 } from "../types/Internal";
-import { isSlot } from "./is-slot";
+import { createIsSlotConfig } from "./is-slot";
 import { stripSlots } from "./strip-slots";
 
 /**
@@ -125,14 +125,7 @@ export function walkTree<UserData extends Data = Data>(
         newProps[slotId] = newContent;
       },
       false,
-      (itemType, propName, propValue) => {
-        const configForComponent =
-          itemType === "root" ? config?.root : config?.components[itemType];
-
-        if (!configForComponent) return isSlot(propValue);
-
-        return configForComponent.fields?.[propName]?.type === "slot";
-      }
+      createIsSlotConfig(config)
     );
 
     const newItem = { ...item, props: newProps };
