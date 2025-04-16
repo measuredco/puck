@@ -8,6 +8,7 @@ import {
 import { mapSlots } from "./map-slots";
 import { getChanged } from "./get-changed";
 import fdeq from "fast-deep-equal";
+import { createIsSlotConfig } from "./is-slot";
 
 export const cache: {
   lastChange: Record<string, any>;
@@ -25,15 +26,17 @@ export const resolveComponentData = async <
   recursive: boolean = true
 ) => {
   const configForItem =
-    "type" in item ? config.components[item.type] : config.root;
+    "type" in item && item.type !== "root"
+      ? config.components[item.type]
+      : config.root;
 
   if (configForItem?.resolveData && item.props) {
     const id = "id" in item.props ? item.props.id : "root";
 
     const { item: oldItem = null, resolved = {} } = cache.lastChange[id] || {};
 
-    if (item && item === oldItem) {
-      return resolved;
+    if (item && fdeq(item, oldItem)) {
+      return { node: resolved, didChange: false };
     }
 
     const changed = getChanged(item, oldItem);
@@ -59,24 +62,29 @@ export const resolveComponentData = async <
     };
 
     if (recursive) {
-      resolvedItem = (await mapSlots(resolvedItem, async (content) => {
-        return Promise.all(
-          content.map(
-            async (childItem) =>
-              (
-                await resolveComponentData(
-                  childItem as T,
-                  config,
-                  metadata,
-                  onResolveStart,
-                  onResolveEnd,
-                  trigger,
-                  false
-                )
-              ).node
-          )
-        );
-      })) as T;
+      resolvedItem = (await mapSlots(
+        resolvedItem,
+        async (content) => {
+          return Promise.all(
+            content.map(
+              async (childItem) =>
+                (
+                  await resolveComponentData(
+                    childItem as T,
+                    config,
+                    metadata,
+                    onResolveStart,
+                    onResolveEnd,
+                    trigger,
+                    false
+                  )
+                ).node
+            )
+          );
+        },
+        false,
+        createIsSlotConfig(config)
+      )) as T;
     }
 
     if (Object.keys(readOnly).length) {
