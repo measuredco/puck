@@ -151,7 +151,7 @@ export function walkTree<UserData extends Data = Data>(
     };
 
     // For now, we strip type and id from root. This may change in future.
-    const finalData: any = newItem;
+    const finalData: any = { ...newItem, props: { ...newItem.props } };
 
     if (newProps.id === "root") {
       delete finalData["type"];
