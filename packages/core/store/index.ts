@@ -253,13 +253,6 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
 
           return { ...s, state, selectedItem };
         }),
-      // resolveDataRuns: 0,
-      // resolveData: (newAppState) =>
-      //   set((s) => {
-      //     resolveData(newAppState, get);
-
-      //     return { ...s, resolveDataRuns: s.resolveDataRuns + 1 };
-      //   }),
       resolveComponentData: async (componentData, trigger) => {
         const { config, metadata, setComponentLoading } = get();
 
