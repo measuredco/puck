@@ -1133,9 +1133,11 @@ describe("Reducer", () => {
               "root": {
                 "data": {
                   "props": {
+                    "id": "root",
                     "slot": [],
                     "title": "",
                   },
+                  "type": "root",
                 },
                 "flatData": {
                   "props": {
@@ -1246,8 +1248,10 @@ describe("Reducer", () => {
               "root": {
                 "data": {
                   "props": {
+                    "id": "root",
                     "slot": [],
                   },
+                  "type": "root",
                 },
                 "flatData": {
                   "props": {
@@ -1331,9 +1335,11 @@ describe("Reducer", () => {
               "root": {
                 "data": {
                   "props": {
+                    "id": "root",
                     "slot": [],
                     "title": "",
                   },
+                  "type": "root",
                 },
                 "flatData": {
                   "props": {
