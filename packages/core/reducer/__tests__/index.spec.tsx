@@ -1032,115 +1032,353 @@ describe("Reducer", () => {
   });
 
   describe("remove action", () => {
-    it("should remove from content", () => {
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          content: [{ type: "Comp", props: { id: "1" } }],
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-      const action: RemoveAction = {
-        type: "remove",
-        index: 0,
-        zone: rootDroppableId,
-      };
+    describe("with DropZones", () => {
+      it("should remove from content", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: rootDroppableId,
+            destinationIndex: 0,
+            id: "1",
+          }),
+          () => ({
+            type: "remove",
+            index: 0,
+            zone: rootDroppableId,
+          }),
+        ]);
 
-      const newState = reducer(state, action);
-      expect(newState.data.content).toHaveLength(0);
-    });
+        expect(newState.data.content).toHaveLength(0);
+        expect(newState.indexes.nodes["1"]).toBeUndefined();
+        expect(newState.indexes.zones[rootDroppableId].contentIds).toEqual([]);
+      });
 
-    it("should remove from a zone", () => {
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          zones: { zone1: [{ type: "Comp", props: { id: "1" } }] },
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-      const action: RemoveAction = {
-        type: "remove",
-        index: 0,
-        zone: "zone1",
-      };
+      it("should remove from a zone", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: dzZoneCompound,
+            destinationIndex: 0,
+            id: "1",
+          }),
+          () => ({
+            type: "remove",
+            index: 0,
+            zone: dzZoneCompound,
+          }),
+        ]);
 
-      const newState = reducer(state, action);
-      expect(newState.data.zones?.zone1).toHaveLength(0);
-    });
+        expect(newState.data.zones?.[dzZoneCompound]).toHaveLength(0);
+        expect(newState.indexes.nodes["1"]).toBeUndefined();
+        expect(newState.indexes.zones[dzZoneCompound].contentIds).toEqual([]);
+      });
 
-    it("should recursively remove items", () => {
-      let counter = 0;
-
-      mockedGenerateId.mockImplementation(() => `mockId-${counter++}`);
-
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          zones: {
-            zone1: [
-              {
-                type: "Comp",
-                props: { id: "mycomponent", prop: "Some example data" },
+      it("should recursively remove items", () => {
+        const state: PrivateAppState = walkTree(
+          {
+            ...defaultState,
+            data: {
+              ...defaultData,
+              content: [
+                {
+                  type: "Comp",
+                  props: { id: "my-component", prop: "Data" },
+                },
+              ],
+              zones: {
+                "my-component:zone": [
+                  {
+                    type: "Comp",
+                    props: { id: "other-component", prop: "More example data" },
+                  },
+                ],
+                "other-component:zone": [
+                  {
+                    type: "Comp",
+                    props: { id: "final-id", prop: "Even more example data" },
+                  },
+                ],
               },
-            ],
-            "mycomponent:zone1": [
-              {
-                type: "Comp",
-                props: { id: "sampleId", prop: "More example data" },
-              },
-            ],
-          },
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-
-      const action: RemoveAction = {
-        type: "remove",
-        index: 0,
-        zone: "zone1",
-      };
-
-      const newState = reducer(state, action);
-
-      expect(newState.data).toMatchInlineSnapshot(`
-        {
-          "content": [],
-          "root": {
-            "props": {
-              "title": "",
             },
           },
-          "zones": {
-            "zone1": [],
+          config
+        );
+
+        const action: RemoveAction = {
+          type: "remove",
+          index: 0,
+          zone: rootDroppableId,
+        };
+
+        const newState = reducer(state, action);
+
+        expect(newState.data).toMatchInlineSnapshot(`
+          {
+            "content": [],
+            "root": {
+              "props": {
+                "slot": [],
+                "title": "",
+              },
+            },
+            "zones": {},
+          }
+        `);
+
+        expect(newState.indexes).toMatchInlineSnapshot(`
+          {
+            "nodes": {
+              "root": {
+                "data": {
+                  "props": {
+                    "slot": [],
+                    "title": "",
+                  },
+                },
+                "flatData": {
+                  "props": {
+                    "id": "root",
+                    "slot": [],
+                    "title": "",
+                  },
+                  "type": "root",
+                },
+                "parentId": null,
+                "path": [],
+                "zone": "",
+              },
+            },
+            "zones": {
+              "root:default-zone": {
+                "contentIds": [],
+                "type": "root",
+              },
+              "root:slot": {
+                "contentIds": [],
+                "type": "slot",
+              },
+            },
+          }
+        `);
+      });
+    });
+
+    describe("with slots", () => {
+      it("should remove from a slot", () => {
+        const newState = executeSequence(defaultState, [
+          () => ({
+            type: "insert",
+            componentType: "Comp",
+            destinationZone: "root:slot",
+            destinationIndex: 0,
+            id: "1",
+          }),
+          () => ({
+            type: "remove",
+            index: 0,
+            zone: "root:slot",
+          }),
+        ]);
+
+        expect(newState.data.content).toHaveLength(0);
+        expect(newState.indexes.nodes["1"]).toBeUndefined();
+        expect(newState.indexes.zones["root:slot"].contentIds).toEqual([]);
+      });
+
+      it("should recursively remove items in a slot", () => {
+        const state: PrivateAppState = walkTree(
+          {
+            ...defaultState,
+            data: {
+              ...defaultData,
+              root: {
+                props: {
+                  slot: [
+                    {
+                      type: "Comp",
+                      props: {
+                        id: "my-component",
+                        prop: "Data",
+                        slot: [
+                          {
+                            type: "Comp",
+                            props: {
+                              id: "final-id",
+                              prop: "Even more example data",
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                } as any,
+              },
+            },
           },
-        }
-      `);
+          config
+        );
+
+        const action: RemoveAction = {
+          type: "remove",
+          index: 0,
+          zone: "root:slot",
+        };
+
+        const newState = reducer(state, action);
+
+        expect(newState.data).toMatchInlineSnapshot(`
+          {
+            "content": [],
+            "root": {
+              "props": {
+                "slot": [],
+              },
+            },
+            "zones": {},
+          }
+        `);
+
+        expect(newState.indexes).toMatchInlineSnapshot(`
+          {
+            "nodes": {
+              "root": {
+                "data": {
+                  "props": {
+                    "slot": [],
+                  },
+                },
+                "flatData": {
+                  "props": {
+                    "id": "root",
+                    "slot": [],
+                  },
+                  "type": "root",
+                },
+                "parentId": null,
+                "path": [],
+                "zone": "",
+              },
+            },
+            "zones": {
+              "root:default-zone": {
+                "contentIds": [],
+                "type": "root",
+              },
+              "root:slot": {
+                "contentIds": [],
+                "type": "slot",
+              },
+            },
+          }
+        `);
+      });
+
+      it("should recursively remove items in a slot within a DropZone", () => {
+        const state: PrivateAppState = walkTree(
+          {
+            ...defaultState,
+            data: {
+              ...defaultData,
+              content: [
+                {
+                  type: "Comp",
+                  props: {
+                    id: "my-component",
+                    prop: "Data",
+                    slot: [
+                      {
+                        type: "Comp",
+                        props: {
+                          id: "final-id",
+                          prop: "Even more example data",
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          config
+        );
+
+        const action: RemoveAction = {
+          type: "remove",
+          index: 0,
+          zone: rootDroppableId,
+        };
+
+        const newState = reducer(state, action);
+
+        expect(newState.data).toMatchInlineSnapshot(`
+          {
+            "content": [],
+            "root": {
+              "props": {
+                "slot": [],
+                "title": "",
+              },
+            },
+            "zones": {},
+          }
+        `);
+
+        expect(newState.indexes).toMatchInlineSnapshot(`
+          {
+            "nodes": {
+              "root": {
+                "data": {
+                  "props": {
+                    "slot": [],
+                    "title": "",
+                  },
+                },
+                "flatData": {
+                  "props": {
+                    "id": "root",
+                    "slot": [],
+                    "title": "",
+                  },
+                  "type": "root",
+                },
+                "parentId": null,
+                "path": [],
+                "zone": "",
+              },
+            },
+            "zones": {
+              "root:default-zone": {
+                "contentIds": [],
+                "type": "root",
+              },
+              "root:slot": {
+                "contentIds": [],
+                "type": "slot",
+              },
+            },
+          }
+        `);
+      });
     });
 
     it("should deselect the item", () => {
-      const state: PrivateAppState = {
-        ui: defaultUi,
-        data: {
-          ...defaultData,
-          content: [
-            {
-              type: "Comp",
-              props: { id: "sampleId", prop: "Some example data" },
-            },
-          ],
-        },
-        indexes: { nodes: {}, zones: {} },
-      };
-      const action: RemoveAction = {
-        type: "remove",
-        index: 0,
-        zone: rootDroppableId,
-      };
+      const newState = executeSequence(defaultState, [
+        () => ({
+          type: "insert",
+          componentType: "Comp",
+          destinationZone: "root:slot",
+          destinationIndex: 0,
+          id: "1",
+        }),
+        () => ({
+          type: "remove",
+          index: 0,
+          zone: "root:slot",
+        }),
+      ]);
 
-      const newState = reducer(state, action);
       expect(newState.ui.itemSelector).toBeNull();
     });
   });
