@@ -172,8 +172,15 @@ export function walkTree<UserData extends Data = Data>(
 
   const processedContent = newContent;
 
+  const zonesAlreadyProcessed = Object.keys(newZones);
+
   Object.keys(zones || {}).forEach((zoneCompound) => {
     const [parentId] = zoneCompound.split(":");
+
+    // Don't reprocess zones already processed as related zones
+    if (zonesAlreadyProcessed.includes(zoneCompound)) {
+      return;
+    }
 
     const [_, newContent] = processContent(
       [rootDroppableId],
