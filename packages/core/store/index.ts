@@ -273,6 +273,13 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           },
           async (item) => {
             const id = "id" in item.props ? item.props.id : "root";
+
+            if ("type" in item) {
+              await permissions.refreshPermissions({ item });
+            } else {
+              await permissions.refreshPermissions({ root: true });
+            }
+
             timeouts[id]();
           },
           trigger

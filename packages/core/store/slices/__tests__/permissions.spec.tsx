@@ -96,10 +96,9 @@ describe("permissions slice", () => {
     appStore.setState({
       setComponentLoading: () => {
         loadingCalled = true;
-        return () => {};
-      },
-      unsetComponentLoading: () => {
-        unloadingCalled = true;
+        return () => {
+          unloadingCalled = true;
+        };
       },
     });
 
@@ -129,11 +128,11 @@ describe("permissions slice", () => {
       },
       setComponentLoading: () => {
         loadingCalled = true;
-        return () => {};
+        return () => {
+          unloadingCalled = true;
+        };
       },
-      unsetComponentLoading: () => {
-        unloadingCalled = true;
-      },
+
       state: {
         ...defaultAppState,
         data: {
