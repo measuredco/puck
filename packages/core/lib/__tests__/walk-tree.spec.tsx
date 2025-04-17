@@ -268,9 +268,11 @@ describe("walk-tree", () => {
           "root": {
             "data": {
               "props": {
+                "id": "root",
                 "slot": [],
                 "title": "",
               },
+              "type": "root",
             },
             "flatData": {
               "props": {
