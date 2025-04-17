@@ -129,6 +129,7 @@ describe("permissions slice", () => {
       },
       setComponentLoading: () => {
         loadingCalled = true;
+        return () => {};
       },
       unsetComponentLoading: () => {
         unloadingCalled = true;

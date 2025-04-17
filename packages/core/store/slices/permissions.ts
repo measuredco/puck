@@ -56,12 +56,7 @@ export const createPermissionsSlice = (
       item: ComponentData,
       force: boolean = false
     ) => {
-      const {
-        config,
-        state: appState,
-        setComponentLoading,
-        unsetComponentLoading,
-      } = get();
+      const { config, state: appState, setComponentLoading } = get();
       const componentConfig =
         item.type === "root" ? config.root : config.components[item.type];
 
@@ -78,7 +73,7 @@ export const createPermissionsSlice = (
         const changed = getChanged(item, cache[item.props.id]?.lastData);
 
         if (Object.values(changed).some((el) => el === true) || force) {
-          setComponentLoading(item.props.id);
+          const clearTimeout = setComponentLoading(item.props.id, true, 50);
 
           const resolvedPermissions = await componentConfig.resolvePermissions(
             item,
@@ -110,7 +105,7 @@ export const createPermissionsSlice = (
             },
           });
 
-          unsetComponentLoading(item.props.id);
+          clearTimeout();
         }
       }
     };

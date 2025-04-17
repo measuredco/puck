@@ -31,6 +31,7 @@ import { PrivateAppState } from "../types/Internal";
 import { resolveComponentData } from "../lib/resolve-component-data";
 import { walkTree } from "../lib/walk-tree";
 import { toRoot } from "../lib/to-root";
+import { generateId } from "../lib/generate-id";
 
 export const defaultAppState: PrivateAppState = {
   data: { content: [], root: {}, zones: {} },
@@ -77,9 +78,13 @@ export type AppStore<
   config: UserConfig;
   componentState: ComponentState;
   setComponentState: (componentState: ComponentState) => void;
-  setComponentLoading: (id: string, loading?: boolean, defer?: number) => void;
+  setComponentLoading: (
+    id: string,
+    loading?: boolean,
+    defer?: number
+  ) => () => void;
   unsetComponentLoading: (id: string) => void;
-  pendingComponentLoads: Record<string, NodeJS.Timeout>;
+  pendingLoadTimeouts: Record<string, NodeJS.Timeout>;
   resolveComponentData: <T extends ComponentData | RootDataWithProps>(
     componentData: T,
     trigger: ResolveDataTrigger
@@ -164,15 +169,15 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
       setZoomConfig: (zoomConfig) => set({ zoomConfig }),
       setStatus: (status) => set({ status }),
       setComponentState: (componentState) => set({ componentState }),
-      pendingComponentLoads: {},
+      pendingLoadTimeouts: {},
       setComponentLoading: (
         id: string,
         loading: boolean = true,
         defer: number = 0
       ) => {
-        const { setComponentState, pendingComponentLoads } = get();
+        const { setComponentState, pendingLoadTimeouts } = get();
 
-        const thisPendingComponentLoads = { ...pendingComponentLoads };
+        const loadId = generateId();
 
         const setLoading = () => {
           const { componentState } = get();
@@ -189,6 +194,12 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
         const unsetLoading = () => {
           const { componentState } = get();
 
+          clearTimeout(timeout);
+
+          delete pendingLoadTimeouts[loadId];
+
+          set({ pendingLoadTimeouts });
+
           setComponentState({
             ...componentState,
             [id]: {
@@ -201,14 +212,6 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           });
         };
 
-        if (thisPendingComponentLoads[id]) {
-          clearTimeout(thisPendingComponentLoads[id]);
-
-          delete thisPendingComponentLoads[id];
-
-          set({ pendingComponentLoads: thisPendingComponentLoads });
-        }
-
         const timeout = setTimeout(() => {
           if (loading) {
             setLoading();
@@ -216,17 +219,19 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
             unsetLoading();
           }
 
-          delete thisPendingComponentLoads[id];
+          delete pendingLoadTimeouts[loadId];
 
-          set({ pendingComponentLoads: thisPendingComponentLoads });
+          set({ pendingLoadTimeouts });
         }, defer);
 
         set({
-          pendingComponentLoads: {
-            ...thisPendingComponentLoads,
+          pendingLoadTimeouts: {
+            ...pendingLoadTimeouts,
             [id]: timeout,
           },
         });
+
+        return unsetLoading;
       },
       unsetComponentLoading: (id: string) => {
         const { setComponentLoading } = get();
@@ -254,24 +259,22 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           return { ...s, state, selectedItem };
         }),
       resolveComponentData: async (componentData, trigger) => {
-        const { config, metadata, setComponentLoading } = get();
+        const { config, metadata, setComponentLoading, permissions } = get();
+
+        const timeouts: Record<string, () => void> = {};
 
         return await resolveComponentData(
           componentData,
           config,
           metadata,
-          (item) =>
-            setComponentLoading(
-              "id" in item.props ? item.props.id : "root",
-              true,
-              50
-            ),
-          (item) =>
-            setComponentLoading(
-              "id" in item.props ? item.props.id : "root",
-              false,
-              0
-            ),
+          (item) => {
+            const id = "id" in item.props ? item.props.id : "root";
+            timeouts[id] = setComponentLoading(id, true, 50);
+          },
+          async (item) => {
+            const id = "id" in item.props ? item.props.id : "root";
+            timeouts[id]();
+          },
           trigger
         );
       },
