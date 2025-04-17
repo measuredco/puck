@@ -53,10 +53,20 @@ export async function resolveAllData<
     return Promise.all(content.map(resolveNode));
   };
 
+  const processZones = async () => {
+    const zones = data.zones ?? {};
+
+    Object.entries(zones).forEach(async ([zoneKey, content]) => {
+      zones[zoneKey] = await Promise.all(content.map(resolveNode));
+    });
+
+    return zones;
+  };
+
   const dynamic: Data = {
     root: await resolveNode(defaultedData.root),
     content: await processContent(defaultedData.content),
-    zones: {},
+    zones: await processZones(),
   };
 
   Object.keys(defaultedData.zones ?? {}).forEach(async (zoneKey) => {
