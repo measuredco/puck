@@ -147,6 +147,12 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
           ? config.components[selectedItem.type]
           : ({ ...config.root, fields: rootFields } as ComponentConfig);
       },
+      selectedItem: initialAppStore?.state?.ui.itemSelector
+        ? getItem(
+            initialAppStore?.state?.ui.itemSelector,
+            initialAppStore.state
+          )
+        : null,
       dispatch: (action: PuckAction) =>
         set((s) => {
           const { record } = get().history;
