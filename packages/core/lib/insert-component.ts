@@ -1,10 +1,8 @@
-import { insertAction, InsertAction, PuckAction } from "../reducer";
+import { InsertAction } from "../reducer";
+import { insertAction } from "../reducer/actions/insert";
 import { AppStore } from "../store";
-import { AppState, Config } from "../types";
-import { PrivateAppState } from "../types/Internal";
 import { generateId } from "./generate-id";
 import { getItem } from "./get-item";
-import { resolveComponentData } from "./resolve-component-data";
 
 // Makes testing easier without mocks
 export const insertComponent = async (
@@ -24,9 +22,9 @@ export const insertComponent = async (
     id,
   };
 
-  const { state, config, dispatch, resolveComponentData } = appStore;
+  const { state, dispatch, resolveComponentData } = appStore;
 
-  const insertedState = insertAction(state, insertActionData, config);
+  const insertedState = insertAction(state, insertActionData, appStore);
 
   // Dispatch the insert, immediately
   dispatch({
