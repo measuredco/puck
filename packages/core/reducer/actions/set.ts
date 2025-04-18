@@ -16,12 +16,12 @@ export const setAction = <UserData extends Data>(
     };
 
     if (action.state.indexes) {
-      console.warn(
-        "`set` is expensive and may cause unnecessary re-renders. Consider using a more atomic action instead."
-      );
-
       return newState;
     }
+
+    console.warn(
+      "`set` is expensive and may cause unnecessary re-renders. Consider using a more atomic action instead."
+    );
 
     return walkTree(newState, appStore.config);
   }
