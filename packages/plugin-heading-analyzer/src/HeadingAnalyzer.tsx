@@ -108,20 +108,45 @@ export const HeadingAnalyzer = () => {
   // Re-render when content changes
   useEffect(() => {
     const frame = getFrame();
-    const entry = frame?.querySelector(`[data-puck-entry]`);
 
-    if (!entry) return;
+    let entry = frame?.querySelector(`[data-puck-entry]`);
 
-    setHierarchy(buildHierarchy(entry));
-
-    const observer = new MutationObserver(() => {
-      setHierarchy(buildHierarchy(entry));
+    const createHierarchy = () => {
+      setHierarchy(buildHierarchy(entry!));
+    };
+    const entryObserver = new MutationObserver(() => {
+      createHierarchy();
     });
 
-    observer.observe(entry, { subtree: true, childList: true });
+    const frameObserver = new MutationObserver(() => {
+      entry = frame?.querySelector(`[data-puck-entry]`);
+
+      if (entry) {
+        registerEntryObserver();
+        frameObserver.disconnect();
+      }
+    });
+
+    const registerEntryObserver = () => {
+      if (!entry) return;
+      entryObserver.observe(entry, { subtree: true, childList: true });
+    };
+
+    const registerFrameObserver = () => {
+      if (!frame) return;
+      frameObserver.observe(frame, { subtree: true, childList: true });
+    };
+
+    if (entry) {
+      createHierarchy();
+      registerEntryObserver();
+    } else {
+      registerFrameObserver();
+    }
 
     return () => {
-      observer.disconnect();
+      entryObserver.disconnect();
+      frameObserver.disconnect();
     };
   }, [data]);
 

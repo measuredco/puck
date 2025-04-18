@@ -1,4 +1,4 @@
-import { DropZonePure } from "../../../DropZone";
+import { DropZoneEditPure, DropZonePure } from "../../../DropZone";
 import { rootDroppableId } from "../../../../lib/root-droppable-id";
 import { RefObject, useCallback, useEffect, useRef, useMemo } from "react";
 import { useAppStore } from "../../../../store";
@@ -8,6 +8,7 @@ import { getClassNameFactory } from "../../../../lib";
 import { DefaultRootRenderProps } from "../../../../types";
 import { Render } from "../../../Render";
 import { BubbledPointerEvent } from "../../../../lib/bubble-pointer-event";
+import { useSlots } from "../../../../lib/use-slots";
 
 const getClassName = getClassNameFactory("PuckPreview", styles);
 
@@ -76,15 +77,20 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   );
 
   const Page = useCallback<React.FC<PageProps>>(
-    (pageProps) =>
-      config.root?.render ? (
+    (pageProps) => {
+      const rootConfig = config.root;
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const propsWithSlots = useSlots(rootConfig, pageProps, DropZoneEditPure);
+
+      return config.root?.render ? (
         config.root?.render({
           id: "puck-root",
-          ...pageProps,
+          ...propsWithSlots,
         })
       ) : (
-        <>{pageProps.children}</>
-      ),
+        <>{propsWithSlots.children}</>
+      );
+    },
     [config.root]
   );
 
