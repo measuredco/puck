@@ -18,6 +18,7 @@ import {
 } from "./actions/register-zone";
 import { setDataAction } from "./actions/set-data";
 import { setUiAction } from "./actions/set-ui";
+import { makeStatePublic } from "../lib/data/make-state-public";
 
 export * from "./actions";
 
@@ -55,7 +56,7 @@ function storeInterceptor<UserData extends Data = Data>(
       if (record) record(newAppState);
     }
 
-    onAction?.(action, newAppState, state);
+    onAction?.(action, makeStatePublic(newAppState), makeStatePublic(state));
 
     return newAppState;
   };

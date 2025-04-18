@@ -3,6 +3,7 @@ import { flattenData } from "../../lib/data/flatten-data";
 import { ComponentData, Config, Permissions, UserGenerics } from "../../types";
 import { getChanged } from "../../lib/get-changed";
 import { AppStore, useAppStoreApi } from "../";
+import { makeStatePublic } from "../../lib/data/make-state-public";
 
 type PermissionsArgs<
   UserConfig extends Config = Config,
@@ -81,7 +82,7 @@ export const createPermissionsSlice = (
               changed,
               lastPermissions: cache[item.props.id]?.lastPermissions || null,
               permissions: initialPermissions,
-              appState,
+              appState: makeStatePublic(appState),
               lastData: cache[item.props.id]?.lastData || null,
             }
           );
