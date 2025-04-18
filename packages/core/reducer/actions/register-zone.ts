@@ -1,5 +1,5 @@
 import { RegisterZoneAction, UnregisterZoneAction } from "..";
-import { setupZone } from "../../lib/setup-zone";
+import { setupZone } from "../../lib/data/setup-zone";
 import { Content, Data } from "../../types";
 import { PrivateAppState } from "../../types/Internal";
 

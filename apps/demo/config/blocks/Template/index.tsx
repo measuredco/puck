@@ -8,7 +8,7 @@ import { withLayout } from "../../components/Layout";
 import { generateId } from "@/core/lib/generate-id";
 import { componentKey, type Props } from "../../index";
 import { AutoField, Button, createUsePuck, FieldLabel } from "@/core";
-import { mapSlots } from "@/core/lib/map-slots";
+import { mapSlots } from "@/core/lib/data/map-slots";
 
 const usePuck = createUsePuck();
 

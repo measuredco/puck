@@ -1,5 +1,5 @@
-import { Data } from "../types";
-import { rootDroppableId } from "./root-droppable-id";
+import { Data } from "../../types";
+import { rootDroppableId } from "../root-droppable-id";
 
 // Force 'zones' to always be present and non-undefined
 type WithZones<T extends Data> = T & { zones: NonNullable<T["zones"]> };

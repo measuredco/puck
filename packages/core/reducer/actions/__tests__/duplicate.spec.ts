@@ -8,7 +8,7 @@ import {
   testSetup,
 } from "../__helpers__";
 import { PrivateAppState } from "../../../types/Internal";
-import { walkTree } from "../../../lib/walk-tree";
+import { walkTree } from "../../../lib/data/walk-tree";
 
 describe("Reducer", () => {
   const { executeSequence, config, reducer } = testSetup();

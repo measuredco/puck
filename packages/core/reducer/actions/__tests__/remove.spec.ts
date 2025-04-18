@@ -1,6 +1,6 @@
 import { RemoveAction } from "../..";
 import { rootDroppableId } from "../../../lib/root-droppable-id";
-import { walkTree } from "../../../lib/walk-tree";
+import { walkTree } from "../../../lib/data/walk-tree";
 import { PrivateAppState } from "../../../types/Internal";
 import {
   defaultData,

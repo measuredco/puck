@@ -1,19 +1,19 @@
-import { forEachSlot } from "../lib/for-each-slot";
-import { forRelatedZones } from "../lib/for-related-zones";
-import { rootDroppableId } from "../lib/root-droppable-id";
+import { forEachSlot } from "./for-each-slot";
+import { forRelatedZones } from "./for-related-zones";
+import { rootDroppableId } from "../root-droppable-id";
 import {
   ComponentData,
   Config,
   Content,
   Data,
   RootDataWithProps,
-} from "../types";
+} from "../../types";
 import {
   NodeIndex,
   PrivateAppState,
   ZoneIndex,
   ZoneType,
-} from "../types/Internal";
+} from "../../types/Internal";
 import { createIsSlotConfig } from "./is-slot";
 import { stripSlots } from "./strip-slots";
 
@@ -203,8 +203,8 @@ export function walkTree<UserData extends Data = Data>(
   return {
     ...state,
     data: {
-      root: root,
-      // root: state.data.root, // TODO changing root causes it's entire subtree to re-render. Let's keep this disabled until the performance issues are resolved in #644.
+      // root: root,
+      root: state.data.root, // TODO changing root causes it's entire subtree to re-render. Let's keep this disabled until the performance issues are resolved in #644.
       content: processedContent,
       zones: {
         ...state.data.zones,

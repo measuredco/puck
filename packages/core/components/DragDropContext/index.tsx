@@ -15,7 +15,7 @@ import { AutoScroller, defaultPreset, DragDropManager } from "@dnd-kit/dom";
 import { DragDropEvents } from "@dnd-kit/abstract";
 import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
-import { getItem } from "../../lib/get-item";
+import { getItem } from "../../lib/data/get-item";
 import { Preview, ZoneStore, ZoneStoreProvider } from "../DropZone/context";
 import { createNestedDroppablePlugin } from "../../lib/dnd/NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";

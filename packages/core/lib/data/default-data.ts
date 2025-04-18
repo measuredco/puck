@@ -1,4 +1,4 @@
-import { Data } from "../types";
+import { Data } from "../../types";
 
 export const defaultData = (data: Partial<Data>): Data => ({
   ...data,

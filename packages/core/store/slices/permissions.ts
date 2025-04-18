@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { flattenData } from "../../lib/flatten-data";
+import { flattenData } from "../../lib/data/flatten-data";
 import { ComponentData, Config, Permissions, UserGenerics } from "../../types";
 import { getChanged } from "../../lib/get-changed";
 import { AppStore, useAppStoreApi } from "../";
