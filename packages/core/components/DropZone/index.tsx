@@ -89,7 +89,7 @@ const DropZoneChild = ({
   };
 
   const ctx = useContext(dropZoneContext);
-  const { depth } = ctx!;
+  const { depth = 1 } = ctx ?? {};
 
   const nodeProps = useAppStore(
     useShallow((s) => {
@@ -223,10 +223,10 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
     const {
       // These all need setting via context
       areaId,
-      depth,
+      depth = 0,
       registerLocalZone,
       unregisterLocalZone,
-    } = ctx!;
+    } = ctx ?? {};
 
     const path = useAppStore(
       useShallow((s) => (areaId ? s.state.indexes.nodes[areaId]?.path : null))
