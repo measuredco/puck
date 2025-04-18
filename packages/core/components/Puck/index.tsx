@@ -292,14 +292,26 @@ function PuckProvider<
 
   const { appendData = true } = _initialHistory || {};
 
-  const blendedHistories = [
-    ...(_initialHistory?.histories || []),
-    ...(appendData ? [{ state: generatedAppState }] : []),
-  ].map((history) => ({
-    ...history,
-    // Inject default data to enable partial history injections
-    state: { ...generatedAppState, ...history.state },
-  }));
+  const [blendedHistories] = useState(
+    [
+      ...(_initialHistory?.histories || []),
+      ...(appendData ? [{ state: generatedAppState }] : []),
+    ].map((history) => {
+      // Inject default data to enable partial history injections
+      let newState = { ...generatedAppState, ...history.state };
+
+      // The history generally doesn't include the indexes, so calculate them for each state item
+      if (!(history.state as PrivateAppState).indexes) {
+        newState = walkTree(newState, config);
+      }
+
+      return {
+        ...history,
+        state: newState,
+      };
+    })
+  );
+
   const initialHistoryIndex =
     _initialHistory?.index || blendedHistories.length - 1;
   const initialAppState = blendedHistories[initialHistoryIndex].state;

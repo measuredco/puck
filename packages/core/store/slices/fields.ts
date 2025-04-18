@@ -3,6 +3,7 @@ import type { Fields } from "../../types";
 import { AppStore, useAppStoreApi } from "../";
 import { useCallback, useEffect } from "react";
 import { getChanged } from "../../lib/get-changed";
+import { makeStatePublic } from "../../lib/data/make-state-public";
 
 type ComponentOrRootData = Omit<ComponentData<any>, "type">;
 
@@ -71,7 +72,7 @@ export const useRegisterFieldsSlice = (
           fields: defaultFields,
           lastFields,
           lastData: lastData as ComponentOrRootData,
-          appState: state,
+          appState: makeStatePublic(state),
           parent,
         });
 
