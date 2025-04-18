@@ -3,7 +3,7 @@ import { useBreadcrumbs } from "../use-breadcrumbs";
 import { createAppStore, appStoreContext } from "../../store";
 import { ComponentData, Config } from "../../types";
 import { PropsWithChildren } from "react";
-import { walkTree } from "../walk-tree";
+import { walkTree } from "../data/walk-tree";
 
 const appStore = createAppStore();
 

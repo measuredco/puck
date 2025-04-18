@@ -2,11 +2,11 @@ import { Data } from "../../types";
 import { generateId } from "../../lib/generate-id";
 import { DuplicateAction } from "../actions";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "../../lib/walk-tree";
-import { getIdsForParent } from "../../lib/get-ids-for-parent";
-import { getItem } from "../../lib/get-item";
+import { walkTree } from "../../lib/data/walk-tree";
+import { getIdsForParent } from "../../lib/data/get-ids-for-parent";
+import { getItem } from "../../lib/data/get-item";
 import { AppStore } from "../../store";
-import { insert } from "../../lib/insert";
+import { insert } from "../../lib/data/insert";
 
 export function duplicateAction<UserData extends Data>(
   state: PrivateAppState<UserData>,

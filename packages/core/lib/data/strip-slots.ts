@@ -1,5 +1,5 @@
-import { isSlot } from "../lib/is-slot";
-import { ComponentData } from "../types";
+import { isSlot } from "./is-slot";
+import { ComponentData } from "../../types";
 
 export const stripSlots = (data: ComponentData): ComponentData => {
   // Strip out slots to prevent re-renders of parents when child changes

@@ -7,7 +7,7 @@ import { AppStore, useAppStore, useAppStoreApi } from "../../../../store";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { ReactNode, useCallback, useMemo } from "react";
-import { ItemSelector } from "../../../../lib/get-item";
+import { ItemSelector } from "../../../../lib/data/get-item";
 import { useRegisterFieldsSlice } from "../../../../store/slices/fields";
 import { useShallow } from "zustand/react/shallow";
 import { StoreApi } from "zustand";

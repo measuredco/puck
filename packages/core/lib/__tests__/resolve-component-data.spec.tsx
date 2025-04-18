@@ -1,7 +1,7 @@
 import { resolveComponentData } from "../resolve-component-data";
 import { createAppStore } from "../../store";
 import { Config } from "../../types";
-import { toComponent } from "../to-component";
+import { toComponent } from "../data/to-component";
 
 const appStore = createAppStore();
 
