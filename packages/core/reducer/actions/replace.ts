@@ -2,8 +2,8 @@ import { Data } from "../../types";
 import { ReplaceAction } from "../actions";
 import { AppStore } from "../../store";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "../../lib/walk-tree";
-import { getIdsForParent } from "../../lib/get-ids-for-parent";
+import { walkTree } from "../../lib/data/walk-tree";
+import { getIdsForParent } from "../../lib/data/get-ids-for-parent";
 
 export const replaceAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,

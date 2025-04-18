@@ -1,10 +1,10 @@
 import { Data } from "../../types";
-import { remove } from "../../lib/remove";
-import { getItem } from "../../lib/get-item";
+import { remove } from "../../lib/data/remove";
+import { getItem } from "../../lib/data/get-item";
 import { RemoveAction } from "../actions";
 import { AppStore } from "../../store";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "../../lib/walk-tree";
+import { walkTree } from "../../lib/data/walk-tree";
 
 export const removeAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,

@@ -8,7 +8,7 @@ import {
   useRef,
 } from "react";
 import { DraggableComponent } from "../DraggableComponent";
-import { setupZone } from "../../lib/setup-zone";
+import { setupZone } from "../../lib/data/setup-zone";
 import {
   rootAreaId,
   rootDroppableId,

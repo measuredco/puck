@@ -1,5 +1,5 @@
-import { ComponentData, Config, Content, RootData } from "../types";
-import { forEachSlot } from "../lib/for-each-slot";
+import { ComponentData, Config, Content, RootData } from "../../types";
+import { forEachSlot } from "./for-each-slot";
 
 export async function mapSlots<T extends ComponentData | RootData>(
   item: T,

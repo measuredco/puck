@@ -5,10 +5,10 @@ import {
   ResolveDataTrigger,
   RootDataWithProps,
 } from "../types";
-import { mapSlots } from "./map-slots";
+import { mapSlots } from "./data/map-slots";
 import { getChanged } from "./get-changed";
 import fdeq from "fast-deep-equal";
-import { createIsSlotConfig } from "./is-slot";
+import { createIsSlotConfig } from "./data/is-slot";
 
 export const cache: {
   lastChange: Record<string, any>;

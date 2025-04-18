@@ -1,4 +1,4 @@
-import { PrivateAppState } from "../types/Internal";
+import { PrivateAppState } from "../../types/Internal";
 
 export const getIdsForParent = (
   zoneCompound: string,

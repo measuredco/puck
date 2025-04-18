@@ -9,9 +9,9 @@ import {
   RootData,
 } from "../types";
 import { resolveComponentData } from "./resolve-component-data";
-import { defaultData } from "./default-data";
-import { mapSlots } from "./map-slots";
-import { toComponent } from "./to-component";
+import { defaultData } from "./data/default-data";
+import { mapSlots } from "./data/map-slots";
+import { toComponent } from "./data/to-component";
 
 export async function resolveAllData<
   Props extends DefaultComponentProps = DefaultComponentProps,

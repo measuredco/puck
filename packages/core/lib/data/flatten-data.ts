@@ -1,5 +1,5 @@
-import { ComponentData, Config, UserGenerics } from "../types";
-import { PrivateAppState } from "../types/Internal";
+import { ComponentData, Config, UserGenerics } from "../../types";
+import { PrivateAppState } from "../../types/Internal";
 import { walkTree } from "./walk-tree";
 
 export const flattenData = <

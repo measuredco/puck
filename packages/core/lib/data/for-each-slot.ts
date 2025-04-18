@@ -1,4 +1,4 @@
-import { ComponentData, Content, RootData } from "../types";
+import { ComponentData, Content, RootData } from "../../types";
 import { isSlot as _isSlot } from "./is-slot";
 
 export const forEachSlot = async <T extends ComponentData | RootData>(

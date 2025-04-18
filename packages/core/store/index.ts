@@ -14,7 +14,7 @@ import {
   ResolveDataTrigger,
 } from "../types";
 import { createReducer, PuckAction } from "../reducer";
-import { getItem } from "../lib/get-item";
+import { getItem } from "../lib/data/get-item";
 import { defaultViewports } from "../components/ViewportControls/default-viewports";
 import { Viewports } from "../types";
 import { create, StoreApi, useStore } from "zustand";
@@ -29,8 +29,8 @@ import {
 import { createFieldsSlice, type FieldsSlice } from "./slices/fields";
 import { PrivateAppState } from "../types/Internal";
 import { resolveComponentData } from "../lib/resolve-component-data";
-import { walkTree } from "../lib/walk-tree";
-import { toRoot } from "../lib/to-root";
+import { walkTree } from "../lib/data/walk-tree";
+import { toRoot } from "../lib/data/to-root";
 import { generateId } from "../lib/generate-id";
 
 export const defaultAppState: PrivateAppState = {

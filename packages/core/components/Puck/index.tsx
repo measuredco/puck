@@ -68,7 +68,7 @@ import {
   UsePuckStoreContext,
   useRegisterUsePuckStore,
 } from "../../lib/use-puck";
-import { walkTree } from "../../lib/walk-tree";
+import { walkTree } from "../../lib/data/walk-tree";
 import { PrivateAppState } from "../../types/Internal";
 
 const getClassName = getClassNameFactory("Puck", styles);

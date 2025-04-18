@@ -1,6 +1,6 @@
-import { Data } from "../types";
-import { PrivateAppState } from "../types/Internal";
-import { rootDroppableId } from "./root-droppable-id";
+import { Data } from "../../types";
+import { PrivateAppState } from "../../types/Internal";
+import { rootDroppableId } from "../root-droppable-id";
 
 export type ItemSelector = {
   index: number;

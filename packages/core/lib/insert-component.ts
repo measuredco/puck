@@ -2,7 +2,7 @@ import { InsertAction } from "../reducer";
 import { insertAction } from "../reducer/actions/insert";
 import { AppStore } from "../store";
 import { generateId } from "./generate-id";
-import { getItem } from "./get-item";
+import { getItem } from "./data/get-item";
 
 // Makes testing easier without mocks
 export const insertComponent = async (

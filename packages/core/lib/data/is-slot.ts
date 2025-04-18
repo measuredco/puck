@@ -1,4 +1,4 @@
-import { Config } from "../types";
+import { Config } from "../../types";
 
 export const isSlot = (prop: any) =>
   Array.isArray(prop) &&

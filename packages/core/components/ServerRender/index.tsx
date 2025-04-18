@@ -4,7 +4,7 @@ import {
   rootDroppableId,
   rootZone,
 } from "../../lib/root-droppable-id";
-import { setupZone } from "../../lib/setup-zone";
+import { setupZone } from "../../lib/data/setup-zone";
 import { Config, Data, Metadata, UserGenerics } from "../../types";
 import { useSlots } from "../../lib/use-slots";
 import { SlotRenderPure } from "../SlotRender";
