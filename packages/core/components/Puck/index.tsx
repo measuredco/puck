@@ -89,8 +89,6 @@ const FieldSideBar = () => {
   );
 };
 
-const DEBUG = false;
-
 type PuckProps<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
@@ -140,33 +138,6 @@ function PropsProvider<UserConfig extends Config = Config>(
 const usePropsContext = () =>
   useContext<PuckProps>(propsContext as Context<PuckProps>);
 
-const debugPlugin: Plugin = {
-  overrides: {
-    fields: ({ children }) => {
-      const state = useAppStore((s) => s.state);
-      const selectedItem = useAppStore((s) => s.selectedItem);
-
-      return (
-        <>
-          {children}
-
-          <SidebarSection title="Debug: Data">
-            {JSON.stringify(state.data)}
-          </SidebarSection>
-          <SidebarSection title="Debug: UI">
-            {JSON.stringify(state.ui)}
-          </SidebarSection>
-          <SidebarSection title="Debug: Other">
-            <ul>
-              <li>Selected Item: {JSON.stringify(selectedItem)}</li>
-            </ul>
-          </SidebarSection>
-        </>
-      );
-    },
-  },
-};
-
 function PuckProvider<
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
@@ -177,7 +148,7 @@ function PuckProvider<
     ui: initialUi,
     onChange,
     permissions = {},
-    plugins: _plugins,
+    plugins,
     overrides,
     viewports = defaultViewports,
     iframe: _iframe,
@@ -315,11 +286,6 @@ function PuckProvider<
   const initialHistoryIndex =
     _initialHistory?.index || blendedHistories.length - 1;
   const initialAppState = blendedHistories[initialHistoryIndex].state;
-
-  const plugins = useMemo(
-    () => (DEBUG ? [...(_plugins || []), debugPlugin] : _plugins),
-    [_plugins]
-  );
 
   // Load all plugins into the overrides
   const loadedOverrides = useLoadedOverrides({
