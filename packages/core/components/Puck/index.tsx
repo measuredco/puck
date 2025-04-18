@@ -69,6 +69,7 @@ import {
   useRegisterUsePuckStore,
 } from "../../lib/use-puck";
 import { walkTree } from "../../lib/walk-tree";
+import { PrivateAppState } from "../../types/Internal";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -314,44 +315,42 @@ function PuckProvider<
     plugins: plugins,
   });
 
-  const generateAppStore = useCallback(() => {
-    return {
-      state: initialAppState,
+  const generateAppStore = useCallback(
+    (state?: PrivateAppState) => {
+      return {
+        state,
+        config,
+        plugins: plugins || [],
+        overrides: loadedOverrides,
+        viewports,
+        iframe,
+        onAction,
+        metadata,
+      };
+    },
+    [
+      initialAppState,
       config,
-      plugins: plugins || [],
-      overrides: loadedOverrides,
+      plugins,
+      loadedOverrides,
       viewports,
       iframe,
       onAction,
       metadata,
-    };
-  }, [
-    initialAppState,
-    config,
-    plugins,
-    loadedOverrides,
-    viewports,
-    iframe,
-    onAction,
-    metadata,
-  ]);
+    ]
+  );
 
-  const [appStore] = useState(() => createAppStore(generateAppStore()));
+  const [appStore] = useState(() =>
+    createAppStore(generateAppStore(initialAppState))
+  );
 
   useEffect(() => {
+    const state = appStore.getState().state;
+
     appStore.setState({
-      ...generateAppStore(),
+      ...generateAppStore(state),
     });
-  }, [
-    initialAppState,
-    config,
-    plugins,
-    loadedOverrides,
-    viewports,
-    iframe,
-    onAction,
-    metadata,
-  ]);
+  }, [config, plugins, loadedOverrides, viewports, iframe, onAction, metadata]);
 
   useRegisterHistorySlice(appStore, {
     histories: blendedHistories,
