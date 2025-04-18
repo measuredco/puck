@@ -7,6 +7,7 @@ import {
 } from "../store/slices/permissions";
 import { HistorySlice } from "../store/slices/history";
 import { createStore, StoreApi, useStore } from "zustand";
+import { makeStatePublic } from "./data/make-state-public";
 
 type WithGet<T> = T & { get: () => T };
 
@@ -38,8 +39,8 @@ type UsePuckStore<UserConfig extends Config = Config> = WithGet<
 
 type PickedStore = Pick<
   AppStore,
-  "state" | "config" | "dispatch" | "selectedItem" | "permissions" | "history"
->;
+  "config" | "dispatch" | "selectedItem" | "permissions" | "history"
+> & { state: AppState };
 
 export const generateUsePuck = (store: PickedStore): UsePuckStore => {
   const history: UsePuckStore["history"] = {
@@ -72,6 +73,17 @@ export const UsePuckStoreContext = createContext<StoreApi<UsePuckStore> | null>(
   null
 );
 
+const convertToPickedStore = (store: AppStore): PickedStore => {
+  return {
+    state: makeStatePublic(store.state),
+    config: store.config,
+    dispatch: store.dispatch,
+    permissions: store.permissions,
+    history: store.history,
+    selectedItem: store.selectedItem,
+  };
+};
+
 /**
  * Mirror changes in appStore to usePuckStore
  */
@@ -79,24 +91,15 @@ export const useRegisterUsePuckStore = (
   appStore: ReturnType<typeof useAppStoreApi>
 ) => {
   const [usePuckStore] = useState(() =>
-    createStore(() => generateUsePuck(appStore.getState()))
+    createStore(() =>
+      generateUsePuck(convertToPickedStore(appStore.getState()))
+    )
   );
 
   useEffect(() => {
     // Subscribe here isn't doing anything as selection isn't shallow
     return appStore.subscribe(
-      (store) => {
-        const pickedStore: PickedStore = {
-          state: store.state,
-          config: store.config,
-          dispatch: store.dispatch,
-          permissions: store.permissions,
-          history: store.history,
-          selectedItem: store.selectedItem,
-        };
-
-        return pickedStore;
-      },
+      (store) => convertToPickedStore(store),
       (pickedStore) => {
         usePuckStore.setState(generateUsePuck(pickedStore));
       }
