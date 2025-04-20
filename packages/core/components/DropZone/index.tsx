@@ -1,6 +1,7 @@
 import {
   CSSProperties,
   forwardRef,
+  memo,
   useCallback,
   useContext,
   useEffect,
@@ -204,6 +205,8 @@ const DropZoneChild = ({
     </DraggableComponent>
   );
 };
+
+const DropZoneChildMemo = memo(DropZoneChild);
 
 export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
   function DropZoneEditInternal(
@@ -410,7 +413,7 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       >
         {contentIdsWithPreview.map((componentId, i) => {
           return (
-            <DropZoneChild
+            <DropZoneChildMemo
               key={componentId}
               zoneCompound={zoneCompound}
               componentId={componentId}
