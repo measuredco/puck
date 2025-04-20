@@ -8,6 +8,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -16,7 +17,12 @@ import { DragDropEvents } from "@dnd-kit/abstract";
 import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
 import { getItem } from "../../lib/data/get-item";
-import { Preview, ZoneStore, ZoneStoreProvider } from "../DropZone/context";
+import {
+  DropZoneContext,
+  Preview,
+  ZoneStore,
+  ZoneStoreProvider,
+} from "../DropZone/context";
 import { createNestedDroppablePlugin } from "../../lib/dnd/NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
@@ -271,6 +277,15 @@ const DragDropContextClient = ({
   const dragMode = useRef<"new" | "existing" | null>(null);
 
   const initialSelector = useRef<{ zone: string; index: number }>(undefined);
+
+  const nextContextValue = useMemo<DropZoneContext>(
+    () => ({
+      mode: "edit",
+      areaId: "root",
+      depth: 0,
+    }),
+    []
+  );
 
   return (
     <div id={id}>
@@ -533,13 +548,7 @@ const DragDropContextClient = ({
           }}
         >
           <ZoneStoreProvider store={zoneStore}>
-            <DropZoneProvider
-              value={{
-                mode: "edit",
-                areaId: "root",
-                depth: 0,
-              }}
-            >
+            <DropZoneProvider value={nextContextValue}>
               {children}
             </DropZoneProvider>
           </ZoneStoreProvider>

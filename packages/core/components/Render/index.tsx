@@ -8,8 +8,9 @@ import {
   DropZoneProvider,
   DropZoneRenderPure,
 } from "../DropZone";
-import React from "react";
+import React, { useMemo } from "react";
 import { SlotRender } from "../SlotRender";
+import { DropZoneContext } from "../DropZone/context";
 
 export const renderContext = React.createContext<{
   config: Config;
@@ -60,15 +61,18 @@ export function Render<
     <SlotRender {...props} config={config} metadata={metadata} />
   ));
 
+  const nextContextValue = useMemo<DropZoneContext>(
+    () => ({
+      mode: "render",
+      depth: 0,
+    }),
+    []
+  );
+
   if (config.root?.render) {
     return (
       <renderContext.Provider value={{ config, data: defaultedData, metadata }}>
-        <DropZoneProvider
-          value={{
-            mode: "render",
-            depth: 0,
-          }}
-        >
+        <DropZoneProvider value={nextContextValue}>
           <config.root.render {...propsWithSlots}>
             <DropZoneRenderPure zone={rootZone} />
           </config.root.render>
@@ -79,12 +83,7 @@ export function Render<
 
   return (
     <renderContext.Provider value={{ config, data: defaultedData, metadata }}>
-      <DropZoneProvider
-        value={{
-          mode: "render",
-          depth: 0,
-        }}
-      >
+      <DropZoneProvider value={nextContextValue}>
         <DropZoneRenderPure zone={rootZone} />
       </DropZoneProvider>
     </renderContext.Provider>
