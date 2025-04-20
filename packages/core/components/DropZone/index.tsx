@@ -18,6 +18,7 @@ import {
 import { getClassNameFactory } from "../../lib";
 import styles from "./styles.module.css";
 import {
+  DropZoneContext,
   DropZoneProvider,
   Preview,
   ZoneStoreContext,
@@ -483,14 +484,16 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
               />
             ));
 
+            const nextContextValue = useMemo<DropZoneContext>(
+              () => ({
+                areaId: props.id,
+                depth: 1,
+              }),
+              [props]
+            );
+
             return (
-              <DropZoneProvider
-                key={props.id}
-                value={{
-                  areaId: props.id,
-                  depth: 1,
-                }}
-              >
+              <DropZoneProvider key={props.id} value={nextContextValue}>
                 <Component.render
                   {...props}
                   puck={{

@@ -26,7 +26,7 @@ import { DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
-import { ZoneStoreContext } from "../DropZone/context";
+import { DropZoneContext, ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
 import { getItem } from "../../lib/data/get-item";
@@ -489,18 +489,29 @@ export const DraggableComponent = ({
     </ActionBar.Action>
   );
 
+  const nextContextValue = useMemo<DropZoneContext>(
+    () => ({
+      ...ctx!,
+      areaId: id,
+      zoneCompound,
+      index,
+      depth: depth + 1,
+      registerLocalZone,
+      unregisterLocalZone,
+    }),
+    [
+      ctx,
+      id,
+      zoneCompound,
+      index,
+      depth,
+      registerLocalZone,
+      unregisterLocalZone,
+    ]
+  );
+
   return (
-    <DropZoneProvider
-      value={{
-        ...ctx!,
-        areaId: id,
-        zoneCompound,
-        index,
-        depth: depth + 1,
-        registerLocalZone,
-        unregisterLocalZone,
-      }}
-    >
+    <DropZoneProvider value={nextContextValue}>
       {isVisible &&
         createPortal(
           <div
