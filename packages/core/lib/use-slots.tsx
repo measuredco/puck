@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from "react";
+import { memo, ReactNode, useMemo } from "react";
 import {
   ComponentConfig,
   Content,
@@ -8,15 +8,15 @@ import {
 } from "../types";
 import { DropZoneProps } from "../components/DropZone/types";
 
-export function useSlots(
+export function useSlots<T extends WithPuckProps<DefaultComponentProps>>(
   config: ComponentConfig | RootConfig | null | undefined,
-  props: WithPuckProps<DefaultComponentProps>,
+  props: T,
   renderSlot: (dzProps: DropZoneProps & { content: Content }) => ReactNode
-): any {
-  return useMemo(() => {
+): T {
+  const slotProps = useMemo(() => {
     if (!config?.fields) return props;
 
-    const newProps: DefaultComponentProps = { ...props };
+    const slotProps: DefaultComponentProps = {};
     const fieldKeys = Object.keys(config.fields);
 
     for (let i = 0; i < fieldKeys.length; i++) {
@@ -24,15 +24,21 @@ export function useSlots(
       const field = config.fields[fieldKey];
 
       if (field?.type === "slot") {
-        newProps[fieldKey] = (dzProps: DropZoneProps) =>
+        const content = props[fieldKey] || [];
+
+        const Slot = (dzProps: DropZoneProps) =>
           renderSlot({
             ...dzProps,
             zone: fieldKey,
-            content: props[fieldKey] || [],
+            content,
           });
+
+        slotProps[fieldKey] = Slot;
       }
     }
 
-    return newProps;
-  }, [config, props]);
+    return slotProps;
+  }, [config]);
+
+  return { ...props, ...slotProps };
 }

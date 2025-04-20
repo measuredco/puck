@@ -197,12 +197,10 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
       },
     };
   },
-  render: ({ children }) => {
+  render: ({ children: Children }) => {
     return (
       <Section>
-        {children({
-          className: getClassName(),
-        })}
+        <Children className={getClassName()} />
       </Section>
     );
   },

@@ -61,19 +61,19 @@ const FlexInternal: ComponentConfig<FlexProps> = {
     },
     children: [],
   },
-  render: ({ justifyContent, direction, gap, wrap, children }) => {
+  render: ({ justifyContent, direction, gap, wrap, children: Children }) => {
     return (
       <Section style={{ height: "100%" }}>
-        {children({
-          className: getClassName(),
-          style: {
+        <Children
+          className={getClassName()}
+          style={{
             justifyContent,
             flexDirection: direction,
             gap,
             flexWrap: wrap,
-          },
-          disallow: ["Hero", "Stats"],
-        })}
+          }}
+          disallow={["Hero", "Stats"]}
+        />
       </Section>
     );
   },
