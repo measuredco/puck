@@ -35,17 +35,17 @@ export const GridInternal: ComponentConfig<GridProps> = {
     gap: 24,
     children: [],
   },
-  render: ({ gap, numColumns, children }) => {
+  render: ({ gap, numColumns, children: Children }) => {
     return (
       <Section>
-        {children({
-          disallow: ["Hero", "Stats"],
-          className: getClassName(),
-          style: {
+        <Children
+          disallow={["Hero", "Stats"]}
+          className={getClassName()}
+          style={{
             gap,
             gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
-          },
-        })}
+          }}
+        />
       </Section>
     );
   },
