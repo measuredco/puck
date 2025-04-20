@@ -203,8 +203,7 @@ export function walkTree<UserData extends Data = Data>(
   return {
     ...state,
     data: {
-      // root: root,
-      root: state.data.root, // TODO changing root causes it's entire subtree to re-render. Let's keep this disabled until the performance issues are resolved in #644.
+      root,
       content: processedContent,
       zones: {
         ...state.data.zones,
