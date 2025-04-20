@@ -3,7 +3,7 @@ import { useRegisterFieldsSlice } from "../fields";
 import { createAppStore, defaultAppState } from "../..";
 import { Config, ComponentData } from "../../../types";
 import { PrivateAppState } from "../../../types/Internal";
-import { walkTree } from "../../../lib/walk-tree";
+import { walkTree } from "../../../lib/data/walk-tree";
 
 const baseState: PrivateAppState = {
   ...defaultAppState,

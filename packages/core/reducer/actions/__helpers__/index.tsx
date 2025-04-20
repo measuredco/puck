@@ -6,7 +6,7 @@ import {
   defaultAppState as _defaultAppState,
 } from "../../../store";
 import { PrivateAppState } from "../../../types/Internal";
-import { stripSlots } from "../../../lib/strip-slots";
+import { stripSlots } from "../../../lib/data/strip-slots";
 import { Reducer } from "react";
 
 jest.mock("../../../lib/generate-id");

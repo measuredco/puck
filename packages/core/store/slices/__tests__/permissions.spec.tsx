@@ -2,7 +2,7 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import { useRegisterPermissionsSlice } from "../permissions";
 import { defaultAppState, createAppStore } from "../../";
 import { rootDroppableId } from "../../../lib/root-droppable-id";
-import { walkTree } from "../../../lib/walk-tree";
+import { walkTree } from "../../../lib/data/walk-tree";
 
 const appStore = createAppStore();
 
