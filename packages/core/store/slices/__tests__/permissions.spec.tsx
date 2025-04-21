@@ -3,6 +3,7 @@ import { useRegisterPermissionsSlice } from "../permissions";
 import { defaultAppState, createAppStore } from "../../";
 import { rootDroppableId } from "../../../lib/root-droppable-id";
 import { walkTree } from "../../../lib/data/walk-tree";
+import { makeStatePublic } from "../../../lib/data/make-state-public";
 
 const appStore = createAppStore();
 
@@ -253,7 +254,7 @@ describe("permissions slice", () => {
           type: "MyComponent",
         },
         {
-          appState: appStore.getState().state,
+          appState: makeStatePublic(appStore.getState().state),
           changed: { id: true },
           lastData: null,
           lastPermissions: null,
@@ -334,7 +335,7 @@ describe("permissions slice", () => {
           type: "MyComponent",
         },
         {
-          appState: appStore.getState().state,
+          appState: makeStatePublic(appStore.getState().state),
           changed: { id: false, title: true },
           lastData: {
             props: { id: "comp-1" },

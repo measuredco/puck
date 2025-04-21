@@ -4,6 +4,7 @@ import { createAppStore, defaultAppState } from "../..";
 import { Config, ComponentData } from "../../../types";
 import { PrivateAppState } from "../../../types/Internal";
 import { walkTree } from "../../../lib/data/walk-tree";
+import { makeStatePublic } from "../../../lib/data/make-state-public";
 
 const baseState: PrivateAppState = {
   ...defaultAppState,
@@ -106,7 +107,7 @@ describe("fields slice", () => {
         type: "root",
       },
       {
-        appState: appStore.getState().state,
+        appState: makeStatePublic(appStore.getState().state),
         changed: {
           id: true,
         },
@@ -150,7 +151,7 @@ describe("fields slice", () => {
         type: "Heading",
       },
       {
-        appState: appStore.getState().state,
+        appState: makeStatePublic(appStore.getState().state),
         changed: {
           id: true,
           title: true,
@@ -222,7 +223,7 @@ describe("fields slice", () => {
         type: "Heading",
       },
       {
-        appState: appStore.getState().state,
+        appState: makeStatePublic(appStore.getState().state),
         changed: {
           id: false,
           title: true,
@@ -307,7 +308,7 @@ describe("fields slice", () => {
         type: "Block",
       },
       {
-        appState: appStore.getState().state,
+        appState: makeStatePublic(appStore.getState().state),
         changed: {
           id: true,
           title: true,
