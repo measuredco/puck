@@ -1,7 +1,7 @@
 import { ComponentData, Content, RootData } from "../../types";
 import { isSlot as _isSlot } from "./is-slot";
 
-export const forEachSlot = async <T extends ComponentData | RootData>(
+export const forEachSlot = <T extends ComponentData | RootData>(
   item: T,
   cb: (
     parentId: string,
@@ -23,11 +23,11 @@ export const forEachSlot = async <T extends ComponentData | RootData>(
     if (isSlot(itemType, propKey, props[propKey])) {
       const content = props[propKey] as Content;
 
-      await cb(props.id, propKey, content);
+      cb(props.id, propKey, content);
 
       if (recursive) {
-        content.forEach(
-          async (childItem) => await forEachSlot(childItem, cb, true, isSlot)
+        content.forEach(async (childItem) =>
+          forEachSlot(childItem, cb, true, isSlot)
         );
       }
     }
