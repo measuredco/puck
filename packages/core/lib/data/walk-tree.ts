@@ -105,8 +105,6 @@ export function walkTree<UserData extends Data = Data>(
 
     const id = mappedItem.props.id;
 
-    processRelatedZones(item, id, path);
-
     const newProps: ComponentData["props"] = { ...mappedItem.props };
 
     forEachSlot(
@@ -127,6 +125,8 @@ export function walkTree<UserData extends Data = Data>(
       false,
       createIsSlotConfig(config)
     );
+
+    processRelatedZones(item, id, path);
 
     const newItem = { ...item, props: newProps };
 
