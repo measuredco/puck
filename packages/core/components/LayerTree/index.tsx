@@ -2,7 +2,7 @@
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import { ComponentConfig } from "../../types";
-import { ItemSelector } from "../../lib/get-item";
+import { ItemSelector } from "../../lib/data/get-item";
 import { scrollIntoView } from "../../lib/scroll-into-view";
 import { ChevronDown, LayoutGrid, Layers, Type } from "lucide-react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
