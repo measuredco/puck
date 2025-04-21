@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { createUsePuck } from "./use-puck";
 import { Plugin } from "../types";
 import { ActionBar } from "../components/ActionBar";

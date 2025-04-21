@@ -484,6 +484,7 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
               />
             ));
 
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             const nextContextValue = useMemo<DropZoneContext>(
               () => ({
                 areaId: props.id,
