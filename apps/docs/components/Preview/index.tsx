@@ -30,7 +30,6 @@ export const PreviewStoreContext = createContext(
 );
 
 const getClassNamePreview = getClassNameFactory("PreviewFrame", styles);
-const getClassNameConfigPreview = getClassNameFactory("ConfigPreview", styles);
 
 const DrawerButton = () => {
   const drawerVisible = useContextStore(
@@ -170,7 +169,7 @@ export const PuckPreview = ({
           style={style}
           renderInfo={renderInfo}
           renderDrawer={renderDrawer}
-          disableOnClick
+          disableOnClick={disableOnClick}
         >
           {children}
         </PreviewFrame>
