@@ -11,10 +11,6 @@ export function forRelatedZones<UserData extends Data>(
     const [parentId] = getZoneId(zoneCompound);
 
     if (parentId === item.props.id) {
-      const newPath = [...path, zoneCompound];
-
-      content.forEach((item) => forRelatedZones(item, data, cb, newPath));
-
       cb(path, zoneCompound, content);
     }
   });
