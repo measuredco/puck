@@ -12,11 +12,8 @@ import { rootDroppableId } from "../../root-droppable-id";
 type Props = {
   Comp: {
     prop: string;
-    slot: Slot;
-  };
-  CompWithDefault: {
-    prop: string;
-    slot: Slot;
+    slotA: Slot;
+    slotB: Slot;
   };
 };
 
@@ -64,7 +61,7 @@ const expectIndexed = (
 
   const zoneCompound = path[path.length - 1];
 
-  expect(state.indexes.zones[zoneCompound].contentIds[index]).toEqual(
+  expect(state.indexes.zones[zoneCompound]?.contentIds[index]).toEqual(
     item.props.id
   );
   expect(state.indexes.nodes[item.props.id].data).toEqual(item);
@@ -81,29 +78,10 @@ describe("walk-tree", () => {
       Comp: {
         fields: {
           prop: { type: "text" },
-          slot: { type: "slot" },
+          slotA: { type: "slot" },
+          slotB: { type: "slot" },
         },
-        defaultProps: { prop: "example", slot: [] },
-        render: () => <div />,
-      },
-      CompWithDefault: {
-        fields: {
-          prop: { type: "text" },
-          slot: { type: "slot" },
-        },
-        defaultProps: {
-          prop: "example",
-          slot: [
-            {
-              type: "Comp",
-              props: {
-                id: "defaulted-item",
-                prop: "Defaulted item",
-                slots: [],
-              },
-            },
-          ],
-        },
+        defaultProps: { prop: "example", slotA: [], slotB: [] },
         render: () => <div />,
       },
     },
@@ -144,10 +122,16 @@ describe("walk-tree", () => {
                 props: {
                   id: "another-id",
                   prop: "Even more example data",
-                  slot: [
+                  slotA: [
                     {
                       type: "Comp",
-                      props: { id: "slotted-id", prop: "Inside a slot" },
+                      props: { id: "slotted-a-id", prop: "Inside a slot" },
+                    },
+                  ],
+                  slotB: [
+                    {
+                      type: "Comp",
+                      props: { id: "slotted-b-id", prop: "Inside a slot" },
                     },
                   ],
                 },
@@ -177,12 +161,24 @@ describe("walk-tree", () => {
 
     expectIndexed(
       state,
-      state.data.zones?.["other-component:zone"][0].props.slot[0],
+      state.data.zones?.["other-component:zone"][0].props.slotA[0],
       [
         rootDroppableId,
         "my-component:zone",
         "other-component:zone",
-        "another-id:slot",
+        "another-id:slotA",
+      ],
+      0
+    );
+
+    expectIndexed(
+      state,
+      state.data.zones?.["other-component:zone"][0].props.slotB[0],
+      [
+        rootDroppableId,
+        "my-component:zone",
+        "other-component:zone",
+        "another-id:slotB",
       ],
       0
     );
@@ -195,10 +191,19 @@ describe("walk-tree", () => {
               "props": {
                 "id": "another-id",
                 "prop": "Even more example data",
-                "slot": [
+                "slotA": [
                   {
                     "props": {
-                      "id": "slotted-id",
+                      "id": "slotted-a-id",
+                      "prop": "Inside a slot",
+                    },
+                    "type": "Comp",
+                  },
+                ],
+                "slotB": [
+                  {
+                    "props": {
+                      "id": "slotted-b-id",
                       "prop": "Inside a slot",
                     },
                     "type": "Comp",
@@ -286,17 +291,17 @@ describe("walk-tree", () => {
             "path": [],
             "zone": "",
           },
-          "slotted-id": {
+          "slotted-a-id": {
             "data": {
               "props": {
-                "id": "slotted-id",
+                "id": "slotted-a-id",
                 "prop": "Inside a slot",
               },
               "type": "Comp",
             },
             "flatData": {
               "props": {
-                "id": "slotted-id",
+                "id": "slotted-a-id",
                 "prop": "Inside a slot",
               },
               "type": "Comp",
@@ -306,15 +311,45 @@ describe("walk-tree", () => {
               "root:default-zone",
               "my-component:zone",
               "other-component:zone",
-              "another-id:slot",
+              "another-id:slotA",
             ],
-            "zone": "slot",
+            "zone": "slotA",
+          },
+          "slotted-b-id": {
+            "data": {
+              "props": {
+                "id": "slotted-b-id",
+                "prop": "Inside a slot",
+              },
+              "type": "Comp",
+            },
+            "flatData": {
+              "props": {
+                "id": "slotted-b-id",
+                "prop": "Inside a slot",
+              },
+              "type": "Comp",
+            },
+            "parentId": "another-id",
+            "path": [
+              "root:default-zone",
+              "my-component:zone",
+              "other-component:zone",
+              "another-id:slotB",
+            ],
+            "zone": "slotB",
           },
         },
         "zones": {
-          "another-id:slot": {
+          "another-id:slotA": {
             "contentIds": [
-              "slotted-id",
+              "slotted-a-id",
+            ],
+            "type": "slot",
+          },
+          "another-id:slotB": {
+            "contentIds": [
+              "slotted-b-id",
             ],
             "type": "slot",
           },
