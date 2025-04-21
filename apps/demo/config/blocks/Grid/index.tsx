@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentConfig, Content } from "@/core/types";
+import { ComponentConfig, Slot } from "@/core/types";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { Section } from "../../components/Section";
@@ -10,7 +10,7 @@ const getClassName = getClassNameFactory("Grid", styles);
 export type GridProps = {
   numColumns: number;
   gap: number;
-  children: Content;
+  items: Slot;
 };
 
 export const GridInternal: ComponentConfig<GridProps> = {
@@ -26,19 +26,19 @@ export const GridInternal: ComponentConfig<GridProps> = {
       type: "number",
       min: 0,
     },
-    children: {
+    items: {
       type: "slot",
     },
   },
   defaultProps: {
     numColumns: 4,
     gap: 24,
-    children: [],
+    items: [],
   },
-  render: ({ gap, numColumns, children: Children }) => {
+  render: ({ gap, numColumns, items: Items }) => {
     return (
       <Section>
-        <Children
+        <Items
           disallow={["Hero", "Stats"]}
           className={getClassName()}
           style={{

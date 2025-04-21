@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentConfig, Content } from "@/core/types";
+import { ComponentConfig, Slot } from "@/core/types";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { Section } from "../../components/Section";
@@ -12,7 +12,7 @@ export type FlexProps = WithLayout<{
   direction: "row" | "column";
   gap: number;
   wrap: "wrap" | "nowrap";
-  children: Content;
+  items: Slot;
 }>;
 
 const FlexInternal: ComponentConfig<FlexProps> = {
@@ -47,7 +47,7 @@ const FlexInternal: ComponentConfig<FlexProps> = {
         { label: "false", value: "nowrap" },
       ],
     },
-    children: {
+    items: {
       type: "slot",
     },
   },
@@ -59,12 +59,12 @@ const FlexInternal: ComponentConfig<FlexProps> = {
     layout: {
       grow: true,
     },
-    children: [],
+    items: [],
   },
-  render: ({ justifyContent, direction, gap, wrap, children: Children }) => {
+  render: ({ justifyContent, direction, gap, wrap, items: Items }) => {
     return (
       <Section style={{ height: "100%" }}>
-        <Children
+        <Items
           className={getClassName()}
           style={{
             justifyContent,

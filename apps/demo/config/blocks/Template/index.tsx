@@ -141,12 +141,12 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
         data: [
           await createComponent("Grid", {
             numColumns: 2,
-            children: [
+            items: [
               await createComponent("Card", { title: "A card", mode: "card" }),
               await createComponent("Flex", {
                 direction: "column",
                 gap: 0,
-                children: [
+                items: [
                   await createComponent("Space", {
                     size: "32px",
                   }),

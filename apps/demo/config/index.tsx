@@ -149,7 +149,7 @@ export const initialData: Record<string, UserData> = {
           id: "Grid-c4cd99ae-8c5e-4cdb-87d2-35a639f5163e",
           gap: 24,
           numColumns: 3,
-          children: [
+          items: [
             {
               type: "Card",
               props: {
@@ -309,7 +309,7 @@ export const initialData: Record<string, UserData> = {
           gap: 24,
           numColumns: 3,
           id: "Grid-2da28e88-7b7b-4152-9da0-9f93f41213b6",
-          children: [
+          items: [
             {
               type: "Card",
               props: {
@@ -437,7 +437,7 @@ export const initialData: Record<string, UserData> = {
           wrap: "wrap",
           layout: { spanCol: 1, spanRow: 1, padding: "0px" },
           id: "Flex-7d63d5ff-bd42-4354-b05d-681b16436fd6",
-          children: [
+          items: [
             {
               type: "Button",
               props: {
