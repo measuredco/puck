@@ -1,12 +1,21 @@
+---
+title: AppState
+---
+
+import { Callout } from "nextra/components";
+
 # `AppState`
 
-> **⚠️ The application state is unstable and is likely to experience breaking changes.**
+<Callout>
+  The application state is unstable and is likely to experience breaking
+  changes.
+</Callout>
 
 The internal state of the [`<Puck>`](/docs/api-reference/components/puck) component.
 
 ## `data`
 
-The current [`Data`](/docs/api-reference/data) payload being managed by Puck.
+The current [`Data`](/docs/api-reference/data-model/data) payload being managed by Puck.
 
 ## `ui`
 
@@ -76,7 +85,7 @@ The index of the item within the zone.
 
 #### `ui.itemSelector.zone`
 
-The zone that the item is defined within. **Defaults to [main content zone](/docs/api-reference/data#content).**
+The zone that the item is defined within. **Defaults to [main content zone](/docs/api-reference/data-model/data#content).**
 
 ---
 

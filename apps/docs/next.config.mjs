@@ -27,6 +27,16 @@ export default withNextra({
         destination: "/docs/api-reference/overrides/components",
         permanent: true,
       },
+      {
+        source: "/docs/api-reference/data",
+        destination: "/docs/api-reference/data-model/data",
+        permanent: true,
+      },
+      {
+        source: "/docs/api-reference/app-state",
+        destination: "/docs/api-reference/data-model/app-state",
+        permanent: true,
+      },
     ];
   },
   transpilePackages: ["@measured/puck"],
