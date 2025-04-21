@@ -50,18 +50,18 @@ Whatever is returned by the [`selector`](#selectordata).
 
 ## UsePuckData
 
-| Param                                             | Example                                          | Type                                                |
-| ------------------------------------------------- | ------------------------------------------------ | --------------------------------------------------- |
-| [`appState`](#appstate)                           | `{ data: {}, ui: {} }`                           | [AppState](/docs/api-reference/app-state)           |
-| [`dispatch`](#dispatchaction)                     | `(action: PuckAction) => void`                   | Function                                            |
-| [`getPermissions`](#getpermissionsparams)         | `() => ({ delete: true  })`                      | Function                                            |
-| [`history`](#history)                             | `{}`                                             | Object                                              |
-| [`refreshPermissions`](#refreshpermissionsparams) | `() => void`                                     | Function                                            |
-| [`selectedItem`](#selecteditem)                   | `{ type: "Heading", props: {id: "my-heading"} }` | [ComponentData](/docs/api-reference/data#content-1) |
+| Param                                             | Example                                          | Type                                                           |
+| ------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------------------- |
+| [`appState`](#appstate)                           | `{ data: {}, ui: {} }`                           | [AppState](/docs/api-reference/data-model/app-state)           |
+| [`dispatch`](#dispatchaction)                     | `(action: PuckAction) => void`                   | Function                                                       |
+| [`getPermissions`](#getpermissionsparams)         | `() => ({ delete: true  })`                      | Function                                                       |
+| [`history`](#history)                             | `{}`                                             | Object                                                         |
+| [`refreshPermissions`](#refreshpermissionsparams) | `() => void`                                     | Function                                                       |
+| [`selectedItem`](#selecteditem)                   | `{ type: "Heading", props: {id: "my-heading"} }` | [ComponentData](/docs/api-reference/data-model/data#content-1) |
 
 ### `appState`
 
-The current [application state](/docs/api-reference/app-state) for this Puck instance.
+The current [application state](/docs/api-reference/data-model/app-state) for this Puck instance.
 
 ```tsx
 console.log(appState.data);
@@ -70,7 +70,7 @@ console.log(appState.data);
 
 ### `dispatch(action)`
 
-Execute an [action](/docs/api-reference/actions) to mutate the Puck [application state](/docs/api-reference/app-state).
+Execute an [action](/docs/api-reference/actions) to mutate the Puck [application state](/docs/api-reference/data-model/app-state).
 
 ```tsx
 dispatch({
@@ -139,7 +139,7 @@ getPermissions({ type: "HeadingBlock" });
 
 ### `history`
 
-The `history` API provides programmatic access to the undo/redo [AppState](/docs/api-reference/app-state) history.
+The `history` API provides programmatic access to the undo/redo [AppState](/docs/api-reference/data-model/app-state) history.
 
 | Param                                 | Example                             | Type                           |
 | ------------------------------------- | ----------------------------------- | ------------------------------ |
@@ -174,14 +174,14 @@ An array describing the recorded history as `History` objects.
 
 ##### `History` params
 
-| Param   | Example  | Type                                      |
-| ------- | -------- | ----------------------------------------- |
-| `state` | `{}`     | [AppState](/docs/api-reference/app-state) |
-| `id`    | `abc123` | String                                    |
+| Param   | Example  | Type                                                 |
+| ------- | -------- | ---------------------------------------------------- |
+| `state` | `{}`     | [AppState](/docs/api-reference/data-model/app-state) |
+| `id`    | `abc123` | String                                               |
 
 ###### `state`
 
-The [app state](/docs/api-reference/app-state) payload for this history entry.
+The [app state](/docs/api-reference/data-model/app-state) payload for this history entry.
 
 ###### `id`
 

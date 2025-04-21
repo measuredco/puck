@@ -22,15 +22,15 @@ An object produced by Puck describing the shape of content.
 
 ## Params
 
-| Param                 | Example                                  | Type                                                  | Status   |
-| --------------------- | ---------------------------------------- | ----------------------------------------------------- | -------- |
-| [`content`](#content) | `content: []`                            | [ComponentData](/docs/api-reference/component-data)[] | Required |
-| [`root`](#root)       | `root: { props: { title: "My page" } }`  | [RootData](/docs/api-reference/root-data)             | Required |
-| [`zones`](#zones)     | `zones: { "HeadingBlock-123:zone": [] }` | Object                                                | -        |
+| Param                 | Example                                  | Type                                                             | Status   |
+| --------------------- | ---------------------------------------- | ---------------------------------------------------------------- | -------- |
+| [`content`](#content) | `content: []`                            | [ComponentData](/docs/api-reference/data-model/component-data)[] | Required |
+| [`root`](#root)       | `root: { props: { title: "My page" } }`  | [RootData](/docs/api-reference/root-data)                        | Required |
+| [`zones`](#zones)     | `zones: { "HeadingBlock-123:zone": [] }` | Object                                                           | -        |
 
 ### `content`
 
-An array of [ComponentData](/docs/api-reference/component-data) objects representing the component instances in the default content region.
+An array of [ComponentData](/docs/api-reference/data-model/component-data) objects representing the component instances in the default content region.
 
 ```json {2-9} copy
 {
@@ -76,7 +76,7 @@ An object describing nested content regions for each [DropZone](/docs/api-refere
 
 #### `zones[zoneKey]`
 
-An array of [ComponentData](/docs/api-reference/component-data) objects representing the components instances in a particular DropZone.
+An array of [ComponentData](/docs/api-reference/data-model/component-data) objects representing the components instances in a particular DropZone.
 
 `zoneKey` is a compound of the component `id` and [DropZone `zone`](/docs/api-reference/components/drop-zone#zone).
 
