@@ -6,6 +6,7 @@ import type { Route } from "./+types/puck-splat";
 import { config } from "../../puck.config";
 import { resolvePuckPath } from "~/lib/resolve-puck-path.server";
 import { getPage, savePage } from "~/lib/pages.server";
+import editorStyles from "@measured/puck/puck.css?url";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const pathname = params["*"] ?? "/";
@@ -59,22 +60,25 @@ function Editor() {
   const fetcher = useFetcher<typeof action>();
 
   return (
-    <Puck
-      config={config}
-      data={loaderData.data}
-      onPublish={async (data) => {
-        await fetcher.submit(
-          {
-            data,
-          },
-          {
-            action: "",
-            method: "post",
-            encType: "application/json",
-          }
-        );
-      }}
-    />
+    <>
+      <link rel="stylesheet" href={editorStyles} id="puck-css" />
+      <Puck
+        config={config}
+        data={loaderData.data}
+        onPublish={async (data) => {
+          await fetcher.submit(
+            {
+              data,
+            },
+            {
+              action: "",
+              method: "post",
+              encType: "application/json",
+            }
+          );
+        }}
+      />
+    </>
   );
 }
 

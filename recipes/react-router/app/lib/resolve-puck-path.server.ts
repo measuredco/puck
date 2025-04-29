@@ -1,7 +1,8 @@
 export function resolvePuckPath(
-  path: string = "",
+  path = "",
   // `base` can be any valid origin, it is required for the URL constructor so
-  // we can return a pathname - you can change this if you want
+  // we can return a pathname - you can change this if you want, but it isn't
+  // important
   base = "https://placeholder.com/"
 ) {
   const url = new URL(path, base);

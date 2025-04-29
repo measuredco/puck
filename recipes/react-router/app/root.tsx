@@ -8,13 +8,6 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
-import puckStyles from "@measured/puck/puck.css?url";
-import stylesheet from "./app.css?url";
-
-export const links: Route.LinksFunction = () => [
-  { rel: "stylesheet", href: puckStyles },
-  { rel: "stylesheet", href: stylesheet },
-];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
