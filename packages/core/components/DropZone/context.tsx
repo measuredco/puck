@@ -44,6 +44,7 @@ export type ZoneStore = {
   nextAreaDepthIndex: Record<string, boolean>;
   previewIndex: Record<string, Preview>;
   draggedItem?: Draggable | null;
+  hoveringComponent: string | null;
 };
 
 export const ZoneStoreContext = createContext<StoreApi<ZoneStore>>(
@@ -54,6 +55,7 @@ export const ZoneStoreContext = createContext<StoreApi<ZoneStore>>(
     nextAreaDepthIndex: {},
     draggedItem: null,
     previewIndex: {},
+    hoveringComponent: "",
   }))
 );
 
