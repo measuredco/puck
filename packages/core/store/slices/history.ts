@@ -139,8 +139,7 @@ export const createHistorySlice = (
 
       dispatch({
         type: "set",
-        state:
-          history.histories[history.index]?.state || history.initialAppState,
+        state: history.histories[index]?.state || history.initialAppState,
       });
 
       set({ history: { ...history, index } });
