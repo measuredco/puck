@@ -1,4 +1,4 @@
-import { Config, UserGenerics, AppState } from "../types";
+import { Config, UserGenerics, AppState, ComponentData } from "../types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { AppStore, useAppStoreApi } from "../store";
 import {
@@ -8,6 +8,7 @@ import {
 import { HistorySlice } from "../store/slices/history";
 import { createStore, StoreApi, useStore } from "zustand";
 import { makeStatePublic } from "./data/make-state-public";
+import { getItem, ItemSelector } from "./data/get-item";
 
 type WithGet<T> = T & { get: () => T };
 
@@ -21,6 +22,9 @@ export type UsePuckData<
   getPermissions: GetPermissions<UserConfig>;
   refreshPermissions: RefreshPermissions<UserConfig>;
   selectedItem: G["UserComponentData"] | null;
+  getItemBySelector: (selector: ItemSelector) => ComponentData | undefined;
+  getItemById: (id: string) => ComponentData | undefined;
+  getSelectorForId: (id: string) => Required<ItemSelector> | undefined;
   history: {
     back: HistorySlice["back"];
     forward: HistorySlice["forward"];
@@ -39,8 +43,8 @@ type UsePuckStore<UserConfig extends Config = Config> = WithGet<
 
 type PickedStore = Pick<
   AppStore,
-  "config" | "dispatch" | "selectedItem" | "permissions" | "history"
-> & { state: AppState };
+  "config" | "dispatch" | "selectedItem" | "permissions" | "history" | "state"
+>;
 
 export const generateUsePuck = (store: PickedStore): UsePuckStore => {
   const history: UsePuckStore["history"] = {
@@ -55,13 +59,27 @@ export const generateUsePuck = (store: PickedStore): UsePuckStore => {
   };
 
   const storeData: UsePuckData = {
-    appState: store.state,
+    appState: makeStatePublic(store.state),
     config: store.config,
     dispatch: store.dispatch,
     getPermissions: store.permissions.getPermissions,
     refreshPermissions: store.permissions.refreshPermissions,
     history,
     selectedItem: store.selectedItem || null,
+    getItemBySelector: (selector) => getItem(selector, store.state),
+    getItemById: (id) => store.state.indexes.nodes[id].data,
+    getSelectorForId: (id) => {
+      const node = store.state.indexes.nodes[id];
+
+      if (!node) return;
+
+      const zoneCompound = `${node.parentId}:${node.zone}`;
+
+      const index =
+        store.state.indexes.zones[zoneCompound].contentIds.indexOf(id);
+
+      return { zone: zoneCompound, index };
+    },
   };
 
   const get = () => storeData;
@@ -75,7 +93,7 @@ export const UsePuckStoreContext = createContext<StoreApi<UsePuckStore> | null>(
 
 const convertToPickedStore = (store: AppStore): PickedStore => {
   return {
-    state: makeStatePublic(store.state),
+    state: store.state,
     config: store.config,
     dispatch: store.dispatch,
     permissions: store.permissions,

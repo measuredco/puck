@@ -21,17 +21,17 @@ The current [`Data`](/docs/api-reference/data-model/data) payload being managed 
 
 The current state of the Puck editor interface.
 
-| Param                                           | Example                                               | Type    |
-| ----------------------------------------------- | ----------------------------------------------------- | ------- |
-| [`arrayState`](#uiarraystate)                   | `{}`                                                  | Object  |
-| [`componentList`](#uicomponentlist)             | `{ typography: { components: [ "HeadingBlock" ] } }`  | Object  |
-| [`field.focus`](#fieldfocus)                    | `"title"`                                             | String  |
-| [`isDragging`](#isdragging)                     | `false`                                               | Boolean |
-| [`itemSelector`](#uiitemselector)               | `{ index: 0, zone: "my-content" }`                    | Object  |
-| [`leftSideBarVisible`](#uileftsidebarvisible)   | `false`                                               | Boolean |
-| [`previewMode`](#uipreviewmode)                 | `"edit"`                                              | String  |
-| [`rightSideBarVisible`](#uirightsidebarvisible) | `false`                                               | Boolean |
-| [`viewports`](#uiviewports)                     | `{ controlsVisible: true, current: {}, options: [] }` | Object  |
+| Param                                           | Example                                               | Type                          |
+| ----------------------------------------------- | ----------------------------------------------------- | ----------------------------- |
+| [`arrayState`](#uiarraystate)                   | `{}`                                                  | Object                        |
+| [`componentList`](#uicomponentlist)             | `{ typography: { components: [ "HeadingBlock" ] } }`  | Object                        |
+| [`field.focus`](#fieldfocus)                    | `"title"`                                             | String                        |
+| [`isDragging`](#isdragging)                     | `false`                                               | Boolean                       |
+| [`itemSelector`](#uiitemselector)               | `{ index: 0, zone: "my-content" }`                    | [ItemSelector](item-selector) |
+| [`leftSideBarVisible`](#uileftsidebarvisible)   | `false`                                               | Boolean                       |
+| [`previewMode`](#uipreviewmode)                 | `"edit"`                                              | String                        |
+| [`rightSideBarVisible`](#uirightsidebarvisible) | `false`                                               | Boolean                       |
+| [`viewports`](#uiviewports)                     | `{ controlsVisible: true, current: {}, options: [] }` | Object                        |
 
 ---
 
@@ -77,15 +77,7 @@ A boolean stating whether or not the user is currently dragging a component.
 
 ### `ui.itemSelector`
 
-An object describing which item is selected.
-
-#### `ui.itemSelector.index`
-
-The index of the item within the zone.
-
-#### `ui.itemSelector.zone`
-
-The zone that the item is defined within. **Defaults to [main content zone](/docs/api-reference/data-model/data#content).**
+An [`ItemSelector`](item-selector) for the currently selected item.
 
 ---
 

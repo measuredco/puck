@@ -50,14 +50,17 @@ Whatever is returned by the [`selector`](#selectordata).
 
 ## UsePuckData
 
-| Param                                             | Example                                          | Type                                                           |
-| ------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------------------- |
-| [`appState`](#appstate)                           | `{ data: {}, ui: {} }`                           | [AppState](/docs/api-reference/data-model/app-state)           |
-| [`dispatch`](#dispatchaction)                     | `(action: PuckAction) => void`                   | Function                                                       |
-| [`getPermissions`](#getpermissionsparams)         | `() => ({ delete: true  })`                      | Function                                                       |
-| [`history`](#history)                             | `{}`                                             | Object                                                         |
-| [`refreshPermissions`](#refreshpermissionsparams) | `() => void`                                     | Function                                                       |
-| [`selectedItem`](#selecteditem)                   | `{ type: "Heading", props: {id: "my-heading"} }` | [ComponentData](/docs/api-reference/data-model/data#content-1) |
+| Param                                             | Example                                            | Type                                                           |
+| ------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------- |
+| [`appState`](#appstate)                           | `{ data: {}, ui: {} }`                             | [AppState](/docs/api-reference/data-model/app-state)           |
+| [`dispatch`](#dispatchaction)                     | `(action: PuckAction) => void`                     | Function                                                       |
+| [`getItemBySelector`](#getitembyselectorselector) | `() => ({ type: "Heading", props: {} })`           | Function                                                       |
+| [`getItemById`](#getitembyidid)                   | `() => ({ type: "Heading", props: {} })`           | Function                                                       |
+| [`getSelectorForId`](#getselectorforidid)         | `() => ({ index: 0, zone: 'Flex-123:children'  })` | Function                                                       |
+| [`getPermissions`](#getpermissionsparams)         | `() => ({ delete: true  })`                        | Function                                                       |
+| [`history`](#history)                             | `{}`                                               | Object                                                         |
+| [`refreshPermissions`](#refreshpermissionsparams) | `() => void`                                       | Function                                                       |
+| [`selectedItem`](#selecteditem)                   | `{ type: "Heading", props: {id: "my-heading"} }`   | [ComponentData](/docs/api-reference/data-model/data#content-1) |
 
 ### `appState`
 
@@ -79,6 +82,36 @@ dispatch({
     leftSideBarVisible: false,
   },
 });
+```
+
+### `getItemBySelector(selector)`
+
+Get the item for a given [selector](/docs/api-reference/data-model/item-selector).
+
+```tsx
+getItemBySelector({
+  index: 0,
+  zone: "Flex-123:children", // The "children" slot field in the component with id "Flex-123"
+});
+// { type: "HeadingBlock", props: {} }
+```
+
+### `getItemById(id)`
+
+Get the item for a given id.
+
+```tsx
+getItemById("HeadingBlock-123");
+// { type: "HeadingBlock", props: {} }
+```
+
+### `getSelectorForId(id)`
+
+Get the [selector](/docs/api-reference/data-model/app-state#uiitemselector) for a component of a given id.
+
+```tsx
+getItemById("HeadingBlock-123");
+// { index: 0, zone: "Flex-123:children" }
 ```
 
 ### `getPermissions(params)`
