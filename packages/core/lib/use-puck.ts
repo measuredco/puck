@@ -37,8 +37,11 @@ export type UsePuckData<
   };
 };
 
+export type PuckApi<UserConfig extends Config = Config> =
+  UsePuckData<UserConfig>;
+
 type UsePuckStore<UserConfig extends Config = Config> = WithGet<
-  UsePuckData<UserConfig>
+  PuckApi<UserConfig>
 >;
 
 type PickedStore = Pick<
@@ -58,7 +61,7 @@ export const generateUsePuck = (store: PickedStore): UsePuckStore => {
     index: store.history.index,
   };
 
-  const storeData: UsePuckData = {
+  const storeData: PuckApi = {
     appState: makeStatePublic(store.state),
     config: store.config,
     dispatch: store.dispatch,
@@ -137,7 +140,7 @@ export const useRegisterUsePuckStore = (
  * @returns a typed usePuck function
  */
 export function createUsePuck<UserConfig extends Config = Config>() {
-  return function usePuck<T = UsePuckData<UserConfig>>(
+  return function usePuck<T = PuckApi<UserConfig>>(
     selector: (state: UsePuckStore<UserConfig>) => T
   ): T {
     const usePuckApi = useContext(UsePuckStoreContext);
@@ -163,4 +166,19 @@ export function usePuck<UserConfig extends Config = Config>() {
   }, []);
 
   return createUsePuck<UserConfig>()((s) => s);
+}
+
+/**
+ * Get the latest state without relying on a render
+ *
+ * @returns PuckApi
+ */
+export function useGetPuck() {
+  const usePuckApi = useContext(UsePuckStoreContext);
+
+  if (!usePuckApi) {
+    throw new Error("usePuckLatest must be used inside <Puck>.");
+  }
+
+  return usePuckApi.getState;
 }
