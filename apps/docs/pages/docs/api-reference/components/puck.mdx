@@ -102,7 +102,7 @@ export function Editor() {
 
 ### `children`
 
-Render custom nodes to create [custom interfaces](/docs/extending-puck/custom-interfaces).
+Render custom nodes to create [compositional interfaces](/docs/extending-puck/composition).
 
 ```tsx {4} copy
 export function Editor() {
@@ -192,7 +192,7 @@ Defer rendering of the Puck preview until the iframe styles have loaded, showing
 
 ### `initialHistory`
 
-Sets the undo/redo Puck history state when using the `usePuck` [history API](/docs/api-reference/functions/use-puck#history).
+Sets the undo/redo Puck history state when using the `usePuck` [history API](/docs/api-reference/puck-api#history).
 
 ```tsx showLineNumbers copy {12-15}
 const historyState = {
@@ -218,11 +218,11 @@ export function Editor() {
 
 #### `initialHistory` params
 
-| Param                       | Example             | Type                                                                 | Status   |
-| --------------------------- | ------------------- | -------------------------------------------------------------------- | -------- |
-| [`histories`](#histories)   | `histories: []`     | [History](/docs/api-reference/functions/use-puck#history-params)\[\] | Required |
-| [`index`](#index)           | `index: 2`          | Number                                                               | Required |
-| [`appendData`](#appenddata) | `appendData: false` | Boolean                                                              | -        |
+| Param                       | Example             | Type                                                       | Status   |
+| --------------------------- | ------------------- | ---------------------------------------------------------- | -------- |
+| [`histories`](#histories)   | `histories: []`     | [History](/docs/api-reference/puck-api#history-params)\[\] | Required |
+| [`index`](#index)           | `index: 2`          | Number                                                     | Required |
+| [`appendData`](#appenddata) | `appendData: false` | Boolean                                                    | -        |
 
 ##### `histories`
 

@@ -37,6 +37,11 @@ export default withNextra({
         destination: "/docs/api-reference/data-model/app-state",
         permanent: true,
       },
+      {
+        source: "/docs/extending-puck/custom-interfaces",
+        destination: "/docs/extending-puck/composition",
+        permanent: true,
+      },
     ];
   },
   transpilePackages: ["@measured/puck"],
