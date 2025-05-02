@@ -26,7 +26,13 @@ import {
 } from "./context";
 import { useAppStore } from "../../store";
 import { DropZoneProps } from "./types";
-import { DragAxis, PuckContext } from "../../types";
+import {
+  ComponentData,
+  Config,
+  DragAxis,
+  Metadata,
+  PuckContext,
+} from "../../types";
 
 import { UseDroppableInput } from "@dnd-kit/react";
 import { DrawerItemInner } from "../Drawer";
@@ -438,6 +444,44 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
   }
 );
 
+const DropZoneRenderItem = ({
+  config,
+  item,
+  metadata,
+}: {
+  config: Config;
+  item: ComponentData;
+  metadata: Metadata;
+}) => {
+  const Component = config.components[item.type];
+
+  const props = useSlots(Component, item.props, (slotProps) => (
+    <SlotRenderPure {...slotProps} config={config} metadata={metadata} />
+  ));
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const nextContextValue = useMemo<DropZoneContext>(
+    () => ({
+      areaId: props.id,
+      depth: 1,
+    }),
+    [props]
+  );
+
+  return (
+    <DropZoneProvider key={props.id} value={nextContextValue}>
+      <Component.render
+        {...props}
+        puck={{
+          ...props.puck,
+          renderDropZone: DropZoneRenderPure,
+          metadata: metadata || {},
+        }}
+      />
+    </DropZoneProvider>
+  );
+};
+
 export const DropZoneRenderPure = (props: DropZoneProps) => (
   <DropZoneRender {...props} />
 );
@@ -481,34 +525,13 @@ const DropZoneRender = forwardRef<HTMLDivElement, DropZoneProps>(
         {content.map((item) => {
           const Component = config.components[item.type];
           if (Component) {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            const props = useSlots(Component, item.props, (slotProps) => (
-              <SlotRenderPure
-                {...slotProps}
+            return (
+              <DropZoneRenderItem
+                key={item.props.id}
                 config={config}
+                item={item}
                 metadata={metadata}
               />
-            ));
-
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            const nextContextValue = useMemo<DropZoneContext>(
-              () => ({
-                areaId: props.id,
-                depth: 1,
-              }),
-              [props]
-            );
-
-            return (
-              <DropZoneProvider key={props.id} value={nextContextValue}>
-                <Component.render
-                  {...props}
-                  puck={{
-                    renderDropZone: DropZoneRenderPure,
-                    metadata: metadata || {},
-                  }}
-                />
-              </DropZoneProvider>
             );
           }
 

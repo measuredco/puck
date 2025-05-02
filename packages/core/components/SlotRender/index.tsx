@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { DropZoneProps } from "../DropZone/types";
-import { Config, Metadata, Slot } from "../../types";
+import { ComponentData, Config, Metadata, Slot } from "../../types";
 import { useSlots } from "../../lib/use-slots";
 import { DropZoneRenderPure } from "../DropZone";
 
@@ -13,6 +13,34 @@ type SlotRenderProps = DropZoneProps & {
 export const SlotRenderPure = (props: SlotRenderProps) => (
   <SlotRender {...props} />
 );
+
+const Item = ({
+  config,
+  item,
+  metadata,
+}: {
+  config: Config;
+  item: ComponentData;
+  metadata: Metadata;
+}) => {
+  const Component = config.components[item.type];
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const props = useSlots(Component, item.props, (slotProps) => (
+    <SlotRenderPure {...slotProps} config={config} metadata={metadata} />
+  ));
+
+  return (
+    <Component.render
+      {...props}
+      puck={{
+        ...props.puck,
+        renderDropZone: DropZoneRenderPure,
+        metadata: metadata || {},
+      }}
+    />
+  );
+};
 
 /**
  * Render a slot.
@@ -27,30 +55,18 @@ export const SlotRender = forwardRef<HTMLDivElement, SlotRenderProps>(
     return (
       <div className={className} style={style} ref={ref}>
         {content.map((item) => {
-          const Component = config.components[item.type];
-          if (Component) {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            const props = useSlots(Component, item.props, (slotProps) => (
-              <SlotRenderPure
-                {...slotProps}
-                config={config}
-                metadata={metadata}
-              />
-            ));
-
-            return (
-              <Component.render
-                key={props.id}
-                {...props}
-                puck={{
-                  renderDropZone: DropZoneRenderPure,
-                  metadata: metadata || {},
-                }}
-              />
-            );
+          if (!config.components[item.type]) {
+            return null;
           }
 
-          return null;
+          return (
+            <Item
+              key={item.props.id}
+              config={config}
+              item={item}
+              metadata={metadata}
+            />
+          );
         })}
       </div>
     );

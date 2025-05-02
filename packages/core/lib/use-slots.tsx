@@ -1,14 +1,13 @@
-import { memo, ReactNode, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 import {
   ComponentConfig,
   Content,
   DefaultComponentProps,
   RootConfig,
-  WithPuckProps,
 } from "../types";
 import { DropZoneProps } from "../components/DropZone/types";
 
-export function useSlots<T extends WithPuckProps<DefaultComponentProps>>(
+export function useSlots<T extends DefaultComponentProps>(
   config: ComponentConfig | RootConfig | null | undefined,
   props: T,
   renderSlot: (dzProps: DropZoneProps & { content: Content }) => ReactNode
