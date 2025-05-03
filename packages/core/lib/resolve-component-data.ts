@@ -49,7 +49,7 @@ export const resolveComponentData = async <
       await configForItem.resolveData(item, {
         changed,
         lastData: oldItem,
-        metadata,
+        metadata: { ...metadata, ...configForItem.metadata },
         trigger,
       });
 

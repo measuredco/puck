@@ -89,11 +89,15 @@ const DropZoneChild = ({
   inDroppableZone: boolean;
 }) => {
   const metadata = useAppStore((s) => s.metadata);
+  const componentConfig = useAppStore((s) =>
+    item?.type ? s.config.components[item.type] : null
+  );
+
   const puckProps: PuckContext = {
     renderDropZone: DropZoneEditPure,
     isEditing: true,
     dragRef: null,
-    metadata,
+    metadata: { ...metadata, ...componentConfig?.metadata },
   };
 
   const ctx = useContext(dropZoneContext);
@@ -117,9 +121,6 @@ const DropZoneChild = ({
     ? { type: preview.componentType, props: preview.props }
     : null;
 
-  const componentConfig = useAppStore((s) =>
-    item?.type ? s.config.components[item.type] : null
-  );
   const overrides = useAppStore((s) => s.overrides);
   const isLoading = useAppStore(
     (s) => s.componentState[componentId]?.loadingCount > 0
@@ -475,7 +476,7 @@ const DropZoneRenderItem = ({
         puck={{
           ...props.puck,
           renderDropZone: DropZoneRenderPure,
-          metadata: metadata || {},
+          metadata: { ...metadata, ...Component.metadata },
         }}
       />
     </DropZoneProvider>

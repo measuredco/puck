@@ -67,6 +67,7 @@ export type ComponentConfig<
       lastData: DataShape | null;
     }
   ) => Promise<Partial<Permissions>> | Partial<Permissions>;
+  metadata?: Metadata;
 };
 
 export type RootConfig<RootProps extends DefaultComponentProps = any> = Partial<
