@@ -415,19 +415,20 @@ data={{
 
 ## Restricting components
 
-Use the [`allow`](/docs/api-reference/components/drop-zone#allow) and [`disallow`](/docs/api-reference/components/drop-zone#disallow) DropZone props to restrict which components can be dragged into a DropZone.
+Use the [`allow`](/docs/api-reference/fields/slot#allow) and [`disallow`](/docs/api-reference/fields/slot#disallow) parameters to restrict which components can be dragged into a slot.
 
-```tsx {10} showLineNumbers copy
+```tsx {6} showLineNumbers copy
 const config = {
   components: {
     fields: {
       content: {
         type: "slot",
+        allow: ["Card"],
       },
     },
     Example: {
       render: ({ content: Content }) => {
-        return <Content allow={["Card"]} />;
+        return <Content />;
       },
     },
   },
@@ -436,7 +437,7 @@ const config = {
 
 Combine this with [categories](/docs/integrating-puck/categories) to restrict behavior based on your existing groups:
 
-```tsx {2-6,15} showLineNumbers copy
+```tsx {2-6,12} showLineNumbers copy
 const config = {
   categories: {
     typography: {
@@ -448,15 +449,18 @@ const config = {
       fields: {
         content: {
           type: "slot",
+          allow: categories.typography.components,
         },
       },
       render: ({ content: Content }) => {
-        return <Content allow={categories.typography.components} />;
+        return <Content />;
       },
     },
   },
 };
 ```
+
+Alternatively, you can provide `allow` and `disallow` [to your render function](/docs/api-reference/fields/slot#allow-1).
 
 ## Setting default props
 
