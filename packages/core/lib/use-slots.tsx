@@ -27,6 +27,8 @@ export function useSlots<T extends DefaultComponentProps>(
 
         const Slot = (dzProps: DropZoneProps) =>
           renderSlot({
+            allow: field.allow,
+            disallow: field.disallow,
             ...dzProps,
             zone: fieldKey,
             content,

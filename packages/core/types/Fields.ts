@@ -120,6 +120,8 @@ export type CustomField<Props extends any = {}> = BaseField & {
 
 export type SlotField = BaseField & {
   type: "slot";
+  allow?: string[];
+  disallow?: string[];
 };
 
 export type Field<Props extends any = any> =

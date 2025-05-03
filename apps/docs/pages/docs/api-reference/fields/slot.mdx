@@ -110,9 +110,11 @@ type Props = {
 
 ## Params
 
-| Param           | Example        | Type   | Status   |
-| --------------- | -------------- | ------ | -------- |
-| [`type`](#type) | `type: "slot"` | "slot" | Required |
+| Param                   | Example                      | Type   | Status   |
+| ----------------------- | ---------------------------- | ------ | -------- |
+| [`type`](#type)         | `type: "slot"`               | "slot" | Required |
+| [`allow`](#allow)       | `allow: ["HeadingBlock"]`    | Array  | -        |
+| [`disallow`](#disallow) | `disallow: ["HeadingBlock"]` | Array  | -        |
 
 ## Required params
 
@@ -127,6 +129,48 @@ const config = {
       fields: {
         content: {
           type: "slot",
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+## Optional params
+
+### `allow`
+
+Only allow specific components to be dragged into the slot. Will be overwritten by the [`allow` prop](#allow-1) provided to the render function.
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      fields: {
+        content: {
+          type: "slot",
+          allow: ["HeadingBlock"],
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `disallow`
+
+Allow all but specific components to be dragged into the slot. Any items in `allow` will override `disallow`. Will be overwritten by the [`disallow` prop](#disallow-1) provided to the render function.
+
+```tsx copy {7}
+const config = {
+  components: {
+    Example: {
+      fields: {
+        content: {
+          type: "slot",
+          disallow: ["HeadingBlock"],
         },
       },
       // ...
@@ -151,7 +195,7 @@ Slot data is provided to `render()` as a render function (or component). Provide
 
 ### `allow`
 
-Only allow specific components to be dragged into the slot:
+Only allow specific components to be dragged into the slot. Overrides the [`allow` parameter](#allow) provided to the field.
 
 ```tsx copy {5}
 const config = {
