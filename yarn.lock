@@ -589,7 +589,7 @@
     "@dnd-kit/state" "^0.1.12"
     tslib "^2.6.2"
 
-"@dnd-kit/helpers@0.1.12":
+"@dnd-kit/helpers@^0.1.12":
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/@dnd-kit/helpers/-/helpers-0.1.12.tgz#8eabfce9e90e58b26cd2793b4e94d4110dfb62b7"
   integrity sha512-d+jokQG90TENXSEFXjZ+8P9jsufplQQZQoWpirK0V23WLaZa4QnUWjNcUp1e5TV3r0KJ1ZlA9ymLWQOH06Eehg==
@@ -597,7 +597,7 @@
     "@dnd-kit/abstract" "^0.1.12"
     tslib "^2.6.2"
 
-"@dnd-kit/react@0.1.12":
+"@dnd-kit/react@^0.1.12":
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/@dnd-kit/react/-/react-0.1.12.tgz#f19f92c566caae3cbe7cbe8f70781d6e20807e8a"
   integrity sha512-4R5R+xSarbPpeywtqRLRthMdjLgFdvVIq+c8Gugl0I9F1VpAX/jGeeZKPFExnYpOnsyv/49bvem1SB8W/hZprg==
