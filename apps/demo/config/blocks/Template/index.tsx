@@ -8,7 +8,7 @@ import { withLayout } from "../../components/Layout";
 import { generateId } from "@/core/lib/generate-id";
 import { componentKey, type Props } from "../../index";
 import { AutoField, Button, createUsePuck, FieldLabel } from "@/core";
-import { mapSlots } from "@/core/lib/data/map-slots";
+import { mapSlotsAsync } from "@/core/lib/data/map-slots";
 
 const usePuck = createUsePuck();
 
@@ -185,7 +185,9 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
 
     children = await Promise.all(
       children.map((item) =>
-        mapSlots(randomizeId(item), async (content) => content.map(randomizeId))
+        mapSlotsAsync(randomizeId(item), async (content) =>
+          content.map(randomizeId)
+        )
       )
     );
 

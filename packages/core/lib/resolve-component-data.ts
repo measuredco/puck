@@ -5,7 +5,7 @@ import {
   ResolveDataTrigger,
   RootDataWithProps,
 } from "../types";
-import { mapSlots } from "./data/map-slots";
+import { mapSlotsAsync } from "./data/map-slots";
 import { getChanged } from "./get-changed";
 import fdeq from "fast-deep-equal";
 import { createIsSlotConfig } from "./data/is-slot";
@@ -62,7 +62,7 @@ export const resolveComponentData = async <
     };
 
     if (recursive) {
-      resolvedItem = (await mapSlots(
+      resolvedItem = (await mapSlotsAsync(
         resolvedItem,
         async (content) => {
           return Promise.all(
