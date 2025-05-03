@@ -15,7 +15,8 @@ export function useSlots<T extends DefaultComponentProps>(
   renderSlotRender: (
     dzProps: DropZoneProps & { content: Content }
   ) => ReactNode = renderSlotEdit,
-  readOnly: ComponentData["readOnly"] = {}
+  readOnly: ComponentData["readOnly"] = {},
+  forceReadOnly = false
 ): T {
   const slotProps = useMemo(() => {
     if (!config?.fields) return props;
@@ -30,7 +31,10 @@ export function useSlots<T extends DefaultComponentProps>(
       if (field?.type === "slot") {
         const content = props[fieldKey] || [];
 
-        const render = readOnly[fieldKey] ? renderSlotRender : renderSlotEdit;
+        const render =
+          readOnly[fieldKey] || forceReadOnly
+            ? renderSlotRender
+            : renderSlotEdit;
 
         const Slot = (dzProps: DropZoneProps) =>
           render({
@@ -46,7 +50,7 @@ export function useSlots<T extends DefaultComponentProps>(
     }
 
     return slotProps;
-  }, [config]);
+  }, [config, readOnly, forceReadOnly]);
 
   return { ...props, ...slotProps };
 }

@@ -165,7 +165,8 @@ const DropZoneChild = ({
     (slotProps) => (
       <ContextSlotRender componentId={componentId} zone={slotProps.zone} />
     ),
-    nodeReadOnly
+    nodeReadOnly,
+    isLoading
   );
 
   if (!item) return;
