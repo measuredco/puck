@@ -2,6 +2,61 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.19.0](https://github.com/measuredco/puck/compare/v0.18.2...v0.19.0) (2025-05-03)
+
+
+### Bug Fixes
+
+* add missing `id` to changed type for resolvers ([eb4f9d8](https://github.com/measuredco/puck/commit/eb4f9d857952ee3323447c355edb9fd3d6770716))
+* bind array item to correct field when using multiple arrays ([7e231b7](https://github.com/measuredco/puck/commit/7e231b782e49162f2b5050ba17fa4178af6ec7c8))
+* don't artificially constrain array items to container ([36b5713](https://github.com/measuredco/puck/commit/36b5713d04e6ad1d116faa25e41fc9683dddb09e))
+* don't render array item until dropped ([1dfc1b3](https://github.com/measuredco/puck/commit/1dfc1b334678ad5b63de0919c92e810bbea19311))
+* don't reset old values when modifying fields in other array items ([ad78e98](https://github.com/measuredco/puck/commit/ad78e98fc7f711da476fa0678a702fd4aa0310d2))
+* don't track dragged headings in heading-outline-analyzer ([2e1a24e](https://github.com/measuredco/puck/commit/2e1a24ed77aa5157647ad93a9dfe2e0723f38cd1))
+* ensure file inputs work inside array fields ([83f8f2d](https://github.com/measuredco/puck/commit/83f8f2d7a1eab1bd7a9c182c5435b3782d3dc720))
+* ensure nested array fields are draggable ([af4f756](https://github.com/measuredco/puck/commit/af4f756348db1a13c6e3139890e2d8b6750a1dc2))
+* expose transformProps in server bundle ([020071e](https://github.com/measuredco/puck/commit/020071e4a8820880b5c5e3389a71b97ce7d9ad4e))
+* fix undo/redo hotkeys for Windows ([a994207](https://github.com/measuredco/puck/commit/a994207e11e6f04cfd23cf827f5e7176a87bab1e))
+* prevent ActionBar clipping if it exceeds top bounds ([56f23e8](https://github.com/measuredco/puck/commit/56f23e8166e9ddf96f929d9f52faa072af2e98da))
+* prevent item from sometimes sticking to window during drag ([e62832e](https://github.com/measuredco/puck/commit/e62832e171de88e2710581d3a3096d5d759d2d63))
+* reflect resolveData value changes in fields ([69dd799](https://github.com/measuredco/puck/commit/69dd799d0bb20ca2baa0bd206f84a575b68dbd70))
+* remove erroneous React 17 from supported peer dependencies ([46212f0](https://github.com/measuredco/puck/commit/46212f0fdb11c2327d92317551a1503646f10e03))
+* reorder array items more predictably ([64c65c3](https://github.com/measuredco/puck/commit/64c65c32ef6f8130832d11c1b532563890b9dcfe))
+* reset stacking context in Puck entry ([6bf9c99](https://github.com/measuredco/puck/commit/6bf9c995ce8e3445e350fa864978fc2dabec52be))
+* restore field values during undo/redo ([6917928](https://github.com/measuredco/puck/commit/6917928d3ce053eee214c438268dbd115520c1f6))
+* restore React 17 compatability ([61c8658](https://github.com/measuredco/puck/commit/61c8658ff5105e2c5fd525de06511a58e8ae15ab))
+* retain minimum height when ActionBar is empty ([a52ccb9](https://github.com/measuredco/puck/commit/a52ccb96abdd37ade8a76e12f902b56d5f4f4efd))
+* set ready status more reliably when using strict mode ([5a526d0](https://github.com/measuredco/puck/commit/5a526d0a2fffdd243c8eb191961bd136639f75f2))
+* show top border on array button when array empty ([add5a17](https://github.com/measuredco/puck/commit/add5a175286036bd029113b2746bc0c94fa0a2ff))
+
+
+### Features
+
+* add convenience metadata API to fields ([5fe936e](https://github.com/measuredco/puck/commit/5fe936e08d2f27f663e8849fc59f20973a289332))
+* add getItem helpers to usePuck ([ad947d8](https://github.com/measuredco/puck/commit/ad947d8c2f9f25bb71585f7158900292237a46d4))
+* add labelIcon param to all fields for custom label icons ([24030a9](https://github.com/measuredco/puck/commit/24030a9caa4091382561019c9adc123839a90569))
+* add mapSlots helper function for manipulating slot data ([a27944f](https://github.com/measuredco/puck/commit/a27944ff7c1135c9ee582ff41173b060dd0d79bf))
+* add metadata API for passing data to every component ([b9add22](https://github.com/measuredco/puck/commit/b9add22951755737e272dbf6e475e24198c401ec))
+* add placeholder param for text, textarea and number fields ([32a6f78](https://github.com/measuredco/puck/commit/32a6f7844b7bd3962a16fd2c6989b412aa91685f))
+* add react-router v7 recipe ([706ea0c](https://github.com/measuredco/puck/commit/706ea0c1f0d9237046675674903a0ba7f61fd785))
+* add replaceRoot action to dispatcher ([586eccd](https://github.com/measuredco/puck/commit/586eccd6f3d80af6a4f43001f5d51feb29eeb887))
+* add selector to usePuck for improved performance ([8976e5f](https://github.com/measuredco/puck/commit/8976e5f28736d97d61a99f6e219e88797d67e309))
+* add slots API ([40bc2ee](https://github.com/measuredco/puck/commit/40bc2eec7e5b409cb2479dc10a989b7b5824ae60))
+* add step parameter to number fields ([0ea6ce4](https://github.com/measuredco/puck/commit/0ea6ce41281710ceecdc5dee8a632c06004244f8))
+* add useGetPuck hook for getting latest internal PuckApi ([1d9a47d](https://github.com/measuredco/puck/commit/1d9a47d78ff0e239ef343f851ef0e5e5de8e1d0d))
+* deprecate DropZone component ([d54145d](https://github.com/measuredco/puck/commit/d54145d8bedf6df319620fde82d867edb9d034e3))
+* export package.json for module federation ([b918900](https://github.com/measuredco/puck/commit/b918900b1ffbd4de46c405a73b6a5c74f8db76f5))
+* expose RootConfig type ([638e066](https://github.com/measuredco/puck/commit/638e066fb655bc3e258093bf2428189f3afd88f9))
+* provide `trigger` event to resolveData parameters ([55b42ae](https://github.com/measuredco/puck/commit/55b42aeeddbc1ada53646bf93c29592523c27e54))
+
+
+### Performance Improvements
+
+* eliminate most re-renders ([9fcd968](https://github.com/measuredco/puck/commit/9fcd96851fd1472890c5846183f64d62a3a2643f))
+
+
+
+
 ## [0.18.3](https://github.com/measuredco/puck/compare/v0.18.2...v0.18.3) (2025-04-05)
 
 
