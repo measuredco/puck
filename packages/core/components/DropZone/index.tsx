@@ -104,7 +104,7 @@ const DropZoneChild = ({
   );
 
   const nodeReadOnly = useAppStore(
-    (s) => s.state.indexes.nodes[componentId]?.data.readOnly
+    useShallow((s) => s.state.indexes.nodes[componentId]?.data.readOnly)
   );
 
   const node = { type: nodeType, props: nodeProps };
