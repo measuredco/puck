@@ -16,7 +16,7 @@ import { AppState, ComponentConfig } from "@/core/types";
 import { getClassNameFactory } from "@/core/lib";
 
 import styles from "./styles.module.css";
-import { usePuck } from "@/core/lib/use-puck";
+import { createUsePuck } from "@/core/lib/use-puck";
 
 import { ChevronUp, ChevronDown } from "lucide-react";
 
@@ -73,6 +73,8 @@ const Drawer = ({ renderDrawer }: { renderDrawer: () => ReactNode }) => {
   );
 };
 
+const usePuck = createUsePuck();
+
 export const PreviewFrame = ({
   children,
   label,
@@ -88,7 +90,7 @@ export const PreviewFrame = ({
   renderInfo?: () => ReactNode;
   renderDrawer?: () => ReactNode;
 }) => {
-  const { dispatch } = usePuck();
+  const dispatch = usePuck((s) => s.dispatch);
 
   return (
     <div
@@ -183,7 +185,7 @@ const ConfigPreviewInner = ({
 }: {
   componentConfig: ComponentConfig;
 }) => {
-  const { appState } = usePuck();
+  const appState = usePuck((s) => s.appState);
 
   return (
     <div>
@@ -204,7 +206,7 @@ export const CodeBlockDrawer = ({
 }: {
   getCode?: (appState: AppState) => object | string;
 }) => {
-  const { appState } = usePuck();
+  const appState = usePuck((s) => s.appState);
   const code = getCode?.(appState) ?? "";
 
   return <CodeBlock code={code} />;
