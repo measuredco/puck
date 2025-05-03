@@ -8,6 +8,7 @@ The base type shared by all fields.
 | ------------------------- | --------------------- | --------- | ------ |
 | [`label`](#label)         | `label: "Title"`      | String    | -      |
 | [`labelIcon`](#labelIcon) | `labelIcon: <Icon />` | ReactNode | -      |
+| [`metadata`](#metadata)   | `metadata: {}`        | Object    | -      |
 
 ## Optional params
 
@@ -42,6 +43,28 @@ const config = {
       fields: {
         items: {
           labelIcon: <Icon />,
+          // ...
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `metadata`
+
+An object containing additional information for the field.
+
+```tsx {6-8} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          metadata: {
+            title: "Hello, world",
+          },
           // ...
         },
       },

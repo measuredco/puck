@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { DefaultComponentProps, UiState } from ".";
+import { DefaultComponentProps, Metadata, UiState } from ".";
 
 type FieldOption = {
   label: string;
@@ -11,6 +11,7 @@ type FieldOptions = Array<FieldOption> | ReadonlyArray<FieldOption>;
 export type BaseField = {
   label?: string;
   labelIcon?: ReactElement;
+  metadata?: Metadata;
 };
 
 export type TextField = BaseField & {
