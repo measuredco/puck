@@ -47,7 +47,7 @@ import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
 import { renderContext } from "../Render";
 import { useSlots } from "../../lib/use-slots";
-import { SlotRenderPure } from "../SlotRender";
+import { ContextSlotRender, SlotRenderPure } from "../SlotRender";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -101,6 +101,10 @@ const DropZoneChild = ({
 
   const nodeType = useAppStore(
     (s) => s.state.indexes.nodes[componentId]?.data.type
+  );
+
+  const nodeReadOnly = useAppStore(
+    (s) => s.state.indexes.nodes[componentId]?.data.readOnly
   );
 
   const node = { type: nodeType, props: nodeProps };
@@ -157,7 +161,11 @@ const DropZoneChild = ({
   const defaultedPropsWithSlots = useSlots(
     componentConfig,
     defaultsProps,
-    DropZoneEditPure
+    DropZoneEditPure,
+    (slotProps) => (
+      <ContextSlotRender componentId={componentId} zone={slotProps.zone} />
+    ),
+    nodeReadOnly
   );
 
   if (!item) return;

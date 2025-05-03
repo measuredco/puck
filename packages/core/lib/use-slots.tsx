@@ -1,6 +1,7 @@
 import { ReactNode, useMemo } from "react";
 import {
   ComponentConfig,
+  ComponentData,
   Content,
   DefaultComponentProps,
   RootConfig,
@@ -10,7 +11,11 @@ import { DropZoneProps } from "../components/DropZone/types";
 export function useSlots<T extends DefaultComponentProps>(
   config: ComponentConfig | RootConfig | null | undefined,
   props: T,
-  renderSlot: (dzProps: DropZoneProps & { content: Content }) => ReactNode
+  renderSlotEdit: (dzProps: DropZoneProps & { content: Content }) => ReactNode,
+  renderSlotRender: (
+    dzProps: DropZoneProps & { content: Content }
+  ) => ReactNode = renderSlotEdit,
+  readOnly: ComponentData["readOnly"] = {}
 ): T {
   const slotProps = useMemo(() => {
     if (!config?.fields) return props;
@@ -25,8 +30,10 @@ export function useSlots<T extends DefaultComponentProps>(
       if (field?.type === "slot") {
         const content = props[fieldKey] || [];
 
+        const render = readOnly[fieldKey] ? renderSlotRender : renderSlotEdit;
+
         const Slot = (dzProps: DropZoneProps) =>
-          renderSlot({
+          render({
             allow: field.allow,
             disallow: field.disallow,
             ...dzProps,

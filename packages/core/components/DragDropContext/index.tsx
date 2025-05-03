@@ -343,8 +343,6 @@ const DragDropContextClient = ({
               if (thisPreview) {
                 zoneStore.setState({ previewIndex: {} });
 
-                const state = appStore.getState().state;
-
                 if (thisPreview.type === "insert") {
                   insertComponent(
                     thisPreview.componentType,

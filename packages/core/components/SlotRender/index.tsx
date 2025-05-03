@@ -3,6 +3,7 @@ import { DropZoneProps } from "../DropZone/types";
 import { ComponentData, Config, Metadata, Slot } from "../../types";
 import { useSlots } from "../../lib/use-slots";
 import { DropZoneRenderPure } from "../DropZone";
+import { useAppStore } from "../../store";
 
 type SlotRenderProps = DropZoneProps & {
   content: Slot;
@@ -13,6 +14,29 @@ type SlotRenderProps = DropZoneProps & {
 export const SlotRenderPure = (props: SlotRenderProps) => (
   <SlotRender {...props} />
 );
+
+export const ContextSlotRender = ({
+  componentId,
+  zone,
+}: {
+  componentId: string;
+  zone: string;
+}) => {
+  const config = useAppStore((s) => s.config);
+  const metadata = useAppStore((s) => s.metadata);
+  const slotContent = useAppStore(
+    (s) => s.state.indexes.nodes[componentId]?.data.props[zone] ?? null
+  );
+
+  return (
+    <SlotRenderPure
+      content={slotContent}
+      zone={zone}
+      config={config}
+      metadata={metadata}
+    />
+  );
+};
 
 const Item = ({
   config,
