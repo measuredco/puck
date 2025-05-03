@@ -260,6 +260,148 @@ describe("Reducer", () => {
         `);
       });
 
+      it("should remove items deep within a slot", () => {
+        const state: PrivateAppState = walkTree(
+          {
+            ...defaultState,
+            data: {
+              ...defaultData,
+              root: {
+                props: {
+                  slot: [
+                    {
+                      type: "Comp",
+                      props: {
+                        id: "my-component",
+                        prop: "Data",
+                        slot: [
+                          {
+                            type: "Comp",
+                            props: {
+                              id: "final-id",
+                              prop: "Even more example data",
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                } as any,
+              },
+            },
+          },
+          config
+        );
+
+        const action: RemoveAction = {
+          type: "remove",
+          index: 0,
+          zone: "my-component:slot",
+        };
+
+        const newState = reducer(state, action);
+
+        expect(newState.data).toMatchInlineSnapshot(`
+          {
+            "content": [],
+            "root": {
+              "props": {
+                "slot": [
+                  {
+                    "props": {
+                      "id": "my-component",
+                      "prop": "Data",
+                      "slot": [],
+                    },
+                    "type": "Comp",
+                  },
+                ],
+              },
+            },
+            "zones": {
+              "my-component:zone1": [],
+            },
+          }
+        `);
+
+        expect(newState.indexes).toMatchInlineSnapshot(`
+          {
+            "nodes": {
+              "my-component": {
+                "data": {
+                  "props": {
+                    "id": "my-component",
+                    "prop": "Data",
+                    "slot": [],
+                  },
+                  "type": "Comp",
+                },
+                "flatData": {
+                  "props": {
+                    "id": "my-component",
+                    "prop": "Data",
+                    "slot": [],
+                  },
+                  "type": "Comp",
+                },
+                "parentId": "root",
+                "path": [
+                  "root:slot",
+                ],
+                "zone": "slot",
+              },
+              "root": {
+                "data": {
+                  "props": {
+                    "id": "root",
+                    "slot": [
+                      {
+                        "props": {
+                          "id": "my-component",
+                          "prop": "Data",
+                          "slot": [],
+                        },
+                        "type": "Comp",
+                      },
+                    ],
+                  },
+                  "type": "root",
+                },
+                "flatData": {
+                  "props": {
+                    "id": "root",
+                  },
+                  "type": "root",
+                },
+                "parentId": null,
+                "path": [],
+                "zone": "",
+              },
+            },
+            "zones": {
+              "my-component:slot": {
+                "contentIds": [],
+                "type": "slot",
+              },
+              "my-component:zone1": {
+                "contentIds": [],
+                "type": "dropzone",
+              },
+              "root:default-zone": {
+                "contentIds": [],
+                "type": "root",
+              },
+              "root:slot": {
+                "contentIds": [
+                  "my-component",
+                ],
+                "type": "slot",
+              },
+            },
+          }
+        `);
+      });
+
       it("should recursively remove items in a slot within a DropZone", () => {
         const state: PrivateAppState = walkTree(
           {

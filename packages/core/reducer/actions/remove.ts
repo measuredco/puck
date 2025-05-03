@@ -13,8 +13,6 @@ export const removeAction = <UserData extends Data>(
 ) => {
   const item = getItem({ index: action.index, zone: action.zone }, state)!;
 
-  const [parentId] = action.zone.split(":");
-
   // Gather related
   const nodesToDelete = Object.entries(state.indexes.nodes).reduce<string[]>(
     (acc, [nodeId, nodeData]) => {
@@ -37,19 +35,6 @@ export const removeAction = <UserData extends Data>(
       }
 
       return content;
-    },
-    (childItem, path) => {
-      const parentIds = path.map((p) => p.split(":")[0]);
-
-      if (
-        childItem.props.id === parentId ||
-        childItem.props.id === item.props.id ||
-        parentIds.indexOf(item.props.id) > -1
-      ) {
-        return childItem;
-      }
-
-      return null;
     }
   );
 
