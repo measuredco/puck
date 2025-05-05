@@ -177,7 +177,7 @@ export function useGetPuck() {
   const usePuckApi = useContext(UsePuckStoreContext);
 
   if (!usePuckApi) {
-    throw new Error("usePuckLatest must be used inside <Puck>.");
+    throw new Error("usePuckGet must be used inside <Puck>.");
   }
 
   return usePuckApi.getState;
