@@ -84,14 +84,14 @@ const config = {
 };
 ```
 
-We can override the default field configuration by providing custom [Fields](/docs/api-reference/fields) to the [`fields` parameter](/docs/api-reference/configuration/component-config#fields):
+You can override the default field configuration by providing custom [Fields](/docs/api-reference/fields) to the [`fields` parameter](/docs/api-reference/configuration/component-config#fields):
 
 ```tsx showLineNumbers copy {4-7} /description/2,3
 const config = {
   // ...
   root: {
     fields: {
-      title: { type: "text" }, // We need to redefine the `title` field if we want to retain it
+      title: { type: "text" }, // You need to redefine the `title` field if we want to retain it
       description: { type: "textarea" },
     },
     render: ({ children, title, description }) => {
