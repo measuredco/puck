@@ -40,7 +40,7 @@ Migrates any props stored on root data to the `props` object.
 
 ### DropZones to slots
 
-Migrates all [DropZone](/docs/api-reference/components/drop-zone) data from [`zones`](/docs/api-reference/data-model/data#zones) to inline [slots](/docs/api-reference/fields/slot). Requires matching slots to be provided via the [`config`](#config) arg. See the [DropZone to slots migration guide](/docs/guides/migrations/dropzones-to-slots) for more information.
+Migrates all [DropZone](/docs/api-reference/components/drop-zone) data from [`zones`](/docs/api-reference/data-model/data#zones) to inline [slots](/docs/api-reference/fields/slot). Requires slots to be provided via the [`config`](#config) arg, where the field name for the slot matches the `zone` prop of the DropZone. See the [DropZone to slots migration guide](/docs/guides/migrations/dropzones-to-slots) for more information.
 
 **Before**
 
