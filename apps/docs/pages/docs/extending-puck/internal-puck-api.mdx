@@ -15,7 +15,7 @@ You can access [`PuckApi`](/docs/api-reference/puck-api) via two hooks:
 
 ### Within the render lifecycle
 
-To access the API within your render lifecycle, use the `usePuck` hook. We can use a selector to limit re-rendering to a specific part of the API.
+To access the API within your render lifecycle, use the `usePuck` hook. You can use a selector to limit re-rendering to a specific part of the API.
 
 ```tsx copy
 import { createUsePuck } from "@measured/puck";
@@ -23,7 +23,7 @@ import { createUsePuck } from "@measured/puck";
 const usePuck = createUsePuck();
 
 const Example = () => {
-  // Use a selector so we only re-render when the selected type changes
+  // Use a selector so you only re-render when the selected type changes
   const type = usePuck((s) => s.selectedItem?.type || "Nothing");
 
   return <h2>{type} selected</h2>;
