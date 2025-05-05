@@ -4,16 +4,32 @@ title: mapSlots
 
 # mapSlots
 
-Recursively map all slots within an item, using a depth-first approach where the deepest slots are processed first.
+Recursively map all slots within a [`ComponentData`](/docs/api-reference/data-model/component-data) object, using a depth-first approach where the deepest slots are processed first. Returns a new `ComponentData` object with the results of a mapping function.
 
 ```tsx
+import { mapSlots } from "@measured/puck";
+
 // Add the example prop to all children of `item`
-mapSlots(item, config, (content) =>
+const newItem = mapSlots(item, config, (content) =>
   content.map((child) => ({
     ...child,
     props: { ...child.props, example: "Hello, world" },
   }))
 );
+
+console.log(newItem);
+// {
+//   "type": "Component",
+//   "props": {
+//     "id": "1234",
+//     "content": [
+//       {
+//         "type": "Child",
+//         "props": { "id": "5678", "example": "Hello, world" }
+//       }
+//     ]
+//   }
+// }
 ```
 
 ## Args
@@ -62,3 +78,7 @@ The name of the slot field.
 #### Returns
 
 An updated array of [`ComponentData`](/docs/api-reference/data-model/component-data).
+
+## Returns
+
+A new [`ComponentData`](/docs/api-reference/data-model/component-data) object populated with the results of the mapping function.
