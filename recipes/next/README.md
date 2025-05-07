@@ -39,4 +39,4 @@ By default, this recipe will generate static pages by setting `dynamic` to [`for
 
 ## License
 
-MIT © [Measured Co.](https://github.com/measuredco)
+MIT © [The Puck Contributors](https://github.com/measuredco/puck/graphs/contributors)
