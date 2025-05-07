@@ -3,9 +3,6 @@
 The visual editor for React.
 
 <p align="left">
-  <a aria-label="Measured logo" href="https://measured.co">
-    <img src="https://img.shields.io/badge/MADE%20BY%20Measured-000000.svg?style=for-the-badge&labelColor=000">
-  </a>
   <a aria-label="NPM version" href="https://www.npmjs.com/package/@measured/puck">
     <img alt="" src="https://img.shields.io/npm/v/@measured/puck.svg?style=for-the-badge&labelColor=000000">
   </a>
@@ -110,4 +107,4 @@ Or [book a discovery call](https://app.cal.com/chrisvxd/puck-enquiry/) for hands
 
 ## License
 
-MIT © [Measured Corporation Ltd](https://measured.co)
+MIT © [The Puck Contributors](https://github.com/measuredco/puck/graphs/contributors)
