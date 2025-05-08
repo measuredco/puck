@@ -53,7 +53,7 @@ dispatch({
 
 ### `getItemBySelector(selector)`
 
-Get the item for a given [selector](/docs/api-reference/data-model/item-selector).
+Get an item’s [`ComponentData`](/docs/api-reference/data-model/component-data) by its [selector](/docs/api-reference/data-model/item-selector).
 
 ```tsx
 getItemBySelector({
@@ -65,7 +65,7 @@ getItemBySelector({
 
 ### `getItemById(id)`
 
-Get the item for a given id.
+Get an item’s [`ComponentData`](/docs/api-reference/data-model/component-data) by its component id.
 
 ```tsx
 getItemById("HeadingBlock-123");
@@ -74,7 +74,7 @@ getItemById("HeadingBlock-123");
 
 ### `getSelectorForId(id)`
 
-Get the [selector](/docs/api-reference/data-model/app-state#uiitemselector) for a component of a given id.
+Get an item's [selector](/docs/api-reference/data-model/app-state#uiitemselector) by its component id.
 
 ```tsx
 getItemById("HeadingBlock-123");
