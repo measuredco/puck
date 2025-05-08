@@ -1,0 +1,84 @@
+---
+title: mapSlots
+---
+
+# mapSlots
+
+Recursively map all slots within a [`ComponentData`](/docs/api-reference/data-model/component-data) object, using a depth-first approach where the deepest slots are processed first. Returns a new `ComponentData` object with the results of a mapping function.
+
+```tsx
+import { mapSlots } from "@measured/puck";
+
+// Add the example prop to all children of `item`
+const newItem = mapSlots(item, config, (content) =>
+  content.map((child) => ({
+    ...child,
+    props: { ...child.props, example: "Hello, world" },
+  }))
+);
+
+console.log(newItem);
+// {
+//   "type": "Component",
+//   "props": {
+//     "id": "1234",
+//     "content": [
+//       {
+//         "type": "Child",
+//         "props": { "id": "5678", "example": "Hello, world" }
+//       }
+//     ]
+//   }
+// }
+```
+
+## Args
+
+| Param                          | Example                            | Type                                                           |
+| ------------------------------ | ---------------------------------- | -------------------------------------------------------------- |
+| [`item`](#item)                | `{ type: "Heading", props: {} }`   | [ComponentData](/docs/api-reference/data-model/component-data) |
+| [`config`](#config)            | `{ components: {} }`               | [Config](/docs/api-reference/configuration/config)             |
+| [`map()`](#mapcontent-options) | `(content) => content.slice(0, 1)` | Function                                                       |
+
+### `item`
+
+The [`ComponentData`](/docs/api-reference/data-model/component-data) to traverse.
+
+### `config`
+
+A Puck [config](/docs/api-reference/configuration/config) object, used to determine which components contain slots.
+
+### `map(content, options)`
+
+A mapping function called for each slot. Receives an array of [`ComponentData`](/docs/api-reference/data-model/component-data).
+
+#### Args
+
+| Param                 | Example                                         | Type                                                               |
+| --------------------- | ----------------------------------------------- | ------------------------------------------------------------------ |
+| [`content`](#item)    | `[{ type: "Heading", props: {} }]`              | [`ComponentData[]`](/docs/api-reference/data-model/component-data) |
+| [`options`](#options) | `{ parentId: "Flex-123", propName: "Content" }` | object                                                             |
+
+##### `content`
+
+An array of [`ComponentData`](/docs/api-reference/data-model/component-data), containing all the nodes for this slot.
+
+##### `options`
+
+An object containing additional options
+
+##### `options.parentId`
+
+The id of the parent component that defines this slot.
+
+##### `options.propName`
+
+The name of the slot field.
+
+#### Returns
+
+An updated array of [`ComponentData`](/docs/api-reference/data-model/component-data).
+
+## Returns
+
+A new [`ComponentData`](/docs/api-reference/data-model/component-data) object populated with the results of the mapping function.

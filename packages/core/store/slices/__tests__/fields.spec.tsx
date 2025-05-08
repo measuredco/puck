@@ -1,10 +1,12 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { useRegisterFieldsSlice } from "../fields";
-import { generateNodesSlice } from "../nodes";
 import { createAppStore, defaultAppState } from "../..";
-import { Config, ComponentData, AppState } from "../../../types";
+import { Config, ComponentData } from "../../../types";
+import { PrivateAppState } from "../../../types/Internal";
+import { walkTree } from "../../../lib/data/walk-tree";
+import { makeStatePublic } from "../../../lib/data/make-state-public";
 
-const baseState: AppState = {
+const baseState: PrivateAppState = {
   ...defaultAppState,
   data: {
     content: [
@@ -22,7 +24,13 @@ const appStore = createAppStore();
 
 function resetStores() {
   // Reset main app store:
-  appStore.setState({ ...appStore.getInitialState(), state: baseState }, true);
+  appStore.setState(
+    {
+      ...appStore.getInitialState(),
+      state: walkTree(baseState, appStore.getInitialState().config),
+    },
+    true
+  );
 }
 
 const selectFirst = (config: Config) => {
@@ -30,22 +38,24 @@ const selectFirst = (config: Config) => {
     ...appStore.getState(),
     config,
     selectedItem: appStore.getState().state.data.content[0],
-    state: {
-      ...appStore.getState().state,
-      ui: {
-        ...appStore.getState().state.ui,
-        itemSelector: {
-          index: 0,
+    state: walkTree(
+      {
+        ...appStore.getState().state,
+        ui: {
+          ...appStore.getState().state.ui,
+          itemSelector: {
+            index: 0,
+          },
         },
       },
-    },
+      config
+    ),
   });
 };
 
 describe("fields slice", () => {
   beforeEach(() => {
     resetStores();
-    generateNodesSlice(appStore.getState().state.data, appStore);
   });
 
   it("returns default fields if no resolver is defined", async () => {
@@ -97,7 +107,7 @@ describe("fields slice", () => {
         type: "root",
       },
       {
-        appState: appStore.getState().state,
+        appState: makeStatePublic(appStore.getState().state),
         changed: {
           id: true,
         },
@@ -141,7 +151,7 @@ describe("fields slice", () => {
         type: "Heading",
       },
       {
-        appState: appStore.getState().state,
+        appState: makeStatePublic(appStore.getState().state),
         changed: {
           id: true,
           title: true,
@@ -196,17 +206,15 @@ describe("fields slice", () => {
     appStore.getState().dispatch({
       type: "replace",
       data: {
-        ...appStore.getState().selectedItem,
+        ...appStore.getState().selectedItem!,
         props: {
-          ...appStore.getState().selectedItem?.props,
+          ...appStore.getState().selectedItem!.props,
           title: "Hello, world",
         },
       },
       destinationIndex: 0,
       destinationZone: "root:default-zone",
     });
-
-    generateNodesSlice(appStore.getState().state.data, appStore);
 
     expect(mockResolveFields).toHaveBeenCalledTimes(1);
     expect(mockResolveFields).toHaveBeenCalledWith(
@@ -215,7 +223,7 @@ describe("fields slice", () => {
         type: "Heading",
       },
       {
-        appState: appStore.getState().state,
+        appState: makeStatePublic(appStore.getState().state),
         changed: {
           id: false,
           title: true,
@@ -265,7 +273,7 @@ describe("fields slice", () => {
       expect(fields).toEqual({ title: { type: "textarea" } });
     });
 
-    mockResolveFields.mockReset();
+    expect(mockResolveFields).toHaveBeenCalledTimes(1);
 
     // Change data and check result
     act(() => {
@@ -275,18 +283,21 @@ describe("fields slice", () => {
       };
 
       appStore.setState({
-        state: {
-          ...appStore.getState().state,
-          data: {
-            ...appStore.getState().state.data,
-            content: [...appStore.getState().state.data.content, newItem],
+        state: walkTree(
+          {
+            ...appStore.getState().state,
+            data: {
+              ...appStore.getState().state.data,
+              content: [...appStore.getState().state.data.content, newItem],
+            },
           },
-        },
+          config
+        ),
         selectedItem: newItem,
       });
-
-      generateNodesSlice(appStore.getState().state.data, appStore);
     });
+
+    mockResolveFields.mockReset();
 
     rerender({ id: "block-1" });
 
@@ -297,7 +308,7 @@ describe("fields slice", () => {
         type: "Block",
       },
       {
-        appState: appStore.getState().state,
+        appState: makeStatePublic(appStore.getState().state),
         changed: {
           id: true,
           title: true,
@@ -381,7 +392,7 @@ describe("fields slice", () => {
     // Now let's simulate a data change
     const selectedItem = appStore.getState().selectedItem;
     const updatedItem = {
-      ...selectedItem,
+      ...selectedItem!,
       props: { ...selectedItem?.props, title: "Newly changed" },
     };
 
@@ -392,8 +403,6 @@ describe("fields slice", () => {
         destinationIndex: 0,
         destinationZone: "root:default-zone",
       });
-
-      generateNodesSlice(appStore.getState().state.data, appStore);
     });
 
     // The subscription should trigger a second resolve:

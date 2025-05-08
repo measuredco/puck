@@ -4,9 +4,11 @@ The base type shared by all fields.
 
 ## Params
 
-| Param             | Example          | Type   | Status |
-| ----------------- | ---------------- | ------ | ------ |
-| [`label`](#label) | `label: "Title"` | String | -      |
+| Param                     | Example               | Type      | Status |
+| ------------------------- | --------------------- | --------- | ------ |
+| [`label`](#label)         | `label: "Title"`      | String    | -      |
+| [`labelIcon`](#labelIcon) | `labelIcon: <Icon />` | ReactNode | -      |
+| [`metadata`](#metadata)   | `metadata: {}`        | Object    | -      |
 
 ## Optional params
 
@@ -21,6 +23,48 @@ const config = {
       fields: {
         items: {
           label: "My Field",
+          // ...
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `labelIcon`
+
+Set an icon to display next to the label.
+
+```tsx {6} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          labelIcon: <Icon />,
+          // ...
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `metadata`
+
+An object containing additional information for the field.
+
+```tsx {6-8} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          metadata: {
+            title: "Hello, world",
+          },
           // ...
         },
       },

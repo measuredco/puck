@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { DefaultComponentProps, UiState } from ".";
+import { DefaultComponentProps, Metadata, UiState } from ".";
 
 type FieldOption = {
   label: string;
@@ -10,6 +10,8 @@ type FieldOptions = Array<FieldOption> | ReadonlyArray<FieldOption>;
 
 export type BaseField = {
   label?: string;
+  labelIcon?: ReactElement;
+  metadata?: Metadata;
 };
 
 export type TextField = BaseField & {
@@ -116,6 +118,12 @@ export type CustomField<Props extends any = {}> = BaseField & {
   }) => ReactElement;
 };
 
+export type SlotField = BaseField & {
+  type: "slot";
+  allow?: string[];
+  disallow?: string[];
+};
+
 export type Field<Props extends any = any> =
   | TextField
   | NumberField
@@ -126,7 +134,8 @@ export type Field<Props extends any = any> =
   | ObjectField<Props extends { [key: string]: any } ? Props : any>
   | ExternalField<Props extends { [key: string]: any } ? Props : any>
   | ExternalFieldWithAdaptor<Props extends { [key: string]: any } ? Props : any>
-  | CustomField<Props>;
+  | CustomField<Props>
+  | SlotField;
 
 export type Fields<
   ComponentProps extends DefaultComponentProps = DefaultComponentProps

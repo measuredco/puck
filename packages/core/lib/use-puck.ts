@@ -1,4 +1,4 @@
-import { Config, UserGenerics, AppState } from "../types";
+import { Config, UserGenerics, AppState, ComponentData } from "../types";
 import { createContext, useContext, useEffect, useState } from "react";
 import { AppStore, useAppStoreApi } from "../store";
 import {
@@ -7,6 +7,8 @@ import {
 } from "../store/slices/permissions";
 import { HistorySlice } from "../store/slices/history";
 import { createStore, StoreApi, useStore } from "zustand";
+import { makeStatePublic } from "./data/make-state-public";
+import { getItem, ItemSelector } from "./data/get-item";
 
 type WithGet<T> = T & { get: () => T };
 
@@ -20,6 +22,9 @@ export type UsePuckData<
   getPermissions: GetPermissions<UserConfig>;
   refreshPermissions: RefreshPermissions<UserConfig>;
   selectedItem: G["UserComponentData"] | null;
+  getItemBySelector: (selector: ItemSelector) => ComponentData | undefined;
+  getItemById: (id: string) => ComponentData | undefined;
+  getSelectorForId: (id: string) => Required<ItemSelector> | undefined;
   history: {
     back: HistorySlice["back"];
     forward: HistorySlice["forward"];
@@ -32,13 +37,16 @@ export type UsePuckData<
   };
 };
 
+export type PuckApi<UserConfig extends Config = Config> =
+  UsePuckData<UserConfig>;
+
 type UsePuckStore<UserConfig extends Config = Config> = WithGet<
-  UsePuckData<UserConfig>
+  PuckApi<UserConfig>
 >;
 
 type PickedStore = Pick<
   AppStore,
-  "state" | "config" | "dispatch" | "selectedItem" | "permissions" | "history"
+  "config" | "dispatch" | "selectedItem" | "permissions" | "history" | "state"
 >;
 
 export const generateUsePuck = (store: PickedStore): UsePuckStore => {
@@ -53,14 +61,28 @@ export const generateUsePuck = (store: PickedStore): UsePuckStore => {
     index: store.history.index,
   };
 
-  const storeData: UsePuckData = {
-    appState: store.state,
+  const storeData: PuckApi = {
+    appState: makeStatePublic(store.state),
     config: store.config,
     dispatch: store.dispatch,
     getPermissions: store.permissions.getPermissions,
     refreshPermissions: store.permissions.refreshPermissions,
     history,
     selectedItem: store.selectedItem || null,
+    getItemBySelector: (selector) => getItem(selector, store.state),
+    getItemById: (id) => store.state.indexes.nodes[id].data,
+    getSelectorForId: (id) => {
+      const node = store.state.indexes.nodes[id];
+
+      if (!node) return;
+
+      const zoneCompound = `${node.parentId}:${node.zone}`;
+
+      const index =
+        store.state.indexes.zones[zoneCompound].contentIds.indexOf(id);
+
+      return { zone: zoneCompound, index };
+    },
   };
 
   const get = () => storeData;
@@ -72,6 +94,17 @@ export const UsePuckStoreContext = createContext<StoreApi<UsePuckStore> | null>(
   null
 );
 
+const convertToPickedStore = (store: AppStore): PickedStore => {
+  return {
+    state: store.state,
+    config: store.config,
+    dispatch: store.dispatch,
+    permissions: store.permissions,
+    history: store.history,
+    selectedItem: store.selectedItem,
+  };
+};
+
 /**
  * Mirror changes in appStore to usePuckStore
  */
@@ -79,24 +112,15 @@ export const useRegisterUsePuckStore = (
   appStore: ReturnType<typeof useAppStoreApi>
 ) => {
   const [usePuckStore] = useState(() =>
-    createStore(() => generateUsePuck(appStore.getState()))
+    createStore(() =>
+      generateUsePuck(convertToPickedStore(appStore.getState()))
+    )
   );
 
   useEffect(() => {
     // Subscribe here isn't doing anything as selection isn't shallow
     return appStore.subscribe(
-      (store) => {
-        const pickedStore: PickedStore = {
-          state: store.state,
-          config: store.config,
-          dispatch: store.dispatch,
-          permissions: store.permissions,
-          history: store.history,
-          selectedItem: store.selectedItem,
-        };
-
-        return pickedStore;
-      },
+      (store) => convertToPickedStore(store),
       (pickedStore) => {
         usePuckStore.setState(generateUsePuck(pickedStore));
       }
@@ -116,7 +140,7 @@ export const useRegisterUsePuckStore = (
  * @returns a typed usePuck function
  */
 export function createUsePuck<UserConfig extends Config = Config>() {
-  return function usePuck<T = UsePuckData<UserConfig>>(
+  return function usePuck<T = PuckApi<UserConfig>>(
     selector: (state: UsePuckStore<UserConfig>) => T
   ): T {
     const usePuckApi = useContext(UsePuckStoreContext);
@@ -142,4 +166,19 @@ export function usePuck<UserConfig extends Config = Config>() {
   }, []);
 
   return createUsePuck<UserConfig>()((s) => s);
+}
+
+/**
+ * Get the latest state without relying on a render
+ *
+ * @returns PuckApi
+ */
+export function useGetPuck() {
+  const usePuckApi = useContext(UsePuckStoreContext);
+
+  if (!usePuckApi) {
+    throw new Error("usePuckLatest must be used inside <Puck>.");
+  }
+
+  return usePuckApi.getState;
 }

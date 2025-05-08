@@ -1,8 +1,21 @@
 import { useState } from "react";
-import { PointerSensor } from "./PointerSensor";
+import { ActivationConstraints, PointerSensor } from "./PointerSensor";
 import { isElement } from "@dnd-kit/dom/utilities";
 
-export const useSensors = () => {
+export const useSensors = (
+  {
+    other,
+    mouse,
+    touch,
+  }: {
+    mouse?: ActivationConstraints;
+    touch?: ActivationConstraints;
+    other?: ActivationConstraints;
+  } = {
+    touch: { delay: { value: 200, tolerance: 10 } },
+    other: { delay: { value: 200, tolerance: 10 }, distance: { value: 5 } },
+  }
+) => {
   const [sensors] = useState(() => [
     PointerSensor.configure({
       activationConstraints(event, source) {
@@ -13,19 +26,14 @@ export const useSensors = () => {
           isElement(target) &&
           (source.handle === target || source.handle?.contains(target))
         ) {
-          return undefined;
+          return mouse;
         }
-
-        const delay = { value: 200, tolerance: 10 };
 
         if (pointerType === "touch") {
-          return { delay };
+          return touch;
         }
 
-        return {
-          delay,
-          distance: { value: 5 },
-        };
+        return other;
       },
     }),
   ]);

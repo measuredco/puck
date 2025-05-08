@@ -227,7 +227,7 @@ describe("history slice", () => {
       expect(appStore.getState().history.index).toBe(0);
       expect(appStore.getState().dispatch).toHaveBeenCalledWith({
         type: "set",
-        state: { ...defaultAppState, data: "B" }, // The code sets with store.histories[store.index] before it changes index
+        state: { ...defaultAppState, data: "A" },
       });
     });
 

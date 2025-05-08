@@ -33,6 +33,7 @@ const config = {
 | [`defaultProps`](#defaultprops)                          | `defaultProps: { title: "Hello, world" }`       | Object   | -        |
 | [`inline`](#inline)                                      | `inline: true`                                  | Boolean  | -        |
 | [`label`](#label)                                        | `label: "Heading Block"`                        | String   | -        |
+| [`metadata`](#metadata)                                  | `metadata: {}`                                  | Object   | -        |
 | [`permissions()`](#permissions)                          | `permissions: { delete: false }`                | Object   | -        |
 | [`resolveData()`](#resolvedatadata-params)               | `resolveData: async ({ props }) => ({ props })` | Object   | -        |
 | [`resolveFields()`](#resolvefieldsdata-params)           | `resolveFields: async ({ props }) => ({})`      | Object   | -        |
@@ -92,7 +93,7 @@ A boolean describing whether or not this component is being rendered in the `<Pu
 
 ##### `puck.metadata`
 
-Global metadata that is be passed in via the Puck [`metadata` prop](/docs/api-reference/components/puck#metadata).
+A merged object containing the [global `metadata`](/docs/api-reference/components/puck#metadata) provided to the `<Puck>` component and any [`metadata`](#metadata) defined on this component config.
 
 ```tsx {5} /renderDropZone/1 copy
 const config = {
@@ -262,6 +263,25 @@ const config = {
   </Drawer>
 </PuckPreview>
 
+### `metadata`
+
+An object containing any additional values. Provided to their [`render`](#renderprops) and [`resolveData`](#resolvedatadata-params) functions.
+
+Will be merged within the [global `metadata` prop](/docs/api-reference/components/puck#metadata), overriding any keys with the same name.
+
+```tsx {4-7}
+const config = {
+  components: {
+    HeadingBlock: {
+      metadata: {
+        title: "Hello, world",
+      },
+      render: ({ puck }) => <h1>{puck.metadata.title}</h1>,
+    },
+  },
+};
+```
+
 ### `permissions`
 
 Set the [permissions](/docs/api-reference/permissions) for all instances of a component to toggle functionality. Inherits [global permissions](/docs/api-reference/components/puck/#permissions).
@@ -378,7 +398,7 @@ The data object from the previous run of this function.
 
 ##### `params.metadata`
 
-Global metadata provided to the `<Puck>` component. See the [`Metadata` docs](/docs/api-reference/metadata) for a full reference.
+A merged object containing the [global `metadata`](/docs/api-reference/components/puck#metadata) provided to the `<Puck>` component and any [`metadata`](#metadata) defined on this component config.
 
 ```tsx copy {2-4} /changed/1 filename="Example only updating 'resolvedTitle' when 'title' changes"
 const resolveData = async ({ props }, { metadata }) => {
@@ -388,7 +408,14 @@ const resolveData = async ({ props }, { metadata }) => {
 };
 ```
 
-Note that returning metadata in the resolveData API will overwrite the prop values. For non-destructive use of metadata, refer to the [`render(puck.metadata)` docs](#puckmetadata).
+##### `params.trigger`
+
+The event that triggered this resolveData call. One of:
+
+- `insert` - the component was inserted
+- `replace` - the component was replaced, such as when a field value is changed
+- `load` - the Puck editor was loaded
+- `force` - an execution was forced via the [`resolveAllData` function](/docs/api-reference/functions/resolve-all-data)
 
 #### Returns
 
@@ -519,7 +546,7 @@ The fields currently set to read-only for this component.
 
 ##### `params.appState`
 
-An object describing the [AppState](/docs/api-reference/app-state).
+An object describing the [AppState](/docs/api-reference/data-model/app-state).
 
 ##### `params.changed`
 
@@ -597,7 +624,7 @@ The fields currently set to read-only for this component.
 
 ##### `params.appState`
 
-An object describing the [AppState](/docs/api-reference/app-state).
+An object describing the [AppState](/docs/api-reference/data-model/app-state).
 
 ##### `params.changed`
 

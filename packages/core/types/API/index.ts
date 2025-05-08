@@ -1,6 +1,6 @@
 import { PuckAction } from "../../reducer";
 import { AppState } from "./../AppState";
-import { Data } from "./../Data";
+import { Content, Data } from "./../Data";
 import { Overrides } from "./Overrides";
 
 export type Permissions = {
@@ -46,6 +46,8 @@ type InitialHistoryNoAppend<AS = Partial<AppState>> = {
 export type InitialHistory<AS = Partial<AppState>> =
   | InitialHistoryAppend<AS>
   | InitialHistoryNoAppend<AS>;
+
+export type Slot = Content;
 
 export * from "./DropZone";
 export * from "./Viewports";

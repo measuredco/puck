@@ -1,44 +1,42 @@
-import { ComponentData, Config, MappedItem, Metadata } from "../types";
+import {
+  ComponentData,
+  Config,
+  Metadata,
+  ResolveDataTrigger,
+  RootDataWithProps,
+} from "../types";
+import { mapSlotsAsync } from "./data/map-slots";
 import { getChanged } from "./get-changed";
+import fdeq from "fast-deep-equal";
+import { createIsSlotConfig } from "./data/is-slot";
 
 export const cache: {
   lastChange: Record<string, any>;
 } = { lastChange: {} };
 
-export const resolveAllComponentData = async (
-  content: MappedItem[],
+export const resolveComponentData = async <
+  T extends ComponentData | RootDataWithProps
+>(
+  item: T,
   config: Config,
   metadata: Metadata = {},
-  onResolveStart?: (item: MappedItem) => void,
-  onResolveEnd?: (item: MappedItem) => void
+  onResolveStart?: (item: T) => void,
+  onResolveEnd?: (item: T) => void,
+  trigger: ResolveDataTrigger = "replace",
+  recursive: boolean = true
 ) => {
-  return await Promise.all(
-    content.map(async (item) => {
-      return await resolveComponentData(
-        item,
-        config,
-        metadata,
-        onResolveStart,
-        onResolveEnd
-      );
-    })
-  );
-};
+  const configForItem =
+    "type" in item && item.type !== "root"
+      ? config.components[item.type]
+      : config.root;
 
-export const resolveComponentData = async (
-  item: ComponentData,
-  config: Config,
-  metadata: Metadata = {},
-  onResolveStart?: (item: MappedItem) => void,
-  onResolveEnd?: (item: MappedItem) => void
-) => {
-  const configForItem = config.components[item.type];
-  if (configForItem.resolveData) {
-    const { item: oldItem = null, resolved = {} } =
-      cache.lastChange[item.props.id] || {};
+  if (configForItem?.resolveData && item.props) {
+    const id = "id" in item.props ? item.props.id : "root";
 
-    if (item && item === oldItem) {
-      return resolved;
+    const { item: oldItem = null, resolved = {} } = cache.lastChange[id] || {};
+
+    if (item && fdeq(item, oldItem)) {
+      return { node: resolved, didChange: false };
     }
 
     const changed = getChanged(item, oldItem);
@@ -51,10 +49,11 @@ export const resolveComponentData = async (
       await configForItem.resolveData(item, {
         changed,
         lastData: oldItem,
-        metadata,
+        metadata: { ...metadata, ...configForItem.metadata },
+        trigger,
       });
 
-    const resolvedItem = {
+    let resolvedItem = {
       ...item,
       props: {
         ...item.props,
@@ -62,11 +61,37 @@ export const resolveComponentData = async (
       },
     };
 
+    if (recursive) {
+      resolvedItem = (await mapSlotsAsync(
+        resolvedItem,
+        async (content) => {
+          return Promise.all(
+            content.map(
+              async (childItem) =>
+                (
+                  await resolveComponentData(
+                    childItem as T,
+                    config,
+                    metadata,
+                    onResolveStart,
+                    onResolveEnd,
+                    trigger,
+                    false
+                  )
+                ).node
+            )
+          );
+        },
+        false,
+        createIsSlotConfig(config)
+      )) as T;
+    }
+
     if (Object.keys(readOnly).length) {
       resolvedItem.readOnly = readOnly;
     }
 
-    cache.lastChange[item.props.id] = {
+    cache.lastChange[id] = {
       item,
       resolved: resolvedItem,
     };
@@ -75,8 +100,8 @@ export const resolveComponentData = async (
       onResolveEnd(resolvedItem);
     }
 
-    return resolvedItem;
+    return { node: resolvedItem, didChange: !fdeq(item, resolvedItem) };
   }
 
-  return item;
+  return { node: item, didChange: false };
 };

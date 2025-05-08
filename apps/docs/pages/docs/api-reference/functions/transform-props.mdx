@@ -4,9 +4,9 @@ title: transformProps
 
 # transformProps
 
-Transform component props stored in a [Data payload](/docs/api-reference/data). This convenience method can be used for [prop renames and other data migrations](/docs/integrating-puck/data-migration).
+Transform component props stored in a [Data payload](/docs/api-reference/data-model/data). This convenience method can be used for [prop renames and other data migrations](/docs/integrating-puck/data-migration).
 
-This method will modify all data in [`content`](/docs/api-reference/data#content) and [`zones`](/docs/api-reference/data#zones).
+This method will modify all data in [`content`](/docs/api-reference/data-model/data#content) and [`zones`](/docs/api-reference/data-model/data#zones).
 
 ```tsx copy showLineNumbers {7-10}
 import { transformProps } from "@measured/puck";
@@ -26,14 +26,14 @@ console.log(updatedData);
 
 ## Args
 
-| Param        | Example                                | Type                             |
-| ------------ | -------------------------------------- | -------------------------------- |
-| `data`       | `{}`                                   | [Data](/docs/api-reference/data) |
-| `transforms` | `{ HeadingBlock: (props) => (props) }` | Object                           |
+| Param                       | Example                                | Type                                        |
+| --------------------------- | -------------------------------------- | ------------------------------------------- |
+| [`data`](#data)             | `{}`                                   | [Data](/docs/api-reference/data-model/data) |
+| [`transforms`](#transforms) | `{ HeadingBlock: (props) => (props) }` | Object                                      |
 
 ### `data`
 
-The [Data payload](/docs/api-reference/data) to be transformed.
+The [Data payload](/docs/api-reference/data-model/data) to be transformed.
 
 ### `transforms`
 
@@ -43,7 +43,7 @@ An object describing the transform functions for each component defined in your 
 
 ## Returns
 
-The updated [Data](/docs/api-reference/data) object.
+The updated [Data](/docs/api-reference/data-model/data) object.
 
 ## Notes
 

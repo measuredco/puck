@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useAppStore, useAppStoreApi } from "../store";
-import { ItemSelector } from "./get-item";
+import { ItemSelector } from "./data/get-item";
 
 export type Breadcrumb = {
   label: string;
@@ -11,7 +11,7 @@ export type Breadcrumb = {
 export const useBreadcrumbs = (renderCount?: number) => {
   const selectedId = useAppStore((s) => s.selectedItem?.props.id);
   const config = useAppStore((s) => s.config);
-  const path = useAppStore((s) => s.nodes.nodes[selectedId]?.path);
+  const path = useAppStore((s) => s.state.indexes.nodes[selectedId]?.path);
   const appStore = useAppStoreApi();
 
   return useMemo<Breadcrumb[]>(() => {
@@ -26,7 +26,11 @@ export const useBreadcrumbs = (renderCount?: number) => {
           };
         }
 
-        const node = appStore.getState().nodes.nodes[componentId];
+        const node = appStore.getState().state.indexes.nodes[componentId];
+        const parentId = node.path[node.path.length - 1];
+        const contentIds =
+          appStore.getState().state.indexes.zones[parentId]?.contentIds || [];
+        const index = contentIds.indexOf(componentId);
 
         const label = node
           ? config.components[node.data.type]?.label ?? node.data.type
@@ -36,7 +40,7 @@ export const useBreadcrumbs = (renderCount?: number) => {
           label,
           selector: node
             ? {
-                index: node.index,
+                index,
                 zone: node.path[node.path.length - 1],
               }
             : null,

@@ -26,9 +26,10 @@ import { DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
-import { ZoneStoreContext } from "../DropZone/context";
+import { DropZoneContext, ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
+import { getItem } from "../../lib/data/get-item";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -104,9 +105,6 @@ export const DraggableComponent = ({
     s.selectedItem?.props.id === id ? s.zoomConfig.zoom : 1
   );
   const overrides = useAppStore((s) => s.overrides);
-  const selectedItem = useAppStore((s) =>
-    s.selectedItem?.props.id === id ? s.selectedItem : null
-  );
   const dispatch = useAppStore((s) => s.dispatch);
   const iframe = useAppStore((s) => s.iframe);
 
@@ -148,12 +146,13 @@ export const DraggableComponent = ({
   const containsActiveZone =
     Object.values(localZones).filter(Boolean).length > 0;
 
-  const path = useAppStore((s) => s.nodes.nodes[id]?.path);
-
-  const item = useAppStore((s) => s.nodes.nodes[id]?.data);
-
+  const path = useAppStore(useShallow((s) => s.state.indexes.nodes[id]?.path));
   const permissions = useAppStore(
-    useShallow((s) => s.permissions.getPermissions({ item }))
+    useShallow((s) => {
+      const item = getItem({ index, zone: zoneCompound }, s.state);
+
+      return s.permissions.getPermissions({ item });
+    })
   );
 
   const userIsDragging = useContextStore(
@@ -303,20 +302,27 @@ export const DraggableComponent = ({
   const appStore = useAppStoreApi();
 
   const onSelectParent = useCallback(() => {
-    const { nodes } = appStore.getState().nodes;
+    const { nodes, zones } = appStore.getState().state.indexes;
     const node = nodes[id];
+
     const parentNode = node?.parentId ? nodes[node?.parentId] : null;
 
-    if (!parentNode) {
+    if (!parentNode || !node.parentId) {
       return;
     }
+
+    const parentZoneCompound = `${parentNode.parentId}:${parentNode.zone}`;
+
+    const parentIndex = zones[parentZoneCompound].contentIds.indexOf(
+      node.parentId
+    );
 
     dispatch({
       type: "setUi",
       ui: {
         itemSelector: {
-          zone: `${parentNode.parentId}:${parentNode.zone}`,
-          index: parentNode.index,
+          zone: parentZoneCompound,
+          index: parentIndex,
         },
       },
     });
@@ -434,11 +440,20 @@ export const DraggableComponent = ({
 
           const diffLeft = rect.x;
           const exceedsBoundsLeft = diffLeft < 0;
+          const diffTop = rect.y;
+          const exceedsBoundsTop = diffTop < 0;
 
           // Modify position if it spills over frame
           if (exceedsBoundsLeft) {
             el.style.transformOrigin = "left top";
             el.style.left = "0px";
+          }
+
+          if (exceedsBoundsTop) {
+            el.style.top = "12px";
+            if (!exceedsBoundsLeft) {
+              el.style.transformOrigin = "right top";
+            }
           }
         }
       }
@@ -474,18 +489,29 @@ export const DraggableComponent = ({
     </ActionBar.Action>
   );
 
+  const nextContextValue = useMemo<DropZoneContext>(
+    () => ({
+      ...ctx!,
+      areaId: id,
+      zoneCompound,
+      index,
+      depth: depth + 1,
+      registerLocalZone,
+      unregisterLocalZone,
+    }),
+    [
+      ctx,
+      id,
+      zoneCompound,
+      index,
+      depth,
+      registerLocalZone,
+      unregisterLocalZone,
+    ]
+  );
+
   return (
-    <DropZoneProvider
-      value={{
-        ...ctx!,
-        areaId: id,
-        zoneCompound,
-        index,
-        depth: depth + 1,
-        registerLocalZone,
-        unregisterLocalZone,
-      }}
-    >
+    <DropZoneProvider value={nextContextValue}>
       {isVisible &&
         createPortal(
           <div

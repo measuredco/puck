@@ -2,6 +2,8 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import { useRegisterPermissionsSlice } from "../permissions";
 import { defaultAppState, createAppStore } from "../../";
 import { rootDroppableId } from "../../../lib/root-droppable-id";
+import { walkTree } from "../../../lib/data/walk-tree";
+import { makeStatePublic } from "../../../lib/data/make-state-public";
 
 const appStore = createAppStore();
 
@@ -95,9 +97,9 @@ describe("permissions slice", () => {
     appStore.setState({
       setComponentLoading: () => {
         loadingCalled = true;
-      },
-      unsetComponentLoading: () => {
-        unloadingCalled = true;
+        return () => {
+          unloadingCalled = true;
+        };
       },
     });
 
@@ -127,10 +129,11 @@ describe("permissions slice", () => {
       },
       setComponentLoading: () => {
         loadingCalled = true;
+        return () => {
+          unloadingCalled = true;
+        };
       },
-      unsetComponentLoading: () => {
-        unloadingCalled = true;
-      },
+
       state: {
         ...defaultAppState,
         data: {
@@ -251,7 +254,7 @@ describe("permissions slice", () => {
           type: "MyComponent",
         },
         {
-          appState: appStore.getState().state,
+          appState: makeStatePublic(appStore.getState().state),
           changed: { id: true },
           lastData: null,
           lastPermissions: null,
@@ -280,23 +283,28 @@ describe("permissions slice", () => {
         resolved: true,
       });
 
+      const config = {
+        components: {
+          MyComponent: {
+            render: () => <div />,
+            permissions: { base: true },
+            resolvePermissions,
+          },
+        },
+      };
+
       appStore.setState({
-        config: {
-          components: {
-            MyComponent: {
-              render: () => <div />,
-              permissions: { base: true },
-              resolvePermissions,
+        config,
+        state: walkTree(
+          {
+            ...defaultAppState,
+            data: {
+              ...defaultAppState.data,
+              content: [{ type: "MyComponent", props: { id: "comp-1" } }],
             },
           },
-        },
-        state: {
-          ...defaultAppState,
-          data: {
-            ...defaultAppState.data,
-            content: [{ type: "MyComponent", props: { id: "comp-1" } }],
-          },
-        },
+          config
+        ),
       });
 
       renderHook(() =>
@@ -327,7 +335,7 @@ describe("permissions slice", () => {
           type: "MyComponent",
         },
         {
-          appState: appStore.getState().state,
+          appState: makeStatePublic(appStore.getState().state),
           changed: { id: false, title: true },
           lastData: {
             props: { id: "comp-1" },

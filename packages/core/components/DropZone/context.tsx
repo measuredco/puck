@@ -20,7 +20,6 @@ export type DropZoneContext = {
   setHoveringComponent?: (id: string | null) => void;
   registerZone?: (zoneCompound: string) => void;
   unregisterZone?: (zoneCompound: string) => void;
-  activeZones?: Record<string, boolean>;
   mode?: "edit" | "render";
   depth: number;
   registerLocalZone?: (zone: string, active: boolean) => void; // A zone as it pertains to the current area
@@ -78,43 +77,26 @@ export const DropZoneProvider = ({
   // Hovering component may match area, but areas must always contain zones
   const [hoveringComponent, setHoveringComponent] = useState<string | null>();
 
-  const [activeZones, setActiveZones] = useState<Record<string, boolean>>({});
-
   const dispatch = useAppStore((s) => s.dispatch);
 
   const registerZone = useCallback(
     (zoneCompound: string) => {
-      if (!dispatch) {
-        return;
-      }
-
       dispatch({
         type: "registerZone",
         zone: zoneCompound,
       });
-
-      setActiveZones((latest) => ({ ...latest, [zoneCompound]: true }));
     },
-    [setActiveZones, dispatch]
+    [dispatch]
   );
 
   const unregisterZone = useCallback(
     (zoneCompound: string) => {
-      if (!dispatch) {
-        return;
-      }
-
       dispatch({
         type: "unregisterZone",
         zone: zoneCompound,
       });
-
-      setActiveZones((latest) => ({
-        ...latest,
-        [zoneCompound]: false,
-      }));
     },
-    [setActiveZones, dispatch]
+    [dispatch]
   );
 
   const memoValue = useMemo(
@@ -124,10 +106,9 @@ export const DropZoneProvider = ({
         setHoveringComponent,
         registerZone,
         unregisterZone,
-        activeZones,
         ...value,
       } as DropZoneContext),
-    [value, hoveringComponent, activeZones]
+    [value, hoveringComponent]
   );
 
   return (

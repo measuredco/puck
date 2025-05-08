@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import { flattenData } from "../../lib/flatten-data";
+import { flattenData } from "../../lib/data/flatten-data";
 import { ComponentData, Config, Permissions, UserGenerics } from "../../types";
 import { getChanged } from "../../lib/get-changed";
 import { AppStore, useAppStoreApi } from "../";
+import { makeStatePublic } from "../../lib/data/make-state-public";
 
 type PermissionsArgs<
   UserConfig extends Config = Config,
@@ -49,19 +50,14 @@ export const createPermissionsSlice = (
   get: () => AppStore
 ): PermissionsSlice => {
   const resolvePermissions: ResolvePermissions = async (params = {}, force) => {
-    const { state, permissions } = get();
+    const { state, permissions, config } = get();
     const { cache, globalPermissions } = permissions;
 
     const resolveDataForItem = async (
       item: ComponentData,
       force: boolean = false
     ) => {
-      const {
-        config,
-        state: appState,
-        setComponentLoading,
-        unsetComponentLoading,
-      } = get();
+      const { config, state: appState, setComponentLoading } = get();
       const componentConfig =
         item.type === "root" ? config.root : config.components[item.type];
 
@@ -78,7 +74,7 @@ export const createPermissionsSlice = (
         const changed = getChanged(item, cache[item.props.id]?.lastData);
 
         if (Object.values(changed).some((el) => el === true) || force) {
-          setComponentLoading(item.props.id);
+          const clearTimeout = setComponentLoading(item.props.id, true, 50);
 
           const resolvedPermissions = await componentConfig.resolvePermissions(
             item,
@@ -86,7 +82,7 @@ export const createPermissionsSlice = (
               changed,
               lastPermissions: cache[item.props.id]?.lastPermissions || null,
               permissions: initialPermissions,
-              appState,
+              appState: makeStatePublic(appState),
               lastData: cache[item.props.id]?.lastData || null,
             }
           );
@@ -110,7 +106,7 @@ export const createPermissionsSlice = (
             },
           });
 
-          unsetComponentLoading(item.props.id);
+          clearTimeout();
         }
       }
     };
@@ -122,7 +118,7 @@ export const createPermissionsSlice = (
         // Shim the root data in by conforming to component data shape
         {
           type: "root",
-          props: { ...appState.data.root.props, id: "puck-root" },
+          props: { ...appState.data.root.props, id: "root" },
         },
         force
       );
@@ -135,7 +131,7 @@ export const createPermissionsSlice = (
       await resolveDataForItem(item, force);
     } else if (type) {
       // Resolve specific type
-      flattenData(state.data)
+      flattenData(state, config)
         .filter((item) => item.type === type)
         .map(async (item) => {
           await resolveDataForItem(item, force);
@@ -143,10 +139,8 @@ export const createPermissionsSlice = (
     } else if (root) {
       resolveDataForRoot(force);
     } else {
-      resolveDataForRoot(force);
-
       // Resolve everything
-      flattenData(state.data).map(async (item) => {
+      flattenData(state, config).map(async (item) => {
         await resolveDataForItem(item, force);
       });
     }
@@ -199,7 +193,7 @@ export const createPermissionsSlice = (
           ...rootConfig?.permissions,
         } as Permissions;
 
-        const resolvedForItem = resolvedPermissions["puck-root"];
+        const resolvedForItem = resolvedPermissions["root"];
 
         return (
           resolvedForItem

@@ -7,6 +7,7 @@ import { Heading, HeadingProps } from "./blocks/Heading";
 import { Flex, FlexProps } from "./blocks/Flex";
 import { Logos, LogosProps } from "./blocks/Logos";
 import { Stats, StatsProps } from "./blocks/Stats";
+import { Template, TemplateProps } from "./blocks/Template";
 import { Text, TextProps } from "./blocks/Text";
 import { Space, SpaceProps } from "./blocks/Space";
 
@@ -23,6 +24,7 @@ export type Props = {
   Flex: FlexProps;
   Logos: LogosProps;
   Stats: StatsProps;
+  Template: TemplateProps;
   Text: TextProps;
   Space: SpaceProps;
 };
@@ -37,12 +39,7 @@ export type UserData = Data<Props, RootProps>;
 
 // We avoid the name config as next gets confused
 export const conf: UserConfig = {
-  root: {
-    defaultProps: {
-      title: "My Page",
-    },
-    render: Root,
-  },
+  root: Root,
   categories: {
     layout: {
       components: ["Grid", "Flex", "Space"],
@@ -56,7 +53,7 @@ export const conf: UserConfig = {
     },
     other: {
       title: "Other",
-      components: ["Card", "Hero", "Logos", "Stats"],
+      components: ["Card", "Hero", "Logos", "Stats", "Template"],
     },
   },
   components: {
@@ -68,6 +65,7 @@ export const conf: UserConfig = {
     Flex,
     Logos,
     Stats,
+    Template,
     Text,
     Space,
   },
@@ -151,6 +149,44 @@ export const initialData: Record<string, UserData> = {
           id: "Grid-c4cd99ae-8c5e-4cdb-87d2-35a639f5163e",
           gap: 24,
           numColumns: 3,
+          items: [
+            {
+              type: "Card",
+              props: {
+                title: "Built for content teams",
+                description:
+                  "Puck enables content teams to make changes to their content without a developer or breaking the UI.",
+                icon: "pen-tool",
+                mode: "flat",
+                layout: { grow: true, spanCol: 1, spanRow: 1, padding: "0px" },
+                id: "Card-66ab42c9-d1da-4c44-9dba-5d7d72f2178d",
+              },
+            },
+            {
+              type: "Card",
+              props: {
+                title: "Easy to integrate",
+                description:
+                  "Front-end developers can easily integrate their own components using a familiar React API.",
+                icon: "git-merge",
+                mode: "flat",
+                layout: { grow: true, spanCol: 1, spanRow: 1, padding: "0px" },
+                id: "Card-0012a293-8ef3-4e7c-9d7c-7da0a03d97ae",
+              },
+            },
+            {
+              type: "Card",
+              props: {
+                title: "No vendor lock-in",
+                description:
+                  "Completely open-source, Puck is designed to be integrated into your existing React application.",
+                icon: "github",
+                mode: "flat",
+                layout: { grow: true, spanCol: 1, spanRow: 1, padding: "0px" },
+                id: "Card-09efb3f3-f58d-4e07-a481-7238d7e57ad6",
+              },
+            },
+          ],
         },
       },
       {
@@ -273,6 +309,77 @@ export const initialData: Record<string, UserData> = {
           gap: 24,
           numColumns: 3,
           id: "Grid-2da28e88-7b7b-4152-9da0-9f93f41213b6",
+          items: [
+            {
+              type: "Card",
+              props: {
+                title: "plugin-heading-analyzer",
+                description:
+                  "Analyze the document structure and identify WCAG 2.1 issues with your heading hierarchy.",
+                icon: "align-left",
+                mode: "card",
+                layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
+                id: "Card-b0e8407d-9fbb-4e76-aa32-d32f655c11d3",
+              },
+            },
+            {
+              type: "Card",
+              props: {
+                title: "External data",
+                description:
+                  "Connect your components with an existing data source, like Strapi.js.",
+                icon: "feather",
+                mode: "card",
+                layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
+                id: "Card-f8ebd568-3a30-4099-a068-22cabae4691b",
+              },
+            },
+            {
+              type: "Card",
+              props: {
+                title: "Custom plugins",
+                description:
+                  "Create your own plugin to extend Puck for your use case using React.",
+                icon: "plug",
+                mode: "card",
+                layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
+                id: "Card-9c3b0acc-ee42-4a4a-8cc7-1b22d98493f1",
+              },
+            },
+            {
+              type: "Card",
+              props: {
+                title: "Title",
+                description: "Description",
+                icon: "Feather",
+                mode: "card",
+                layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
+                id: "Card-dbec4ae9-8208-49bf-8910-3347ff13d957",
+              },
+            },
+            {
+              type: "Card",
+              props: {
+                title: "Title",
+                description: "Description",
+                icon: "Feather",
+                mode: "card",
+                layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
+                id: "Card-e807464c-4974-4dbb-b1c9-989deabce58d",
+              },
+            },
+            {
+              type: "Card",
+              props: {
+                title: "Title",
+                description: "Description",
+                icon: "Feather",
+                mode: "card",
+                layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
+                id: "Card-3b4b7d53-2124-4d7a-a67e-36b24fd765b4",
+              },
+            },
+          ],
         },
       },
       {
@@ -330,6 +437,26 @@ export const initialData: Record<string, UserData> = {
           wrap: "wrap",
           layout: { spanCol: 1, spanRow: 1, padding: "0px" },
           id: "Flex-7d63d5ff-bd42-4354-b05d-681b16436fd6",
+          items: [
+            {
+              type: "Button",
+              props: {
+                label: "Visit GitHub",
+                href: "https://github.com/measuredco/puck",
+                variant: "primary",
+                id: "Button-bd41007c-6627-414d-839a-e261d470d8f9",
+              },
+            },
+            {
+              type: "Button",
+              props: {
+                label: "Edit this page",
+                href: "/edit",
+                variant: "secondary",
+                id: "Button-6a5fa26c-8a2d-4b08-a756-c46079877127",
+              },
+            },
+          ],
         },
       },
       {
@@ -342,137 +469,7 @@ export const initialData: Record<string, UserData> = {
       },
     ],
     root: { props: { title: "Puck Example" } },
-    zones: {
-      "Grid-c4cd99ae-8c5e-4cdb-87d2-35a639f5163e:grid": [
-        {
-          type: "Card",
-          props: {
-            title: "Built for content teams",
-            description:
-              "Puck enables content teams to make changes to their content without a developer or breaking the UI.",
-            icon: "pen-tool",
-            mode: "flat",
-            layout: { grow: true, spanCol: 1, spanRow: 1, padding: "0px" },
-            id: "Card-66ab42c9-d1da-4c44-9dba-5d7d72f2178d",
-          },
-        },
-        {
-          type: "Card",
-          props: {
-            title: "Easy to integrate",
-            description:
-              "Front-end developers can easily integrate their own components using a familiar React API.",
-            icon: "git-merge",
-            mode: "flat",
-            layout: { grow: true, spanCol: 1, spanRow: 1, padding: "0px" },
-            id: "Card-0012a293-8ef3-4e7c-9d7c-7da0a03d97ae",
-          },
-        },
-        {
-          type: "Card",
-          props: {
-            title: "No vendor lock-in",
-            description:
-              "Completely open-source, Puck is designed to be integrated into your existing React application.",
-            icon: "github",
-            mode: "flat",
-            layout: { grow: true, spanCol: 1, spanRow: 1, padding: "0px" },
-            id: "Card-09efb3f3-f58d-4e07-a481-7238d7e57ad6",
-          },
-        },
-      ],
-      "Grid-2da28e88-7b7b-4152-9da0-9f93f41213b6:grid": [
-        {
-          type: "Card",
-          props: {
-            title: "plugin-heading-analyzer",
-            description:
-              "Analyze the document structure and identify WCAG 2.1 issues with your heading hierarchy.",
-            icon: "align-left",
-            mode: "card",
-            layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
-            id: "Card-b0e8407d-9fbb-4e76-aa32-d32f655c11d3",
-          },
-        },
-        {
-          type: "Card",
-          props: {
-            title: "External data",
-            description:
-              "Connect your components with an existing data source, like Strapi.js.",
-            icon: "feather",
-            mode: "card",
-            layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
-            id: "Card-f8ebd568-3a30-4099-a068-22cabae4691b",
-          },
-        },
-        {
-          type: "Card",
-          props: {
-            title: "Custom plugins",
-            description:
-              "Create your own plugin to extend Puck for your use case using React.",
-            icon: "plug",
-            mode: "card",
-            layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
-            id: "Card-9c3b0acc-ee42-4a4a-8cc7-1b22d98493f1",
-          },
-        },
-        {
-          type: "Card",
-          props: {
-            title: "Title",
-            description: "Description",
-            icon: "Feather",
-            mode: "card",
-            layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
-            id: "Card-dbec4ae9-8208-49bf-8910-3347ff13d957",
-          },
-        },
-        {
-          type: "Card",
-          props: {
-            title: "Title",
-            description: "Description",
-            icon: "Feather",
-            mode: "card",
-            layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
-            id: "Card-e807464c-4974-4dbb-b1c9-989deabce58d",
-          },
-        },
-        {
-          type: "Card",
-          props: {
-            title: "Title",
-            description: "Description",
-            icon: "Feather",
-            mode: "card",
-            layout: { grow: false, spanCol: 1, spanRow: 1, padding: "0px" },
-            id: "Card-3b4b7d53-2124-4d7a-a67e-36b24fd765b4",
-          },
-        },
-      ],
-      "Flex-7d63d5ff-bd42-4354-b05d-681b16436fd6:flex": [
-        {
-          type: "Button",
-          props: {
-            label: "Visit GitHub",
-            href: "https://github.com/measuredco/puck",
-            variant: "primary",
-            id: "Button-bd41007c-6627-414d-839a-e261d470d8f9",
-          },
-        },
-        {
-          type: "Button",
-          props: {
-            label: "Edit this page",
-            href: "/edit",
-            variant: "secondary",
-            id: "Button-6a5fa26c-8a2d-4b08-a756-c46079877127",
-          },
-        },
-      ],
-    },
+    zones: {},
   },
   "/pricing": {
     content: [],
@@ -483,5 +480,9 @@ export const initialData: Record<string, UserData> = {
     root: { props: { title: "About Us" } },
   },
 };
+
+export const componentKey = Buffer.from(
+  `${Object.keys(conf.components).join("-")}-${JSON.stringify(initialData)}`
+).toString("base64");
 
 export default conf;

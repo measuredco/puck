@@ -2,8 +2,8 @@ import { renderHook, render } from "@testing-library/react";
 import { useBreadcrumbs } from "../use-breadcrumbs";
 import { createAppStore, appStoreContext } from "../../store";
 import { ComponentData, Config } from "../../types";
-import { useRegisterNodesSlice } from "../../store/slices/nodes";
 import { PropsWithChildren } from "react";
+import { walkTree } from "../data/walk-tree";
 
 const appStore = createAppStore();
 
@@ -56,20 +56,22 @@ describe("useBreadcrumbs", () => {
       props: { id: "item-2" },
     };
 
-    renderHook(() => useRegisterNodesSlice(appStore));
-
     appStore.setState({
       config,
-      state: {
-        ui: appStore.getState().state.ui,
-        data: {
-          content: [testItem],
-          root: {},
-          zones: {
-            "item-1:zone": [testItem2],
+      state: walkTree(
+        {
+          ui: appStore.getState().state.ui,
+          data: {
+            content: [testItem],
+            root: {},
+            zones: {
+              "item-1:zone": [testItem2],
+            },
           },
+          indexes: { nodes: {}, zones: {} },
         },
-      },
+        config
+      ),
       selectedItem: testItem2,
     });
 
@@ -116,20 +118,22 @@ describe("useBreadcrumbs", () => {
       props: { id: "item-2" },
     };
 
-    renderHook(() => useRegisterNodesSlice(appStore));
-
     appStore.setState({
       config,
-      state: {
-        ui: appStore.getState().state.ui,
-        data: {
-          content: [testItem],
-          root: {},
-          zones: {
-            "item-1:zone": [testItem2],
+      state: walkTree(
+        {
+          ui: appStore.getState().state.ui,
+          data: {
+            content: [testItem],
+            root: {},
+            zones: {
+              "item-1:zone": [testItem2],
+            },
           },
+          indexes: { nodes: {}, zones: {} },
         },
-      },
+        config
+      ),
       selectedItem: testItem2,
     });
 
@@ -174,20 +178,22 @@ describe("useBreadcrumbs", () => {
       props: { id: "item-2" },
     };
 
-    renderHook(() => useRegisterNodesSlice(appStore));
-
     appStore.setState({
       config,
-      state: {
-        ui: appStore.getState().state.ui,
-        data: {
-          content: [testItem],
-          root: {},
-          zones: {
-            "item-1:zone": [testItem2],
+      state: walkTree(
+        {
+          ui: appStore.getState().state.ui,
+          data: {
+            content: [testItem],
+            root: {},
+            zones: {
+              "item-1:zone": [testItem2],
+            },
           },
+          indexes: { nodes: {}, zones: {} },
         },
-      },
+        config
+      ),
       selectedItem: testItem2,
     });
 

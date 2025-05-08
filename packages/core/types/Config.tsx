@@ -1,22 +1,29 @@
-import type { JSX } from "react";
+import type { JSX, ReactNode } from "react";
 import { Fields } from "./Fields";
 import { ComponentData, Metadata, RootData } from "./Data";
 
 import { AsFieldProps, WithChildren, WithId, WithPuckProps } from "./Utils";
 import { AppState } from "./AppState";
 import { DefaultComponentProps } from "./Props";
-import { Permissions } from "./API";
+import { Permissions, Slot } from "./API";
+import { DropZoneProps } from "../components/DropZone/types";
 
 export type PuckComponent<Props> = (
   props: WithId<WithPuckProps<Props>>
 ) => JSX.Element;
+
+export type ResolveDataTrigger = "insert" | "replace" | "load" | "force";
 
 export type ComponentConfig<
   RenderProps extends DefaultComponentProps = DefaultComponentProps,
   FieldProps extends DefaultComponentProps = RenderProps,
   DataShape = Omit<ComponentData<FieldProps>, "type">
 > = {
-  render: PuckComponent<RenderProps>;
+  render: PuckComponent<{
+    [PropName in keyof RenderProps]: RenderProps[PropName] extends Slot
+      ? (props?: Omit<DropZoneProps, "zone">) => ReactNode
+      : RenderProps[PropName];
+  }>;
   label?: string;
   defaultProps?: FieldProps;
   fields?: Fields<FieldProps>;
@@ -25,7 +32,7 @@ export type ComponentConfig<
   resolveFields?: (
     data: DataShape,
     params: {
-      changed: Partial<Record<keyof FieldProps, boolean>>;
+      changed: Partial<Record<keyof FieldProps, boolean> & { id: string }>;
       fields: Fields<FieldProps>;
       lastFields: Fields<FieldProps>;
       lastData: DataShape | null;
@@ -36,9 +43,10 @@ export type ComponentConfig<
   resolveData?: (
     data: DataShape,
     params: {
-      changed: Partial<Record<keyof FieldProps, boolean>>;
+      changed: Partial<Record<keyof FieldProps, boolean> & { id: string }>;
       lastData: DataShape | null;
       metadata: Metadata;
+      trigger: ResolveDataTrigger;
     }
   ) =>
     | Promise<{
@@ -52,14 +60,23 @@ export type ComponentConfig<
   resolvePermissions?: (
     data: DataShape,
     params: {
-      changed: Partial<Record<keyof FieldProps, boolean>>;
+      changed: Partial<Record<keyof FieldProps, boolean> & { id: string }>;
       lastPermissions: Partial<Permissions>;
       permissions: Partial<Permissions>;
       appState: AppState;
       lastData: DataShape | null;
     }
   ) => Promise<Partial<Permissions>> | Partial<Permissions>;
+  metadata?: Metadata;
 };
+
+export type RootConfig<RootProps extends DefaultComponentProps = any> = Partial<
+  ComponentConfig<
+    WithChildren<RootProps>,
+    AsFieldProps<RootProps>,
+    RootData<AsFieldProps<RootProps>>
+  >
+>;
 
 type Category<ComponentName> = {
   components?: ComponentName[];
@@ -82,11 +99,5 @@ export type Config<
       "type"
     >;
   };
-  root?: Partial<
-    ComponentConfig<
-      WithChildren<RootProps>,
-      AsFieldProps<RootProps>,
-      RootData<AsFieldProps<RootProps>>
-    >
-  >;
+  root?: RootConfig<RootProps>;
 };

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   Context,
   createContext,
@@ -60,7 +61,6 @@ import { DefaultOverride } from "../DefaultOverride";
 import { useInjectGlobalCss } from "../../lib/use-inject-css";
 import { usePreviewModeHotkeys } from "../../lib/use-preview-mode-hotkeys";
 import { useRegisterHistorySlice } from "../../store/slices/history";
-import { useRegisterNodesSlice } from "../../store/slices/nodes";
 import { useRegisterPermissionsSlice } from "../../store/slices/permissions";
 import { monitorHotkeys, useMonitorHotkeys } from "../../lib/use-hotkey";
 import { getFrame } from "../../lib/get-frame";
@@ -68,6 +68,8 @@ import {
   UsePuckStoreContext,
   useRegisterUsePuckStore,
 } from "../../lib/use-puck";
+import { walkTree } from "../../lib/data/walk-tree";
+import { PrivateAppState } from "../../types/Internal";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -226,7 +228,7 @@ function PuckProvider<
       ...rootProps,
     };
 
-    return {
+    const newAppState = {
       ...defaultAppState,
       data: {
         ...initialData,
@@ -255,18 +257,32 @@ function PuckProvider<
           : {},
       },
     } as G["UserAppState"];
+
+    return walkTree(newAppState, config);
   });
 
   const { appendData = true } = _initialHistory || {};
 
-  const blendedHistories = [
-    ...(_initialHistory?.histories || []),
-    ...(appendData ? [{ state: generatedAppState }] : []),
-  ].map((history) => ({
-    ...history,
-    // Inject default data to enable partial history injections
-    state: { ...generatedAppState, ...history.state },
-  }));
+  const [blendedHistories] = useState(
+    [
+      ...(_initialHistory?.histories || []),
+      ...(appendData ? [{ state: generatedAppState }] : []),
+    ].map((history) => {
+      // Inject default data to enable partial history injections
+      let newState = { ...generatedAppState, ...history.state };
+
+      // The history generally doesn't include the indexes, so calculate them for each state item
+      if (!(history.state as PrivateAppState).indexes) {
+        newState = walkTree(newState, config);
+      }
+
+      return {
+        ...history,
+        state: newState,
+      };
+    })
+  );
+
   const initialHistoryIndex =
     _initialHistory?.index || blendedHistories.length - 1;
   const initialAppState = blendedHistories[initialHistoryIndex].state;
@@ -277,44 +293,42 @@ function PuckProvider<
     plugins: plugins,
   });
 
-  const generateAppStore = useCallback(() => {
-    return {
-      state: initialAppState,
+  const generateAppStore = useCallback(
+    (state?: PrivateAppState) => {
+      return {
+        state,
+        config,
+        plugins: plugins || [],
+        overrides: loadedOverrides,
+        viewports,
+        iframe,
+        onAction,
+        metadata,
+      };
+    },
+    [
+      initialAppState,
       config,
-      plugins: plugins || [],
-      overrides: loadedOverrides,
+      plugins,
+      loadedOverrides,
       viewports,
       iframe,
       onAction,
       metadata,
-    };
-  }, [
-    initialAppState,
-    config,
-    plugins,
-    loadedOverrides,
-    viewports,
-    iframe,
-    onAction,
-    metadata,
-  ]);
+    ]
+  );
 
-  const [appStore] = useState(() => createAppStore(generateAppStore()));
+  const [appStore] = useState(() =>
+    createAppStore(generateAppStore(initialAppState))
+  );
 
   useEffect(() => {
+    const state = appStore.getState().state;
+
     appStore.setState({
-      ...generateAppStore(),
+      ...generateAppStore(state),
     });
-  }, [
-    initialAppState,
-    config,
-    plugins,
-    loadedOverrides,
-    viewports,
-    iframe,
-    onAction,
-    metadata,
-  ]);
+  }, [config, plugins, loadedOverrides, viewports, iframe, onAction, metadata]);
 
   useRegisterHistorySlice(appStore, {
     histories: blendedHistories,
@@ -328,20 +342,21 @@ function PuckProvider<
     });
   }, []);
 
-  useRegisterNodesSlice(appStore);
   useRegisterPermissionsSlice(appStore, permissions);
 
   const uPuckStore = useRegisterUsePuckStore(appStore);
 
   useEffect(() => {
-    const { state, resolveData } = appStore.getState();
+    const { resolveAndCommitData } = appStore.getState();
 
-    resolveData(state);
+    resolveAndCommitData();
   }, []);
 
   return (
     <appStoreContext.Provider value={appStore}>
-      <UsePuckStoreContext value={uPuckStore}>{children}</UsePuckStoreContext>
+      <UsePuckStoreContext.Provider value={uPuckStore}>
+        {children}
+      </UsePuckStoreContext.Provider>
     </appStoreContext.Provider>
   );
 }

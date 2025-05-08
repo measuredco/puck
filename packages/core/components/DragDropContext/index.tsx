@@ -8,7 +8,7 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useId,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -16,8 +16,13 @@ import { AutoScroller, defaultPreset, DragDropManager } from "@dnd-kit/dom";
 import { DragDropEvents } from "@dnd-kit/abstract";
 import { DropZoneProvider } from "../DropZone";
 import type { Draggable, Droppable } from "@dnd-kit/dom";
-import { getItem } from "../../lib/get-item";
-import { Preview, ZoneStore, ZoneStoreProvider } from "../DropZone/context";
+import { getItem } from "../../lib/data/get-item";
+import {
+  DropZoneContext,
+  Preview,
+  ZoneStore,
+  ZoneStoreProvider,
+} from "../DropZone/context";
 import { createNestedDroppablePlugin } from "../../lib/dnd/NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
@@ -29,6 +34,7 @@ import { generateId } from "../../lib/generate-id";
 import { createStore } from "zustand";
 import { getDeepDir } from "../../lib/get-deep-dir";
 import { useSensors } from "../../lib/dnd/use-sensors";
+import { useSafeId } from "../../lib/use-safe-id";
 
 const DEBUG = false;
 
@@ -103,13 +109,10 @@ const DragDropContextClient = ({
   children,
   disableAutoScroll,
 }: DragDropContextProps) => {
-  const config = useAppStore((s) => s.config);
   const dispatch = useAppStore((s) => s.dispatch);
-  const resolveData = useAppStore((s) => s.resolveData);
-  const metadata = useAppStore((s) => s.metadata);
   const appStore = useAppStoreApi();
 
-  const id = useId();
+  const id = useSafeId();
 
   const debouncedParamsRef = useRef<DeepestParams | null>(null);
 
@@ -275,6 +278,15 @@ const DragDropContextClient = ({
 
   const initialSelector = useRef<{ zone: string; index: number }>(undefined);
 
+  const nextContextValue = useMemo<DropZoneContext>(
+    () => ({
+      mode: "edit",
+      areaId: "root",
+      depth: 0,
+    }),
+    []
+  );
+
   return (
     <div id={id}>
       <dragListenerContext.Provider
@@ -331,14 +343,12 @@ const DragDropContextClient = ({
               if (thisPreview) {
                 zoneStore.setState({ previewIndex: {} });
 
-                const state = appStore.getState().state;
-
                 if (thisPreview.type === "insert") {
                   insertComponent(
                     thisPreview.componentType,
                     thisPreview.zone,
                     thisPreview.index,
-                    { config, dispatch, resolveData, state }
+                    appStore.getState()
                   );
                 } else if (initialSelector.current) {
                   dispatch({
@@ -427,7 +437,8 @@ const DragDropContextClient = ({
               targetIndex = 0;
             }
 
-            const path = appStore.getState().nodes.nodes[target.id]?.path || [];
+            const path =
+              appStore.getState().state.indexes.nodes[target.id]?.path || [];
 
             // Abort if dragging over self or descendant
             if (
@@ -464,8 +475,7 @@ const DragDropContextClient = ({
 
               const item = getItem(
                 initialSelector.current,
-                appStore.getState().state.data,
-                {}
+                appStore.getState().state
               );
 
               if (item) {
@@ -497,14 +507,13 @@ const DragDropContextClient = ({
 
             if (source && source.type !== "void") {
               const sourceData = source.data as ComponentDndData;
-              const { data } = appStore.getState().state;
 
               const item = getItem(
                 {
                   zone: sourceData.zone,
                   index: sourceData.index,
                 },
-                data
+                appStore.getState().state
               );
 
               if (item) {
@@ -537,13 +546,7 @@ const DragDropContextClient = ({
           }}
         >
           <ZoneStoreProvider store={zoneStore}>
-            <DropZoneProvider
-              value={{
-                mode: "edit",
-                areaId: "root",
-                depth: 0,
-              }}
-            >
+            <DropZoneProvider value={nextContextValue}>
               {children}
             </DropZoneProvider>
           </ZoneStoreProvider>

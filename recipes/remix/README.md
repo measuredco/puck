@@ -43,4 +43,4 @@ This recipe can be adapted to disable JavaScript. See the [Remix docs](https://r
 
 ## License
 
-MIT © [Measured Co.](https://github.com/measuredco)
+MIT © [The Puck Contributors](https://github.com/measuredco/puck/graphs/contributors)

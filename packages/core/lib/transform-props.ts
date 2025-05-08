@@ -1,5 +1,5 @@
 import { Data, DefaultComponentProps, DefaultRootFieldProps } from "../types";
-import { defaultData } from "./default-data";
+import { defaultData } from "./data/default-data";
 
 type PropTransform<
   Props extends DefaultComponentProps = DefaultComponentProps,

@@ -57,6 +57,8 @@ export class PointerSensor extends Sensor<
 
   protected source: Draggable | undefined = undefined;
 
+  protected started: boolean = false;
+
   #clearTimeout: CleanupFunction | undefined;
 
   constructor(
@@ -286,6 +288,12 @@ export class PointerSensor extends Sensor<
     if (!status.idle) {
       const canceled = !status.initialized;
       this.manager.actions.stop({ canceled });
+    } else if (this.started) {
+      setTimeout(() => {
+        if (!this.manager.dragOperation.status.idle) {
+          this.manager.actions.stop({ canceled: false });
+        }
+      }, 10);
     }
 
     // Remove the pointer move and up event listeners
@@ -305,13 +313,19 @@ export class PointerSensor extends Sensor<
 
     this.#clearTimeout?.();
 
-    if (!initialCoordinates || manager.dragOperation.status.initialized) {
+    if (
+      !initialCoordinates ||
+      manager.dragOperation.status.initialized ||
+      this.started
+    ) {
       return;
     }
 
     if (event.defaultPrevented) {
       return;
     }
+
+    this.started = true;
 
     event.preventDefault();
 
@@ -344,6 +358,9 @@ export class PointerSensor extends Sensor<
     ownerDocument.body.setPointerCapture(event.pointerId);
 
     this.cleanup.add(unbind);
+    this.cleanup.add(() => {
+      this.started = false;
+    });
   }
 
   protected handleDragStart(event: DragEvent) {
