@@ -9,7 +9,13 @@ import { Permissions, Slot } from "./API";
 import { DropZoneProps } from "../components/DropZone/types";
 
 export type PuckComponent<Props> = (
-  props: WithId<WithPuckProps<Props>>
+  props: WithId<
+    WithPuckProps<{
+      [PropName in keyof Props]: Props[PropName] extends Slot
+        ? (props?: Omit<DropZoneProps, "zone">) => ReactNode
+        : Props[PropName];
+    }>
+  >
 ) => JSX.Element;
 
 export type ResolveDataTrigger = "insert" | "replace" | "load" | "force";
@@ -19,11 +25,7 @@ export type ComponentConfig<
   FieldProps extends DefaultComponentProps = RenderProps,
   DataShape = Omit<ComponentData<FieldProps>, "type">
 > = {
-  render: PuckComponent<{
-    [PropName in keyof RenderProps]: RenderProps[PropName] extends Slot
-      ? (props?: Omit<DropZoneProps, "zone">) => ReactNode
-      : RenderProps[PropName];
-  }>;
+  render: PuckComponent<RenderProps>;
   label?: string;
   defaultProps?: FieldProps;
   fields?: Fields<FieldProps>;
