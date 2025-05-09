@@ -5,7 +5,8 @@
 
 import { ActionBar, Button, Data, Puck, Render } from "@/core";
 import { HeadingAnalyzer } from "@/plugin-heading-analyzer/src/HeadingAnalyzer";
-import config, { UserConfig } from "../../../config";
+import config from "../../../config";
+import { UserConfig } from "../../../config/types";
 import { useDemoData } from "../../../lib/use-demo-data";
 import { IconButton, createUsePuck } from "@/core";
 import { ReactNode, useEffect, useRef, useState } from "react";
