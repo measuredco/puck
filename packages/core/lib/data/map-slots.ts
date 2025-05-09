@@ -36,7 +36,11 @@ export async function mapSlotsAsync<T extends ComponentData | RootData>(
 
 export function mapSlotsSync<T extends ComponentData | RootData>(
   item: T,
-  map: (data: Content, parentId: string, propName: string) => Content,
+  map: (
+    data: Content,
+    parentId: string,
+    propName: string
+  ) => Content | null | void,
   isSlot: (type: string, propName: string, propValue: any) => boolean = _isSlot
 ): T {
   const props: Record<string, any> = { ...item.props };
@@ -55,28 +59,10 @@ export function mapSlotsSync<T extends ComponentData | RootData>(
         return mapSlotsSync(item, map, isSlot);
       });
 
-      props[propKey] = map(mappedContent, props.id, propKey);
+      props[propKey] =
+        map(mappedContent, props.id ?? "root", propKey) ?? mappedContent;
     }
   }
 
   return { ...item, props };
-}
-
-type MapSlotOptions = {
-  parentId: string;
-  propName: string;
-};
-
-export function mapSlotsPublic<T extends ComponentData | RootData>(
-  item: T,
-  config: Config,
-  map: (data: Content, options: MapSlotOptions) => Content
-): T {
-  const isSlot = createIsSlotConfig(config);
-
-  return mapSlotsSync(
-    item,
-    (content, parentId, propName) => map(content, { parentId, propName }),
-    isSlot
-  );
 }
