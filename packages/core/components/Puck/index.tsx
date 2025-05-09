@@ -68,7 +68,7 @@ import {
   UsePuckStoreContext,
   useRegisterUsePuckStore,
 } from "../../lib/use-puck";
-import { walkTree } from "../../lib/data/walk-tree";
+import { walkAppState } from "../../lib/data/walk-app-state";
 import { PrivateAppState } from "../../types/Internal";
 
 const getClassName = getClassNameFactory("Puck", styles);
@@ -258,7 +258,7 @@ function PuckProvider<
       },
     } as G["UserAppState"];
 
-    return walkTree(newAppState, config);
+    return walkAppState(newAppState, config);
   });
 
   const { appendData = true } = _initialHistory || {};
@@ -273,7 +273,7 @@ function PuckProvider<
 
       // The history generally doesn't include the indexes, so calculate them for each state item
       if (!(history.state as PrivateAppState).indexes) {
-        newState = walkTree(newState, config);
+        newState = walkAppState(newState, config);
       }
 
       return {

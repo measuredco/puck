@@ -29,7 +29,7 @@ import {
 import { createFieldsSlice, type FieldsSlice } from "./slices/fields";
 import { PrivateAppState } from "../types/Internal";
 import { resolveComponentData } from "../lib/resolve-component-data";
-import { walkTree } from "../lib/data/walk-tree";
+import { walkAppState } from "../lib/data/walk-app-state";
 import { toRoot } from "../lib/data/to-root";
 import { generateId } from "../lib/generate-id";
 
@@ -294,7 +294,7 @@ export const createAppStore = (initialAppStore?: Partial<AppStore>) =>
       resolveAndCommitData: async () => {
         const { config, state, dispatch, resolveComponentData } = get();
 
-        walkTree(
+        walkAppState(
           state,
           config,
           (content) => content,

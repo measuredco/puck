@@ -3,7 +3,7 @@ import { insert } from "../../lib/data/insert";
 import { generateId } from "../../lib/generate-id";
 import { InsertAction } from "../actions";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "../../lib/data/walk-tree";
+import { walkAppState } from "../../lib/data/walk-app-state";
 import { getIdsForParent } from "../../lib/data/get-ids-for-parent";
 import { AppStore } from "../../store";
 
@@ -24,7 +24,7 @@ export function insertAction<UserData extends Data>(
   const [parentId] = action.destinationZone.split(":");
   const idsInPath = getIdsForParent(action.destinationZone, state);
 
-  return walkTree<UserData>(
+  return walkAppState<UserData>(
     state,
     appStore.config,
     (content, zoneCompound) => {

@@ -5,7 +5,7 @@ import {
   defaultAppState as _defaultAppState,
 } from "../../../store";
 import { PrivateAppState } from "../../../types/Internal";
-import { walkTree } from "../walk-tree";
+import { walkAppState } from "../walk-app-state";
 import { stripSlots } from "../strip-slots";
 import { rootDroppableId } from "../../root-droppable-id";
 
@@ -69,7 +69,7 @@ const expectIndexed = (
   expect(state.indexes.nodes[item.props.id].path).toEqual(path);
 };
 
-describe("walk-tree", () => {
+describe("walk-app-state", () => {
   const config: UserConfig = {
     root: {
       fields: { title: { type: "text" }, slot: { type: "slot" } },
@@ -98,7 +98,7 @@ describe("walk-tree", () => {
   });
 
   it("should generate the correct index for a given payload", () => {
-    const state: PrivateAppState = walkTree(
+    const state: PrivateAppState = walkAppState(
       {
         ...defaultState,
         data: {

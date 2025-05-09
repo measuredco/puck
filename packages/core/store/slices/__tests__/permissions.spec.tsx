@@ -2,7 +2,7 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import { useRegisterPermissionsSlice } from "../permissions";
 import { defaultAppState, createAppStore } from "../../";
 import { rootDroppableId } from "../../../lib/root-droppable-id";
-import { walkTree } from "../../../lib/data/walk-tree";
+import { walkAppState } from "../../../lib/data/walk-app-state";
 import { makeStatePublic } from "../../../lib/data/make-state-public";
 
 const appStore = createAppStore();
@@ -295,7 +295,7 @@ describe("permissions slice", () => {
 
       appStore.setState({
         config,
-        state: walkTree(
+        state: walkAppState(
           {
             ...defaultAppState,
             data: {

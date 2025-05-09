@@ -3,7 +3,7 @@ import { useRegisterFieldsSlice } from "../fields";
 import { createAppStore, defaultAppState } from "../..";
 import { Config, ComponentData } from "../../../types";
 import { PrivateAppState } from "../../../types/Internal";
-import { walkTree } from "../../../lib/data/walk-tree";
+import { walkAppState } from "../../../lib/data/walk-app-state";
 import { makeStatePublic } from "../../../lib/data/make-state-public";
 
 const baseState: PrivateAppState = {
@@ -27,7 +27,7 @@ function resetStores() {
   appStore.setState(
     {
       ...appStore.getInitialState(),
-      state: walkTree(baseState, appStore.getInitialState().config),
+      state: walkAppState(baseState, appStore.getInitialState().config),
     },
     true
   );
@@ -38,7 +38,7 @@ const selectFirst = (config: Config) => {
     ...appStore.getState(),
     config,
     selectedItem: appStore.getState().state.data.content[0],
-    state: walkTree(
+    state: walkAppState(
       {
         ...appStore.getState().state,
         ui: {
@@ -283,7 +283,7 @@ describe("fields slice", () => {
       };
 
       appStore.setState({
-        state: walkTree(
+        state: walkAppState(
           {
             ...appStore.getState().state,
             data: {

@@ -5,7 +5,7 @@ import { getItem } from "../../lib/data/get-item";
 import { MoveAction } from "../actions";
 import { AppStore } from "../../store";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "../../lib/data/walk-tree";
+import { walkAppState } from "../../lib/data/walk-app-state";
 import { getIdsForParent } from "../../lib/data/get-ids-for-parent";
 
 // Restore unregistered zones when re-registering in same session
@@ -37,7 +37,7 @@ export const moveAction = <UserData extends Data>(
   const idsInSourcePath = getIdsForParent(action.sourceZone, state);
   const idsInDestinationPath = getIdsForParent(action.destinationZone, state);
 
-  return walkTree<UserData>(
+  return walkAppState<UserData>(
     state,
     appStore.config,
     (content, zoneCompound) => {

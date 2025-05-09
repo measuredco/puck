@@ -3,7 +3,7 @@ import { useBreadcrumbs } from "../use-breadcrumbs";
 import { createAppStore, appStoreContext } from "../../store";
 import { ComponentData, Config } from "../../types";
 import { PropsWithChildren } from "react";
-import { walkTree } from "../data/walk-tree";
+import { walkAppState } from "../data/walk-app-state";
 
 const appStore = createAppStore();
 
@@ -58,7 +58,7 @@ describe("useBreadcrumbs", () => {
 
     appStore.setState({
       config,
-      state: walkTree(
+      state: walkAppState(
         {
           ui: appStore.getState().state.ui,
           data: {
@@ -120,7 +120,7 @@ describe("useBreadcrumbs", () => {
 
     appStore.setState({
       config,
-      state: walkTree(
+      state: walkAppState(
         {
           ui: appStore.getState().state.ui,
           data: {
@@ -180,7 +180,7 @@ describe("useBreadcrumbs", () => {
 
     appStore.setState({
       config,
-      state: walkTree(
+      state: walkAppState(
         {
           ui: appStore.getState().state.ui,
           data: {
