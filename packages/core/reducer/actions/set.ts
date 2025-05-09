@@ -2,7 +2,7 @@ import { Data } from "../../types";
 import { SetAction } from "../actions";
 import { AppStore } from "../../store";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "../../lib/data/walk-tree";
+import { walkAppState } from "../../lib/data/walk-app-state";
 
 export const setAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,
@@ -23,7 +23,7 @@ export const setAction = <UserData extends Data>(
       "`set` is expensive and may cause unnecessary re-renders. Consider using a more atomic action instead."
     );
 
-    return walkTree(newState, appStore.config);
+    return walkAppState(newState, appStore.config);
   }
 
   return { ...state, ...action.state(state) };

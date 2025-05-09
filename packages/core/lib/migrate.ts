@@ -1,6 +1,6 @@
 import { defaultAppState } from "../store";
 import { ComponentData, Config, Data } from "../types";
-import { walkTree } from "./data/walk-tree";
+import { walkAppState } from "./data/walk-app-state";
 
 type Migration = (
   props: Data & { [key: string]: any },
@@ -38,11 +38,11 @@ const migrations: Migration[] = [
 
     const updatedItems: Record<string, ComponentData> = {};
     const appState = { ...defaultAppState, data };
-    const { indexes } = walkTree(appState, config);
+    const { indexes } = walkAppState(appState, config);
 
     const deletedCompounds: string[] = [];
 
-    walkTree(appState, config, (content, zoneCompound, zoneType) => {
+    walkAppState(appState, config, (content, zoneCompound, zoneType) => {
       if (zoneType === "dropzone") {
         const [id, slotName] = zoneCompound.split(":");
 
@@ -70,7 +70,7 @@ const migrations: Migration[] = [
       return content;
     });
 
-    const updated = walkTree(
+    const updated = walkAppState(
       appState,
       config,
       (content) => content,

@@ -26,7 +26,7 @@ import { stripSlots } from "./strip-slots";
  *
  * @returns The updated state
  */
-export function walkTree<UserData extends Data = Data>(
+export function walkAppState<UserData extends Data = Data>(
   state: PrivateAppState<UserData>,
   config: Config,
   mapContent: (

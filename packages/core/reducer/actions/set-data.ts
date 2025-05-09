@@ -2,7 +2,7 @@ import { Data } from "../../types";
 import { SetDataAction } from "../actions";
 import { AppStore } from "../../store";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "../../lib/data/walk-tree";
+import { walkAppState } from "../../lib/data/walk-app-state";
 
 export const setDataAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,
@@ -14,7 +14,7 @@ export const setDataAction = <UserData extends Data>(
       "`setData` is expensive and may cause unnecessary re-renders. Consider using a more atomic action instead."
     );
 
-    return walkTree(
+    return walkAppState(
       {
         ...state,
         data: {
@@ -26,7 +26,7 @@ export const setDataAction = <UserData extends Data>(
     );
   }
 
-  return walkTree(
+  return walkAppState(
     {
       ...state,
       data: {

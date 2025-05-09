@@ -1,6 +1,6 @@
 import { ComponentData, Config, UserGenerics } from "../../types";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "./walk-tree";
+import { walkAppState } from "./walk-app-state";
 
 export const flattenData = <
   UserConfig extends Config = Config,
@@ -11,7 +11,7 @@ export const flattenData = <
 ) => {
   const data: ComponentData[] = [];
 
-  walkTree(
+  walkAppState(
     state,
     config,
     (content) => content,

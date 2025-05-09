@@ -2,7 +2,7 @@ import { Data } from "../../types";
 import { ReplaceAction } from "../actions";
 import { AppStore } from "../../store";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "../../lib/data/walk-tree";
+import { walkAppState } from "../../lib/data/walk-app-state";
 import { getIdsForParent } from "../../lib/data/get-ids-for-parent";
 
 export const replaceAction = <UserData extends Data>(
@@ -26,7 +26,7 @@ export const replaceAction = <UserData extends Data>(
     );
   }
 
-  return walkTree<UserData>(
+  return walkAppState<UserData>(
     state,
     appStore.config,
     (content, zoneCompound) => {

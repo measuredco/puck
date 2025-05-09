@@ -8,7 +8,7 @@ import {
   testSetup,
 } from "../__helpers__";
 import { PrivateAppState } from "../../../types/Internal";
-import { walkTree } from "../../../lib/data/walk-tree";
+import { walkAppState } from "../../../lib/data/walk-app-state";
 
 describe("Reducer", () => {
   const { executeSequence, config, reducer } = testSetup();
@@ -86,7 +86,7 @@ describe("Reducer", () => {
       });
 
       it("should recursively duplicate related items and zones", () => {
-        const state: PrivateAppState = walkTree(
+        const state: PrivateAppState = walkAppState(
           {
             ...defaultState,
             data: {

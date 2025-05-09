@@ -2,7 +2,7 @@ import { Data } from "../../types";
 import { generateId } from "../../lib/generate-id";
 import { DuplicateAction } from "../actions";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "../../lib/data/walk-tree";
+import { walkAppState } from "../../lib/data/walk-app-state";
 import { getIdsForParent } from "../../lib/data/get-ids-for-parent";
 import { getItem } from "../../lib/data/get-item";
 import { AppStore } from "../../store";
@@ -28,7 +28,7 @@ export function duplicateAction<UserData extends Data>(
     },
   };
 
-  const modified = walkTree<UserData>(
+  const modified = walkAppState<UserData>(
     state,
     appStore.config,
     (content, zoneCompound) => {

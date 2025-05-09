@@ -4,7 +4,7 @@ import { getItem } from "../../lib/data/get-item";
 import { RemoveAction } from "../actions";
 import { AppStore } from "../../store";
 import { PrivateAppState } from "../../types/Internal";
-import { walkTree } from "../../lib/data/walk-tree";
+import { walkAppState } from "../../lib/data/walk-app-state";
 
 export const removeAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,
@@ -26,7 +26,7 @@ export const removeAction = <UserData extends Data>(
     [item.props.id]
   );
 
-  const newState = walkTree<UserData>(
+  const newState = walkAppState<UserData>(
     state,
     appStore.config,
     (content, zoneCompound) => {

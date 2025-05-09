@@ -1,6 +1,6 @@
 import { RemoveAction } from "../..";
 import { rootDroppableId } from "../../../lib/root-droppable-id";
-import { walkTree } from "../../../lib/data/walk-tree";
+import { walkAppState } from "../../../lib/data/walk-app-state";
 import { PrivateAppState } from "../../../types/Internal";
 import {
   defaultData,
@@ -57,7 +57,7 @@ describe("Reducer", () => {
       });
 
       it("should recursively remove items", () => {
-        const state: PrivateAppState = walkTree(
+        const state: PrivateAppState = walkAppState(
           {
             ...defaultState,
             data: {
@@ -171,7 +171,7 @@ describe("Reducer", () => {
       });
 
       it("should recursively remove items in a slot", () => {
-        const state: PrivateAppState = walkTree(
+        const state: PrivateAppState = walkAppState(
           {
             ...defaultState,
             data: {
@@ -261,7 +261,7 @@ describe("Reducer", () => {
       });
 
       it("should remove items deep within a slot", () => {
-        const state: PrivateAppState = walkTree(
+        const state: PrivateAppState = walkAppState(
           {
             ...defaultState,
             data: {
@@ -403,7 +403,7 @@ describe("Reducer", () => {
       });
 
       it("should recursively remove items in a slot within a DropZone", () => {
-        const state: PrivateAppState = walkTree(
+        const state: PrivateAppState = walkAppState(
           {
             ...defaultState,
             data: {
