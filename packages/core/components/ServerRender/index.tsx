@@ -7,7 +7,7 @@ import {
 import { setupZone } from "../../lib/data/setup-zone";
 import { Config, Data, Metadata, UserGenerics } from "../../types";
 import { useSlots } from "../../lib/use-slots";
-import { SlotRenderPure } from "../SlotRender";
+import { SlotRenderPure } from "../SlotRender/server";
 
 type DropZoneRenderProps = {
   zone: string;
@@ -18,7 +18,7 @@ type DropZoneRenderProps = {
   metadata?: Metadata;
 };
 
-function DropZoneRender({
+export function DropZoneRender({
   zone,
   data,
   areaId = "root",
@@ -59,7 +59,7 @@ function DropZoneRender({
         };
 
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        const propsWithSlots = useSlots(config.root, props, (props) => (
+        const propsWithSlots = useSlots(Component, props, (props) => (
           <SlotRenderPure {...props} config={config} metadata={metadata} />
         ));
 
