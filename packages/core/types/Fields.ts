@@ -106,16 +106,18 @@ export type ExternalField<
   initialFilters?: Record<string, any>;
 };
 
-export type CustomField<Props extends any = {}> = BaseField & {
+export type CustomFieldRender<Value extends any> = (props: {
+  field: CustomField<Value>;
+  name: string;
+  id: string;
+  value: Value;
+  onChange: (value: Value) => void;
+  readOnly?: boolean;
+}) => ReactElement;
+
+export type CustomField<Value extends any> = BaseField & {
   type: "custom";
-  render: (props: {
-    field: CustomField<Props>;
-    name: string;
-    id: string;
-    value: Props;
-    onChange: (value: Props) => void;
-    readOnly?: boolean;
-  }) => ReactElement;
+  render: CustomFieldRender<Value>;
 };
 
 export type SlotField = BaseField & {

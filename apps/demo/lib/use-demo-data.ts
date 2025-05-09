@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import config, {
-  componentKey,
-  initialData,
-  Props,
-  RootProps,
-  UserData,
-} from "../config";
+import config, { componentKey } from "../config";
+import { initialData } from "../config/initial-data";
 import { Metadata, resolveAllData } from "@/core";
+import { Props, UserData } from "../config/types";
+import { RootProps } from "../config/root";
 
 const isBrowser = typeof window !== "undefined";
 

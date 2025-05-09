@@ -1,5 +1,9 @@
 import { CSSProperties, forwardRef, ReactNode } from "react";
-import { ComponentConfig, DefaultComponentProps, ObjectField } from "@/core";
+import {
+  ComponentConfig,
+  DefaultComponentProps,
+  ObjectField,
+} from "@/core/types";
 import { spacingOptions } from "../../options";
 import { getClassNameFactory } from "@/core/lib";
 import styles from "./styles.module.css";
