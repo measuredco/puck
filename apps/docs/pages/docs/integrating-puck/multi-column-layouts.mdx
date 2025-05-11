@@ -464,9 +464,9 @@ Alternatively, you can provide `allow` and `disallow` [to your render function](
 
 ## Setting default props
 
-Use slots with [`defaultProps`](/docs/api-reference/configuration/component-config#defaultprops) to pre-populate it when the component is inserted.
+Use slots with [`defaultProps`](/docs/api-reference/configuration/component-config#defaultprops) to pre-populate it when the component is inserted with an array of [`ComponentData`](/docs/api-reference/data-model/component-data).
 
-```tsx {9-19} showLineNumbers copy
+```tsx {9-18} showLineNumbers copy
 const config = {
   components: {
     Example: {
@@ -480,7 +480,6 @@ const config = {
           {
             type: "Card",
             props: {
-              id: "12345",
               text: "Pre-populated",
             },
           },
@@ -509,7 +508,6 @@ const config = {
           {
             type: "Card",
             props: {
-              id: "12345",
               text: "Pre-populated",
             },
           },

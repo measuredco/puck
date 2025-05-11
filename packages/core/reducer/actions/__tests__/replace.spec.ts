@@ -86,7 +86,7 @@ describe("Reducer", () => {
             destinationIndex: 0,
             data: {
               type: "CompWithDefaults",
-              props: { id: "1", slot: [{ type: "Comp", props: { id: "3" } }] },
+              props: { id: "1", slot: [{ type: "Comp", props: {} }] },
             },
           }),
         ]);
@@ -95,7 +95,7 @@ describe("Reducer", () => {
 
         expect(newState.data.root.props?.slot.length).toBe(1);
         expect(item?.props.id).toBe("1");
-        expect(item?.props.slot[0].props.id).toBe("3");
+        expect(item?.props.slot[0].props.id).toBe("mockId-2");
         expectIndexed(newState, item, ["root:slot"], 0);
       });
     });

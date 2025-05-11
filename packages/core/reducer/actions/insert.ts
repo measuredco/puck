@@ -6,6 +6,7 @@ import { PrivateAppState } from "../../types/Internal";
 import { walkAppState } from "../../lib/data/walk-app-state";
 import { getIdsForParent } from "../../lib/data/get-ids-for-parent";
 import { AppStore } from "../../store";
+import { populateIds } from "../../lib/data/populate-ids";
 
 export function insertAction<UserData extends Data>(
   state: PrivateAppState<UserData>,
@@ -13,13 +14,17 @@ export function insertAction<UserData extends Data>(
   appStore: AppStore
 ): PrivateAppState<UserData> {
   const id = action.id || generateId(action.componentType);
-  const emptyComponentData = {
-    type: action.componentType,
-    props: {
-      ...(appStore.config.components[action.componentType].defaultProps || {}),
-      id,
+  const emptyComponentData = populateIds(
+    {
+      type: action.componentType,
+      props: {
+        ...(appStore.config.components[action.componentType].defaultProps ||
+          {}),
+        id,
+      },
     },
-  };
+    appStore.config
+  );
 
   const [parentId] = action.destinationZone.split(":");
   const idsInPath = getIdsForParent(action.destinationZone, state);
