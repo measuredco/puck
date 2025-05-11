@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from "react";
-import { AutoField, Button, createUsePuck, FieldLabel } from "@/core";
-import { ComponentConfig, ComponentData, Slot } from "@/core/types";
+import { AutoField, Button, createUsePuck, FieldLabel, walkTree } from "@/core";
+import { ComponentConfig, ComponentDataOptionalId, Slot } from "@/core/types";
 import { withLayout } from "../../components/Layout";
 import { generateId } from "@/core/lib/generate-id";
 import { componentKey } from "../../index";
 import { type Props } from "../../types";
-import { mapSlotsAsync } from "@/core/lib/data/map-slots";
 import TemplateComponent, { TemplateProps } from "./Template";
 
 const usePuck = createUsePuck();
@@ -14,7 +13,7 @@ const usePuck = createUsePuck();
 async function createComponent<T extends keyof Props>(
   component: T,
   props?: Partial<Props[T]>
-) {
+): Promise<ComponentDataOptionalId<Props[T]>> {
   const { conf: config } = await import("../../index");
 
   return {
@@ -22,9 +21,8 @@ async function createComponent<T extends keyof Props>(
     props: {
       ...config.components[component].defaultProps,
       ...props,
-      id: generateId(component),
     },
-  };
+  } as ComponentDataOptionalId<Props[T]>;
 }
 
 type TemplateData = Record<string, { label: string; data: Slot }>;
@@ -36,9 +34,9 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
       render: ({ name, value, onChange }) => {
         const templateKey = `puck-demo-templates:${componentKey}`;
 
-        const props: TemplateProps | undefined = usePuck(
-          (s) => s.selectedItem?.props
-        );
+        const props = usePuck((s) => s.selectedItem?.props) as
+          | TemplateProps
+          | undefined;
 
         const [templates, setTemplates] = useState<TemplateData>(
           JSON.parse(localStorage.getItem(templateKey) ?? "{}")
@@ -65,18 +63,35 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
             <div style={{ marginLeft: "auto", marginTop: 16 }}>
               <Button
                 variant="secondary"
-                onClick={() => {
+                onClick={async () => {
                   if (!props?.children) {
                     return;
                   }
 
                   const templateId = generateId();
 
+                  const { conf: config } = await import("../../index");
+
+                  const data = props.children.map((child) =>
+                    walkTree(
+                      {
+                        type: child.type,
+                        props: { ...child.props, id: generateId(child.type) },
+                      },
+                      config,
+                      (content) =>
+                        content.map((item) => ({
+                          ...item,
+                          props: { ...item.props, id: generateId(item.type) },
+                        }))
+                    )
+                  );
+
                   const templateData = {
                     ...templates,
                     [templateId]: {
                       label: new Date().toLocaleString(),
-                      data: props.children,
+                      data,
                     },
                   };
 
@@ -167,21 +182,8 @@ export const TemplateInternal: ComponentConfig<TemplateProps> = {
       },
     };
 
-    let children =
+    const children =
       templates[data.props.template]?.data || templates["example_1"].data;
-
-    const randomizeId = (item: ComponentData) => ({
-      ...item,
-      props: { ...item.props, id: generateId(item.type) },
-    });
-
-    children = await Promise.all(
-      children.map((item) =>
-        mapSlotsAsync(randomizeId(item), async (content) =>
-          content.map(randomizeId)
-        )
-      )
-    );
 
     return {
       ...data,

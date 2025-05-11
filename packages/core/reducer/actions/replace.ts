@@ -4,6 +4,7 @@ import { AppStore } from "../../store";
 import { PrivateAppState } from "../../types/Internal";
 import { walkAppState } from "../../lib/data/walk-app-state";
 import { getIdsForParent } from "../../lib/data/get-ids-for-parent";
+import { populateIds } from "../../lib/data/populate-ids";
 
 export const replaceAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,
@@ -26,6 +27,8 @@ export const replaceAction = <UserData extends Data>(
     );
   }
 
+  const data = populateIds(action.data, appStore.config);
+
   return walkAppState<UserData>(
     state,
     appStore.config,
@@ -33,7 +36,7 @@ export const replaceAction = <UserData extends Data>(
       const newContent = [...content];
 
       if (zoneCompound === action.destinationZone) {
-        newContent[action.destinationIndex] = action.data;
+        newContent[action.destinationIndex] = data;
       }
 
       return newContent;
@@ -41,14 +44,14 @@ export const replaceAction = <UserData extends Data>(
     (childItem, path) => {
       const pathIds = path.map((p) => p.split(":")[0]);
 
-      if (childItem.props.id === action.data.props.id) {
-        return action.data;
+      if (childItem.props.id === data.props.id) {
+        return data;
       } else if (childItem.props.id === parentId) {
         return childItem;
       } else if (idsInPath.indexOf(childItem.props.id) > -1) {
         // Node is parent of target
         return childItem;
-      } else if (pathIds.indexOf(action.data.props.id) > -1) {
+      } else if (pathIds.indexOf(data.props.id) > -1) {
         // Node is child target
         return childItem;
       }

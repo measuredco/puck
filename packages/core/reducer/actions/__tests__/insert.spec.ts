@@ -86,6 +86,7 @@ describe("Reducer", () => {
 
         expect(item).toHaveProperty("type", "CompWithDefault");
         expect(defaultedItem?.props).toHaveProperty("prop", "Defaulted item");
+        expect(defaultedItem?.props.id).toEqual("mockId-1");
         expectIndexed(newState, defaultedItem, ["root:slot", "first:slot"], 0);
       });
 

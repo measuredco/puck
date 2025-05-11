@@ -118,7 +118,6 @@ export const testSetup = () => {
             {
               type: "Comp",
               props: {
-                id: "defaulted-item",
                 prop: "Defaulted item",
                 slots: [],
               },

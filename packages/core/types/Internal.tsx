@@ -1,5 +1,7 @@
+import { Slot } from "./API";
 import { AppState } from "./AppState";
-import { ComponentData, Data } from "./Data";
+import { BaseData, ComponentData, Content, Data } from "./Data";
+import { DefaultComponentProps } from "./Props";
 
 export type ZoneType = "root" | "dropzone" | "slot";
 
@@ -26,3 +28,14 @@ export type PrivateAppState<UserData extends Data = Data> =
       zones: ZoneIndex;
     };
   };
+
+export type WithPopulatedSlots<
+  Props extends DefaultComponentProps = DefaultComponentProps,
+  SlotProps extends DefaultComponentProps = Props
+> = Props extends any
+  ? any
+  : {
+      [PropName in keyof Props]: Props[PropName] extends Slot<SlotProps>
+        ? Content<SlotProps>
+        : Props[PropName];
+    };
