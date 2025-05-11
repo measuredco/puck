@@ -1,5 +1,5 @@
-import { ComponentData, Config, Content, RootData } from "../../types";
-import { isSlot as _isSlot, createIsSlotConfig } from "./is-slot";
+import { ComponentData, Content, RootData } from "../../types";
+import { isSlot as _isSlot } from "./is-slot";
 
 export async function mapSlotsAsync<T extends ComponentData | RootData>(
   item: T,
