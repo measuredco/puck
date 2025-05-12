@@ -9,6 +9,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -70,6 +71,7 @@ import {
 } from "../../lib/use-puck";
 import { walkAppState } from "../../lib/data/walk-app-state";
 import { PrivateAppState } from "../../types/Internal";
+import fdeq from "fast-deep-equal";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -336,10 +338,21 @@ function PuckProvider<
     initialAppState,
   });
 
+  const previousData = useRef<Data>(null);
+
   useEffect(() => {
-    appStore.subscribe((s) => {
-      if (onChange) onChange(s.state.data as G["UserData"]);
-    });
+    appStore.subscribe(
+      (s) => s.state.data,
+      (data) => {
+        if (onChange) {
+          if (fdeq(data, previousData.current)) return;
+
+          onChange(data as G["UserData"]);
+
+          previousData.current = data;
+        }
+      }
+    );
   }, []);
 
   useRegisterPermissionsSlice(appStore, permissions);
@@ -366,7 +379,6 @@ function PuckLayout<
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
 >({ children }: PropsWithChildren) {
   const {
-    onChange,
     onPublish,
     renderHeader,
     renderHeaderActions,
@@ -393,13 +405,6 @@ function PuckLayout<
   const [menuOpen, setMenuOpen] = useState(false);
 
   const appStore = useAppStoreApi();
-
-  useEffect(() => {
-    // TODO use selector
-    return appStore.subscribe((s) => {
-      if (onChange) onChange(s.state.data as G["UserData"]);
-    });
-  }, [appStore]);
 
   // DEPRECATED
   const rootProps = useAppStore(
