@@ -63,6 +63,8 @@ const getZoneId = (candidate: Droppable | undefined) => {
   return id;
 };
 
+const BUFFER = 6;
+
 const getPointerCollisions = (
   position: GlobalPosition,
   manager: DragDropManager
@@ -101,6 +103,28 @@ const getPointerCollisions = (
       const element = elements[i];
 
       const dropzoneId = element.getAttribute("data-puck-dropzone");
+      const id = element.getAttribute("data-puck-dnd");
+
+      // Only include this candidate if we're within a threshold of the bounding box
+      if (BUFFER && (dropzoneId || id)) {
+        const box = element.getBoundingClientRect();
+
+        const contractedBox = {
+          left: box.left + BUFFER,
+          right: box.right - BUFFER,
+          top: box.top + BUFFER,
+          bottom: box.bottom - BUFFER,
+        };
+
+        if (
+          position.frame.x < contractedBox.left ||
+          position.frame.x > contractedBox.right ||
+          position.frame.y > contractedBox.bottom ||
+          position.frame.y < contractedBox.top
+        ) {
+          continue;
+        }
+      }
 
       if (dropzoneId) {
         const droppable = manager.registry.droppables.get(dropzoneId);
@@ -109,8 +133,6 @@ const getPointerCollisions = (
           candidates.push(droppable);
         }
       }
-
-      const id = element.getAttribute("data-puck-dnd");
 
       if (id) {
         const droppable = manager.registry.droppables.get(id);
