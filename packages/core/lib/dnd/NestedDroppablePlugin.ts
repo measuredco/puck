@@ -13,6 +13,7 @@ import {
   BubbledPointerEvent,
   BubbledPointerEventType,
 } from "../bubble-pointer-event";
+import { rootAreaId, rootDroppableId } from "../root-droppable-id";
 
 type NestedDroppablePluginOptions = {
   onChange: (
@@ -191,9 +192,10 @@ export const findDeepestCandidate = (
 
     return { zone, area };
   }
+
   return {
-    zone: "default-zone",
-    area: null,
+    zone: rootDroppableId,
+    area: rootAreaId,
   };
 };
 
