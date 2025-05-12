@@ -161,7 +161,13 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
 
   const fieldsLoading = useAppStore((s) => s.fields.loading);
   const fieldNames = useAppStore(
-    useShallow((s) => Object.keys(s.fields.fields))
+    useShallow((s) => {
+      if (s.fields.id === id) {
+        return Object.keys(s.fields.fields);
+      }
+
+      return [];
+    })
   );
 
   const isLoading = fieldsLoading || componentResolving;

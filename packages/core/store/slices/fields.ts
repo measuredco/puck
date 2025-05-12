@@ -11,6 +11,7 @@ export type FieldsSlice = {
   fields: Fields | Partial<Fields>;
   loading: boolean;
   lastResolvedData: Partial<ComponentOrRootData>;
+  id: string | undefined;
 };
 
 export const createFieldsSlice = (
@@ -21,6 +22,7 @@ export const createFieldsSlice = (
     fields: {},
     loading: false,
     lastResolvedData: {},
+    id: undefined,
   };
 };
 
@@ -49,7 +51,7 @@ export const useRegisterFieldsSlice = (
 
       if (reset) {
         appStore.setState((s) => ({
-          fields: { ...s.fields, fields: defaultFields },
+          fields: { ...s.fields, fields: defaultFields, id },
         }));
 
         lastFields = defaultFields;
@@ -88,11 +90,12 @@ export const useRegisterFieldsSlice = (
             fields: newFields,
             loading: false,
             lastResolvedData: componentData,
+            id,
           },
         });
       } else {
         appStore.setState((s) => ({
-          fields: { ...s.fields, fields: defaultFields },
+          fields: { ...s.fields, fields: defaultFields, id },
         }));
       }
     },
