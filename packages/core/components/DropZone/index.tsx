@@ -294,12 +294,6 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
     // Register and unregister zone on mount
     useEffect(() => {
       if (!zoneType || zoneType === "dropzone") {
-        if (zoneCompound !== rootDroppableId) {
-          console.warn(
-            "DropZones have been deprecated in favor of slot fields and will be removed in a future version of Puck. Please see the migration guide: https://www.puckeditor.com/docs/guides/migrations/dropzones-to-slots"
-          );
-        }
-
         if (ctx?.registerZone) {
           ctx?.registerZone(zoneCompound);
         }
@@ -309,6 +303,16 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
             ctx?.unregisterZone(zoneCompound);
           }
         };
+      }
+    }, [zoneType]);
+
+    useEffect(() => {
+      if (zoneType === "dropzone") {
+        if (zoneCompound !== rootDroppableId) {
+          console.warn(
+            "DropZones have been deprecated in favor of slot fields and will be removed in a future version of Puck. Please see the migration guide: https://www.puckeditor.com/docs/guides/migrations/dropzones-to-slots"
+          );
+        }
       }
     }, [zoneType]);
 
