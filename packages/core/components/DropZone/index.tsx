@@ -34,11 +34,10 @@ import {
   PuckContext,
 } from "../../types";
 
-import { UseDroppableInput } from "@dnd-kit/react";
+import { useDroppable, UseDroppableInput } from "@dnd-kit/react";
 import { DrawerItemInner } from "../Drawer";
 import { pointerIntersection } from "@dnd-kit/collision";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
-import { useDroppableSafe } from "../../lib/dnd/dnd-kit/safe";
 import { useMinEmptyHeight } from "./lib/use-min-empty-height";
 import { assignRefs } from "../../lib/assign-refs";
 import { useContentIdsWithPreview } from "./lib/use-content-with-preview";
@@ -399,7 +398,7 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       },
     };
 
-    const { ref: dropRef } = useDroppableSafe(droppableConfig);
+    const { ref: dropRef } = useDroppable(droppableConfig);
 
     const isAreaSelected = useAppStore(
       (s) => s?.selectedItem && areaId === s?.selectedItem.props.id

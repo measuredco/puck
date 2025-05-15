@@ -1,13 +1,10 @@
 import { DragDropProvider } from "@dnd-kit/react";
-import { PropsWithChildren, ReactNode, useState } from "react";
-import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
+import { PropsWithChildren, ReactNode } from "react";
 import { useSensors } from "../../lib/dnd/use-sensors";
-import {
-  CollisionMap,
-  createDynamicCollisionDetector,
-} from "../../lib/dnd/collision/dynamic";
+import { createDynamicCollisionDetector } from "../../lib/dnd/collision/dynamic";
 import "./styles.css";
 import { collisionStore } from "../../lib/dnd/collision/dynamic/store";
+import { useSortable } from "@dnd-kit/react/sortable";
 
 export const SortableProvider = ({
   children,
@@ -98,7 +95,7 @@ export const Sortable = ({
     isDragging,
     isDropping,
     handleRef,
-  } = useSortableSafe({
+  } = useSortable({
     id,
     type,
     index,
