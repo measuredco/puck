@@ -24,12 +24,12 @@ import { dropZoneContext, DropZoneProvider } from "../DropZone";
 import { createDynamicCollisionDetector } from "../../lib/dnd/collision/dynamic";
 import { DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
-import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { DropZoneContext, ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
 import { getItem } from "../../lib/data/get-item";
+import { useSortable } from "@dnd-kit/react/sortable";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -167,7 +167,7 @@ export const DraggableComponent = ({
   const [dragAxis, setDragAxis] = useState(userDragAxis || autoDragAxis);
 
   const { ref: sortableRef, isDragging: thisIsDragging } =
-    useSortableSafe<ComponentDndData>({
+    useSortable<ComponentDndData>({
       id,
       index,
       group: zoneCompound,
