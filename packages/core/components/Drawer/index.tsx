@@ -74,8 +74,9 @@ const DrawerItemDraggable = ({
 }) => {
   const { ref } = useDraggableSafe({
     id,
-    data: { type: "drawer", componentType: name },
+    data: { componentType: name },
     disabled: isDragDisabled,
+    type: "drawer",
   });
 
   return (
