@@ -1,6 +1,22 @@
 import { useState } from "react";
-import { ActivationConstraints, PointerSensor } from "./PointerSensor";
+import { PointerSensor } from "@dnd-kit/react";
 import { isElement } from "@dnd-kit/dom/utilities";
+import { type Distance } from "@dnd-kit/geometry";
+
+export interface DelayConstraint {
+  value: number;
+  tolerance: Distance;
+}
+
+export interface DistanceConstraint {
+  value: Distance;
+  tolerance?: Distance;
+}
+
+export interface ActivationConstraints {
+  distance?: DistanceConstraint;
+  delay?: DelayConstraint;
+}
 
 export const useSensors = (
   {
