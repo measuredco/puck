@@ -26,7 +26,7 @@ export const SortableProvider = ({
       onDragStart={(event) =>
         onDragStart(event.operation.source?.id.toString() ?? "")
       }
-      onDragOver={(event) => {
+      onDragOver={(event, manager) => {
         event.preventDefault();
 
         const { operation } = event;
@@ -37,14 +37,11 @@ export const SortableProvider = ({
         let sourceIndex = source.data.index;
         let targetIndex = target.data.index;
 
-        // NB drag operation can come out of sync with collision
-        // Would be better for event itself to contain collision data
-        const { collisionMap } = collisionStore.getState();
-        const collisionData = collisionMap[target.id];
+        const collisionData = manager.collisionObserver.collisions[0]?.data;
 
         if (sourceIndex !== targetIndex && source.id !== target.id) {
           const collisionPosition =
-            collisionData.direction === "up" ? "before" : "after";
+            collisionData?.direction === "up" ? "before" : "after";
 
           if (targetIndex >= sourceIndex) {
             targetIndex = targetIndex - 1;
