@@ -181,6 +181,7 @@ export const Drawer = ({
       ref={ref}
       data-puck-dnd={id}
       data-puck-drawer
+      data-puck-dnd-void
     >
       {children}
     </div>

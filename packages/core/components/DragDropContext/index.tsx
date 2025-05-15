@@ -26,7 +26,6 @@ import {
 import { createNestedDroppablePlugin } from "../../lib/dnd/NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
-import { CollisionMap } from "../../lib/dnd/collision/dynamic";
 import { ComponentDndData } from "../DraggableComponent";
 
 import { collisionStore } from "../../lib/dnd/collision/dynamic/store";

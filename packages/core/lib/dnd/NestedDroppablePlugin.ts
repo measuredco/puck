@@ -104,9 +104,10 @@ const getPointerCollisions = (
 
       const dropzoneId = element.getAttribute("data-puck-dropzone");
       const id = element.getAttribute("data-puck-dnd");
+      const isVoid = element.hasAttribute("data-puck-dnd-void");
 
       // Only include this candidate if we're within a threshold of the bounding box
-      if (BUFFER && (dropzoneId || id)) {
+      if (BUFFER && (dropzoneId || id) && !isVoid) {
         const box = element.getBoundingClientRect();
 
         const contractedBox = {
