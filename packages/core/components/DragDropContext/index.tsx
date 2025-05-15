@@ -535,8 +535,7 @@ const DragDropContextClient = ({
             });
           }}
           onBeforeDragStart={(event) => {
-            const isNewComponent =
-              event.operation.source?.data.type === "drawer";
+            const isNewComponent = event.operation.source?.type === "drawer";
 
             dragMode.current = isNewComponent ? "new" : "existing";
             initialSelector.current = undefined;
