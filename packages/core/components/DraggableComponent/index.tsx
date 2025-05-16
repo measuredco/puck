@@ -9,6 +9,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useTransition,
 } from "react";
 import styles from "./styles.module.css";
 import "./styles.css";
@@ -26,10 +27,10 @@ import { DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { DropZoneContext, ZoneStoreContext } from "../DropZone/context";
-import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
 import { getItem } from "../../lib/data/get-item";
 import { useSortable } from "@dnd-kit/react/sortable";
+import { DROP_ANIMATION_DELAY } from "../DragDropContext";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -81,7 +82,6 @@ export const DraggableComponent = ({
   isSelected = false,
   debug,
   label,
-  isEnabled,
   autoDragAxis,
   userDragAxis,
   inDroppableZone = true,
@@ -96,7 +96,6 @@ export const DraggableComponent = ({
   debug?: string;
   label?: string;
   isLoading: boolean;
-  isEnabled?: boolean;
   autoDragAxis: DragAxis;
   userDragAxis?: DragAxis;
   inDroppableZone: boolean;
@@ -155,44 +154,65 @@ export const DraggableComponent = ({
     })
   );
 
-  const userIsDragging = useContextStore(
-    ZoneStoreContext,
-    (s) => !!s.draggedItem
-  );
-
-  const canCollide = permissions.drag || userIsDragging;
-
-  const disabled = !isEnabled || !canCollide;
+  const zoneStore = useContext(ZoneStoreContext);
 
   const [dragAxis, setDragAxis] = useState(userDragAxis || autoDragAxis);
 
-  const { ref: sortableRef, isDragging: thisIsDragging } =
-    useSortable<ComponentDndData>({
-      id,
-      index,
-      group: zoneCompound,
-      type: "component",
-      data: {
-        areaId: ctx?.areaId,
-        zone: zoneCompound,
-        index,
-        componentType,
-        containsActiveZone,
-        depth,
-        path: path || [],
-        inDroppableZone,
-      },
-      collisionPriority: isEnabled ? depth : 0,
-      collisionDetector: createDynamicCollisionDetector(dragAxis),
-      disabled,
+  const dynamicCollisionDetector = useMemo(
+    () => createDynamicCollisionDetector(dragAxis),
+    [dragAxis]
+  );
 
-      // "Out of the way" transition from react-beautiful-dnd
-      transition: {
-        duration: 200,
-        easing: "cubic-bezier(0.2, 0, 0, 1)",
-      },
-      feedback: "clone",
+  const {
+    ref: sortableRef,
+    isDragging: thisIsDragging,
+    sortable,
+  } = useSortable<ComponentDndData>({
+    id,
+    index,
+    group: zoneCompound,
+    type: "component",
+    data: {
+      areaId: ctx?.areaId,
+      zone: zoneCompound,
+      index,
+      componentType,
+      containsActiveZone,
+      depth,
+      path: path || [],
+      inDroppableZone,
+    },
+    collisionPriority: depth,
+    collisionDetector: dynamicCollisionDetector,
+    // "Out of the way" transition from react-beautiful-dnd
+    transition: {
+      duration: 200,
+      easing: "cubic-bezier(0.2, 0, 0, 1)",
+    },
+    feedback: "clone",
+  });
+
+  useEffect(() => {
+    const isEnabled = zoneStore.getState().enabledIndex[zoneCompound];
+
+    sortable.droppable.disabled = !isEnabled;
+    sortable.draggable.disabled = !permissions.drag;
+
+    const cleanup = zoneStore.subscribe((s) => {
+      sortable.droppable.disabled = !s.enabledIndex[zoneCompound];
     });
+
+    if (ref.current && !permissions.drag) {
+      ref.current.setAttribute("data-puck-disabled", "");
+
+      return () => {
+        ref.current?.removeAttribute("data-puck-disabled");
+        cleanup();
+      };
+    }
+
+    return cleanup;
+  }, [permissions.drag, zoneCompound]);
 
   const ref = useRef<HTMLElement>(null);
 
@@ -259,6 +279,8 @@ export const DraggableComponent = ({
   }, [ref.current, iframe]);
 
   useEffect(() => {
+    const userIsDragging = !!zoneStore.getState().draggedItem;
+
     if (ref.current && !userIsDragging) {
       const observer = new ResizeObserver(sync);
 
@@ -268,7 +290,7 @@ export const DraggableComponent = ({
         observer.disconnect();
       };
     }
-  }, [ref.current, userIsDragging]);
+  }, [ref.current]);
 
   const registerNode = useAppStore((s) => s.nodes.registerNode);
 
@@ -356,6 +378,8 @@ export const DraggableComponent = ({
     const el = ref.current as HTMLElement;
 
     const _onMouseOver = (e: Event) => {
+      const userIsDragging = !!zoneStore.getState().draggedItem;
+
       if (userIsDragging) {
         // User is dragging, and dragging this item
         if (thisIsDragging) {
@@ -396,32 +420,37 @@ export const DraggableComponent = ({
     containsActiveZone,
     zoneCompound,
     id,
-    userIsDragging,
     thisIsDragging,
     inDroppableZone,
   ]);
 
-  useEffect(() => {
-    if (ref.current && disabled) {
-      ref.current.setAttribute("data-puck-disabled", "");
-
-      return () => {
-        ref.current?.removeAttribute("data-puck-disabled");
-      };
-    }
-  }, [disabled, ref]);
-
   const [isVisible, setIsVisible] = useState(false);
+  const [dragFinished, setDragFinished] = useState(true);
+  const [_, startTransition] = useTransition();
 
   useEffect(() => {
-    sync();
+    startTransition(() => {
+      if (hover || indicativeHover || isSelected) {
+        sync();
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    });
+  }, [hover, indicativeHover, isSelected, iframe]);
 
-    if ((isSelected || hover || indicativeHover) && !userIsDragging) {
-      setIsVisible(true);
+  useEffect(() => {
+    if (thisIsDragging) {
+      setDragFinished(false);
     } else {
-      setIsVisible(false);
+      setTimeout(() => {
+        startTransition(() => {
+          sync();
+          setDragFinished(true);
+        });
+      }, DROP_ANIMATION_DELAY);
     }
-  }, [isSelected, hover, indicativeHover, iframe, userIsDragging]);
+  }, [thisIsDragging]);
 
   const syncActionsPosition = useCallback(
     (el: HTMLDivElement | null | undefined) => {
@@ -476,10 +505,15 @@ export const DraggableComponent = ({
     setDragAxis(autoDragAxis);
   }, [ref, userDragAxis, autoDragAxis]);
 
-  const parentAction = ctx?.areaId && ctx?.areaId !== "root" && (
-    <ActionBar.Action onClick={onSelectParent} label="Select parent">
-      <CornerLeftUp size={16} />
-    </ActionBar.Action>
+  const parentAction = useMemo(
+    () =>
+      ctx?.areaId &&
+      ctx?.areaId !== "root" && (
+        <ActionBar.Action onClick={onSelectParent} label="Select parent">
+          <CornerLeftUp size={16} />
+        </ActionBar.Action>
+      ),
+    [ctx?.areaId]
   );
 
   const nextContextValue = useMemo<DropZoneContext>(
@@ -505,7 +539,8 @@ export const DraggableComponent = ({
 
   return (
     <DropZoneProvider value={nextContextValue}>
-      {isVisible &&
+      {dragFinished &&
+        isVisible &&
         createPortal(
           <div
             className={getClassName({

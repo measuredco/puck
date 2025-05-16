@@ -3,6 +3,7 @@ import {
   ReactNode,
   createContext,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -41,6 +42,7 @@ export type ZoneStore = {
   areaDepthIndex: Record<string, boolean>;
   nextZoneDepthIndex: Record<string, boolean>;
   nextAreaDepthIndex: Record<string, boolean>;
+  enabledIndex: Record<string, boolean>;
   previewIndex: Record<string, Preview>;
   draggedItem?: Draggable | null;
 };
@@ -53,6 +55,7 @@ export const ZoneStoreContext = createContext<StoreApi<ZoneStore>>(
     nextAreaDepthIndex: {},
     draggedItem: null,
     previewIndex: {},
+    enabledIndex: {},
   }))
 );
 

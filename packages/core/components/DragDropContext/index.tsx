@@ -37,6 +37,8 @@ import { useSafeId } from "../../lib/use-safe-id";
 
 const DEBUG = false;
 
+export const DROP_ANIMATION_DELAY = 225;
+
 type Events = DragDropEvents<Draggable, Droppable, DragDropManager>;
 type DragCbs = Partial<{ [eventName in keyof Events]: Events[eventName][] }>;
 
@@ -125,6 +127,7 @@ const DragDropContextClient = ({
       nextAreaDepthIndex: {},
       draggedItem: null,
       previewIndex: {},
+      enabledIndex: {},
     }))
   );
 
@@ -361,22 +364,19 @@ const DragDropContextClient = ({
                 }
               }
 
-              // Delay selection until next cycle to give box chance to render
-              setTimeout(() => {
-                dispatch({
-                  type: "setUi",
-                  ui: {
-                    itemSelector: { index, zone },
-                    isDragging: false,
-                  },
-                  recordHistory: true,
-                });
-              }, 50);
+              dispatch({
+                type: "setUi",
+                ui: {
+                  itemSelector: { index, zone },
+                  isDragging: false,
+                },
+                recordHistory: true,
+              });
 
               dragListeners.dragend?.forEach((fn) => {
                 fn(event, manager);
               });
-            }, 250);
+            }, DROP_ANIMATION_DELAY);
           }}
           onDragOver={(event, manager) => {
             // Prevent the optimistic re-ordering
@@ -535,6 +535,20 @@ const DragDropContextClient = ({
             initialSelector.current = undefined;
 
             zoneStore.setState({ draggedItem: event.operation.source });
+
+            if (
+              appStore.getState().selectedItem?.props.id !==
+              event.operation.source?.id
+            ) {
+              dispatch({
+                type: "setUi",
+                ui: {
+                  itemSelector: null,
+                  isDragging: false,
+                },
+                recordHistory: true,
+              });
+            }
           }}
         >
           <ZoneStoreProvider store={zoneStore}>
