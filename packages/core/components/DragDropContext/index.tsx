@@ -34,6 +34,7 @@ import { createStore } from "zustand";
 import { getDeepDir } from "../../lib/get-deep-dir";
 import { useSensors } from "../../lib/dnd/use-sensors";
 import { useSafeId } from "../../lib/use-safe-id";
+import { getFrame } from "../../lib/get-frame";
 
 const DEBUG = false;
 
@@ -301,6 +302,9 @@ const DragDropContextClient = ({
           plugins={plugins}
           sensors={sensors}
           onDragEnd={(event, manager) => {
+            const entryEl = getFrame()?.querySelector("[data-puck-entry]");
+            entryEl?.removeAttribute("data-puck-dragging");
+
             const { source, target } = event.operation;
 
             if (!source) {
@@ -557,6 +561,9 @@ const DragDropContextClient = ({
                 recordHistory: false,
               });
             }
+
+            const entryEl = getFrame()?.querySelector("[data-puck-entry]");
+            entryEl?.setAttribute("data-puck-dragging", "true");
           }}
         >
           <ZoneStoreProvider store={zoneStore}>
