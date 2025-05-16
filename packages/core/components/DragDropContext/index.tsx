@@ -496,11 +496,6 @@ const DragDropContextClient = ({
             });
           }}
           onDragStart={(event, manager) => {
-            dispatch({
-              type: "setUi",
-              ui: { itemSelector: null, isDragging: true },
-            });
-
             const { source } = event.operation;
 
             if (source && source.type !== "void") {
