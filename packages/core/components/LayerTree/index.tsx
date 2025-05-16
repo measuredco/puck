@@ -103,8 +103,10 @@ const Layer = ({
             );
 
             if (!el) {
-              console.error("Scroll failed. No element was found for", itemId);
-
+              setItemSelector({
+                index,
+                zone: zoneCompound,
+              });
               return;
             }
 
