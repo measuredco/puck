@@ -20,7 +20,6 @@ import styles from "./styles.module.css";
 import {
   DropZoneContext,
   DropZoneProvider,
-  Preview,
   ZoneStoreContext,
   dropZoneContext,
 } from "./context";
@@ -71,18 +70,14 @@ export const DropZoneEditPure = (props: DropZoneProps) => (
 const DropZoneChild = ({
   zoneCompound,
   componentId,
-  preview,
   index,
-  isEnabled,
   dragAxis,
   collisionAxis,
   inDroppableZone,
 }: {
   zoneCompound: string;
   componentId: string;
-  preview?: Preview;
   index: number;
-  isEnabled: boolean;
   dragAxis: DragAxis;
   collisionAxis?: DragAxis;
   inDroppableZone: boolean;
@@ -91,6 +86,8 @@ const DropZoneChild = ({
 
   const ctx = useContext(dropZoneContext);
   const { depth = 1 } = ctx ?? {};
+
+  const zoneStore = useContext(ZoneStoreContext);
 
   const nodeProps = useAppStore(
     useShallow((s) => {
@@ -106,24 +103,37 @@ const DropZoneChild = ({
     useShallow((s) => s.state.indexes.nodes[componentId]?.data.readOnly)
   );
 
-  const node = { type: nodeType, props: nodeProps };
+  const item = useMemo(() => {
+    if (nodeProps) {
+      return { type: nodeType, props: nodeProps };
+    }
 
-  const item = nodeProps
-    ? node
-    : preview?.componentType
-    ? { type: preview.componentType, props: preview.props }
-    : null;
+    const preview = zoneStore.getState().previewIndex[zoneCompound];
+
+    if (componentId === preview?.props.id) {
+      return {
+        type: preview.componentType,
+        props: preview.props,
+        previewType: preview.type,
+      };
+    }
+
+    return null;
+  }, [componentId, zoneCompound, nodeType, nodeProps]);
 
   const componentConfig = useAppStore((s) =>
     item?.type ? s.config.components[item.type] : null
   );
 
-  const puckProps: PuckContext = {
-    renderDropZone: DropZoneEditPure,
-    isEditing: true,
-    dragRef: null,
-    metadata: { ...metadata, ...componentConfig?.metadata },
-  };
+  const puckProps: PuckContext = useMemo(
+    () => ({
+      renderDropZone: DropZoneEditPure,
+      isEditing: true,
+      dragRef: null,
+      metadata: { ...metadata, ...componentConfig?.metadata },
+    }),
+    [metadata, componentConfig?.metadata]
+  );
 
   const overrides = useAppStore((s) => s.overrides);
   const isLoading = useAppStore(
@@ -180,10 +190,9 @@ const DropZoneChild = ({
 
   let componentType = item.type as string;
 
-  const isPreview =
-    componentId === preview?.props.id && preview.type === "insert";
+  const isInserting = item.previewType === "insert";
 
-  if (isPreview) {
+  if (isInserting) {
     Render = renderPreview;
   }
 
@@ -197,13 +206,12 @@ const DropZoneChild = ({
       isLoading={isLoading}
       isSelected={isSelected}
       label={label}
-      isEnabled={isEnabled}
       autoDragAxis={dragAxis}
       userDragAxis={collisionAxis}
       inDroppableZone={inDroppableZone}
     >
       {(dragRef) =>
-        componentConfig?.inline && !isPreview ? (
+        componentConfig?.inline && !isInserting ? (
           <>
             <Render
               {...defaultedPropsWithSlots}
@@ -384,6 +392,15 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
         ? contentIdsWithPreview.length === 1
         : contentIdsWithPreview.length === 0);
 
+    const zoneStore = useContext(ZoneStoreContext);
+
+    useEffect(() => {
+      const { enabledIndex } = zoneStore.getState();
+      zoneStore.setState({
+        enabledIndex: { ...enabledIndex, [zoneCompound]: isEnabled },
+      });
+    }, [isEnabled, zoneStore, zoneCompound]);
+
     const droppableConfig: UseDroppableInput<DropZoneDndData> = {
       id: zoneCompound,
       collisionPriority: isEnabled ? depth : 0,
@@ -444,9 +461,7 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
               key={componentId}
               zoneCompound={zoneCompound}
               componentId={componentId}
-              preview={preview}
               dragAxis={dragAxis}
-              isEnabled={isEnabled}
               index={i}
               collisionAxis={collisionAxis}
               inDroppableZone={acceptsTarget(draggedComponentType)}

@@ -52,5 +52,10 @@ export function useSlots<T extends DefaultComponentProps>(
     return slotProps;
   }, [config, readOnly, forceReadOnly]);
 
-  return { ...props, ...slotProps };
+  const mergedProps = useMemo(
+    () => ({ ...props, ...slotProps }),
+    [props, slotProps]
+  );
+
+  return mergedProps;
 }
