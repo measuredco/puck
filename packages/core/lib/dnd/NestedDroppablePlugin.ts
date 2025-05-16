@@ -3,7 +3,7 @@ import { Plugin } from "@dnd-kit/abstract";
 
 import type { Droppable } from "@dnd-kit/dom";
 
-import { effects } from "@dnd-kit/state";
+import { effects, untracked } from "@dnd-kit/state";
 import { throttle } from "../throttle";
 import { ComponentDndData } from "../../components/DraggableComponent";
 import { DropZoneDndData } from "../../components/DropZone";
@@ -104,9 +104,10 @@ const getPointerCollisions = (
 
       const dropzoneId = element.getAttribute("data-puck-dropzone");
       const id = element.getAttribute("data-puck-dnd");
+      const isVoid = element.hasAttribute("data-puck-dnd-void");
 
       // Only include this candidate if we're within a threshold of the bounding box
-      if (BUFFER && (dropzoneId || id)) {
+      if (BUFFER && (dropzoneId || id) && !isVoid) {
         const box = element.getBoundingClientRect();
 
         const contractedBox = {
@@ -224,7 +225,7 @@ export const findDeepestCandidate = (
 export const createNestedDroppablePlugin = (
   { onChange }: NestedDroppablePluginOptions,
   id: string
-) =>
+): any =>
   class NestedDroppablePlugin extends Plugin<DragDropManager, {}> {
     constructor(manager: DragDropManager, options?: {}) {
       super(manager);
@@ -233,7 +234,7 @@ export const createNestedDroppablePlugin = (
         return;
       }
 
-      const cleanupEffect = effects(() => {
+      this.registerEffect(() => {
         const handleMove = (event: BubbledPointerEventType | PointerEvent) => {
           const target = (
             event instanceof BubbledPointerEvent // Necessary for Firefox
@@ -268,12 +269,13 @@ export const createNestedDroppablePlugin = (
           capture: true, // dndkit's PointerSensor prevents propagation during drag
         });
 
-        this.destroy = () => {
+        const cleanup = () => {
           document.body.removeEventListener("pointermove", handlePointerMove, {
             capture: true,
           });
-          cleanupEffect();
         };
+
+        return cleanup;
       });
     }
   };

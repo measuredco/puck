@@ -26,7 +26,6 @@ import {
 import { createNestedDroppablePlugin } from "../../lib/dnd/NestedDroppablePlugin";
 import { insertComponent } from "../../lib/insert-component";
 import { useDebouncedCallback } from "use-debounce";
-import { CollisionMap } from "../../lib/dnd/collision/dynamic";
 import { ComponentDndData } from "../DraggableComponent";
 
 import { collisionStore } from "../../lib/dnd/collision/dynamic/store";
@@ -412,9 +411,8 @@ const DragDropContextClient = ({
               targetZone = targetData.zone;
               targetIndex = targetData.index;
 
-              const collisionData = (
-                manager.dragOperation.data?.collisionMap as CollisionMap
-              )?.[targetId];
+              const collisionData =
+                manager.collisionObserver.collisions[0]?.data;
 
               const dir = getDeepDir(target.element);
 
@@ -498,11 +496,6 @@ const DragDropContextClient = ({
             });
           }}
           onDragStart={(event, manager) => {
-            dispatch({
-              type: "setUi",
-              ui: { itemSelector: null, isDragging: true },
-            });
-
             const { source } = event.operation;
 
             if (source && source.type !== "void") {
@@ -536,8 +529,7 @@ const DragDropContextClient = ({
             });
           }}
           onBeforeDragStart={(event) => {
-            const isNewComponent =
-              event.operation.source?.data.type === "drawer";
+            const isNewComponent = event.operation.source?.type === "drawer";
 
             dragMode.current = isNewComponent ? "new" : "existing";
             initialSelector.current = undefined;

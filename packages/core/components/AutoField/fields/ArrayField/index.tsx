@@ -109,7 +109,7 @@ export const ArrayField = ({
   }, []);
 
   const [draggedItem, setDraggedItem] = useState("");
-  const isDragging = !!draggedItem;
+  const isDraggingAny = !!draggedItem;
 
   const canEdit = useAppStore(
     (s) => s.permissions.getPermissions({ item: s.selectedItem }).edit
@@ -194,12 +194,12 @@ export const ArrayField = ({
                     index={i}
                     disabled={readOnly}
                   >
-                    {({ status, ref, handleRef }) => (
+                    {({ isDragging, ref, handleRef }) => (
                       <div
                         ref={ref}
                         className={getClassNameItem({
                           isExpanded: arrayState.openId === _arrayId,
-                          isDragging: status === "dragging",
+                          isDragging,
                           readOnly,
                         })}
                       >
@@ -368,7 +368,7 @@ export const ArrayField = ({
               type="button"
               className={getClassName("addButton")}
               onClick={() => {
-                if (isDragging) return;
+                if (isDraggingAny) return;
 
                 const existingValue = value || [];
 

@@ -24,12 +24,12 @@ import { dropZoneContext, DropZoneProvider } from "../DropZone";
 import { createDynamicCollisionDetector } from "../../lib/dnd/collision/dynamic";
 import { DragAxis } from "../../types";
 import { UniqueIdentifier } from "@dnd-kit/abstract";
-import { useSortableSafe } from "../../lib/dnd/dnd-kit/safe";
 import { getDeepScrollPosition } from "../../lib/get-deep-scroll-position";
 import { DropZoneContext, ZoneStoreContext } from "../DropZone/context";
 import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
 import { getItem } from "../../lib/data/get-item";
+import { useSortable } from "@dnd-kit/react/sortable";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -166,33 +166,33 @@ export const DraggableComponent = ({
 
   const [dragAxis, setDragAxis] = useState(userDragAxis || autoDragAxis);
 
-  const { ref: sortableRef, status } = useSortableSafe<ComponentDndData>({
-    id,
-    index,
-    group: zoneCompound,
-    type: "component",
-    data: {
-      areaId: ctx?.areaId,
-      zone: zoneCompound,
+  const { ref: sortableRef, isDragging: thisIsDragging } =
+    useSortable<ComponentDndData>({
+      id,
       index,
-      componentType,
-      containsActiveZone,
-      depth,
-      path: path || [],
-      inDroppableZone,
-    },
-    collisionPriority: isEnabled ? depth : 0,
-    collisionDetector: createDynamicCollisionDetector(dragAxis),
-    disabled,
+      group: zoneCompound,
+      type: "component",
+      data: {
+        areaId: ctx?.areaId,
+        zone: zoneCompound,
+        index,
+        componentType,
+        containsActiveZone,
+        depth,
+        path: path || [],
+        inDroppableZone,
+      },
+      collisionPriority: isEnabled ? depth : 0,
+      collisionDetector: createDynamicCollisionDetector(dragAxis),
+      disabled,
 
-    // "Out of the way" transition from react-beautiful-dnd
-    transition: {
-      duration: 200,
-      easing: "cubic-bezier(0.2, 0, 0, 1)",
-    },
-  });
-
-  const thisIsDragging = status === "dragging";
+      // "Out of the way" transition from react-beautiful-dnd
+      transition: {
+        duration: 200,
+        easing: "cubic-bezier(0.2, 0, 0, 1)",
+      },
+      feedback: "clone",
+    });
 
   const ref = useRef<HTMLElement>(null);
 
@@ -383,19 +383,12 @@ export const DraggableComponent = ({
     el.addEventListener("mouseover", _onMouseOver);
     el.addEventListener("mouseout", _onMouseOut);
 
-    if (thisIsDragging) {
-      el.setAttribute("data-puck-dragging", "");
-    } else {
-      el.removeAttribute("data-puck-dragging");
-    }
-
     return () => {
       el.removeAttribute("data-puck-component");
       el.removeAttribute("data-puck-dnd");
       el.removeEventListener("click", onClick);
       el.removeEventListener("mouseover", _onMouseOver);
       el.removeEventListener("mouseout", _onMouseOut);
-      el.removeAttribute("data-puck-dragging");
     };
   }, [
     ref,
