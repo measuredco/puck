@@ -273,19 +273,10 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       zone === rootDroppableId ||
       areaId === "root";
 
-    const {
-      isDeepestZone,
-      inNextDeepestArea,
-      draggedComponentType,
-      userIsDragging,
-    } = useContextStore(ZoneStoreContext, (s) => {
-      return {
-        isDeepestZone: s.zoneDepthIndex[zoneCompound] ?? false,
-        inNextDeepestArea: s.nextAreaDepthIndex[areaId || ""],
-        draggedComponentType: s.draggedItem?.data.componentType,
-        userIsDragging: !!s.draggedItem,
-      };
-    });
+    const inNextDeepestArea = useContextStore(
+      ZoneStoreContext,
+      (s) => s.nextAreaDepthIndex[areaId || ""]
+    );
 
     const zoneContentIds = useAppStore(
       useShallow((s) => {
@@ -357,9 +348,29 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       [allow, disallow]
     );
 
+    const targetAccepted = useContextStore(ZoneStoreContext, (s) => {
+      const draggedComponentType = s.draggedItem?.data.componentType;
+      return acceptsTarget(draggedComponentType);
+    });
+
+    const hoveringOverArea = inNextDeepestArea || isRootZone;
+
+    const isEnabled = useContextStore(ZoneStoreContext, (s) => {
+      let _isEnabled = true;
+      const isDeepestZone = s.zoneDepthIndex[zoneCompound] ?? false;
+
+      _isEnabled = isDeepestZone;
+
+      if (_isEnabled) {
+        _isEnabled = targetAccepted;
+      }
+
+      return _isEnabled;
+    });
+
     useEffect(() => {
       if (registerLocalZone) {
-        registerLocalZone(zoneCompound, acceptsTarget(draggedComponentType));
+        registerLocalZone(zoneCompound, isEnabled);
       }
 
       return () => {
@@ -367,19 +378,7 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
           unregisterLocalZone(zoneCompound);
         }
       };
-    }, [draggedComponentType, zoneCompound]);
-
-    const hoveringOverArea = inNextDeepestArea || isRootZone;
-
-    let isEnabled = true;
-
-    if (userIsDragging) {
-      isEnabled = isDeepestZone;
-    }
-
-    if (isEnabled) {
-      isEnabled = acceptsTarget(draggedComponentType);
-    }
+    }, [isEnabled, zoneCompound]);
 
     const [contentIdsWithPreview, preview] = useContentIdsWithPreview(
       contentIds,
@@ -410,7 +409,7 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       data: {
         areaId,
         depth,
-        isDroppableTarget: acceptsTarget(draggedComponentType),
+        isDroppableTarget: targetAccepted,
         path: path || [],
       },
     };
@@ -433,7 +432,6 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
       <div
         className={`${getClassName({
           isRootZone,
-          userIsDragging,
           hoveringOverArea,
           isEnabled,
           isAreaSelected,
@@ -464,7 +462,7 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
               dragAxis={dragAxis}
               index={i}
               collisionAxis={collisionAxis}
-              inDroppableZone={acceptsTarget(draggedComponentType)}
+              inDroppableZone={targetAccepted}
             />
           );
         })}

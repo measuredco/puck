@@ -1,5 +1,5 @@
 import { Preview } from "./../context";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRenderedCallback } from "../../../lib/dnd/use-rendered-callback";
 import { insert } from "../../../lib/data/insert";
 import { ZoneStoreContext } from "../context";
@@ -10,15 +10,10 @@ export const useContentIdsWithPreview = (
   contentIds: string[],
   zoneCompound: string
 ): [string[], Preview | undefined] => {
-  const { draggedItemId, preview, previewExists } = useContextStore(
+  const zoneStore = useContext(ZoneStoreContext);
+  const preview = useContextStore(
     ZoneStoreContext,
-    (s) => {
-      return {
-        draggedItemId: s.draggedItem?.id,
-        preview: s.previewIndex[zoneCompound],
-        previewExists: Object.keys(s.previewIndex || {}).length > 0,
-      };
-    }
+    (s) => s.previewIndex[zoneCompound]
   );
 
   const isDragging = useAppStore((s) => s.state.ui.isDragging);
@@ -30,17 +25,9 @@ export const useContentIdsWithPreview = (
   );
 
   const updateContent = useRenderedCallback(
-    (
-      contentIds: string[],
-      preview: Preview | undefined,
-      isDragging: boolean
-    ) => {
-      // Preview is cleared but context hasn't yet caught up
-      // This is necessary because Zustand clears the preview before the dispatcher finishes
-      // Refactor this once all state has moved to Zustand.
-      if (isDragging && !previewExists) {
-        return;
-      }
+    (contentIds: string[], preview: Preview | undefined) => {
+      const s = zoneStore.getState();
+      const draggedItemId = s.draggedItem?.id;
 
       if (preview) {
         if (preview.type === "insert") {
@@ -62,15 +49,13 @@ export const useContentIdsWithPreview = (
         }
       } else {
         setContentIdsWithPreview(
-          previewExists
-            ? contentIds.filter((id) => id !== draggedItemId)
-            : contentIds
+          contentIds.filter((id) => id !== draggedItemId)
         );
       }
 
       setLocalPreview(preview);
     },
-    [draggedItemId, previewExists]
+    []
   );
 
   useEffect(() => {
