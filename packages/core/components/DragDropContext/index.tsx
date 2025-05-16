@@ -34,8 +34,11 @@ import { createStore } from "zustand";
 import { getDeepDir } from "../../lib/get-deep-dir";
 import { useSensors } from "../../lib/dnd/use-sensors";
 import { useSafeId } from "../../lib/use-safe-id";
+import { getFrame } from "../../lib/get-frame";
 
 const DEBUG = false;
+
+export const DROP_ANIMATION_DELAY = 250;
 
 type Events = DragDropEvents<Draggable, Droppable, DragDropManager>;
 type DragCbs = Partial<{ [eventName in keyof Events]: Events[eventName][] }>;
@@ -125,6 +128,8 @@ const DragDropContextClient = ({
       nextAreaDepthIndex: {},
       draggedItem: null,
       previewIndex: {},
+      enabledIndex: {},
+      hoveringComponent: null,
     }))
   );
 
@@ -298,6 +303,9 @@ const DragDropContextClient = ({
           plugins={plugins}
           sensors={sensors}
           onDragEnd={(event, manager) => {
+            const entryEl = getFrame()?.querySelector("[data-puck-entry]");
+            entryEl?.removeAttribute("data-puck-dragging");
+
             const { source, target } = event.operation;
 
             if (!source) {
@@ -361,22 +369,19 @@ const DragDropContextClient = ({
                 }
               }
 
-              // Delay selection until next cycle to give box chance to render
-              setTimeout(() => {
-                dispatch({
-                  type: "setUi",
-                  ui: {
-                    itemSelector: { index, zone },
-                    isDragging: false,
-                  },
-                  recordHistory: true,
-                });
-              }, 50);
+              dispatch({
+                type: "setUi",
+                ui: {
+                  itemSelector: { index, zone },
+                  isDragging: false,
+                },
+                recordHistory: true,
+              });
 
               dragListeners.dragend?.forEach((fn) => {
                 fn(event, manager);
               });
-            }, 250);
+            }, DROP_ANIMATION_DELAY);
           }}
           onDragOver={(event, manager) => {
             // Prevent the optimistic re-ordering
@@ -535,6 +540,23 @@ const DragDropContextClient = ({
             initialSelector.current = undefined;
 
             zoneStore.setState({ draggedItem: event.operation.source });
+
+            if (
+              appStore.getState().selectedItem?.props.id !==
+              event.operation.source?.id
+            ) {
+              dispatch({
+                type: "setUi",
+                ui: {
+                  itemSelector: null,
+                  isDragging: false,
+                },
+                recordHistory: true,
+              });
+            }
+
+            const entryEl = getFrame()?.querySelector("[data-puck-entry]");
+            entryEl?.setAttribute("data-puck-dragging", "true");
           }}
         >
           <ZoneStoreProvider store={zoneStore}>
