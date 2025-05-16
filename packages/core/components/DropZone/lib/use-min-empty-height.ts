@@ -35,8 +35,14 @@ export const useMinEmptyHeight = ({
       }
     }
 
+    const _prevHeight = prevHeight;
+
     setPrevHeight(0);
     setTimeout(() => {
+      const newHeight = ref.current?.getBoundingClientRect().height;
+
+      if (newHeight === _prevHeight) return;
+
       const zones = appStore.getState().state.indexes.zones;
       const nodes = appStore.getState().nodes;
       const selectedItem = appStore.getState().selectedItem;
