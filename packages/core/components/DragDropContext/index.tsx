@@ -38,7 +38,7 @@ import { getFrame } from "../../lib/get-frame";
 
 const DEBUG = false;
 
-export const DROP_ANIMATION_DELAY = 225;
+export const DROP_ANIMATION_DELAY = 250;
 
 type Events = DragDropEvents<Draggable, Droppable, DragDropManager>;
 type DragCbs = Partial<{ [eventName in keyof Events]: Events[eventName][] }>;
