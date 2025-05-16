@@ -31,6 +31,7 @@ import { useShallow } from "zustand/react/shallow";
 import { getItem } from "../../lib/data/get-item";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { DROP_ANIMATION_DELAY } from "../DragDropContext";
+import { useContextStore } from "../../lib/use-context-store";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -368,7 +369,10 @@ export const DraggableComponent = ({
 
   const [hover, setHover] = useState(false);
 
-  const indicativeHover = ctx?.hoveringComponent === id;
+  const indicativeHover = useContextStore(
+    ZoneStoreContext,
+    (s) => s.hoveringComponent === id
+  );
 
   useEffect(() => {
     if (!ref.current) {
