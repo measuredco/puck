@@ -10,8 +10,8 @@ Puck exposes it's internal API as [`PuckApi`](/docs/api-reference/puck-api) for 
 
 You can access [`PuckApi`](/docs/api-reference/puck-api) via two hooks:
 
-- [`usePuck`](/docs/api-reference/functions/use-puck) - access `PuckApi` as part of your component render lifecycle
-- [`useGetPuck`](/docs/api-reference/functions/use-get-puck) - receive a getter to access `PuckApi` outside of your component render lifecycle
+- [`usePuck`](/docs/api-reference/functions/use-puck) - returns `PuckApi` as part of your component render lifecycle
+- [`useGetPuck`](/docs/api-reference/functions/use-get-puck) - returns a function to access the latest `PuckApi` at call time
 
 ### Within the render lifecycle
 
@@ -34,7 +34,7 @@ See the [`usePuck`](/docs/api-reference/functions/use-puck) docs for a full API 
 
 ### Outside of the render lifecycle
 
-Often it's not necessary to re-render your component when the PuckApi changes. Puck provides the `useGetPuck` hook for use-cases where you need the latest data outside of a render.
+Often it's not necessary to re-render your component when the PuckApi changes. Puck provides the `useGetPuck` hook for accessing the latest `PuckApi` at call time.
 
 ```tsx copy
 import { useGetPuck } from "@measured/puck";
