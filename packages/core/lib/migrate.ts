@@ -1,4 +1,4 @@
-import { defaultAppState } from "../store";
+import { defaultAppState } from "../store/default-app-state";
 import { ComponentData, Config, Data } from "../types";
 import { walkAppState } from "./data/walk-app-state";
 
