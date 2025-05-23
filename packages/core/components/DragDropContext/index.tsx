@@ -535,6 +535,14 @@ const DragDropContextClient = ({
             initialSelector.current = undefined;
 
             zoneStore.setState({ draggedItem: event.operation.source });
+
+            dispatch({
+              type: "setUi",
+              ui: {
+                isDragging: true,
+              },
+              recordHistory: false,
+            });
           }}
         >
           <ZoneStoreProvider store={zoneStore}>
