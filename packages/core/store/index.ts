@@ -27,37 +27,13 @@ import {
   type PermissionsSlice,
 } from "./slices/permissions";
 import { createFieldsSlice, type FieldsSlice } from "./slices/fields";
-import { PrivateAppState } from "../types/Internal";
 import { resolveComponentData } from "../lib/resolve-component-data";
 import { walkAppState } from "../lib/data/walk-app-state";
 import { toRoot } from "../lib/data/to-root";
 import { generateId } from "../lib/generate-id";
+import { defaultAppState } from "./default-app-state";
 
-export const defaultAppState: PrivateAppState = {
-  data: { content: [], root: {}, zones: {} },
-  ui: {
-    leftSideBarVisible: true,
-    rightSideBarVisible: true,
-    arrayState: {},
-    itemSelector: null,
-    componentList: {},
-    isDragging: false,
-    previewMode: "edit",
-    viewports: {
-      current: {
-        width: defaultViewports[0].width,
-        height: defaultViewports[0].height || "auto",
-      },
-      options: [],
-      controlsVisible: true,
-    },
-    field: { focus: null },
-  },
-  indexes: {
-    nodes: {},
-    zones: {},
-  },
-};
+export { defaultAppState };
 
 export type Status = "LOADING" | "MOUNTED" | "READY";
 
