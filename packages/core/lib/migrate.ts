@@ -49,7 +49,8 @@ const migrations: Migration[] = [
         const nodeData = indexes.nodes[id].data;
         const componentType = nodeData.type;
 
-        const configForComponent = config.components[componentType];
+        const configForComponent =
+          id === "root" ? config.root : config.components[componentType];
 
         if (configForComponent?.fields?.[slotName]?.type === "slot") {
           // Migrate this to slot

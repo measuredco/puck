@@ -98,4 +98,82 @@ describe("migrate method", () => {
       `"Could not migrate DropZone "Grid-123:grid" to slot field. No slot exists with the name "grid"."`
     );
   });
+
+  it("should support migrating root DropZones", () => {
+    const input: Data = {
+      root: { props: { title: "" } },
+      content: [
+        {
+          type: "HeadingBlock",
+          props: {
+            title: "Header",
+            id: "HeadingBlock-1694032984497",
+          },
+        },
+      ],
+      zones: {
+        "root:footer": [
+          {
+            type: "HeadingBlock",
+            props: {
+              id: "HeadingBlock-f7f88252-1926-4042-80b0-6c5ec72f2f75",
+              title: "Footer header",
+            },
+          },
+        ],
+      },
+    };
+
+    const config: Config = {
+      components: {
+        HeadingBlock: {
+          fields: {
+            title: { type: "text" },
+          },
+          render: ({ title }) => <h1>{title}</h1>,
+        },
+      },
+      root: {
+        fields: {
+          footer: { type: "slot" },
+        },
+        render: ({ children, footer }) => {
+          return (
+            <>
+              {children}
+              {footer()}
+            </>
+          );
+        },
+      },
+    };
+
+    expect(migrate(input, config)).toMatchInlineSnapshot(`
+      {
+        "content": [
+          {
+            "props": {
+              "id": "HeadingBlock-1694032984497",
+              "title": "Header",
+            },
+            "type": "HeadingBlock",
+          },
+        ],
+        "root": {
+          "props": {
+            "footer": [
+              {
+                "props": {
+                  "id": "HeadingBlock-f7f88252-1926-4042-80b0-6c5ec72f2f75",
+                  "title": "Footer header",
+                },
+                "type": "HeadingBlock",
+              },
+            ],
+            "title": "",
+          },
+        },
+      }
+    `);
+  });
 });
