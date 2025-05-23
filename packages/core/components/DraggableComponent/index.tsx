@@ -30,6 +30,7 @@ import { useContextStore } from "../../lib/use-context-store";
 import { useShallow } from "zustand/react/shallow";
 import { getItem } from "../../lib/data/get-item";
 import { useSortable } from "@dnd-kit/react/sortable";
+import { accumulateTransform } from "../../lib/accumulate-transform";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -242,11 +243,18 @@ export const DraggableComponent = ({
         deepScrollPosition.y - portalScroll.y - (portalContainerRect?.top ?? 0),
     };
 
+    const untransformed = {
+      height: ref.current.offsetHeight,
+      width: ref.current.offsetWidth,
+    };
+
+    const transform = accumulateTransform(ref.current);
+
     const style: CSSProperties = {
-      left: `${rect.left + scroll.x}px`,
-      top: `${rect.top + scroll.y}px`,
-      height: `${rect.height}px`,
-      width: `${rect.width}px`,
+      left: `${(rect.left + scroll.x) / transform.scaleX}px`,
+      top: `${(rect.top + scroll.y) / transform.scaleY}px`,
+      height: `${untransformed.height}px`,
+      width: `${untransformed.width}px`,
     };
 
     return style;
