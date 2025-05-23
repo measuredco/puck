@@ -14,7 +14,9 @@ export const useOnDragFinished = (
       if (isDragging) {
         cb(false);
       } else {
-        cb(true);
+        setTimeout(() => {
+          cb(true);
+        }, 0); // Run outside of React thread, as otherwise state can still race callback and cause unexpected renders
 
         if (dispose) dispose();
       }

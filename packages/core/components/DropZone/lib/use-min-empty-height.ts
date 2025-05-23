@@ -1,7 +1,11 @@
-import { RefObject, useEffect, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { ZoneStoreContext } from "./../context";
 import { useContextStore } from "../../../lib/use-context-store";
-import { useAppStoreApi } from "../../../store";
+import { AppStoreApi, useAppStoreApi } from "../../../store";
+import { useOnDragFinished } from "../../../lib/dnd/use-on-drag-finished";
+
+const getNumItems = (appStore: AppStoreApi, zoneCompound: string) =>
+  appStore.getState().state.indexes.zones[zoneCompound].contentIds.length;
 
 export const useMinEmptyHeight = ({
   zoneCompound,
@@ -23,44 +27,63 @@ export const useMinEmptyHeight = ({
     };
   });
 
+  const numItems = useRef(0);
+
+  const onDragFinished = useOnDragFinished(
+    (finished) => {
+      if (finished) {
+        const newNumItems = getNumItems(appStore, zoneCompound);
+
+        setPrevHeight(0);
+
+        if (newNumItems || numItems.current === 0) {
+          setIsAnimating(false);
+
+          return;
+        }
+
+        const selectedItem = appStore.getState().selectedItem;
+        const zones = appStore.getState().state.indexes.zones;
+        const nodes = appStore.getState().nodes;
+
+        nodes.nodes[selectedItem?.props.id]?.methods.hideOverlay();
+
+        setTimeout(() => {
+          const contentIds = zones[zoneCompound]?.contentIds || [];
+
+          contentIds.forEach((contentId) => {
+            const node = nodes.nodes[contentId];
+            node?.methods.sync();
+          });
+
+          if (selectedItem) {
+            setTimeout(() => {
+              nodes.nodes[selectedItem.props.id]?.methods.sync();
+              nodes.nodes[selectedItem.props.id]?.methods.showOverlay();
+            }, 200);
+          }
+
+          setIsAnimating(false);
+        }, 100);
+      }
+    },
+    [appStore, prevHeight, zoneCompound]
+  );
+
   useEffect(() => {
     if (draggedItem && ref.current) {
       if (isZone) {
         const rect = ref.current.getBoundingClientRect();
 
+        numItems.current = getNumItems(appStore, zoneCompound);
+
         setPrevHeight(rect.height);
         setIsAnimating(true);
 
-        return;
+        return onDragFinished();
       }
     }
-
-    const _prevHeight = prevHeight;
-
-    setPrevHeight(0);
-    setTimeout(() => {
-      const newHeight = ref.current?.getBoundingClientRect().height;
-
-      if (newHeight === _prevHeight) return;
-
-      const zones = appStore.getState().state.indexes.zones;
-      const nodes = appStore.getState().nodes;
-      const selectedItem = appStore.getState().selectedItem;
-
-      const contentIds = zones[zoneCompound]?.contentIds || [];
-
-      contentIds.forEach((contentId) => {
-        const node = nodes.nodes[contentId];
-        node?.methods.sync();
-      });
-
-      if (selectedItem) {
-        nodes.nodes[selectedItem.props.id]?.methods.sync();
-      }
-
-      setIsAnimating(false);
-    }, 400);
-  }, [ref.current, draggedItem, zoneCompound]);
+  }, [ref.current, draggedItem, onDragFinished]);
 
   return [prevHeight || userMinEmptyHeight, isAnimating];
 };
