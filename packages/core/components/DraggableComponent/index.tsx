@@ -30,8 +30,8 @@ import { DropZoneContext, ZoneStoreContext } from "../DropZone/context";
 import { useShallow } from "zustand/react/shallow";
 import { getItem } from "../../lib/data/get-item";
 import { useSortable } from "@dnd-kit/react/sortable";
-import { DROP_ANIMATION_DELAY } from "../DragDropContext";
 import { useContextStore } from "../../lib/use-context-store";
+import { useOnDragFinished } from "../../lib/dnd/use-on-drag-finished";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
 
@@ -437,24 +437,35 @@ export const DraggableComponent = ({
       if (hover || indicativeHover || isSelected) {
         sync();
         setIsVisible(true);
+        setThisWasDragging(false);
       } else {
         setIsVisible(false);
       }
     });
   }, [hover, indicativeHover, isSelected, iframe]);
 
+  const [thisWasDragging, setThisWasDragging] = useState(false);
+
+  const onDragFinished = useOnDragFinished((finished) => {
+    if (finished) {
+      startTransition(() => {
+        sync();
+        setDragFinished(true);
+      });
+    } else {
+      setDragFinished(false);
+    }
+  });
+
   useEffect(() => {
     if (thisIsDragging) {
-      setDragFinished(false);
-    } else {
-      setTimeout(() => {
-        startTransition(() => {
-          sync();
-          setDragFinished(true);
-        });
-      }, DROP_ANIMATION_DELAY);
+      setThisWasDragging(true);
     }
   }, [thisIsDragging]);
+
+  useEffect(() => {
+    if (thisWasDragging) return onDragFinished();
+  }, [thisWasDragging, onDragFinished]);
 
   const syncActionsPosition = useCallback(
     (el: HTMLDivElement | null | undefined) => {

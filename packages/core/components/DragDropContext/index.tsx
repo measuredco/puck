@@ -35,10 +35,9 @@ import { getDeepDir } from "../../lib/get-deep-dir";
 import { useSensors } from "../../lib/dnd/use-sensors";
 import { useSafeId } from "../../lib/use-safe-id";
 import { getFrame } from "../../lib/get-frame";
+import { effect } from "@dnd-kit/state";
 
 const DEBUG = false;
-
-export const DROP_ANIMATION_DELAY = 250;
 
 type Events = DragDropEvents<Draggable, Droppable, DragDropManager>;
 type DragCbs = Partial<{ [eventName in keyof Events]: Events[eventName][] }>;
@@ -323,8 +322,7 @@ const DragDropContextClient = ({
                 ? previewIndex[zone]
                 : null;
 
-            // Delay insert until animation has finished
-            setTimeout(() => {
+            const onAnimationEnd = () => {
               zoneStore.setState({ draggedItem: null });
 
               // Tidy up cancellation
@@ -381,7 +379,17 @@ const DragDropContextClient = ({
               dragListeners.dragend?.forEach((fn) => {
                 fn(event, manager);
               });
-            }, DROP_ANIMATION_DELAY);
+            };
+
+            // Delay insert until animation has finished
+            let dispose: () => void | undefined;
+
+            dispose = effect(() => {
+              if (source.status === "idle") {
+                onAnimationEnd();
+                dispose?.();
+              }
+            });
           }}
           onDragOver={(event, manager) => {
             // Prevent the optimistic re-ordering
