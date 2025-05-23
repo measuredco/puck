@@ -1,4 +1,4 @@
-import { WithPopulatedSlots } from "./Internal";
+import { WithSlotProps } from "./Internal";
 import { DefaultComponentProps, DefaultRootFieldProps } from "./Props";
 import { AsFieldProps, WithId } from "./Utils";
 
@@ -11,7 +11,7 @@ export type BaseData<
 export type RootDataWithProps<
   Props extends DefaultComponentProps = DefaultRootFieldProps
 > = BaseData<Props> & {
-  props: WithPopulatedSlots<Props>;
+  props: WithSlotProps<Props>;
 };
 
 // DEPRECATED
@@ -29,7 +29,7 @@ export type ComponentData<
   Name = string
 > = {
   type: Name;
-  props: WithId<WithPopulatedSlots<Props>>;
+  props: WithId<WithSlotProps<Props>>;
 } & BaseData<Props>;
 
 export type ComponentDataOptionalId<

@@ -29,7 +29,7 @@ export type PrivateAppState<UserData extends Data = Data> =
     };
   };
 
-export type WithPopulatedSlots<
+export type WithSlotProps<
   Props extends DefaultComponentProps = DefaultComponentProps,
   SlotProps extends DefaultComponentProps = Props
 > = Props extends any
