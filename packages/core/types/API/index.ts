@@ -1,7 +1,7 @@
 import { PuckAction } from "../../reducer";
 import { DefaultComponentProps } from "../Props";
 import { AppState } from "./../AppState";
-import { ComponentDataOptionalId, Data } from "./../Data";
+import { ComponentDataOptionalId, Content, Data } from "./../Data";
 import { Overrides } from "./Overrides";
 
 export type Permissions = {
@@ -58,6 +58,17 @@ export type Slot<
     K extends string ? K : never
   >;
 }[keyof Props][];
+
+export type WithSlotProps<
+  Props extends DefaultComponentProps = DefaultComponentProps,
+  SlotProps extends DefaultComponentProps = Props
+> = Props extends any
+  ? any
+  : {
+      [PropName in keyof Props]: Props[PropName] extends Slot<SlotProps>
+        ? Content<SlotProps>
+        : Props[PropName];
+    };
 
 export * from "./DropZone";
 export * from "./Viewports";
