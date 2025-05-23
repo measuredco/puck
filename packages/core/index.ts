@@ -26,6 +26,7 @@ export { walkTree } from "./lib/data/walk-tree";
 export {
   createUsePuck,
   usePuck,
+  useGetPuck,
   type UsePuckData,
   type PuckApi,
 } from "./lib/use-puck";
