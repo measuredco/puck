@@ -1,4 +1,4 @@
-import { WithSlotProps } from "./Internal";
+import { WithSlotProps } from "./API";
 import { DefaultComponentProps, DefaultRootFieldProps } from "./Props";
 import { AsFieldProps, WithId } from "./Utils";
 
