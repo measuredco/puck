@@ -71,6 +71,7 @@ describe("transformProps method", () => {
           {
             "props": {
               "heading": "Hello, world",
+              "id": "123",
             },
             "type": "HeadingBlock",
           },
@@ -84,12 +85,95 @@ describe("transformProps method", () => {
           "MyZone": [
             {
               "props": {
-                "heading": "Hello, other world",
+                "id": "456",
+                "title": "Hello, other world",
               },
               "type": "HeadingBlock",
             },
           ],
         },
+      }
+    `);
+  });
+
+  it("should migrate props for slots", () => {
+    expect(
+      transformProps(
+        {
+          content: [
+            {
+              type: "Flex",
+              props: {
+                content: [
+                  {
+                    type: "HeadingBlock",
+                    props: { title: "Hello, other world", id: "456" },
+                  },
+                ],
+              },
+            },
+          ],
+
+          root: {
+            props: {
+              content: [
+                {
+                  type: "HeadingBlock",
+                  props: { title: "Hello, other world", id: "456" },
+                },
+              ],
+            },
+          },
+        },
+        {
+          HeadingBlock: (props) => ({
+            heading: props.title,
+          }),
+        },
+        {
+          root: {
+            fields: { content: { type: "slot" } },
+          },
+          components: {
+            Flex: {
+              fields: { content: { type: "slot" } },
+              render: () => <div />,
+            },
+          },
+        }
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "content": [
+          {
+            "props": {
+              "content": [
+                {
+                  "props": {
+                    "heading": "Hello, other world",
+                    "id": "456",
+                  },
+                  "type": "HeadingBlock",
+                },
+              ],
+            },
+            "type": "Flex",
+          },
+        ],
+        "root": {
+          "props": {
+            "content": [
+              {
+                "props": {
+                  "heading": "Hello, other world",
+                  "id": "456",
+                },
+                "type": "HeadingBlock",
+              },
+            ],
+          },
+        },
+        "zones": {},
       }
     `);
   });
