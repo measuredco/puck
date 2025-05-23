@@ -288,9 +288,7 @@ export const DraggableComponent = ({
   }, [ref.current, iframe]);
 
   useEffect(() => {
-    const userIsDragging = !!zoneStore.getState().draggedItem;
-
-    if (ref.current && !userIsDragging) {
+    if (ref.current) {
       const observer = new ResizeObserver(sync);
 
       observer.observe(ref.current);
@@ -303,11 +301,29 @@ export const DraggableComponent = ({
 
   const registerNode = useAppStore((s) => s.nodes.registerNode);
 
+  const hideOverlay = useCallback(() => {
+    setIsVisible(false);
+  }, []);
+
+  const showOverlay = useCallback(() => {
+    setIsVisible(true);
+  }, []);
+
   useEffect(() => {
-    registerNode(id, { methods: { sync }, element: ref.current ?? null });
+    registerNode(id, {
+      methods: { sync, showOverlay, hideOverlay },
+      element: ref.current ?? null,
+    });
 
     return () => {
-      registerNode(id, { methods: { sync: () => null }, element: null });
+      registerNode(id, {
+        methods: {
+          sync: () => null,
+          hideOverlay: () => null,
+          showOverlay: () => null,
+        },
+        element: null,
+      });
     };
   }, [id, zoneCompound, index, componentType, sync]);
 

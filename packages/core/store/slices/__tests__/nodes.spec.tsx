@@ -25,7 +25,11 @@ describe("nodes slice", () => {
 
     act(() => {
       appStore.getState().nodes.registerNode("test-1", {
-        methods: { sync: syncMethod },
+        methods: {
+          sync: syncMethod,
+          hideOverlay: () => {},
+          showOverlay: () => {},
+        },
       });
     });
 

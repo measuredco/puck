@@ -2,6 +2,8 @@ import { AppStore } from "../";
 
 type NodeMethods = {
   sync: () => void;
+  hideOverlay: () => void;
+  showOverlay: () => void;
 };
 
 type PuckNodeInstance = {
@@ -26,7 +28,11 @@ export const createNodesSlice = (
 
     const emptyNode: PuckNodeInstance = {
       id,
-      methods: { sync: () => null },
+      methods: {
+        sync: () => null,
+        hideOverlay: () => null,
+        showOverlay: () => null,
+      },
       element: null,
     };
 
