@@ -2,6 +2,7 @@ import { RefObject, useEffect, useState } from "react";
 import { ZoneStoreContext } from "./../context";
 import { useContextStore } from "../../../lib/use-context-store";
 import { useAppStoreApi } from "../../../store";
+import { useOnDragFinished } from "../../../lib/dnd/use-on-drag-finished";
 
 export const useMinEmptyHeight = ({
   zoneCompound,
@@ -23,6 +24,47 @@ export const useMinEmptyHeight = ({
     };
   });
 
+  const onDragFinished = useOnDragFinished(
+    (finished) => {
+      if (finished) {
+        const newHeight = ref.current?.getBoundingClientRect().height;
+
+        setPrevHeight(0);
+
+        if (prevHeight === newHeight) {
+          setIsAnimating(false);
+
+          return;
+        }
+
+        const selectedItem = appStore.getState().selectedItem;
+        const zones = appStore.getState().state.indexes.zones;
+        const nodes = appStore.getState().nodes;
+
+        nodes.nodes[selectedItem?.props.id]?.methods.hideOverlay();
+
+        setTimeout(() => {
+          const contentIds = zones[zoneCompound]?.contentIds || [];
+
+          contentIds.forEach((contentId) => {
+            const node = nodes.nodes[contentId];
+            node?.methods.sync();
+          });
+
+          if (selectedItem) {
+            setTimeout(() => {
+              nodes.nodes[selectedItem.props.id]?.methods.sync();
+              nodes.nodes[selectedItem.props.id]?.methods.showOverlay();
+            }, 200);
+          }
+
+          setIsAnimating(false);
+        }, 50);
+      }
+    },
+    [appStore, prevHeight, zoneCompound]
+  );
+
   useEffect(() => {
     if (draggedItem && ref.current) {
       if (isZone) {
@@ -35,26 +77,8 @@ export const useMinEmptyHeight = ({
       }
     }
 
-    setPrevHeight(0);
-    setTimeout(() => {
-      const zones = appStore.getState().state.indexes.zones;
-      const nodes = appStore.getState().nodes;
-      const selectedItem = appStore.getState().selectedItem;
-
-      const contentIds = zones[zoneCompound]?.contentIds || [];
-
-      contentIds.forEach((contentId) => {
-        const node = nodes.nodes[contentId];
-        node?.methods.sync();
-      });
-
-      if (selectedItem) {
-        nodes.nodes[selectedItem.props.id]?.methods.sync();
-      }
-
-      setIsAnimating(false);
-    }, 400);
-  }, [ref.current, draggedItem, zoneCompound]);
+    return onDragFinished();
+  }, [ref.current, draggedItem, onDragFinished]);
 
   return [prevHeight || userMinEmptyHeight, isAnimating];
 };

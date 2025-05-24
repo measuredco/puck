@@ -34,6 +34,8 @@ import { createStore } from "zustand";
 import { getDeepDir } from "../../lib/get-deep-dir";
 import { useSensors } from "../../lib/dnd/use-sensors";
 import { useSafeId } from "../../lib/use-safe-id";
+import { getFrame } from "../../lib/get-frame";
+import { effect } from "@dnd-kit/state";
 
 const DEBUG = false;
 
@@ -125,6 +127,8 @@ const DragDropContextClient = ({
       nextAreaDepthIndex: {},
       draggedItem: null,
       previewIndex: {},
+      enabledIndex: {},
+      hoveringComponent: null,
     }))
   );
 
@@ -298,6 +302,9 @@ const DragDropContextClient = ({
           plugins={plugins}
           sensors={sensors}
           onDragEnd={(event, manager) => {
+            const entryEl = getFrame()?.querySelector("[data-puck-entry]");
+            entryEl?.removeAttribute("data-puck-dragging");
+
             const { source, target } = event.operation;
 
             if (!source) {
@@ -315,8 +322,7 @@ const DragDropContextClient = ({
                 ? previewIndex[zone]
                 : null;
 
-            // Delay insert until animation has finished
-            setTimeout(() => {
+            const onAnimationEnd = () => {
               zoneStore.setState({ draggedItem: null });
 
               // Tidy up cancellation
@@ -361,22 +367,29 @@ const DragDropContextClient = ({
                 }
               }
 
-              // Delay selection until next cycle to give box chance to render
-              setTimeout(() => {
-                dispatch({
-                  type: "setUi",
-                  ui: {
-                    itemSelector: { index, zone },
-                    isDragging: false,
-                  },
-                  recordHistory: true,
-                });
-              }, 50);
+              dispatch({
+                type: "setUi",
+                ui: {
+                  itemSelector: { index, zone },
+                  isDragging: false,
+                },
+                recordHistory: true,
+              });
 
               dragListeners.dragend?.forEach((fn) => {
                 fn(event, manager);
               });
-            }, 250);
+            };
+
+            // Delay insert until animation has finished
+            let dispose: () => void | undefined;
+
+            dispose = effect(() => {
+              if (source.status === "idle") {
+                onAnimationEnd();
+                dispose?.();
+              }
+            });
           }}
           onDragOver={(event, manager) => {
             // Prevent the optimistic re-ordering
@@ -536,13 +549,30 @@ const DragDropContextClient = ({
 
             zoneStore.setState({ draggedItem: event.operation.source });
 
-            dispatch({
-              type: "setUi",
-              ui: {
-                isDragging: true,
-              },
-              recordHistory: false,
-            });
+            if (
+              appStore.getState().selectedItem?.props.id !==
+              event.operation.source?.id
+            ) {
+              dispatch({
+                type: "setUi",
+                ui: {
+                  itemSelector: null,
+                  isDragging: true,
+                },
+                recordHistory: false,
+              });
+            } else {
+              dispatch({
+                type: "setUi",
+                ui: {
+                  isDragging: true,
+                },
+                recordHistory: false,
+              });
+            }
+
+            const entryEl = getFrame()?.querySelector("[data-puck-entry]");
+            entryEl?.setAttribute("data-puck-dragging", "true");
           }}
         >
           <ZoneStoreProvider store={zoneStore}>

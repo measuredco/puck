@@ -3,6 +3,7 @@ import {
   ReactNode,
   createContext,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -16,8 +17,6 @@ export type DropZoneContext = {
   areaId?: string;
   zoneCompound?: string;
   index?: number;
-  hoveringComponent?: string | null;
-  setHoveringComponent?: (id: string | null) => void;
   registerZone?: (zoneCompound: string) => void;
   unregisterZone?: (zoneCompound: string) => void;
   mode?: "edit" | "render";
@@ -41,8 +40,10 @@ export type ZoneStore = {
   areaDepthIndex: Record<string, boolean>;
   nextZoneDepthIndex: Record<string, boolean>;
   nextAreaDepthIndex: Record<string, boolean>;
+  enabledIndex: Record<string, boolean>;
   previewIndex: Record<string, Preview>;
   draggedItem?: Draggable | null;
+  hoveringComponent: string | null;
 };
 
 export const ZoneStoreContext = createContext<StoreApi<ZoneStore>>(
@@ -53,6 +54,8 @@ export const ZoneStoreContext = createContext<StoreApi<ZoneStore>>(
     nextAreaDepthIndex: {},
     draggedItem: null,
     previewIndex: {},
+    enabledIndex: {},
+    hoveringComponent: null,
   }))
 );
 
@@ -74,9 +77,6 @@ export const DropZoneProvider = ({
   children: ReactNode;
   value: DropZoneContext;
 }) => {
-  // Hovering component may match area, but areas must always contain zones
-  const [hoveringComponent, setHoveringComponent] = useState<string | null>();
-
   const dispatch = useAppStore((s) => s.dispatch);
 
   const registerZone = useCallback(
@@ -102,13 +102,11 @@ export const DropZoneProvider = ({
   const memoValue = useMemo(
     () =>
       ({
-        hoveringComponent,
-        setHoveringComponent,
         registerZone,
         unregisterZone,
         ...value,
       } as DropZoneContext),
-    [value, hoveringComponent]
+    [value]
   );
 
   return (

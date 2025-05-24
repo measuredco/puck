@@ -7,11 +7,12 @@ import { scrollIntoView } from "../../lib/scroll-into-view";
 import { ChevronDown, LayoutGrid, Layers, Type } from "lucide-react";
 import { rootDroppableId } from "../../lib/root-droppable-id";
 import { useCallback, useContext } from "react";
-import { dropZoneContext } from "../DropZone/context";
+import { dropZoneContext, ZoneStoreContext } from "../DropZone/context";
 import { getFrame } from "../../lib/get-frame";
 import { onScrollEnd } from "../../lib/on-scroll-end";
 import { useAppStore } from "../../store";
 import { useShallow } from "zustand/react/shallow";
+import { useContextStore } from "../../lib/use-context-store";
 
 const getClassName = getClassNameFactory("LayerTree", styles);
 const getClassNameLayer = getClassNameFactory("Layer", styles);
@@ -57,9 +58,11 @@ const Layer = ({
   );
   const containsZone = zonesForItem.length > 0;
 
-  const { setHoveringComponent = () => {}, hoveringComponent } = ctx || {};
-
-  const isHovering = hoveringComponent === itemId;
+  const zoneStore = useContext(ZoneStoreContext);
+  const isHovering = useContextStore(
+    ZoneStoreContext,
+    (s) => s.hoveringComponent === itemId
+  );
 
   const childIsSelected = useAppStore((s) => {
     const selectedData = s.state.indexes.nodes[s.selectedItem?.props.id];
@@ -117,13 +120,13 @@ const Layer = ({
               });
             });
           }}
-          onMouseOver={(e) => {
+          onMouseEnter={(e) => {
             e.stopPropagation();
-            setHoveringComponent(itemId);
+            zoneStore.setState({ hoveringComponent: itemId });
           }}
-          onMouseOut={(e) => {
+          onMouseLeave={(e) => {
             e.stopPropagation();
-            setHoveringComponent(null);
+            zoneStore.setState({ hoveringComponent: null });
           }}
         >
           {containsZone && (
