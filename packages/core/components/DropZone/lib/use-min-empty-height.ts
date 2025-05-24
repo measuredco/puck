@@ -24,21 +24,26 @@ export const useMinEmptyHeight = ({
     };
   });
 
-  // TODO animation is now broken
   const onDragFinished = useOnDragFinished(
     (finished) => {
       if (finished) {
+        const newHeight = ref.current?.getBoundingClientRect().height;
+
+        setPrevHeight(0);
+
+        if (prevHeight === newHeight) {
+          setIsAnimating(false);
+
+          return;
+        }
+
+        const selectedItem = appStore.getState().selectedItem;
+        const zones = appStore.getState().state.indexes.zones;
+        const nodes = appStore.getState().nodes;
+
+        nodes.nodes[selectedItem?.props.id]?.methods.hideOverlay();
+
         setTimeout(() => {
-          const _prevHeight = prevHeight;
-
-          const newHeight = ref.current?.getBoundingClientRect().height;
-
-          if (newHeight === _prevHeight) return;
-
-          const zones = appStore.getState().state.indexes.zones;
-          const nodes = appStore.getState().nodes;
-          const selectedItem = appStore.getState().selectedItem;
-
           const contentIds = zones[zoneCompound]?.contentIds || [];
 
           contentIds.forEach((contentId) => {
@@ -47,11 +52,14 @@ export const useMinEmptyHeight = ({
           });
 
           if (selectedItem) {
-            nodes.nodes[selectedItem.props.id]?.methods.sync();
+            setTimeout(() => {
+              nodes.nodes[selectedItem.props.id]?.methods.sync();
+              nodes.nodes[selectedItem.props.id]?.methods.showOverlay();
+            }, 200);
           }
 
           setIsAnimating(false);
-        }, 200);
+        }, 50);
       }
     },
     [appStore, prevHeight, zoneCompound]
@@ -68,8 +76,6 @@ export const useMinEmptyHeight = ({
         return;
       }
     }
-
-    setPrevHeight(0);
 
     return onDragFinished();
   }, [ref.current, draggedItem, onDragFinished]);
