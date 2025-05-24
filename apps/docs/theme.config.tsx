@@ -133,15 +133,11 @@ const theme: DocsThemeConfig = {
   banner:
     process.env.NEXT_PUBLIC_IS_LATEST === "true"
       ? {
-          dismissible: true,
-          key: "v0.18.0",
+          dismissible: false,
+          key: "github",
           content: (
-            <a
-              href="https://github.com/measuredco/puck/releases"
-              target="_blank"
-            >
-              <b>🎈 Puck 0.18</b>: The new drag-and-drop engine is here, with
-              CSS grid & flexbox support →
+            <a href="https://github.com/measuredco/puck/" target="_blank">
+              <b>⭐️ Love Puck?</b> Give us a star on GitHub! →
             </a>
           ),
         }
