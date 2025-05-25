@@ -159,11 +159,14 @@ function PuckProvider<
     onAction,
   } = usePropsContext();
 
-  const iframe: IframeConfig = {
-    enabled: true,
-    waitForStyles: true,
-    ..._iframe,
-  };
+  const iframe: IframeConfig = useMemo(
+    () => ({
+      enabled: true,
+      waitForStyles: true,
+      ..._iframe,
+    }),
+    [_iframe]
+  );
 
   const [generatedAppState] = useState<G["UserAppState"]>(() => {
     const initial = { ...defaultAppState.ui, ...initialUi };
@@ -389,11 +392,14 @@ function PuckLayout<
     initialHistory: _initialHistory,
   } = usePropsContext();
 
-  const iframe: IframeConfig = {
-    enabled: true,
-    waitForStyles: true,
-    ..._iframe,
-  };
+  const iframe: IframeConfig = useMemo(
+    () => ({
+      enabled: true,
+      waitForStyles: true,
+      ..._iframe,
+    }),
+    [_iframe]
+  );
 
   useInjectGlobalCss(iframe.enabled);
 
@@ -406,10 +412,11 @@ function PuckLayout<
 
   const appStore = useAppStoreApi();
 
-  // DEPRECATED
-  const rootProps = useAppStore(
-    (s) => s.state.data.root.props || s.state.data.root.props
-  );
+  const rootTitle = useAppStore((s) => {
+    const rootData = s.state.indexes.nodes["root"]?.data as G["UserRootProps"];
+
+    return rootData.title ?? "";
+  });
 
   const dispatch = useAppStore((s) => s.dispatch);
 
@@ -607,7 +614,7 @@ function PuckLayout<
                       </div>
                       <div className={getLayoutClassName("headerTitle")}>
                         <Heading rank="2" size="xs">
-                          {headerTitle || rootProps?.title || "Page"}
+                          {headerTitle || rootTitle || "Page"}
                           {headerPath && (
                             <>
                               {" "}
