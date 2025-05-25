@@ -6,7 +6,7 @@ import { AppStore, useAppStore, useAppStoreApi } from "../../../../store";
 
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
-import { ReactNode, useCallback, useMemo } from "react";
+import { memo, ReactNode, useCallback, useMemo } from "react";
 import { ItemSelector } from "../../../../lib/data/get-item";
 import { useRegisterFieldsSlice } from "../../../../store/slices/fields";
 import { useShallow } from "zustand/react/shallow";
@@ -145,7 +145,9 @@ const FieldsChild = ({ fieldName }: { fieldName: string }) => {
   );
 };
 
-export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
+const FieldsChildMemo = memo(FieldsChild);
+
+const FieldsInternal = ({ wrapFields = true }: { wrapFields?: boolean }) => {
   const overrides = useAppStore((s) => s.overrides);
   const componentResolving = useAppStore((s) => {
     const loadingCount = s.selectedItem
@@ -183,7 +185,7 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
     >
       <Wrapper isLoading={isLoading} itemSelector={itemSelector}>
         {fieldNames.map((fieldName) => (
-          <FieldsChild key={fieldName} fieldName={fieldName} />
+          <FieldsChildMemo key={fieldName} fieldName={fieldName} />
         ))}
       </Wrapper>
       {isLoading && (
@@ -196,3 +198,5 @@ export const Fields = ({ wrapFields = true }: { wrapFields?: boolean }) => {
     </form>
   );
 };
+
+export const Fields = memo(FieldsInternal);
