@@ -26,18 +26,9 @@ import type {
   Data,
   Metadata,
 } from "../../types";
-import { Button } from "../Button";
 
 import { SidebarSection } from "../SidebarSection";
-import {
-  ChevronDown,
-  ChevronUp,
-  Globe,
-  PanelLeft,
-  PanelRight,
-} from "lucide-react";
-import { Heading } from "../Heading";
-import { IconButton } from "../IconButton/IconButton";
+
 import { PuckAction } from "../../reducer";
 import getClassNameFactory from "../../lib/get-class-name-factory";
 import {
@@ -47,7 +38,6 @@ import {
   useAppStoreApi,
   appStoreContext,
 } from "../../store";
-import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
 import { Components } from "./components/Components";
@@ -72,6 +62,7 @@ import {
 import { walkAppState } from "../../lib/data/walk-app-state";
 import { PrivateAppState } from "../../types/Internal";
 import fdeq from "fast-deep-equal";
+import { Header } from "./components/Header";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -137,7 +128,7 @@ function PropsProvider<UserConfig extends Config = Config>(
   );
 }
 
-const usePropsContext = () =>
+export const usePropsContext = () =>
   useContext<PuckProps>(propsContext as Context<PuckProps>);
 
 function PuckProvider<
@@ -382,11 +373,6 @@ function PuckLayout<
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
 >({ children }: PropsWithChildren) {
   const {
-    onPublish,
-    renderHeader,
-    renderHeaderActions,
-    headerTitle,
-    headerPath,
     iframe: _iframe,
     dnd,
     initialHistory: _initialHistory,
@@ -408,36 +394,7 @@ function PuckLayout<
     (s) => s.state.ui.rightSideBarVisible
   );
 
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const appStore = useAppStoreApi();
-
-  const rootTitle = useAppStore((s) => {
-    const rootData = s.state.indexes.nodes["root"]?.data as G["UserRootProps"];
-
-    return rootData.title ?? "";
-  });
-
   const dispatch = useAppStore((s) => s.dispatch);
-
-  const toggleSidebars = useCallback(
-    (sidebar: "left" | "right") => {
-      const widerViewport = window.matchMedia("(min-width: 638px)").matches;
-      const sideBarVisible =
-        sidebar === "left" ? leftSideBarVisible : rightSideBarVisible;
-      const oppositeSideBar =
-        sidebar === "left" ? "rightSideBarVisible" : "leftSideBarVisible";
-
-      dispatch({
-        type: "setUi",
-        ui: {
-          [`${sidebar}SideBarVisible`]: !sideBarVisible,
-          ...(!widerViewport ? { [oppositeSideBar]: false } : {}),
-        },
-      });
-    },
-    [dispatch, leftSideBarVisible, rightSideBarVisible]
-  );
 
   useEffect(() => {
     if (!window.matchMedia("(min-width: 638px)").matches) {
@@ -469,65 +426,10 @@ function PuckLayout<
     };
   }, []);
 
-  // DEPRECATED
-  const defaultHeaderRender = useMemo((): Overrides["header"] => {
-    if (renderHeader) {
-      console.warn(
-        "`renderHeader` is deprecated. Please use `overrides.header` and the `usePuck` hook instead"
-      );
-
-      const RenderHeader = ({ actions, ...props }: any) => {
-        const Comp = renderHeader!;
-
-        const appState = useAppStore((s) => s.state);
-
-        return (
-          <Comp {...props} dispatch={dispatch} state={appState}>
-            {actions}
-          </Comp>
-        );
-      };
-
-      return RenderHeader;
-    }
-
-    return DefaultOverride;
-  }, [renderHeader]);
-
-  // DEPRECATED
-  const defaultHeaderActionsRender = useMemo((): Overrides["headerActions"] => {
-    if (renderHeaderActions) {
-      console.warn(
-        "`renderHeaderActions` is deprecated. Please use `overrides.headerActions` and the `usePuck` hook instead."
-      );
-
-      const RenderHeader = (props: any) => {
-        const Comp = renderHeaderActions!;
-
-        const appState = useAppStore((s) => s.state);
-
-        return <Comp {...props} dispatch={dispatch} state={appState}></Comp>;
-      };
-
-      return RenderHeader;
-    }
-
-    return DefaultOverride;
-  }, [renderHeader]);
-
   const overrides = useAppStore((s) => s.overrides);
 
   const CustomPuck = useMemo(
     () => overrides.puck || DefaultOverride,
-    [overrides]
-  );
-
-  const CustomHeader = useMemo(
-    () => overrides.header || defaultHeaderRender,
-    [overrides]
-  );
-  const CustomHeaderActions = useMemo(
-    () => overrides.headerActions || defaultHeaderActionsRender,
     [overrides]
   );
 
@@ -561,111 +463,12 @@ function PuckLayout<
             <div
               className={getLayoutClassName({
                 leftSideBarVisible,
-                menuOpen,
                 mounted,
                 rightSideBarVisible,
               })}
             >
               <div className={getLayoutClassName("inner")}>
-                <CustomHeader
-                  actions={
-                    <>
-                      <CustomHeaderActions>
-                        <Button
-                          onClick={() => {
-                            const data = appStore.getState().state.data;
-                            onPublish && onPublish(data as G["UserData"]);
-                          }}
-                          icon={<Globe size="14px" />}
-                        >
-                          Publish
-                        </Button>
-                      </CustomHeaderActions>
-                    </>
-                  }
-                >
-                  <header className={getLayoutClassName("header")}>
-                    <div className={getLayoutClassName("headerInner")}>
-                      <div className={getLayoutClassName("headerToggle")}>
-                        <div
-                          className={getLayoutClassName("leftSideBarToggle")}
-                        >
-                          <IconButton
-                            onClick={() => {
-                              toggleSidebars("left");
-                            }}
-                            title="Toggle left sidebar"
-                          >
-                            <PanelLeft focusable="false" />
-                          </IconButton>
-                        </div>
-                        <div
-                          className={getLayoutClassName("rightSideBarToggle")}
-                        >
-                          <IconButton
-                            onClick={() => {
-                              toggleSidebars("right");
-                            }}
-                            title="Toggle right sidebar"
-                          >
-                            <PanelRight focusable="false" />
-                          </IconButton>
-                        </div>
-                      </div>
-                      <div className={getLayoutClassName("headerTitle")}>
-                        <Heading rank="2" size="xs">
-                          {headerTitle || rootTitle || "Page"}
-                          {headerPath && (
-                            <>
-                              {" "}
-                              <code
-                                className={getLayoutClassName("headerPath")}
-                              >
-                                {headerPath}
-                              </code>
-                            </>
-                          )}
-                        </Heading>
-                      </div>
-                      <div className={getLayoutClassName("headerTools")}>
-                        <div className={getLayoutClassName("menuButton")}>
-                          <IconButton
-                            onClick={() => {
-                              return setMenuOpen(!menuOpen);
-                            }}
-                            title="Toggle menu bar"
-                          >
-                            {menuOpen ? (
-                              <ChevronUp focusable="false" />
-                            ) : (
-                              <ChevronDown focusable="false" />
-                            )}
-                          </IconButton>
-                        </div>
-                        <MenuBar<G["UserData"]>
-                          dispatch={dispatch}
-                          onPublish={onPublish}
-                          menuOpen={menuOpen}
-                          renderHeaderActions={() => (
-                            <CustomHeaderActions>
-                              <Button
-                                onClick={() => {
-                                  const data = appStore.getState().state
-                                    .data as G["UserData"];
-                                  onPublish && onPublish(data);
-                                }}
-                                icon={<Globe size="14px" />}
-                              >
-                                Publish
-                              </Button>
-                            </CustomHeaderActions>
-                          )}
-                          setMenuOpen={setMenuOpen}
-                        />
-                      </div>
-                    </div>
-                  </header>
-                </CustomHeader>
+                <Header />
                 <div className={getLayoutClassName("leftSideBar")}>
                   <SidebarSection title="Components" noBorderTop>
                     <Components />
