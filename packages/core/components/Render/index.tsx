@@ -57,9 +57,11 @@ export function Render<
     id: "puck-root",
   };
 
-  const propsWithSlots = useSlots(config.root, pageProps, (props) => (
-    <SlotRender {...props} config={config} metadata={metadata} />
-  ));
+  const propsWithSlots = useSlots(
+    config,
+    { type: "root", props: pageProps },
+    (props) => <SlotRender {...props} config={config} metadata={metadata} />
+  );
 
   const nextContextValue = useMemo<DropZoneContext>(
     () => ({

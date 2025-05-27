@@ -58,13 +58,17 @@ export function DropZoneRender({
           },
         };
 
+        const renderItem = { ...item, props };
+
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        const propsWithSlots = useSlots(Component, props, (props) => (
+        const propsWithSlots = useSlots(config, renderItem, (props) => (
           <SlotRenderPure {...props} config={config} metadata={metadata} />
         ));
 
         if (Component) {
-          return <Component.render key={item.props.id} {...propsWithSlots} />;
+          return (
+            <Component.render key={renderItem.props.id} {...propsWithSlots} />
+          );
         }
 
         return null;
@@ -110,7 +114,7 @@ export function Render<
     id: "puck-root",
   };
 
-  const propsWithSlots = useSlots(config.root, props, (props) => (
+  const propsWithSlots = useSlots(config, { type: "root", props }, (props) => (
     <SlotRenderPure {...props} config={config} metadata={metadata} />
   ));
 

@@ -1,10 +1,10 @@
 import { ReactNode, useMemo } from "react";
-import { ComponentData, Content } from "../types";
+import { ComponentData, Config, Content } from "../types";
 import { DropZoneProps } from "../components/DropZone/types";
 import { mapSlotsSync } from "./data/map-slots";
-import { useAppStoreApi } from "../store";
 
 export function useSlots(
+  config: Config,
   item: ComponentData,
   renderSlotEdit: (dzProps: DropZoneProps & { content: Content }) => ReactNode,
   renderSlotRender: (
@@ -13,11 +13,7 @@ export function useSlots(
   readOnly?: ComponentData["readOnly"],
   forceReadOnly?: boolean
 ): ComponentData["props"] {
-  const appStore = useAppStoreApi();
-
   const slotProps = useMemo(() => {
-    const config = appStore.getState().config;
-
     const mapped = mapSlotsSync(
       item,
       (content, _parentId, propName, field, propPath) => {
@@ -42,7 +38,7 @@ export function useSlots(
     ).props;
 
     return mapped;
-  }, [item, readOnly, forceReadOnly]);
+  }, [config, item, readOnly, forceReadOnly]);
 
   const mergedProps = useMemo(
     () => ({ ...item.props, ...slotProps }),
