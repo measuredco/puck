@@ -70,11 +70,13 @@ export type ComponentConfig<
   ) =>
     | Promise<{
         props?: Partial<FieldProps>;
-        readOnly?: Partial<Record<keyof FieldProps, boolean>>;
+        readOnly?: Partial<Record<keyof FieldProps, boolean>> &
+          Record<string, boolean>;
       }>
     | {
         props?: Partial<FieldProps>;
-        readOnly?: Partial<Record<keyof FieldProps, boolean>>;
+        readOnly?: Partial<Record<keyof FieldProps, boolean>> &
+          Record<string, boolean>;
       };
   resolvePermissions?: (
     data: DataShape,
