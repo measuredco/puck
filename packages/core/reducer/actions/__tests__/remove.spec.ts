@@ -123,7 +123,7 @@ describe("Reducer", () => {
                 "flatData": {
                   "props": {
                     "id": "root",
-                    "slot": [],
+                    "slot": null,
                     "title": "",
                   },
                   "type": "root",
@@ -237,7 +237,7 @@ describe("Reducer", () => {
                 "flatData": {
                   "props": {
                     "id": "root",
-                    "slot": [],
+                    "slot": null,
                   },
                   "type": "root",
                 },
@@ -340,7 +340,7 @@ describe("Reducer", () => {
                   "props": {
                     "id": "my-component",
                     "prop": "Data",
-                    "slot": [],
+                    "slot": null,
                   },
                   "type": "Comp",
                 },
@@ -370,6 +370,7 @@ describe("Reducer", () => {
                 "flatData": {
                   "props": {
                     "id": "root",
+                    "slot": null,
                   },
                   "type": "root",
                 },
@@ -467,7 +468,7 @@ describe("Reducer", () => {
                 "flatData": {
                   "props": {
                     "id": "root",
-                    "slot": [],
+                    "slot": null,
                     "title": "",
                   },
                   "type": "root",

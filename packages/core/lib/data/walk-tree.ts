@@ -5,7 +5,6 @@ import {
   RootData,
   UserGenerics,
 } from "../../types";
-import { createIsSlotConfig } from "./is-slot";
 import { mapSlotsSync } from "./map-slots";
 
 type WalkTreeOptions = {
@@ -22,14 +21,13 @@ export function walkTree<
   config: UserConfig,
   callbackFn: (data: Content, options: WalkTreeOptions) => Content | null | void
 ): T {
-  const isSlot = createIsSlotConfig(config);
-
   const walkItem = (item: ComponentData | RootData) => {
     return mapSlotsSync(
       item,
-      (content, parentId, propName) =>
-        callbackFn(content, { parentId, propName }),
-      isSlot
+      (content, parentId, propName) => {
+        return callbackFn(content, { parentId, propName }) ?? content;
+      },
+      config
     );
   };
 

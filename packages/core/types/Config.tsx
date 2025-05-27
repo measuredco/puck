@@ -8,12 +8,29 @@ import { DefaultComponentProps } from "./Props";
 import { Permissions, Slot } from "./API";
 import { DropZoneProps } from "../components/DropZone/types";
 
+type SlotComponent = (props?: Omit<DropZoneProps, "zone">) => ReactNode;
+
+/**
+ * Recursively walk T and replace Slots with SlotComponents
+ */
+type WithDeepSlots<T> =
+  // ────────────────────────────── leaf conversions ─────────────────────────────
+  T extends Slot
+    ? SlotComponent
+    : // ────────────────────────── recurse into arrays & tuples ────────────────
+    T extends readonly (infer U)[]
+    ? ReadonlyArray<WithDeepSlots<U>>
+    : T extends (infer U)[]
+    ? WithDeepSlots<U>[]
+    : // ───────────── recurse into objects while preserving optionality ────
+    T extends object
+    ? { [K in keyof T]: WithDeepSlots<T[K]> }
+    : T;
+
 export type PuckComponent<Props> = (
   props: WithId<
     WithPuckProps<{
-      [PropName in keyof Props]: Props[PropName] extends Slot
-        ? (props?: Omit<DropZoneProps, "zone">) => ReactNode
-        : Props[PropName];
+      [K in keyof Props]: WithDeepSlots<Props[K]>;
     }>
   >
 ) => JSX.Element;

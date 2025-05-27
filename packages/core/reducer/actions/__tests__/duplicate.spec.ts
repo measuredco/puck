@@ -46,7 +46,13 @@ describe("Reducer", () => {
         expect(newState.data.content).toHaveLength(2);
         expect(newState.data.content[1].props.id).not.toBe("sampleId");
         expect(newState.data.content[1].props.prop).toBe("Some example data");
-        expectIndexed(newState, newState.data.content[1], [rootDroppableId], 1);
+        expectIndexed(
+          newState,
+          newState.data.content[1],
+          [rootDroppableId],
+          1,
+          config
+        );
       });
 
       it("should duplicate in a different zone", () => {
@@ -82,7 +88,13 @@ describe("Reducer", () => {
         expect(zone).toHaveLength(2);
         expect(zone[1].props.id).not.toBe("sampleId");
         expect(zone[1].props.prop).toBe("Some example data");
-        expectIndexed(newState, zone[1], [rootDroppableId, dzZoneCompound], 1);
+        expectIndexed(
+          newState,
+          zone[1],
+          [rootDroppableId, dzZoneCompound],
+          1,
+          config
+        );
       });
 
       it("should recursively duplicate related items and zones", () => {
@@ -127,7 +139,7 @@ describe("Reducer", () => {
         expect(zone1).toHaveLength(2);
         expect(zone1[1].props.id).not.toBe("my-component");
         expect(zone1[1].props.prop).toBe("Data");
-        expectIndexed(newState, zone1[1], [rootDroppableId], 1);
+        expectIndexed(newState, zone1[1], [rootDroppableId], 1, config);
 
         const zone2ZoneCompound = `${zone1[1].props.id}:zone`;
         const zone2 = newState.data.zones?.[zone2ZoneCompound] ?? [];
@@ -139,7 +151,8 @@ describe("Reducer", () => {
           newState,
           zone2[0],
           [rootDroppableId, zone2ZoneCompound],
-          0
+          0,
+          config
         );
 
         const zone3ZoneCompound = `${zone2[0].props.id}:zone`;
@@ -152,7 +165,8 @@ describe("Reducer", () => {
           newState,
           zone3[0],
           [rootDroppableId, zone2ZoneCompound, zone3ZoneCompound],
-          0
+          0,
+          config
         );
       });
 
@@ -209,7 +223,7 @@ describe("Reducer", () => {
         expect(content).toHaveLength(2);
         expect(content[1].props.id).not.toBe("sampleId");
         expect(content[1].props.prop).toBe("Some example data");
-        expectIndexed(newState, content[1], ["root:slot"], 1);
+        expectIndexed(newState, content[1], ["root:slot"], 1, config);
       });
 
       it("should duplicate within a slot, within a slot", () => {
@@ -252,7 +266,13 @@ describe("Reducer", () => {
         expect(content).toHaveLength(2);
         expect(content[1].props.id).not.toBe("second");
         expect(content[1].props.prop).toBe("Some example data");
-        expectIndexed(newState, content[1], ["root:slot", "first:slot"], 1);
+        expectIndexed(
+          newState,
+          content[1],
+          ["root:slot", "first:slot"],
+          1,
+          config
+        );
       });
 
       it("should duplicate within a slot, within a DropZone", () => {
@@ -300,7 +320,8 @@ describe("Reducer", () => {
           newState,
           content[1],
           [rootDroppableId, dzZoneCompound, "first:slot"],
-          1
+          1,
+          config
         );
       });
 
@@ -342,7 +363,7 @@ describe("Reducer", () => {
         const zone1 = newState.data.root.props?.slot ?? [];
         expect(zone1).toHaveLength(2);
         expect(zone1[1].props.id).not.toBe("second");
-        expectIndexed(newState, zone1[1], ["root:slot"], 1);
+        expectIndexed(newState, zone1[1], ["root:slot"], 1, config);
 
         const zone2ZoneCompound = `${zone1[1].props.id}:slot`;
         const zone2 = zone1[1].props.slot ?? [];
@@ -350,7 +371,13 @@ describe("Reducer", () => {
         expect(zone2).toHaveLength(1);
         expect(zone2[0].props.id).not.toBe("second");
         expect(zone2[0].props.prop).toBe("Some example data");
-        expectIndexed(newState, zone2[0], ["root:slot", zone2ZoneCompound], 0);
+        expectIndexed(
+          newState,
+          zone2[0],
+          ["root:slot", zone2ZoneCompound],
+          0,
+          config
+        );
       });
 
       it("should select the duplicated item", () => {

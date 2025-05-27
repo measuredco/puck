@@ -51,6 +51,7 @@
   "devDependencies": {
     "@testing-library/react": "^16.1.0",
     "@types/deep-diff": "^1.0.3",
+    "@types/flat": "^5.0.5",
     "@types/jest": "^29.5.4",
     "@types/object-hash": "^3.0.6",
     "@types/react": "^19.0.1",
@@ -73,6 +74,7 @@
     "@dnd-kit/react": "0.1.18-beta-20250525014052",
     "deep-diff": "^1.0.2",
     "fast-deep-equal": "^3.1.3",
+    "flat": "^5.0.2",
     "object-hash": "^3.0.0",
     "react-hotkeys-hook": "^4.6.1",
     "use-debounce": "^9.0.4",
