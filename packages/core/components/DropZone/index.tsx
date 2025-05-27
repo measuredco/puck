@@ -175,7 +175,10 @@ const DropZoneChild = ({
     [componentConfig?.defaultProps, item?.props, puckProps]
   );
 
+  const config = useAppStore((s) => s.config);
+
   const defaultedPropsWithSlots = useSlots(
+    config,
     { type: nodeType, props: defaultsProps },
     DropZoneEditPure,
     (slotProps) => (
@@ -490,11 +493,10 @@ const DropZoneRenderItem = ({
 }) => {
   const Component = config.components[item.type];
 
-  const props = useSlots(item.props, (slotProps) => (
+  const props = useSlots(config, item, (slotProps) => (
     <SlotRenderPure {...slotProps} config={config} metadata={metadata} />
   ));
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const nextContextValue = useMemo<DropZoneContext>(
     () => ({
       areaId: props.id,

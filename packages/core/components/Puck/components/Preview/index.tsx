@@ -80,6 +80,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
     (pageProps) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const propsWithSlots = useSlots(
+        config,
         { type: "root", props: pageProps },
         DropZoneEditPure
       );
@@ -93,7 +94,7 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         <>{propsWithSlots.children}</>
       );
     },
-    [config.root]
+    [config]
   );
 
   const Frame = useMemo(() => overrides.iframe, [overrides]);
