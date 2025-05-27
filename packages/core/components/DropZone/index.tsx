@@ -179,7 +179,7 @@ const DropZoneChild = ({
 
   const defaultedPropsWithSlots = useSlots(
     config,
-    { type: nodeType, props: defaultsProps },
+    { type: item?.type ?? nodeType, props: defaultsProps },
     DropZoneEditPure,
     (slotProps) => (
       <ContextSlotRender componentId={componentId} zone={slotProps.zone} />
