@@ -4,7 +4,7 @@ import styles from "./styles.module.css";
 import { getClassNameFactory } from "@/core/lib";
 import { Button } from "@/core/components/Button";
 import { Section } from "../../components/Section";
-import { PuckComponent } from "@/core/types";
+import { PuckComponent, Slot } from "@/core/types";
 
 const getClassName = getClassNameFactory("Hero", styles);
 
@@ -15,7 +15,8 @@ export type HeroProps = {
   align?: string;
   padding: string;
   image?: {
-    mode?: "inline" | "background";
+    content?: Slot;
+    mode?: "inline" | "background" | "custom";
     url?: string;
   };
   buttons: {
@@ -75,7 +76,7 @@ export const Hero: PuckComponent<HeroProps> = ({
           </div>
         </div>
 
-        {align !== "center" && image?.mode !== "background" && image?.url && (
+        {align !== "center" && image?.mode === "inline" && image?.url && (
           <div
             style={{
               backgroundImage: `url('${image?.url}')`,
@@ -83,6 +84,16 @@ export const Hero: PuckComponent<HeroProps> = ({
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
               borderRadius: 24,
+              height: 356,
+              marginLeft: "auto",
+              width: "100%",
+            }}
+          />
+        )}
+
+        {align !== "center" && image?.mode === "custom" && image.content && (
+          <image.content
+            style={{
               height: 356,
               marginLeft: "auto",
               width: "100%",
