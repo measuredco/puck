@@ -175,11 +175,16 @@ const DropZoneChild = ({
     [componentConfig?.defaultProps, item?.props, puckProps]
   );
 
+  const defaultedNode = useMemo(
+    () => ({ type: item?.type ?? nodeType, props: defaultsProps }),
+    [item?.type, nodeType, defaultsProps]
+  );
+
   const config = useAppStore((s) => s.config);
 
   const defaultedPropsWithSlots = useSlots(
     config,
-    { type: item?.type ?? nodeType, props: defaultsProps },
+    defaultedNode,
     DropZoneEditPure,
     (slotProps) => (
       <ContextSlotRender componentId={componentId} zone={slotProps.zone} />
