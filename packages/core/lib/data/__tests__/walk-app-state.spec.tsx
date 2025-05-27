@@ -6,14 +6,16 @@ import {
 } from "../../../store";
 import { PrivateAppState } from "../../../types/Internal";
 import { walkAppState } from "../walk-app-state";
-import { stripSlots } from "../strip-slots";
 import { rootDroppableId } from "../../root-droppable-id";
+import { flattenNode } from "../flatten-node";
 
 type Props = {
   Comp: {
     prop: string;
     slotA: Slot;
     slotB: Slot;
+    array: { slot: Slot }[];
+    object: { slot: Slot };
   };
 };
 
@@ -51,24 +53,6 @@ const defaultState = {
 
 const appStore = createAppStore();
 
-const expectIndexed = (
-  state: PrivateAppState,
-  item: ComponentData | undefined,
-  path: string[],
-  index: number
-) => {
-  if (!item) return;
-
-  const zoneCompound = path[path.length - 1];
-
-  expect(state.indexes.zones[zoneCompound]?.contentIds[index]).toEqual(
-    item.props.id
-  );
-  expect(state.indexes.nodes[item.props.id].data).toEqual(item);
-  expect(state.indexes.nodes[item.props.id].flatData).toEqual(stripSlots(item));
-  expect(state.indexes.nodes[item.props.id].path).toEqual(path);
-};
-
 describe("walk-app-state", () => {
   const config: UserConfig = {
     root: {
@@ -80,11 +64,39 @@ describe("walk-app-state", () => {
           prop: { type: "text" },
           slotA: { type: "slot" },
           slotB: { type: "slot" },
+          array: { type: "array", arrayFields: { slot: { type: "slot" } } },
+          object: { type: "object", objectFields: { slot: { type: "slot" } } },
         },
-        defaultProps: { prop: "example", slotA: [], slotB: [] },
+        defaultProps: {
+          prop: "example",
+          slotA: [],
+          slotB: [],
+          array: [],
+          object: { slot: [] },
+        },
         render: () => <div />,
       },
     },
+  };
+
+  const expectIndexed = (
+    state: PrivateAppState,
+    item: ComponentData | undefined,
+    path: string[],
+    index: number
+  ) => {
+    if (!item) return;
+
+    const zoneCompound = path[path.length - 1];
+
+    expect(state.indexes.zones[zoneCompound]?.contentIds[index]).toEqual(
+      item.props.id
+    );
+    expect(state.indexes.nodes[item.props.id].data).toEqual(item);
+    expect(state.indexes.nodes[item.props.id].flatData).toEqual(
+      flattenNode(item, config)
+    );
+    expect(state.indexes.nodes[item.props.id].path).toEqual(path);
   };
 
   beforeEach(() => {
@@ -134,6 +146,30 @@ describe("walk-app-state", () => {
                       props: { id: "slotted-b-id", prop: "Inside a slot" },
                     },
                   ],
+                  array: [
+                    {
+                      slot: [
+                        {
+                          type: "Comp",
+                          props: {
+                            id: "array-slotted-a-id",
+                            prop: "Inside a slot, inside an array",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                  object: {
+                    slot: [
+                      {
+                        type: "Comp",
+                        props: {
+                          id: "object-slotted-a-id",
+                          prop: "Inside a slot, inside an object",
+                        },
+                      },
+                    ],
+                  },
                 },
               },
             ],
@@ -183,13 +219,61 @@ describe("walk-app-state", () => {
       0
     );
 
+    expectIndexed(
+      state,
+      state.data.zones?.["other-component:zone"][0].props.array[0].slot[0],
+      [
+        rootDroppableId,
+        "my-component:zone",
+        "other-component:zone",
+        "another-id:array[0].slot",
+      ],
+      0
+    );
+
+    expectIndexed(
+      state,
+      state.data.zones?.["other-component:zone"][0].props.object.slot[0],
+      [
+        rootDroppableId,
+        "my-component:zone",
+        "other-component:zone",
+        "another-id:object.slot",
+      ],
+      0
+    );
+
     expect(state.indexes).toMatchInlineSnapshot(`
       {
         "nodes": {
           "another-id": {
             "data": {
               "props": {
+                "array": [
+                  {
+                    "slot": [
+                      {
+                        "props": {
+                          "id": "array-slotted-a-id",
+                          "prop": "Inside a slot, inside an array",
+                        },
+                        "type": "Comp",
+                      },
+                    ],
+                  },
+                ],
                 "id": "another-id",
+                "object": {
+                  "slot": [
+                    {
+                      "props": {
+                        "id": "object-slotted-a-id",
+                        "prop": "Inside a slot, inside an object",
+                      },
+                      "type": "Comp",
+                    },
+                  ],
+                },
                 "prop": "Even more example data",
                 "slotA": [
                   {
@@ -214,8 +298,12 @@ describe("walk-app-state", () => {
             },
             "flatData": {
               "props": {
+                "array.0.slot": null,
                 "id": "another-id",
+                "object.slot": null,
                 "prop": "Even more example data",
+                "slotA": null,
+                "slotB": null,
               },
               "type": "Comp",
             },
@@ -226,6 +314,30 @@ describe("walk-app-state", () => {
               "other-component:zone",
             ],
             "zone": "zone",
+          },
+          "array-slotted-a-id": {
+            "data": {
+              "props": {
+                "id": "array-slotted-a-id",
+                "prop": "Inside a slot, inside an array",
+              },
+              "type": "Comp",
+            },
+            "flatData": {
+              "props": {
+                "id": "array-slotted-a-id",
+                "prop": "Inside a slot, inside an array",
+              },
+              "type": "Comp",
+            },
+            "parentId": "another-id",
+            "path": [
+              "root:default-zone",
+              "my-component:zone",
+              "other-component:zone",
+              "another-id:array[0].slot",
+            ],
+            "zone": "array[0].slot",
           },
           "my-component": {
             "data": {
@@ -247,6 +359,30 @@ describe("walk-app-state", () => {
               "root:default-zone",
             ],
             "zone": "default-zone",
+          },
+          "object-slotted-a-id": {
+            "data": {
+              "props": {
+                "id": "object-slotted-a-id",
+                "prop": "Inside a slot, inside an object",
+              },
+              "type": "Comp",
+            },
+            "flatData": {
+              "props": {
+                "id": "object-slotted-a-id",
+                "prop": "Inside a slot, inside an object",
+              },
+              "type": "Comp",
+            },
+            "parentId": "another-id",
+            "path": [
+              "root:default-zone",
+              "my-component:zone",
+              "other-component:zone",
+              "another-id:object.slot",
+            ],
+            "zone": "object.slot",
           },
           "other-component": {
             "data": {
@@ -282,7 +418,7 @@ describe("walk-app-state", () => {
             "flatData": {
               "props": {
                 "id": "root",
-                "slot": [],
+                "slot": null,
                 "title": "",
               },
               "type": "root",
@@ -341,6 +477,18 @@ describe("walk-app-state", () => {
           },
         },
         "zones": {
+          "another-id:array[0].slot": {
+            "contentIds": [
+              "array-slotted-a-id",
+            ],
+            "type": "slot",
+          },
+          "another-id:object.slot": {
+            "contentIds": [
+              "object-slotted-a-id",
+            ],
+            "type": "slot",
+          },
           "another-id:slotA": {
             "contentIds": [
               "slotted-a-id",

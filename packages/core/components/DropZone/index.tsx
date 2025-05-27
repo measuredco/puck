@@ -23,7 +23,7 @@ import {
   ZoneStoreContext,
   dropZoneContext,
 } from "./context";
-import { useAppStore } from "../../store";
+import { useAppStore, useAppStoreApi } from "../../store";
 import { DropZoneProps } from "./types";
 import {
   ComponentData,
@@ -46,6 +46,7 @@ import { useShallow } from "zustand/react/shallow";
 import { renderContext } from "../Render";
 import { useSlots } from "../../lib/use-slots";
 import { ContextSlotRender, SlotRenderPure } from "../SlotRender";
+import { expandNode } from "../../lib/data/flatten-node";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -103,9 +104,16 @@ const DropZoneChild = ({
     useShallow((s) => s.state.indexes.nodes[componentId]?.data.readOnly)
   );
 
+  const appStore = useAppStoreApi();
+
   const item = useMemo(() => {
     if (nodeProps) {
-      return { type: nodeType, props: nodeProps };
+      const expanded = expandNode({
+        type: nodeType,
+        props: nodeProps,
+      }) as ComponentData;
+
+      return expanded;
     }
 
     const preview = zoneStore.getState().previewIndex[zoneCompound];
@@ -119,7 +127,7 @@ const DropZoneChild = ({
     }
 
     return null;
-  }, [componentId, zoneCompound, nodeType, nodeProps]);
+  }, [appStore, componentId, zoneCompound, nodeType, nodeProps]);
 
   const componentConfig = useAppStore((s) =>
     item?.type ? s.config.components[item.type] : null
@@ -168,8 +176,7 @@ const DropZoneChild = ({
   );
 
   const defaultedPropsWithSlots = useSlots(
-    componentConfig,
-    defaultsProps,
+    { type: nodeType, props: defaultsProps },
     DropZoneEditPure,
     (slotProps) => (
       <ContextSlotRender componentId={componentId} zone={slotProps.zone} />
@@ -190,7 +197,8 @@ const DropZoneChild = ({
 
   let componentType = item.type as string;
 
-  const isInserting = item.previewType === "insert";
+  const isInserting =
+    "previewType" in item ? item.previewType === "insert" : false;
 
   if (isInserting) {
     Render = renderPreview;
@@ -482,7 +490,7 @@ const DropZoneRenderItem = ({
 }) => {
   const Component = config.components[item.type];
 
-  const props = useSlots(Component, item.props, (slotProps) => (
+  const props = useSlots(item.props, (slotProps) => (
     <SlotRenderPure {...slotProps} config={config} metadata={metadata} />
   ));
 

@@ -78,9 +78,11 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
 
   const Page = useCallback<React.FC<PageProps>>(
     (pageProps) => {
-      const rootConfig = config.root;
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const propsWithSlots = useSlots(rootConfig, pageProps, DropZoneEditPure);
+      const propsWithSlots = useSlots(
+        { type: "root", props: pageProps },
+        DropZoneEditPure
+      );
 
       return config.root?.render ? (
         config.root?.render({

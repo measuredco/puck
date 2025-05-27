@@ -1,4 +1,3 @@
-import { forEachSlot } from "./for-each-slot";
 import { forRelatedZones } from "./for-related-zones";
 import { rootDroppableId } from "../root-droppable-id";
 import {
@@ -14,8 +13,8 @@ import {
   ZoneIndex,
   ZoneType,
 } from "../../types/Internal";
-import { createIsSlotConfig } from "./is-slot";
-import { stripSlots } from "./strip-slots";
+import { mapSlotsSync } from "./map-slots";
+import { flattenNode } from "./flatten-node";
 
 /**
  * Walk the Puck state, generate indexes and make modifications to nodes.
@@ -105,26 +104,26 @@ export function walkAppState<UserData extends Data = Data>(
 
     const id = mappedItem.props.id;
 
-    const newProps: ComponentData["props"] = { ...mappedItem.props };
+    const newProps = {
+      ...mapSlotsSync(
+        mappedItem,
+        (content, parentId, slotId) => {
+          const zoneCompound = `${parentId}:${slotId}`;
 
-    forEachSlot(
-      mappedItem,
-      (parentId, slotId, content) => {
-        const zoneCompound = `${parentId}:${slotId}`;
+          const [_, newContent] = processContent(
+            path,
+            zoneCompound,
+            content,
+            "slot",
+            parentId
+          );
 
-        const [_, newContent] = processContent(
-          path,
-          zoneCompound,
-          content,
-          "slot",
-          parentId
-        );
-
-        newProps[slotId] = newContent;
-      },
-      false,
-      createIsSlotConfig(config)
-    );
+          return newContent;
+        },
+        config
+      ).props,
+      id,
+    };
 
     processRelatedZones(item, id, path);
 
@@ -137,7 +136,7 @@ export function walkAppState<UserData extends Data = Data>(
 
     newNodeIndex[id] = {
       data: newItem,
-      flatData: stripSlots(newItem),
+      flatData: flattenNode(newItem, config) as ComponentData,
       path,
       parentId,
       zone,

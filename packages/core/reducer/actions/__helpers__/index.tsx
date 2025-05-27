@@ -8,6 +8,7 @@ import {
 import { PrivateAppState } from "../../../types/Internal";
 import { stripSlots } from "../../../lib/data/strip-slots";
 import { Reducer } from "react";
+import { flattenNode } from "../../../lib/data/flatten-node";
 
 jest.mock("../../../lib/generate-id");
 
@@ -18,7 +19,7 @@ type Props = {
     prop: string;
     slot: Slot;
   };
-  CompWithDefault: {
+  CompWithDefaults: {
     prop: string;
     slot: Slot;
   };
@@ -58,11 +59,47 @@ export const defaultState = {
 
 export const appStore = createAppStore();
 
+const config: UserConfig = {
+  root: {
+    fields: { title: { type: "text" }, slot: { type: "slot" } },
+  },
+  components: {
+    Comp: {
+      fields: {
+        prop: { type: "text" },
+        slot: { type: "slot" },
+      },
+      defaultProps: { prop: "example", slot: [] },
+      render: () => <div />,
+    },
+    CompWithDefaults: {
+      fields: {
+        prop: { type: "text" },
+        slot: { type: "slot" },
+      },
+      defaultProps: {
+        prop: "example",
+        slot: [
+          {
+            type: "Comp",
+            props: {
+              prop: "Defaulted item",
+              slots: [],
+            },
+          },
+        ],
+      },
+      render: () => <div />,
+    },
+  },
+};
+
 export const expectIndexed = (
   state: PrivateAppState,
   item: ComponentData | undefined,
   path: string[],
-  index: number
+  index: number,
+  _config: Config = config
 ) => {
   if (!item) return;
 
@@ -72,7 +109,9 @@ export const expectIndexed = (
     item.props.id
   );
   expect(state.indexes.nodes[item.props.id].data).toEqual(item);
-  expect(state.indexes.nodes[item.props.id].flatData).toEqual(stripSlots(item));
+  expect(state.indexes.nodes[item.props.id].flatData).toEqual(
+    flattenNode(item, _config)
+  );
   expect(state.indexes.nodes[item.props.id].path).toEqual(path);
 };
 
@@ -94,41 +133,6 @@ export const executeSequenceFactory =
   };
 
 export const testSetup = () => {
-  const config: UserConfig = {
-    root: {
-      fields: { title: { type: "text" }, slot: { type: "slot" } },
-    },
-    components: {
-      Comp: {
-        fields: {
-          prop: { type: "text" },
-          slot: { type: "slot" },
-        },
-        defaultProps: { prop: "example", slot: [] },
-        render: () => <div />,
-      },
-      CompWithDefault: {
-        fields: {
-          prop: { type: "text" },
-          slot: { type: "slot" },
-        },
-        defaultProps: {
-          prop: "example",
-          slot: [
-            {
-              type: "Comp",
-              props: {
-                prop: "Defaulted item",
-                slots: [],
-              },
-            },
-          ],
-        },
-        render: () => <div />,
-      },
-    },
-  };
-
   let _reducer = createReducer({ appStore: appStore.getState() });
 
   const beforeEachFn = () => {

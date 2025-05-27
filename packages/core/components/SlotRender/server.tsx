@@ -26,7 +26,7 @@ const Item = ({
   const Component = config.components[item.type];
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const props = useSlots(Component, item.props, (slotProps) => (
+  const props = useSlots(item, (slotProps) => (
     <SlotRenderPure {...slotProps} config={config} metadata={metadata} />
   ));
 

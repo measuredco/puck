@@ -1,60 +1,52 @@
 import { ReactNode, useMemo } from "react";
-import {
-  ComponentConfig,
-  ComponentData,
-  Content,
-  DefaultComponentProps,
-  RootConfig,
-} from "../types";
+import { ComponentData, Content } from "../types";
 import { DropZoneProps } from "../components/DropZone/types";
+import { mapSlotsSync } from "./data/map-slots";
+import { useAppStoreApi } from "../store";
 
-export function useSlots<T extends DefaultComponentProps>(
-  config: ComponentConfig | RootConfig | null | undefined,
-  props: T,
+export function useSlots<T extends ComponentData>(
+  item: T,
   renderSlotEdit: (dzProps: DropZoneProps & { content: Content }) => ReactNode,
   renderSlotRender: (
     dzProps: DropZoneProps & { content: Content }
   ) => ReactNode = renderSlotEdit,
   readOnly?: ComponentData["readOnly"],
   forceReadOnly?: boolean
-): T {
+): T["props"] {
+  const appStore = useAppStoreApi();
+
   const slotProps = useMemo(() => {
-    if (!config?.fields) return props;
+    const config = appStore.getState().config;
 
-    const slotProps: DefaultComponentProps = {};
-    const fieldKeys = Object.keys(config.fields);
-
-    for (let i = 0; i < fieldKeys.length; i++) {
-      const fieldKey = fieldKeys[i];
-      const field = config.fields[fieldKey];
-
-      if (field?.type === "slot") {
-        const content = props[fieldKey] || [];
-
+    const mapped = mapSlotsSync(
+      item,
+      (content, _parentId, propName, field) => {
+        // TODO fix readOnly for array / object fields
         const render =
-          readOnly?.[fieldKey] || forceReadOnly
+          readOnly?.[propName] || forceReadOnly
             ? renderSlotRender
             : renderSlotEdit;
 
         const Slot = (dzProps: DropZoneProps) =>
           render({
-            allow: field.allow,
-            disallow: field.disallow,
+            allow: field?.type === "slot" ? field.allow : [],
+            disallow: field?.type === "slot" ? field.disallow : [],
             ...dzProps,
-            zone: fieldKey,
+            zone: propName,
             content,
           });
 
-        slotProps[fieldKey] = Slot;
-      }
-    }
+        return Slot;
+      },
+      config
+    ).props;
 
-    return slotProps;
-  }, [config, readOnly, forceReadOnly]);
+    return mapped;
+  }, [item, readOnly, forceReadOnly]);
 
   const mergedProps = useMemo(
-    () => ({ ...props, ...slotProps }),
-    [props, slotProps]
+    () => ({ ...item.props, ...slotProps }),
+    [item.props, slotProps]
   );
 
   return mergedProps;

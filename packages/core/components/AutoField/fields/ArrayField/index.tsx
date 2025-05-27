@@ -10,6 +10,9 @@ import { ArrayState, ItemWithId } from "../../../../types";
 import { useAppStore, useAppStoreApi } from "../../../../store";
 import { Sortable, SortableProvider } from "../../../Sortable";
 import { NestedFieldProvider, useNestedFieldContext } from "../../context";
+import { mapSlotsSync, walkField } from "../../../../lib/data/map-slots";
+import { walkTree } from "../../../../rsc";
+import { populateIds } from "../../../../lib/data/populate-ids";
 
 const getClassName = getClassNameFactory("ArrayField", styles);
 const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);
@@ -118,6 +121,25 @@ export const ArrayField = ({
   const forceReadOnly = !canEdit;
 
   const valueRef = useRef<object[]>(value);
+
+  /**
+   * Walk the item and ensure all slotted items have unique IDs
+   */
+  const uniqifyItem = useCallback(
+    (val: any) => {
+      if (field.type !== "array" || !field.arrayFields) return;
+
+      const config = appStore.getState().config;
+
+      return walkField({
+        value: val,
+        fields: field.arrayFields,
+        map: (content) =>
+          content.map((item) => populateIds(item, config, true)),
+      });
+    },
+    [appStore, field]
+  );
 
   if (field.type !== "array" || !field.arrayFields) {
     return null;
@@ -242,11 +264,11 @@ export const ArrayField = ({
 
                                       const existingValue = [...(value || [])];
 
-                                      existingValue.splice(
-                                        i,
-                                        0,
+                                      const newItem = uniqifyItem(
                                         existingValue[i]
                                       );
+
+                                      existingValue.splice(i, 0, newItem);
 
                                       const newUi = mapArrayStateToUi(
                                         regenerateArrayState(existingValue)
@@ -372,10 +394,8 @@ export const ArrayField = ({
 
                 const existingValue = value || [];
 
-                const newValue = [
-                  ...existingValue,
-                  field.defaultItemProps || {},
-                ];
+                const newItem = uniqifyItem(field.defaultItemProps ?? {});
+                const newValue = [...existingValue, newItem];
 
                 const newArrayState = regenerateArrayState(newValue);
 
