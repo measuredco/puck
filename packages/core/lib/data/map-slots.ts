@@ -55,7 +55,8 @@ export const walkField = ({
     data: Content,
     parentId: string,
     propName: string,
-    field: SlotField
+    field: SlotField,
+    propPath: string
   ) => any;
   propKey?: string;
   propPath?: string;
@@ -64,7 +65,7 @@ export const walkField = ({
   if (fields[propKey]?.type === "slot") {
     const content = (value as Content) || [];
 
-    return map(content, id, propPath, fields[propKey]);
+    return map(content, id, propPath, fields[propKey], propPath);
   }
 
   if (value && typeof value === "object") {
@@ -124,7 +125,8 @@ export function mapSlotsSync<T extends ComponentData | RootData>(
     data: Content,
     parentId: string,
     propName: string,
-    field: SlotField
+    field: SlotField,
+    propPath: string
   ) => any,
   config: Config
 ): T {
