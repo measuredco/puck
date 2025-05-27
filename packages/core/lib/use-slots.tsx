@@ -4,15 +4,15 @@ import { DropZoneProps } from "../components/DropZone/types";
 import { mapSlotsSync } from "./data/map-slots";
 import { useAppStoreApi } from "../store";
 
-export function useSlots<T extends ComponentData>(
-  item: T,
+export function useSlots(
+  item: ComponentData,
   renderSlotEdit: (dzProps: DropZoneProps & { content: Content }) => ReactNode,
   renderSlotRender: (
     dzProps: DropZoneProps & { content: Content }
   ) => ReactNode = renderSlotEdit,
   readOnly?: ComponentData["readOnly"],
   forceReadOnly?: boolean
-): T["props"] {
+): ComponentData["props"] {
   const appStore = useAppStoreApi();
 
   const slotProps = useMemo(() => {
@@ -20,12 +20,12 @@ export function useSlots<T extends ComponentData>(
 
     const mapped = mapSlotsSync(
       item,
-      (content, _parentId, propName, field) => {
-        // TODO fix readOnly for array / object fields
-        const render =
-          readOnly?.[propName] || forceReadOnly
-            ? renderSlotRender
-            : renderSlotEdit;
+      (content, _parentId, propName, field, propPath) => {
+        const wildcardPath = propPath.replace(/\[\d+\]/g, "[*]");
+        const isReadOnly =
+          readOnly?.[propPath] || readOnly?.[wildcardPath] || forceReadOnly;
+
+        const render = isReadOnly ? renderSlotRender : renderSlotEdit;
 
         const Slot = (dzProps: DropZoneProps) =>
           render({
