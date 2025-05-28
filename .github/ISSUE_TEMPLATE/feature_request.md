@@ -1,8 +1,8 @@
 ---
 name: "Feature Request ✨"
 about: "Share ideas for new features."
-title: "Feat: "
-labels: ""
+title: ""
+labels: ["type: feature"]
 assignees: ""
 ---
 
@@ -18,8 +18,8 @@ assignees: ""
 
 ## Considerations
 
-- This might be related to field validation, which is currently being tracked in issue:...
-- The file implementing the `text` field lives at...
+- This might be related to field validation, which is currently being tracked in issue: #1...
+- The file implementing the `text` field lives at `core/text.tsx`...
 
 <!--
   List any special considerations for this feature that might help or make the changes more difficult.
