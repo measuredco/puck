@@ -1,7 +1,7 @@
 import { ReactNode, useMemo } from "react";
 import { ComponentData, Config, Content } from "../types";
 import { DropZoneProps } from "../components/DropZone/types";
-import { mapSlotsSync } from "./data/map-slots";
+import { mapSlots } from "./data/map-slots";
 
 export function useSlots(
   config: Config,
@@ -14,7 +14,7 @@ export function useSlots(
   forceReadOnly?: boolean
 ): ComponentData["props"] {
   const slotProps = useMemo(() => {
-    const mapped = mapSlotsSync(
+    const mapped = mapSlots(
       item,
       (content, _parentId, propName, field, propPath) => {
         const wildcardPath = propPath.replace(/\[\d+\]/g, "[*]");

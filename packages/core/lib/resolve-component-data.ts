@@ -5,10 +5,9 @@ import {
   ResolveDataTrigger,
   RootDataWithProps,
 } from "../types";
-import { mapSlotsAsync } from "./data/map-slots";
+import { mapSlots } from "./data/map-slots";
 import { getChanged } from "./get-changed";
 import fdeq from "fast-deep-equal";
-import { createIsSlotConfig } from "./data/is-slot";
 
 export const cache: {
   lastChange: Record<string, any>;
@@ -62,7 +61,7 @@ export const resolveComponentData = async <
     };
 
     if (recursive) {
-      resolvedItem = (await mapSlotsAsync(
+      resolvedItem = (await mapSlots(
         resolvedItem,
         async (content) => {
           return Promise.all(
@@ -82,8 +81,7 @@ export const resolveComponentData = async <
             )
           );
         },
-        false,
-        createIsSlotConfig(config)
+        config
       )) as T;
     }
 
