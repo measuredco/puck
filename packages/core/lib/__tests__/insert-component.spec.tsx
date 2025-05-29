@@ -11,7 +11,24 @@ const appStore = createAppStore();
 const config: Config = {
   components: {
     MyComponent: {
-      defaultProps: { prop: "example" },
+      fields: {
+        prop: { type: "text" },
+        object: { type: "object", objectFields: { slot: { type: "slot" } } },
+      },
+      defaultProps: {
+        prop: "Unresolved",
+        object: {
+          slot: [
+            {
+              type: "MyComponent",
+              props: {
+                prop: "Unresolved",
+                object: { slot: [] },
+              },
+            },
+          ],
+        },
+      },
       resolveData: ({ props }) => {
         return {
           props: {
@@ -96,7 +113,19 @@ describe("use-insert-component", () => {
         type: "MyComponent",
         props: {
           id: expect.stringContaining("MyComponent-"),
-          prop: "example",
+          prop: "Unresolved",
+          object: {
+            slot: [
+              {
+                type: "MyComponent",
+                props: {
+                  id: expect.stringContaining("MyComponent-"),
+                  prop: "Unresolved",
+                  object: { slot: [] },
+                },
+              },
+            ],
+          },
         },
       });
 
