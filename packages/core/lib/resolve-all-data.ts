@@ -10,8 +10,8 @@ import {
 } from "../types";
 import { resolveComponentData } from "./resolve-component-data";
 import { defaultData } from "./data/default-data";
-import { mapSlotsAsync } from "./data/map-slots";
 import { toComponent } from "./data/to-component";
+import { mapSlots } from "./data/map-slots";
 
 export async function resolveAllData<
   Props extends DefaultComponentProps = DefaultComponentProps,
@@ -42,10 +42,10 @@ export async function resolveAllData<
       )
     ).node as T;
 
-    const resolvedDeep = (await mapSlotsAsync(
+    const resolvedDeep = (await mapSlots(
       resolved,
       processContent,
-      false
+      config
     )) as T;
 
     onResolveEnd?.(toComponent(resolvedDeep));

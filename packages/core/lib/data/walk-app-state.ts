@@ -13,7 +13,7 @@ import {
   ZoneIndex,
   ZoneType,
 } from "../../types/Internal";
-import { mapSlotsSync } from "./map-slots";
+import { mapSlots } from "./map-slots";
 import { flattenNode } from "./flatten-node";
 
 /**
@@ -105,7 +105,7 @@ export function walkAppState<UserData extends Data = Data>(
     const id = mappedItem.props.id;
 
     const newProps = {
-      ...mapSlotsSync(
+      ...mapSlots(
         mappedItem,
         (content, parentId, slotId) => {
           const zoneCompound = `${parentId}:${slotId}`;

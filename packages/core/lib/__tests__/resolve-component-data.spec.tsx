@@ -9,6 +9,7 @@ const config: Config = {
   root: {
     fields: {
       title: { type: "text" },
+      object: { type: "object", objectFields: { slot: { type: "slot" } } },
       slot: { type: "slot" },
     },
     resolveData: (rootData) => {
@@ -22,6 +23,14 @@ const config: Config = {
               props: { id: "123456789", prop: "Not yet resolved" },
             },
           ],
+          object: {
+            slot: [
+              {
+                type: "MyComponent",
+                props: { id: "987654321", prop: "Not yet resolved" },
+              },
+            ],
+          },
         },
         readOnly: { title: true },
       };
@@ -58,6 +67,8 @@ describe("resolveComponentData", () => {
     expect(newRoot.readOnly?.title).toBe(true);
     expect(newRoot.props.slot[0].props.prop).toBe("Hello, world");
     expect(newRoot.props.slot[0].readOnly.prop).toBe(true);
+    expect(newRoot.props.object.slot[0].props.prop).toBe("Hello, world");
+    expect(newRoot.props.object.slot[0].readOnly.prop).toBe(true);
     expect(didChange).toBe(true);
   });
 

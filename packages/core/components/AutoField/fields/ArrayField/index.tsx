@@ -10,8 +10,7 @@ import { ArrayState, ItemWithId } from "../../../../types";
 import { useAppStore, useAppStoreApi } from "../../../../store";
 import { Sortable, SortableProvider } from "../../../Sortable";
 import { NestedFieldProvider, useNestedFieldContext } from "../../context";
-import { mapSlotsSync, walkField } from "../../../../lib/data/map-slots";
-import { walkTree } from "../../../../rsc";
+import { walkField } from "../../../../lib/data/map-slots";
 import { populateIds } from "../../../../lib/data/populate-ids";
 
 const getClassName = getClassNameFactory("ArrayField", styles);

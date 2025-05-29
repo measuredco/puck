@@ -5,7 +5,7 @@ import {
   RootData,
   UserGenerics,
 } from "../../types";
-import { mapSlotsSync } from "./map-slots";
+import { mapSlots } from "./map-slots";
 
 type WalkTreeOptions = {
   parentId: string;
@@ -22,7 +22,7 @@ export function walkTree<
   callbackFn: (data: Content, options: WalkTreeOptions) => Content | null | void
 ): T {
   const walkItem = (item: ComponentData | RootData) => {
-    return mapSlotsSync(
+    return mapSlots(
       item,
       (content, parentId, propName) => {
         return callbackFn(content, { parentId, propName }) ?? content;

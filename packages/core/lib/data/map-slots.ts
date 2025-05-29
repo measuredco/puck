@@ -8,38 +8,42 @@ import {
 } from "../../types";
 import { isSlot as _isSlot } from "./is-slot";
 
-export async function mapSlotsAsync<T extends ComponentData | RootData>(
-  item: T,
-  map: (data: Content, propName: string) => Promise<Content>,
-  recursive: boolean = true,
-  isSlot: (type: string, propName: string, propValue: any) => boolean = _isSlot
-): Promise<T> {
-  const props: Record<string, any> = { ...item.props };
+type MapFn<T = any> = (
+  data: Content,
+  parentId: string,
+  propName: string,
+  field: SlotField,
+  propPath: string
+) => T;
 
-  const propKeys = Object.keys(props);
+type PromiseMapFn = MapFn<Promise<any>>;
 
-  for (let i = 0; i < propKeys.length; i++) {
-    const propKey = propKeys[i];
+type EitherMapFn = MapFn<any | Promise<any>>;
 
-    const itemType = "type" in item ? item.type : "root";
+type WalkFieldOpts = {
+  value: unknown;
+  fields: Fields;
+  map: EitherMapFn;
+  propKey?: string;
+  propPath?: string;
+  id?: string;
+};
 
-    if (isSlot(itemType, propKey, props[propKey])) {
-      const content = props[propKey] as Content;
+type WalkObjectOpts = {
+  value: Record<string, any>;
+  fields: Fields;
+  map: EitherMapFn;
+  id: string;
+  getPropPath: (str: string) => string;
+};
 
-      const mappedContent = recursive
-        ? await Promise.all(
-            content.map(async (item) => {
-              return await mapSlotsAsync(item, map, recursive, isSlot);
-            })
-          )
-        : content;
+const isPromise = <T = unknown>(v: any): v is Promise<T> =>
+  !!v && typeof v.then === "function";
 
-      props[propKey] = await map(mappedContent, propKey);
-    }
-  }
+const flatten = (values: Record<string, any>[]) =>
+  values.reduce((acc, item) => ({ ...acc, ...item }), {});
 
-  return { ...item, props };
-}
+const containsPromise = (arr: any[]) => arr.some(isPromise);
 
 export const walkField = ({
   value,
@@ -48,20 +52,7 @@ export const walkField = ({
   propKey = "",
   propPath = "",
   id = "",
-}: {
-  value: unknown;
-  fields: Fields;
-  map: (
-    data: Content,
-    parentId: string,
-    propName: string,
-    field: SlotField,
-    propPath: string
-  ) => any;
-  propKey?: string;
-  propPath?: string;
-  id?: string;
-}): any => {
+}: WalkFieldOpts): any | Promise<any> => {
   if (fields[propKey]?.type === "slot") {
     const content = (value as Content) || [];
 
@@ -93,62 +84,88 @@ export const walkField = ({
           ? fields[propKey].objectFields
           : fields;
 
-      return Object.entries(value as Record<string, unknown>).reduce(
-        (acc, [k, v]) => {
-          const newValue = walkField({
-            value: v,
-            fields: objectFields,
-            map,
-            propKey: k,
-            propPath: `${propPath}.${k}`,
-            id,
-          });
-
-          if (typeof newValue === "undefined" || newValue === v) return acc;
-
-          return {
-            ...acc,
-            [k]: newValue,
-          };
-        },
-        value
-      );
+      return walkObject({
+        value,
+        fields: objectFields,
+        map,
+        id,
+        getPropPath: (k) => `${propPath}.${k}`,
+      });
     }
   }
 
   return value;
 };
 
-export function mapSlotsSync<T extends ComponentData | RootData>(
+const walkObject = ({
+  value,
+  fields,
+  map,
+  id,
+  getPropPath,
+}: WalkObjectOpts): Record<string, any> => {
+  const newProps = Object.entries(value).map(([k, v]) => {
+    const opts: WalkFieldOpts = {
+      value: v,
+      fields,
+      map,
+      propKey: k,
+      propPath: getPropPath(k),
+      id,
+    };
+
+    const newValue = walkField(opts);
+
+    if (isPromise(newValue)) {
+      return newValue.then((resolvedValue: any) => ({
+        [k]: resolvedValue,
+      }));
+    }
+
+    return {
+      [k]: newValue,
+    };
+  }, {});
+
+  if (containsPromise(newProps)) {
+    return Promise.all(newProps).then(flatten);
+  }
+
+  return flatten(newProps);
+};
+
+export function mapSlots<T extends ComponentData | RootData>(
   item: T,
-  map: (
-    data: Content,
-    parentId: string,
-    propName: string,
-    field: SlotField,
-    propPath: string
-  ) => any,
+  map: MapFn,
   config: Config
-): T {
+): T;
+
+export function mapSlots<T extends ComponentData | RootData>(
+  item: T,
+  map: PromiseMapFn,
+  config: Config
+): Promise<T>;
+
+export function mapSlots(item: any, map: EitherMapFn, config: Config): any {
   const itemType = "type" in item ? item.type : "root";
 
   const componentConfig =
     itemType === "root" ? config.root : config.components?.[itemType];
 
-  const newProps = { ...(item.props ?? {}) };
+  const newProps = walkObject({
+    value: item.props ?? {},
+    fields: componentConfig?.fields ?? {},
+    map,
+    id: item.props ? item.props.id : "root",
+    getPropPath: (k) => k,
+  });
 
-  Object.entries(item.props ?? {}).forEach(([k, v]) => {
-    const newValue = walkField({
-      value: v,
-      fields: componentConfig?.fields ?? {},
-      map,
-      propKey: k,
-      propPath: k,
-      id: item.props.id ?? "root",
-    });
-
-    newProps[k] = newValue;
-  }, item.props);
+  if (isPromise(newProps)) {
+    return newProps.then((resolvedProps) => ({
+      ...item,
+      props: resolvedProps,
+    }));
+  }
 
   return {
     ...item,
