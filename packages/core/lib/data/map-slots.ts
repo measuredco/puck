@@ -66,7 +66,7 @@ export const walkField = ({
 
       if (!arrayFields) return value;
 
-      return value.map((el, idx) =>
+      const newValue = value.map((el, idx) =>
         walkField({
           value: el,
           fields: arrayFields,
@@ -76,6 +76,12 @@ export const walkField = ({
           id,
         })
       );
+
+      if (containsPromise(newValue)) {
+        return Promise.all(newValue);
+      }
+
+      return newValue;
     } else if ("$$typeof" in value) {
       return value;
     } else {

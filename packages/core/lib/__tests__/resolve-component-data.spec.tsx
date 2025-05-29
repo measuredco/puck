@@ -1,9 +1,24 @@
 import { resolveComponentData } from "../resolve-component-data";
 import { createAppStore } from "../../store";
-import { Config } from "../../types";
+import { Config, Fields } from "../../types";
 import { toComponent } from "../data/to-component";
 
 const appStore = createAppStore();
+
+const myComponentFields: Fields = {
+  prop: { type: "text" },
+  slot: {
+    type: "slot",
+  },
+  object: {
+    type: "object",
+    objectFields: {
+      slot: {
+        type: "slot",
+      },
+    },
+  },
+};
 
 const config: Config = {
   root: {
@@ -11,6 +26,14 @@ const config: Config = {
       title: { type: "text" },
       object: { type: "object", objectFields: { slot: { type: "slot" } } },
       slot: { type: "slot" },
+      array: {
+        type: "array",
+        arrayFields: {
+          slot: {
+            type: "slot",
+          },
+        },
+      },
     },
     resolveData: (rootData) => {
       return {
@@ -19,25 +42,36 @@ const config: Config = {
           title: "Resolved title",
           slot: [
             {
-              type: "MyComponent",
+              type: "MyComponentWithResolver",
               props: { id: "123456789", prop: "Not yet resolved" },
             },
           ],
           object: {
             slot: [
               {
-                type: "MyComponent",
+                type: "MyComponentWithResolver",
                 props: { id: "987654321", prop: "Not yet resolved" },
               },
             ],
           },
+          array: [
+            {
+              slot: [
+                {
+                  type: "MyComponentWithResolver",
+                  props: { id: "987654321", prop: "Not yet resolved" },
+                },
+              ],
+            },
+          ],
         },
         readOnly: { title: true },
       };
     },
   },
   components: {
-    MyComponent: {
+    MyComponentWithResolver: {
+      fields: myComponentFields,
       resolveData: ({ props }) => {
         return {
           props: {
@@ -47,6 +81,10 @@ const config: Config = {
           readOnly: { prop: true },
         };
       },
+      render: () => <div />,
+    },
+    MyComponentWithoutResolver: {
+      fields: myComponentFields,
       render: () => <div />,
     },
   },
@@ -65,6 +103,41 @@ describe("resolveComponentData", () => {
 
     expect(newRoot.props?.title).toBe("Resolved title");
     expect(newRoot.readOnly?.title).toBe(true);
+    expect(newRoot.props.slot[0].props.prop).toBe("Hello, world");
+    expect(newRoot.props.slot[0].readOnly.prop).toBe(true);
+    expect(newRoot.props.object.slot[0].props.prop).toBe("Hello, world");
+    expect(newRoot.props.object.slot[0].readOnly.prop).toBe(true);
+    expect(newRoot.props.array[0].slot[0].props.prop).toBe("Hello, world");
+    expect(newRoot.props.array[0].slot[0].readOnly.prop).toBe(true);
+    expect(didChange).toBe(true);
+  });
+
+  it("should run child resolvers even if parent doesn't have one", async () => {
+    const { node: newRoot, didChange } = await resolveComponentData(
+      toComponent({
+        type: "MyComponentWithoutResolver",
+        props: {
+          title: "Resolved title",
+          slot: [
+            {
+              type: "MyComponentWithResolver",
+              props: { id: "123456789", prop: "Not yet resolved" },
+            },
+          ],
+          object: {
+            slot: [
+              {
+                type: "MyComponentWithResolver",
+                props: { id: "987654321", prop: "Not yet resolved" },
+              },
+            ],
+          },
+        },
+      }),
+      appStore.getState().config
+    );
+
+    expect(newRoot.props?.title).toBe("Resolved title");
     expect(newRoot.props.slot[0].props.prop).toBe("Hello, world");
     expect(newRoot.props.slot[0].readOnly.prop).toBe(true);
     expect(newRoot.props.object.slot[0].props.prop).toBe("Hello, world");
