@@ -202,7 +202,7 @@ export function mapSlots(
     value: item.props ?? {},
     fields: componentConfig?.fields ?? {},
     map,
-    id: item.props ? item.props.id : "root",
+    id: item.props ? item.props.id ?? "root" : "root",
     getPropPath: (k) => k,
     config,
     recurseSlots,
