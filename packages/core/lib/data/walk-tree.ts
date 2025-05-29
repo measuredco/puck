@@ -27,7 +27,8 @@ export function walkTree<
       (content, parentId, propName) => {
         return callbackFn(content, { parentId, propName }) ?? content;
       },
-      config
+      config,
+      true
     );
   };
 
