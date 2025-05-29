@@ -27,6 +27,8 @@ type WalkFieldOpts = {
   propKey?: string;
   propPath?: string;
   id?: string;
+  config: Config;
+  recurseSlots?: boolean;
 };
 
 type WalkObjectOpts = {
@@ -35,6 +37,8 @@ type WalkObjectOpts = {
   map: EitherMapFn;
   id: string;
   getPropPath: (str: string) => string;
+  config: Config;
+  recurseSlots?: boolean;
 };
 
 const isPromise = <T = unknown>(v: any): v is Promise<T> =>
@@ -52,11 +56,32 @@ export const walkField = ({
   propKey = "",
   propPath = "",
   id = "",
+  config,
+  recurseSlots = false,
 }: WalkFieldOpts): any | Promise<any> => {
   if (fields[propKey]?.type === "slot") {
     const content = (value as Content) || [];
 
-    return map(content, id, propPath, fields[propKey], propPath);
+    const mappedContent = recurseSlots
+      ? content.map((el) => {
+          const fields = config.components[el.type].fields ?? {};
+
+          return walkField({
+            value: el,
+            fields,
+            map,
+            id: el.props.id,
+            config,
+            recurseSlots,
+          });
+        })
+      : content;
+
+    if (containsPromise(mappedContent)) {
+      return Promise.all(mappedContent);
+    }
+
+    return map(mappedContent, id, propPath, fields[propKey], propPath);
   }
 
   if (value && typeof value === "object") {
@@ -74,6 +99,8 @@ export const walkField = ({
           propKey,
           propPath: `${propPath}[${idx}]`,
           id,
+          config,
+          recurseSlots,
         })
       );
 
@@ -96,6 +123,8 @@ export const walkField = ({
         map,
         id,
         getPropPath: (k) => `${propPath}.${k}`,
+        config,
+        recurseSlots,
       });
     }
   }
@@ -109,6 +138,8 @@ const walkObject = ({
   map,
   id,
   getPropPath,
+  config,
+  recurseSlots,
 }: WalkObjectOpts): Record<string, any> => {
   const newProps = Object.entries(value).map(([k, v]) => {
     const opts: WalkFieldOpts = {
@@ -118,6 +149,8 @@ const walkObject = ({
       propKey: k,
       propPath: getPropPath(k),
       id,
+      config,
+      recurseSlots,
     };
 
     const newValue = walkField(opts);
@@ -143,16 +176,23 @@ const walkObject = ({
 export function mapSlots<T extends ComponentData | RootData>(
   item: T,
   map: MapFn,
-  config: Config
+  config: Config,
+  recurseSlots?: boolean
 ): T;
 
 export function mapSlots<T extends ComponentData | RootData>(
   item: T,
   map: PromiseMapFn,
-  config: Config
+  config: Config,
+  recurseSlots?: boolean
 ): Promise<T>;
 
-export function mapSlots(item: any, map: EitherMapFn, config: Config): any {
+export function mapSlots(
+  item: any,
+  map: EitherMapFn,
+  config: Config,
+  recurseSlots: boolean = false
+): any {
   const itemType = "type" in item ? item.type : "root";
 
   const componentConfig =
@@ -164,6 +204,8 @@ export function mapSlots(item: any, map: EitherMapFn, config: Config): any {
     map,
     id: item.props ? item.props.id : "root",
     getPropPath: (k) => k,
+    config,
+    recurseSlots,
   });
 
   if (isPromise(newProps)) {

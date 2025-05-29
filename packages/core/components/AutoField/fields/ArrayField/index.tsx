@@ -135,6 +135,7 @@ export const ArrayField = ({
         fields: field.arrayFields,
         map: (content) =>
           content.map((item) => populateIds(item, config, true)),
+        config,
       });
     },
     [appStore, field]
