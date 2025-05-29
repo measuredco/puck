@@ -21,8 +21,7 @@ export const resolveComponentData = async <
   metadata: Metadata = {},
   onResolveStart?: (item: T) => void,
   onResolveEnd?: (item: T) => void,
-  trigger: ResolveDataTrigger = "replace",
-  recursive: boolean = true
+  trigger: ResolveDataTrigger = "replace"
 ) => {
   const configForItem =
     "type" in item && item.type !== "root"
@@ -68,33 +67,28 @@ export const resolveComponentData = async <
     }
   }
 
-  let itemWithResolvedChildren = item;
+  let itemWithResolvedChildren = await mapSlots(
+    resolvedItem,
+    async (content) => {
+      return await Promise.all(
+        content.map(
+          async (childItem) =>
+            (
+              await resolveComponentData(
+                childItem as T,
+                config,
+                metadata,
+                onResolveStart,
+                onResolveEnd,
+                trigger
+              )
+            ).node
+        )
+      );
+    },
 
-  if (recursive) {
-    itemWithResolvedChildren = await mapSlots(
-      resolvedItem,
-      async (content) => {
-        return await Promise.all(
-          content.map(
-            async (childItem) =>
-              (
-                await resolveComponentData(
-                  childItem as T,
-                  config,
-                  metadata,
-                  onResolveStart,
-                  onResolveEnd,
-                  trigger,
-                  true
-                )
-              ).node
-          )
-        );
-      },
-
-      config
-    );
-  }
+    config
+  );
 
   if (shouldRunResolver && onResolveEnd) {
     onResolveEnd(resolvedItem);
