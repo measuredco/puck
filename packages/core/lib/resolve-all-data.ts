@@ -37,8 +37,7 @@ export async function resolveAllData<
         metadata,
         () => {},
         () => {},
-        "force",
-        false
+        "force"
       )
     ).node as T;
 
