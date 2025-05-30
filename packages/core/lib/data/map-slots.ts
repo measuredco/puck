@@ -6,7 +6,6 @@ import {
   RootData,
   SlotField,
 } from "../../types";
-import { isSlot as _isSlot } from "./is-slot";
 
 type MapFn<T = any> = (
   data: Content,
