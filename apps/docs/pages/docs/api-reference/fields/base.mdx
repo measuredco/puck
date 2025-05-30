@@ -9,6 +9,7 @@ The base type shared by all fields.
 | [`label`](#label)         | `label: "Title"`      | String    | -      |
 | [`labelIcon`](#labelicon) | `labelIcon: <Icon />` | ReactNode | -      |
 | [`metadata`](#metadata)   | `metadata: {}`        | Object    | -      |
+| [`visible`](#visible)     | `visible: false`      | Boolean   | -      |
 
 ## Optional params
 
@@ -65,6 +66,26 @@ const config = {
           metadata: {
             title: "Hello, world",
           },
+          // ...
+        },
+      },
+      // ...
+    },
+  },
+};
+```
+
+### `visible`
+
+Show or hide the field. Defaults to `true`.
+
+```tsx {6-8} copy
+const config = {
+  components: {
+    Example: {
+      fields: {
+        items: {
+          visible: false,
           // ...
         },
       },

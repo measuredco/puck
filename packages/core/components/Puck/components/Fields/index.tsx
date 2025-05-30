@@ -127,7 +127,9 @@ const FieldsChild = ({ fieldName }: { fieldName: string }) => {
     fieldName,
   ]);
 
-  if (!field || !id) return null;
+  const { visible = true } = field ?? {};
+
+  if (!field || !id || !visible) return null;
 
   if (field.type === "slot") return null;
 
