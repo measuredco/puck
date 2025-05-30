@@ -5,42 +5,33 @@ import { ComponentData, Metadata, RootData } from "./Data";
 import { AsFieldProps, WithChildren, WithId, WithPuckProps } from "./Utils";
 import { AppState } from "./AppState";
 import { DefaultComponentProps } from "./Props";
-import { Permissions, Slot } from "./API";
+import { Permissions } from "./API";
 import { DropZoneProps } from "../components/DropZone/types";
+import { WithDeepSlots } from "./Internal";
 
 type SlotComponent = (props?: Omit<DropZoneProps, "zone">) => ReactNode;
-
-/**
- * Recursively walk T and replace Slots with SlotComponents
- */
-type WithDeepSlots<T> =
-  // ────────────────────────────── leaf conversions ─────────────────────────────
-  T extends Slot
-    ? SlotComponent
-    : // ────────────────────────── recurse into arrays & tuples ────────────────
-    T extends readonly (infer U)[]
-    ? ReadonlyArray<WithDeepSlots<U>>
-    : T extends (infer U)[]
-    ? WithDeepSlots<U>[]
-    : // ───────────── recurse into objects while preserving optionality ────
-    T extends object
-    ? { [K in keyof T]: WithDeepSlots<T[K]> }
-    : T;
 
 export type PuckComponent<Props> = (
   props: WithId<
     WithPuckProps<{
-      [K in keyof Props]: WithDeepSlots<Props[K]>;
+      [K in keyof Props]: WithDeepSlots<Props[K], SlotComponent>;
     }>
   >
 ) => JSX.Element;
 
 export type ResolveDataTrigger = "insert" | "replace" | "load" | "force";
 
+type WithPartialProps<T, Props extends DefaultComponentProps> = Omit<
+  T,
+  "props"
+> & {
+  props?: Partial<Props>;
+};
+
 export type ComponentConfig<
   RenderProps extends DefaultComponentProps = DefaultComponentProps,
   FieldProps extends DefaultComponentProps = RenderProps,
-  DataShape = Omit<ComponentData<FieldProps>, "type">
+  DataShape = Omit<ComponentData<FieldProps>, "type"> // NB this doesn't include AllProps, so types will not contain deep slot types. To fix, we require a breaking change.
 > = {
   render: PuckComponent<RenderProps>;
   label?: string;
@@ -68,16 +59,8 @@ export type ComponentConfig<
       trigger: ResolveDataTrigger;
     }
   ) =>
-    | Promise<{
-        props?: Partial<FieldProps>;
-        readOnly?: Partial<Record<keyof FieldProps, boolean>> &
-          Record<string, boolean>;
-      }>
-    | {
-        props?: Partial<FieldProps>;
-        readOnly?: Partial<Record<keyof FieldProps, boolean>> &
-          Record<string, boolean>;
-      };
+    | Promise<WithPartialProps<DataShape, FieldProps>>
+    | WithPartialProps<DataShape, FieldProps>;
   resolvePermissions?: (
     data: DataShape,
     params: {

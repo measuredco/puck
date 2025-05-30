@@ -43,7 +43,7 @@ export const resolveComponentData = async <
       return { node: resolved, didChange: false };
     }
 
-    const changed = getChanged(item, oldItem);
+    const changed = getChanged(item, oldItem) as any;
 
     if (onResolveStart) {
       onResolveStart(item);

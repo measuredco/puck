@@ -21,19 +21,26 @@ export function walkTree<
   config: UserConfig,
   callbackFn: (data: Content, options: WalkTreeOptions) => Content | null | void
 ): T {
-  const walkItem = (item: ComponentData | RootData) => {
+  const walkItem = <
+    ItemType extends
+      | G["UserComponentData"]
+      | G["UserData"]["root"]
+      | G["UserData"]
+  >(
+    item: ItemType
+  ): ItemType => {
     return mapSlots(
-      item,
+      item as ComponentData,
       (content, parentId, propName) => {
         return callbackFn(content, { parentId, propName }) ?? content;
       },
       config,
       true
-    );
+    ) as ItemType;
   };
 
   if ("props" in data) {
-    return walkItem(data) as T;
+    return walkItem(data as any) as T;
   }
 
   const _data = data as G["UserData"];
