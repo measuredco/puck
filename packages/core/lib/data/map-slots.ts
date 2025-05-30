@@ -64,7 +64,13 @@ export const walkField = ({
 
     const mappedContent = recurseSlots
       ? content.map((el) => {
-          const fields = config.components[el.type].fields ?? {};
+          const componentConfig = config.components[el.type];
+
+          if (!componentConfig) {
+            throw new Error(`Could not find component config for ${el.type}`);
+          }
+
+          const fields = componentConfig.fields ?? {};
 
           return walkField({
             value: el,

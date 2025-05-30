@@ -12,7 +12,7 @@ export const populateIds = (
   return walkTree(
     {
       ...data,
-      props: override ? { ...data.props, id } : { id, ...data.props },
+      props: override ? { ...data.props, id } : { ...data.props },
     },
     config,
     (contents) =>

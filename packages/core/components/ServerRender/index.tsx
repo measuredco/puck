@@ -55,6 +55,8 @@ export function DropZoneRender({
               />
             ),
             metadata,
+            dragRef: null,
+            isEditing: false,
           },
         };
 
@@ -90,7 +92,7 @@ export function Render<
   metadata?: Metadata;
 }) {
   // DEPRECATED
-  const rootProps = data.root.props || data.root;
+  const rootProps = "props" in data.root ? data.root.props : data.root;
 
   const title = rootProps.title || "";
 

@@ -6,7 +6,7 @@ export const flattenData = <
   UserConfig extends Config = Config,
   G extends UserGenerics<UserConfig> = UserGenerics<UserConfig>
 >(
-  state: PrivateAppState<G["UserData"]>,
+  state: PrivateAppState,
   config: UserConfig
 ) => {
   const data: ComponentData[] = [];

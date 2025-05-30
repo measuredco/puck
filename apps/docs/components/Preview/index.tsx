@@ -193,7 +193,12 @@ const ConfigPreviewInner = ({
         <div className={getClassNamePreview("preview")}>
           {componentConfig.render({
             ...appState.data["content"][0]?.props,
-            puck: { renderDropZone: () => <div />, isEditing: false },
+            puck: {
+              renderDropZone: () => <div />,
+              isEditing: false,
+              metadata: {},
+              dragRef: null,
+            },
           })}
         </div>
       )}

@@ -1,4 +1,4 @@
-import { WithSlotProps } from "./API";
+import { DefaultAllProps, WithDeepSlots } from "./Internal";
 import { DefaultComponentProps, DefaultRootFieldProps } from "./Props";
 import { AsFieldProps, WithId } from "./Utils";
 
@@ -11,7 +11,7 @@ export type BaseData<
 export type RootDataWithProps<
   Props extends DefaultComponentProps = DefaultRootFieldProps
 > = BaseData<Props> & {
-  props: WithSlotProps<Props>;
+  props: Props;
 };
 
 // DEPRECATED
@@ -26,10 +26,14 @@ export type RootData<
 
 export type ComponentData<
   Props extends DefaultComponentProps = DefaultComponentProps,
-  Name = string
+  Name = string,
+  AllProps extends Record<string, DefaultComponentProps> = Record<
+    string,
+    DefaultComponentProps
+  >
 > = {
   type: Name;
-  props: WithId<WithSlotProps<Props>>;
+  props: WithDeepSlots<WithId<Props>, Content<AllProps>>;
 } & BaseData<Props>;
 
 export type ComponentDataOptionalId<
@@ -46,10 +50,14 @@ export type ComponentDataOptionalId<
 export type MappedItem = ComponentData;
 
 export type ComponentDataMap<
-  Props extends Record<string, DefaultComponentProps> = DefaultComponentProps
+  AllProps extends DefaultAllProps = DefaultAllProps
 > = {
-  [K in keyof Props]: ComponentData<Props[K], K extends string ? K : never>;
-}[keyof Props];
+  [K in keyof AllProps]: ComponentData<
+    AllProps[K],
+    K extends string ? K : never,
+    AllProps
+  >;
+}[keyof AllProps];
 
 export type Content<
   PropsMap extends { [key: string]: DefaultComponentProps } = {
@@ -58,12 +66,12 @@ export type Content<
 > = ComponentDataMap<PropsMap>[];
 
 export type Data<
-  Props extends DefaultComponentProps = DefaultComponentProps,
+  AllProps extends DefaultAllProps = DefaultAllProps,
   RootProps extends DefaultComponentProps = DefaultRootFieldProps
 > = {
-  root: RootData<RootProps>;
-  content: Content<Props>;
-  zones?: Record<string, Content<Props>>;
+  root: WithDeepSlots<RootData<RootProps>, Content<AllProps>>;
+  content: Content<AllProps>;
+  zones?: Record<string, Content<AllProps>>;
 };
 
 export type Metadata = { [key: string]: any };

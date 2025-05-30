@@ -41,7 +41,10 @@ export function Render<
   };
 
   // DEPRECATED
-  const rootProps = defaultedData.root.props || defaultedData.root;
+  const rootProps =
+    "props" in defaultedData.root
+      ? defaultedData.root.props
+      : defaultedData.root;
   const title = rootProps?.title || "";
 
   const pageProps = {

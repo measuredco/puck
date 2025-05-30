@@ -104,6 +104,7 @@ describe("transformProps method", () => {
             {
               type: "Flex",
               props: {
+                id: "Flex-1",
                 content: [
                   {
                     type: "HeadingBlock",
@@ -139,6 +140,10 @@ describe("transformProps method", () => {
               fields: { content: { type: "slot" } },
               render: () => <div />,
             },
+            HeadingBlock: {
+              fields: { title: { type: "text" } },
+              render: () => <div />,
+            },
           },
         }
       )
@@ -156,6 +161,7 @@ describe("transformProps method", () => {
                   "type": "HeadingBlock",
                 },
               ],
+              "id": "Flex-1",
             },
             "type": "Flex",
           },

@@ -28,3 +28,22 @@ export type PrivateAppState<UserData extends Data = Data> =
       zones: ZoneIndex;
     };
   };
+
+export type DefaultAllProps = Record<string, DefaultComponentProps>;
+
+/**
+ * Recursively walk T and replace Slots with SlotComponents
+ */
+export type WithDeepSlots<T, SlotType = T> =
+  // ────────────────────────────── leaf conversions ─────────────────────────────
+  T extends Slot
+    ? SlotType
+    : // ────────────────────────── recurse into arrays & tuples ────────────────
+    T extends (infer U)[]
+    ? Array<WithDeepSlots<U, SlotType>>
+    : T extends (infer U)[]
+    ? WithDeepSlots<U, SlotType>[]
+    : // ───────────── recurse into objects while preserving optionality ────
+    T extends object
+    ? { [K in keyof T]: WithDeepSlots<T[K], SlotType> }
+    : T;

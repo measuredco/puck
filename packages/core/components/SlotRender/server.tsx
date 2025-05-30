@@ -1,11 +1,11 @@
 import { forwardRef } from "react";
 import { DropZoneProps } from "../DropZone/types";
-import { ComponentData, Config, Metadata, Slot } from "../../types";
+import { ComponentData, Config, Content, Metadata, Slot } from "../../types";
 import { useSlots } from "../../lib/use-slots";
 import { DropZoneRender } from "../ServerRender";
 
 type SlotRenderProps = DropZoneProps & {
-  content: Slot;
+  content: Content;
   config: Config;
   metadata: Metadata;
 };
