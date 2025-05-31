@@ -116,4 +116,67 @@ describe("Puck", () => {
 
     expect(appStore.getState()).toMatchSnapshot();
   });
+
+  it("should index slots on mount", async () => {
+    render(
+      <Puck
+        config={{
+          root: {
+            fields: {
+              content: { type: "slot" },
+            },
+          },
+          components: {},
+        }}
+        data={{
+          root: {
+            props: {
+              content: [],
+            },
+          },
+        }}
+        iframe={{ enabled: false }}
+      />
+    );
+
+    await flush();
+
+    const { appStore } = getInternal();
+
+    expect(appStore.getState().state.indexes).toMatchInlineSnapshot(`
+      {
+        "nodes": {
+          "root": {
+            "data": {
+              "props": {
+                "content": [],
+                "id": "root",
+              },
+              "type": "root",
+            },
+            "flatData": {
+              "props": {
+                "content": null,
+                "id": "root",
+              },
+              "type": "root",
+            },
+            "parentId": null,
+            "path": [],
+            "zone": "",
+          },
+        },
+        "zones": {
+          "root:content": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "root:default-zone": {
+            "contentIds": [],
+            "type": "root",
+          },
+        },
+      }
+    `);
+  });
 });
