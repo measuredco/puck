@@ -35,8 +35,8 @@ import {
   createAppStore,
   defaultAppState,
   useAppStore,
-  useAppStoreApi,
   appStoreContext,
+  AppStore,
 } from "../../store";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
@@ -317,6 +317,12 @@ function PuckProvider<
   const [appStore] = useState(() =>
     createAppStore(generateAppStore(initialAppState))
   );
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      (window as any).__PUCK_INTERNAL_DO_NOT_USE = { appStore };
+    }
+  }, [appStore]);
 
   useEffect(() => {
     const state = appStore.getState().state;
