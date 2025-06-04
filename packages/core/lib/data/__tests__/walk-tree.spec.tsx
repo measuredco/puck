@@ -25,14 +25,19 @@ const testData: UserData = {
   content: [
     {
       type: "Comp",
-      props: { id: "my-component", prop: "Data" },
+      props: { id: "my-component", prop: "Data", slotA: [], slotB: [] },
     },
   ],
   zones: {
     "my-component:zone": [
       {
         type: "Comp",
-        props: { id: "other-component", prop: "More example data" },
+        props: {
+          id: "other-component",
+          prop: "More example data",
+          slotA: [],
+          slotB: [],
+        },
       },
     ],
     "other-component:zone": [
@@ -44,13 +49,23 @@ const testData: UserData = {
           slotA: [
             {
               type: "Comp",
-              props: { id: "slotted-a-id", prop: "Inside a slot" },
+              props: {
+                id: "slotted-a-id",
+                prop: "Inside a slot",
+                slotA: [],
+                slotB: [],
+              },
             },
           ],
           slotB: [
             {
               type: "Comp",
-              props: { id: "slotted-b-id", prop: "Inside a slot" },
+              props: {
+                id: "slotted-b-id",
+                prop: "Inside a slot",
+                slotA: [],
+                slotB: [],
+              },
             },
           ],
         },
@@ -92,7 +107,12 @@ describe("walk-tree", () => {
     expect(mockMap).toHaveBeenCalledWith(
       [
         {
-          props: { id: "slotted-a-id", prop: "Inside a slot" },
+          props: {
+            id: "slotted-a-id",
+            prop: "Inside a slot",
+            slotA: [],
+            slotB: [],
+          },
           type: "Comp",
         },
       ],
@@ -102,7 +122,12 @@ describe("walk-tree", () => {
     expect(mockMap).toHaveBeenCalledWith(
       [
         {
-          props: { id: "slotted-b-id", prop: "Inside a slot" },
+          props: {
+            id: "slotted-b-id",
+            prop: "Inside a slot",
+            slotA: [],
+            slotB: [],
+          },
           type: "Comp",
         },
       ],
@@ -123,7 +148,12 @@ describe("walk-tree", () => {
     expect(mockMap).toHaveBeenCalledWith(
       [
         {
-          props: { id: "slotted-a-id", prop: "Inside a slot" },
+          props: {
+            id: "slotted-a-id",
+            prop: "Inside a slot",
+            slotA: [],
+            slotB: [],
+          },
           type: "Comp",
         },
       ],
@@ -133,7 +163,12 @@ describe("walk-tree", () => {
     expect(mockMap).toHaveBeenCalledWith(
       [
         {
-          props: { id: "slotted-b-id", prop: "Inside a slot" },
+          props: {
+            id: "slotted-b-id",
+            prop: "Inside a slot",
+            slotA: [],
+            slotB: [],
+          },
           type: "Comp",
         },
       ],
@@ -157,6 +192,8 @@ describe("walk-tree", () => {
               "example": "Hello, world",
               "id": "my-component",
               "prop": "Data",
+              "slotA": [],
+              "slotB": [],
             },
             "type": "Comp",
           },
@@ -173,6 +210,8 @@ describe("walk-tree", () => {
               "props": {
                 "id": "other-component",
                 "prop": "More example data",
+                "slotA": [],
+                "slotB": [],
               },
               "type": "Comp",
             },
@@ -188,6 +227,8 @@ describe("walk-tree", () => {
                       "example": "Hello, world",
                       "id": "slotted-a-id",
                       "prop": "Inside a slot",
+                      "slotA": [],
+                      "slotB": [],
                     },
                     "type": "Comp",
                   },
@@ -198,6 +239,8 @@ describe("walk-tree", () => {
                       "example": "Hello, world",
                       "id": "slotted-b-id",
                       "prop": "Inside a slot",
+                      "slotA": [],
+                      "slotB": [],
                     },
                     "type": "Comp",
                   },
@@ -233,6 +276,8 @@ describe("walk-tree", () => {
                 "example": "Hello, world",
                 "id": "slotted-a-id",
                 "prop": "Inside a slot",
+                "slotA": [],
+                "slotB": [],
               },
               "type": "Comp",
             },
@@ -243,6 +288,8 @@ describe("walk-tree", () => {
                 "example": "Hello, world",
                 "id": "slotted-b-id",
                 "prop": "Inside a slot",
+                "slotA": [],
+                "slotB": [],
               },
               "type": "Comp",
             },
