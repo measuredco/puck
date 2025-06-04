@@ -256,6 +256,8 @@ describe("walk-app-state", () => {
                         "props": {
                           "id": "array-slotted-a-id",
                           "prop": "Inside a slot, inside an array",
+                          "slotA": [],
+                          "slotB": [],
                         },
                         "type": "Comp",
                       },
@@ -269,6 +271,8 @@ describe("walk-app-state", () => {
                       "props": {
                         "id": "object-slotted-a-id",
                         "prop": "Inside a slot, inside an object",
+                        "slotA": [],
+                        "slotB": [],
                       },
                       "type": "Comp",
                     },
@@ -280,6 +284,8 @@ describe("walk-app-state", () => {
                     "props": {
                       "id": "slotted-a-id",
                       "prop": "Inside a slot",
+                      "slotA": [],
+                      "slotB": [],
                     },
                     "type": "Comp",
                   },
@@ -289,6 +295,8 @@ describe("walk-app-state", () => {
                     "props": {
                       "id": "slotted-b-id",
                       "prop": "Inside a slot",
+                      "slotA": [],
+                      "slotB": [],
                     },
                     "type": "Comp",
                   },
@@ -320,6 +328,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "array-slotted-a-id",
                 "prop": "Inside a slot, inside an array",
+                "slotA": [],
+                "slotB": [],
               },
               "type": "Comp",
             },
@@ -327,6 +337,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "array-slotted-a-id",
                 "prop": "Inside a slot, inside an array",
+                "slotA": null,
+                "slotB": null,
               },
               "type": "Comp",
             },
@@ -344,6 +356,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "my-component",
                 "prop": "Data",
+                "slotA": [],
+                "slotB": [],
               },
               "type": "Comp",
             },
@@ -351,6 +365,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "my-component",
                 "prop": "Data",
+                "slotA": null,
+                "slotB": null,
               },
               "type": "Comp",
             },
@@ -365,6 +381,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "object-slotted-a-id",
                 "prop": "Inside a slot, inside an object",
+                "slotA": [],
+                "slotB": [],
               },
               "type": "Comp",
             },
@@ -372,6 +390,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "object-slotted-a-id",
                 "prop": "Inside a slot, inside an object",
+                "slotA": null,
+                "slotB": null,
               },
               "type": "Comp",
             },
@@ -389,6 +409,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "other-component",
                 "prop": "More example data",
+                "slotA": [],
+                "slotB": [],
               },
               "type": "Comp",
             },
@@ -396,6 +418,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "other-component",
                 "prop": "More example data",
+                "slotA": null,
+                "slotB": null,
               },
               "type": "Comp",
             },
@@ -432,6 +456,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "slotted-a-id",
                 "prop": "Inside a slot",
+                "slotA": [],
+                "slotB": [],
               },
               "type": "Comp",
             },
@@ -439,6 +465,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "slotted-a-id",
                 "prop": "Inside a slot",
+                "slotA": null,
+                "slotB": null,
               },
               "type": "Comp",
             },
@@ -456,6 +484,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "slotted-b-id",
                 "prop": "Inside a slot",
+                "slotA": [],
+                "slotB": [],
               },
               "type": "Comp",
             },
@@ -463,6 +493,8 @@ describe("walk-app-state", () => {
               "props": {
                 "id": "slotted-b-id",
                 "prop": "Inside a slot",
+                "slotA": null,
+                "slotB": null,
               },
               "type": "Comp",
             },
@@ -501,6 +533,22 @@ describe("walk-app-state", () => {
             ],
             "type": "slot",
           },
+          "array-slotted-a-id:slotA": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "array-slotted-a-id:slotB": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "my-component:slotA": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "my-component:slotB": {
+            "contentIds": [],
+            "type": "slot",
+          },
           "my-component:zone": {
             "contentIds": [
               "other-component",
@@ -511,6 +559,22 @@ describe("walk-app-state", () => {
             "contentIds": [],
             "type": "dropzone",
           },
+          "object-slotted-a-id:slotA": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "object-slotted-a-id:slotB": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "other-component:slotA": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "other-component:slotB": {
+            "contentIds": [],
+            "type": "slot",
+          },
           "other-component:zone": {
             "contentIds": [
               "another-id",
@@ -520,6 +584,121 @@ describe("walk-app-state", () => {
           "root:default-zone": {
             "contentIds": [
               "my-component",
+            ],
+            "type": "root",
+          },
+          "root:slot": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "slotted-a-id:slotA": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "slotted-a-id:slotB": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "slotted-b-id:slotA": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "slotted-b-id:slotB": {
+            "contentIds": [],
+            "type": "slot",
+          },
+        },
+      }
+    `);
+  });
+
+  it("should default values for any undefined slots", () => {
+    const state: PrivateAppState = walkAppState(
+      {
+        ...defaultState,
+        data: {
+          ...defaultData,
+          content: [
+            {
+              type: "Comp",
+              props: {
+                id: "another-id",
+                prop: "Even more example data",
+              },
+            },
+          ],
+          zones: {},
+        },
+      },
+      config
+    );
+
+    expect(state.indexes).toMatchInlineSnapshot(`
+      {
+        "nodes": {
+          "another-id": {
+            "data": {
+              "props": {
+                "id": "another-id",
+                "prop": "Even more example data",
+                "slotA": [],
+                "slotB": [],
+              },
+              "type": "Comp",
+            },
+            "flatData": {
+              "props": {
+                "id": "another-id",
+                "prop": "Even more example data",
+                "slotA": null,
+                "slotB": null,
+              },
+              "type": "Comp",
+            },
+            "parentId": "root",
+            "path": [
+              "root:default-zone",
+            ],
+            "zone": "default-zone",
+          },
+          "root": {
+            "data": {
+              "props": {
+                "id": "root",
+                "slot": [],
+                "title": "",
+              },
+              "type": "root",
+            },
+            "flatData": {
+              "props": {
+                "id": "root",
+                "slot": null,
+                "title": "",
+              },
+              "type": "root",
+            },
+            "parentId": null,
+            "path": [],
+            "zone": "",
+          },
+        },
+        "zones": {
+          "another-id:slotA": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "another-id:slotB": {
+            "contentIds": [],
+            "type": "slot",
+          },
+          "my-component:zone1": {
+            "contentIds": [],
+            "type": "dropzone",
+          },
+          "root:default-zone": {
+            "contentIds": [
+              "another-id",
             ],
             "type": "root",
           },
