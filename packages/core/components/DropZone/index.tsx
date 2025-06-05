@@ -386,7 +386,7 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
 
     useEffect(() => {
       if (registerLocalZone) {
-        registerLocalZone(zoneCompound, isEnabled);
+        registerLocalZone(zoneCompound, targetAccepted || isEnabled);
       }
 
       return () => {
@@ -394,7 +394,7 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
           unregisterLocalZone(zoneCompound);
         }
       };
-    }, [isEnabled, zoneCompound]);
+    }, [targetAccepted, isEnabled, zoneCompound]);
 
     const [contentIdsWithPreview, preview] = useContentIdsWithPreview(
       contentIds,
