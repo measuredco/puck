@@ -3,7 +3,6 @@ import { PropsWithChildren, ReactNode } from "react";
 import { useSensors } from "../../lib/dnd/use-sensors";
 import { createDynamicCollisionDetector } from "../../lib/dnd/collision/dynamic";
 import "./styles.css";
-import { collisionStore } from "../../lib/dnd/collision/dynamic/store";
 import { useSortable } from "@dnd-kit/react/sortable";
 
 export const SortableProvider = ({

@@ -57,7 +57,7 @@ export function transformProps<
 
   // DEPRECATED - handle legacy root props
   if (!defaultedData.root.props) {
-    updatedData.root = updatedData.root.props;
+    updatedData.root = updatedData.root.props as any;
   }
 
   return updatedData;

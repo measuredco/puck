@@ -35,6 +35,7 @@
   padding: 12px 15px;
   transition: border-color 50ms ease-in;
   width: 100%;
+  max-width: 100%;
 }
 
 select.Input-input {

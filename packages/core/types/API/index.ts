@@ -1,4 +1,5 @@
 import { PuckAction } from "../../reducer";
+import { DefaultAllProps, WithDeepSlots } from "../Internal";
 import { DefaultComponentProps } from "../Props";
 import { AppState } from "./../AppState";
 import { ComponentDataOptionalId, Content, Data } from "./../Data";
@@ -60,15 +61,10 @@ export type Slot<
 }[keyof Props][];
 
 export type WithSlotProps<
-  Props extends DefaultComponentProps = DefaultComponentProps,
-  SlotProps extends DefaultComponentProps = Props
-> = Props extends any
-  ? any
-  : {
-      [PropName in keyof Props]: Props[PropName] extends Slot<SlotProps>
-        ? Content<SlotProps>
-        : Props[PropName];
-    };
+  Target extends Record<string, any>,
+  AllProps extends DefaultAllProps = DefaultAllProps,
+  SlotType extends Content<AllProps> = Content<AllProps>
+> = WithDeepSlots<Target, SlotType>;
 
 export * from "./DropZone";
 export * from "./Viewports";

@@ -10,6 +10,7 @@ export type PuckContext = {
 };
 
 export type DefaultRootFieldProps = {
+  [key: string]: any;
   title?: string;
 };
 

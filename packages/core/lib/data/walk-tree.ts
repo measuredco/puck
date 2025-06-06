@@ -5,8 +5,7 @@ import {
   RootData,
   UserGenerics,
 } from "../../types";
-import { createIsSlotConfig } from "./is-slot";
-import { mapSlotsSync } from "./map-slots";
+import { mapSlots } from "./map-slots";
 
 type WalkTreeOptions = {
   parentId: string;
@@ -22,19 +21,26 @@ export function walkTree<
   config: UserConfig,
   callbackFn: (data: Content, options: WalkTreeOptions) => Content | null | void
 ): T {
-  const isSlot = createIsSlotConfig(config);
-
-  const walkItem = (item: ComponentData | RootData) => {
-    return mapSlotsSync(
-      item,
-      (content, parentId, propName) =>
-        callbackFn(content, { parentId, propName }),
-      isSlot
-    );
+  const walkItem = <
+    ItemType extends
+      | G["UserComponentData"]
+      | G["UserData"]["root"]
+      | G["UserData"]
+  >(
+    item: ItemType
+  ): ItemType => {
+    return mapSlots(
+      item as ComponentData,
+      (content, parentId, propName) => {
+        return callbackFn(content, { parentId, propName }) ?? content;
+      },
+      config,
+      true
+    ) as ItemType;
   };
 
   if ("props" in data) {
-    return walkItem(data) as T;
+    return walkItem(data as any) as T;
   }
 
   const _data = data as G["UserData"];

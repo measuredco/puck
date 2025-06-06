@@ -73,7 +73,7 @@ describe("Reducer", () => {
 
         const action: InsertAction = {
           type: "insert",
-          componentType: "CompWithDefault",
+          componentType: "CompWithDefaults",
           destinationIndex: 0,
           destinationZone: "root:slot",
           id: "first",
@@ -84,7 +84,7 @@ describe("Reducer", () => {
         const item = newState.data.root.props?.slot[0];
         const defaultedItem = newState.data.root.props?.slot[0].props.slot[0];
 
-        expect(item).toHaveProperty("type", "CompWithDefault");
+        expect(item).toHaveProperty("type", "CompWithDefaults");
         expect(defaultedItem?.props).toHaveProperty("prop", "Defaulted item");
         expect(defaultedItem?.props.id).toEqual("mockId-1");
         expectIndexed(newState, defaultedItem, ["root:slot", "first:slot"], 0);

@@ -8,8 +8,8 @@ describe("Reducer", () => {
     it("should set new data", () => {
       const newData = {
         ...defaultData,
-        root: { props: { title: "Hello, world" } },
-        content: [{ type: "Comp", props: { id: "1" } }],
+        root: { props: { title: "Hello, world", slot: [] } },
+        content: [{ type: "Comp", props: { id: "1", slot: [] } }],
       };
 
       const action: SetDataAction = {

@@ -206,6 +206,12 @@ function AutoFieldInternal<
     }
   }, []);
 
+  const { visible = true } = props.field;
+
+  if (!visible) {
+    return null;
+  }
+
   if (field.type === "slot") {
     return null;
   }

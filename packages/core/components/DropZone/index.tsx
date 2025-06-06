@@ -23,7 +23,7 @@ import {
   ZoneStoreContext,
   dropZoneContext,
 } from "./context";
-import { useAppStore } from "../../store";
+import { useAppStore, useAppStoreApi } from "../../store";
 import { DropZoneProps } from "./types";
 import {
   ComponentData,
@@ -46,6 +46,7 @@ import { useShallow } from "zustand/react/shallow";
 import { renderContext } from "../Render";
 import { useSlots } from "../../lib/use-slots";
 import { ContextSlotRender, SlotRenderPure } from "../SlotRender";
+import { expandNode } from "../../lib/data/flatten-node";
 
 const getClassName = getClassNameFactory("DropZone", styles);
 
@@ -103,9 +104,16 @@ const DropZoneChild = ({
     useShallow((s) => s.state.indexes.nodes[componentId]?.data.readOnly)
   );
 
+  const appStore = useAppStoreApi();
+
   const item = useMemo(() => {
     if (nodeProps) {
-      return { type: nodeType, props: nodeProps };
+      const expanded = expandNode({
+        type: nodeType,
+        props: nodeProps,
+      }) as ComponentData;
+
+      return expanded;
     }
 
     const preview = zoneStore.getState().previewIndex[zoneCompound];
@@ -119,7 +127,7 @@ const DropZoneChild = ({
     }
 
     return null;
-  }, [componentId, zoneCompound, nodeType, nodeProps]);
+  }, [appStore, componentId, zoneCompound, nodeType, nodeProps]);
 
   const componentConfig = useAppStore((s) =>
     item?.type ? s.config.components[item.type] : null
@@ -167,9 +175,16 @@ const DropZoneChild = ({
     [componentConfig?.defaultProps, item?.props, puckProps]
   );
 
+  const defaultedNode = useMemo(
+    () => ({ type: item?.type ?? nodeType, props: defaultsProps }),
+    [item?.type, nodeType, defaultsProps]
+  );
+
+  const config = useAppStore((s) => s.config);
+
   const defaultedPropsWithSlots = useSlots(
-    componentConfig,
-    defaultsProps,
+    config,
+    defaultedNode,
     DropZoneEditPure,
     (slotProps) => (
       <ContextSlotRender componentId={componentId} zone={slotProps.zone} />
@@ -190,7 +205,8 @@ const DropZoneChild = ({
 
   let componentType = item.type as string;
 
-  const isInserting = item.previewType === "insert";
+  const isInserting =
+    "previewType" in item ? item.previewType === "insert" : false;
 
   if (isInserting) {
     Render = renderPreview;
@@ -370,7 +386,7 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
 
     useEffect(() => {
       if (registerLocalZone) {
-        registerLocalZone(zoneCompound, isEnabled);
+        registerLocalZone(zoneCompound, targetAccepted || isEnabled);
       }
 
       return () => {
@@ -378,7 +394,7 @@ export const DropZoneEdit = forwardRef<HTMLDivElement, DropZoneProps>(
           unregisterLocalZone(zoneCompound);
         }
       };
-    }, [isEnabled, zoneCompound]);
+    }, [targetAccepted, isEnabled, zoneCompound]);
 
     const [contentIdsWithPreview, preview] = useContentIdsWithPreview(
       contentIds,
@@ -482,11 +498,10 @@ const DropZoneRenderItem = ({
 }) => {
   const Component = config.components[item.type];
 
-  const props = useSlots(Component, item.props, (slotProps) => (
+  const props = useSlots(config, item, (slotProps) => (
     <SlotRenderPure {...slotProps} config={config} metadata={metadata} />
   ));
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const nextContextValue = useMemo<DropZoneContext>(
     () => ({
       areaId: props.id,

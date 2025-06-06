@@ -105,6 +105,7 @@ export const Hero: ComponentConfig<HeroProps> = {
     image: {
       type: "object",
       objectFields: {
+        content: { type: "slot" },
         url: {
           type: "custom",
           render: ({ value, field, name, onChange, readOnly }) => (
@@ -126,7 +127,8 @@ export const Hero: ComponentConfig<HeroProps> = {
           type: "radio",
           options: [
             { label: "inline", value: "inline" },
-            { label: "background", value: "background" },
+            { label: "bg", value: "background" },
+            { label: "custom", value: "custom" },
           ],
         },
       },
