@@ -77,15 +77,19 @@ export function Example() {
 
 ### `metadata`
 
-Provide additional data to the [`puck.metadata`](/docs/api-reference/configuration/component-config#puckmetadata) render prop provided to all components.
+An object containing additional data provided to each component's [`render`](/docs/api-reference/configuration/component-config#renderprops) and [`resolveData`](/docs/api-reference/configuration/component-config#resolvedatadata-params) functions.
 
-```tsx {4-12} copy
+```tsx {4,8} copy
 export function Example() {
   return (
     <Render
-      metadata={{
-        title: "Page title",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+      metadata={{ title: "Hello, world" }}
+      config={{
+        HeadingBlock: {
+          render: ({ puck }) => {
+            return <h1>{puck.metadata.title}</h1>; // "Hello, world"
+          },
+        },
       }}
       // ...
     />
