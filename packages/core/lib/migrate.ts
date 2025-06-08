@@ -58,6 +58,7 @@ const migrations: Migration[] = [
             ...nodeData,
             props: {
               ...nodeData.props,
+              ...updatedItems[id]?.props,
               [slotName]: content,
             },
           };
