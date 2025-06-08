@@ -1,6 +1,9 @@
-import { flatten, unflatten } from "flat";
+import flat from "flat";
 import { ComponentData, Config, RootData, UserGenerics } from "../../types";
 import { stripSlots } from "./strip-slots";
+
+// Explicitly destructure to account for flat module issues: https://github.com/puckeditor/puck/issues/1089
+const { flatten, unflatten } = flat;
 
 export const flattenNode = <
   UserConfig extends Config = Config,
