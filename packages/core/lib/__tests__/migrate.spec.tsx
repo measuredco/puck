@@ -21,7 +21,8 @@ describe("migrate method", () => {
       content: [{ type: "Flex", props: { id: "Flex-123" } }],
       root: {},
       zones: {
-        "Flex-123:flex": [{ type: "Other", props: { id: "Other-123" } }],
+        "Flex-123:flexA": [{ type: "Other", props: { id: "Other-123" } }],
+        "Flex-123:flexB": [{ type: "Heading", props: { id: "Heading-123" } }],
         "Other-123:content": [
           { type: "Heading", props: { id: "Heading-456" } },
         ],
@@ -33,7 +34,8 @@ describe("migrate method", () => {
         Flex: {
           fields: {
             // Migrate to slots for Flex
-            flex: { type: "slot" },
+            flexA: { type: "slot" },
+            flexB: { type: "slot" },
           },
           render: () => <div />,
         },
@@ -56,7 +58,7 @@ describe("migrate method", () => {
           type: "Flex",
           props: {
             id: "Flex-123",
-            flex: [
+            flexA: [
               {
                 type: "Other",
                 props: {
@@ -65,6 +67,7 @@ describe("migrate method", () => {
                 },
               },
             ],
+            flexB: [{ type: "Heading", props: { id: "Heading-123" } }],
           },
         },
       ],
