@@ -1,10 +1,11 @@
-import { Data } from "../../types";
+import { ComponentDataOptionalId, Data } from "../../types";
 import { ReplaceAction } from "../actions";
 import { AppStore } from "../../store";
 import { PrivateAppState } from "../../types/Internal";
 import { walkAppState } from "../../lib/data/walk-app-state";
 import { getIdsForParent } from "../../lib/data/get-ids-for-parent";
-import { populateIds } from "../../lib/data/populate-ids";
+import { walkTree } from "../../rsc";
+import { generateId } from "../../lib/generate-id";
 
 export const replaceAction = <UserData extends Data>(
   state: PrivateAppState<UserData>,
@@ -27,10 +28,37 @@ export const replaceAction = <UserData extends Data>(
     );
   }
 
-  const data = populateIds(action.data, appStore.config);
+  const newSlotIds: string[] = [];
+
+  // Populate ids and collect nested slot IDs
+  // We use explicit function here so we don't need to walk tree twice
+  const data = walkTree(action.data, appStore.config, (contents, opts) => {
+    newSlotIds.push(`${opts.parentId}:${opts.propName}`);
+
+    return contents.map((item: ComponentDataOptionalId) => {
+      const id = generateId(item.type);
+
+      return {
+        ...item,
+        props: { id, ...item.props },
+      };
+    });
+  });
+
+  const stateWithDeepSlotsRemoved = { ...state };
+
+  Object.keys(state.indexes.zones).forEach((zoneCompound) => {
+    const id = zoneCompound.split(":")[0];
+
+    if (id === originalId) {
+      if (!newSlotIds.includes(zoneCompound)) {
+        delete stateWithDeepSlotsRemoved.indexes.zones[zoneCompound];
+      }
+    }
+  });
 
   return walkAppState<UserData>(
-    state,
+    stateWithDeepSlotsRemoved,
     appStore.config,
     (content, zoneCompound) => {
       const newContent = [...content];
