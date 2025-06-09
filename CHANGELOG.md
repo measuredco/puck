@@ -2,6 +2,19 @@
 
 <!--__CHANGELOG_ENTRY__-->
 
+## [0.19.1](https://github.com/measuredco/puck/compare/v0.19.0...v0.19.1) (2025-06-09)
+
+
+### Bug Fixes
+
+* address flat package import errors ([61f2e46](https://github.com/measuredco/puck/commit/61f2e46822471fcdbc52476eaae813a3fb2dd27b))
+* handle multiple slots in migrate function ([8597105](https://github.com/measuredco/puck/commit/859710536bc17102f73db6b9cd411c55e1ed6517))
+* prevent type erasure in object props ([00fbbb8](https://github.com/measuredco/puck/commit/00fbbb8ae2217e38a304a4114069c4e124a1a28f))
+* tidy internal index when array slots removed ([f9d3f0e](https://github.com/measuredco/puck/commit/f9d3f0e93f21735b9a3fb605b4eed4fa8c7ded3e))
+
+
+
+
 ## [0.19.0](https://github.com/measuredco/puck/compare/v0.18.2...v0.19.0) (2025-06-04)
 
 
