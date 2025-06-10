@@ -25,9 +25,18 @@ export const useContentIdsWithPreview = (
   );
 
   const updateContent = useRenderedCallback(
-    (contentIds: string[], preview: Preview | undefined) => {
-      const s = zoneStore.getState();
-      const draggedItemId = s.draggedItem?.id;
+    (
+      contentIds: string[],
+      preview: Preview | undefined,
+      isDragging: boolean,
+      draggedItemId?: string,
+      previewExists?: boolean
+    ) => {
+      // Preview is cleared but context hasn't yet caught up
+      // This is necessary because Zustand clears the preview before the dispatcher finishes
+      if (isDragging && !previewExists) {
+        return;
+      }
 
       if (preview) {
         if (preview.type === "insert") {
@@ -49,7 +58,9 @@ export const useContentIdsWithPreview = (
         }
       } else {
         setContentIdsWithPreview(
-          contentIds.filter((id) => id !== draggedItemId)
+          previewExists
+            ? contentIds.filter((id) => id !== draggedItemId)
+            : contentIds
         );
       }
 
@@ -59,7 +70,21 @@ export const useContentIdsWithPreview = (
   );
 
   useEffect(() => {
-    updateContent(contentIds, preview, isDragging);
+    // We MUST explicitly pass these in, otherwise mobile dragging fails
+    // due to hard-to-debug rendering race conditions. This must happen
+    // within this callback (after preview has updated), and not inside
+    // the renderedCallback.
+    const s = zoneStore.getState();
+    const draggedItemId = s.draggedItem?.id;
+    const previewExists = Object.keys(s.previewIndex || {}).length > 0;
+
+    updateContent(
+      contentIds,
+      preview,
+      isDragging,
+      draggedItemId,
+      previewExists
+    );
   }, [contentIds, preview, isDragging]);
 
   return [contentIdsWithPreview, localPreview];

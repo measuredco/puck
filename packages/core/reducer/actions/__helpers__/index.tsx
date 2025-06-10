@@ -18,10 +18,12 @@ type Props = {
   Comp: {
     prop: string;
     slot: Slot;
+    slotArray: { slot: Slot }[];
   };
   CompWithDefaults: {
     prop: string;
     slot: Slot;
+    slotArray: { slot: Slot }[];
   };
 };
 
@@ -68,14 +70,16 @@ const config: UserConfig = {
       fields: {
         prop: { type: "text" },
         slot: { type: "slot" },
+        slotArray: { type: "array", arrayFields: { slot: { type: "slot" } } },
       },
-      defaultProps: { prop: "example", slot: [] },
+      defaultProps: { prop: "example", slot: [], slotArray: [] },
       render: () => <div />,
     },
     CompWithDefaults: {
       fields: {
         prop: { type: "text" },
         slot: { type: "slot" },
+        slotArray: { type: "array", arrayFields: { slot: { type: "slot" } } },
       },
       defaultProps: {
         prop: "example",
@@ -88,6 +92,7 @@ const config: UserConfig = {
             },
           },
         ],
+        slotArray: [],
       },
       render: () => <div />,
     },

@@ -210,8 +210,17 @@ export const findDeepestCandidate = (
 
     filteredCandidates.reverse();
 
-    const zone = getZoneId(filteredCandidates[0]);
-    const area = filteredCandidates[0]?.data.areaId;
+    const primaryCandidate = filteredCandidates[0];
+    const primaryCandidateData = primaryCandidate.data as
+      | ComponentDndData
+      | DropZoneDndData;
+    const primaryCandidateIsComponent =
+      "containsActiveZone" in primaryCandidateData;
+    const zone = getZoneId(primaryCandidate);
+    const area =
+      primaryCandidateIsComponent && primaryCandidateData.containsActiveZone
+        ? filteredCandidates[0].id
+        : filteredCandidates[0]?.data.areaId;
 
     return { zone, area };
   }

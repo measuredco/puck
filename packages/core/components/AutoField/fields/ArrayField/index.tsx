@@ -12,6 +12,7 @@ import { Sortable, SortableProvider } from "../../../Sortable";
 import { NestedFieldProvider, useNestedFieldContext } from "../../context";
 import { walkField } from "../../../../lib/data/map-slots";
 import { populateIds } from "../../../../lib/data/populate-ids";
+import { defaultSlots } from "../../../../lib/data/default-slots";
 
 const getClassName = getClassNameFactory("ArrayField", styles);
 const getClassNameItem = getClassNameFactory("ArrayFieldItem", styles);
@@ -394,7 +395,10 @@ export const ArrayField = ({
 
                 const existingValue = value || [];
 
-                const newItem = uniqifyItem(field.defaultItemProps ?? {});
+                const newItem = defaultSlots(
+                  uniqifyItem(field.defaultItemProps ?? {}),
+                  field.arrayFields
+                );
                 const newValue = [...existingValue, newItem];
 
                 const newArrayState = regenerateArrayState(newValue);

@@ -3,7 +3,7 @@ title: ComponentConfig
 ---
 
 import { ConfigPreview, PuckPreview } from "@/docs/components/Preview";
-import { Drawer } from "@/core/components/Drawer";
+import { Drawer } from "@/puck";
 
 # ComponentConfig
 
@@ -93,7 +93,7 @@ A boolean describing whether or not this component is being rendered in the `<Pu
 
 ##### `puck.metadata`
 
-A merged object containing the [global `metadata`](/docs/api-reference/components/puck#metadata) provided to the `<Puck>` component and any [`metadata`](#metadata) defined on this component config.
+An object containing the global metadata provided to the [`<Puck>`](/docs/api-reference/components/puck#metadata) or [`<Render>`](/docs/api-reference/components/render#metadata) component, merged with any metadata defined in this [component's config](#metadata).
 
 ```tsx {5} /renderDropZone/1 copy
 const config = {
@@ -267,7 +267,7 @@ const config = {
 
 An object containing any additional values. Provided to their [`render`](#renderprops) and [`resolveData`](#resolvedatadata-params) functions.
 
-Will be merged within the [global `metadata` prop](/docs/api-reference/components/puck#metadata), overriding any keys with the same name.
+Will be merged with the global `metadata` prop provided to the [`<Puck>`](/docs/api-reference/components/puck#metadata) or [`<Render>`](/docs/api-reference/components/render#metadata) component, overriding any keys with the same name.
 
 ```tsx {4-7}
 const config = {
@@ -398,7 +398,7 @@ The data object from the previous run of this function.
 
 ##### `params.metadata`
 
-A merged object containing the [global `metadata`](/docs/api-reference/components/puck#metadata) provided to the `<Puck>` component and any [`metadata`](#metadata) defined on this component config.
+An object containing the global metadata provided to the [`<Puck>`](/docs/api-reference/components/puck#metadata) or [`<Render>`](/docs/api-reference/components/render#metadata) component, merged with any metadata defined in this [component's config](#metadata).
 
 ```tsx copy {2-4} /changed/1 filename="Example only updating 'resolvedTitle' when 'title' changes"
 const resolveData = async ({ props }, { metadata }) => {

@@ -6,6 +6,7 @@ import {
   RootData,
   SlotField,
 } from "../../types";
+import { defaultSlots } from "./default-slots";
 
 type MapFn<T = any> = (
   data: Content,
@@ -72,7 +73,7 @@ export const walkField = ({
           const fields = componentConfig.fields ?? {};
 
           return walkField({
-            value: el,
+            value: { ...el, props: defaultSlots(el.props, fields) },
             fields,
             map,
             id: el.props.id,
@@ -204,7 +205,7 @@ export function mapSlots(
     itemType === "root" ? config.root : config.components?.[itemType];
 
   const newProps = walkObject({
-    value: item.props ?? {},
+    value: defaultSlots(item.props ?? {}, componentConfig?.fields ?? {}),
     fields: componentConfig?.fields ?? {},
     map,
     id: item.props ? item.props.id ?? "root" : "root",

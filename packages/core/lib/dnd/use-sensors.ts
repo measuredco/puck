@@ -18,18 +18,24 @@ export interface ActivationConstraints {
   delay?: DelayConstraint;
 }
 
+const touchDefault = { delay: { value: 200, tolerance: 10 } };
+const otherDefault = {
+  delay: { value: 200, tolerance: 10 },
+  distance: { value: 5 },
+};
+
 export const useSensors = (
   {
-    other,
+    other = otherDefault,
     mouse,
-    touch,
+    touch = touchDefault,
   }: {
     mouse?: ActivationConstraints;
     touch?: ActivationConstraints;
     other?: ActivationConstraints;
   } = {
-    touch: { delay: { value: 200, tolerance: 10 } },
-    other: { delay: { value: 200, tolerance: 10 }, distance: { value: 5 } },
+    touch: touchDefault,
+    other: otherDefault,
   }
 ) => {
   const [sensors] = useState(() => [

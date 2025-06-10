@@ -1,6 +1,6 @@
 {
   "name": "@measured/puck",
-  "version": "0.18.3",
+  "version": "0.19.1",
   "author": "Chris Villa <chris@puckeditor.com>",
   "repository": "measuredco/puck",
   "bugs": "https://github.com/measuredco/puck/issues",
@@ -73,8 +73,8 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@dnd-kit/helpers": "0.1.18-beta-20250525014052",
-    "@dnd-kit/react": "0.1.18-beta-20250525014052",
+    "@dnd-kit/helpers": "0.1.18",
+    "@dnd-kit/react": "0.1.18",
     "deep-diff": "^1.0.2",
     "fast-deep-equal": "^3.1.3",
     "flat": "^5.0.2",
