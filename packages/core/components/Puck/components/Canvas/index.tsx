@@ -107,7 +107,13 @@ export const Canvas = () => {
   useEffect(() => {
     setShowTransition(false);
     resetAutoZoom(viewports);
-  }, [frameRef, leftSideBarVisible, rightSideBarVisible, leftSidebarWidth, rightSidebarWidth]);
+  }, [
+    frameRef,
+    leftSideBarVisible,
+    rightSideBarVisible,
+    leftSidebarWidth,
+    rightSidebarWidth,
+  ]);
 
   // Constrain height
   useEffect(() => {

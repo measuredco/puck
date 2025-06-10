@@ -90,22 +90,23 @@ const ResizeHandle = ({
       startX.current = e.clientX;
 
       sidebarRef.current = handleRef.current?.parentElement || null;
-      startWidth.current = sidebarRef.current?.getBoundingClientRect().width || 0;
+      startWidth.current =
+        sidebarRef.current?.getBoundingClientRect().width || 0;
 
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
-      
-      const overlay = document.createElement('div');
-      overlay.id = 'resize-overlay';
-      overlay.style.position = 'fixed';
-      overlay.style.top = '0';
-      overlay.style.left = '0';
-      overlay.style.right = '0';
-      overlay.style.bottom = '0';
-      overlay.style.zIndex = '9999';
-      overlay.style.cursor = 'col-resize';
+
+      const overlay = document.createElement("div");
+      overlay.id = "resize-overlay";
+      overlay.style.position = "fixed";
+      overlay.style.top = "0";
+      overlay.style.left = "0";
+      overlay.style.right = "0";
+      overlay.style.bottom = "0";
+      overlay.style.zIndex = "9999";
+      overlay.style.cursor = "col-resize";
       document.body.appendChild(overlay);
-      
+
       e.preventDefault();
     },
     [position]
@@ -135,7 +136,7 @@ const ResizeHandle = ({
     document.body.style.cursor = "";
     document.body.style.userSelect = "";
 
-    const overlay = document.getElementById('resize-overlay');
+    const overlay = document.getElementById("resize-overlay");
     if (overlay) {
       document.body.removeChild(overlay);
     }
@@ -144,7 +145,7 @@ const ResizeHandle = ({
     onResizeEnd(finalWidth);
 
     sidebarRef.current = null;
-    
+
     // Trigger auto zoom by dispatching the viewportchange event
     window.dispatchEvent(
       new CustomEvent("viewportchange", {
@@ -504,22 +505,24 @@ function PuckLayout<
   useInjectGlobalCss(iframe.enabled);
 
   const leftSideBarVisible = useAppStore((s) => s.state.ui.leftSideBarVisible);
-  const rightSideBarVisible = useAppStore((s) => s.state.ui.rightSideBarVisible);
-  
+  const rightSideBarVisible = useAppStore(
+    (s) => s.state.ui.rightSideBarVisible
+  );
+
   const [leftWidth, setLeftWidth] = useState<number | null>(null);
   const [rightWidth, setRightWidth] = useState<number | null>(null);
-  
+
   const dispatch = useAppStore((s) => s.dispatch);
-  
+
   const storeLeftWidth = useAppStore((s) => s.state.ui.leftSidebarWidth);
   const storeRightWidth = useAppStore((s) => s.state.ui.rightSidebarWidth);
-  
+
   useEffect(() => {
     if (storeLeftWidth !== undefined) {
       setLeftWidth(storeLeftWidth);
     }
   }, [storeLeftWidth]);
-  
+
   useEffect(() => {
     if (storeRightWidth !== undefined) {
       setRightWidth(storeRightWidth);
@@ -538,8 +541,8 @@ function PuckLayout<
               type: "setUi",
               ui: {
                 leftSidebarWidth: left || null,
-                rightSidebarWidth: right || null
-              }
+                rightSidebarWidth: right || null,
+              },
             });
           }
         }
@@ -550,62 +553,71 @@ function PuckLayout<
   }, []);
 
   // Save widths to localStorage when they change and update store
-  const handleLeftSidebarResizeEnd = useCallback((width: number) => {
-    // Update store
-    dispatch({
-      type: "setUi",
-      ui: {
-        leftSidebarWidth: width
-      }
-    });
-    
-    // Save to localStorage
-    let widths = {};
-    try {
-      const savedWidths = localStorage.getItem("puck-sidebar-widths");
-      widths = savedWidths ? JSON.parse(savedWidths) : {};
-    } catch (error) {
-      console.error("Failed to save left sidebar width to localStorage", error);
-    } finally {
-      localStorage.setItem(
-        "puck-sidebar-widths",
-        JSON.stringify({
-          ...widths,
-          left: width,
-        })
-      );
-    }
-  }, [dispatch]);
+  const handleLeftSidebarResizeEnd = useCallback(
+    (width: number) => {
+      // Update store
+      dispatch({
+        type: "setUi",
+        ui: {
+          leftSidebarWidth: width,
+        },
+      });
 
-  const handleRightSidebarResizeEnd = useCallback((width: number) => {
-    // Update store
-    dispatch({
-      type: "setUi",
-      ui: {
-        rightSidebarWidth: width
+      // Save to localStorage
+      let widths = {};
+      try {
+        const savedWidths = localStorage.getItem("puck-sidebar-widths");
+        widths = savedWidths ? JSON.parse(savedWidths) : {};
+      } catch (error) {
+        console.error(
+          "Failed to save left sidebar width to localStorage",
+          error
+        );
+      } finally {
+        localStorage.setItem(
+          "puck-sidebar-widths",
+          JSON.stringify({
+            ...widths,
+            left: width,
+          })
+        );
       }
-    });
-    
-    // Save to localStorage
-    let widths = {};
-    try {
-      const savedWidths = localStorage.getItem("puck-sidebar-widths");
-      widths = savedWidths ? JSON.parse(savedWidths) : {};
-    } catch (error) {
-      console.error(
-        "Failed to save right sidebar width to localStorage",
-        error
-      );
-    } finally {
-      localStorage.setItem(
-        "puck-sidebar-widths",
-        JSON.stringify({
-          ...widths,
-          right: width,
-        })
-      );
-    }
-  }, [dispatch]);
+    },
+    [dispatch]
+  );
+
+  const handleRightSidebarResizeEnd = useCallback(
+    (width: number) => {
+      // Update store
+      dispatch({
+        type: "setUi",
+        ui: {
+          rightSidebarWidth: width,
+        },
+      });
+
+      // Save to localStorage
+      let widths = {};
+      try {
+        const savedWidths = localStorage.getItem("puck-sidebar-widths");
+        widths = savedWidths ? JSON.parse(savedWidths) : {};
+      } catch (error) {
+        console.error(
+          "Failed to save right sidebar width to localStorage",
+          error
+        );
+      } finally {
+        localStorage.setItem(
+          "puck-sidebar-widths",
+          JSON.stringify({
+            ...widths,
+            right: width,
+          })
+        );
+      }
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     if (!window.matchMedia("(min-width: 638px)").matches) {
@@ -682,9 +694,21 @@ function PuckLayout<
                 className={getLayoutClassName("inner")}
                 style={{
                   gridTemplateColumns: `
-                    ${leftSideBarVisible ? leftWidth ? `${leftWidth}px` : "var(--puck-side-bar-width)" : "0"} 
+                    ${
+                      leftSideBarVisible
+                        ? leftWidth
+                          ? `${leftWidth}px`
+                          : "var(--puck-side-bar-width)"
+                        : "0"
+                    } 
                     var(--puck-frame-width) 
-                    ${rightSideBarVisible ? rightWidth ? `${rightWidth}px` : "var(--puck-side-bar-width)" : "0"}
+                    ${
+                      rightSideBarVisible
+                        ? rightWidth
+                          ? `${rightWidth}px`
+                          : "var(--puck-side-bar-width)"
+                        : "0"
+                    }
                   `,
                 }}
               >
