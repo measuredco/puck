@@ -36,7 +36,7 @@
 /* Resize Handles */
 .Puck-resizeHandle {
   position: absolute;
-  width: 8px;
+  width: 5px;
   height: 100%;
   cursor: col-resize;
   z-index: 10;
@@ -50,12 +50,10 @@
 
 .Puck-resizeHandle--left {
   right: 0;
-  transform: translateX(50%);
 }
 
 .Puck-resizeHandle--right {
   left: 0;
-  transform: translateX(-50%);
 }
 
 /* Puck Layout */
