@@ -232,8 +232,6 @@ function AutoFieldInternal<
     );
   }
 
-  const children = defaultFields[field.type](mergedProps);
-
   const Render = render[field.type] as (props: FieldProps) => ReactElement;
 
   return (
@@ -254,7 +252,7 @@ function AutoFieldInternal<
           e.stopPropagation();
         }}
       >
-        <Render {...mergedProps}>{children}</Render>
+        <Render {...mergedProps} />
       </div>
     </NestedFieldContext.Provider>
   );
