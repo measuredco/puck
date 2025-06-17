@@ -100,7 +100,9 @@ export type ExternalField<
       page: number;
       itemsPerPage: number;
     };
-  }) => Promise<any[] | { data: any[]; totalPages?: number; total?: number } | null>;
+  }) => Promise<
+    any[] | { data: any[]; totalPages?: number; total?: number } | null
+  >;
   mapProp?: (value: any) => Props;
   mapRow?: (value: any) => Record<string, string | number | ReactElement>;
   getItemSummary?: (item: Props, index?: number) => string;
