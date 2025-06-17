@@ -63,118 +63,11 @@ import { walkAppState } from "../../lib/data/walk-app-state";
 import { PrivateAppState } from "../../types/Internal";
 import fdeq from "fast-deep-equal";
 import { Header } from "./components/Header";
+import { Sidebar } from "./components/Sidebar";
+import { useSidebarResize } from "../../lib/use-sidebar-resize";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
-
-interface ResizeHandleProps {
-  position: "left" | "right";
-  onResize: (width: number) => void;
-  onResizeEnd: (width: number) => void;
-}
-
-const ResizeHandle = ({
-  position,
-  onResize,
-  onResizeEnd,
-}: ResizeHandleProps) => {
-  const handleRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const startWidth = useRef(0);
-  const sidebarRef = useRef<HTMLElement | null>(null);
-
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      isDragging.current = true;
-      startX.current = e.clientX;
-
-      sidebarRef.current = handleRef.current?.parentElement || null;
-      startWidth.current =
-        sidebarRef.current?.getBoundingClientRect().width || 0;
-
-      document.body.style.cursor = "col-resize";
-      document.body.style.userSelect = "none";
-
-      const overlay = document.createElement("div");
-      overlay.id = "resize-overlay";
-      overlay.style.position = "fixed";
-      overlay.style.top = "0";
-      overlay.style.left = "0";
-      overlay.style.right = "0";
-      overlay.style.bottom = "0";
-      overlay.style.zIndex = "9999";
-      overlay.style.cursor = "col-resize";
-      document.body.appendChild(overlay);
-
-      e.preventDefault();
-    },
-    [position]
-  );
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!isDragging.current) return;
-
-      const delta = e.clientX - startX.current;
-      const newWidth =
-        position === "left"
-          ? startWidth.current + delta
-          : startWidth.current - delta;
-
-      const width = Math.max(186, newWidth);
-      onResize(width);
-      e.preventDefault();
-    },
-    [onResize, position]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    if (!isDragging.current) return;
-
-    isDragging.current = false;
-    document.body.style.cursor = "";
-    document.body.style.userSelect = "";
-
-    const overlay = document.getElementById("resize-overlay");
-    if (overlay) {
-      document.body.removeChild(overlay);
-    }
-
-    const finalWidth = sidebarRef.current?.getBoundingClientRect().width || 0;
-    onResizeEnd(finalWidth);
-
-    sidebarRef.current = null;
-
-    // Trigger auto zoom by dispatching the viewportchange event
-    window.dispatchEvent(
-      new CustomEvent("viewportchange", {
-        bubbles: true,
-        cancelable: false,
-      })
-    );
-  }, [onResizeEnd]);
-
-  useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [handleMouseMove, handleMouseUp]);
-
-  return (
-    <div
-      ref={handleRef}
-      className={`${getClassName("resizeHandle")} ${getClassName(
-        `resizeHandle--${position}`
-      )}`}
-      onMouseDown={handleMouseDown}
-    />
-  );
-};
 
 const FieldSideBar = () => {
   const title = useAppStore((s) =>
@@ -504,30 +397,25 @@ function PuckLayout<
 
   useInjectGlobalCss(iframe.enabled);
 
+  const dispatch = useAppStore((s) => s.dispatch);
   const leftSideBarVisible = useAppStore((s) => s.state.ui.leftSideBarVisible);
   const rightSideBarVisible = useAppStore(
     (s) => s.state.ui.rightSideBarVisible
   );
 
-  const [leftWidth, setLeftWidth] = useState<number | null>(null);
-  const [rightWidth, setRightWidth] = useState<number | null>(null);
+  const {
+    width: leftWidth,
+    setWidth: setLeftWidth,
+    sidebarRef: leftSidebarRef,
+    handleResizeEnd: handleLeftSidebarResizeEnd,
+  } = useSidebarResize("left", dispatch);
 
-  const dispatch = useAppStore((s) => s.dispatch);
-
-  const storeLeftWidth = useAppStore((s) => s.state.ui.leftSidebarWidth);
-  const storeRightWidth = useAppStore((s) => s.state.ui.rightSidebarWidth);
-
-  useEffect(() => {
-    if (storeLeftWidth !== undefined) {
-      setLeftWidth(storeLeftWidth);
-    }
-  }, [storeLeftWidth]);
-
-  useEffect(() => {
-    if (storeRightWidth !== undefined) {
-      setRightWidth(storeRightWidth);
-    }
-  }, [storeRightWidth]);
+  const {
+    width: rightWidth,
+    setWidth: setRightWidth,
+    sidebarRef: rightSidebarRef,
+    handleResizeEnd: handleRightSidebarResizeEnd,
+  } = useSidebarResize("right", dispatch);
 
   // Load saved widths from localStorage on mount
   useEffect(() => {
@@ -551,73 +439,6 @@ function PuckLayout<
       }
     }
   }, []);
-
-  // Save widths to localStorage when they change and update store
-  const handleLeftSidebarResizeEnd = useCallback(
-    (width: number) => {
-      // Update store
-      dispatch({
-        type: "setUi",
-        ui: {
-          leftSidebarWidth: width,
-        },
-      });
-
-      // Save to localStorage
-      let widths = {};
-      try {
-        const savedWidths = localStorage.getItem("puck-sidebar-widths");
-        widths = savedWidths ? JSON.parse(savedWidths) : {};
-      } catch (error) {
-        console.error(
-          "Failed to save left sidebar width to localStorage",
-          error
-        );
-      } finally {
-        localStorage.setItem(
-          "puck-sidebar-widths",
-          JSON.stringify({
-            ...widths,
-            left: width,
-          })
-        );
-      }
-    },
-    [dispatch]
-  );
-
-  const handleRightSidebarResizeEnd = useCallback(
-    (width: number) => {
-      // Update store
-      dispatch({
-        type: "setUi",
-        ui: {
-          rightSidebarWidth: width,
-        },
-      });
-
-      // Save to localStorage
-      let widths = {};
-      try {
-        const savedWidths = localStorage.getItem("puck-sidebar-widths");
-        widths = savedWidths ? JSON.parse(savedWidths) : {};
-      } catch (error) {
-        console.error(
-          "Failed to save right sidebar width to localStorage",
-          error
-        );
-      } finally {
-        localStorage.setItem(
-          "puck-sidebar-widths",
-          JSON.stringify({
-            ...widths,
-            right: width,
-          })
-        );
-      }
-    },
-    [dispatch]
-  );
 
   useEffect(() => {
     if (!window.matchMedia("(min-width: 638px)").matches) {
@@ -713,32 +534,32 @@ function PuckLayout<
                 }}
               >
                 <Header />
-                <div className={getLayoutClassName("leftSideBar")}>
+                <Sidebar
+                  position="left"
+                  sidebarRef={leftSidebarRef}
+                  isVisible={leftSideBarVisible}
+                  width={leftWidth}
+                  onResize={setLeftWidth}
+                  onResizeEnd={handleLeftSidebarResizeEnd}
+                >
                   <SidebarSection title="Components" noBorderTop>
                     <Components />
                   </SidebarSection>
                   <SidebarSection title="Outline">
                     <Outline />
                   </SidebarSection>
-                  {leftSideBarVisible && (
-                    <ResizeHandle
-                      position="left"
-                      onResize={(width) => setLeftWidth(width)}
-                      onResizeEnd={handleLeftSidebarResizeEnd}
-                    />
-                  )}
-                </div>
+                </Sidebar>
                 <Canvas />
-                <div className={getLayoutClassName("rightSideBar")}>
+                <Sidebar
+                  position="right"
+                  sidebarRef={rightSidebarRef}
+                  isVisible={rightSideBarVisible}
+                  width={rightWidth}
+                  onResize={setRightWidth}
+                  onResizeEnd={handleRightSidebarResizeEnd}
+                >
                   <FieldSideBar />
-                  {rightSideBarVisible && (
-                    <ResizeHandle
-                      position="right"
-                      onResize={(width) => setRightWidth(width)}
-                      onResizeEnd={handleRightSidebarResizeEnd}
-                    />
-                  )}
-                </div>
+                </Sidebar>
               </div>
             </div>
           )}

@@ -33,29 +33,6 @@
   z-index: 2;
 }
 
-/* Resize Handles */
-.Puck-resizeHandle {
-  position: absolute;
-  width: 5px;
-  height: 100%;
-  cursor: col-resize;
-  z-index: 10;
-  background: transparent;
-  top: 0;
-}
-
-.Puck-resizeHandle:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-.Puck-resizeHandle--left {
-  right: 0;
-}
-
-.Puck-resizeHandle--right {
-  left: 0;
-}
-
 /* Puck Layout */
 
 .PuckLayout-inner {
@@ -133,24 +110,4 @@
   .PuckLayout .PuckLayout-inner {
     --puck-side-bar-width: 320px;
   }
-}
-
-.PuckLayout-leftSideBar {
-  background: var(--puck-color-grey-12);
-  border-inline-end: 1px solid var(--puck-color-grey-09);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  grid-area: left;
-  overflow-y: auto;
-}
-
-.PuckLayout-rightSideBar {
-  background: var(--puck-color-white);
-  border-inline-start: 1px solid var(--puck-color-grey-09);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  grid-area: right;
-  overflow-y: auto;
 }
