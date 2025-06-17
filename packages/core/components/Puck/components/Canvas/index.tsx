@@ -41,10 +41,18 @@ export const Canvas = () => {
       iframe: s.iframe,
     }))
   );
-  const { leftSideBarVisible, rightSideBarVisible, viewports } = useAppStore(
+  const {
+    leftSideBarVisible,
+    rightSideBarVisible,
+    leftSidebarWidth,
+    rightSidebarWidth,
+    viewports,
+  } = useAppStore(
     useShallow((s) => ({
       leftSideBarVisible: s.state.ui.leftSideBarVisible,
       rightSideBarVisible: s.state.ui.rightSideBarVisible,
+      leftSidebarWidth: s.state.ui.leftSidebarWidth,
+      rightSidebarWidth: s.state.ui.rightSidebarWidth,
       viewports: s.state.ui.viewports,
     }))
   );
@@ -99,7 +107,13 @@ export const Canvas = () => {
   useEffect(() => {
     setShowTransition(false);
     resetAutoZoom(viewports);
-  }, [frameRef, leftSideBarVisible, rightSideBarVisible]);
+  }, [
+    frameRef,
+    leftSideBarVisible,
+    rightSideBarVisible,
+    leftSidebarWidth,
+    rightSidebarWidth,
+  ]);
 
   // Constrain height
   useEffect(() => {
