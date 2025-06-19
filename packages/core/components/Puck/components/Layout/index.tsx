@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useMemo, useState } from "react";
 import { getClassNameFactory } from "../../../../lib";
 import { IframeConfig, UiState } from "../../../../types";
 import { usePropsContext } from "../..";
@@ -16,8 +16,8 @@ import { Components } from "../Components";
 import { Outline } from "../Outline";
 import { Canvas } from "../Canvas";
 import { Fields } from "../Fields";
-import { Nav } from "../Nav";
-import { Hammer, Heading1, Layers } from "lucide-react";
+import { MenuItem, Nav } from "../Nav";
+import { Hammer, Layers, ToyBrick } from "lucide-react";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -42,6 +42,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
     iframe: _iframe,
     dnd,
     initialHistory: _initialHistory,
+    plugins,
   } = usePropsContext();
 
   const iframe: IframeConfig = useMemo(
@@ -121,7 +122,38 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 
   usePreviewModeHotkeys();
 
-  const [view, setView] = useState<"blocks" | "outline" | "headings">("blocks");
+  const [view, setView] = useState<"blocks" | "outline" | string>("blocks");
+
+  const pluginItems = useMemo(() => {
+    const details: Record<string, MenuItem & { render: () => ReactElement }> =
+      {};
+
+    plugins?.forEach((plugin) => {
+      if (plugin.name && plugin.render) {
+        details[plugin.name] = {
+          label: plugin.label ?? plugin.name,
+          icon: plugin.icon ?? <ToyBrick />,
+          onClick: () => {
+            setView(plugin.name!);
+          },
+          isActive: view === plugin.name,
+          render: plugin.render,
+        };
+      }
+    });
+
+    return details;
+  }, [plugins, view]);
+
+  const PluginRender = useMemo(() => {
+    if (view === "blocks") {
+      return Components;
+    } else if (view === "outline") {
+      return Outline;
+    } else {
+      return pluginItems[view]?.render;
+    }
+  }, [view]);
 
   return (
     <div className={`Puck ${getClassName()}`}>
@@ -160,26 +192,14 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                             },
                             isActive: view === "outline",
                           },
-                          headings: {
-                            label: "Headings",
-                            icon: <Heading1 />,
-                            onClick: () => {
-                              setView("headings");
-                            },
-                            isActive: view === "headings",
-                          },
+                          ...pluginItems,
                         },
                       },
                     }}
                   />
                 </div>
                 <div className={getLayoutClassName("leftSideBar")}>
-                  {leftSideBarVisible && (
-                    <>
-                      {view === "blocks" && <Components />}
-                      {view === "outline" && <Outline />}
-                    </>
-                  )}
+                  {leftSideBarVisible && <PluginRender />}
                 </div>
                 <Canvas />
                 <div className={getLayoutClassName("rightSideBar")}>
