@@ -16,6 +16,8 @@ import { Components } from "../Components";
 import { Outline } from "../Outline";
 import { Canvas } from "../Canvas";
 import { Fields } from "../Fields";
+import { Nav } from "../Nav";
+import { Hammer, Heading1, Layers } from "lucide-react";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -119,6 +121,8 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 
   usePreviewModeHotkeys();
 
+  const [view, setView] = useState<"blocks" | "outline" | "headings">("blocks");
+
   return (
     <div className={`Puck ${getClassName()}`}>
       <DragDropContext disableAutoScroll={dnd?.disableAutoScroll}>
@@ -133,13 +137,49 @@ export const Layout = ({ children }: { children: ReactNode }) => {
             >
               <div className={getLayoutClassName("inner")}>
                 <Header />
+
+                <div className={getLayoutClassName("nav")}>
+                  <Nav
+                    slim
+                    navigation={{
+                      main: {
+                        items: {
+                          build: {
+                            label: "Blocks",
+                            icon: <Hammer />,
+                            onClick: () => {
+                              setView("blocks");
+                            },
+                            isActive: view === "blocks",
+                          },
+                          outline: {
+                            label: "Outline",
+                            icon: <Layers />,
+                            onClick: () => {
+                              setView("outline");
+                            },
+                            isActive: view === "outline",
+                          },
+                          headings: {
+                            label: "Headings",
+                            icon: <Heading1 />,
+                            onClick: () => {
+                              setView("headings");
+                            },
+                            isActive: view === "headings",
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </div>
                 <div className={getLayoutClassName("leftSideBar")}>
-                  <SidebarSection title="Components" noBorderTop>
-                    <Components />
-                  </SidebarSection>
-                  <SidebarSection title="Outline">
-                    <Outline />
-                  </SidebarSection>
+                  {leftSideBarVisible && (
+                    <>
+                      {view === "blocks" && <Components />}
+                      {view === "outline" && <Outline />}
+                    </>
+                  )}
                 </div>
                 <Canvas />
                 <div className={getLayoutClassName("rightSideBar")}>
