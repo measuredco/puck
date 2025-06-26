@@ -9,7 +9,7 @@ export const useComponentList = () => {
 
   useEffect(() => {
     if (Object.keys(uiComponentList).length > 0) {
-      const matchedComponents: string[] = [];
+      const matchedComponents = new Set<string>();
 
       let _componentList: ReactNode[];
 
@@ -26,15 +26,15 @@ export const useComponentList = () => {
               title={category.title || categoryKey}
             >
               {category.components.map((componentName, i) => {
-                matchedComponents.push(componentName as string);
+                matchedComponents.add(componentName);
 
                 const componentConf = config.components[componentName] || {};
 
                 return (
                   <ComponentList.Item
                     key={componentName}
-                    label={(componentConf["label"] ?? componentName) as string}
-                    name={componentName as string}
+                    label={(componentConf["label"] ?? componentName)}
+                    name={componentName}
                     index={i}
                   />
                 );
@@ -45,7 +45,7 @@ export const useComponentList = () => {
       );
 
       const remainingComponents = Object.keys(config.components).filter(
-        (component) => matchedComponents.indexOf(component) === -1
+        (component) => !matchedComponents.has(component)
       );
 
       if (
